@@ -1,0 +1,58 @@
+%!
+% Bifurcation plot --- iterate x * (1-x) * r, for 0 < x < 1 and various values of r,
+% then plot the fixed points.
+% by John Fouhy.
+%
+% Change rinit and rmax to "zoom in" on various parts of the plot.
+
+0 setlinewidth
+
+/maxy 768 def % length of the y-axis (approx)
+/maxx 600 def % length of the x-axis (approx)
+/ignore 500 def % the number of iterations to ignore
+/good 180 def % the number of iterations to look at
+/rinit 2.7 def % initial value of r
+/rmax 4.0 def  % max value of r
+/rdiff rmax rinit sub def % rdiff := rmax - rinit
+/rinc rdiff 2000 div def % r increment
+/xinit 0.4 def % initial value of x
+
+/r rinit def
+/x xinit def
+
+/scalex {
+    maxx 0.8 mul 
+    x mul
+    maxx 0.1 mul add
+} def
+
+/scaley {
+    r rinit sub rdiff div % scale r to between 0 and 1
+    maxy 0.8 mul mul  % middle 80%
+    maxy 0.1 mul add
+    maxy exch sub % invert
+} def
+
+{
+    ignore
+    {
+        /x x 1 x sub mul r mul def  % x := x*(1-x)*r
+    } repeat
+
+    good
+    {
+        /x x 1 x sub mul r mul def
+        %/x0 x 400 mul 100 add def
+        %/y0 r rdiff sub 400 mul 500 sub def
+        /x0 scalex def
+        /y0 scaley def
+        newpath x0 y0 moveto x0 y0 0.1 add lineto closepath stroke % Don't know if I can just draw a dot ... so draw a very short line instead ;-0
+    } repeat
+
+    /r r rinc add def % r := r+ 0.001
+
+    r rmax ge { exit } if % exit if r >= rmax
+    
+} loop
+
+showpage

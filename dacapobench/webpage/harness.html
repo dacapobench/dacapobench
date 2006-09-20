@@ -1,0 +1,112 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="dacapo.css"/>
+<title>Benchmark harness</title>
+</head>
+<body>
+<h1>The Benchmark harness</h1>
+
+The benchmarks in the DaCapo suite are packaged into a jar file,
+and run via a <i>benchmark harness</i> which simplifies the execution of the benchmark
+and provides hooks to user-specified callbacks, warm-up iterations, validation etc.  This
+page describes the benchmark harness, initially in general terms so that users of the
+suite can understand the DaCapo benchmark methodology more thoroughly, and later
+in sufficient detail for people interested in maintaining the suite or writing their
+own benchmarks.
+<p>
+
+<h2>Benchmark Execution</h2>
+
+The harness permits benchmarks to be run multiple times for a single invocation of the
+program, in order to allow (for example) adaptive compilers to reach a steady state 
+before timing the execution of a benchmark.  The number of iterations is given by
+the <tt>-n</tt> or <tt>-two</tt> command line flags.  
+The first <tt>n - 1</tt> iterations are considered warmup iterations, and the final iteration 
+is considered the timing iteration.
+<p>
+
+Before executing the first (warmup) iteration of a benchmark, the test data (if any)
+is extracted from the dacapo jar file, into a scratch directory, and any per-benchmark
+preparation takes place.  During each iteration of the benchmark, some optional pre-iteration
+work takes place, then the pre-iteration user callback is invoked and the body of the benchmark is executed.
+When this completes, the post-iteration user callback is invoked, and the per-benchmark
+validations take place.  Some post-iteration work is then done (eg deleting output files),
+and the next iteration is executed.  Different methods of the user callback are invoked
+for warmup iterations and the final timing iteration.
+<p>
+
+<h2>Benchmark internals</h2>
+
+From the benchmark developer's perspective, a benchmark consists of several components:
+<ul>
+<li>The benchmark program itself.
+<li>Input data to the benchmark
+<li>A configuration file
+<li>The benchmark-specific harness class.
+<li>Two targets in the build.xml ant script.
+</ul>
+The build.xml should contain targets that a) download the source from its home server,
+and b) build it from source, and package its test data, harness etc into the suite.  Test
+data should be zipped into a file called &lt;benchmark&gt;.zip, which will be automatically
+extracted into the scratch directory at runtime.
+<p>
+
+The benchmark harness is conventionally called &lt;Benchmark&gt;Harness, and is in the
+package dacapo.&lt;benchmark&gt;.  This class must extend the abstract dacapo.Benchmark
+class, and many benchmarks simply need to provide a trivial constructor, and an iterate
+method that performs one iteration of the script.  The methods of the Benchmark class,
+in conjunction with the configuration file, perform most of the tasks required by a typical
+benchmark.
+<p>
+
+<h3>Configuration file</h3>
+
+Each benchmark must supply a configuration file, in the cnf/ directory, called &lt;benchmark&gt;.cnf.
+The contents of this file are as follows:
+<pre>
+benchmark &lt;benchmark> class &lt;class>;
+</pre>
+
+This specifies the name of the benchmark (which must correspond to the name of the
+file), and the class that implements its harness.
+
+<pre>
+size &lt;size> args &lt;parameter>...
+  output &lt;output-file>... ;
+</pre>
+
+A size clause is required for each size of workload that the benchmark provides.  By convention,
+each benchmark provides a small, default and large workload, but several provide additional
+workloads and there is no restriction on size names or how many there can be.  The parameters
+specified (as a comma-separated list of quoted strings) by the args keyword are available to the 
+benchmark harness in an array of strings, retrieved by the method call getArgs(size).
+<p>
+Each size can specify a set of output files, as a comma-separated list.  Each output file 
+gives its name (as a quoted string), and then optionally a list of attributes against which
+the output file can be validated.  Currently the available attributes are:
+
+<table border=1 columns=2>
+<tr><td>digest</td> <td>An SHA-1 digest of the file</td> </tr>
+<tr> <td>bytes</td> <td>The size of the file in bytes</td> </tr>
+<tr> <td>lines</td> <td>The size of the file in lines</td> </tr>
+</table>
+
+If an attribute is specified for a file, then it will be checked.  All named
+output files ae deleted after each iteration whether they have a validation 
+attribute specified or not.  The special file names "$stdout" and "$stderr"
+refer to standard and error output respectively (System.out and System.err).
+These currently only support the digest validation attributes.
+<p>
+The configuration file also contains a structured description of the benchmark
+in the following format:
+<pre>
+description
+  long "Long description",
+  short "...",
+  url "...",
+  copyright "...",
+  version "...";
+</pre>
+
+</body>
+</html>

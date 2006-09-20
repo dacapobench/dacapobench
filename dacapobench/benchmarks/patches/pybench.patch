@@ -1,0 +1,46 @@
+diff -u pybench/CommandLine.py tmp/pybench/CommandLine.py
+--- pybench/CommandLine.py	2006-07-05 16:21:05.000000000 +1000
++++ tmp/pybench/CommandLine.py	2006-07-05 16:14:00.000000000 +1000
+@@ -367,7 +367,8 @@
+             print
+             rc = 1
+ 
+-        raise SystemExit,rc
++# dacapo: we don't want an exit()!
++#        raise SystemExit,rc
+ 
+     def add_option(self, option):
+ 
+diff -u pybench/pybench.py tmp/pybench/pybench.py
+--- pybench/pybench.py	2006-07-05 16:21:05.000000000 +1000
++++ tmp/pybench/pybench.py	2006-07-05 16:21:32.000000000 +1000
+@@ -437,7 +437,8 @@
+         self.tests = {}
+         if _debug:
+             print 'Getting machine details...'
+-        self.machine_details = get_machine_details()
++# dacapo: incompatible with jython
++#        self.machine_details = get_machine_details()
+ 
+         # Make .version an instance attribute to have it saved in the
+         # Benchmark pickle
+@@ -846,7 +847,8 @@
+         if not withsyscheck:
+             # Too bad the check interval uses an int instead of a long...
+             value = 2147483647
+-            sys.setcheckinterval(value)
++# dacapo: incompatible with jython
++#            sys.setcheckinterval(value)
+             print '* system check interval set to maximum: %s' % value
+ 
+         if timer == TIMER_SYSTIMES_PROCESSTIME:
+@@ -923,7 +925,8 @@
+                                   limitnames=limitnames)
+ 
+         # Ring bell
+-        sys.stderr.write('\007')
++# dacapo: we don't need to hear a bell
++#        sys.stderr.write('\007')
+ 
+         if reportfile:
+             try:

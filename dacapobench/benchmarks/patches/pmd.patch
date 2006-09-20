@@ -1,0 +1,14 @@
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' pmd.orig/pmd-1.8/etc/build.xml pmd/pmd-1.8/etc/build.xml
+--- pmd.orig/pmd-1.8/etc/build.xml	2004-05-20 04:13:09.000000000 +1000
++++ pmd/pmd-1.8/etc/build.xml	2005-09-30 15:30:21.000000000 +1000
+@@ -18,6 +18,8 @@^
+         <include name="jaxen-core-1.0-fcs.jar"/>
+         <include name="saxpath-1.0-fcs.jar"/>
+         <include name="xercesImpl-2.0.2.jar"/>
++        <include name="junit.jar"/>
+         <include name="xmlParserAPIs-2.0.2.jar"/>
+     </fileset>
++    <pathelement location="${dacapo.classes}"/>
+ </path>
+ 
+ <target name="delete">

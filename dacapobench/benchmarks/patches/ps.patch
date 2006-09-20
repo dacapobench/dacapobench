@@ -1,0 +1,19 @@
+diff -r -N -u -x Makefile -x '*.class' -x '*.g' ../../dacapo/EDU/unm/cs/oal/DaCapo/JavaPostScript/Red/executive.java edu/unm/cs/oal/DaCapo/JavaPostScript/Red/executive.java
+--- edu/unm/cs/oal/DaCapo/JavaPostScript/Red/executive.java	2004-06-28 09:48:29.000000000 -0400
++++ edu/unm/cs/oal/DaCapo/JavaPostScript/Red/executive.java	2004-07-14 10:12:51.000000000 -0400
+@@ -61,6 +61,15 @@
+             System.err.println("Usage: executive [filename]");
+             return;
+         }
++
++        //#-if GCBM
++        try {
++          System.setOut(new java.io.PrintStream(new java.io.FileOutputStream("./scratch/out.ps")));
++        } catch (Exception e) {
++          System.err.println("Can't open output file: "+e);
++          
++        }
++        //#-endif
+         
+         if (args.length > 1 && args[1].equals("-debug"))
+             State.debug = true;

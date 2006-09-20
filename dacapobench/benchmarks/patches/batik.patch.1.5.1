@@ -1,0 +1,394 @@
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/build.xml batik/xml-batik/build.xml
+--- batik.orig/xml-batik/build.xml	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/build.xml	2005-09-28 18:15:50.000000000 +1000
+@@ -113,6 +113,7 @@
+     <fileset dir="lib">
+       <include name="*.jar"/>
+     </fileset>
++    <pathelement location="${dacapo.classes}" />
+   </path>
+ 
+   <path id="libs-build-classpath">
+@@ -262,6 +263,7 @@
+            debug="${debug}" optimize="${optimize}" >
+       <classpath>
+         <pathelement location="${dest}" />
++        <pathelement location="${dacapo.classes}" />
+         <path refid="libs-classpath"/>
+         <path refid="libs-build-classpath"/>
+       </classpath>
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/Main.java batik/xml-batik/sources/org/apache/batik/apps/rasterizer/Main.java
+--- batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/Main.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/apps/rasterizer/Main.java	2005-09-28 18:20:23.000000000 +1000
+@@ -970,7 +970,7 @@
+ 
+     public static void main(String [] args) {
+         (new Main(args)).execute();
+-        System.exit(0);
++	//        System.exit(0);
+     }
+ 
+     //
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java
+--- batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverter.java	2005-09-28 18:20:23.000000000 +1000
+@@ -70,6 +70,10 @@
+ import org.apache.batik.transcoder.image.JPEGTranscoder;
+ import org.apache.batik.transcoder.image.PNGTranscoder;
+ 
++//-#if GCBM
++import dacapo.TestHarness;
++//-#endif
++
+ /**
+  * This application can be used to convert SVG images to raster images.
+  * <br />
+@@ -797,7 +801,11 @@
+         for (int i=0; i<n; i++){
+             String sourceString = (String)(this.sources.elementAt(i));
+             File file = new File(sourceString);
+-            if (file.exists()) {
++            //-#if GCBM
++            if (TestHarness.exists(file)) {
++            //-#else
++            //if (file.exists()) {
++            //-#endif
+                 sources.addElement(new SVGConverterFileSource(file));
+             } else {
+                 String[] fileNRef = getFileNRef(sourceString);
+@@ -954,23 +962,32 @@
+                 throw new SVGConverterException(ERROR_SOURCE_SAME_AS_DESTINATION,
+                                                  true /* fatal error */);
+             }
+-            
+-            // Compute transcoder input.
+-            if (!inputFile.isReadable()) {
+-                throw new SVGConverterException(ERROR_CANNOT_READ_SOURCE,
+-                                                 new Object[]{inputFile.getName()});
+-            }
+-
++            //-#if GCBM
+             try {
+-                InputStream in = inputFile.openStream();
+-                in.close();
+-            } catch(IOException ioe) {
+-                throw new SVGConverterException(ERROR_CANNOT_OPEN_SOURCE,
+-                                                 new Object[] {inputFile.getName(),
+-                                                               ioe.toString()});
++              input = new TranscoderInput((inputFile.openStream()));
++            }
++            catch (Exception fnfe){
++                throw new SVGConverterException(ERROR_CANNOT_READ_SOURCE,
++                                                true);
+                                                                } 
++            //-#else
++//             // Compute transcoder input.
++//             if (!inputFile.isReadable()) {
++//                 throw new SVGConverterException(ERROR_CANNOT_READ_SOURCE,
++//                                                  new Object[]{inputFile.getName()});
++//             }
++
++//             try {
++//                 InputStream in = inputFile.openStream();
++//                 in.close();
++//             } catch(IOException ioe) {
++//                 throw new SVGConverterException(ERROR_CANNOT_OPEN_SOURCE,
++//                                                  new Object[] {inputFile.getName(),
++//                                                                ioe.toString()});
++//                                                                } 
+             
+-            input = new TranscoderInput(inputFile.getURI());
++//             input = new TranscoderInput(inputFile.getURI());
++            //-#endif
+ 
+             // Compute transcoder output.
+             if (!isWriteable(outputFile)) {
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java
+--- batik.orig/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/apps/rasterizer/SVGConverterFileSource.java	2005-09-28 18:20:23.000000000 +1000
+@@ -56,6 +56,10 @@
+ import java.io.InputStream;
+ import java.net.MalformedURLException;
+ 
++//-#if GCBM
++import dacapo.TestHarness;
++//-#endif
++
+ /**
+  * Describes a file source for the <tt>SVGConverter</tt>
+  *
+@@ -112,7 +116,11 @@
+     }
+ 
+     public InputStream openStream() throws FileNotFoundException{
+-        return new FileInputStream(file);
++      //-#if GCBM
++      return TestHarness.getInputStream(file);
++      //-#else
++      //return new FileInputStream(file);
++      //-#endif
+     }
+ 
+     public boolean isSameAs(String srcStr){
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java batik/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java
+--- batik.orig/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/ext/awt/geom/ExtendedGeneralPath.java	2005-09-28 18:20:23.000000000 +1000
+@@ -497,18 +497,79 @@
+         return path.createTransformedShape(at);
+     }
+ 
++  //-#if GCBM
++  public static synchronized Rectangle2D getBounds2D(Shape shape) {
++    // Sadly, GNU classpath 0.10 does not implement
++    //GeneralPath.getBounds2D(). So, for the purposes of this
++    //benchmark, we calculate a rough approximation of the
++    //bounds. If the path contains splines this could be wildly
++    //inaccurate, but we don't really care if the program output is
++    //strictly valid, just that program behavior is consistent
++    //between VM's!
++
++    if (!(shape instanceof java.awt.geom.GeneralPath))
++      return shape.getBounds2D();
++    else {
++      
++      Rectangle2D bounds = null; 
++      double pts[] = new double[6];
++      for (PathIterator subpath = shape.getPathIterator(null, 2.0);
++           !subpath.isDone();
++           subpath.next()) {
++        int type = subpath.currentSegment(pts);
++        int count;
++        switch (type) {
++        case PathIterator.SEG_MOVETO:
++        case PathIterator.SEG_LINETO:
++          count = 2;
++          break;
++        case PathIterator.SEG_QUADTO:
++          count =  4;
++          break;
++        case PathIterator.SEG_CUBICTO:
++          count = 6;
++          break;
++        default:
++          count = 0;
++          break;
++        }
++        for (int i=0; i < count; i += 2) {
++          if (bounds == null) {
++            bounds = new Rectangle2D.Double(pts[i], pts[i]+1, 0, 0);
++          } else {
++            bounds.add(pts[i], pts[i]+1);
++          }
++          
++        }
++      }
++      return bounds;
++    }
++  }
++  public static synchronized java.awt.Rectangle getBounds(Shape shape) {
++    return getBounds2D(shape).getBounds();
++  }
++  //-#endif
++  
+     /**
+      * Delegates to the enclosed <code>GeneralPath</code>.
+      */
+     public java.awt.Rectangle getBounds() {
+-        return path.getBounds();
++      //-#if GCBM
++      return getBounds2D().getBounds();
++      //-#else
++      //return path.getBounds();
++      //-#endif
+     }
+ 
+     /**
+      * Delegates to the enclosed <code>GeneralPath</code>.
+      */
+     public synchronized Rectangle2D getBounds2D() {
+-        return path.getBounds2D();
++      //-#if GCBM
++      return getBounds2D(path);
++      //-#else
++      //  return path.getBounds2D();
++      //-#endif
+     }
+ 
+     /**
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/gvt/AbstractGraphicsNode.java batik/xml-batik/sources/org/apache/batik/gvt/AbstractGraphicsNode.java
+--- batik.orig/xml-batik/sources/org/apache/batik/gvt/AbstractGraphicsNode.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/gvt/AbstractGraphicsNode.java	2005-09-28 18:20:23.000000000 +1000
+@@ -498,7 +498,12 @@
+         Rectangle2D bounds = getBounds();
+         Shape g2dClip = curClip; //g2d.getClip();
+         if (g2dClip != null) {
+-            Rectangle2D clipBounds = g2dClip.getBounds2D();
++          //-#if GCBM
++          Rectangle2D clipBounds =
++            org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds2D(curClip);
++          //-#else
++          //Rectangle2D clipBounds = g2dClip.getBounds2D();
++          //-#endif
+             if(bounds != null && !bounds.intersects(clipBounds.getX(),
+                                                     clipBounds.getY(),
+                                                     clipBounds.getWidth(),
+@@ -823,15 +828,15 @@
+             // Use txf, not t
+             tBounds = getTransformedPrimitiveBounds(txf);
+         } else {
+-            tBounds = t.createTransformedShape
+-                (filter.getBounds2D()).getBounds2D();
++            tBounds = org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds2D(t.createTransformedShape
++                (filter.getBounds2D()));
+         }
+         // Factor in the clipping area, if any
+         if (tBounds != null) {
+             if (clip != null) {
+                 Rectangle2D.intersect
+                     (tBounds,
+-                     t.createTransformedShape(clip.getClipPath()).getBounds2D(),
++                     org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds2D(t.createTransformedShape(clip.getClipPath())),
+                      tBounds);
+             }
+ 
+@@ -839,7 +844,7 @@
+             if(mask != null) {
+                 Rectangle2D.intersect
+                     (tBounds,
+-                     t.createTransformedShape(mask.getBounds2D()).getBounds2D(),
++                     org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds2D(t.createTransformedShape(mask.getBounds2D())),
+                      tBounds);
+             }
+         }
+@@ -865,7 +870,11 @@
+             t.concatenate(transform);
+         }
+ 
+-        return t.createTransformedShape(tpBounds).getBounds2D();
++        //-#if GCBM
++        return org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds2D(t.createTransformedShape(tpBounds));
++        //-#else
++        //return t.createTransformedShape(tpBounds).getBounds2D();
++        //-#endif
+     }
+ 
+     /**
+@@ -889,7 +898,11 @@
+             t.concatenate(transform);
+         }
+ 
+-        return t.createTransformedShape(tpBounds).getBounds2D();
++        //-#if GCBM
++        return org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds2D(t.createTransformedShape(tpBounds));
++        //-#else
++        //return t.createTransformedShape(tpBounds).getBounds2D();
++        //-#endif
+     }
+ 
+     /**
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/gvt/filter/GraphicsNodeRed8Bit.java batik/xml-batik/sources/org/apache/batik/gvt/filter/GraphicsNodeRed8Bit.java
+--- batik.orig/xml-batik/sources/org/apache/batik/gvt/filter/GraphicsNodeRed8Bit.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/gvt/filter/GraphicsNodeRed8Bit.java	2005-09-28 18:20:23.000000000 +1000
+@@ -117,7 +117,7 @@
+                 at.concatenate(nodeAt);
+             }
+         }
+-        Rectangle   bounds = at.createTransformedShape(bounds2D).getBounds();
++        Rectangle   bounds = org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds(at.createTransformedShape(bounds2D));
+         // System.out.println("Bounds: " + bounds);
+ 
+         ColorModel cm = GraphicsUtil.sRGB_Unpre;
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/gvt/renderer/StaticRenderer.java batik/xml-batik/sources/org/apache/batik/gvt/renderer/StaticRenderer.java
+--- batik.orig/xml-batik/sources/org/apache/batik/gvt/renderer/StaticRenderer.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/gvt/renderer/StaticRenderer.java	2005-09-28 18:20:23.000000000 +1000
+@@ -131,7 +131,14 @@
+ 
+     protected static RenderingHints defaultRenderingHints;
+     static {
+-        defaultRenderingHints = new RenderingHints(null);
++      //-#if GCBM GNU
++      // classpath 0.10 RenderingHints(Map map)
++      // constructor doesn't accept null as an argument, though spec
++      // says it should.
++       defaultRenderingHints = new RenderingHints(new java.util.HashMap());
++       //-#else
++       //defaultRenderingHints = new RenderingHints(null);
++       //-#endif
+         defaultRenderingHints.put(RenderingHints.KEY_ANTIALIASING,
+                                   RenderingHints.VALUE_ANTIALIAS_ON);
+ 
+@@ -145,6 +152,13 @@
+      */
+     public StaticRenderer(RenderingHints rh,
+                           AffineTransform at){
++      //-#if GCBM
++      // GNU classpath 0.10 RenderingHints(Map map)
++      // constructor doesn't accept null as an argument, though spec
++      // says it should.
++      if (rh == null)
++        rh = new RenderingHints(new java.util.HashMap());
++      //-#endif
+         renderingHints = new RenderingHints(rh);
+         usr2dev = new AffineTransform(at);
+     }
+@@ -375,7 +389,11 @@
+     public void repaint(Shape area) {
+         if (area == null) return;
+         RectListManager rlm = new RectListManager();
+-        rlm.add(usr2dev.createTransformedShape(area).getBounds());
++        //-#if GCBM
++        rlm.add(org.apache.batik.ext.awt.geom.ExtendedGeneralPath.getBounds(usr2dev.createTransformedShape(area)));
++        //-#else
++        //rlm.add(usr2dev.createTransformedShape(area).getBounds());
++        //-#endif
+         repaint(rlm);
+     }
+ 
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/util/ApplicationSecurityEnforcer.java batik/xml-batik/sources/org/apache/batik/util/ApplicationSecurityEnforcer.java
+--- batik.orig/xml-batik/sources/org/apache/batik/util/ApplicationSecurityEnforcer.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/util/ApplicationSecurityEnforcer.java	2005-09-28 18:20:23.000000000 +1000
+@@ -120,7 +120,7 @@
+      * version
+      */
+     public static final String APP_MAIN_CLASS_DIR
+-        = "classes/";
++      = "";                      // GCBM "classes"
+ 
+     /**
+      * The application's main entry point
+@@ -333,11 +333,17 @@
+         // defined.
+         //
+         String curAppCodeBase = System.getProperty(PROPERTY_APP_DEV_BASE);
++        System.out.println("XXX PROPERTY_APP_DEV_BASE="+PROPERTY_APP_DEV_BASE);
++        System.out.println("XXX APP_MAIN_CLASS_DIR="+APP_MAIN_CLASS_DIR);
++        System.out.println("XXX cACB="+curAppCodeBase);
++        System.out.println("XXX expandedMainClassName="+expandedMainClassName);
++        System.out.println("XXX appMainClassRelativeURL="+appMainClassRelativeURL);
+         if (curAppCodeBase == null) {
+             int codeBaseEnd = 
+                 expandedMainClassName.indexOf(APP_MAIN_CLASS_DIR
+                                               + appMainClassRelativeURL);
+             
++            System.out.println("XXX codeBaseEnd="+codeBaseEnd);
+             if (codeBaseEnd == -1){
+                 // Something is seriously wrong. This should *never* happen
+                 // as the APP_SECURITY_POLICY_URL is such that it will be
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' batik.orig/xml-batik/sources/org/apache/batik/util/ParsedURLDefaultProtocolHandler.java batik/xml-batik/sources/org/apache/batik/util/ParsedURLDefaultProtocolHandler.java
+--- batik.orig/xml-batik/sources/org/apache/batik/util/ParsedURLDefaultProtocolHandler.java	2005-09-28 18:02:25.000000000 +1000
++++ batik/xml-batik/sources/org/apache/batik/util/ParsedURLDefaultProtocolHandler.java	2005-09-28 18:20:23.000000000 +1000
+@@ -105,6 +105,14 @@
+      * @param urlStr the string to parse as a URL.
+      */
+     public ParsedURLData parseURL(String urlStr) {
++      //-#if GCBM
++      // GNU classpath 0.10 returns a NullPointerException rather than
++      // a MalformedURLException if the URL constructor is passed a
++      // null string
++      if (urlStr == null) {
++        return  constructParsedURLData();
++      }
++      //-#endif
+         try {
+             URL url = new URL(urlStr);
+             // System.err.println("System Parse: " + urlStr);

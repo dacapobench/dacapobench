@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="dacapo.css"/>
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  <title>The DaCapo Benchmark Suite</title>
+</head>
+
+<body>
+<h1>Usage</h1>
+Our suite will evolve to maintain its relevance. It is therefore
+<span style="color: rgb(204, 0, 0); font-style: italic;"> essential that
+the version number associated with the release be cited in any use of
+the benchmark,</span> and we ask that you please cite the 2006 OOPSLA paper describing the suite:
+<ul>
+<font size=-2>
+Blackburn, S. M., Garner, R., Hoffman, C., Khan, A. M., McKinley, K. S., Bentzur, R., Diwan, A., Feinberg, D., Frampton, D., Guyer, S. Z., Hirzel, M., Hosking, A., Jump, M., Lee, H., Moss, J. E. B., Phansalkar, A., Stefanovic, D., VanDrunen, T., von Dincklage, D., and Wiedermann, B. <b>The DaCapo Benchmarks: Java Benchmarking Development and Analysis</b>, <i>OOPSLA '06: Proceedings of the 21st annual ACM SIGPLAN conference on Object-Oriented Programing, Systems, Languages, and Applications</i>, (Portland, OR, USA, October 22-26, 2006) (<a href="download/dacapo-oopsla-2006.pdf">pdf</a>, <a href="cite.html">BibTeX</a>).
+</font>
+</ul>
+<h2>Running benchmarks</h2>
+To run one of the benchmarks, use the command:<p>
+<span style="font-family: monospace;">java -jar dacapo-beta&lt;date&gt;.jar [-s small|default|large] [-c &lt;callbackclass&gt;] [-<flags>] &lt;bm&gt; [&lt;bm2&gt;, ...]</span>
+<pre><br>where:</pre>
+<table cellpadding="2" cellspacing="2" border="0" style="text-align: left; font-family: monospace;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-s</pre>
+      </td>
+      <td style="vertical-align: top;">
+      specifies the workload size (small, default, large)
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-c</pre>
+      </td>
+      <td style="vertical-align: top;">
+      specifies the name of a callback class which extends dacapo.Callback, 
+allowing hooks for benchmark start, end, warmup start, and warm up end
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-h</pre>
+      </td>
+      <td style="vertical-align: top;">
+      prints a usage message
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-n &lt;num></pre>
+      </td>
+      <td style="vertical-align: top;">
+      Number of iterations.  The first (n-1) are warmup iterations, 
+and the last one is timed.
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-i</pre>
+      </td>
+      <td style="vertical-align: top;">
+      print information about the benchmark(s), including brief description, urls,
+copyright and version
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-scratch scratch-dir</pre>
+      </td>
+      <td style="vertical-align: top;">
+      Specify a scratch directory for temporary output files.  If it exists, the harness
+will delete and re-create it.
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-debug</pre>
+      </td>
+      <td style="vertical-align: top;">
+      debugging output (probably only of interest to maintainers)
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-noDigestOutput</pre>
+      </td>
+      <td style="vertical-align: top;">
+      Disable digest validation of standard output and error streams.
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-preserve</pre>
+      </td>
+      <td style="vertical-align: top;">
+      preserve output files (probably only of interest to maintainers)
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>-v</pre>
+      </td>
+      <td style="vertical-align: top;">
+      verbose output (probably only of interest to maintainers)
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><b>&lt;bm&gt;</pre>
+      </td>
+      <td style="vertical-align: top;">
+      a list of benchmarks to execute {antlr, bloat, chart, eclipse, fop, hsqldb, jython, 
+lusearch, luindex, pmd, xalan}
+      </td>
+    </tr>
+  </tbody>
+</table>
+<pre><br></pre>
+Several of the benchmarks create output files, which they do by
+creating a new subdirectory in the current working directory called
+'scratch'.  The jython benchmark creates a subdirectory called 'cachedir'.
+It is therefore necessary to run the benchmarks in a directory that is
+writeable by the current user.
+
+<h3>Callbacks</h3>
+The harness allows for pluggable callbacks which are executed before and after
+benchmark execution.  These allow (for example) JVM-specific statistics collection
+to be started and stopped.
+<a href="MyCallback.java">Here</a>
+is an example benchmark callback
+class (use<span style="font-family: monospace;"> "-c MyCallback"</span>
+on the commandline).  The distributed jar file contains one pre-built
+callback
+<ul>
+<li><bf>MMTkCallback</bf>.  Brackets the timing run with calls to MMTk's
+  benchmark harness.</li>
+</ul><br>
+</body></html>

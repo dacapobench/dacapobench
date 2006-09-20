@@ -1,0 +1,45 @@
+%!PS-Adobe-1.0
+%%Title:Random Fern
+%%Creator:Eric Wicklund
+% Last modified: MLO 02 Jan 1993 11:24:14
+% Changed: 'save' and 'restore' statements (incorrect grammar);
+% length added, and set to 0.001 (0 does not work with Post 1.7).
+%/m1 [  0.00  0.00  0.00  0.16  0.00 0.00 ] def
+%/m2 [  0.85 -0.04  0.04  0.85  0.00 1.60 ] def
+%/m3 [  0.20  0.23 -0.26  0.22  0.00 1.60 ] def
+%/m4 [ -0.15  0.26  0.28  0.24  0.00 0.44 ] def
+/m1 [  0.00  0.00  0.00  0.16  0.00 0.00 ] def
+/m2 [  0.85 -0.04  0.04  0.85  0.00 1.60 ] def
+/m3 [  0.20  0.23 -0.26  0.22  0.00 1.60 ] def
+/m4 [ -0.15  0.26  0.28  0.24  0.00 0.44 ] def
+/point 72 def
+/length 0 def
+%/length 0.001 def
+%%EndProlog
+%%Page: 1 1
+/zzz save def
+% will draw inside a 8 inch square centered on 8.5 by 11 inch page
+4.25 point mul 1.5 point mul translate
+0.8 point mul dup scale
+% x coordinate ranges from -5 to 5
+% y coordinate ranges from  0 to 10
+1 setlinecap
+0.005 setlinewidth
+% First point at origin
+0 0
+300000 {
+% Pick a transformation matrix probabilistically
+   /r rand 100 mod def
+   r  1 lt { /m m1 def }
+ { r 86 lt { /m m2 def }
+ { r 93 lt { /m m3 def }
+           { /m m4 def } ifelse } ifelse } ifelse
+% Make a linear transformation, then
+% plot a point at current location
+   m transform 2 copy moveto
+   length length rlineto
+   stroke
+} repeat
+showpage
+zzz restore
+%%Trailer

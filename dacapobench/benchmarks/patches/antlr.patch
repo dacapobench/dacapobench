@@ -1,0 +1,15 @@
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' antlr.orig/antlr-2.7.2/antlr/Tool.java antlr/antlr-2.7.2/antlr/Tool.java
+--- antlr.orig/antlr-2.7.2/antlr/Tool.java	2003-01-20 11:38:00.000000000 +1100
++++ antlr/antlr-2.7.2/antlr/Tool.java	2006-04-05 15:29:12.000000000 +1000
+@@ -409,7 +409,10 @@
+                                System.getProperty("line.separator"));
+             e.printStackTrace();
+         }
+-        System.exit(0);
++        //-#if GCBM
++        //-#else
++        //System.exit(0);
++        //-#endif
+     }
+ 
+     /** This method is used by all code generators to create new output

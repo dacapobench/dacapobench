@@ -1,0 +1,25 @@
+benchmark xalan
+  class dacapo.xalan.XalanHarness;
+
+size small args "2","1"
+  output 	"$stdout" digest 0x3cd18bc25a97c64c86c54728ece6d79a76627a17 /*,
+  			"$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709 */;
+
+size default args "8","2"
+  output 	"$stdout" digest 0xab99de4cc93e7b92212f261e8dc50558dca53bef /*,
+  			"$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709 */;
+
+size large args "16","2"
+  output 	"$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709 /*,
+  			"$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709 */;
+
+description
+  short		"An XSLT processor for transforming XML documents",
+  long		"Xalan transforms an XML document (either a test case or the works of Shakespeare) and transforms the document into html",
+  copyright	"Copyright (C) 1999-2003 The Apache Software Foundation",
+  author	"Apache Software Foundation",
+  license	"Apache Software License",
+  url		"http://xml.apache.org/xalan-j/",
+  version	"2.4.1",
+  threads	"Single threaded",
+  repeats	"8 iterations, each transforms a single large XML document (the works of Shakespeare)";

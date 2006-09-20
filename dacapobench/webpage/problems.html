@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="dacapo.css"/>
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  <title>The DaCapo Benchmark Suite</title>
+</head>
+
+<body>
+<h1>Known Problems</h1>
+<ul>
+  <li>The <b>'chart'</b> benchmark will not run on VMs which use GNU Classpath 0.91 or earlier.<p>
+  </li>
+  <li>The <b>'eclipse'</b> benchmark requires a regular, Sun-like jre in order to be able to perform its build tasks (it needs to be able to compile against standard libraries such as 'rt.jar').  Some JVMs do not comply with eclipse's expectations.  A simple work-around is to specify a jre for eclipse to compile against.  If the jvm used to run the benchmarks does not comply with eclipse's expectations, an error message will be produced with an explanation of the suggested work around (setting -Declipse.java.home=xxx on the command line to point to an orthodox jre, whose libraries will be used).<p>
+  </li>
+  <li>The <b>'jython'</b> benchmark has been reported to fail bytecode verification on an internal product JVM.  We have not yet confirmed whether this is a problem with jython or just that JVM.  The jython interpreter dynamically generates bytecodes, and apparently it is these that are failing verification.<p>
+  </li>
+  <li>The benchmarks run with the Sun jdk 1.4 and 1.5, but <b>do not build with
+     a 1.5 javac</b>.  This is a limitation of some of the benchmarks themselves.<p>
+  </li>
+  <li>
+The jar file contains the compiled classes for the benchmark programs, plus
+the minimum library jar file contents required to get the benchmarks to run.
+If the system class libraries for your VM are <b>missing classes</b> which
+are distributed as library jar files with the benchmark, please let us
+know so we can amend the build procedure.  After building with ant,
+the source tree for each benchmark is left in the build_src
+subdirectory, and comparing the library jar files distributed with the
+benchmark and the dacapo build.xml might provide the answer.<p>
+
+  </li>
+  <li>There are some issues specific to <b>Jikes RVM</b>.</li>
+  <ul>
+    <li>By default, JikesRVM does not build classpath with <b>support for
+AWT</b>, which
+<span style="font-style: monospace;">chart</span> uses. Jikes RVM can be configured
+to use AWT, by editing <span style="font-family: monospace;">rvm/bin/jBuildClasspathJar</span>,
+in particular, ensuring that the <span style="font-family: monospace;">--disable-gtk-peer</span>
+argument is <span style="font-style: italic;">not </span>set when
+classpath is built (ie you want the gtk-peer enabled).
+</li>
+    <li>We found that a number of benchmarks, most notably <b>'eclipse'</b>, exposed brittleness in Jikes RVM, such that some configurations would not relibaly run or would only run at some heap sizes. <b>Status as at Jikes RVM version 2.4.5:</b>
+    <ul>
+    <li>MarkCompact will not run for <b>'eclipse'</b> or <b>'jython'</b>, and will only work in large heaps for <b>'luindex'</b>. </li>
+<li>GenMS will not run for <b>'eclipse'</b>, and will only work in large heaps for <b>'luindex'</b>.</li>
+<li>GenCopy will only work in large heaps for <b>'luindex'</b>.</li>
+</ul> 
+    </li>
+    <li>Version beta041020 of the DaCapo suite did not include sufficient classes for Jikes
+RVM to run <b>'xalan'</b>.&nbsp; This is fixed in subsequent releases.<br>
+    </li>
+  </ul>
+</ul>
+<br>
+</body></html>

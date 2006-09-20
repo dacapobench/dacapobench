@@ -1,0 +1,75 @@
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' src-orig/EDU/purdue/cs/bloat/benchmark/Makefile src/EDU/purdue/cs/bloat/benchmark/Makefile
+--- src-orig/EDU/purdue/cs/bloat/benchmark/Makefile	2001-09-19 05:10:19.000000000 +1000
++++ src/EDU/purdue/cs/bloat/benchmark/Makefile	2005-09-23 19:09:10.000000000 +1000
+@@ -40,7 +40,7 @@
+ 
+ .SUFFIXES: .java .class
+ 
+-JAVA_HOME = /u/u83/pps/java
++#JAVA_HOME = /u/u83/pps/java
+ JAVAC = $(JAVA_HOME)/bin/javac
+ JAVAH = $(JAVA_HOME)/bin/javah
+ JFLAGS = -g
+@@ -48,7 +48,7 @@
+ CFLAGS = -K pic -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/solaris \
+ 	-I/u/u83/pps/perfmon/include
+ 
+-all: class $(LIB)
++all: class # $(LIB)
+ 
+ clean:
+ 	rm -f *.class *.o $(JNIH) $(OBJ) $(LIB)
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' src-orig/EDU/purdue/cs/bloat/class.mk src/EDU/purdue/cs/bloat/class.mk
+--- src-orig/EDU/purdue/cs/bloat/class.mk	2001-09-19 05:10:18.000000000 +1000
++++ src/EDU/purdue/cs/bloat/class.mk	2005-09-23 19:09:10.000000000 +1000
+@@ -21,7 +21,7 @@
+ 
+ .SUFFIXES: .java .class
+ 
+-JAVA_HOME = /gcm/where/jdk/1.3/sparc.Solaris
++# JAVA_HOME = /gcm/where/jdk/1.3/sparc.Solaris
+ JAVAC = $(JAVA_HOME)/bin/javac
+ JFLAGS = -g
+ CLASSPATH = $(JAVA_HOME)/lib/classes.zip
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' src-orig/EDU/purdue/cs/bloat/context/Makefile src/EDU/purdue/cs/bloat/context/Makefile
+--- src-orig/EDU/purdue/cs/bloat/context/Makefile	2001-09-19 05:10:22.000000000 +1000
++++ src/EDU/purdue/cs/bloat/context/Makefile	2005-09-23 19:09:43.000000000 +1000
+@@ -22,6 +22,7 @@
+ CLASS = \
+ 	BloatContext.class\
+ 	CachingBloatContext.class\
++	BloatingClassLoader.class \
+ 	PersistentBloatContext.class
+ 
+ include ../class.mk
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' src-orig/EDU/purdue/cs/bloat/optimize/Main.java src/EDU/purdue/cs/bloat/optimize/Main.java
+--- src-orig/EDU/purdue/cs/bloat/optimize/Main.java	2001-09-19 05:10:30.000000000 +1000
++++ src/EDU/purdue/cs/bloat/optimize/Main.java	2005-09-23 19:09:10.000000000 +1000
+@@ -556,7 +556,8 @@
+     boolean skip = false;
+     
+     String name = c.type().className();
+-    String qual = c.type().qualifier() + "/*";
++    //String qual = c.type().qualifier() + "/*";
++    String qual = c.type().qualifier();
+     
+     // Edit only classes explicitly mentioned.
+     if (ONLY.size() > 0) {
+@@ -566,7 +567,7 @@
+       for (int i = 0; i < ONLY.size(); i++) {
+ 	String pkg = (String) ONLY.get(i);
+ 	
+-	if (name.equals(pkg) || qual.equals(pkg)) {
++	if (name.equals(pkg) || qual.startsWith(pkg)) {
+ 	  skip = false;
+ 	  break;
+ 	}
+@@ -578,7 +579,7 @@
+       for (int i = 0; i < SKIP.size(); i++) {
+ 	String pkg = (String) SKIP.get(i);
+ 	
+-	if (name.equals(pkg) || qual.equals(pkg)) {
++	if (name.equals(pkg) || qual.startsWith(pkg)) {
+ 	  skip = true;
+ 	  break;
+ 	}

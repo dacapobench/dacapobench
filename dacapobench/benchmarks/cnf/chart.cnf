@@ -1,0 +1,21 @@
+benchmark chart class dacapo.chart.ChartHarness;
+
+size small   args "-p","compress","small","chart/compress.dat"
+  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+     
+size default args "-p","javac","small","chart/javac.dat"
+  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+	  
+size large   args "-p","javac","large","chart/javac.dat"
+  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+description
+  short		"A graph plotting toolkit and pdf renderer",
+  long		"jfreechart plots a number of complex line graphs and renders them as pdf via itext",
+  copyright	"(C)opyright 2000-2004, by Object Refinery Limited and Contributors; Copyright 2000, 2001, 2002 by Bruno Lowagie",
+  author    "David Gilbert, Bruno Lowagie and Paulo Soares",
+  license   "LGPL and MPL",
+  url       "http//www.jfree.org, http://www.lowagie.com/iText/",
+  version	"0.9.21, 1.0b",
+  threads	"Single threaded",
+  repeats	"Single iteration plots 14 distinct graphs";

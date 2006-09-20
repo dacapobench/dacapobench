@@ -1,0 +1,96 @@
+%! PostScript source
+
+
+%This program uses 4 variables:
+% depth should be a small positive integer indicating the recursion
+%       depth of the snowflake pattern;
+% length corresponds to the size of the snowflake (400 is reasonable);
+% x0 & y0 are the x & y coordinates of the centre of the snowflake.
+
+/snowedge
+%do a snowflake edge to recursion depth 'depth' moving distance 'length'
+{ depth 0 eq                       %If we have reached full recursion depth
+  { length 0 rlineto }             %then just draw a straight line,
+  { /depth depth 1 sub def         %otherwise recurse, drawing four lines
+    /length length 3 div def       %of one third the length in the appropriate
+    snowedge                       %directions.
+    60 rotate
+    snowedge
+    -120 rotate
+    snowedge
+    60 rotate
+    snowedge
+    /length length 3 mul def       %Restore the original values of length and
+    /depth depth 1 add def         %depth.
+  } ifelse
+} def
+
+
+/sqrt3 1.7320508 def               %approximation to the square-root of 3.
+
+/snowflake
+%Draw a snowflake centred on (x0, y0) of size specified by length, and
+%of recursion depth specified by depth. In fact we just draw three
+%snowedges around the relevant equilateral triangle.
+{ newpath
+  x0 length 2 div sub y0 length sqrt3 2 mul div add moveto
+  snowedge stroke
+  newpath
+  x0 length 2 div add y0 length sqrt3 2 mul div add moveto
+  -120 rotate
+  snowedge stroke
+  120 rotate
+  newpath
+  x0 y0 length sqrt3 div sub moveto
+  120 rotate
+  snowedge
+  stroke
+  -120 rotate
+} def
+
+0.2 setlinewidth                   %Use a fine line.
+
+300 400 translate                  %Must translate because of the rotations
+                                   %below.
+/x0 0 def
+/y0 0 def                          %Centre on (0, 0) which is really (300, 400)
+
+/length 400 def                    %Fairly large snowflake
+/depth 5 def                       %Depths greater than 5 are too much for
+                                   %an Apple LaserWriter.
+
+
+
+snowflake                          %Now we draw a succession of snowflakes
+30 rotate                          %inside each other to get a pretty picture.
+/length length sqrt3 div def
+snowflake
+30 rotate
+/length length sqrt3 div def
+snowflake
+30 rotate
+/length length sqrt3 div def
+/depth depth 1 sub def
+snowflake
+30 rotate
+/length length sqrt3 div def
+snowflake
+30 rotate
+/length length sqrt3 div def
+/depth depth 1 sub def
+snowflake
+30 rotate
+/length length sqrt3 div def
+snowflake
+30 rotate
+/length length sqrt3 div def
+/depth depth 1 sub def
+snowflake
+30 rotate
+/length length sqrt3 div def
+snowflake
+
+/#copies 1 def                     %Print just one copy.
+showpage
+
+

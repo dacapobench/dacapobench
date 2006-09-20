@@ -1,0 +1,136 @@
+diff -u -r org/apache/fop/apps/CommandLineOptions.java /exp/home/hoffmann/tmp/fop/org/apache/fop/apps/CommandLineOptions.java
+--- org/apache/fop/apps/CommandLineOptions.java	Tue Jul 15 04:03:26 2003
++++ /exp/home/hoffmann/tmp/fop/org/apache/fop/apps/CommandLineOptions.java	Mon Sep 13 15:01:31 2004
+@@ -50,6 +50,8 @@
+  */ 
+ package org.apache.fop.apps;
+ 
++import dacapo.TestHarness;
++
+ // FOP
+ import org.apache.fop.apps.FOPException;
+ import org.apache.fop.messaging.MessageHandler;
+@@ -405,12 +407,12 @@
+                                        + "\n  fofile: "
+                                        + fofile.getAbsolutePath());
+             }
+-            if (!xmlfile.exists()) {
++            if (!TestHarness.exists(xmlfile)) {
+                 throw new FileNotFoundException("xml file "
+                                                 + xmlfile.getAbsolutePath()
+                                                 + " not found ");
+             }
+-            if (!xsltfile.exists()) {
++            if (!TestHarness.exists(xsltfile)) {
+                 throw new FileNotFoundException("xsl file "
+                                                 + xsltfile.getAbsolutePath()
+                                                 + " not found ");
+@@ -422,7 +424,7 @@
+                 log.error("xml file: " + xmlfile.toString());
+                 log.error("xslt file: " + xsltfile.toString());
+             }
+-            if (!fofile.exists()) {
++            if (!TestHarness.exists(fofile)) {
+                 throw new FileNotFoundException("fo file "
+                                                 + fofile.getAbsolutePath()
+                                                 + " not found ");
+diff -u -r org/apache/fop/apps/InputHandler.java /exp/home/hoffmann/tmp/fop/org/apache/fop/apps/InputHandler.java
+--- org/apache/fop/apps/InputHandler.java	Tue Jul 15 04:03:18 2003
++++ /exp/home/hoffmann/tmp/fop/org/apache/fop/apps/InputHandler.java	Mon Sep 13 15:34:21 2004
+@@ -50,6 +50,8 @@
+  */ 
+ package org.apache.fop.apps;
+ 
++import dacapo.TestHarness;
++
+ // SAX
+ import org.xml.sax.InputSource;
+ import org.xml.sax.XMLReader;
+@@ -80,18 +82,19 @@
+      * @return the InputSource created
+      */
+     static public InputSource fileInputSource(File file) {
+-        /* this code adapted from James Clark's in XT */
+-        String path = file.getAbsolutePath();
+-        String fSep = System.getProperty("file.separator");
+-        if (fSep != null && fSep.length() == 1)
+-            path = path.replace(fSep.charAt(0), '/');
+-        if (path.length() > 0 && path.charAt(0) != '/')
+-            path = '/' + path;
+-        try {
+-            return new InputSource(new URL("file", null, path).toString());
+-        } catch (java.net.MalformedURLException e) {
+-            throw new Error("unexpected MalformedURLException");
+-        }
++      return new InputSource(TestHarness.getURL(file).toString());
++//         /* this code adapted from James Clark's in XT */
++//         String path = file.getAbsolutePath();
++//         String fSep = System.getProperty("file.separator");
++//         if (fSep != null && fSep.length() == 1)
++//             path = path.replace(fSep.charAt(0), '/');
++//         if (path.length() > 0 && path.charAt(0) != '/')
++//             path = '/' + path;
++//         try {
++//             return new InputSource(new URL("file", null, path).toString());
++//         } catch (java.net.MalformedURLException e) {
++//             throw new Error("unexpected MalformedURLException");
++//         }
+     }
+ 
+     /**
+diff -u -r org/apache/fop/apps/Options.java /exp/home/hoffmann/tmp/fop/org/apache/fop/apps/Options.java
+--- org/apache/fop/apps/Options.java	Tue Jul 15 04:03:18 2003
++++ /exp/home/hoffmann/tmp/fop/org/apache/fop/apps/Options.java	Mon Sep 13 15:20:23 2004
+@@ -50,6 +50,8 @@
+  */ 
+ package org.apache.fop.apps;
+ 
++import dacapo.TestHarness;
++
+ // SAX
+ import org.xml.sax.InputSource;
+ 
+@@ -162,24 +164,28 @@
+         String file = "config.xml";
+         InputStream configfile = null;
+ 
+-        // Try to use Context Class Loader to load the properties file.
+-        try {
+-            java.lang.reflect.Method getCCL =
+-                Thread.class.getMethod("getContextClassLoader", new Class[0]);
+-            if (getCCL != null) {
+-                ClassLoader contextClassLoader =
+-                    (ClassLoader)getCCL.invoke(Thread.currentThread(),
+-                                               new Object[0]);
+-                configfile = contextClassLoader.getResourceAsStream("conf/"
+-                        + file);
+-            }
+-        } catch (Exception e) {}
++//         // Try to use Context Class Loader to load the properties file.
++//         try {
++//             java.lang.reflect.Method getCCL =
++//                 Thread.class.getMethod("getContextClassLoader", new Class[0]);
++//             if (getCCL != null) {
++//                 ClassLoader contextClassLoader =
++//                     (ClassLoader)getCCL.invoke(Thread.currentThread(),
++//                                                new Object[0]);
++//                 configfile = contextClassLoader.getResourceAsStream("conf/"
++//                         + file);
++//             }
++//         } catch (Exception e) {}
+ 
+-        // the entry /conf/config.xml refers to a directory conf which is a sibling of org
++        // the entry /conf/config.xml refers to a directory conf which
++        // is a sibling of org
++
++        try {
+         if (configfile == null)
+             configfile =
+-                ConfigurationReader.class.getResourceAsStream("/conf/"
+-                    + file);
++                TestHarness.getInputStream("dat/fop/conf/" + file);
++        } catch (Exception e) {}
++        
+         if (configfile == null) {
+             throw new FOPException("can't find default configuration file");
+         }

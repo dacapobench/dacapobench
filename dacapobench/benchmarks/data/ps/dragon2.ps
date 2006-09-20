@@ -1,0 +1,122 @@
+%!postscript
+%%
+%%  Program:  Fractals
+%%  Filename: /mit/postscript/dragon.ps
+%%  Purpose:  Draw simple fractal
+%%  Author:   Andre' DeHon (amdehon)
+%%  Written:  1/21/87
+%%
+
+%%note  %% uses page with less imaging area on LaserWriter only
+        %%  reclaims lots of VM
+
+/points-per-inch 72 def  %% 72 PostScript points per inch
+
+/inch {points-per-inch mul} def 
+              %% a useful operator to convert from inches to points
+  %% num inch --> num
+
+/drawline { moveto  lineto } def  %% draw line given both endpoints
+ 
+  %% x1 y1 x2 y2 drawline --> --
+
+
+/fract {  %% basic fractal generating procedure
+        
+  %% x1 y1 x2 y2 level fract --> -- 
+
+     
+         /level exch def %% current iteration level
+         /y2 exch def    %%  y coord of second endpoint
+         /x2 exch def    %%  x coord of second endpoint
+         /y1 exch def    %%  y coord of first endpoint
+         /x1 exch def    %%  x coord of first endpoint
+        
+     level 0 eq                      
+     { x1 y1 x2 y2 drawline stroke}    %% if at level 0, simply draw a line
+     {                                 %% otherwise....
+      
+      /len x1 x2 sub dup mul y1 y2 sub dup mul add sqrt def  
+                                       %% compute length of line
+      /ang y2 y1 sub x2 x1 sub neg  atan  def
+                                       %% get angle
+       
+       /nx x1 x2 add 2 div len 2 div ang sin mul add def
+       /ny y1 y2 add 2 div len 2 div ang cos mul add def
+                                       %% compute new point
+
+       nx ny x2 y2 level 1 sub         %% put args for second call on stack
+       x1 y1 nx ny level 1 sub fract   %% put args for first call on stack
+                                       %% and make call
+                               fract   %% make second call (first args will
+                                       %%     have been used)
+      %%  if the arguments for the second call weren't put onto the stack
+      %%    before the first was made, the tokens wouldn't be evaluated
+      %%    until the first returned...at which time, the tokens would 
+      %%    have the wrong bindings (e.g. those from the last chronological
+      %%    invocation of dragon/fract) [if only there were dynamic
+      %%    bindings...] 
+
+
+     }
+     ifelse
+
+
+      } def  %% fract
+
+/dragon {  %% basic fractal generating procedure
+           %% modified to produce Heighway's dragon
+
+  %% x1 y1 x2 y2 level dragon --> -- 
+
+     
+         /level exch def %% current iteration level
+         /y2 exch def    %%  y coord of second endpoint
+         /x2 exch def    %%  x coord of second endpoint
+         /y1 exch def    %%  y coord of first endpoint
+         /x1 exch def    %%  x coord of first endpoint
+        
+     level 0 eq                      
+     { x1 y1 x2 y2 drawline stroke}    %% if at level 0, simply draw a line
+     {                                 %% otherwise....
+      
+      /len x1 x2 sub dup mul y1 y2 sub dup mul add sqrt def  
+                                       %% compute length of line
+      /ang y2 y1 sub x2 x1 sub neg  atan  def
+                                       %% get angle
+       
+       /nx x1 x2 add 2 div len 2 div ang sin mul add def
+       /ny y1 y2 add 2 div len 2 div ang cos mul add def
+                                       %% compute new point
+
+       %% Note here order of arguements to dragon is all that differs
+       %%      from fract.
+
+       x2 y2 nx ny level 1 sub         %% put args for second call on stack
+       x1 y1 nx ny level 1 sub dragon  %% put args for first call on stack
+                                       %% and make call
+                               dragon  %% make second call (first args will
+                                       %%     have been used)
+      %%  if the arguments for the second call weren't put onto the stack
+      %%    before the first was made, the tokens wouldn't be evaluated
+      %%    until the first returned...at which time, the tokens would 
+      %%    have the wrong bindings (e.g. those from the last chronological
+      %%    invocation of dragon/fract) [if only there were dynamic
+      %%    bindings...] 
+
+     }
+     ifelse
+
+      } def  %% dragon
+
+
+
+
+2.5 inch 9 inch  5.5 inch 9 inch 10 dragon  %% draw a dragon 
+                                               %% with 10 level of recursion
+3 inch 3.5 inch 5 inch 3.5 inch 11 fract  %% draw a fractal
+5 inch 3.5 inch 3 inch 3.5 inch 11 fract  %% ...and its flip
+
+showpage  %% get a hardcopy and see if everything's happy           
+                            
+

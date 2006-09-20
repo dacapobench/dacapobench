@@ -1,0 +1,20 @@
+%%Fibonacci numbers generated using the dictionary representation of closures
+/copy' {dup length array copy} def
+/text 0 dict def
+text
+begin
+	/f_fib {C {dup /n get 1 le 
+		{pop 1}
+		{dup /f_fib get exch dup /n get exch dup /f_fib get exch dup /n get exch pop
+		1 sub exch copy' dup 0 <</n 5 index /f_fib 5 index>> put 
+		cvx exec
+		exch pop
+		3 1 roll
+		2 sub exch copy' dup 0 <</n 5 index /f_fib 5 index>> put 
+		cvx exec
+		exch pop
+		add}
+		ifelse
+		} exec} def
+end
+text /f_fib get copy' dup 0 <</n 15 /f_fib 5 index>> put cvx exec =
