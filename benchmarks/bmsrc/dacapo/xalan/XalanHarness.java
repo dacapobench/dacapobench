@@ -126,17 +126,21 @@ public class XalanHarness extends Benchmark {
 
     // Check Xalan version, this is easy to get wrong because its
     // bundled with Java these days, so we do explict check
+    Properties props = System.getProperties();
     if (!org.apache.xalan.Version.getVersion().equals(XALAN_VERSION)) {
-      throw new DacapoException(
-          "Incorrect version of Xalan in use, should be '" + XALAN_VERSION
-              + "', actually is '" + org.apache.xalan.Version.getVersion()
-              + "'.");
+      System.err.println("***  Incorrect version of Xalan in use!");
+      System.err.println("***     Should be '" + XALAN_VERSION + "',");
+      System.err.println("***     actually is '" + org.apache.xalan.Version.getVersion() + "').");
+      System.err.println("***  To fix this, extract the included xalan.jar:");
+      System.err.println("***     unzip "+props.get("java.class.path")+" xalan.jar");
+      System.err.println("***  and override your jvm's boot classpath:");
+      System.err.println("***     java -Xbootclasspath/p:xalan.jar [...] ");
+      throw new DacapoException("Please fix your bootclasspath and try again.");
     }
 
     // Fix the JAXP transformer to be Xalan
     String key = "javax.xml.transform.TransformerFactory";
     String value = "org.apache.xalan.processor.TransformerFactoryImpl";
-    Properties props = System.getProperties();
     props.put(key, value);
     System.setProperties(props);
 

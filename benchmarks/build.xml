@@ -18,8 +18,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-09-22 11:02:44 +1000 (Fri, 22 Sep 2006) $
- *   $Id: build.xml 129 2006-09-22 01:02:44Z steveb-oss $
+ *   $Date: 2006-09-22 12:18:34 +1000 (Fri, 22 Sep 2006) $
+ *   $Id: build.xml 130 2006-09-22 02:18:34Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -89,7 +89,7 @@
 	<property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 	<property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
 	<property name="bible.url" value="${sfdata.url}/kjv.zip"/>
-	<property name="xalan.data.url" value="http://cs.anu.edu.au/people/Steve.Blackburn/private/dacapo/xalan.zip"/>
+	<property name="xalan.data.url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/WD-xforms-20010608.zip"/>
 	<property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
 
 	<!-- External programs -->
@@ -999,10 +999,21 @@
 	<!-- ================================= 
         target: xalan
        ================================= -->
-	<target name="xalan" depends="xalan.benchmark,xalan.harness" description="--> build the xalan benchmark"/>
+	<target name="xalan" depends="xalan.jar,xalan.data,xalan.harness" description="--> build the xalan benchmark"/>
 	<!-- Build the xalan dacapo harness -->
 	<target name="xalan.harness" depends="harness" description="Build xalan">
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/xalan/*"/>
+	</target>
+	<!-- Build the xalan input data -->
+	<target name="xalan.data" depends="init" description="Create data zip">
+		<mkdir dir="${xalan-top}/xalan-data/xalan/"/>
+		<unzip src="${sources}/xalan.data.zip" dest="${xalan-top}/xalan-data/xalan/">
+			<patternset>
+				<include name="*.xml"/>
+				<include name="xmlspec.xsl"/>
+			</patternset>
+		</unzip>
+		<zip basedir="${xalan-top}/xalan-data/" includes="xalan/**" destfile="${zipdata}/xalan.zip"/>
 	</target>
 	<!-- Build the xalan benchmark -->
 	<target name="xalan.benchmark" depends="init,xerces" description="Build xalan">
@@ -1013,8 +1024,7 @@
 		<mkdir dir="${xalan-top}"/>
 
 		<!-- Unpack the source distribution -->
-		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" 
-           dest="${xalan-top}" compression="gzip"/>
+		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" dest="${xalan-top}" compression="gzip"/>
 
 		<!-- Build using Ant, setting the classpath appropriately -->
 		<exec dir="${xalan-top}/xalan-j_${xalan-v}" executable="ant">
@@ -1024,9 +1034,10 @@
 		
 		<!-- Grab the xalan class files from the built jar files -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
-
-		<!-- Copy over the data -->
-		<copy file="${sources}/xalan.data.zip" tofile="${zipdata}/xalan.zip" />
+	</target>
+	<!-- Copy a stand-alone xalan jar into the build -->
+	<target name="xalan.jar" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
+		<copy file="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" todir="${build}"/>
 	</target>
 
 
