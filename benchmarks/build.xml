@@ -18,8 +18,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-08-20 15:08:10 +1000 (Sun, 20 Aug 2006) $
- *   $Id: build.xml 116 2006-08-20 05:08:10Z steveb $
+ *   $Date: 2006-09-22 11:02:44 +1000 (Fri, 22 Sep 2006) $
+ *   $Id: build.xml 129 2006-09-22 01:02:44Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -38,10 +38,10 @@
 	<property name="zipdata" location="${build}/data"/>
 	<property name="config" location="cnf"/>
 	<property name="prune" location="prune"/>
-	
+
 	<!-- constraints -->
 	<property name="constraints.gnuclasspath" value="true"/>
-	
+
 	<!-- tested jres -->
 	<property name="j9" value="/opt/ibm-java2-i386-50"/>
 	<property name="jrockit" value="/opt/jrockit-R26.3.0-jdk1.5.0_06"/>
@@ -60,13 +60,12 @@
 	<property name="jython.version" value="Release_2_2alpha1"/>
 	<property name="lucene.version" value="1.9.1"/>
 	<property name="pmd.version" value="3.7"/>
-	<property name="xalan.version" value="2_7_0"/>
+	<property name="xalan.version" value="2_4_1"/>
 	<!-- auxilary downloads -->
 	<property name="itext.version" value="1.02b"/>
 	<property name="junit.version" value="3.8.1"/>
-	<property name="python.version" value="2.5b2"/>
-<!--	<property name="xerces.version" value="2.8.0"/><property name="xerces._version" value="2_8_0"/> -->
-	<property name="xerces.version" value="2.6.2"/><property name="xerces._version" value="2_6_2"/>
+	<property name="python.version" value="2.5"/>
+	<property name="xerces.version" value="2.8.0"/><property name="xerces._version" value="2_8_0"/>
 
 	<!-- benchmark locations -->
 	<property name="antlr.url" value="http://www.antlr.org/download"/>
@@ -83,14 +82,16 @@
 	<!-- auxilary downloads -->
 	<property name="itext.url" value="http://easynews.dl.sourceforge.net/sourceforge/itext"/>
 	<property name="junit.url" value="http://easynews.dl.sourceforge.net/sourceforge/junit"/>
-	<property name="python.url" value="http://www.python.org/ftp/python/2.5/prev"/>
-	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j"/>
+	<property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
+<!--	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j/old_xerces2"/> -->
+	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j/"/>
 	<!-- data downloads -->
-	<property name="shakespeare.url" value="http://www.it.usyd.edu.au/~matty/Shakespeare/shakespeare.tar.gz"/>
-	<property name="bible.url" value="http://www.donlineinc.com/download/kjv.exe"/>
-	<property name="xalan.data.url" value="http://www-plan.cs.colorado.edu/henkel/projects/colorado_bench/xalan-20030321.tar.gz"/>
+	<property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
+	<property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
+	<property name="bible.url" value="${sfdata.url}/kjv.zip"/>
+	<property name="xalan.data.url" value="http://cs.anu.edu.au/people/Steve.Blackburn/private/dacapo/xalan.zip"/>
 	<property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
-	
+
 	<!-- External programs -->
 	<property name="make" location="/usr/bin/make"/>
 
@@ -172,6 +173,16 @@
 	<target name="sourcedist" depends="sources,dist" 
       description="--> Download the source and then build">
 	</target>
+
+	<!-- ================================= 
+         target: source           
+         ================================= -->
+	<target name="source" depends="init" description="add source to build">
+		<copy todir="${build}">
+			<fileset dir="${src}" includes="**/*.java"/>
+			<fileset dir="${bmsrc}" includes="**/*.java"/>
+		</copy>
+</target>	
 
 
 	<!-- ================================= 
@@ -437,7 +448,7 @@
      	dest="${sources}/jython_${jython.version}.jar"  
         usetimestamp="true"/>
 	</target>
-	
+
 	<target name="python.source" depends="init.sources">
 		<get src="${python.url}/Python-${python.version}.tgz"
      	dest="${sources}/Python-${python.version}.tgz"  
@@ -456,7 +467,7 @@
    usetimestamp="true"/>
 	</target>
 
-	<target name="pmd.source" depends="init.sources">
+	<target name="pmd.source" depends="junit.source,init.sources">
 		<get src="${pmd.url}/pmd-src-${pmd.version}.zip"
          dest="${sources}/pmd-src-${pmd.version}.zip"
        usetimestamp="true"/>
@@ -473,7 +484,7 @@
          usetimestamp="true"/>
 	</target>
 
-	<target name="xalan.source" depends="init.sources">
+	<target name="xalan.source" depends="xerces.source">
 		<get src="${xalan.url}/xalan-j_${xalan.version}-src.tar.gz"
                dest="${sources}/xalan-j_${xalan.version}-src.tar.gz"
          usetimestamp="true"/>
@@ -488,7 +499,7 @@
 	<target name="data.source" depends="init.sources">
 		<get src="${shakespeare.url}" dest="${sources}/shakespeare.tgz" usetimestamp="true"/>
 		<get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
-		<get src="${xalan.data.url}" dest="${sources}/xalan.data.tgz" usetimestamp="true"/>
+		<get src="${xalan.data.url}" dest="${sources}/xalan.data.zip" usetimestamp="true"/>
 	</target>
 
 
@@ -673,12 +684,12 @@
 			<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
 		</ant>
 	</target>
-	
+
 	<!-- only delete the directories if not constrained by Jikes RVM -->
 	<target name="eclipse.clearosgi" unless="constraints.jikesrvm">
 		<delete dir="${osgihack}/org"/>
 	</target>
-	
+
 	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
 	<target name="eclipse.osgiclasses" depends="eclipse.benchmark">
 		<property name="osgihack" value="${build_src}/eclipse/osgihack"/>
@@ -689,13 +700,13 @@
 			<fileset dir="${osgihack}" includes="org/**/*"/>
 		</copy>
 		<!-- conditionally clean out the stuff we've duplicated -->
-	<!--	<antcall target="eclipse.clearosgi"/> -->
+		<!--	<antcall target="eclipse.clearosgi"/> -->
 		<delete dir="${osgihack}/org"/>
 		<!-- jar up the remainder -->
 		<zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
 		<delete dir="${osgihack}"/>
 	</target>
-	
+
 	<!-- Create the eclipse data file -->
 	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin,eclipse.osgiclasses" description="--> build the eclipse data file">
 		<!-- Install the test data -->
@@ -985,43 +996,10 @@
 	</target>
 
 
-
-	<!-- ================================= 
-          target: ps              
-         ================================= -->
-	<target name="ps" depends="harness" description="--> Build the ps benchmark">
-		<property name="ps-top" location="${build_src}/ps"/>
-		<mkdir dir="${ps-top}/ps"/>
-
-		<!-- untar the source distribution -->
-		<untar src="${sources}/ps.tgz" dest="${ps-top}/ps" compression="gzip"/>
-
-		<!-- Apply the dacapo patch -->
-		<patch patchfile="${patches}/ps.patch" 
-                 dir="${ps-top}/ps"
-                 strip="0" ignorewhitespace="yes"/>
-
-		<!-- Build using Javac -->
-		<javac srcdir="${ps-top}/ps" classpath="${build}"
-             destdir="${build}"/>
-
-		<javac srcdir="${bmsrc}" classpath="${build}"
-               destdir="${build}"
-                 includes="dacapo/ps/*"/>
-
-		<!-- Install the test data -->
-		<zip basedir="${data}"
-           includes="ps/**"
-           destfile="${zipdata}/ps.zip"/>
-
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/ps/*"/>
-	</target>
-
 	<!-- ================================= 
         target: xalan
        ================================= -->
-	<target name="xalan" depends="xalan.harness,xalan.benchmark" description="--> build the xalan benchmark"/>
+	<target name="xalan" depends="xalan.benchmark,xalan.harness" description="--> build the xalan benchmark"/>
 	<!-- Build the xalan dacapo harness -->
 	<target name="xalan.harness" depends="harness" description="Build xalan">
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/xalan/*"/>
@@ -1030,51 +1008,25 @@
 	<target name="xalan.benchmark" depends="init,xerces" description="Build xalan">
 		<property name="xalan-top" value="${build_src}/xalan/"/>
 		<property name="xalan-v" value="${xalan.version}"/>
+		<property name="xalan.xerces.jar" value="${xerces-top}/xerces-${xerces._version}/${xerces.jar}"/>
+		<property name="xalan.xercesxml.jar" value="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}"/>
 		<mkdir dir="${xalan-top}"/>
 
 		<!-- Unpack the source distribution -->
 		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" 
            dest="${xalan-top}" compression="gzip"/>
 
-		<!-- Build using the supplied build.xml -->
-		<ant antfile="${xalan-top}/xalan-j_${xalan-v}/build.xml" dir="${xalan-top}/xalan-j_${xalan-v}" 
-         inheritall="false"/>
-
+		<!-- Build using Ant, setting the classpath appropriately -->
+		<exec dir="${xalan-top}/xalan-j_${xalan-v}" executable="ant">
+			<env key="CLASSPATH" value=".:${xalan.xerces.jar}:${xalan.xercesxml.jar}"/>
+			<env key="ANT_HOME" value="${ant.install}"/>
+		</exec>
+		
 		<!-- Grab the xalan class files from the built jar files -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
-		<!-- required for later versions of xalan -->
-		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/serializer.jar" dest="${build}"/>
 
-		<!--
-		<mkdir dir="${data}/xalan/tmp"/>
-		<unzip src="${sources}/shakespeare.xml.zip" dest="${data}/xalan/tmp"/>
-		<delete file="${data}/xalan/william.xml"/>
-		<concat destfile="${data}/xalan/william.xml">
-		    <fileset dir="${data}/xalan/tmp" includes="*.xml"/>
-		</concat>
-		<copy file="${data}/xalan/tmp/play.dtd" todir="${data}/xalan/"/>
-		<delete dir="${data}/xalan/tmp"/> 
-		-->
-
-		<!-- Install the test data -->
-		<mkdir dir="${data}/xalan"/>
-		<untar src="${sources}/xalan.data.tgz" dest="${data}/xalan" compression="gzip">
-			<patternset>
-				<include name="xalan-j_2_2_D9/bench/william.xml"/>
-				<include name="xalan-j_2_2_D9/bench/william.xsl"/>
-				<include name="xalan-j_2_2_D9/bench/xslbenchdream.xml"/>
-				<include name="xalan-j_2_2_D9/bench/xslbench3.xsl"/>
-			</patternset>
-		</untar>
-		<copy todir="${data}/xalan/">
-	    	<fileset dir="${data}/xalan/xalan-j_2_2_D9/bench">
-	      		<include name="*"/>
-	    	</fileset>
-		</copy>
-		<zip basedir="${data}" includes="xalan/**" destfile="${zipdata}/xalan.zip"/>
-		<delete dir="${data}/xalan"/>
-
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/xalan/*"/>
+		<!-- Copy over the data -->
+		<copy file="${sources}/xalan.data.zip" tofile="${zipdata}/xalan.zip" />
 	</target>
 
 
@@ -1095,7 +1047,10 @@
 		<condition property="xerces.jar" value="xerces.jar" else="xercesImpl.jar">
 			<contains string="${xerces.version}" substring="1.4.4"/>
 		</condition>
+		<condition property="xercesxml.jar" value="xmlParserAPIs.jar" else="xml-apis.jar">
+			<contains string="${xerces.version}" substring="2.2.1"/>
+		</condition>
 		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${build}"/>
-		<unjar src="${xerces-top}/xerces-${xerces._version}/xml-apis.jar" dest="${build}"/>
+		<unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${build}"/>
 	</target>
 </project>
