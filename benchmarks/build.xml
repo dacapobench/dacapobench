@@ -18,8 +18,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-09-22 12:18:34 +1000 (Fri, 22 Sep 2006) $
- *   $Id: build.xml 130 2006-09-22 02:18:34Z steveb-oss $
+ *   $Date: 2006-09-28 21:11:06 +1000 (Thu, 28 Sep 2006) $
+ *   $Id: build.xml 135 2006-09-28 11:11:06Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -109,7 +109,7 @@
 	<!-- ================================= 
          target: compile  all sources
          ================================= -->
-	<target name="compile" depends="antlr,batik,bloat,chart,eclipse,fop,hsqldb,jython,lucene,pmd,xalan"
+	<target name="compile" depends="antlr,bloat,chart,eclipse,fop,hsqldb,jython,lucene,pmd,xalan"
           description="compile the sources for all benchmarks" >
 	</target>
 
@@ -120,7 +120,8 @@
 	<target name="harness" depends="init" description="compile the source ">
 		<javacc javacchome="${javacchome}" target="${src}/dacapo/parser/ConfigFile.jj"/>
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" sourcepath="${stub}"/>
+		<javac srcdir="${src}" destdir="${build}" sourcepath="${stub}" 
+		       debug="true" debuglevel="lines,vars,source"/>
 		<!-- Test data and configuration files -->
 		<copy todir="${build}/cnf">
 			<fileset dir="${config}"/>
@@ -132,7 +133,8 @@
          ================================= -->
 	<target name="bms" depends="compile" description="compile the benchmarks">
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${bmsrc}" destdir="${build}"/>
+		<javac srcdir="${bmsrc}" destdir="${build}" 
+			   debug="true" debuglevel="lines,vars,source"/>
 
 	</target>
 
@@ -182,7 +184,7 @@
 			<fileset dir="${src}" includes="**/*.java"/>
 			<fileset dir="${bmsrc}" includes="**/*.java"/>
 		</copy>
-</target>	
+    </target>	
 
 
 	<!-- ================================= 
@@ -333,29 +335,15 @@
 	<!-- ================================= 
          target: clean              
          ================================= -->
-	<target name="clean" 
-          description="clean up after the build process">
-		<delete dir="${build}"/>
-		<delete dir="${build_src}/antlr/antlr-${antlr.version}"/>
-		<delete dir="${build_src}/batik/xml-batik"/>
-		<delete dir="${build_src}/bloat/bloat"/>
-		<delete dir="${build_src}/chart/jfreechart-${chart.version}"/>
-		<delete dir="${build_src}/fop/fop-${fop.version}"/>
-		<delete dir="${build_src}/eclipse/"/>
-		<delete dir="${build_src}/hsqldb/hsqldb"/>
-		<delete dir="${build_src}/junit"/>
-		<delete dir="${build_src}/jython/jython"/>
-		<delete dir="${build_src}/lucene/lucene-${lucene.version}"/>
-		<delete dir="${build_src}/pmd/pmd-${pmd.version}"/>
-		<delete dir="${build_src}/ps/edu"/>
-		<delete dir="${build_src}/xalan/xalan-j_2_4_1"/>
-		<delete dir="${build_src}/xalan/xalan-j_${xalan.version}"/>
-		<delete dir="${build_src}/xerces"/>
-		<delete dir="${extra}/eclipse-plugin/@dot"/>
-		<delete dir="cachedir"/>
-		<!-- Jython's mess -->
-		<delete dir="scratch"/>
-		<!-- default scratch directory -->
+	<target name="clean" description="clean up after the build process">
+        <delete failonerror="false" includeemptydirs="true">
+          <fileset dir="${build}"/>
+          <fileset dir="${build_src}"/>
+          <fileset dir="${extra}/eclipse-plugin/@dot"/>
+          <fileset dir="cachedir"/>
+          <!-- Jython's mess -->
+          <fileset dir="scratch"/>
+        </delete>
 	</target>
 
 	<!-- ================================= 
@@ -523,8 +511,9 @@
 
 		<!-- Build directly with javac, classfiles into the build directory -->
 		<javac srcdir="${build_src}/antlr/antlr-${antlr.version}/antlr/"
-         classpath="${build}"
-         destdir="${build}"/>
+            classpath="${build}"
+            destdir="${build}"
+			debug="true" debuglevel="lines,vars,source"/>
 
 		<!-- Install the test data -->
 		<zip basedir="${data}"
@@ -532,13 +521,20 @@
          destfile="${zipdata}/antlr.zip"/>
 
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/antlr/*"/>
+                 includes="dacapo/antlr/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 
 	<!-- ================================= 
         target: batik 
        ================================= -->
-	<target name="batik" description="Build batik" depends="harness,xerces">
+	<target name="batik" description="Build batik" depends="batik.benchmark,batik.harness"/>
+	<target name="batik.harness" description="Build batik" depends="harness">
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
+                 includes="dacapo/batik/*"
+			debug="true" debuglevel="lines,vars,source"/>
+	</target>
+	<target name="batik.benchmark" description="Build batik" depends="harness,xerces">
 		<property name="batik-top" value="${build_src}/batik/xml-batik"/>
 
 		<mkdir dir="${build_src}/batik"/>
@@ -579,8 +575,6 @@
          includes="batik/**"
          destfile="${zipdata}/batik.zip"/>
 
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                 includes="dacapo/batik/*"/>
 	</target>
 
 	<!-- ================================= 
@@ -589,7 +583,9 @@
 	<target name="bloat" depends="bloat.benchmark,bloat.harness" description="Build bloat"/>
 	<!-- Build the bloat dacapo harness -->
 	<target name="bloat.harness" depends="harness" description="Build bloat">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/bloat/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/bloat/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the bloat benchmark -->
 	<target name="bloat.benchmark" description="Build bloat" depends="harness">
@@ -624,7 +620,9 @@
 	<target name="chart" depends="chart.benchmark,chart.harness" description="--> build the jFreeChart benchmark"/>
 	<!-- Build the chart dacapo harness -->
 	<target name="chart.harness" depends="init" description="--> build the jFreeChart harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/chart/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/chart/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the chart benchmark -->
 	<target name="chart.benchmark" depends="init,harness" description="--> build the jFreeChart benchmark">
@@ -656,7 +654,16 @@
 	<target name="eclipse" depends="eclipse.data,eclipse.harness" description="--> build the eclipse benchmark"/>
 	<!-- Build the eclipse dacapo harness -->
 	<target name="eclipse.harness" depends="init,harness" description="--> build the eclipse harness">
-		<javac srcdir="${bmsrc}" classpath="${build}:${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar:${build_src}/eclipse/eclipse/plugins/org.eclipse.core.runtime_${eclipse.version}.jar:${build_src}/eclipse/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar" destdir="${build}" includes="dacapo/eclipse/*.java"/>
+		<javac 	srcdir="${bmsrc}" 
+				destdir="${build}" includes="dacapo/eclipse/*.java"
+				debug="true" debuglevel="lines,vars,source">
+			<classpath>
+		      	<pathelement path="${build}"/>
+				<pathelement path="${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+				<pathelement path="${build_src}/eclipse/eclipse/plugins/org.eclipse.core.runtime_${eclipse.version}.jar"/>
+				<pathelement path="${build_src}/eclipse/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
+			</classpath>
+		</javac>
 	</target>
 	<!-- Build the eclipse benchmark -->
 	<target name="eclipse.benchmark" depends="init" description="--> build the eclipse benchmark">
@@ -744,13 +751,15 @@
 	<!-- ================================= 
           target: fop              
          ================================= -->
-	<target name="fop" depends="fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
+	<target name="fop" depends="batik.benchmark,fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
 	<!-- Build the fop dacapo harness -->
 	<target name="fop.harness" depends="harness" description="--> Build the fop harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/fop/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/fop/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the fop benchmark -->
-	<target name="fop.benchmark" depends="batik,init" description="--> Build the fop benchmark">
+	<target name="fop.benchmark" depends="init" description="--> Build the fop benchmark">
 		<mkdir dir="${build_src}/fop"/>
 		<property name="fop-top" value="${build_src}/fop/fop-${fop.version}/"/>
 		<!-- Expand the source distribution -->
@@ -768,12 +777,15 @@
 		<!-- Copy the build to the distribution directory -->
 		<unjar src="${fop-top}/build/fop.jar" dest="${build}"/>
 		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
+		<!-- <unjar src="${fop-top}/lib/batik.jar" dest="${build}"/> -->
 
 		<!-- Install the test data -->
 		<zip basedir="${data}" includes="fop/**" destfile="${zipdata}/fop.zip"/>
 
 		<!-- Build the fop dacapo harness -->
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/fop/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/fop/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 
 
@@ -796,7 +808,9 @@
 	<target name="hsqldb" depends="hsqldb.benchmark,hsqldb.harness" description="--> build the hsqldb benchmark"/>
 	<!-- Build the hsqldb dacapo harness -->
 	<target name="hsqldb.harness" depends="harness" description="--> The hsqldb dacapo harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/hsqldb/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/hsqldb/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the hsqldb benchmark -->
 	<target name="hsqldb.benchmark" depends="harness,junit" description="--> The hsqldb benchmark">
@@ -827,7 +841,9 @@
 	<target name="jython" depends="jython.benchmark,jython.harness" description="--> build the jython benchmark"/>
 	<!-- Build the jython dacapo harness -->
 	<target name="jython.harness" depends="harness" description="--> Build the Jython dacapo harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/jython/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/jython/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the jython benchmark -->
 	<target name="jython.benchmark" depends="init" description="--> Build the Jython benchmark">
@@ -889,7 +905,9 @@
 	<target name="lucene" depends="lucene.benchmark,lucene.harness" description="--> build the lucene benchmark"/>
 	<!-- Build the lucene dacapo harness -->
 	<target name="lucene.harness" depends="harness" description="--> Build the lucene dacapo harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/lucene/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/lucene/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the lucene benchmark -->
 	<target name="lucene.benchmark" depends="init" description="--> Build the lucene benchmark">
@@ -943,7 +961,9 @@
 	<target name="pmd" depends="pmd.benchmark,pmd.harness" description="--> build the pmd benchmark"/>
 	<!-- Build the pmd dacapo harness -->
 	<target name="pmd.harness" depends="harness" description="--> Build the pmd dacapo harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/pmd/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/pmd/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the pmd benchmark -->
 	<target name="pmd.benchmark" depends="init,xerces,junit" description="--> Build the pmd benchmark">
@@ -1002,7 +1022,9 @@
 	<target name="xalan" depends="xalan.jar,xalan.data,xalan.harness" description="--> build the xalan benchmark"/>
 	<!-- Build the xalan dacapo harness -->
 	<target name="xalan.harness" depends="harness" description="Build xalan">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/xalan/*"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+			includes="dacapo/xalan/*"
+			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the xalan input data -->
 	<target name="xalan.data" depends="init" description="Create data zip">

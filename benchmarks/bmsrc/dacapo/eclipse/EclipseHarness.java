@@ -1,10 +1,6 @@
 package dacapo.eclipse;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.*;
-import java.io.*;
-import java.lang.reflect.Method;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 
@@ -41,7 +37,7 @@ public class EclipseHarness extends Benchmark {
   public void postIteration(String size) throws Exception {
     super.postIteration(size);
     restoreJavaHomeIfRequired();
-    if (!preserve)
+    if (!isPreserve())
       deleteTree(new File(scratch,wsDirectory));
   }
   

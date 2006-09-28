@@ -992,7 +992,7 @@ public class PseudoJDBCBench {
           Query += "SET     Abalance = Abalance + " + delta + " ";
           Query += "WHERE   Aid = " + aid;
 
-          int res = Stmt.executeUpdate(Query);
+          Stmt.executeUpdate(Query);
 
           Stmt.clearWarnings();
 

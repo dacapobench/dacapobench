@@ -16,7 +16,8 @@ size default args "-driver","org.hsqldb.jdbcDriver",
 		  "-clients","20",
 		  "-tpc","40",
 		  "-tps","64"
-  output "$stdout" digest 0xd0bb70dcb423f75ce72d18a6db2c46f879a62b78,
+//  output "$stdout" digest 0xd0bb70dcb423f75ce72d18a6db2c46f879a62b78,
+  output "$stdout" digest 0x1b9eb439377986d5b0e42cc8ca89fb3e6ae38833,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.hsqldb.jdbcDriver",

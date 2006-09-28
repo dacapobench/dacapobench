@@ -30,7 +30,7 @@ public class ChartHarness extends Benchmark {
         newArgs.add((new File(scratch,args[i])).getPath());
     }
     String[] newArgStrings = (String[])newArgs.toArray(new String[0]);
-    if (verbose) {
+    if (isVerbose()) {
       for (int i=0; i < newArgStrings.length; i++) 
         System.out.print(newArgStrings[i]+" ");
       System.out.println();

@@ -4,8 +4,6 @@
 package dacapo;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -21,8 +19,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 95 2006-07-13 08:29:11Z robing $
- * $Date: 2006-07-13 18:29:11 +1000 (Thu, 13 Jul 2006) $
+ * $Id: TestHarness.java 135 2006-09-28 11:11:06Z rgarner $
+ * $Date: 2006-09-28 21:11:06 +1000 (Thu, 28 Sep 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -105,6 +103,7 @@ public class TestHarness {
       double target_var = 3.0/100; // Mean deviation to aim for
       int window = 3;              // # iterations to define mean dev over.
       int max_iterations = 20;     // Give up on finding convergence after this many times.
+      boolean ignoreValidation = false; // Useful when gathering new digests
       
       /* No options - print usage and die */
       if (args.length == 0) {
@@ -126,6 +125,9 @@ public class TestHarness {
         } else if (args[i].equals("-v")) {
           // display detailed information
           verbose = true;
+        } else if (args[i].equals("-vv")) {
+          // display verbose information from the benchmark harness
+          Benchmark.setVerbose(true);
         } else if (args[i].equals("-c")) {
           // use a callback
           Class cls = null;
@@ -155,11 +157,13 @@ public class TestHarness {
         } else if (args[i].equals("-window")) {     // # iterations to average convergence over
           window = Integer.parseInt(args[++i]);
         } else if (args[i].equals("-debug")) {
-          Benchmark.verbose = true;
+          Benchmark.setVerbose(true);
         } else if (args[i].equals("-preserve")) {
-          Benchmark.preserve = true;
+          Benchmark.setPreserve(true);
         } else if (args[i].equals("-noDigestOutput")) {
-          Benchmark.digestOutput = false;
+          Benchmark.setDigestOutput(false);
+        } else if (args[i].equals("-ignoreValidation")) {
+          ignoreValidation = true;
         } else if (args[i].equals("-scratch")) {
           scratchDir = args[++i];
         } else
@@ -236,9 +240,13 @@ public class TestHarness {
             
             if (!valid) {
               System.err.println("Validation FAILED for "+bm+" "+size);
-              System.exit(-2);
+              if (!ignoreValidation)
+                System.exit(-2);
             }
           } else {
+            /*
+             * Old-style benchmarks
+             */
             Method m = harness.findMethod();
 
             for (; iterations > 1; iterations--) {
@@ -285,6 +293,7 @@ public class TestHarness {
     System.out.println("    -debug                  Verbose debugging information");
     System.out.println("    -v                      Verbose output");
     System.out.println("    -noDigestOutput         Turn off SHA1 digest of stdout/stderr");
+    System.out.println("    -ignoreValidation       Don't halt on validation failure");
     System.out.println("    -preserve               Preserve output files (debug)");
   }
   

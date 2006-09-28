@@ -1,19 +1,7 @@
 package dacapo;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.URL;
-import java.security.DigestOutputStream;
-import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -29,42 +17,101 @@ import dacapo.parser.Config;
  *
  */
 public abstract class Benchmark {
+  
   /*
-   * These flags are set by the TestHarness in response to command line flags
+   * Constants
    */
-  public static boolean verbose = false;
-  public static boolean digestOutput = true;
-  public static boolean preserve = false;
   
-  protected final File scratch;
-  protected final Config config;
+  /**
+   * I/O buffer size for unzipping
+   */
+  private static final int BUFFER_SIZE = 2048;
   
-  private static final int BUFFER = 2048;
-  protected static final MessageDigest outDigest = Digest.create();
-  protected static final MessageDigest errDigest = Digest.create();
-  protected static final PrintStream out = new PrintStream(
-      new DigestOutputStream(System.out,outDigest));
-  protected static final PrintStream err = new PrintStream(
-      new DigestOutputStream(System.err,errDigest));
+  /*
+   * Class variables
+   */
   
+  /**
+   * Verbose output.  
+   */
+  private static boolean verbose = false;
+  
+  /**
+   * Perform digest operations on standard output and standard error
+   */
+  private static boolean digestOutput = true;
+  
+  /**
+   * Don't clean up output files
+   */
+  private static boolean preserve = false;
+  
+  /**
+   * Output stream for validating System.out
+   */
+  private final DigestPrintStream out;
+  
+  /**
+   * Saved System.out while redirected to the digest stream
+   */
   private static PrintStream savedOut = System.out;
+  
+
+  /**
+   * Output stream for validating System.err
+   */
+  private final DigestPrintStream err;
+  
+  /**
+   * Saved System.err while redirected to the digest stream
+   */
   private static PrintStream savedErr = System.err;
   
+  /*
+   * Instance fields
+   */
+  
+  /**
+   * The scratch directory
+   */
+  protected final File scratch;
+  
+  /**
+   * Parsed version of the configuration file for this benchmark
+   */
+  protected final Config config;
+  
+  /**
+   * Saved versions of the most recent output/error digests
+   */
   private String lastOutDigest, lastErrDigest;
   
-  public boolean run(Callback callback, String size, boolean timing) throws Exception {
+  /**
+   * Run a benchmark.  This is final because individual
+   * benchmarks should not interfere with the flow of control.
+   * 
+   * @param callback The user-specified timing callback
+   * @param size The size (as given on the command line)
+   * @param timing Is this the timing loop ?  Affects how we call the callback.
+   * @return Whether the run was valid or not.
+   * @throws Exception Whatever exception the target application dies with
+   */
+  public final boolean run(Callback callback, String size, boolean timing) throws Exception {
     preIteration(size);
     if (timing)
       callback.start(config.name);
     else
       callback.startWarmup(config.name);
+    
     startIteration();
     iterate(size);
     stopIteration();
+    
     if (timing)
       callback.stop();
     else
       callback.stopWarmup();
+    
     boolean valid = validate(size);
     if (timing)
       callback.complete(config.name, valid);
@@ -83,6 +130,8 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
     this.config = config;
+    out = new DigestPrintStream(System.out,scratch);
+    err = new DigestPrintStream(System.out,scratch);
     prepare();
   }
   
@@ -97,11 +146,12 @@ public abstract class Benchmark {
   /**
    * Benchmark-specific per-iteration setup, outside the timing loop.
    * 
-   * @param size
+   * @param size Size as specified by the "-s" command line flag
    */
   public void preIteration(String size) throws Exception {
     if (verbose) {
       String[] args = config.getArgs(size);
+      System.out.print("Benchmark parameters: ");
       for (int i=0; i < args.length; i++)
         System.out.print(args[i]+" ");
       System.out.println();
@@ -117,8 +167,8 @@ public abstract class Benchmark {
     if (digestOutput) {
       System.setOut(out);
       System.setErr(err);
-      outDigest.reset();
-      errDigest.reset();
+      out.reset();
+      err.reset();
     }
   }
   
@@ -139,13 +189,19 @@ public abstract class Benchmark {
     if (digestOutput) {
       System.setOut(savedOut);
       System.setErr(savedErr);
-      lastOutDigest = Digest.toString(outDigest.digest());
-      lastErrDigest = Digest.toString(errDigest.digest());
+      
+      /* 
+       * Reading a digest resets it, so we save them at the earliest opportunity
+       * to avoid arguments between different methods.
+       */
+      lastOutDigest = Digest.toString(out.digest());
+      lastErrDigest = Digest.toString(err.digest());
     }
   }
   
   /**
-   * Perform validation of output
+   * Perform validation of output.  By default process the conditions
+   * specified in the config file.
    * 
    * @param size Size of the benchmark run.
    * @return true if the output was correct
@@ -154,7 +210,7 @@ public abstract class Benchmark {
     boolean valid = true;
     for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
       String file = (String)v.next();
-      
+
       /*
        * Validate by file digest
        */
@@ -276,15 +332,29 @@ public abstract class Benchmark {
    *  Utility methods
    */
   
+  /**
+   * Copy a file to the specified directory
+   * 
+   * @param inputFile File to copy
+   * @param outputDir Destination directory
+   */
   public static void copyFileTo(File inputFile, File outputDir) throws IOException {
     copyFile(inputFile,new File(outputDir,inputFile.getName()));
   }
   
+  /**
+   * Copy a file, specifying input and output file names.
+   * 
+   * @param inputFile Name of the input file.
+   * @param outputFile Name of the output file
+   * @throws IOException Any exception thrown by the java.io functions used
+   *                     to perform the copy.
+   */
   public static void copyFile(File inputFile, File outputFile) throws IOException {
     FileInputStream input = new FileInputStream(inputFile);
     FileOutputStream output = new FileOutputStream(outputFile);
     while (true) {
-      byte[] buffer = new byte[BUFFER];
+      byte[] buffer = new byte[BUFFER_SIZE];
       int read = input.read(buffer);
       if (read == -1) break;
       output.write(buffer, 0, read);
@@ -295,21 +365,38 @@ public abstract class Benchmark {
   }
   
   /**
+   * Translate a resource name into a URL.
+   * 
    * @param fn
    * @return
    */
   public static URL getURL(String fn) {
     ClassLoader cl = Benchmark.class.getClassLoader();
+    URL resource = cl.getResource(fn);
     if (verbose)
-      System.out.println("Util.getURL: returns "+cl.getResource(fn));
-    return cl.getResource(fn);    
+      System.out.println("Util.getURL: returns "+resource);
+    return resource;    
   }
   
+  /**
+   * Return a file name, relative to the specified scratch directory.
+   * 
+   * @param name Name of the file, relative to the top of the scratch directory
+   * @return The path name of the file
+   */
   public String fileInScratch(String name) {
     return (new File(scratch,name)).getPath();
   }
 
-  public static void unpackZipFile(String name, File destination) throws Exception {
+  /**
+   * Unpack a zip archive into the specified directory.
+   * 
+   * @param name Name of the zip file
+   * @param destination Directory to unpack into.
+   * @throws IOException
+   */
+  public static void unpackZipFile(String name, File destination) throws 
+  IOException, FileNotFoundException {
     BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(name));
     unpackZipStream(inputStream, destination);
   }
@@ -322,7 +409,8 @@ public abstract class Benchmark {
    * @param destination
    * @throws IOException
    */
-  public static void unpackZipFileResource(String name, File destination) throws Exception {
+  public static void unpackZipFileResource(String name, File destination) 
+  throws IOException, FileNotFoundException, DacapoException {
     URL resource = getURL(name);
     if (resource == null)
       throw new DacapoException("No such zip file: \""+name+"\"");
@@ -335,9 +423,9 @@ public abstract class Benchmark {
    * @param inputStream
    * @param destination
    * @throws IOException
-   * @throws FileNotFoundException
    */
-  private static void unpackZipStream(BufferedInputStream inputStream, File destination) throws IOException, FileNotFoundException {
+  private static void unpackZipStream(BufferedInputStream inputStream, File destination) 
+  throws IOException {
     ZipInputStream input = new ZipInputStream(inputStream);
     ZipEntry entry;
     while((entry = input.getNextEntry()) != null) {
@@ -349,11 +437,10 @@ public abstract class Benchmark {
           file.mkdir();
       } else {
         FileOutputStream fos = new FileOutputStream(file);
-        BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+        BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE);
         int count;
-        byte data[] = new byte[BUFFER];
-        while ((count = input.read(data, 0, BUFFER)) != -1) {
-          //System.out.write(x);
+        byte data[] = new byte[BUFFER_SIZE];
+        while ((count = input.read(data, 0, BUFFER_SIZE)) != -1) {
           dest.write(data, 0, count);
         }
         dest.flush();
@@ -413,6 +500,30 @@ public abstract class Benchmark {
   }
   public static long byteCount(File file) throws IOException {
     return file.length();
+  }
+
+  public static void setVerbose(boolean verbose) {
+    Benchmark.verbose = verbose;
+  }
+
+  public static boolean isVerbose() {
+    return verbose;
+  }
+
+  public static void setDigestOutput(boolean digestOutput) {
+    Benchmark.digestOutput = digestOutput;
+  }
+
+  public static boolean isDigestOutput() {
+    return digestOutput;
+  }
+
+  public static void setPreserve(boolean preserve) {
+    Benchmark.preserve = preserve;
+  }
+
+  public static boolean isPreserve() {
+    return preserve;
   }
   
 }

@@ -2,15 +2,15 @@ benchmark eclipse
   class dacapo.eclipse.EclipseHarness;
 
 size small   args "-level", "0", "-ast"
-  output /* $stdout" digest 0xd6db3713e4bc91853c9d376bd1ce03d64edbe726,*/
+  output "$stdout" digest 0xd6db3713e4bc91853c9d376bd1ce03d64edbe726,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-level", "0"
-  output /* "$stdout" digest 0xbd6a589281f39b069f94ed596fe79ac1c12ed401, */
+  output "$stdout" digest 0xbd6a589281f39b069f94ed596fe79ac1c12ed401,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large   args "-level", "1"
-  output /* "$stdout" digest 0x212dcd2274bc9b684a458e70193ddb16b7a9eebd, */
+  output "$stdout" digest 0x212dcd2274bc9b684a458e70193ddb16b7a9eebd,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

@@ -2,7 +2,7 @@ benchmark pmd
   class dacapo.pmd.PmdHarness;
 
 size xsmall args "@pmd/small.lst","xml","pmd/rulesets/imports.xml","-debug"
-  output /* "$stdout" digest 0xb4ca2420fb99aaa107e986bcbe8275e73323d642, */
+  output "$stdout" digest 0x26782a5bd65d608879642daea8d783bdec332bbc,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size small args "@pmd/small.lst","text",
@@ -24,7 +24,7 @@ size small args "@pmd/small.lst","text",
 		"pmd/rulesets/strictexception.xml",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
-  output "$stdout" digest 0x26782a5bd65d608879642daea8d783bdec332bbc,
+  output "$stdout" digest 0x3159c27aee56168354c0ebcfd075e2dd7dc3a73d,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size default args "@pmd/default.lst","text",
@@ -46,7 +46,7 @@ size default args "@pmd/default.lst","text",
 		"pmd/rulesets/strictexception.xml",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
-  output /*"$stdout" digest 0x65e1efdcdc76811f5561d280248a289b6d460b81,*/
+  output "$stdout" digest 0x3159c27aee56168354c0ebcfd075e2dd7dc3a73d,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size large args "@pmd/large.lst","text",
@@ -68,7 +68,7 @@ size large args "@pmd/large.lst","text",
 		"pmd/rulesets/strictexception.xml",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
-  output /*"$stdout" digest 0x65e1efdcdc76811f5561d280248a289b6d460b81,*/
+  output "$stdout" digest 0xead7165f1d69f2e3e5d80417055c1514f8d74477,
          "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
