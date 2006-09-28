@@ -1,9 +1,26 @@
+/*
+ * 
+ */
 package dacapo;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Encapsulate the digests used for validation of files.
+ * 
+ * @author Robin Garner
+ * @date $Date: 2006-09-28 14:15:21 +1000 (Thu, 28 Sep 2006) $
+ * @id $Id: Digest.java 134 2006-09-28 04:15:21Z rgarner $
+ *
+ */
 public class Digest {
+  
+  /**
+   * Return an instance of our chosen message digest
+   * 
+   * @return The MessageDigest object
+   */
   public static MessageDigest create() {
     try {
       return MessageDigest.getInstance("SHA-1");
@@ -14,6 +31,12 @@ public class Digest {
     }
   }
   
+  /**
+   * String representation of a message digest.
+   * 
+   * @param digest
+   * @return
+   */
   public static String toString(byte[] digest) {
     StringBuffer result = new StringBuffer(digest.length*2);
     for (int i=0; i < digest.length; i++) {
