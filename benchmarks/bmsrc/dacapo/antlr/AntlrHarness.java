@@ -7,6 +7,15 @@ import dacapo.Benchmark;
 import dacapo.parser.Config;
 import antlr.Tool;
 
+/**
+ * Benchmark harness for the Antlr benchmark
+ * 
+ * @author Robin Garner
+ * @author Steve Blackburn
+ * @date $Date: 2006-10-03 17:24:11 +1000 (Tue, 03 Oct 2006) $
+ * @id $Id: AntlrHarness.java 137 2006-10-03 07:24:11Z rgarner $
+ *
+ */
 public class AntlrHarness extends Benchmark {
   
   public AntlrHarness(Config config, File scratch) throws Exception {
@@ -18,7 +27,9 @@ public class AntlrHarness extends Benchmark {
     copyFileTo(new File(scratch,"antlr/CommonTokenTypes.txt"),scratch);
   }
   
-  /** After each iteration, delete the output files */
+  /** 
+   * After each iteration, delete the output files
+   */
   public void postIteration(String size) throws Exception {
     super.postIteration(size);
     if (!isPreserve())
@@ -32,7 +43,7 @@ public class AntlrHarness extends Benchmark {
     String[] newArgs = null;
     Vector v = new Vector(args.length);
     v.addElement("-o");
-    v.addElement(scratch.getPath());
+    v.addElement(scratch.getAbsolutePath());
     for (int i=0; i < args.length; i++) {
       if (args[i].equals("-grammars")) {
         firstGrammarIndex = i+1;

@@ -105,6 +105,7 @@ public class LuceneIndex extends Benchmark {
         String[] files = file.list();
         // an IO error could occur
         if (files != null) {
+          sortArray(files);
           for (int i = 0; i < files.length; i++) {
             indexDocs(writer, new File(file, files[i]));
           }

@@ -2,7 +2,11 @@ package dacapo;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -131,7 +135,7 @@ public abstract class Benchmark {
     this.scratch = scratch;
     this.config = config;
     out = new DigestPrintStream(System.out,scratch);
-    err = new DigestPrintStream(System.out,scratch);
+    err = new DigestPrintStream(System.err,scratch);
     prepare();
   }
   
@@ -187,6 +191,8 @@ public abstract class Benchmark {
    */
   public final void stopIteration() {
     if (digestOutput) {
+      out.flush();
+      err.flush();
       System.setOut(savedOut);
       System.setErr(savedErr);
       
@@ -493,6 +499,24 @@ public abstract class Benchmark {
       lines++;
     in.close();
     return lines;
+  }
+  
+  /**
+   * Sort an array.
+   * 
+   * @param list
+   * @return
+   */
+  protected void sortArray(Comparable[] list) {
+    List l = new ArrayList(list.length);
+    for (int i=0; i < list.length; i++)
+      l.add(list[i]);
+    Collections.sort(l);
+    int j = 0;
+    for (Iterator i = l.iterator(); i.hasNext(); ) {
+      list[j++] = (Comparable)i.next();
+      //System.out.println(j+" : "+list[j-1]);
+    }
   }
   
   public static long byteCount(String file) throws IOException {

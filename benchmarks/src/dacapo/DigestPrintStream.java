@@ -11,6 +11,11 @@ import java.io.PrintStream;
 import java.security.DigestOutputStream;
 
 /**
+ * Version of a PrintStream class that canonicalises its pinput in several ways, and
+ * computes a hash of the  stream.
+ * - Newlines are hashed in a platform-independent way
+ * - The relative and absolute versions of the scratch directory path are
+ *   replaced with '$SCRATCH'
  * 
  * @author Robin Garner
  * @date $Date:$
@@ -46,7 +51,7 @@ public class DigestPrintStream extends PrintStream {
    * Reset the message digest
    */
   public void reset() {
-    
+    stream.getMessageDigest().reset();
   }
   
   public byte[] digest() {
