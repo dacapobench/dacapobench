@@ -84,20 +84,26 @@ TOKEN :
   < ARGS : "args" >
 | < AUTHOR : "author" >
 | < BENCHMARK : "benchmark" >
+| < BINARY : "binary" >
 | < BYTES : "bytes" >
 | < CLASS : "class" >
 | < COPYRIGHT : "copyright" >
 | < DESCRIPTION : "description" >
 | < DIGEST : "digest" >
 | < EXISTS : "exists" >
+| < FILTER : "filter" >
 | < KEEP : "keep" >
 | < LICENSE : "license" >
 | < LINES : "lines" >
 | < LONG : "long" >
 | < METHOD : "method" >
 | < OUTPUT : "output" >
+| < RAW : "raw" >
 | < SHORT : "short" >
 | < SIZE : "size" >
+| < STDOUT : "stdout" >
+| < STDERR : "stderr" >
+| < TEXT : "text" >
 | < URL : "url" >
 | < VERSION : "version" >
 | < THREADS : "threads" >
@@ -122,8 +128,10 @@ TOKEN:
       "\""
   >
 | < INT_LITERAL : (["0"-"9"])+ >
-| < SEMI : ";" >
 | < COMMA : "," >
+| < LPAREN : "(" >
+| < RPAREN : ")" >
+| < SEMI : ";" >
 }
 
 Config configFile() :
@@ -166,7 +174,10 @@ void sizeClause(Config config, String size) :
 void outputFile(Config config, String size) :
 { String file; }
 {
-	file=string()
+	(file=string() 
+	| <STDOUT> { file = "stdout.log"; }
+	| <STDERR> { file = "stderr.log"; }
+	)
 	{ config.addOutputFile(size,file); }
 	(outputClause(config,size,file))*
 }
@@ -174,11 +185,22 @@ void outputFile(Config config, String size) :
 void outputClause(Config config, String size, String file) :
 { String digest; int n; long l; }
 {
-	  <DIGEST> digest=hex() { config.setDigest(size,file,digest); }
+	  <DIGEST> [<LPAREN> digestOption(config,size,file) 
+	         (<COMMA> digestOption(config,size,file))* <RPAREN>]
+	  digest=hex() { config.setDigest(size,file,digest); }
 	| <EXISTS>              { config.setExists(size,file); }
 	| <KEEP>                { config.setKeep(size,file); }
 	| <LINES> n=integer()   { config.setLines(size,file,n); }
 	| <BYTES> l=longInt()   { config.setBytes(size,file,l); }
+}
+
+void digestOption(Config config, String size, String file) :
+{}
+{
+	  <TEXT>    	{ config.setTextFile(size,file,true); }
+	| <BINARY>   	{ config.setTextFile(size,file,false); }
+	| <FILTER>   	{ config.setFilterScratch(size,file,true); }
+	| <RAW>   		{ config.setFilterScratch(size,file,false); }
 }
 
 void description(Config config) :
@@ -197,7 +219,8 @@ void descElement(Config config) :
 String descId() :
 {}
 {
-  (<AUTHOR> | <COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <THREADS> | <REPEATS> | <URL> | <VERSION>)
+  (<AUTHOR> | <COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <THREADS> | <REPEATS> 
+  | <URL> | <VERSION>)
   { return token.image; }
 }
 

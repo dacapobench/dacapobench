@@ -85,19 +85,14 @@ public abstract class Benchmark {
   protected final Config config;
   
   /**
-   * Saved versions of the most recent output/error digests
-   */
-  private String lastOutDigest, lastErrDigest;
-  
-  /**
    * Output stream for validating System.err
    */
-  private final DigestPrintStream err;
+  private final TeePrintStream err;
   
   /**
    * Output stream for validating System.out
    */
-  private final DigestPrintStream out;
+  private final TeePrintStream out;
   
   /**
    * Keep track of the number of times we have been iterated.
@@ -149,8 +144,8 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
     this.config = config;
-    out = DigestPrintStream.create(System.out,scratch,"stdout.log");
-    err = DigestPrintStream.create(System.err,scratch,"stderr.log");
+    out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
+    err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
     prepare();
   }
   
@@ -196,8 +191,6 @@ public abstract class Benchmark {
     if (digestOutput) {
       System.setOut(out);
       System.setErr(err);
-      out.reset();
-      err.reset();
       if (iteration > 1) {
         out.version();
         err.version();
@@ -224,13 +217,6 @@ public abstract class Benchmark {
       err.flush();
       System.setOut(savedOut);
       System.setErr(savedErr);
-      
-      /* 
-       * Reading a digest resets it, so we save them at the earliest opportunity
-       * to avoid arguments between different methods.
-       */
-      lastOutDigest = Digest.toString(out.digest());
-      lastErrDigest = Digest.toString(err.digest());
     }
   }
   
@@ -255,19 +241,17 @@ public abstract class Benchmark {
       if (config.hasDigest(size,file)) {
         String refDigest = config.getDigest(size,file);
         String digest;
-        if (file.equals("$stdout")) {
-          digest = lastOutDigest;
-        } else if (file.equals("$stderr")) {
-          digest = lastErrDigest;
-        } else {
-          try {
-            digest = Digest.toString(FileDigest.get(fileInScratch(file)));
-          } catch (FileNotFoundException e) {
-            digest = "<File not found>";
-          } catch (IOException e) {
-            digest = "<IO exception>";
-            e.printStackTrace();
-          }
+
+        try {
+          digest = Digest.toString(FileDigest.get(fileInScratch(file),
+              config.isTextFile(size, file),
+              config.filterScratch(size, file),
+              scratch));
+        } catch (FileNotFoundException e) {
+          digest = "<File not found>";
+        } catch (IOException e) {
+          digest = "<IO exception>";
+          e.printStackTrace();
         }
         if (validationReport) {
           valRepFile.println("  \""+file+"\" digest 0x"+digest+",");
@@ -286,29 +270,25 @@ public abstract class Benchmark {
        * Validate by line count
        */
       if (config.hasLines(size,file)) {
-        if (file.equals("$stdout") || file.equals("$stderr"))
-          System.err.println("Line count not supported for error/output streams");
-        else {
-          int refLines = config.getLines(size,file);
-          int lines;
-          try {
-            lines = lineCount(new File(scratch,file));
-          } catch (FileNotFoundException e) {
-            System.err.println("File not found, "+file);
-            lines = -1;
-          } catch (IOException e) {
-            e.printStackTrace();
-            lines = -1;
-          }
-          if (validationReport) {
-            valRepFile.println("  \""+file+"\" lines "+lines+",");
-          }
-          if (lines != refLines) {
-            valid = false;
-            System.err.println("Line count validation failed for "+file+", expecting "+refLines+" found "+lines);
-          } else if (verbose) { 
-            System.out.println("Line count validation succeeded for "+file);
-          }
+        int refLines = config.getLines(size,file);
+        int lines;
+        try {
+          lines = lineCount(new File(scratch,file));
+        } catch (FileNotFoundException e) {
+          System.err.println("File not found, "+file);
+          lines = -1;
+        } catch (IOException e) {
+          e.printStackTrace();
+          lines = -1;
+        }
+        if (validationReport) {
+          valRepFile.println("  \""+file+"\" lines "+lines+",");
+        }
+        if (lines != refLines) {
+          valid = false;
+          System.err.println("Line count validation failed for "+file+", expecting "+refLines+" found "+lines);
+        } else if (verbose) { 
+          System.out.println("Line count validation succeeded for "+file);
         }
       }
       
@@ -316,29 +296,25 @@ public abstract class Benchmark {
        * Validate by byte count
        */
       if (config.hasBytes(size,file)) {
-        if (file.equals("$stdout") || file.equals("$stderr"))
-          System.err.println("Byte count not supported for error/output streams");
-        else {
-          long refBytes = config.getBytes(size,file);
-          long bytes;
-          try {
-            bytes = byteCount(new File(scratch,file));
-          } catch (FileNotFoundException e) {
-            System.err.println("File not found, "+file);
-            bytes = -1;
-          } catch (IOException e) {
-            e.printStackTrace();
-            bytes = -1;
-          }
-          if (validationReport) {
-            valRepFile.println("  \""+file+"\" bytes "+bytes+",");
-          }
-          if (bytes != refBytes) {
-            valid = false;
-            System.err.println("Byte count validation failed for "+file+", expecting "+refBytes+" found "+bytes);
-          } else if (verbose) { 
-            System.out.println("Byte count validation succeeded for "+file);
-          }
+        long refBytes = config.getBytes(size,file);
+        long bytes;
+        try {
+          bytes = byteCount(new File(scratch,file));
+        } catch (FileNotFoundException e) {
+          System.err.println("File not found, "+file);
+          bytes = -1;
+        } catch (IOException e) {
+          e.printStackTrace();
+          bytes = -1;
+        }
+        if (validationReport) {
+          valRepFile.println("  \""+file+"\" bytes "+bytes+",");
+        }
+        if (bytes != refBytes) {
+          valid = false;
+          System.err.println("Byte count validation failed for "+file+", expecting "+refBytes+" found "+bytes);
+        } else if (verbose) { 
+          System.out.println("Byte count validation succeeded for "+file);
         }
       }
       
@@ -346,15 +322,11 @@ public abstract class Benchmark {
        * Check for existence
        */
       if (config.checkExists(size, file)) {
-        if (file.equals("$stdout") || file.equals("$stderr"))
-          System.err.println("$stdout and $stderr always exist");
-        else {
-          if (!new File(scratch,file).exists()) {
-            System.err.println("Expected file "+file+" does not exist");
-            valid = false;
-          } else if (verbose) { 
-            System.out.println("Existence validation succeeded for "+file);
-          }
+        if (!new File(scratch,file).exists()) {
+          System.err.println("Expected file "+file+" does not exist");
+          valid = false;
+        } else if (verbose) { 
+          System.out.println("Existence validation succeeded for "+file);
         }
       }
     }
@@ -635,5 +607,4 @@ public abstract class Benchmark {
   protected int getIteration() {
     return iteration;
   }
-  
 }

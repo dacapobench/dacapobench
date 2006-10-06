@@ -8,8 +8,8 @@ size small args "-driver","org.hsqldb.jdbcDriver",
 		"-tpc", "5",
 		"-tps","4","-v"
   output 
-         "stdout.log" digest 0x76017508de1dd5dfef96fdba5061d264a3ce053b,
-         "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stdout digest 0x76017508de1dd5dfef96fdba5061d264a3ce053b,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:mem:hsqldb",
@@ -18,8 +18,8 @@ size default args "-driver","org.hsqldb.jdbcDriver",
 		  "-tpc","40",
 		  "-tps","64"
   output 
-         "stdout.log" digest 0x68f2be9306913c92688b6b34f8454b6311de9310,
-         "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stdout digest 0x68f2be9306913c92688b6b34f8454b6311de9310,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:mem:hsqldb",
@@ -28,8 +28,8 @@ size large args "-driver","org.hsqldb.jdbcDriver",
 		"-tpc","50",
 		"-tps","128"
   output 
-         "stdout.log" digest 0xd9e4aa9493ef4da225e4636964416bfab23d204a,
-         "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stdout digest 0xd9e4aa9493ef4da225e4636964416bfab23d204a,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
 description

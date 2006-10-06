@@ -2,8 +2,8 @@ benchmark chart class dacapo.chart.ChartHarness;
 
 size small   args "-p","compress","small","chart/compress.dat"
   output  
-    "stdout.log" digest 0x28d213f4ce7b72388ff3f87463617edc1832e5f3,
-    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    stdout digest 0x28d213f4ce7b72388ff3f87463617edc1832e5f3,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
     "compress-dst-mut-prf-time.pdf" exists,
     "compress-heap-comp-b.pdf" exists,
     "compress-heap-comp-a.pdf" exists,
@@ -16,8 +16,8 @@ size small   args "-p","compress","small","chart/compress.dat"
      
 size default args "-p","javac","small","chart/javac.dat"
   output  
-    "stdout.log" digest 0xb13dc34c376563cb0ba0f9ef5989e9b128f5fbae,
-    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    stdout digest 0xb13dc34c376563cb0ba0f9ef5989e9b128f5fbae,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
     "javac-dst-mut-prf-time.pdf" exists,
     "javac-heap-comp-b.pdf" exists,
     "javac-heap-comp-a.pdf" exists,
@@ -30,8 +30,8 @@ size default args "-p","javac","small","chart/javac.dat"
 	  
 size large   args "-p","javac","large","chart/javac.dat"
   output  
-    "stdout.log" digest 0xb7c9877f1d71f2bc3739ad6a89230a6c19299ce1,
-    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    stdout digest 0xb7c9877f1d71f2bc3739ad6a89230a6c19299ce1,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
     "javac-tgt-mut-prf-hist-sm.pdf" exists,
     "javac-src-mut-prf-hist-sm.pdf" exists,
     "javac-dst-mut-prf-hist-sm.pdf" exists,

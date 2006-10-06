@@ -18,11 +18,19 @@ import java.io.UnsupportedEncodingException;
  *
  */
 public class TeePrintStream extends PrintStream {
-
+  
   /**
-   * @param arg0
+   * @param dest
    */
-  public TeePrintStream(OutputStream arg0, File logFile) {
-    super(arg0);
+  public TeePrintStream(OutputStream dest, File logFile) {
+    super(new TeeOutputStream(dest,logFile));
+  }
+  
+  /**
+   * Start a new log file, creating an archived version of the current one.
+   *
+   */
+  public void version() {
+    ((TeeOutputStream)out).version();
   }
 }

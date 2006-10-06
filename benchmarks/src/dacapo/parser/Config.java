@@ -22,8 +22,8 @@ import java.util.Vector;
  * file.
  * 
  * @author Robin Garner
- * @date $Date: 2006-10-06 12:19:08 +1000 (Fri, 06 Oct 2006) $
- * @id $Id: Config.java 138 2006-10-06 02:19:08Z rgarner $
+ * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
+ * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
  *
  */
 public class Config {
@@ -33,8 +33,8 @@ public class Config {
    * specified by a benchmark.
    * 
    * @author Robin Garner
-   * @date $Date: 2006-10-06 12:19:08 +1000 (Fri, 06 Oct 2006) $
-   * @id $Id: Config.java 138 2006-10-06 02:19:08Z rgarner $
+   * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
+   * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
    *
    */
   class OutputFile {
@@ -44,6 +44,10 @@ public class Config {
     boolean existence = false;     // Check file exists
     int lines = -1;                // Check for #lines
     long bytes = -1;               // Check for #bytes
+    
+    /* Options that apply to digest processing */
+    boolean text = false;          // Read as a text file - canonical CR/LF processing
+    boolean filter = false;        // Filter scratch directory name
     
     OutputFile(String name) {
       this.name = name;
@@ -58,8 +62,8 @@ public class Config {
    * a benchmark.
    * 
    * @author Robin Garner
-   * @date $Date: 2006-10-06 12:19:08 +1000 (Fri, 06 Oct 2006) $
-   * @id $Id: Config.java 138 2006-10-06 02:19:08Z rgarner $
+   * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
+   * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
    *
    */
   class Size {
@@ -115,6 +119,12 @@ public class Config {
   
   void addOutputFile(String size, String file) {
     getSize(size).addOutputFile(file);
+    
+    /* Set defaults for certain files */
+    if (file.equals("stdout.log") || file.equals("stderr.log")) {
+      setTextFile(size,file,true);
+      setFilterScratch(size,file,true);
+    }
   }
   
   void setDigest(String size, String file, String digest) {
@@ -136,6 +146,24 @@ public class Config {
   void setExists(String size, String file) {
     getSize(size).getOutputFile(file).existence = true;
   }
+  
+  /**
+   * Is this a text file (affects how it is read)
+   * 
+   * @param size benchmark size
+   * @param file output file
+   * @param isText Is this a text file ?
+   */
+  public void setTextFile(String size, String file, boolean isText) {
+    Size s = getSize(size);
+    s.getOutputFile(file).text = isText;
+  }
+  
+  public void setFilterScratch(String size, String file, boolean doFilter) {
+    Size s = getSize(size);
+    s.getOutputFile(file).filter = doFilter;
+  }
+  
   
   /**
    * Parse a config file
@@ -178,27 +206,69 @@ public class Config {
   /*
    * Getter methods
    */
+  
+  /**
+   * Benchmark arguments for a given run size
+   */
   public String[] getArgs(String config) {
     Size s = getSize(config);
     return (String[])s.args.clone();
   }
   
+  /**
+   * Get the collection of sizes this benchmark accepts
+   * 
+   * @return A collection of strings
+   */
   public Collection getSizes() {
     return sizes.keySet();
   }
   
+  /**
+   * Get the set of output files for a benchmark size
+   * 
+   * @param size
+   * @return Set\<String\> of file names
+   */
   public Set getOutputs(String size) {
     return getSize(size).outputFiles.keySet();
   }
   
+  /**
+   * Get the expected digest for a given size/file pair
+   * @param size benchmark size
+   * @param file output file
+   */
   public String getDigest(String size, String file) {
     Size s = getSize(size);
     return s.getOutputFile(file).digest;
   }
   
+  /**
+   * Does the given size/file pair have an expected file digest ?
+   * @param size benchmark size
+   * @param file output file
+   */
   public boolean hasDigest(String size, String file) {
     Size s = getSize(size);
     return s.getOutputFile(file).hasDigest();
+  }
+  
+  /**
+   * Is this a text file (affects how it is read)
+   * 
+   * @param size benchmark size
+   * @param file output file
+   * @return Is this a text file ?
+   */
+  public boolean isTextFile(String size, String file) {
+    Size s = getSize(size);
+    return s.getOutputFile(file).text;
+  }
+  
+  public boolean filterScratch(String size, String file) {
+    Size s = getSize(size);
+    return s.getOutputFile(file).filter;
   }
   
   public long getBytes(String size, String file) {
@@ -237,6 +307,9 @@ public class Config {
     return in;
   }
   
+  /*
+   * Manage the description fields
+   */
   public void describe(PrintStream str) { describe(str,false); }
   
   private void describe(PrintStream str, boolean decorated,String desc,String trail) {
@@ -295,7 +368,9 @@ public class Config {
   }
 
   /**
-   * @param args
+   * Main - for testing purposes.  Parse a config file and print its contents.
+   * 
+   * @param args Input file(s)
    */
   public static void main(String[] args) {
     // TODO Auto-generated method stub
