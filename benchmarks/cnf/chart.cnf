@@ -1,13 +1,46 @@
 benchmark chart class dacapo.chart.ChartHarness;
 
 size small   args "-p","compress","small","chart/compress.dat"
-  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output  
+    "stdout.log" digest 0x28d213f4ce7b72388ff3f87463617edc1832e5f3,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    "compress-dst-mut-prf-time.pdf" exists,
+    "compress-heap-comp-b.pdf" exists,
+    "compress-heap-comp-a.pdf" exists,
+    "compress-tgt-ptr-inf-time.pdf" exists,
+    "compress-src-ptr-inf-time.pdf" exists,
+    "compress-dst-ptr-inf-time.pdf" exists,
+    "compress-tgt-mut-inf-time.pdf" exists,
+    "compress-src-mut-inf-time.pdf" exists,
+    "compress-dst-mut-inf-time.pdf" exists;
      
 size default args "-p","javac","small","chart/javac.dat"
-  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output  
+    "stdout.log" digest 0xb13dc34c376563cb0ba0f9ef5989e9b128f5fbae,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    "javac-dst-mut-prf-time.pdf" exists,
+    "javac-heap-comp-b.pdf" exists,
+    "javac-heap-comp-a.pdf" exists,
+    "javac-tgt-ptr-inf-time.pdf" exists,
+    "javac-src-ptr-inf-time.pdf" exists,
+    "javac-dst-ptr-inf-time.pdf" exists,
+    "javac-tgt-mut-inf-time.pdf" exists,
+    "javac-src-mut-inf-time.pdf" exists,
+    "javac-dst-mut-inf-time.pdf" exists;
 	  
 size large   args "-p","javac","large","chart/javac.dat"
-  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output  
+    "stdout.log" digest 0xb7c9877f1d71f2bc3739ad6a89230a6c19299ce1,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    "javac-tgt-mut-prf-hist-sm.pdf" exists,
+    "javac-src-mut-prf-hist-sm.pdf" exists,
+    "javac-dst-mut-prf-hist-sm.pdf" exists,
+    "javac-tgt-ptr-inf-hist-sm.pdf" exists,
+    "javac-src-ptr-inf-hist-sm.pdf" exists,
+    "javac-dst-ptr-inf-hist-sm.pdf" exists,
+    "javac-tgt-mut-inf-hist-sm.pdf" exists,
+    "javac-src-mut-inf-hist-sm.pdf" exists,
+    "javac-dst-mut-inf-hist-sm.pdf" exists;
 
 description
   short		"A graph plotting toolkit and pdf renderer",

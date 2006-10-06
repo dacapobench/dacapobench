@@ -9,6 +9,7 @@ import dacapo.parser.Config;
 
 public class EclipseHarness extends Benchmark {
   
+  protected static final String ECLIPSE_SOURCE_ZIP = "eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip";
   static final String wsDirectory = "workspace";
   static String oldJavaHome = null;
   
@@ -19,15 +20,18 @@ public class EclipseHarness extends Benchmark {
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
     File wsdir = new File(scratch, wsDirectory);
+    if (wsdir.exists())
+      deleteTree(new File(scratch,wsDirectory));
     wsdir.mkdir();
-    unpackZipFile(fileInScratch("eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip"),wsdir);
+    unpackZipFile(fileInScratch(ECLIPSE_SOURCE_ZIP),wsdir);
+    if (!EclipseStarter.isRunning()) {
+      startup(size);
+    }
+    setJavaHomeIfRequired();
   }
   
   public void iterate(String size) throws Exception {
     try {
-      if (!EclipseStarter.isRunning())
-        startup(size);
-      setJavaHomeIfRequired();
       EclipseStarter.run(null);
     } catch (Exception e) {
       e.printStackTrace();
@@ -58,6 +62,7 @@ public class EclipseHarness extends Benchmark {
       System.setProperty("osgi.noShutdown", "true");
       System.setProperty("osgi.framework","file:"+fileInScratch("eclipse/plugins/org.eclipse.osgi_3.1.2.jar"));
       setJavaHomeIfRequired();
+      
       String[] pluginArgs = config.getArgs(size);
       String[] args = new String[4 + pluginArgs.length];
       args[0] = "-data";
@@ -67,7 +72,7 @@ public class EclipseHarness extends Benchmark {
       for (int i = 0; i < pluginArgs.length; i++)
         args[4+i] = pluginArgs[i];
       EclipseStarter.startup(args, null);
-      } catch (Exception e) {
+    } catch (Exception e) {
         e.printStackTrace();
     }
   }

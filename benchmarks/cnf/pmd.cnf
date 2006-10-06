@@ -2,8 +2,9 @@ benchmark pmd
   class dacapo.pmd.PmdHarness;
 
 size xsmall args "@pmd/small.lst","xml","pmd/rulesets/imports.xml","-debug"
-  output "$stdout" digest 0x26782a5bd65d608879642daea8d783bdec332bbc,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output 
+    "stdout.log" digest 0xeed330117ac3825c8747c2c648381fefabc82b89,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size small args "@pmd/small.lst","text",
         "pmd/rulesets/basic.xml",
@@ -24,8 +25,9 @@ size small args "@pmd/small.lst","text",
 		"pmd/rulesets/strictexception.xml",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
-  output "$stdout" digest 0x3159c27aee56168354c0ebcfd075e2dd7dc3a73d,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output 
+    "stdout.log" digest 0xeed330117ac3825c8747c2c648381fefabc82b89,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size default args "@pmd/default.lst","text",
         "pmd/rulesets/basic.xml",
@@ -46,8 +48,9 @@ size default args "@pmd/default.lst","text",
 		"pmd/rulesets/strictexception.xml",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
-  output "$stdout" digest 0x3159c27aee56168354c0ebcfd075e2dd7dc3a73d,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output
+    "stdout.log" digest 0x15443d38fce80cd97026c5ca650fe3dae0a30e01,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size large args "@pmd/large.lst","text",
         "pmd/rulesets/basic.xml",
@@ -68,8 +71,9 @@ size large args "@pmd/large.lst","text",
 		"pmd/rulesets/strictexception.xml",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
-  output "$stdout" digest 0xead7165f1d69f2e3e5d80417055c1514f8d74477,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output 
+    "stdout.log" digest 0xfb000ef34052f879946f886b125e378e96c108c1,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"A source code analyzer for Java",

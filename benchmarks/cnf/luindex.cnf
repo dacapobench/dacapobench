@@ -2,20 +2,20 @@ benchmark luindex
   class dacapo.lucene.LuceneIndex;
 
 size small args "luindex/william/poetry" 
-  output "$stdout"         digest 0x26759a861da4eda83ccc1222c263051ce039b6f4,
-         "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+  output "stdout.log"  digest 0xebb11b9e1c56c6ef5620b890cca24ec773301388,
+         "stderr.log"  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
 	 "index/segments"  bytes 27;
 
 size default args "luindex/william","luindex/kjv"
-  output "$stdout"         digest 0xa122c447887ce10dca220750bba4349ba0401ca2,
-         "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+  output "stdout.log"  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
+         "stderr.log"      digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
 	 "index/segments"  bytes 29;
 
 size large args "luindex/william","luindex/kjv"
-  output "$stdout"         digest 0xa122c447887ce10dca220750bba4349ba0401ca2,
-         "$stderr"         digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+  output "stdout.log"  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
+         "stderr.log"  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/deletable" digest 0x9069ca78e7450a285173431b3e52c5c25299e473,
 	 "index/segments"  bytes 29;
 

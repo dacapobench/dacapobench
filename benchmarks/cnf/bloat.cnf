@@ -8,26 +8,26 @@ size small args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "
   "-f",
   	      "EDU.purdue.cs.bloat.trans.ValueNumbering",
           "optimizedcode"
-  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
   "-f",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer",
 		  "optimizedcode"
-  output  "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output  "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
   "-f",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.SSAPRE",
 		  "optimizedcode"
-  output "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
   "-f",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.StackPRE", "EDU.purdue.cs.bloat.trans.SSAPRE",
 		  "optimizedcode"
-  output "$stdout" digest 0xb0e53a201d2454102bbed3c3da74afff1b2c918a,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "stdout.log" digest 0xb0e53a201d2454102bbed3c3da74afff1b2c918a,
+         "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"A Bytecode-level optimization and analysis tool for Java",

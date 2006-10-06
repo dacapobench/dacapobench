@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -51,9 +50,14 @@ public abstract class Benchmark {
   private static boolean preserve = false;
   
   /**
-   * Output stream for validating System.out
+   * Output file for writing digests
    */
-  private final DigestPrintStream out;
+  private static PrintWriter valRepFile = null;
+  
+  /**
+   * 
+   */
+  private static boolean validationReport = false;
   
   /**
    * Saved System.out while redirected to the digest stream
@@ -61,11 +65,6 @@ public abstract class Benchmark {
   private static PrintStream savedOut = System.out;
   
 
-  /**
-   * Output stream for validating System.err
-   */
-  private final DigestPrintStream err;
-  
   /**
    * Saved System.err while redirected to the digest stream
    */
@@ -91,6 +90,21 @@ public abstract class Benchmark {
   private String lastOutDigest, lastErrDigest;
   
   /**
+   * Output stream for validating System.err
+   */
+  private final DigestPrintStream err;
+  
+  /**
+   * Output stream for validating System.out
+   */
+  private final DigestPrintStream out;
+  
+  /**
+   * Keep track of the number of times we have been iterated.
+   */
+  private int iteration = 0;
+  
+  /**
    * Run a benchmark.  This is final because individual
    * benchmarks should not interfere with the flow of control.
    * 
@@ -101,6 +115,7 @@ public abstract class Benchmark {
    * @throws Exception Whatever exception the target application dies with
    */
   public final boolean run(Callback callback, String size, boolean timing) throws Exception {
+    iteration++;
     preIteration(size);
     if (timing)
       callback.start(config.name);
@@ -134,14 +149,14 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
     this.config = config;
-    out = new DigestPrintStream(System.out,scratch);
-    err = new DigestPrintStream(System.err,scratch);
+    out = DigestPrintStream.create(System.out,scratch,"stdout.log");
+    err = DigestPrintStream.create(System.err,scratch,"stderr.log");
     prepare();
   }
   
   /**
    * Perform pre-benchmark preparation.  By default it unpacks the zip file
-   * data/<code>name</code>.zip into the scratch directory.
+   * <code>data/<i>name</i>.zip</code> into the scratch directory.
    */
   protected void prepare() throws Exception {
     unpackZipFileResource("data/"+config.name+".zip", scratch);
@@ -149,6 +164,9 @@ public abstract class Benchmark {
   
   /**
    * Benchmark-specific per-iteration setup, outside the timing loop.
+   * 
+   * Needs to take care of any *required* cleanup when the -preserve
+   * flag us used.
    * 
    * @param size Size as specified by the "-s" command line flag
    */
@@ -160,6 +178,13 @@ public abstract class Benchmark {
         System.out.print(args[i]+" ");
       System.out.println();
     }
+    
+    /* 
+     * Allow those benchmarks that can't tolerate overwriting prior output
+     * to run in the face of the '-preserve' flag.
+     */
+    if (preserve && iteration > 1)
+      postIterationCleanup(size);
   }
   
   /**
@@ -173,6 +198,10 @@ public abstract class Benchmark {
       System.setErr(err);
       out.reset();
       err.reset();
+      if (iteration > 1) {
+        out.version();
+        err.version();
+      }
     }
   }
   
@@ -213,6 +242,9 @@ public abstract class Benchmark {
    * @return true if the output was correct
    */
   public boolean validate(String size) {
+    if (validationReport) {
+      valRepFile.println("Validating "+config.name+" "+size);
+    }
     boolean valid = true;
     for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
       String file = (String)v.next();
@@ -236,6 +268,9 @@ public abstract class Benchmark {
             digest = "<IO exception>";
             e.printStackTrace();
           }
+        }
+        if (validationReport) {
+          valRepFile.println("  \""+file+"\" digest 0x"+digest+",");
         }
         if (!digestOutput && (file.equals("$stdout") || file.equals("$stderr")) ) {
           // Not collecting digests for stdout and stderr, so can't check them
@@ -265,6 +300,9 @@ public abstract class Benchmark {
             e.printStackTrace();
             lines = -1;
           }
+          if (validationReport) {
+            valRepFile.println("  \""+file+"\" lines "+lines+",");
+          }
           if (lines != refLines) {
             valid = false;
             System.err.println("Line count validation failed for "+file+", expecting "+refLines+" found "+lines);
@@ -292,6 +330,9 @@ public abstract class Benchmark {
             e.printStackTrace();
             bytes = -1;
           }
+          if (validationReport) {
+            valRepFile.println("  \""+file+"\" bytes "+bytes+",");
+          }
           if (bytes != refBytes) {
             valid = false;
             System.err.println("Byte count validation failed for "+file+", expecting "+refBytes+" found "+bytes);
@@ -300,6 +341,25 @@ public abstract class Benchmark {
           }
         }
       }
+      
+      /*
+       * Check for existence
+       */
+      if (config.checkExists(size, file)) {
+        if (file.equals("$stdout") || file.equals("$stderr"))
+          System.err.println("$stdout and $stderr always exist");
+        else {
+          if (!new File(scratch,file).exists()) {
+            System.err.println("Expected file "+file+" does not exist");
+            valid = false;
+          } else if (verbose) { 
+            System.out.println("Existence validation succeeded for "+file);
+          }
+        }
+      }
+    }
+    if (validationReport) {
+      valRepFile.flush();
     }
     return valid;
   }
@@ -312,13 +372,22 @@ public abstract class Benchmark {
    */
   public void postIteration(String size) throws Exception {
     if (!preserve) {
-      for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
-        String file = (String)v.next();
-        if (file.equals("$stdout") || file.equals("$stderr")) {
-        } else {
-          if (!config.isKept(size,file))
-            deleteFile(new File(scratch,file));
-        }
+      postIterationCleanup(size);
+    }
+  }
+
+  /**
+   * Perform post-iteration cleanup.
+   * 
+   * @param size
+   */
+  protected void postIterationCleanup(String size) {
+    for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
+      String file = (String)v.next();
+      if (file.equals("$stdout") || file.equals("$stderr")) {
+      } else {
+        if (!config.isKept(size,file))
+          deleteFile(new File(scratch,file));
       }
     }
   }
@@ -534,6 +603,16 @@ public abstract class Benchmark {
     return verbose;
   }
 
+  public static void enableValidationReport(String filename) {
+    try {
+      validationReport = true;
+      // Append to an output file
+      valRepFile = new PrintWriter(new BufferedWriter(new FileWriter(filename,true)));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public static void setDigestOutput(boolean digestOutput) {
     Benchmark.digestOutput = digestOutput;
   }
@@ -548,6 +627,13 @@ public abstract class Benchmark {
 
   public static boolean isPreserve() {
     return preserve;
+  }
+
+  /**
+   * @return the iteration
+   */
+  protected int getIteration() {
+    return iteration;
   }
   
 }

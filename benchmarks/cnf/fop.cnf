@@ -3,19 +3,19 @@ benchmark fop
 
 /*
  * 'small' uses debug mode ("-d"), which puts current stats in the output,
- * so we don't use "$stdout" to validate small.
+ * so we don't use "stdout.log" to validate small.
  */
 size small args "-q", "fop/readme.fo", "-pdf", "readme.pdf"
-  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "stdout.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-q", "fop/test.fo", "-ps", "test.ps"
-  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "stdout.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-q", "fop/test.fo", "-ps", "test.ps"
-  output "$stdout" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output "stdout.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"An output-independant print formatter",

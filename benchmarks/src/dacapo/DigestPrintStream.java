@@ -24,7 +24,8 @@ import java.security.DigestOutputStream;
  */
 public class DigestPrintStream extends PrintStream {
   
-  private DigestOutputStream stream;
+  private final TeeOutputStream teeStream;
+  private final DigestOutputStream digestStream;
   
   /**
    * The real constructor.
@@ -32,40 +33,59 @@ public class DigestPrintStream extends PrintStream {
    * Note the order the two SubstitutingOutputStreams are wrapped in - 
    * it is important to substitute the absolute path before the relative path.
    */
-  private DigestPrintStream(DigestOutputStream out, File scratch) {
+  private DigestPrintStream(
+      DigestOutputStream digestStream, 
+      TeeOutputStream teeStream, 
+      File scratch, 
+      String logFile) {
     super(new SubstitutingOutputStream(
         new SubstitutingOutputStream(
-            out,scratch.getPath(),"$SCRATCH"),
+            teeStream,
+            scratch.getPath(),"$SCRATCH"),
           scratch.getAbsolutePath(),"$SCRATCH"));
-    stream = out;
+    this.teeStream = teeStream;
+    this.digestStream = digestStream;
   }
-  
+
   /**
    * @param out
    */
-  public DigestPrintStream(OutputStream out, File scratch) {
-    this(new DigestOutputStream(out,Digest.create()),scratch);
+  public static DigestPrintStream create(OutputStream out, File scratch, String logFile) {
+    DigestOutputStream digestStream = new DigestOutputStream(out,Digest.create());
+    TeeOutputStream teeStream = new TeeOutputStream(digestStream,new File(scratch,logFile));
+    return new DigestPrintStream(digestStream,teeStream,scratch,logFile);
   }
 
   /**
    * Reset the message digest
    */
   public void reset() {
-    stream.getMessageDigest().reset();
+    digestStream.getMessageDigest().reset();
   }
   
+  /**
+   * Read and reset the message digest
+   * @return
+   */
   public byte[] digest() {
-    return stream.getMessageDigest().digest();
+    return digestStream.getMessageDigest().digest();
+  }
+  
+  /**
+   * Start a new log file, archiving the existing one.
+   */
+  public void version() {
+    teeStream.version();
   }
 
   /* (non-Javadoc)
    * @see java.io.PrintStream#println()
    */
   public void println() {
-    stream.on(false);
+    digestStream.on(false);
     super.println();
-    stream.on(true);
-    stream.getMessageDigest().update((byte)'\n');
+    digestStream.on(true);
+    digestStream.getMessageDigest().update((byte)'\n');
   }
 
   /* (non-Javadoc)

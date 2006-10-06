@@ -89,6 +89,7 @@ TOKEN :
 | < COPYRIGHT : "copyright" >
 | < DESCRIPTION : "description" >
 | < DIGEST : "digest" >
+| < EXISTS : "exists" >
 | < KEEP : "keep" >
 | < LICENSE : "license" >
 | < LINES : "lines" >
@@ -174,6 +175,7 @@ void outputClause(Config config, String size, String file) :
 { String digest; int n; long l; }
 {
 	  <DIGEST> digest=hex() { config.setDigest(size,file,digest); }
+	| <EXISTS>              { config.setExists(size,file); }
 	| <KEEP>                { config.setKeep(size,file); }
 	| <LINES> n=integer()   { config.setLines(size,file,n); }
 	| <BYTES> l=longInt()   { config.setBytes(size,file,l); }

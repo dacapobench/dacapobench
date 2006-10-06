@@ -3,12 +3,12 @@ benchmark antlr
 
 size small args "-o","./scratch","-grammars","antlr/java.g"
  output
-   "$stdout" digest 0x2eba08719c117842720ac9926864551a20864e5e,
-   "$stderr" digest 0x9f38f22c6d9e69348614705626e6ba8729131efe,
+   "stdout.log" digest 0x1fdda3f0af68c67c53cd5cdd18c94f1978499b3e,
+   "stderr.log" digest 0xdad1e41f6321fe17f7fcb73a790bedd69a777d41,
    "JavaLexer.java",
    "JavaRecognizer.java",
-   "JavaTokenTypes.java" digest 0x8ca5f9d96ca260452900be9361ac36e718964e30,
-   "JavaTokenTypes.txt" digest 0x30fe998f1d32261691c5b808eed005fffcaf2647;
+   "JavaTokenTypes.java" digest 0x531c7a3bdc41185f7db175cfe216d13b8a9bae0a,
+   "JavaTokenTypes.txt" digest 0x9645d441047a61dfc4c0ab6e4fa66f74d66cac17;
 
 size default args "-o","./scratch",
                   "-iterations","2",
@@ -45,8 +45,8 @@ size default args "-o","./scratch",
 		     "antlr/java/track.g", "antlr/java/treewalk.g", 
 		     "antlr/java/unicode.g","antlr/java/xml.g"
   output
-    "$stdout" digest 0xf0f217287a4cf95fb4632e6ae5ad7475c81b03fd,
-    "$stderr" digest 0x35efc1b436f995048b94e94711fe731514197890;
+    "stdout.log" digest 0x48a0c230c35d8db2d0f6affdc11d4061840eb6f6,
+    "stderr.log" digest 0xcc12d5cffbfe9a84c9c00f2c220e121d347eca9f;
 
 size large args "-o","./scratch",
                 "-iterations","5",
@@ -83,8 +83,8 @@ size large args "-o","./scratch",
 		   "antlr/java/treewalk.g", "antlr/java/unicode.g",
 		   "antlr/java/xml.g"
   output
-    "$stdout" digest 0x55de59eb90537dcc75f403574ca04747ad15aa74,
-    "$stderr" digest 0x777944ce8df4cf71c1ae52196725174f88c170cf;
+    "stdout.log" digest 0x707aadb2210e1c05cfdd4ccfef030bcfa9133053,
+    "stderr.log" digest 0xfcefb2d1c1686f37ea24a3560ab8373f2e5b239e;
 
 description
   short		"A parser generator and translator generator",

@@ -49,8 +49,8 @@ public class LuceneIndex extends Benchmark {
     }
   }
   
-  public void postIteration(String size) {
-    if (!isPreserve()) {
+  public void preIteration(String size) {
+    if (isPreserve() && getIteration() > 1) {
       deleteTree(new File(scratch,"index"));
     }
   }
@@ -86,6 +86,12 @@ public class LuceneIndex extends Benchmark {
     writer.close();
   }
 
+  public void postIteration(String size) {
+    if (!isPreserve()) {
+      deleteTree(new File(scratch,"index"));
+    }
+  }
+  
   /**
    * Index either a file or a directory tree.
    * 

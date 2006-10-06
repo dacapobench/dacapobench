@@ -2,16 +2,19 @@ benchmark xalan
   class dacapo.xalan.XalanHarness;
 
 size small args "10"
-  output 	"$stdout" digest 0x4680abf7dcfc06df0c1600b55594bccf5f131349 ,
-  		"$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709 ;
+  output
+    "stdout.log" digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "100"
-  output 	"$stdout" digest 0x4680abf7dcfc06df0c1600b55594bccf5f131349 ,
-  		"$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709 ;
+  output
+    "stdout.log" digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "1000"
-  output 	"$stdout" digest 0x4680abf7dcfc06df0c1600b55594bccf5f131349 ,
-  		"$stderr" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709 ;
+  output
+    "stdout.log" digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
+    "stderr.log" digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"An XSLT processor for transforming XML documents",

@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) Dept of Computer Science, ANU
+ */
 package dacapo.parser;
 
 import java.io.File;
@@ -14,14 +17,33 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Vector;
 
+/**
+ * Container class for all options specified in a benchmark's configuration
+ * file.
+ * 
+ * @author Robin Garner
+ * @date $Date: 2006-10-06 12:19:08 +1000 (Fri, 06 Oct 2006) $
+ * @id $Id: Config.java 138 2006-10-06 02:19:08Z rgarner $
+ *
+ */
 public class Config {
 
+  /**
+   * Inner class that keeps details of one of the output files 
+   * specified by a benchmark.
+   * 
+   * @author Robin Garner
+   * @date $Date: 2006-10-06 12:19:08 +1000 (Fri, 06 Oct 2006) $
+   * @id $Id: Config.java 138 2006-10-06 02:19:08Z rgarner $
+   *
+   */
   class OutputFile {
-    String name;
-    String digest = null;
-    boolean keep = false;
-    int lines = -1;
-    long bytes = -1;
+    String name;                   // Output file name
+    String digest = null;          // SHA1-digest - check if non-null
+    boolean keep = false;          // keep this file
+    boolean existence = false;     // Check file exists
+    int lines = -1;                // Check for #lines
+    long bytes = -1;               // Check for #bytes
     
     OutputFile(String name) {
       this.name = name;
@@ -31,6 +53,15 @@ public class Config {
     boolean hasBytes() { return bytes != -1; }
   }
   
+  /**
+   * Inner class to encapsulate specifications for a given sized run of
+   * a benchmark.
+   * 
+   * @author Robin Garner
+   * @date $Date: 2006-10-06 12:19:08 +1000 (Fri, 06 Oct 2006) $
+   * @id $Id: Config.java 138 2006-10-06 02:19:08Z rgarner $
+   *
+   */
   class Size {
     final String name;
     final String[] args;
@@ -100,6 +131,10 @@ public class Config {
   
   void setKeep(String size, String file) {
     getSize(size).getOutputFile(file).keep = true;
+  }
+  
+  void setExists(String size, String file) {
+    getSize(size).getOutputFile(file).existence = true;
   }
   
   /**
@@ -189,6 +224,11 @@ public class Config {
   public boolean isKept(String size, String file) {
     Size s = getSize(size);
     return s.getOutputFile(file).keep;
+  }
+  
+  public boolean checkExists(String size, String file) {
+    Size s = getSize(size);
+    return s.getOutputFile(file).existence;
   }
   
   private String pad(String in, int length) {
