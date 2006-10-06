@@ -69,15 +69,14 @@ public class EclipseTests {
     }
   }
   
-  protected static void runtests(String[] argArray) {
+  protected static void runtests(String[] args) {
     boolean all = true;
     boolean build = false, hierarchy = false, ast = false, complete = false, search = false;
     int level = 0;
-    String[] args = (String[]) argArray;
     for (int i = 0; i < args.length; i++) {
-      if (args[i].equals("-level") && i < args.length - 1)
+      if (args[i].equals("-level") && i < args.length - 1) {
         level = Integer.parseInt(args[i+1]);
-      else if (args[i].equals("-build")) {
+      } else if (args[i].equals("-build")) {
         build = true; all = false;
       } else if (args[i].equals("-hierarchy")) {
         hierarchy = true; all = false;
@@ -87,8 +86,9 @@ public class EclipseTests {
         complete = true; all = false;
       } else if (args[i].equals("-search")) {
         search = true; all = false;
-      }
+      } 
     }
+    initialize();
     System.out.println("<running tests at level "+level+"...>");
     try {
       if (build || all) { // Build tests
@@ -162,12 +162,14 @@ public class EclipseTests {
         File targetWorkspaceDir = new File(targetWorkspacePath);
         String[] projectNames = targetWorkspaceDir.list();
         for (int i = 0, length = projectNames.length; i < length; i++) {
-          System.out.print(".");
           String projectName = projectNames[i];
-          if (".metadata".equals(projectName)) continue;
-          IProject project = workspaceRoot.getProject(projectName);
-          project.create(monitor);
-          project.open(monitor);
+          if (!".metadata".equals(projectName)) {
+            System.out.print(".");
+            //System.out.println(projectName);
+            IProject project = workspaceRoot.getProject(projectName);
+            project.create(monitor);
+            project.open(monitor);
+	  }
         }
         System.out.println(">");
       }

@@ -18,7 +18,6 @@ public class HarnessRunner implements IPlatformRunnable {
   public Object run(Object args) throws Exception {
     if (validJavaHome()) {
       try {
-        EclipseTests.initialize();
         EclipseTests.runtests((String[]) args);
       } catch (Exception e) {
         e.printStackTrace();
