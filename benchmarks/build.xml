@@ -23,8 +23,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-07 12:33:13 +1000 (Sat, 07 Oct 2006) $
- *   $Id: build.xml 152 2006-10-07 02:33:13Z steveb-oss $
+ *   $Date: 2006-10-07 12:51:15 +1000 (Sat, 07 Oct 2006) $
+ *   $Id: build.xml 153 2006-10-07 02:51:15Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -63,7 +63,7 @@
          ================================= -->
 	<target name="sources" 
     description="Download sources from their original locations"
-    depends="init.sources,data.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,ps.source,xalan.source,xerces.source">
+    depends="init.sources,data.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
 	</target>
     	
 	<!-- ================================= 
@@ -393,8 +393,6 @@
 		<mkdir dir="${sources}"/>
 	</target>
 
-
-
 	<target name="antlr.source" depends="init.sources">
 		<get src="${antlr.url}/antlr-${antlr.version}.tar.gz"
          dest="${sources}/antlr-${antlr.version}.tar.gz"
@@ -409,7 +407,8 @@
 
 	<target name="bloat.source" depends="init.sources">
 		<get src="${bloat.url}/bloat-${bloat.version}-src.tar.gz"
-         dest="${sources}/bloat-${bloat.version}-src.tar.gz"/>
+         dest="${sources}/bloat-${bloat.version}-src.tar.gz"
+	     usetimestamp="true"/>
 	</target>
 
 	<target name="chart.source" depends="init.sources">
@@ -442,7 +441,6 @@
        usetimestamp="true"/>
 	</target>
 
-
 	<target name="jython.source" depends="init.sources, python.source">
 		<get src="${jython.url}/jython_${jython.version}.jar"
      	dest="${sources}/jython_${jython.version}.jar"  
@@ -464,18 +462,13 @@
 	<target name="lucene.source" depends="init.sources">
 		<get dest="${sources}/lucene-${lucene.version}-src.tar.gz"
          src="${lucene.url}/lucene-${lucene.version}-src.tar.gz"
-   usetimestamp="true"/>
+         usetimestamp="true"/>
 	</target>
 
 	<target name="pmd.source" depends="junit.source,init.sources">
 		<get src="${pmd.url}/pmd-src-${pmd.version}.zip"
          dest="${sources}/pmd-src-${pmd.version}.zip"
        usetimestamp="true"/>
-	</target>
-
-	<target name="ps.source" depends="init.sources">
-		<!-- ps was a student assignment - the source here is the definitive one -->
-		<copy file="originals/ps.tgz" todir="${sources}"/>
 	</target>
 
 	<target name="xalan-241.source" depends="init.sources">
