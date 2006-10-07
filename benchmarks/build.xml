@@ -1,16 +1,21 @@
 <!--
- * Ant build file for the dacapo benchmark suite.
+ * Ant build file for the DaCapo benchmark suite.
  *       
  * Public targets are 
- * - dist (default) compiles from source and creates the dacapo jar file. 
- * - jar         compiles from source and creates the dacapo jar file. 
- * - sourcedist  Downloads sources and builds. 
- * - sources     download the sources from the 'net, if they are available.
- * - clean       remove files generated buring the build process
- * - distclean   remove files generated buring the build process, 
- *               including the 'results'
- * - sourceclean Remove all distribution files, and all downloadable
- *               sources.  This prepares an "ip-clean" distribution.
+ * - dist (default) compile from source and create the dacapo jar file. 
+ * - sourcedist     download sources and build 
+ * - sources        download the sources from the 'net, if they are available.
+ * - srczip         create source zip file
+ * - clean          remove files generated buring the build process
+ * - distclean      remove files generated buring the build process, 
+ *                  including the 'results'
+ * - sourceclean    remove all distribution files, and all downloadable
+ *                  sources.  This prepares an "ip-clean" distribution.
+ *
+ * Individual benchmarks can be built into a jar using the benchmark name
+ * (lucene covers both lusearch and luindex), and the jar.quick target,
+ * which will create a jar with no other dependencies.  For example:
+ * - antlr jar.quick  creates a jar which can run the antlr benchmark (only)
  *       
  * External tools required (apart from a JDK and Ant)
  *   - make
@@ -18,13 +23,123 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-09-28 21:11:06 +1000 (Thu, 28 Sep 2006) $
- *   $Id: build.xml 135 2006-09-28 11:11:06Z rgarner $
+ *   $Date: 2006-10-07 12:33:13 +1000 (Sat, 07 Oct 2006) $
+ *   $Id: build.xml 152 2006-10-07 02:33:13Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
 	<description>Dacapo benchmarks</description>
+	
+	<!-- BEGIN USER-MODIFIABLE PROPERTIES -->
+	
+	<!-- external programs -->
+	<property name="make" location="/usr/bin/make"/>
 	<property name="javacchome" location="/usr/share/java"/>
+
+	<!-- tested jres -->
+	<property name="j9" value="/opt/ibm-java2-i386-50"/>
+	<property name="jrockit" value="/opt/jrockit-R26.3.0-jdk1.5.0_06"/>
+	<property name="sun" value="/opt/jdk1.5.0_07"/>
+	<property name="blackdown" value="/usr/lib/j2se/1.4"/>
+
+	<!-- END USER-MODIFIABLE PROPERTIES -->
+
+	<!-- BEGIN PUBLIC TARGETS -->
+	
+	<!-- ================================= 
+         target: dist              
+         ================================= -->
+	<target name="dist" depends="jar" description="--> Build the distribution from source"/>
+
+	<!-- ================================= 
+         target: sourcedist              
+         ================================= -->
+	<target name="sourcedist" depends="sources,dist" 
+      description="--> Download the source and then build">
+	</target>
+
+	<!-- ================================= 
+         target: sources          
+         ================================= -->
+	<target name="sources" 
+    description="Download sources from their original locations"
+    depends="init.sources,data.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,ps.source,xalan.source,xerces.source">
+	</target>
+    	
+	<!-- ================================= 
+         target: srczip              
+         ================================= -->
+	<target name="srczip" depends="init,clean" description="--> Creates a source zip">
+		<zip destfile="dacapo-${DSTAMP}-src.zip">
+			<fileset dir=".." includes="extra/eclipse-plugin/*" excludes="**/CVS"/>
+			<fileset dir=".." includes="extra/eclipse-plugin/src/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="extra/eclipse-plugin/META-INF/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/LICENSE-2.0.txt"/>
+			<fileset dir=".." includes="benchmarks/README.txt"/>
+			<fileset dir=".." includes="benchmarks/bmsrc/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/build.xml"/>
+			<fileset dir=".." includes="benchmarks/cnf/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/stub/**" excludes="**/CVS"/>
+		</zip>
+	</target>
+
+	<!-- ================================= 
+         target: clean              
+         ================================= -->
+	<target name="clean" description="clean up after the build process">
+        <delete failonerror="false" includeemptydirs="true">
+          <fileset dir="${build}"/>
+          <fileset dir="${build_src}"/>
+          <fileset dir="${extra}/eclipse-plugin/@dot"/>
+          <fileset dir="cachedir"/>
+          <!-- Jython's mess -->
+          <fileset dir="scratch"/>
+        </delete>
+	</target>
+
+	<!-- ================================= 
+         target: distclean              
+         ================================= -->
+	<target name="distclean" depends="clean"
+          description="clean up including the resulting jar files">
+		<delete dir="bin"/>
+		<delete>
+			<fileset dir="${basedir}">
+				<include name="dacapo*.jar"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<!-- ================================= 
+          target: sourceclean              
+         ================================= -->
+	<target name="sourceclean" depends="distclean" 
+            description="--> Delete all downloadable sources, too">
+		<delete dir="${sources}"/>
+	</target>
+	
+	<!-- ================================= 
+         target: jar.quick             
+         ================================= -->
+	<target name="jar.quick" depends="harness,init"
+          description="generate a jar file" >
+		<antcall target="meta-inf">
+			<param name="jarroot" value="${build}"/>
+		</antcall>
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="dacapo-${DSTAMP}.jar" basedir="${build}"
+         index="true"
+         manifest="${build}/META-INF/MANIFEST.MF"/>
+	</target>
+
+	<!-- END PUBLIC TARGETS -->
+
+	
+	<!-- internal directory structure -->
 	<property name="src" location="src"/>
 	<property name="extra" location="../extra"/>
 	<property name="bmsrc" location="bmsrc"/>
@@ -41,12 +156,6 @@
 
 	<!-- constraints -->
 	<property name="constraints.gnuclasspath" value="true"/>
-
-	<!-- tested jres -->
-	<property name="j9" value="/opt/ibm-java2-i386-50"/>
-	<property name="jrockit" value="/opt/jrockit-R26.3.0-jdk1.5.0_06"/>
-	<property name="sun" value="/opt/jdk1.5.0_07"/>
-	<property name="blackdown" value="/usr/lib/j2se/1.4"/>
 
 	<!-- benchmark versions -->
 	<property name="antlr.version" value="2.7.2"/>
@@ -83,7 +192,6 @@
 	<property name="itext.url" value="http://easynews.dl.sourceforge.net/sourceforge/itext"/>
 	<property name="junit.url" value="http://easynews.dl.sourceforge.net/sourceforge/junit"/>
 	<property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
-<!--	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j/old_xerces2"/> -->
 	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j/"/>
 	<!-- data downloads -->
 	<property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
@@ -91,10 +199,11 @@
 	<property name="bible.url" value="${sfdata.url}/kjv.zip"/>
 	<property name="xalan.data.url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/WD-xforms-20010608.zip"/>
 	<property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
-
-	<!-- External programs -->
-	<property name="make" location="/usr/bin/make"/>
-
+	
+	
+	<!-- ================================= 
+         target: initialize directory structures
+         ================================= -->
 	<target name="init">
 		<!-- Create the time stamp -->
 		<tstamp/>
@@ -103,8 +212,17 @@
 		<mkdir dir="${build}/cnf"/>
 		<mkdir dir="${zipdata}"/>
 		<mkdir dir="${build_src}"/>
-	</target>
-
+	</target>	
+	
+	<!-- ================================= 
+         target: source           
+         ================================= -->
+	<target name="source" depends="init" description="add source to build">
+		<copy todir="${build}">
+			<fileset dir="${src}" includes="**/*.java"/>
+			<fileset dir="${bmsrc}" includes="**/*.java"/>
+		</copy>
+    </target>	
 
 	<!-- ================================= 
          target: compile  all sources
@@ -112,8 +230,7 @@
 	<target name="compile" depends="antlr,bloat,chart,eclipse,fop,hsqldb,jython,lucene,pmd,xalan"
           description="compile the sources for all benchmarks" >
 	</target>
-
-
+	
 	<!-- ================================= 
          target: harness           
          ================================= -->
@@ -138,75 +255,10 @@
 
 	</target>
 
-
-	<!-- ================================= 
-         target: dist              
-         ================================= -->
-	<target name="dist" depends="jar" 
-    description="--> Build the distribution from source">
-	</target>
-
-
-	<!-- ================================= 
-         target: srczip              
-         ================================= -->
-	<target name="srczip" depends="init,clean" description="--> Creates a source zip">
-		<zip destfile="dacapo-${DSTAMP}-src.zip">
-			<fileset dir=".." includes="extra/eclipse-plugin/*" excludes="**/CVS"/>
-			<fileset dir=".." includes="extra/eclipse-plugin/src/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="extra/eclipse-plugin/META-INF/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/LICENSE-2.0.txt"/>
-			<fileset dir=".." includes="benchmarks/README.txt"/>
-			<fileset dir=".." includes="benchmarks/bmsrc/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/build.xml"/>
-			<fileset dir=".." includes="benchmarks/cnf/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/originals/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/stub/**" excludes="**/CVS"/>
-		</zip>
-	</target>
-
-
-	<!-- ================================= 
-         target: sourcedist              
-         ================================= -->
-	<target name="sourcedist" depends="sources,dist" 
-      description="--> Download the source and then build">
-	</target>
-
-	<!-- ================================= 
-         target: source           
-         ================================= -->
-	<target name="source" depends="init" description="add source to build">
-		<copy todir="${build}">
-			<fileset dir="${src}" includes="**/*.java"/>
-			<fileset dir="${bmsrc}" includes="**/*.java"/>
-		</copy>
-    </target>	
-
-
 	<!-- ================================= 
          target: jar              
          ================================= -->
 	<target name="jar" depends="compile,jar.quick" description="generate the distribution jar file"/>
-
-	<!-- ================================= 
-         target: jar.quick             
-         ================================= -->
-	<target name="jar.quick" depends="harness,init"
-          description="generate a jar file" >
-		<antcall target="meta-inf">
-			<param name="jarroot" value="${build}"/>
-		</antcall>
-
-		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-		<jar jarfile="dacapo-${DSTAMP}.jar" basedir="${build}"
-         index="true"
-         manifest="${build}/META-INF/MANIFEST.MF"
-    />
-	</target>
 
 	<!-- ================================= 
          target: meta-inf             
@@ -332,43 +384,6 @@
 		</java>
 	</target>
 
-	<!-- ================================= 
-         target: clean              
-         ================================= -->
-	<target name="clean" description="clean up after the build process">
-        <delete failonerror="false" includeemptydirs="true">
-          <fileset dir="${build}"/>
-          <fileset dir="${build_src}"/>
-          <fileset dir="${extra}/eclipse-plugin/@dot"/>
-          <fileset dir="cachedir"/>
-          <!-- Jython's mess -->
-          <fileset dir="scratch"/>
-        </delete>
-	</target>
-
-	<!-- ================================= 
-         target: distclean              
-         ================================= -->
-	<target name="distclean" depends="clean"
-          description="clean up including the resulting jar files">
-		<delete dir="bin"/>
-		<delete>
-			<fileset dir="${basedir}">
-				<include name="dacapo*.jar"/>
-			</fileset>
-		</delete>
-	</target>
-
-
-	<!-- ================================= 
-          target: sourceclean              
-         ================================= -->
-	<target name="sourceclean" depends="distclean" 
-            description="--> Delete all downloadable sources, too">
-		<delete dir="${sources}"/>
-	</target>
-
-
 
 	<!-- *************************************************************************** -->
 	<!--                        Fetch sources                                        -->
@@ -378,10 +393,7 @@
 		<mkdir dir="${sources}"/>
 	</target>
 
-	<target name="sources" 
-    description="Download sources from their original locations"
-    depends="init.sources,data.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,ps.source,xalan.source,xerces.source">
-	</target>
+
 
 	<target name="antlr.source" depends="init.sources">
 		<get src="${antlr.url}/antlr-${antlr.version}.tar.gz"
