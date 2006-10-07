@@ -142,7 +142,9 @@ public class LuceneSearch extends dacapo.Benchmark {
         this.field = field;
         if (normsField != null) reader = new OneNormsReader(reader, normsField);
         searcher = new IndexSearcher(reader);
-        in = new BufferedReader(new FileReader(queryBase + id + ".txt"));
+        /* String inName = String.format("%s%2d.txt",queryBase,id); // supported in 1.5+ only :-( */
+        String inName = queryBase + (id < 10 ? "0" : "") + id + ".txt";
+        in = new BufferedReader(new FileReader(inName));
         out = new PrintWriter(new BufferedWriter(new FileWriter(fileInScratch(outBase + id))));
       } catch (Exception e) {
         e.printStackTrace();

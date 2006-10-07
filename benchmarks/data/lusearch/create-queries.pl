@@ -1,23 +1,46 @@
 #!/usr/bin/perl
-#$source = shift(@ARGV);        # source of words
-$listorder = shift(@ARGV);          # log_2 of the number of output files
-$lists = 2**$listorder;             # number of output files
-$wordorder = shift(@ARGV);     # total number of words to be used
-$totalwords = 2**$wordorder;
-$listsizeorder = $wordorder - $listorder; 
-$listsize = 2**$listsizeorder;
-@allwords = ();                 # input array of words
-@listarray = ();
-$baseoutname = "query";
+# (re)create the queries used by lusearch
+#
+# This code takes a large word list, randomizes the order, then creates N query
+# lists, where 1/2 of each list contains unique words (not used in any other
+# query), 1/4 of each list contains words shared with one other query, 1/8
+# contains words shared by three other lists, 1/16 contains words shared 8 ways,
+# etc etc.
+# 
+# The lists are created from the randomized source using a simple algorithm, then
+# the order of each list is randomized and the relationship between the lists is
+# randomized.
+# 
+# usage: create-queries.pl N M
+#    where N = log_2 the number of query lists to create
+#          M = log_2 the total number of words
+#
+# by defualt, we use:
+#        create-queries.pl 6 18
+#          N = 6 => 64 query lists
+#          M = 18 => 256K words
+#
+
+$wordlist = "words.txt.gz";               # source of words we're using (gleaned from kjv & shakespeare)
+$baseoutname = "query";                   # basename of generated files
+
+$listorder = shift(@ARGV);                # log_2 of the number of output files
+$lists = 2**$listorder;                   # number of output files
+$wordorder = shift(@ARGV);                # log_2 the number of words to be used
+$totalwords = 2**$wordorder;              # number of words to be used
+
+$listsizeorder = $wordorder - $listorder; # log_2 the length of each query list
+$listsize = 2**$listsizeorder;            # length of each query list
+@allwords = ();                           # input array of words
+@listarray = ();                          # list of lists
 $wordlist = "";
 
 print "creating $lists lists, each with $listsize words, for a total of ".($lists*$listsize)." words\n";
 
-getallwords(*allwords, "words.txt.gz");
+getallwords(*allwords, $wordlist);
 populatelists(*listarray, *allwords, $listsizeorder, $lists, $listorder);
 shufflelists(*listarray);
 writelists(*listarray, $lists);
-
 
 #
 # get all the words from the source
