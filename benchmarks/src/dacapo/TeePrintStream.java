@@ -8,7 +8,6 @@ package dacapo;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * 
@@ -20,7 +19,8 @@ import java.io.UnsupportedEncodingException;
 public class TeePrintStream extends PrintStream {
   
   /**
-   * @param dest
+   * @param dest The destination stream (around which this class wraps)
+   * @param logFile Log a copy to this file.
    */
   public TeePrintStream(OutputStream dest, File logFile) {
     super(new TeeOutputStream(dest,logFile));

@@ -7,17 +7,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
 /**
- * Perform a digest operation on a file.  Provides a main for maintainers
+ * Perform a digest operation on a file.  Also provides a 'main' method for maintainers
  * to use outside the harness.
  * 
  * @author Robin Garner
- * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
- * @id $Id: FileDigest.java 142 2006-10-06 09:15:50Z rgarner $
+ * @date $Date: 2006-10-10 19:27:18 +1000 (Tue, 10 Oct 2006) $
+ * @id $Id: FileDigest.java 162 2006-10-10 09:27:18Z rgarner $
  *
  */
 public class FileDigest {
