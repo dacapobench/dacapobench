@@ -17,6 +17,19 @@ public class PmdHarness extends Benchmark {
 
   public PmdHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
+    
+    /*
+     * Explicitly set some properties that control factory methods
+     * 
+     * Leaving it to the standard methods of resolving at runtime
+     * can lead to testing different implementations on different
+     * platforms.
+     * 
+     * It's always possible that there are additional properties that 
+     * need to be set.
+     */
+    System.setProperty("javax.xml.parsers.DocumentBuilderFactory", 
+        "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
   }
 
   public void iterate(String size) throws Exception {

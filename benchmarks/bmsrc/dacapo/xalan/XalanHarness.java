@@ -84,8 +84,10 @@ public class XalanHarness extends Benchmark {
 						break;
 					Transformer transformer = _template.newTransformer();
 					transformer.setErrorListener(this);
-					Source inFile = new StreamSource(new FileInputStream(new File(fileInScratch(fileName))));
-					Result outFile = new StreamResult(new FileOutputStream(new File(fileInScratch("xalan.out." + _id))));
+					Source inFile = new StreamSource(new FileInputStream(
+              new File(scratch,fileName)));
+					Result outFile = new StreamResult(new FileOutputStream(
+              new File(scratch,"xalan.out." + _id)));
 					transformer.transform(inFile, outFile);
 				}
 			} catch (TransformerConfigurationException e) {

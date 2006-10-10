@@ -61,6 +61,14 @@ public class EclipseHarness extends Benchmark {
       System.setProperty("osgi.install.area",  "file:"+fileInScratch("eclipse/"));
       System.setProperty("osgi.noShutdown", "true");
       System.setProperty("osgi.framework","file:"+fileInScratch("eclipse/plugins/org.eclipse.osgi_3.1.2.jar"));
+
+      /*
+       * Hard-wire some properties that could otherwise be overriden in the
+       * environment. 
+       */
+      System.setProperty("javax.xml.parsers.DocumentBuilderFactory", 
+                "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+      
       setJavaHomeIfRequired();
       
       String[] pluginArgs = config.getArgs(size);
