@@ -23,8 +23,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-07 12:51:15 +1000 (Sat, 07 Oct 2006) $
- *   $Id: build.xml 153 2006-10-07 02:51:15Z steveb-oss $
+ *   $Date: 2006-10-10 23:56:52 +1000 (Tue, 10 Oct 2006) $
+ *   $Id: build.xml 163 2006-10-10 13:56:52Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -1061,6 +1061,11 @@
 		
 		<!-- Grab the xalan class files from the built jar files -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
+
+		<!-- Add the stub sun.io classes to the build -->
+		<javac srcdir="${stub}" destdir="${build}" 
+			includes="sun/io/*"
+		       debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Copy a stand-alone xalan jar into the build -->
 	<target name="xalan.jar" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
