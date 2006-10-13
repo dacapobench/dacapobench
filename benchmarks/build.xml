@@ -23,8 +23,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-13 16:50:54 +1000 (Fri, 13 Oct 2006) $
- *   $Id: build.xml 168 2006-10-13 06:50:54Z steveb-oss $
+ *   $Date: 2006-10-13 19:27:29 +1000 (Fri, 13 Oct 2006) $
+ *   $Id: build.xml 170 2006-10-13 09:27:29Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -657,6 +657,7 @@
           target: eclipse              
          ================================= -->
 	<target name="eclipse" depends="eclipse.data,eclipse.harness" description="--> build the eclipse benchmark"/>
+
 	<!-- Build the eclipse dacapo harness -->
 	<target name="eclipse.harness" depends="init,harness" description="--> build the eclipse harness">
 		<javac 	srcdir="${bmsrc}" 
@@ -670,6 +671,7 @@
 			</classpath>
 		</javac>
 	</target>
+
 	<!-- Build the eclipse benchmark -->
 	<target name="eclipse.benchmark" depends="init" description="--> build the eclipse benchmark">
 		<property name="eclipse-top" value="${build_src}/eclipse/eclipse"/>
@@ -687,13 +689,14 @@
 		</unzip>
 		<delete dir="${build_src}/eclipse/eclipse-testing"/>
 	</target>
+
 	<!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
 	<target name="eclipse.plugin" depends="eclipse.benchmark,eclipse.harness" description="--> build the eclipse harness">
 		<ant antfile="${extra}/eclipse-plugin/build.xml" dir="${extra}/eclipse-plugin" 
          target="build.update.jar" inheritall="false">
-			<property name="eclipsesrc.home" location="${build_src}/eclipse"/>
+			<property name="eclipsesrc.home" location="${eclipse-top}"/>
 			<property name="harness.home" location="${build}"/>
-			<property name="plugin.destination" location="${build_src}/eclipse/eclipse/plugins/"/>
+			<property name="plugin.destination" location="${eclipse-top}/plugins/"/>
 		</ant>
 	</target>
 
