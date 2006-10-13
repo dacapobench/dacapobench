@@ -23,8 +23,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-10 23:56:52 +1000 (Tue, 10 Oct 2006) $
- *   $Id: build.xml 163 2006-10-10 13:56:52Z rgarner $
+ *   $Date: 2006-10-13 16:50:54 +1000 (Fri, 13 Oct 2006) $
+ *   $Id: build.xml 168 2006-10-13 06:50:54Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -721,10 +721,16 @@
 
 	<!-- Create the eclipse data file -->
 	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin,eclipse.osgiclasses" description="--> build the eclipse data file">
+		<!-- Create the fake jre -->
+		<unzip dest="${build_src}/eclipse/dummyjre" src="${data}/eclipse/dummyjre.zip"/>
+		
 		<!-- Install the test data -->
 		<zip destfile="${zipdata}/eclipse.zip">
-			<!--			<fileset dir="${build_src}/eclipse/" includes="eclipse/**"/> -->
-			<!-- empirically derived list of what we really need -->
+			<!-- The dummy jre -->
+			<fileset dir="${build_src}/eclipse/" includes="dummyjre/**"/>
+			
+			<!-- The eclipse runtime.  We just include as little as we can, -->
+			<!-- using an empirically derived list of what we really need.  -->
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/*"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/about_files/**"/>
 			<fileset dir="${build_src}/eclipse/" includes="eclipse/configuration/**"/>
