@@ -13,9 +13,17 @@ import java.security.MessageDigest;
  * Perform a digest operation on a file.  Also provides a 'main' method for maintainers
  * to use outside the harness.
  * 
+ * Has facilities to canonicalise text files, using the following operations:
+ * - Files are read using Java character-oriented I/O.  This removes
+ *   platform-dependent CR/LF sequences
+ * - The absolute and relative paths of the benchmark scratch directory are replaced
+ *   with "$SCRATCH"
+ * - All  occurrences of "\" are replaced with "/" to bring windows filenames into line
+ *   with Unix ones.  (A bit heavy handed, better alternatives are invited :)
+ * 
  * @author Robin Garner
- * @date $Date: 2006-10-10 19:27:18 +1000 (Tue, 10 Oct 2006) $
- * @id $Id: FileDigest.java 162 2006-10-10 09:27:18Z rgarner $
+ * @date $Date: 2006-10-13 18:01:52 +1000 (Fri, 13 Oct 2006) $
+ * @id $Id: FileDigest.java 169 2006-10-13 08:01:52Z rgarner $
  *
  */
 public class FileDigest {
@@ -69,6 +77,7 @@ public class FileDigest {
         if (filter) {
           line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
           line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
+          line = replaceAllFixed(line,"\\","/");
         }
         byte[] buf = line.getBytes();
         for (int i=0; i < buf.length; i++)
@@ -108,7 +117,8 @@ public class FileDigest {
       boolean filterScratch = false;
       String scratchDir = "";
       boolean text = false;
-      for (int i=0; i < args.length && args[i].charAt(0) == '-'; i++)
+      int i=0;
+      for (; i < args.length && args[i].charAt(0) == '-'; i++) {
         if (args[i].equals("-f")) {
           filterScratch = true;
           scratchDir = args[++i];
@@ -119,12 +129,13 @@ public class FileDigest {
           System.err.println("Usage: FileDigest [-t [-f scratchDir]] file...");
           System.exit(1);
         }
+      }
       if (filterScratch && !text) {
         System.err.println("Can't filter scratch in binary input files");
         System.exit(2);
       }
-      for (int i=0; i < args.length; i++)
-        System.out.println(Digest.toString(get(args[i],text,filterScratch,new File(scratchDir))));
+      for (; i < args.length; i++)
+        System.out.println(args[i]+" "+Digest.toString(get(args[i],text,filterScratch,new File(scratchDir))));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
