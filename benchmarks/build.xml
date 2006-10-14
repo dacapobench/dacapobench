@@ -29,8 +29,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-14 13:37:26 +1000 (Sat, 14 Oct 2006) $
- *   $Id: build.xml 173 2006-10-14 03:37:26Z steveb-oss $
+ *   $Date: 2006-10-14 15:01:01 +1000 (Sat, 14 Oct 2006) $
+ *   $Id: build.xml 175 2006-10-14 05:01:01Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -59,6 +59,13 @@
          target: dist              
          ================================= -->
 	<target name="dist" depends="jar" description="--> Build the distribution from source"/>
+
+	<!-- ================================= 
+         target: deps        
+         ================================= -->
+	<target name="split-deps" description="--> Split the distribution into a core jar and a jar containting dependencies">
+		<property name="externalize.deps" value="true"/>
+	</target>
 
 	<!-- ================================= 
          target: sourcedist              
@@ -281,6 +288,13 @@
 
 		<!-- Put everything in ${build} into the dacapo${jar.suffix}.jar file -->
 		<jar jarfile="dacapo${jar.suffix}.jar" basedir="${build}" index="true" manifest="${build}/META-INF/MANIFEST.MF"/>
+		<antcall target="jar.deps"/>
+	</target>
+	
+    <!-- ================================= 
+         target: jar.deps           
+         ================================= -->
+	<target name="jar.deps" if="externalize.deps" depends="harness,init" description="generate a jar file with suffix (may be null)" >
 		<!-- Put everything in ${deps} into the MyProject-build-deps${jar.suffix}.jar file -->
 		<jar jarfile="dacapo-build-deps${jar.suffix}.jar" basedir="${deps}" index="true" />
 	</target>
@@ -399,6 +413,7 @@
 			<param name="bm" value="xalan" />
 		</antcall>
 	</target>
+	
 	<!-- ================================= 
           target: run        
          ================================= -->
@@ -691,21 +706,27 @@
 		<!-- Build it using jfreechart's build.xml -->
 		<ant antfile="${chart-top}/ant/build.xml" dir="${chart-top}" target="compile" inheritall="false"/>
 
-	    <!-- Unjar dependencies into deps directory -->
+		<!-- Copy files to the build directory -->
+		<unjar src="${chart-top}/jfreechart-${chart.version}.jar" dest="${build}"/>
+		<antcall target="chart.libs"/>
+		<antcall target="chart.deps"/>
+		
+		<!-- Install the test data -->
+		<zip basedir="${data}" includes="chart/**" destfile="${zipdata}/chart.zip"/>
+	</target>
+	<!-- Add external libraries to the build -->
+	<target name="chart.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+		<unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${build}"/>
+		<unjar src="${sources}/itext-1.02b.jar" dest="${build}"/>
+    </target>
+	<!-- Add external libraries to the deps -->
+	<target name="chart.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
 		<unjar src="${chart-top}/lib/gnujaxp.jar" dest="${deps}"/>
 		<unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${deps}"/>
 		<unjar src="${chart-top}/lib/servlet.jar" dest="${deps}"/>
 		<unjar src="${sources}/itext-1.02b.jar" dest="${deps}"/>
+    </target>
 		
-		<!-- Copy files to the build directory -->
-		<unjar src="${chart-top}/jfreechart-${chart.version}.jar" dest="${build}"/>
-		<unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${build}"/>
-		<unjar src="${sources}/itext-1.02b.jar" dest="${build}"/>
-
-		<!-- Install the test data -->
-		<zip basedir="${data}" includes="chart/**" destfile="${zipdata}/chart.zip"/>
-	</target>
-
 
 	<!-- ================================= 
           target: eclipse              
@@ -841,19 +862,11 @@
         -->
 		<exec executable="ant" dir="${fop-top}"/>
 
-	    <!-- Unjar dependencies into deps directory -->
-		<unjar src="${fop-top}/lib/batik.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/xalan-2.4.1.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/ant-1.5.1.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/xml-apis.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/xercesImpl-2.2.1.jar" dest="${deps}"/>
-
 		<!-- Copy the build to the distribution directory -->
 		<unjar src="${fop-top}/build/fop.jar" dest="${build}"/>
-		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
-		<!-- <unjar src="${fop-top}/lib/batik.jar" dest="${build}"/> -->
-
+        <antcall target="fop.libs"/>
+		<antcall target="fop.deps"/>
+		
 		<!-- Install the test data -->
 		<zip basedir="${data}" includes="fop/**" destfile="${zipdata}/fop.zip"/>
 
@@ -862,7 +875,21 @@
 			includes="dacapo/fop/*"
 			debug="true" debuglevel="lines,vars,source"/>
 	</target>
-
+	<!-- Add external libraries to the build -->
+	<target name="fop.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+		<echo message="INTERNALIZING"/>
+		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
+    </target>
+	<!-- Add external libraries to the deps -->
+	<target name="fop.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+		<echo message="EXTERNALIZING"/>
+		<unjar src="${fop-top}/lib/batik.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/xalan-2.4.1.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/ant-1.5.1.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/xml-apis.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/xercesImpl-2.2.1.jar" dest="${deps}"/>
+    </target>
 
 	<!-- ================================= 
           target: junit             
@@ -901,14 +928,16 @@
 		<ant antfile="${hsqldb-top}/hsqldb/build/build.xml" dir="${hsqldb-top}/hsqldb" 
            target="hsqldbtest" inheritall="false"/>
 
-	    <!-- Unjar dependencies into deps directory -->
-		<unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${deps}"/>
-		<unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${deps}"/>
-		
 		<!-- Copy the build to the distribution directory -->
 		<unjar src="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" dest="${build}"/>
+		<antcall target="hsqldb.deps"/>
 	</target>
-					
+	<!-- Add external libraries to the deps -->
+	<target name="hsqldb.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+		<unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${deps}"/>
+		<unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${deps}"/>
+    </target>	
+	
 	<!-- ================================= 
           target: jython                
          ================================= -->
@@ -944,9 +973,7 @@
 
 		<!-- Copy files to the distribution directory -->
 		<unjar src="${jython-top}/jython_${jython.version}/src/java/dist/jython.jar" dest="${build}"/>
-		
-	    <!-- Unjar dependencies into deps directory -->
-		<unjar src="${build_src}/ant/ant.jar" dest="${deps}"/>
+		<antcall target="jython.deps"/>
 
 		<!-- Extract the pybench benchmark from the python sources -->
 		<untar src="${sources}/Python-${python.version}.tgz" dest="${jython-top}" compression="gzip">
@@ -974,6 +1001,10 @@
 			<fileset dir="${jython-top}/" includes="jython/Lib/**"/>
 		</zip>
 	</target>
+	<!-- Add external libraries to the deps -->
+	<target name="jython.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+		<unjar src="${build_src}/ant/ant.jar" dest="${deps}"/>
+    </target>	
 
 
 	<!-- ================================= 
@@ -1064,17 +1095,9 @@
 				<include name="net/**/*.class"/>
 			</fileset>
 		</copy>
-
-		<unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build}"/>
-		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${build}"/>
-
-	    <!-- Unjar dependencies into deps directory -->
-	    <unjar src="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" dest="${deps}"/>
-	    <unjar src="${pmd-top}/lib/jakarta-oro-2.0.8.jar" dest="${deps}"/>
-	    <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${deps}"/>
-	    <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${deps}"/>
-		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${deps}"/>
-
+		<antcall target="pmd.libs"/>
+		<antcall target="pmd.deps"/>
+		
 		<!-- Construct the test data -->
 		<property name="pmd-data" value="${pmd-top}/data/pmd"/>
 		<mkdir dir="${pmd-data}"/>
@@ -1098,7 +1121,19 @@
 		<zip basedir="${pmd-top}/data" includes="pmd/**" destfile="${zipdata}/pmd.zip"/>
 		<delete dir="${pmd-top}/data"/>
 	</target>
-
+	<!-- Add external libraries to the build -->
+	<target name="pmd.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+		<unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build}"/>
+		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${build}"/>
+    </target>
+	<!-- Add external libraries to the deps -->
+	<target name="pmd.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+	    <unjar src="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" dest="${deps}"/>
+	    <unjar src="${pmd-top}/lib/jakarta-oro-2.0.8.jar" dest="${deps}"/>
+	    <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${deps}"/>
+	    <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${deps}"/>
+		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${deps}"/>
+    </target>
 
 	<!-- ================================= 
         target: xalan
@@ -1138,10 +1173,8 @@
 			<env key="ANT_HOME" value="${ant.install}"/>
 		</exec>
 		
-	    <!-- Unjar dependencies into deps directory -->
-	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xml-apis.jar" dest="${deps}"/>
-	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xercesImpl.jar" dest="${deps}"/>
-		
+		<antcall target="xalan.deps"/>
+				
 		<!-- Grab the xalan class files from the built jar files -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
 
@@ -1154,7 +1187,11 @@
 	<target name="xalan.jar" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
 		<copy file="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" todir="${build}"/>
 	</target>
-
+	<!-- Add external libraries to the deps -->
+	<target name="xalan.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
+	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xml-apis.jar" dest="${deps}"/>
+	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xercesImpl.jar" dest="${deps}"/>
+    </target>
 
 	<!-- ================================= 
         target: xerces 
@@ -1176,9 +1213,17 @@
 		<condition property="xercesxml.jar" value="xmlParserAPIs.jar" else="xml-apis.jar">
 			<contains string="${xerces.version}" substring="2.2.1"/>
 		</condition>
+		<antcall target="xerces.libs"/>
+		<antcall target="xerces.deps"/>
+	</target>
+	<!-- Add external libraries to the build -->
+	<target name="xerces.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
 		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${build}"/>
 		<unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${build}"/>
+    </target>
+	<!-- Add external libraries to the deps -->
+	<target name="xerces.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
 		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${deps}"/>
 		<unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${deps}"/>
-	</target>
+    </target>
 </project>
