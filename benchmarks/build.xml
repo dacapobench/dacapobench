@@ -12,9 +12,15 @@
  * - sourceclean    remove all distribution files, and all downloadable
  *                  sources.  This prepares an "ip-clean" distribution.
  *
- * Individual benchmarks can be built into a jar using the benchmark name
- * (lucene covers both lusearch and luindex), and the jar.quick target,
- * which will create a jar with no other dependencies.  For example:
+ * - <bmname>       will compile a given benchmark
+ * - compile        will compile all benchmarks
+ * - jar.quick      will build a jar (undated) based on whatever has been compiled already
+ * - jar.date       will build a dated jar based on whatever has been compiled already
+ *
+ * Therefore, individual benchmarks can be built into a jar using the
+ * benchmark name (note that lucene covers both lusearch and luindex),
+ * and the jar.quick or jar.date targets, which will create a jar with
+ * no other dependencies.  For example:
  * - antlr jar.quick  creates a jar which can run the antlr benchmark (only)
  *       
  * External tools required (apart from a JDK and Ant)
@@ -23,14 +29,17 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-13 19:27:29 +1000 (Fri, 13 Oct 2006) $
- *   $Id: build.xml 170 2006-10-13 09:27:29Z rgarner $
+ *   $Date: 2006-10-14 13:37:26 +1000 (Sat, 14 Oct 2006) $
+ *   $Id: build.xml 173 2006-10-14 03:37:26Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
 	<description>Dacapo benchmarks</description>
 	
 	<!-- BEGIN USER-MODIFIABLE PROPERTIES -->
+	<!-- download mirrors -->
+	<property name="apache.dl.url" value="http://archive.apache.org/dist"/>
+	<property name="sourceforge.dl.url" value="http://easynews.dl.sourceforge.net/sourceforge"/>
 	
 	<!-- external programs -->
 	<property name="make" location="/usr/bin/make"/>
@@ -57,13 +66,13 @@
 	<target name="sourcedist" depends="sources,dist" 
       description="--> Download the source and then build">
 	</target>
-
+	
 	<!-- ================================= 
          target: sources          
          ================================= -->
 	<target name="sources" 
     description="Download sources from their original locations"
-    depends="init.sources,data.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
+    depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
 	</target>
     	
 	<!-- ================================= 
@@ -122,20 +131,23 @@
 	</target>
 	
 	<!-- ================================= 
-         target: jar.quick             
+         target: jar.quick            
          ================================= -->
-	<target name="jar.quick" depends="harness,init"
-          description="generate a jar file" >
-		<antcall target="meta-inf">
-			<param name="jarroot" value="${build}"/>
+	<target name="jar.quick" depends="harness,init" description="generate a jar file" >
+		<antcall target="jar.basic">
+			<param name="jar.suffix" value=""/>
 		</antcall>
-
-		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-		<jar jarfile="dacapo-${DSTAMP}.jar" basedir="${build}"
-         index="true"
-         manifest="${build}/META-INF/MANIFEST.MF"/>
 	</target>
-
+	
+	<!-- ================================= 
+         target: jar.date          
+         ================================= -->
+	<target name="jar.date" depends="harness,init" description="generate a jar file" >
+		<antcall target="jar.basic">
+			<param name="jar.suffix" value="-${DSTAMP}"/>
+		</antcall>
+	</target>
+	
 	<!-- END PUBLIC TARGETS -->
 
 	
@@ -153,7 +165,8 @@
 	<property name="zipdata" location="${build}/data"/>
 	<property name="config" location="cnf"/>
 	<property name="prune" location="prune"/>
-
+	<property name="deps" location="build_deps"/>
+	
 	<!-- constraints -->
 	<property name="constraints.gnuclasspath" value="true"/>
 
@@ -171,6 +184,7 @@
 	<property name="pmd.version" value="3.7"/>
 	<property name="xalan.version" value="2_4_1"/>
 	<!-- auxilary downloads -->
+	<property name="ant.dl.version" value="1.6.5"/>
 	<property name="itext.version" value="1.02b"/>
 	<property name="junit.version" value="3.8.1"/>
 	<property name="python.version" value="2.5"/>
@@ -178,21 +192,22 @@
 
 	<!-- benchmark locations -->
 	<property name="antlr.url" value="http://www.antlr.org/download"/>
-	<property name="batik.url" value="http://archive.apache.org/dist/xml/batik"/>
+	<property name="batik.url" value="${apache.dl.url}/xml/batik"/>
 	<property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
-	<property name="chart.url" value="http://easynews.dl.sourceforge.net/sourceforge/jfreechart"/>
+	<property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
 	<property name="eclipse.url" value="http://download.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
-	<property name="fop.url" value="http://archive.apache.org/dist/xml/fop"/>
-	<property name="hsqldb.url" value="http://easynews.dl.sourceforge.net/sourceforge/hsqldb"/>
-	<property name="jython.url" value="http://easynews.dl.sourceforge.net/sourceforge/jython"/>
-	<property name="lucene.url" value="http://archive.apache.org/dist/lucene/java"/>
-	<property name="pmd.url" value="http://easynews.dl.sourceforge.net/sourceforge/pmd"/>
-	<property name="xalan.url" value="http://archive.apache.org/dist/xml/xalan-j"/>
+	<property name="fop.url" value="${apache.dl.url}/xml/fop"/>
+	<property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
+	<property name="jython.url" value="${sourceforge.dl.url}/jython"/>
+	<property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
+	<property name="pmd.url" value="${sourceforge.dl.url}/pmd"/>
+	<property name="xalan.url" value="${apache.dl.url}/xml/xalan-j"/>
 	<!-- auxilary downloads -->
-	<property name="itext.url" value="http://easynews.dl.sourceforge.net/sourceforge/itext"/>
-	<property name="junit.url" value="http://easynews.dl.sourceforge.net/sourceforge/junit"/>
+	<property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
+	<property name="itext.url" value="${sourceforge.dl.url}/itext"/>
+	<property name="junit.url" value="${sourceforge.dl.url}/junit"/>
 	<property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
-	<property name="xerces.url" value="http://archive.apache.org/dist/xml/xerces-j/"/>
+	<property name="xerces.url" value="${apache.dl.url}/xml/xerces-j/"/>
 	<!-- data downloads -->
 	<property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 	<property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
@@ -212,6 +227,7 @@
 		<mkdir dir="${build}/cnf"/>
 		<mkdir dir="${zipdata}"/>
 		<mkdir dir="${build_src}"/>
+		<mkdir dir="${deps}"/>
 	</target>	
 	
 	<!-- ================================= 
@@ -255,10 +271,24 @@
 
 	</target>
 
+    <!-- ================================= 
+         target: jar.basic            
+         ================================= -->
+	<target name="jar.basic" depends="harness,init" description="generate a jar file with suffix (may be null)" >
+		<antcall target="meta-inf">
+			<param name="jarroot" value="${build}"/>
+		</antcall>
+
+		<!-- Put everything in ${build} into the dacapo${jar.suffix}.jar file -->
+		<jar jarfile="dacapo${jar.suffix}.jar" basedir="${build}" index="true" manifest="${build}/META-INF/MANIFEST.MF"/>
+		<!-- Put everything in ${deps} into the MyProject-build-deps${jar.suffix}.jar file -->
+		<jar jarfile="dacapo-build-deps${jar.suffix}.jar" basedir="${deps}" index="true" />
+	</target>
+
 	<!-- ================================= 
          target: jar              
          ================================= -->
-	<target name="jar" depends="compile,jar.quick" description="generate the distribution jar file"/>
+	<target name="jar" depends="compile,jar.date" description="generate the distribution jar file"/>
 
 	<!-- ================================= 
          target: meta-inf             
@@ -369,7 +399,6 @@
 			<param name="bm" value="xalan" />
 		</antcall>
 	</target>
-
 	<!-- ================================= 
           target: run        
          ================================= -->
@@ -393,6 +422,12 @@
 		<mkdir dir="${sources}"/>
 	</target>
 
+	<target name="ant.source" depends="init.sources">
+		<get dest="${sources}/apache-ant-${ant.dl.version}-bin.zip"
+         src="${ant.url}/apache-ant-${ant.dl.version}-bin.zip"
+       usetimestamp="true"/>
+	</target>
+				
 	<target name="antlr.source" depends="init.sources">
 		<get src="${antlr.url}/antlr-${antlr.version}.tar.gz"
          dest="${sources}/antlr-${antlr.version}.tar.gz"
@@ -458,7 +493,7 @@
          src="${junit.url}/junit${junit.version}.zip"
        usetimestamp="true"/>
 	</target>
-
+			
 	<target name="lucene.source" depends="init.sources">
 		<get dest="${sources}/lucene-${lucene.version}-src.tar.gz"
          src="${lucene.url}/lucene-${lucene.version}-src.tar.gz"
@@ -469,12 +504,6 @@
 		<get src="${pmd.url}/pmd-src-${pmd.version}.zip"
          dest="${sources}/pmd-src-${pmd.version}.zip"
        usetimestamp="true"/>
-	</target>
-
-	<target name="xalan-241.source" depends="init.sources">
-		<get src="http://archive.apache.org/dist/xml/xalan-j/xalan-j_2_4_1-src.tar.gz"
-               dest="${sources}/xalan-j_2_4_1-src.tar.gz"
-         usetimestamp="true"/>
 	</target>
 
 	<target name="xalan.source" depends="xerces.source">
@@ -499,6 +528,19 @@
 	<!-- *************************************************************************** -->
 	<!--                            Build                                            -->
 	<!-- *************************************************************************** -->
+
+	<!-- ================================= 
+          target: ant            
+       ================================= -->
+	<target name="ant" description="--> The ant library - required by some other benchmarks">
+		<!-- Install the ant jar file -->
+		<unzip src="${sources}/apache-ant-${ant.dl.version}-bin.zip" dest="${build_src}/ant/">
+			<patternset>
+				<include name="apache-ant-${ant.dl.version}/lib/ant.jar"/>
+			</patternset>
+		</unzip>
+		<move file="${build_src}/ant/apache-ant-${ant.dl.version}/lib/ant.jar" tofile="${build_src}/ant/ant.jar"/>
+	</target>
 
 	<!-- ================================= 
         target: antlr 
@@ -545,8 +587,7 @@
 		<mkdir dir="${build_src}/batik"/>
 
 		<!-- unpack the source files -->
-		<unzip src="${sources}/batik-src-${batik.version}.zip" 
-           dest="${build_src}/batik/"/>
+		<unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build_src}/batik/"/>
 
 		<!-- Apply the dacapo patch -->
 		<fixcrlf srcdir="${batik-top}/sources" includes="**/*.java"/>
@@ -567,6 +608,16 @@
 				<include name="**/*.class"/>
 			</fileset>
 		</copy>
+
+	    <!-- unjar dependencies into deps directory -->
+		<unjar src="${batik-top}/lib/build/ant_1_4_1.jar" dest="${deps}"/>
+		<unjar src="${batik-top}/lib/build/crimson-ant.jar" dest="${deps}"/>
+		<unjar src="${batik-top}/lib/build/stylebook-1.0-b3_xalan-2.jar" dest="${deps}"/>
+		<unjar src="${batik-top}/lib/build/xalan-2.0.1.jar" dest="${deps}"/>
+		<unjar src="${batik-top}/lib/js.jar" dest="${deps}"/>
+		<unjar src="${batik-top}/lib/pdf-transcoder.jar" dest="${deps}"/>
+		<unjar src="${batik-top}/lib/xerces_2_5_0.jar" dest="${deps}"/>
+		<unjar src="${batik-top}/lib/xml-apis.jar" dest="${deps}"/>
 
 		<!-- Copy the batik resource files -->
 		<copy todir="${build}">
@@ -625,7 +676,7 @@
 	<target name="chart" depends="chart.benchmark,chart.harness" description="--> build the jFreeChart benchmark"/>
 	<!-- Build the chart dacapo harness -->
 	<target name="chart.harness" depends="init" description="--> build the jFreeChart harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+		<javac srcdir="${bmsrc}" classpath="${build}:${deps}" destdir="${build}" 
 			includes="dacapo/chart/*"
 			debug="true" debuglevel="lines,vars,source"/>
 	</target>
@@ -633,16 +684,19 @@
 	<target name="chart.benchmark" depends="init,harness" description="--> build the jFreeChart benchmark">
 		<property name="chart-top" value="${build_src}/chart/jfreechart-${chart.version}"/>
 
-		<!-- Un-tar the source distribution -->
+		<!-- Untar the source distribution -->
 		<mkdir dir="${build_src}/chart/"/>
-		<untar src="${sources}/jfreechart-${chart.version}.tar.gz" 
-             dest="${build_src}/chart/"
-             compression="gzip"/>
+		<untar src="${sources}/jfreechart-${chart.version}.tar.gz" dest="${build_src}/chart/" compression="gzip"/>
 
 		<!-- Build it using jfreechart's build.xml -->
-		<ant antfile="${chart-top}/ant/build.xml" dir="${chart-top}" 
-           target="compile" inheritall="false"/>
+		<ant antfile="${chart-top}/ant/build.xml" dir="${chart-top}" target="compile" inheritall="false"/>
 
+	    <!-- Unjar dependencies into deps directory -->
+		<unjar src="${chart-top}/lib/gnujaxp.jar" dest="${deps}"/>
+		<unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${deps}"/>
+		<unjar src="${chart-top}/lib/servlet.jar" dest="${deps}"/>
+		<unjar src="${sources}/itext-1.02b.jar" dest="${deps}"/>
+		
 		<!-- Copy files to the build directory -->
 		<unjar src="${chart-top}/jfreechart-${chart.version}.jar" dest="${build}"/>
 		<unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${build}"/>
@@ -773,20 +827,27 @@
 			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the fop benchmark -->
-	<target name="fop.benchmark" depends="init" description="--> Build the fop benchmark">
+	<target name="fop.benchmark" depends="init,harness" description="--> Build the fop benchmark">
 		<mkdir dir="${build_src}/fop"/>
 		<property name="fop-top" value="${build_src}/fop/fop-${fop.version}/"/>
 		<!-- Expand the source distribution -->
 		<untar src="${sources}/fop-${fop.version}-src.tar.gz" 
            dest="${build_src}/fop" compression="gzip"/>
 
-		<!-- Build it using fop's build.xml
-      
+		<!-- Build it using fop's build.xml      
            Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
            build.xml handles relative directories.  The classpath allows the patched
            sources to see the test harness code.
         -->
 		<exec executable="ant" dir="${fop-top}"/>
+
+	    <!-- Unjar dependencies into deps directory -->
+		<unjar src="${fop-top}/lib/batik.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/xalan-2.4.1.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/ant-1.5.1.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/xml-apis.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/xercesImpl-2.2.1.jar" dest="${deps}"/>
 
 		<!-- Copy the build to the distribution directory -->
 		<unjar src="${fop-top}/build/fop.jar" dest="${build}"/>
@@ -836,19 +897,18 @@
 		<copy file="${build_src}/junit/junit${junit.version}/junit.jar"
             todir="${hsqldb-top}/hsqldb/lib/"/>
 
-		<!-- Build it using hsqldb's build.xml
-      
-           Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
-           build.xml handles relative directories.  The classpath allows the patched
-           sources to see the test harness code.
-        -->
+		<!-- Build it using hsqldb's build.xml -->
 		<ant antfile="${hsqldb-top}/hsqldb/build/build.xml" dir="${hsqldb-top}/hsqldb" 
-           target="jartest" inheritall="false"/>
+           target="hsqldbtest" inheritall="false"/>
 
+	    <!-- Unjar dependencies into deps directory -->
+		<unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${deps}"/>
+		<unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${deps}"/>
+		
 		<!-- Copy the build to the distribution directory -->
 		<unjar src="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" dest="${build}"/>
 	</target>
-
+					
 	<!-- ================================= 
           target: jython                
          ================================= -->
@@ -860,7 +920,7 @@
 			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the jython benchmark -->
-	<target name="jython.benchmark" depends="init" description="--> Build the Jython benchmark">
+	<target name="jython.benchmark" depends="init,ant" description="--> Build the Jython benchmark">
 		<property name="jython-top" value="${build_src}/jython/"/>
 		<mkdir dir="${jython-top}/jython_${jython.version}"/>
 
@@ -884,6 +944,9 @@
 
 		<!-- Copy files to the distribution directory -->
 		<unjar src="${jython-top}/jython_${jython.version}/src/java/dist/jython.jar" dest="${build}"/>
+		
+	    <!-- Unjar dependencies into deps directory -->
+		<unjar src="${build_src}/ant/ant.jar" dest="${deps}"/>
 
 		<!-- Extract the pybench benchmark from the python sources -->
 		<untar src="${sources}/Python-${python.version}.tgz" dest="${jython-top}" compression="gzip">
@@ -1005,6 +1068,13 @@
 		<unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build}"/>
 		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${build}"/>
 
+	    <!-- Unjar dependencies into deps directory -->
+	    <unjar src="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" dest="${deps}"/>
+	    <unjar src="${pmd-top}/lib/jakarta-oro-2.0.8.jar" dest="${deps}"/>
+	    <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${deps}"/>
+	    <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${deps}"/>
+		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${deps}"/>
+
 		<!-- Construct the test data -->
 		<property name="pmd-data" value="${pmd-top}/data/pmd"/>
 		<mkdir dir="${pmd-data}"/>
@@ -1068,6 +1138,10 @@
 			<env key="ANT_HOME" value="${ant.install}"/>
 		</exec>
 		
+	    <!-- Unjar dependencies into deps directory -->
+	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xml-apis.jar" dest="${deps}"/>
+	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xercesImpl.jar" dest="${deps}"/>
+		
 		<!-- Grab the xalan class files from the built jar files -->
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
 
@@ -1104,5 +1178,7 @@
 		</condition>
 		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${build}"/>
 		<unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${build}"/>
+		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${deps}"/>
+		<unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${deps}"/>
 	</target>
 </project>
