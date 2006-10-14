@@ -97,7 +97,8 @@ public class TeeOutputStream extends FilterOutputStream {
   public void version() {
     version++;
     File archive = new File(logFile.getAbsolutePath()+"."+version);
-    try { log.close(); } catch (IOException e) {}
+    if (log != null) 
+      try { log.close(); } catch (IOException e) {}
     logFile.renameTo(archive);
   }
 }
