@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-15 07:46:44 +1000 (Sun, 15 Oct 2006) $
- *   $Id: build.xml 181 2006-10-14 21:46:44Z steveb-oss $
+ *   $Date: 2006-10-15 07:49:37 +1000 (Sun, 15 Oct 2006) $
+ *   $Id: build.xml 182 2006-10-14 21:49:37Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -844,7 +844,7 @@
 	<!-- ================================= 
           target: fop              
          ================================= -->
-	<target name="fop" depends="fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
+	<target name="fop" depends="batik.benchmark,fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
 	<!-- Build the fop dacapo harness -->
 	<target name="fop.harness" depends="harness" description="--> Build the fop harness">
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
