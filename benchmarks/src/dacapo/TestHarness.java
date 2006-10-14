@@ -6,6 +6,7 @@ package dacapo;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -19,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 174 2006-10-14 04:22:35Z steveb-oss $
- * $Date: 2006-10-14 14:22:35 +1000 (Sat, 14 Oct 2006) $
+ * $Id: TestHarness.java 177 2006-10-14 08:01:30Z rgarner $
+ * $Date: 2006-10-14 18:01:30 +1000 (Sat, 14 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -32,6 +33,28 @@ public class TestHarness {
   private static boolean verbose = false;
   
   private static boolean allowOpenFromFileSystem = false;
+
+  private static boolean converge = false;
+
+  private static double target_var = 3.0/100;
+
+  private static int window = 3;
+
+  private static int max_iterations = 20;
+
+  private static boolean ignoreValidation = false;
+
+  private static int iterations = 1;
+
+  private static String size = "default";
+
+  private static String scratchDir = "./scratch";
+
+  private static Callback callback = null;
+
+  private static boolean info = false;
+
+  private static final DecimalFormat two_dp = twoDecimalPlaces();
   
   private static URL getURL(String fn) {
     ClassLoader cl = TestHarness.class.getClassLoader();
@@ -83,28 +106,6 @@ public class TestHarness {
   
   public static void main(String[] args) {
     try {
-      DecimalFormat two_dp = new DecimalFormat();
-      two_dp.setMaximumFractionDigits(2);
-      two_dp.setMinimumFractionDigits(2);
-      two_dp.setGroupingUsed(true);
-      
-      InputStream ins = System.in;
-      String size = "default";
-      String scratchDir = "./scratch";
-      Callback callback = null;
-      int iterations = 1;
-      boolean info = false;
-      
-      /* 
-       * Command line parameters for convergent benchmark discipline.
-       * Initial values are defaults overridden on the command line.
-       */
-      boolean converge = false;
-      double target_var = 3.0/100; // Mean deviation to aim for
-      int window = 3;              // # iterations to define mean dev over.
-      int max_iterations = 20;     // Give up on finding convergence after this many times.
-      boolean ignoreValidation = false; // Useful when gathering new digests
-      
       /* No options - print usage and die */
       if (args.length == 0) {
         printUsage();
@@ -184,7 +185,7 @@ public class TestHarness {
         // name of file containing configurations
         String bm = args[i];
         String cnf = "cnf/"+bm+".cnf";
-        ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
+        InputStream ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
         if (ins == null) {
           System.err.println("Unknown benchmark: "+args[i]);
           System.exit(12);
@@ -198,69 +199,10 @@ public class TestHarness {
           if (verbose)
             harness.dump();
           
-          Class c = harness.findClass();
-          
-          if (dacapo.Benchmark.class.isAssignableFrom(c)) {
-            Constructor cons = c.getConstructor(new Class[] {Config.class,File.class});
-            
-            Benchmark b = (Benchmark) cons.newInstance(new Object[] {harness.config,scratch});
-            
-            boolean valid = true;
-            if (converge) {
-              /*
-               * Run the benchmark using convergence 
-               */
-              long[] times = new long[window];
-              int n = 0;
-              
-              /* Warmup */
-              while (n < window || (n < max_iterations && coeff_of_var(times) > target_var) ) {
-                long start_time = System.currentTimeMillis();
-                valid = b.run(callback, size, false) && valid;
-                times[n%window] = System.currentTimeMillis() - start_time;
-                n++;
-                if (n >= window && verbose) {
-                  System.err.println("Variation "+two_dp.format(coeff_of_var(times)*100)+
-                          "% achieved after "+n+" iterations");
-                }
-              }
-              if (n < max_iterations) {
-                valid = b.run(callback, size, true) && valid; // beware order of evaluation!
-              } else {
-                System.err.println("Benchmark failed to converge.");
-              }
-            } else {
-              /*
-               * Run the benchmark for a set # of iterations
-               */
-              for (; iterations > 1; iterations--)
-                valid = b.run(callback, size, false) && valid; // beware order of evaluation!
-              valid = b.run(callback, size, true) && valid; // beware order of evaluation!
-            }            
-            b.cleanup();
-            
-            if (!valid) {
-              System.err.println("Validation FAILED for "+bm+" "+size);
-              if (!ignoreValidation)
-                System.exit(-2);
-            }
+          if (dacapo.Benchmark.class.isAssignableFrom(harness.findClass())) {
+            runBenchmark(scratch, bm, harness);
           } else {
-            /*
-             * Old-style benchmarks
-             */
-            Method m = harness.findMethod();
-
-            for (; iterations > 1; iterations--) {
-              callback.startWarmup(bm);
-              harness.invokeConfiguration(m, size);
-              callback.stopWarmup();
-              callback.completeWarmup(bm, true);
-            }
-
-            callback.start(bm);
-            harness.invokeConfiguration(m, size);
-            callback.stop();
-            callback.complete(bm, true);
+            runBenchmarkOld(bm, harness);
           }
         }
       }
@@ -270,6 +212,98 @@ public class TestHarness {
       e.printStackTrace();
       System.exit(-1);
     }
+  }
+
+  /**
+   * @param scratch
+   * @param bm
+   * @param harness
+   * @param c
+   * @throws NoSuchMethodException
+   * @throws InstantiationException
+   * @throws IllegalAccessException
+   * @throws InvocationTargetException
+   * @throws Exception
+   */
+  private static void runBenchmark(File scratch, String bm, TestHarness harness) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, Exception {
+    Constructor cons = harness.findClass().getConstructor(new Class[] {Config.class,File.class});
+    
+    Benchmark b = (Benchmark) cons.newInstance(new Object[] {harness.config,scratch});
+    
+    boolean valid = true;
+    if (converge) {
+      /*
+       * Run the benchmark using convergence 
+       */
+      long[] times = new long[window];
+      int n = 0;
+      
+      /* Warmup */
+      while (n < window || (n < max_iterations && coeff_of_var(times) > target_var) ) {
+        long start_time = System.currentTimeMillis();
+        valid = b.run(callback, size, false) && valid;
+        times[n%window] = System.currentTimeMillis() - start_time;
+        n++;
+        if (n >= window && verbose) {
+          System.err.println("Variation "+two_dp.format(coeff_of_var(times)*100)+
+                  "% achieved after "+n+" iterations");
+        }
+      }
+      if (n < max_iterations) {
+        valid = b.run(callback, size, true) && valid; // beware order of evaluation!
+      } else {
+        System.err.println("Benchmark failed to converge.");
+      }
+    } else {
+      /*
+       * Run the benchmark for a set # of iterations
+       */
+      for (; iterations > 1; iterations--)
+        valid = b.run(callback, size, false) && valid; // beware order of evaluation!
+      valid = b.run(callback, size, true) && valid; // beware order of evaluation!
+    }            
+    b.cleanup();
+    
+    if (!valid) {
+      System.err.println("Validation FAILED for "+bm+" "+size);
+      if (!ignoreValidation)
+        System.exit(-2);
+    }
+  }
+
+  /**
+   * @param bm
+   * @param harness
+   */
+  private static void runBenchmarkOld(String bm, TestHarness harness) {
+    /*
+     * Old-style benchmarks
+     */
+    Method m = harness.findMethod();
+
+    for (; iterations > 1; iterations--) {
+      callback.startWarmup(bm);
+      harness.invokeConfiguration(m, size);
+      callback.stopWarmup();
+      callback.completeWarmup(bm, true);
+    }
+
+    callback.start(bm);
+    harness.invokeConfiguration(m, size);
+    callback.stop();
+    callback.complete(bm, true);
+  }
+
+  /**
+   * @return A Decimal Format object
+   */
+  private static DecimalFormat twoDecimalPlaces() {
+    DecimalFormat two_dp;
+    two_dp = new DecimalFormat();
+    two_dp.setMaximumFractionDigits(2);
+    two_dp.setMinimumFractionDigits(2);
+    two_dp.setGroupingUsed(true);
+    return two_dp;
   }
 
   /**

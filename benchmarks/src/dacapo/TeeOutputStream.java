@@ -24,6 +24,7 @@ public class TeeOutputStream extends FilterOutputStream {
   private OutputStream log = null;
   private int version = 0;
   private final File logFile;
+  
   /**
    * 
    */
@@ -42,6 +43,20 @@ public class TeeOutputStream extends FilterOutputStream {
     try {
       log = new FileOutputStream(logFile);
     } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public void openLog() {
+    newLog();
+  }
+  
+  public void closeLog() {
+    try {
+      flush();
+      log.close();
+      log = null;
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -72,10 +87,10 @@ public class TeeOutputStream extends FilterOutputStream {
    * @see java.lang.Object#finalize()
    */
   protected void finalize() throws Throwable {
-    super.finalize();
     try { 
       flush();
       close();
+      super.finalize();
     } catch (Exception e) {}
   }
 
@@ -84,6 +99,5 @@ public class TeeOutputStream extends FilterOutputStream {
     File archive = new File(logFile.getAbsolutePath()+"."+version);
     try { log.close(); } catch (IOException e) {}
     logFile.renameTo(archive);
-    newLog();
   }
 }

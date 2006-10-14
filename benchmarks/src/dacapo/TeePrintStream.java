@@ -33,4 +33,11 @@ public class TeePrintStream extends PrintStream {
   public void version() {
     ((TeeOutputStream)out).version();
   }
+  
+  public void openLog() {
+    ((TeeOutputStream)out).openLog();
+  }
+  public void closeLog() {
+    ((TeeOutputStream)out).closeLog();
+  }
 }

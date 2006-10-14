@@ -62,13 +62,13 @@ public abstract class Benchmark {
   /**
    * Saved System.out while redirected to the digest stream
    */
-  private static PrintStream savedOut = System.out;
+  private static final PrintStream savedOut = System.out;
   
 
   /**
    * Saved System.err while redirected to the digest stream
    */
-  private static PrintStream savedErr = System.err;
+  private static final PrintStream savedErr = System.err;
   
   /*
    * Instance fields
@@ -87,12 +87,12 @@ public abstract class Benchmark {
   /**
    * Output stream for validating System.err
    */
-  private final TeePrintStream err;
+  private static TeePrintStream err = null;
   
   /**
    * Output stream for validating System.out
    */
-  private final TeePrintStream out;
+  private static TeePrintStream out = null;
   
   /**
    * Keep track of the number of times we have been iterated.
@@ -144,8 +144,10 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
     this.config = config;
-    out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
-    err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
+    if (out == null) 
+      out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
+    if (err == null) 
+      err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
     prepare();
   }
   
@@ -195,6 +197,8 @@ public abstract class Benchmark {
         out.version();
         err.version();
       }
+      out.openLog();
+      err.openLog();
     }
   }
   
@@ -213,8 +217,8 @@ public abstract class Benchmark {
    */
   public final void stopIteration() {
     if (digestOutput) {
-      out.flush();
-      err.flush();
+      out.closeLog();
+      err.closeLog();
       System.setOut(savedOut);
       System.setErr(savedErr);
     }
@@ -260,7 +264,7 @@ public abstract class Benchmark {
           // Not collecting digests for stdout and stderr, so can't check them
         } else if (!digest.equals(refDigest)) {
           valid = false;
-          System.err.println("Digest validation failed for "+file+", expecting "+refDigest+" found "+digest);
+          System.err.println("Digest validation failed for "+file+", expecting 0x"+refDigest+" found 0x"+digest);
         } else if (verbose) { 
           System.out.println("Digest validation succeeded for "+file);
         }
