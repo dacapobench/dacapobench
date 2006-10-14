@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-14 15:04:52 +1000 (Sat, 14 Oct 2006) $
- *   $Id: build.xml 176 2006-10-14 05:04:52Z steveb-oss $
+ *   $Date: 2006-10-15 07:46:44 +1000 (Sun, 15 Oct 2006) $
+ *   $Id: build.xml 181 2006-10-14 21:46:44Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -114,6 +114,7 @@
           <fileset dir="${build_src}"/>
           <fileset dir="${extra}/eclipse-plugin/@dot"/>
           <fileset dir="cachedir"/>
+          <fileset dir="${deps}"/>
           <!-- Jython's mess -->
           <fileset dir="scratch"/>
         </delete>
@@ -205,7 +206,7 @@
 	<property name="batik.url" value="${apache.dl.url}/xml/batik"/>
 	<property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
 	<property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
-	<property name="eclipse.url" value="http://download.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
+	<property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
 	<property name="fop.url" value="${apache.dl.url}/xml/fop"/>
 	<property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
 	<property name="jython.url" value="${sourceforge.dl.url}/jython"/>
@@ -843,7 +844,7 @@
 	<!-- ================================= 
           target: fop              
          ================================= -->
-	<target name="fop" depends="batik.benchmark,fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
+	<target name="fop" depends="fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
 	<!-- Build the fop dacapo harness -->
 	<target name="fop.harness" depends="harness" description="--> Build the fop harness">
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
@@ -1007,7 +1008,8 @@
 	<!-- Add external libraries to the deps -->
 	<target name="jython.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
 		<unjar src="${build_src}/ant/ant.jar" dest="${deps}"/>
-    </target>	
+		<unjar src="${build_src}/ant/ant-launcher.jar" dest="${deps}"/>
+	</target>	
 
 
 	<!-- ================================= 
@@ -1136,6 +1138,7 @@
 	    <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${deps}"/>
 	    <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${deps}"/>
 		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${deps}"/>
+		<unjar src="${build_src}/ant/ant-launcher.jar" dest="${deps}"/>
     </target>
 
 	<!-- ================================= 
