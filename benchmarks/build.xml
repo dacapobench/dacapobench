@@ -11,6 +11,9 @@
  *                  including the 'results'
  * - sourceclean    remove all distribution files, and all downloadable
  *                  sources.  This prepares an "ip-clean" distribution.
+ * - split-deps     use this target in combination with any of the others
+ *                  to force external dependencies to be separated and placed
+ *                  into a second generated jar file.
  *
  * - <bmname>       will compile a given benchmark
  * - compile        will compile all benchmarks
@@ -29,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-14 15:01:01 +1000 (Sat, 14 Oct 2006) $
- *   $Id: build.xml 175 2006-10-14 05:01:01Z steveb-oss $
+ *   $Date: 2006-10-14 15:04:52 +1000 (Sat, 14 Oct 2006) $
+ *   $Id: build.xml 176 2006-10-14 05:04:52Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
