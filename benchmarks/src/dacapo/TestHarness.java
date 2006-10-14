@@ -19,8 +19,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 138 2006-10-06 02:19:08Z rgarner $
- * $Date: 2006-10-06 12:19:08 +1000 (Fri, 06 Oct 2006) $
+ * $Id: TestHarness.java 174 2006-10-14 04:22:35Z steveb-oss $
+ * $Date: 2006-10-14 14:22:35 +1000 (Sat, 14 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -276,7 +276,7 @@ public class TestHarness {
    * Print a usage message to stdout
    */
   private static void printUsage() {
-    System.out.println("Usage: java Harness [options ...] [benchmarks ...]");
+    System.out.println("Usage: java -jar dacapo-<version>.jar [options ...] [benchmarks ...]");
     System.out.println("    -c <callback>           Use class <callback> to bracket benchmark runs");
     System.out.println("    -h                      Print this help");
     System.out.println("    -i                      Display benchmark information");
