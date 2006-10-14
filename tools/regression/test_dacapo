@@ -1,0 +1,160 @@
+#!/bin/bash
+
+BIN=$HOME/dacapo_regressions
+
+VERSION=$1
+VMS="$2"
+BMS="$3"
+SIZES="$4"
+
+if [ "$VMS" == "" -o "$VMS" == "ALL" ]
+then
+  VMS="JIKESRVM SUN J9 BLACKDOWN JROCKIT TOKYO"
+fi
+
+if [ "$BMS" == "" -o "$BMS" == "ALL" ]
+then
+  BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
+fi
+
+if [ "$SIZES" == "" -o "$SIZES" == "ALL" ]
+then
+  SIZES="small default large"
+fi
+
+OUTDIR=results-$VERSION
+JAR=dacapo-${VERSION}.jar
+
+[ -e $OUTDIR ] || { mkdir $OUTDIR; }
+
+#
+# Return the IDs all processes descended from a given PID (inclusive)
+#
+proctree() {
+  pid=$1
+
+  children=$(ps --ppid $pid -o pid --no-headers)
+
+  descendents=
+  for child in $children; do
+    descendents="$descendents $(proctree $child)"
+  done
+  parent=$(ps --pid $pid -o pid --no-headers)
+  echo $parent $descendents
+}
+
+#
+# Run a command, and kill it if it exceeds a timeout
+#
+with_timeout() {
+  limit=$1
+  shift
+
+  START=`date -u +%s`
+
+  $* &
+  PID=$!
+
+  NOW=`date -u +%s`
+  TIMEOUT=$(($START + $limit))
+  while [ \( "$(proctree $PID)" != "" \) -a \( $NOW -lt $TIMEOUT \) ]; do
+    sleep 5
+    NOW=`date -u +%s`
+  done
+
+  if [ "$(proctree $PID)" != "" ]; then
+    #
+    # timeout occurred - time to kill the offending process and its progeny
+    #
+    PROCS=$(proctree $PID)
+    echo "TIMEOUT - terminating benchmark run"
+    kill $PROCS
+    sleep 5
+    
+    for pid in $PROCS; do
+      if [ $(ps --pid $pid -o pid --no-headers) != "" ]; then
+        # no more "mr nice guy"
+        kill -9 $proc
+      fi
+    done
+    for pid in $PROCS; do
+      if [ $(ps --pid $pid -o pid --no-headers) != "" ]; then
+        echo "WARNING: Unable to kill $pid"
+      fi
+    done
+  fi
+}
+
+#
+# Run the benchmarks:
+# forall VMS
+#   forall sizes
+#     forall benchmarks
+#       in 2 different scratch directories
+#
+
+for vm in $VMS
+do
+  VMFLAGS=
+  case $vm in  
+  JIKESRVM)   JAVA_HOME=/usr/lib/j2se/1.4/ ;;
+  JROCKIT)   JAVA_HOME=/opt/jrockit-R26.3.0-jdk1.5.0_06 ;;
+  SUN)       JAVA_HOME=/opt/jdk1.5.0_07 ;;
+  BLACKDOWN) JAVA_HOME=/usr/lib/j2se/1.4 ;;
+  TOKYO) case `uname -m` in
+         ppc*) JAVA_HOME=/opt/IBMJava2-ppc-142;;
+         i*86) JAVA_HOME=/opt/IBMJava2-142;;
+         esac
+         ;;
+  J9) case `uname -m` in
+      ppc*) JAVA_HOME=/opt/ibm-java2-ppc-50 ;;
+      i*86) JAVA_HOME=/opt/ibm-java2-i386-50 ;;
+      esac
+         ;; 
+  esac
+
+  case $vm in
+    JIKESRVM) JAVA=$RVM_ROOT/bin/rvm ;;
+    *) JAVA=$JAVA_HOME/bin/java;;
+  esac
+  export JAVA_HOME
+
+  [ -e $OUTDIR/$vm ] || { mkdir $OUTDIR/$vm; }
+
+  for size in $SIZES
+  do
+    echo -n "$vm/$size: "
+    for bm in $BMS
+    do
+      echo -n "$bm "
+      VMFLAGS="-Xmx512m"
+      case $bm in
+        hsqldb) VMFLAGS="-Xmx700m" ;;
+        xalan) if [ $vm == "J9" -o $vm == "TOKYO" ]; 
+               then
+                 jar xf $JAR xalan.jar 
+                 VMFLAGS="-Xbootclasspath/p:xalan.jar"; 
+               fi ;;
+        chart) if [ $vm == "JIKESRVM" ]
+               then 
+                 # assume virtual framebuffer device
+                 export DISPLAY=:0.0
+               fi ;;
+        eclipse) if [ $vm == "JIKESRVM" ]
+               then VMFLAGS="-Declipse.java.home=$JAVA_HOME"
+               fi ;;
+        *) VMFLAGS= ;;
+      esac
+      #DFLAGS="-c ToCallback -s $size -n 2"
+      DFLAGS="-s $size -n 2"
+      with_timeout 600 $JAVA $VMFLAGS -jar $JAR $DFLAGS \
+	      -scratch /tmp/$$ $bm &> $OUTDIR/$vm/$bm.$size.tmp.log
+      with_timeout 600 $JAVA $VMFLAGS -jar $JAR $DFLAGS \
+	      $bm &> $OUTDIR/$vm/$bm.$size.log
+    done
+    echo ...complete
+    $BIN/test_dacapo_results $VERSION
+  done
+done
+
+$BIN/test_dacapo_results $VERSION

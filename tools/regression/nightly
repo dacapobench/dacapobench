@@ -1,0 +1,106 @@
+#!/bin/bash
+#
+# Nightly regressions for dacapo
+#
+
+DSTAMP=$(date +%Y%m%d)
+TOP=$HOME/tmp/dacapo-nightly-$DSTAMP
+DACAPO_SVNHOME=https://svn.sourceforge.net/svnroot/dacapobench
+RVM_SVNHOME=https://svn.sourceforge.net/svnroot/jikesrvm
+BIN=$HOME/dacapo_regressions
+JAVA_HOME_14=/usr/lib/j2se/1.4
+
+#
+# Pick up system-specific parameters
+#
+SYSCONFIG=$BIN/$(uname -m).nightly.config
+if [ -e $SYSCONFIG ]; then
+  . $SYSCONFIG
+fi
+
+#
+# JikesRVM configuration variabes
+#
+CONFIG=FastAdaptiveGenMS
+export RVM_ROOT=$TOP/rvm_trunk
+export RVM_HOST_CONFIG=$RVM_ROOT/config/i686-pc-linux-gnu
+export RVM_BUILD=$RVM_ROOT/build/$CONFIG
+export PATH=$RVM_ROOT/bin:$PATH
+
+#
+# Create the working directory and other initialization tasks
+#
+init() {
+  if [ -e $TOP ]
+  then
+    rm -rf $TOP
+  fi
+  mkdir $TOP
+}
+
+#
+# Build the dacapo benchmarks from SVN head
+#
+build_dacapo() {
+  ( 
+    set -x
+    export JAVA_HOME=$JAVA_HOME_14
+
+    cd $TOP
+
+    svn co $DACAPO_SVNHOME/benchmarks/trunk dacapo
+
+    cd dacapo/benchmarks
+    if [ -d $BIN/sources ]; then
+      cp -r $BIN/sources .
+      BUILD_PARAMS=dist
+    else
+      BUILD_PARAMS="sources dist"
+    fi
+    ant $BUILD_PARAMS
+    cp dacapo-$DSTAMP.jar $TOP 
+  )
+}
+
+build_rvm() {
+  (
+    cd $TOP
+
+    svn co $RVM_SVNHOME/rvmroot/trunk rvm_trunk
+
+    mkdir -p $RVM_ROOT/build
+
+
+    echo "RVM_ROOT=$RVM_ROOT"
+    echo "RVM_BUILD=$RVM_BUILD"
+    echo "RVM_HOST_CONFIG=$RVM_HOST_CONFIG"
+
+    jconfigure $CONFIG
+    cd $RVM_BUILD
+    ./jbuild 
+  )
+}
+
+(
+  init
+  build_dacapo
+  if [ ! -e $TOP/dacapo-$DSTAMP.jar ]; then
+    echo "ERROR: dacapo benchmarks failed to build."
+    exit 1
+  fi
+
+  build_rvm
+  if [ ! -e $TOP/rvm_trunk/build/$CONFIG ]; then
+    echo "ERROR: JikesRVM failed to build."
+  fi
+
+  if [ "$1" = "test" ]; then
+    exit
+  fi
+
+  ( cd $TOP; 
+    $BIN/test_dacapo $DSTAMP 
+  ) && { 
+      rm -rf $TOP
+  }
+) > $HOME/nightly.$DSTAMP.log 2>&1

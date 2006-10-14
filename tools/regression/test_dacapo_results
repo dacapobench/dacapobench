@@ -1,0 +1,196 @@
+#!/bin/bash
+#
+# Format results of test_dacapo into a web page
+#
+
+if [ $# -lt 1 ]
+then
+  echo "Usage $0 release"
+  exit 1
+fi
+
+SIZES="small default large"
+VMS="JIKESRVM SUN J9 BLACKDOWN JROCKIT TOKYO"
+BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
+RESULTS=results-$1
+PASSES=1          # number of passes of benchmark
+
+MAIN=$RESULTS/index.html
+LASTVM=$(echo $VMS | awk '{ print $NF }')
+SUMMARY=$RESULTS/summary.dat
+PUBLIC=war:/cs/pub/people/Robin.Garner/dacapo/regression/
+
+#
+# Format into an html table with one row per benchmark, column
+# for VM
+#
+n_vms=`echo $VMS | wc -w`
+
+result() {
+  status=$1
+  logs="$2"
+
+  echo -n "<td class=$status>"
+  LINK="&nbsp;"
+  for log in $logs
+  do
+    LINK="${LINK}<a href=\"$log\">log</a>&nbsp;"
+  done
+  echo -n "$LINK"
+  echo "</td>"
+}
+
+check_bm() {
+  vm=$1
+  bm=$2
+  size=$3
+
+  STATUS="nolog"
+  LOGS=""
+  PASS=0
+  FAIL=0
+  for log in $vm/$bm.$size.log $vm/$bm.$size.tmp.log
+  do
+    logfile=$RESULTS/$log
+    if [ -e $logfile ]; then
+      if `grep -q FAILED $logfile`; then
+        STATUS="fail";
+        LOGS="$LOGS $log"
+        FAIL=$(($FAIL + 1))
+      elif `grep -q PASSED $logfile`; then
+        if [ "$STATUS" != "fail" ]; then
+          STATUS="pass"
+        fi
+        PASS=$((${PASS} + 1))
+      else
+        LOGS="$LOGS $log"
+        STATUS="fail"
+        FAIL=$(($FAIL + 1))
+      fi
+    fi
+  done
+  result $STATUS "$LOGS"
+  STATS="$PASS $FAIL"
+}
+
+(
+# All output from here goes to $MAIN
+
+cols=$(($n_vms+2))
+colspan=$((100/$cols))
+
+echo "<html><head>"
+echo "<title>DaCapo regression test results for $RESULTS</title>"
+echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"../regression.sty\"/>"
+echo "</head>"
+echo "<body>"
+echo "<h1>Regression test results $(date) $(uname -m)</h1>"
+echo "<table columns=$cols>"
+
+#
+# Table heading
+#
+echo "<col id=\"benchmark\">"
+echo -n "<col id=\"size\">"
+for vm in $VMS
+do
+  if [ $vm == $LASTVM ]; then
+    echo -n "<col id=\"last\">"
+  else 
+    echo -n "<col id=\"$vm\">" 
+  fi
+done
+echo
+
+echo "<tr class=\"heading\">"
+echo "  <th width=\"$colspan%\" class=\"benchmark\">Benchmark</th>"
+echo "  <th width=\"$colspan%\" class=size>Size</th>"
+for vm in $VMS
+do
+  echo "  <th width=\"$colspan%\" class=$vm>$vm</th> " 
+done
+echo "</tr>"
+
+declare -a PASS_BM FAIL_BM PASS_SIZE FAIL_SIZE PASS_VM FAIL_VM
+
+declare i
+i=0
+for bm in $BMS; do
+  PASS_BM[$i]=0
+  FAIL_BM[$i]=0
+  i=$(($i+1))
+done
+
+i=0;
+for size in $SIZES; do
+  PASS_SIZE[$i]=0
+  FAIL_SIZE[$i]=0
+  i=$(($i+1))
+done
+
+i=0;
+for vm in $VMS; do
+  PASS_VM[$i]=0
+  FAIL_VM[$i]=0
+  i=$(($i+1))
+done
+#
+# Table body
+#
+declare bm_no
+declare size_no
+declare vm_no
+bm_no=0
+for bm in $BMS
+do
+  size_no=0
+  for size in $SIZES
+  do
+    echo -n "<tr class=\"$size\">"
+    if [ "$size" == "small" ]; then
+      echo "<th class=\"benchmark\" rowspan=3>$bm</th>"
+    fi
+    echo -n "<td class=\"size\">$size</td>"
+    vm_no=0
+    for vm in $VMS
+    do
+      check_bm $vm $bm $size
+      PASS=$(echo $STATS | cut -d' ' -f 1)
+      FAIL=$(echo $STATS | cut -d' ' -f 2)
+      PASS_BM[$bm_no]=$((${PASS_BM[$bm_no]}+$PASS))
+      FAIL_BM[$bm_no]=$((${FAIL_BM[$bm_no]}+$FAIL))
+      PASS_SIZE[$size_no]=$((${PASS_SIZE[$size_no]}+$PASS))
+      FAIL_SIZE[$size_no]=$((${FAIL_SIZE[$size_no]}+$FAIL))
+      PASS_VM[$vm_no]=$((${PASS_VM[$vm_no]}+$PASS))
+      FAIL_VM[$vm_no]=$((${FAIL_VM[$vm_no]}+$FAIL))
+      vm_no=$(($vm_no+1))
+    done # for vm
+    echo "</tr>"
+    size_no=$(($size_no+1))
+  done # for size
+  bm_no=$(($bm_no+1))
+done # for bm
+echo "</table>"
+echo "</body>"
+
+#
+# Generate the summary
+#
+i=0
+for bm in $BMS; do
+  echo "benchmark $bm ${PASS_BM[$i]} ${FAIL_BM[$i]}">> $SUMMARY
+  i=$(($i+1))
+done
+i=0
+for size in $SIZES; do
+  echo "size $size ${PASS_SIZE[$i]} ${FAIL_SIZE[$i]}">> $SUMMARY
+  i=$(($i+1))
+done
+i=0
+for vm in $VMS; do
+  echo "vm $vm ${PASS_VM[$i]} ${FAIL_VM[$i]}" >> $SUMMARY
+  i=$(($i+1))
+done
+) > $MAIN
+
+rsync -a $RESULTS $PUBLIC
