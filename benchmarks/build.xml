@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-15 07:56:05 +1000 (Sun, 15 Oct 2006) $
- *   $Id: build.xml 183 2006-10-14 21:56:05Z steveb-oss $
+ *   $Date: 2006-10-17 16:15:39 +1000 (Tue, 17 Oct 2006) $
+ *   $Id: build.xml 187 2006-10-17 06:15:39Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -556,9 +556,11 @@
 		<unzip src="${sources}/apache-ant-${ant.dl.version}-bin.zip" dest="${build_src}/ant/">
 			<patternset>
 				<include name="apache-ant-${ant.dl.version}/lib/ant.jar"/>
+				<include name="apache-ant-${ant.dl.version}/lib/ant-launcher.jar"/>
 			</patternset>
 		</unzip>
 		<move file="${build_src}/ant/apache-ant-${ant.dl.version}/lib/ant.jar" tofile="${build_src}/ant/ant.jar"/>
+		<move file="${build_src}/ant/apache-ant-${ant.dl.version}/lib/ant-launcher.jar" tofile="${build_src}/ant/ant-launcher.jar"/>
 	</target>
 
 	<!-- ================================= 
@@ -1078,7 +1080,7 @@
 			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the pmd benchmark -->
-	<target name="pmd.benchmark" depends="init,xerces,junit" description="--> Build the pmd benchmark">
+	<target name="pmd.benchmark" depends="init,ant,xerces,junit" description="--> Build the pmd benchmark">
 
 		<mkdir dir="${build_src}/pmd"/>
 		<property name="pmd-top" value="${build_src}/pmd/pmd-${pmd.version}"/>
@@ -1137,6 +1139,7 @@
 	    <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${deps}"/>
 	    <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${deps}"/>
 		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${deps}"/>
+		<unjar src="${build_src}/ant/ant.jar" dest="${deps}"/>
 		<unjar src="${build_src}/ant/ant-launcher.jar" dest="${deps}"/>
     </target>
 
