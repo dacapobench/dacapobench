@@ -38,7 +38,7 @@ import org.apache.lucene.queryParser.QueryParser;
 import dacapo.parser.Config;
 
 /** Simple command-line based search demo. */
-public class LuceneSearch extends dacapo.Benchmark {
+public class LusearchHarness extends dacapo.Benchmark {
   public int completed = 0;
   
   /** Use the norms from one field for all fields.  Norms are read into memory,
@@ -61,7 +61,7 @@ public class LuceneSearch extends dacapo.Benchmark {
   
   
   
-  public LuceneSearch(Config config, File scratch) throws Exception {
+  public LusearchHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
   }
   
@@ -132,10 +132,10 @@ public class LuceneSearch extends dacapo.Benchmark {
     String field;
     int repeat;
     boolean raw;
-    LuceneSearch parent;
+    LusearchHarness parent;
     
     public QueryThread(String str, int id, String index, String outBase, String queryBase,
-        String field, String normsField, int repeat, boolean raw, LuceneSearch parent) {
+        String field, String normsField, int repeat, boolean raw, LusearchHarness parent) {
       super(str);
       try {
         reader = IndexReader.open(index);
