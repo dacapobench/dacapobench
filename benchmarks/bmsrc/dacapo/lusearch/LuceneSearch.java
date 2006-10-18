@@ -1,4 +1,4 @@
-package dacapo.luindex;
+package dacapo.lusearch;
 
 /**
  * Copyright 2004 The Apache Software Foundation

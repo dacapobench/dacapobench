@@ -1,4 +1,4 @@
-package dacapo.lucene;
+package dacapo.luindex;
 
 /**
  * Copyright 2004 The Apache Software Foundation
@@ -37,9 +37,9 @@ import dacapo.parser.Config;
  *
  */
 
-public class LuceneIndex extends Benchmark {
+public class LuindexHarness extends Benchmark {
   
-  public LuceneIndex(Config config, File scratch) throws Exception {
+  public LuindexHarness(Config config, File scratch) throws Exception {
     super(config,scratch);
   }
   
