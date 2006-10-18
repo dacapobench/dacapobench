@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-17 16:15:39 +1000 (Tue, 17 Oct 2006) $
- *   $Id: build.xml 187 2006-10-17 06:15:39Z steveb-oss $
+ *   $Date: 2006-10-18 10:32:05 +1000 (Wed, 18 Oct 2006) $
+ *   $Id: build.xml 194 2006-10-18 00:32:05Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -1019,9 +1019,8 @@
 	<target name="lucene" depends="lucene.benchmark,lucene.harness" description="--> build the lucene benchmark"/>
 	<!-- Build the lucene dacapo harness -->
 	<target name="lucene.harness" depends="harness" description="--> Build the lucene dacapo harness">
-		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-			includes="dacapo/lucene/*"
-			debug="true" debuglevel="lines,vars,source"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/luindex/*" debug="true" debuglevel="lines,vars,source"/>
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" includes="dacapo/lusearch/*"	debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the lucene benchmark -->
 	<target name="lucene.benchmark" depends="init" description="--> Build the lucene benchmark">
