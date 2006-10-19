@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 198 2006-10-19 20:41:51Z steveb-oss $
- * $Date: 2006-10-20 06:41:51 +1000 (Fri, 20 Oct 2006) $
+ * $Id: TestHarness.java 201 2006-10-19 21:45:48Z steveb-oss $
+ * $Date: 2006-10-20 07:45:48 +1000 (Fri, 20 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -117,7 +117,7 @@ public class TestHarness {
       for (; i < args.length && args[i].charAt(0) == '-'; i++) {
         if (args[i].equals("-s")) {
           // size name name
-          if (i == args.length) {
+          if (i == args.length - 1) {
             System.err.println("No size specified!");
             printUsage();
             System.exit(10);    	  
@@ -133,7 +133,7 @@ public class TestHarness {
           verbose = true;
         } else if (args[i].equals("-c")) {
           // use a callback
-          if (i == args.length) {
+          if (i == args.length - 1) {
             System.err.println("No callback class specified!");
             printUsage();
             System.exit(11);    	  
@@ -148,24 +148,39 @@ public class TestHarness {
           } 
           if (!(Class.forName("dacapo.Callback").isAssignableFrom(cls))) {
             System.err.println(args[i] + " is not an instance of dacapo.Callback");
-            System.exit(11);
+            System.exit(13);
           } else {
             callback = (Callback) cls.newInstance();
           }
         } else if (args[i].equals("-n")) {          // Run n times, showing the last iteration
-          if (i == args.length) {
+          if (i == args.length - 1) {
             System.err.println("Number of iterations not specified!");
             printUsage();
-            System.exit(13);    	  
+            System.exit(14);    	  
           }
           iterations = Integer.parseInt(args[++i]);
         } else if (args[i].equals("-converge")) {   // Run until times converge
           converge = true;
         } else if (args[i].equals("-max_iterations")) { // Max iterations for convergence
+          if (i == args.length - 1) {
+            System.err.println("No max specified!");
+            printUsage();
+            System.exit(15);    	  
+          }
           max_iterations = Integer.parseInt(args[++i]);
         } else if (args[i].equals("-variance")) {   // Coeff. of variance to aim for
+          if (i == args.length - 1) {
+            System.err.println("No variance specified!");
+            printUsage();
+            System.exit(16);    	  
+          }
           target_var = Double.parseDouble(args[++i])/100.0;
         } else if (args[i].equals("-window")) {     // # iterations to average convergence over
+          if (i == args.length - 1) {
+            System.err.println("No window size specified!");
+            printUsage();
+            System.exit(17);    	  
+          }
           window = Integer.parseInt(args[++i]);
         } else if (args[i].equals("-debug")) {      // Verbose benchmark output
           Benchmark.setVerbose(true);
@@ -178,10 +193,10 @@ public class TestHarness {
         } else if (args[i].equals("-validationReport")) {
           Benchmark.enableValidationReport(args[++i]);
         } else if (args[i].equals("-scratch")) {
-          if (i == args.length) {
+          if (i == args.length - 1) {
             System.err.println("No scratch directory specified!");
             printUsage();
-            System.exit(14);    	  
+            System.exit(18);    	  
           }
           scratchDir = args[++i];
         } else {
@@ -192,7 +207,7 @@ public class TestHarness {
       
       if (i == args.length) {
           System.err.println("No benchmarks specified!");
-          System.exit(15);    	  
+          System.exit(19);    	  
       }
       
       if (callback == null) {
@@ -212,7 +227,7 @@ public class TestHarness {
         InputStream ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
         if (ins == null) {
           System.err.println("Unknown benchmark: "+args[i]);
-          System.exit(12);
+          System.exit(20);
         }
         
         TestHarness harness = new TestHarness(ins);
