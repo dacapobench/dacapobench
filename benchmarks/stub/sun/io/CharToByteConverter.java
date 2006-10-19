@@ -5,6 +5,8 @@
 
 package sun.io;
 
+import java.io.UnsupportedEncondingException;
+
 /**
  * This class is not provided by runtimes that aren't based on the sun libraries
  * This class does the minimum required for the xalan benchmark to run.
@@ -16,7 +18,7 @@ package sun.io;
  */
 public class CharToByteConverter {
   private static final CharToByteConverter instance = new CharToByteConverter();
-  public static Object getConverter(String converter) {
+  public static Object getConverter(String converter) throws UnsupportedEncondingException {
     return instance;
   }
   public boolean canConvert(char c) {
