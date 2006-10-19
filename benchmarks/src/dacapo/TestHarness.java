@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 201 2006-10-19 21:45:48Z steveb-oss $
- * $Date: 2006-10-20 07:45:48 +1000 (Fri, 20 Oct 2006) $
+ * $Id: TestHarness.java 203 2006-10-19 22:11:43Z steveb-oss $
+ * $Date: 2006-10-20 08:11:43 +1000 (Fri, 20 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -118,8 +118,7 @@ public class TestHarness {
         if (args[i].equals("-s")) {
           // size name name
           if (i == args.length - 1) {
-            System.err.println("No size specified!");
-            printUsage();
+            System.err.println("No size specified! (\"-h\" for usage)");
             System.exit(10);    	  
           }
           size = args[++i];
@@ -134,8 +133,7 @@ public class TestHarness {
         } else if (args[i].equals("-c")) {
           // use a callback
           if (i == args.length - 1) {
-            System.err.println("No callback class specified!");
-            printUsage();
+            System.err.println("No callback class specified! (\"-h\" for usage)");
             System.exit(11);    	  
           }
           Class cls = null;
@@ -154,8 +152,7 @@ public class TestHarness {
           }
         } else if (args[i].equals("-n")) {          // Run n times, showing the last iteration
           if (i == args.length - 1) {
-            System.err.println("Number of iterations not specified!");
-            printUsage();
+            System.err.println("Number of iterations not specified! (\"-h\" for usage)");
             System.exit(14);    	  
           }
           iterations = Integer.parseInt(args[++i]);
@@ -163,22 +160,19 @@ public class TestHarness {
           converge = true;
         } else if (args[i].equals("-max_iterations")) { // Max iterations for convergence
           if (i == args.length - 1) {
-            System.err.println("No max specified!");
-            printUsage();
+            System.err.println("No max specified! (\"-h\" for usage)");
             System.exit(15);    	  
           }
           max_iterations = Integer.parseInt(args[++i]);
         } else if (args[i].equals("-variance")) {   // Coeff. of variance to aim for
           if (i == args.length - 1) {
-            System.err.println("No variance specified!");
-            printUsage();
+            System.err.println("No variance specified! (\"-h\" for usage)");
             System.exit(16);    	  
           }
           target_var = Double.parseDouble(args[++i])/100.0;
         } else if (args[i].equals("-window")) {     // # iterations to average convergence over
           if (i == args.length - 1) {
-            System.err.println("No window size specified!");
-            printUsage();
+            System.err.println("No window size specified!  (\"-h\" for usage)");
             System.exit(17);    	  
           }
           window = Integer.parseInt(args[++i]);
@@ -194,19 +188,18 @@ public class TestHarness {
           Benchmark.enableValidationReport(args[++i]);
         } else if (args[i].equals("-scratch")) {
           if (i == args.length - 1) {
-            System.err.println("No scratch directory specified!");
-            printUsage();
+            System.err.println("No scratch directory specified! (\"-h\" for usage)");
             System.exit(18);    	  
           }
           scratchDir = args[++i];
         } else {
-          System.err.println("Unrecognized option "+args[i]);
+          System.err.println("Unrecognized option "+args[i]+ " (\"-h\" for usage)");
           System.exit(1);
         }
       }
       
       if (i == args.length) {
-          System.err.println("No benchmarks specified!");
+          System.err.println("No benchmarks specified! (\"-h\" for usage)");
           System.exit(19);    	  
       }
       
