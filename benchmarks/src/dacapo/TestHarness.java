@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 177 2006-10-14 08:01:30Z rgarner $
- * $Date: 2006-10-14 18:01:30 +1000 (Sat, 14 Oct 2006) $
+ * $Id: TestHarness.java 198 2006-10-19 20:41:51Z steveb-oss $
+ * $Date: 2006-10-20 06:41:51 +1000 (Fri, 20 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -117,6 +117,11 @@ public class TestHarness {
       for (; i < args.length && args[i].charAt(0) == '-'; i++) {
         if (args[i].equals("-s")) {
           // size name name
+          if (i == args.length) {
+            System.err.println("No size specified!");
+            printUsage();
+            System.exit(10);    	  
+          }
           size = args[++i];
         } else if (args[i].equals("-i")) {
           // display benchmark information
@@ -128,13 +133,18 @@ public class TestHarness {
           verbose = true;
         } else if (args[i].equals("-c")) {
           // use a callback
+          if (i == args.length) {
+            System.err.println("No callback class specified!");
+            printUsage();
+            System.exit(11);    	  
+          }
           Class cls = null;
           try {
             cls = Class.forName(args[++i]);
           } catch (Exception e) {
             System.err.println(e);
             System.err.println("Could not find callback class "+args[i]);
-            System.exit(10);
+            System.exit(12);
           } 
           if (!(Class.forName("dacapo.Callback").isAssignableFrom(cls))) {
             System.err.println(args[i] + " is not an instance of dacapo.Callback");
@@ -142,9 +152,12 @@ public class TestHarness {
           } else {
             callback = (Callback) cls.newInstance();
           }
-        } else if (args[i].equals("-two")) {        // Synonym for -n 2
-          iterations = 2;
         } else if (args[i].equals("-n")) {          // Run n times, showing the last iteration
+          if (i == args.length) {
+            System.err.println("Number of iterations not specified!");
+            printUsage();
+            System.exit(13);    	  
+          }
           iterations = Integer.parseInt(args[++i]);
         } else if (args[i].equals("-converge")) {   // Run until times converge
           converge = true;
@@ -165,12 +178,23 @@ public class TestHarness {
         } else if (args[i].equals("-validationReport")) {
           Benchmark.enableValidationReport(args[++i]);
         } else if (args[i].equals("-scratch")) {
+          if (i == args.length) {
+            System.err.println("No scratch directory specified!");
+            printUsage();
+            System.exit(14);    	  
+          }
           scratchDir = args[++i];
         } else {
           System.err.println("Unrecognized option "+args[i]);
           System.exit(1);
         }
       }
+      
+      if (i == args.length) {
+          System.err.println("No benchmarks specified!");
+          System.exit(15);    	  
+      }
+      
       if (callback == null) {
         callback = new Callback();
       }
