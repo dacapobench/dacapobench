@@ -5,7 +5,7 @@
 
 package sun.io;
 
-import java.io.UnsupportedEncondingException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * This class is not provided by runtimes that aren't based on the sun libraries
@@ -18,7 +18,7 @@ import java.io.UnsupportedEncondingException;
  */
 public class CharToByteConverter {
   private static final CharToByteConverter instance = new CharToByteConverter();
-  public static Object getConverter(String converter) throws UnsupportedEncondingException {
+  public static Object getConverter(String converter) throws UnsupportedEncodingException {
     return instance;
   }
   public boolean canConvert(char c) {
