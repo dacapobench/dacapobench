@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class CharToByteConverter {
   private static final CharToByteConverter instance = new CharToByteConverter();
-  public static Object getConverter(String converter) throws UnsupportedEncodingException {
+  public static CharToByteConverter getConverter(String converter) throws UnsupportedEncodingException {
     return instance;
   }
   public boolean canConvert(char c) {
