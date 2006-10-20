@@ -1,0 +1,21 @@
+diff -N -u -r xalan.orig/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java xalan/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java
+--- xalan.orig/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java	2006-10-21 07:25:15.000000000 +1000
++++ xalan/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java	2006-10-21 07:25:49.000000000 +1000
+@@ -149,7 +149,7 @@
+    */
+   public static Object getCharToByteConverter(String encoding)
+   {
+-
++    /*
+     Class charToByteConverterClass = null;
+     java.lang.reflect.Method getConverterMethod = null;
+ 
+@@ -184,7 +184,7 @@
+         }
+       }
+     }
+-
++    */
+     return null;
+   }
+ 

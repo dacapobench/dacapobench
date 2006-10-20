@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-20 08:11:43 +1000 (Fri, 20 Oct 2006) $
- *   $Id: build.xml 203 2006-10-19 22:11:43Z steveb-oss $
+ *   $Date: 2006-10-21 07:44:20 +1000 (Sat, 21 Oct 2006) $
+ *   $Id: build.xml 207 2006-10-20 21:44:20Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -1173,6 +1173,9 @@
 
 		<!-- Unpack the source distribution -->
 		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" dest="${xalan-top}" compression="gzip"/>
+
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/xalan.patch" dir="${build_src}" strip="0"/>
 
 		<!-- Build using Ant, setting the classpath appropriately -->
 		<exec dir="${xalan-top}/xalan-j_${xalan-v}" executable="ant">

@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 203 2006-10-19 22:11:43Z steveb-oss $
- * $Date: 2006-10-20 08:11:43 +1000 (Fri, 20 Oct 2006) $
+ * $Id: TestHarness.java 207 2006-10-20 21:44:20Z steveb-oss $
+ * $Date: 2006-10-21 07:44:20 +1000 (Sat, 21 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -115,6 +115,7 @@ public class TestHarness {
       /* get global options */
       int i = 0;
       for (; i < args.length && args[i].charAt(0) == '-'; i++) {
+    	try {
         if (args[i].equals("-s")) {
           // size name name
           if (i == args.length - 1) {
@@ -196,6 +197,10 @@ public class TestHarness {
           System.err.println("Unrecognized option "+args[i]+ " (\"-h\" for usage)");
           System.exit(1);
         }
+    	} catch (NumberFormatException e) {
+          System.err.println("Could not parse numeric argument to "+args[i-1]+" : "+args[i]+"! (\"-h\" for usage)");
+          System.exit(18);    	  
+    	}
       }
       
       if (i == args.length) {
