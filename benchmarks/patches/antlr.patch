@@ -1,6 +1,108 @@
-diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' antlr.orig/antlr-2.7.2/antlr/Tool.java antlr/antlr-2.7.2/antlr/Tool.java
---- antlr.orig/antlr-2.7.2/antlr/Tool.java	2003-01-20 11:38:00.000000000 +1100
-+++ antlr/antlr-2.7.2/antlr/Tool.java	2006-04-05 15:29:12.000000000 +1000
+diff -N -u -r antlr.orig/antlr-2.7.2/antlr/DefineGrammarSymbols.java antlr/antlr-2.7.2/antlr/DefineGrammarSymbols.java
+--- antlr.orig/antlr-2.7.2/antlr/DefineGrammarSymbols.java	2006-10-20 15:19:24.000000000 +1000
++++ antlr/antlr-2.7.2/antlr/DefineGrammarSymbols.java	2006-10-20 15:19:42.000000000 +1000
+@@ -8,8 +8,10 @@
+  */
+ 
+ import java.util.Hashtable;
++import java.util.Enumeration;
+ 
+ import antlr.collections.impl.BitSet;
++import antlr.collections.impl.Vector;
+ 
+ /**DefineGrammarSymbols is a behavior for the ANTLRParser that adds all
+  * the token and rule symbols to the grammar symbol table.
+@@ -19,7 +21,7 @@
+  */
+ public class DefineGrammarSymbols implements ANTLRGrammarParseBehavior {
+     // Contains all of the defined parser and lexer Grammar's indexed by name
+-    protected Hashtable grammars = new Hashtable();
++    protected Vector grammars = new Vector();
+     // Contains all the TokenManagers indexed by name
+     protected Hashtable tokenManagers = new Hashtable();
+     // Current grammar (parser or lexer)
+@@ -41,6 +43,15 @@
+     // The target language
+     String language = "Java";
+ 
++    protected Grammar findGrammar(String name) {
++	Enumeration e = grammars.elements();
++	while (e.hasMoreElements()) {
++	    Grammar g = (Grammar)e.nextElement();
++	    if (g.getClassName().equals(name)) return g;
++       }
++        return null;
++    }
++    
+     protected int numLexers = 0;
+     protected int numParsers = 0;
+     protected int numTreeParsers = 0;
+@@ -91,7 +102,7 @@
+     /** Abort the processing of a grammar due to syntax errors */
+     public void abortGrammar() {
+         if (grammar != null && grammar.getClassName() != null) {
+-            grammars.remove(grammar.getClassName());
++            grammars.removeElement(grammar);
+         }
+         grammar = null;
+     }
+@@ -699,7 +710,7 @@
+         reset();
+         //System.out.println("Processing lexer '" + name.getText() + "'");
+         // Does the lexer already exist?
+-        Grammar g = (Grammar)grammars.get(name);
++        Grammar g = findGrammar(name.getText());
+         if (g != null) {
+             if (!(g instanceof LexerGrammar)) {
+                 tool.panic("'" + name.getText() + "' is already defined as a non-lexer");
+@@ -714,7 +725,7 @@
+             lg.comment = doc;
+             lg.processArguments(args);
+             lg.setFilename(file);
+-            grammars.put(lg.getClassName(), lg);
++            grammars.appendElement(lg);
+             // Use any preamble action
+             lg.preambleAction = thePreambleAction;
+             thePreambleAction = new CommonToken(Token.INVALID_TYPE, "");
+@@ -732,7 +743,7 @@
+         reset();
+         //System.out.println("Processing parser '" + name.getText() + "'");
+         // Is this grammar already defined?
+-        Grammar g = (Grammar)grammars.get(name);
++        Grammar g = findGrammar(name.getText());
+         if (g != null) {
+             if (!(g instanceof ParserGrammar)) {
+                 tool.panic("'" + name.getText() + "' is already defined as a non-parser");
+@@ -747,7 +758,7 @@
+             grammar.comment = doc;
+             grammar.processArguments(args);
+             grammar.setFilename(file);
+-            grammars.put(grammar.getClassName(), grammar);
++            grammars.appendElement(grammar);
+             // Use any preamble action
+             grammar.preambleAction = thePreambleAction;
+             thePreambleAction = new CommonToken(Token.INVALID_TYPE, "");
+@@ -763,7 +774,7 @@
+         reset();
+         //System.out.println("Processing tree-walker '" + name.getText() + "'");
+         // Is this grammar already defined?
+-        Grammar g = (Grammar)grammars.get(name);
++        Grammar g = findGrammar(name.getText());
+         if (g != null) {
+             if (!(g instanceof TreeWalkerGrammar)) {
+                 tool.panic("'" + name.getText() + "' is already defined as a non-tree-walker");
+@@ -778,7 +789,7 @@
+             grammar.comment = doc;
+             grammar.processArguments(args);
+             grammar.setFilename(file);
+-            grammars.put(grammar.getClassName(), grammar);
++            grammars.appendElement(grammar);
+             // Use any preamble action
+             grammar.preambleAction = thePreambleAction;
+             thePreambleAction = new CommonToken(Token.INVALID_TYPE, "");
+diff -N -u -r antlr.orig/antlr-2.7.2/antlr/Tool.java antlr/antlr-2.7.2/antlr/Tool.java
+--- antlr.orig/antlr-2.7.2/antlr/Tool.java	2006-10-20 15:19:24.000000000 +1000
++++ antlr/antlr-2.7.2/antlr/Tool.java	2006-10-20 15:19:42.000000000 +1000
 @@ -409,7 +409,10 @@
                                 System.getProperty("line.separator"));
              e.printStackTrace();
