@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 208 2006-10-20 21:49:35Z steveb-oss $
- * $Date: 2006-10-21 07:49:35 +1000 (Sat, 21 Oct 2006) $
+ * $Id: TestHarness.java 209 2006-10-20 21:52:29Z steveb-oss $
+ * $Date: 2006-10-21 07:52:29 +1000 (Sat, 21 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -359,7 +359,6 @@ public class TestHarness {
     System.out.println("      -variance <pct>         Target coefficient of variation (default 3.0)");
     System.out.println("      -window <n>             Measure variance over n runs (default 3)");
     System.out.println("    -n <iter>               Run the benchmark <iter> times");
-    System.out.println("    -two                    Equivalent to -n 2");
     System.out.println();
     System.out.println("  Debugging options (for benchmark suite maintainers)");
     System.out.println("    -debug                  Verbose debugging information");
