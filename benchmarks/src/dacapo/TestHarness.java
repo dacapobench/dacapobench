@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 209 2006-10-20 21:52:29Z steveb-oss $
- * $Date: 2006-10-21 07:52:29 +1000 (Sat, 21 Oct 2006) $
+ * $Id: TestHarness.java 210 2006-10-20 21:59:35Z steveb-oss $
+ * $Date: 2006-10-21 07:59:35 +1000 (Sat, 21 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -198,7 +198,7 @@ public class TestHarness {
           System.exit(1);
         }
     	} catch (NumberFormatException e) {
-          System.err.println("Could not parse numeric argument to \""+args[i-1]+"\": \""+args[i]+"\"! (\"-h\" for usage)");
+          System.err.println("Could not parse numeric argument to \""+args[i-1]+"\"! (\"-h\" for usage)");
           System.exit(18);    	  
     	}
       }
