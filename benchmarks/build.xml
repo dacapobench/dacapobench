@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-10-21 07:44:20 +1000 (Sat, 21 Oct 2006) $
- *   $Id: build.xml 207 2006-10-20 21:44:20Z steveb-oss $
+ *   $Date: 2006-10-25 08:12:51 +1000 (Wed, 25 Oct 2006) $
+ *   $Id: build.xml 211 2006-10-24 22:12:51Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -1087,6 +1087,9 @@
 		<!-- Expand the pmd distribution zipfile -->
 		<unzip src="${sources}/pmd-src-${pmd.version}.zip" dest="${build_src}/pmd"/>
 
+		<!-- Apply the dacapo patch -->
+		<patch patchfile="${patches}/pmd.patch" dir="${build_src}" strip="0"/>
+		
 		<!-- Build using Ant, setting the classpath appropriately -->
 		<exec dir="${pmd-top}/bin" executable="ant">
 			<arg value="compile"/>
