@@ -1,4 +1,11 @@
 #!/bin/bash
+#
+# Main driver for dacapo regression tests.  Runs all benchmarks at all sizes
+# through all available JVMs, with 2 different scratch directories.
+#
+# $Date:$
+# $Id:$
+#
 
 BIN=$HOME/dacapo_regressions
 
@@ -72,13 +79,13 @@ with_timeout() {
     sleep 5
     
     for pid in $PROCS; do
-      if [ $(ps --pid $pid -o pid --no-headers) != "" ]; then
+      if [ "$(ps --pid $pid -o pid --no-headers)" != "" ]; then
         # no more "mr nice guy"
         kill -9 $proc
       fi
     done
     for pid in $PROCS; do
-      if [ $(ps --pid $pid -o pid --no-headers) != "" ]; then
+      if [ "$(ps --pid $pid -o pid --no-headers)" != "" ]; then
         echo "WARNING: Unable to kill $pid"
       fi
     done
