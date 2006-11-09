@@ -150,11 +150,11 @@ public abstract class Benchmark {
     this.scratch = scratch;
     this.config = config;
     if (validate) {
-      synchronized(out) {
+      synchronized(System.out) {
         if (out == null) 
           out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
       }
-      synchronized(err) {
+      synchronized(System.err) {
         if (err == null) 
           err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
       }
