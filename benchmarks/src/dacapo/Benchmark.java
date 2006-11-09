@@ -42,7 +42,12 @@ public abstract class Benchmark {
   /**
    * Perform digest operations on standard output and standard error
    */
-  private static boolean digestOutput = true;
+  private static boolean validateOutput = true;
+  
+  /**
+   * Perform validation
+   */
+  private static boolean validate = true;
   
   /**
    * Don't clean up output files
@@ -144,10 +149,16 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
     this.config = config;
-    if (out == null) 
-      out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
-    if (err == null) 
-      err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
+    if (validate) {
+      synchronized(out) {
+        if (out == null) 
+          out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
+      }
+      synchronized(err) {
+        if (err == null) 
+          err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
+      }
+    }
     prepare();
   }
   
@@ -190,7 +201,7 @@ public abstract class Benchmark {
    * and output streams.  stopIteration() should be its inverse.
    */
   public final void startIteration() {
-    if (digestOutput) {
+    if (validateOutput) {
       System.setOut(out);
       System.setErr(err);
       if (iteration > 1) {
@@ -216,7 +227,7 @@ public abstract class Benchmark {
    * the timing loop so as not to process any output from the timing harness.
    */
   public final void stopIteration() {
-    if (digestOutput) {
+    if (validateOutput) {
       out.closeLog();
       err.closeLog();
       System.setOut(savedOut);
@@ -232,6 +243,9 @@ public abstract class Benchmark {
    * @return true if the output was correct
    */
   public boolean validate(String size) {
+    if (!validate) 
+      return true;
+    
     if (validationReport) {
       valRepFile.println("Validating "+config.name+" "+size);
     }
@@ -260,7 +274,7 @@ public abstract class Benchmark {
         if (validationReport) {
           valRepFile.println("  \""+file+"\" digest 0x"+digest+",");
         }
-        if (!digestOutput && (file.equals("$stdout") || file.equals("$stderr")) ) {
+        if (!validateOutput && (file.equals("$stdout") || file.equals("$stderr")) ) {
           // Not collecting digests for stdout and stderr, so can't check them
         } else if (!digest.equals(refDigest)) {
           valid = false;
@@ -589,12 +603,12 @@ public abstract class Benchmark {
     }
   }
 
-  public static void setDigestOutput(boolean digestOutput) {
-    Benchmark.digestOutput = digestOutput;
+  public static void setValidateOutput(boolean digestOutput) {
+    Benchmark.validateOutput = digestOutput;
   }
 
   public static boolean isDigestOutput() {
-    return digestOutput;
+    return validateOutput;
   }
 
   public static void setPreserve(boolean preserve) {
@@ -610,5 +624,13 @@ public abstract class Benchmark {
    */
   protected int getIteration() {
     return iteration;
+  }
+
+  /**
+   * @param validate the validate to set
+   */
+  public static void setValidate(boolean flag) {
+    validate = flag;
+    setValidateOutput(false);
   }
 }
