@@ -1,0 +1,8 @@
+ - Xalan benchmark harness now closes input and output files
+   explicitly.  Prevents running out of file handles in large
+   heaps (where finalizers never run).
+   
+ - Added "-ignoreValidation" command line switch.
+ 
+ - Changed jikesrvm stubs so that MMTk callback works with recent 
+   JikesRVM releases.
