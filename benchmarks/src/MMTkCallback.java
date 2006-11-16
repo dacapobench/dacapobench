@@ -4,7 +4,7 @@
  */
 import dacapo.Callback;
 
-import com.ibm.JikesRVM.memoryManagers.mmInterface.MM_Interface;
+import com.ibm.jikesrvm.memorymanagers.mminterface.MM_Interface;
 
 public class MMTkCallback extends Callback {
   /* Immediatly prior to start of the benchmark */

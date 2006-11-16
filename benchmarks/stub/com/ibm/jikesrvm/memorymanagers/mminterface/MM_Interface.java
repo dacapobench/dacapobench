@@ -1,15 +1,18 @@
-package com.ibm.JikesRVM.memoryManagers.mmInterface;
+package com.ibm.jikesrvm.memorymanagers.mminterface;
 
 /**
- * As well as being a compilation stub, this provides forward compatibility 
- * to recent releases of JikesRVM.  
+ * As well as being a compilation stub, this provides backward compatibility 
+ * to earlier releases of JikesRVM.  On a JikesRVM build newer than Nov 2006, 
+ * the stub should never be called, as the class built in to the VM will take 
+ * precedence.  On an earlier build this stub should invoke the VM's version
+ * of the class, providing backward compatibility.
  * 
  * NOTE: the 'active' flag isn't thread safe, but it should provide
  * adequate protection against unbounded recursion.
  * 
  * @author Robin Garner
- * @date $Date: 2006-11-16 15:33:46 +1100 (Thu, 16 Nov 2006) $
- * @id $Id: MM_Interface.java 222 2006-11-16 04:33:46Z rgarner $
+ * @date $Date:$
+ * @id $Id:$
  *
  */
 public class MM_Interface {
@@ -19,7 +22,7 @@ public class MM_Interface {
       warn(); 
     else {
       active = true;
-      com.ibm.jikesrvm.memorymanagers.mminterface.MM_Interface.harnessBegin();
+      com.ibm.JikesRVM.memoryManagers.mmInterface.MM_Interface.harnessBegin();
       active = false;
     }
   }
@@ -28,7 +31,7 @@ public class MM_Interface {
       warn(); 
     else {
       active = true;
-      com.ibm.jikesrvm.memorymanagers.mminterface.MM_Interface.harnessEnd();
+      com.ibm.JikesRVM.memoryManagers.mmInterface.MM_Interface.harnessEnd();
       active = false;
     }
   }
