@@ -14,8 +14,7 @@ $p=$_GET['p'];
   <link rel="shortcut icon" href="<? print $imagespath."anu.ico" ?>" TYPE="image/x-icon">
   <link href="http://styles.anu.edu.au/anu_global_styles.css" rel="stylesheet" type="text/css">
 <style>
-TABLE { border-collapse: collapse;
-}
+TABLE { border-collapse: collapse; }
 *#SIZE { border-right: 2px solid black; }
 TR { border=none; }
 TR.heading { border: 2px solid black; }
@@ -23,9 +22,19 @@ TD { border: 1px solid white;
      text-align: center;
 }
 TD.pass { background-color: lightgreen; }
-TD.fail { background-color: red; }
 TD.nolog { background-color: white; }
 TD.unknown { background-color: yellow; }
+TD.p100 { background-color: rgb(80,224,80); }
+TD.p95 { background-color: rgb(128,224,80); }
+TD.p90 { background-color: rgb(186,224,80); }
+TD.p80 { background-color: rgb(224,234,80); }
+TD.p60 { background-color: rgb(224,205,80); }
+TD.p40 { background-color: rgb(224,186,80); }
+TD.p20 { background-color: rgb(224,166,80); }
+TD.p1 { background-color: rgb(224,147,80); }
+TD.p0 { background-color: rgb(224,116,80); }
+TD.fail { background-color: rgb(224,80,80); }
+TD.none { background-color: white; }
 COL#last { border-right: 2px solid black; }
 </style>
 <!-- BEGIN DOCUMENT META DATA -->
@@ -36,26 +45,8 @@ COL#last { border-right: 2px solid black; }
 <!-- END DOCUMENT META DATA -->
 </head>
 
-<body marginheight="0" marginwidth="0" topmargin="0">
-<? if (($searchBar == "1") && ( $p != "1" )){ include ($includespath."searchBar.inc"); } ?>
-<? include ($includespath."globalHeader.inc") ?>
+<body>
 
-<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Page content layout table">
-	<tr>
-		<? include ($nav) ?>
-		<td width="99%" align="left" height="300" valign="top"><a name="content"></a>
-		<div style="padding-left: 15px; padding-right: 10px;">
-<?
-If (!$blnPrinterFriendly)
-{
- ?>
-<div class="caption">
-    
-</div>
-<!-- SET BREADCRUMB TRAIL HERE ^ (above) -->
-<?
-}
-?>
 
 <!-- BEGIN DOCUMENT CONTENT -->
 <h1>DaCapo Benchmarks</h1>
@@ -64,20 +55,29 @@ If (!$blnPrinterFriendly)
 function passfail($pass,$fail,$style) {
   $status = "";
   $total = $pass + $fail;
-  if (($fail == 0) && ($pass > 0)) {
-    $status = "pass";
-  } elseif ($fail > 0 && $pass == 0) {
-    $status = "fail";
-  } elseif ($fail == 0 && $pass == 0) {
-    $status = "";
-  } else {
-    $status = "unknown";
-  }
   if ($total > 0)
     $pct = (int) (100.0*$pass/$total);
   else
     $pct = 0;
-  echo "<td align=\"center\" class=\"$status\" style=\"$style\">$pass/$fail($pct%)</td>";
+  $bands = array(100,95,90,80,60,40,20,0);
+  if ($total == 0) {
+    $cellClass = "none";
+  } else {
+    $cellClass = "fail";
+    foreach ($bands as $band) {
+      if ($pct >= $band) {
+        $cellClass = "p" . $band ;
+        break;
+      }
+    }
+  }
+  echo "<td align=\"center\" class=\"$cellClass\" style=\"$style\">";
+  if ($total > 0) {
+    echo "$pass/$total($pct%)";
+  } else {
+    echo "&nbsp;";
+  }
+  echo "</td>";
 }
 
 $sizes = array("small","default","large");
@@ -127,8 +127,11 @@ foreach ($sizes as $size) {
     $style .= "border-right: 1px solid grey;";
   echo "  <th align=\"center\" width=\"$width%\" style=\"$style\">$size</th>\n";
 }
-foreach ($vms as $vm) 
-  echo "  <th align=\"center\" width=\"$width%\">$vm</th>\n";
+foreach ($vms as $vm) {
+  echo "  <th align=\"center\" width=\"$width%\">";
+  echo "<a href=\"results-$available[0]/$vm/version.txt\">$vm</a>";
+  echo "</th>\n";
+}
 echo "</tr>\n";
 //
 // Print one row per result directory
@@ -166,13 +169,10 @@ foreach ($available as $result) {
   }
   echo "</tr>\n";
 }
+echo "</table>";
 ?>
+<h2>Performance tests</h2>
+<table>
 </table>
-<!-- END DOCUMENT CONTENT -->
-			</div>
-		</td>
-	</tr>
-</table>
-<? include ($includespath."globalFooter.inc"); ?>
 </body>
 </html>

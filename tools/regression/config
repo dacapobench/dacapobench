@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# config.
+#
+# Configuration variables for DaCapo benchmarks.  "source"d into
+# the main shell scripts to pick up symbols.
+#
+
+export BIN=$HOME/dacapo_regressions
+export SCRATCH=$HOME/tmp
+export JAVA_HOME_14=/usr/lib/j2se/1.4
+
+export ALL_VMS="DRLVM JIKESRVM SUN J9 BLACKDOWN JROCKIT TOKYO"
+export ALL_BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
+export ALL_SIZES="small default large"
+export PUBLIC=war:/cs/pub/people/Robin.Garner/dacapo/regression/
+export PERF_VMS="JIKESRVM DRLVM"
+

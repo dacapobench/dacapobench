@@ -3,12 +3,18 @@
 # Nightly regressions for dacapo
 #
 
+HERE=$(dirname $0)
+
+if [ -z "$1" ]; then
+  . $HERE/config
+else
+  . $1
+fi
+
 DSTAMP=$(date +%Y%m%d)
-TOP=$HOME/tmp/dacapo-nightly-$DSTAMP
+TOP=$SCRATCH/dacapo-nightly-$DSTAMP
 DACAPO_SVNHOME=https://svn.sourceforge.net/svnroot/dacapobench
 RVM_SVNHOME=https://svn.sourceforge.net/svnroot/jikesrvm
-BIN=$HOME/dacapo_regressions
-JAVA_HOME_14=/usr/lib/j2se/1.4
 
 #
 # Pick up system-specific parameters
@@ -89,9 +95,19 @@ build_rvm() {
     exit 1
   fi
 
-  build_rvm
-  if [ ! -e $TOP/rvm_trunk/build/$CONFIG ]; then
-    echo "ERROR: JikesRVM failed to build."
+  if $(echo $ALL_VMS | grep JIKESRVM > /dev/null); then
+    build_rvm
+    if [ ! -e $TOP/rvm_trunk/build/$CONFIG ]; then
+      echo "ERROR: JikesRVM failed to build."
+    fi
+  fi
+
+  if $(echo $ALL_VMS | grep JIKESRVM > /dev/null); then
+    $BIN/build_harmony $TOP/harmony
+    export DRLVM_HOME=$TOP/harmony/harmony/working_vm/build/lnx_ia32_gcc_release/deploy/
+    if [ ! -e $DRLVM_HOME/jre/bin/java ]; then
+      echo "ERROR: DRLVM failed to build."
+    fi
   fi
 
   if [ "$1" = "test" ]; then
@@ -99,7 +115,7 @@ build_rvm() {
   fi
 
   ( cd $TOP; 
-    $BIN/test_dacapo $DSTAMP 
+    $BIN/test_dacapo $DSTAMP # "JIKESRVM DRLVM"
   ) && { 
       rm -rf $TOP
   }

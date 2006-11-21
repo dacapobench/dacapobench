@@ -7,26 +7,32 @@
 # $Id:$
 #
 
-BIN=$HOME/dacapo_regressions
+if [ -z "$BIN" ]; then
+  . $(dirname $0)/config
+fi
 
 VERSION=$1
 VMS="$2"
 BMS="$3"
 SIZES="$4"
 
+if `echo $VERSION | grep '\.' > /dev/null`; then
+  VERSION=$(echo $VERSION | cut -f1 -d.)
+fi
+
 if [ "$VMS" == "" -o "$VMS" == "ALL" ]
 then
-  VMS="JIKESRVM SUN J9 BLACKDOWN JROCKIT TOKYO"
+  VMS=$ALL_VMS
 fi
 
 if [ "$BMS" == "" -o "$BMS" == "ALL" ]
 then
-  BMS="antlr bloat chart eclipse fop hsqldb jython luindex lusearch pmd xalan"
+  BMS=$ALL_BMS
 fi
 
 if [ "$SIZES" == "" -o "$SIZES" == "ALL" ]
 then
-  SIZES="small default large"
+  SIZES=$ALL_SIZES
 fi
 
 OUTDIR=results-$VERSION
@@ -35,62 +41,19 @@ JAR=dacapo-${VERSION}.jar
 [ -e $OUTDIR ] || { mkdir $OUTDIR; }
 
 #
-# Return the IDs all processes descended from a given PID (inclusive)
+# Timestamp this run.
 #
-proctree() {
-  pid=$1
+date +%Y-%m-%d > $OUTDIR/timestamp
 
-  children=$(ps --ppid $pid -o pid --no-headers)
 
-  descendents=
-  for child in $children; do
-    descendents="$descendents $(proctree $child)"
-  done
-  parent=$(ps --pid $pid -o pid --no-headers)
-  echo $parent $descendents
-}
-
-#
-# Run a command, and kill it if it exceeds a timeout
-#
 with_timeout() {
   limit=$1
-  shift
-
-  START=`date -u +%s`
-
-  $* &
-  PID=$!
-
-  NOW=`date -u +%s`
-  TIMEOUT=$(($START + $limit))
-  while [ \( "$(proctree $PID)" != "" \) -a \( $NOW -lt $TIMEOUT \) ]; do
-    sleep 5
-    NOW=`date -u +%s`
-  done
-
-  if [ "$(proctree $PID)" != "" ]; then
-    #
-    # timeout occurred - time to kill the offending process and its progeny
-    #
-    PROCS=$(proctree $PID)
-    echo "TIMEOUT - terminating benchmark run"
-    kill $PROCS
-    sleep 5
-    
-    for pid in $PROCS; do
-      if [ "$(ps --pid $pid -o pid --no-headers)" != "" ]; then
-        # no more "mr nice guy"
-        kill -9 $proc
-      fi
-    done
-    for pid in $PROCS; do
-      if [ "$(ps --pid $pid -o pid --no-headers)" != "" ]; then
-        echo "WARNING: Unable to kill $pid"
-      fi
-    done
-  fi
+  logfile=$2
+  shift 2
+  echo -n "."
+  $BIN/run_with_timeout $limit $OUTDIR/$logfile $*
 }
+
 
 #
 # Run the benchmarks:
@@ -104,7 +67,8 @@ for vm in $VMS
 do
   VMFLAGS=
   case $vm in  
-  JIKESRVM)   JAVA_HOME=/usr/lib/j2se/1.4/ ;;
+  JIKESRVM)  JAVA_HOME=/usr/lib/j2se/1.4 ;;
+  DRLVM)     JAVA_HOME=$DRLVM_HOME ;;
   JROCKIT)   JAVA_HOME=/opt/jrockit-R26.3.0-jdk1.5.0_06 ;;
   SUN)       JAVA_HOME=/opt/jdk1.5.0_07 ;;
   BLACKDOWN) JAVA_HOME=/usr/lib/j2se/1.4 ;;
@@ -122,46 +86,86 @@ do
 
   case $vm in
     JIKESRVM) JAVA=$RVM_ROOT/bin/rvm ;;
+    DRLVM) JAVA=$JAVA_HOME/jre/bin/java ;;
     *) JAVA=$JAVA_HOME/bin/java;;
   esac
   export JAVA_HOME
 
   [ -e $OUTDIR/$vm ] || { mkdir $OUTDIR/$vm; }
+  $JAVA -version &> $OUTDIR/$vm/version.txt
 
   for size in $SIZES
   do
     echo -n "$vm/$size: "
     for bm in $BMS
     do
-      echo -n "$bm "
-      VMFLAGS="-Xmx512m"
+      echo -n "$bm"
+      HEAP=512
       case $bm in
-        hsqldb) VMFLAGS="-Xmx700m" ;;
-        xalan) if [ $vm == "J9" -o $vm == "TOKYO" ]; 
-               then
-                 jar xf $JAR xalan.jar 
-                 VMFLAGS="-Xbootclasspath/p:xalan.jar"; 
-               fi ;;
-        chart) if [ $vm == "JIKESRVM" ]
-               then 
-                 # assume virtual framebuffer device
-                 export DISPLAY=:0.0
-               fi ;;
-        eclipse) if [ $vm == "JIKESRVM" ]
-               then VMFLAGS="-Declipse.java.home=$JAVA_HOME"
-               fi ;;
-        *) VMFLAGS= ;;
+        antlr)   case $vm in
+                   DRLVM) VMFLAGS="-Xbootclasspath/p:$BIN/antlr.jar" ;;
+                 esac ;;
+        hsqldb)  HEAP=768 ;;
+        xalan)   case $vm in
+                   J9|TOKYO|DRLVM)
+                     jar xf $JAR xalan.jar 
+                     VMFLAGS="-Xbootclasspath/p:xalan.jar" ;;
+                 esac ;;
+        chart)   if [ $vm == "JIKESRVM" -o $vm == "DRLVM" ]; then 
+                   # assume virtual framebuffer device
+                   export DISPLAY=:0.0
+                 fi ;;
+        eclipse) if [ $vm == "JIKESRVM" ]; then
+                   VMFLAGS="-Declipse.java.home=$JAVA_HOME"
+                 fi ;;
       esac
-      #DFLAGS="-c ToCallback -s $size -n 2"
+      
       DFLAGS="-s $size -n 2"
-      with_timeout 600 $JAVA $VMFLAGS -jar $JAR $DFLAGS \
-	      -scratch /tmp/$$ $bm &> $OUTDIR/$vm/$bm.$size.tmp.log
-      with_timeout 600 $JAVA $VMFLAGS -jar $JAR $DFLAGS \
-	      $bm &> $OUTDIR/$vm/$bm.$size.log
+      HEAPFLAGS="-Xmx${HEAP}m -Xms${HEAP}m"
+      
+      with_timeout 1200 $vm/$bm.$size.tmp.log $JAVA $VMFLAGS $HEAPFLAGS \
+        -jar $JAR $DFLAGS -scratch /tmp/$$ $bm
+
+      if [ "$size" != "large" ]; then
+        with_timeout 1200 $vm/$bm.$size.log $JAVA $VMFLAGS $HEAPFLAGS \
+          -jar $JAR $DFLAGS $bm
+      fi
+
+      #
+      # VM-specific tests
+      #
+      if [ $vm == "JIKESRVM" -a "$size" != "large" ]; then
+          with_timeout 1200 $vm/$bm.$size.2proc.log \
+            $JAVA $VMFLAGS -X:processors=2 $HEAPFLAGS \
+              -jar $JAR $DFLAGS $bm
+      fi
+
+      #
+      # Performance run for default workload - do 3 iterations
+      #
+      case $bm in
+        antlr) HEAP=64 ;;
+        bloat) HEAP=256 ;;
+        chart) HEAP=128;;
+        fop) HEAP=32;;
+        eclipse) HEAP=256;;
+        hsqldb) HEAP=256;;
+        jython) HEAP=64;;
+        luindex) HEAP=128;;
+        lusearch) HEAP=128;;
+        pmd) HEAP=128;;
+        xalan) HEAP=128;;
+        *) HEAP=512;;
+      esac
+      HEAPFLAGS="-Xmx${HEAP}m -Xms${HEAP}m"
+      if [ "$size" == "${PERF_SIZE:-default}" ]; then
+        DFLAGS="-s $size -n 3"
+        with_timeout 1800 $vm/$bm.$size.perf.log $JAVA $VMFLAGS $HEAPFLAGS \
+          -jar $JAR $DFLAGS $bm
+      fi
+      echo -n " "
     done
-    echo ...complete
-    $BIN/test_dacapo_results $VERSION
+    echo "...complete, publishing results"
+    $BIN/test_dacapo_results results-$VERSION
   done
 done
-
-$BIN/test_dacapo_results $VERSION
