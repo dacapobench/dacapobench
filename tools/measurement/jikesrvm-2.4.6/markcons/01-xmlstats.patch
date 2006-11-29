@@ -1,0 +1,650 @@
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/plan/Plan.java ./MMTk/src/org/mmtk/plan/Plan.java
+--- ./MMTk/src/org/mmtk/plan/Plan.java	2006-11-27 10:19:46.000000000 +1100
++++ ./MMTk/src/org/mmtk/plan/Plan.java	2006-11-27 12:44:06.000000000 +1100
+@@ -519,7 +519,7 @@
+    * instrumentation, etc.  By default we stop all statistics objects
+    * and print their values.
+    */
+-  public static void harnessEnd() {
++  public static void harnessEnd() throws InterruptiblePragma {
+     Stats.stopAll();
+     Stats.printStats();
+     insideHarness = false;
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/utility/options/Options.java ./MMTk/src/org/mmtk/utility/options/Options.java
+--- ./MMTk/src/org/mmtk/utility/options/Options.java	2006-11-27 10:19:30.000000000 +1100
++++ ./MMTk/src/org/mmtk/utility/options/Options.java	2006-11-27 12:32:07.000000000 +1100
+@@ -9,6 +9,8 @@
+  */
+ package org.mmtk.utility.options;
+ 
++import org.mmtk.utility.Log;
++
+ /**
+  * Repository for all option instances.
+  * 
+@@ -55,4 +57,41 @@
+   public static VerboseFragmentationStats verboseFragmentationStats;
+   public static Verbose verbose;
+   public static VerboseTiming verboseTiming;
++  public static XmlStats xmlStats;
++  
++  public static void printOptionsXml() {
++    Log.writeln("<options>");
++    Option opt = Option.getFirst();
++    while (opt != null) {
++      String key = opt.getKey();
++      Log.write("<option name=\""); Log.write(key); Log.write("\" value=\"");
++      String units = null;
++      switch (opt.getType()) {
++      case Option.BOOLEAN_OPTION:  
++        Log.write(((BooleanOption)opt).getValue()); break;
++      case Option.STRING_OPTION:   
++        Log.write(((StringOption)opt).getValue());  break;
++      case Option.ENUM_OPTION:     
++        Log.write(((EnumOption)opt).getValue());    break;
++      case Option.INT_OPTION:      
++        Log.write(((IntOption)opt).getValue());    break;
++      case Option.PAGES_OPTION:    
++        Log.write(((PagesOption)opt).getBytes());    
++        units = "bytes";                  break;
++      case Option.MICROSECONDS_OPTION: 
++        Log.write(((MicrosecondsOption)opt).getMicroseconds());    
++        units = "microseconds";           break;
++      case Option.FLOAT_OPTION:
++        Log.write(((FloatOption)opt).getValue());   break;
++      }
++      Log.write("\"");
++      if (units != null) {
++        Log.write(" units=\""); Log.write(units); Log.write("\"");
++      }
++      Log.writeln("/>");
++ 
++      opt = opt.getNext();
++    }
++    Log.writeln("</options>");
++  }
+ }
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/utility/options/XmlStats.java ./MMTk/src/org/mmtk/utility/options/XmlStats.java
+--- ./MMTk/src/org/mmtk/utility/options/XmlStats.java	1970-01-01 10:00:00.000000000 +1000
++++ ./MMTk/src/org/mmtk/utility/options/XmlStats.java	2006-11-27 10:20:34.000000000 +1100
+@@ -0,0 +1,9 @@
++package org.mmtk.utility.options;
++
++public class XmlStats extends BooleanOption {
++
++  public XmlStats() {
++    super("Xml Stats", "Print end-of-run statistics in XML format", false);
++  }
++
++}
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/utility/statistics/Counter.java ./MMTk/src/org/mmtk/utility/statistics/Counter.java
+--- ./MMTk/src/org/mmtk/utility/statistics/Counter.java	2006-11-27 10:19:30.000000000 +1100
++++ ./MMTk/src/org/mmtk/utility/statistics/Counter.java	2006-11-27 10:20:34.000000000 +1100
+@@ -31,6 +31,7 @@
+   private String name;
+   private boolean start;
+   private boolean mergephases;
++  protected boolean complex = false;
+ 
+   /****************************************************************************
+    * 
+@@ -166,4 +167,6 @@
+    * @return True if this counter will merge stats for GC and mutator phases.
+    */
+   boolean mergePhases() { return mergephases; }
++
++  boolean isComplex() { return complex; }
+ }
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/utility/statistics/Stats.java ./MMTk/src/org/mmtk/utility/statistics/Stats.java
+--- ./MMTk/src/org/mmtk/utility/statistics/Stats.java	2006-11-27 10:19:30.000000000 +1100
++++ ./MMTk/src/org/mmtk/utility/statistics/Stats.java	2006-11-27 12:43:08.000000000 +1100
+@@ -14,6 +14,7 @@
+ import org.mmtk.utility.Log;
+ import org.mmtk.utility.options.Options;
+ import org.mmtk.utility.options.PrintPhaseStats;
++import org.mmtk.utility.options.XmlStats;
+ 
+ import org.mmtk.vm.VM;
+ 
+@@ -61,6 +62,7 @@
+   static {
+     counter = new Counter[MAX_COUNTERS];
+     Options.printPhaseStats = new PrintPhaseStats();
++    Options.xmlStats = new XmlStats();
+   }
+ 
+   /**
+@@ -124,6 +126,11 @@
+       if (counter[c].getStart())
+         counter[c].start();
+     }
++    if (Options.xmlStats.getValue()) {
++      Xml.begin();
++      Xml.openTag("mmtk-stats");
++      Xml.end();
++    }
+   }
+ 
+   /**
+@@ -137,10 +144,17 @@
+     gatheringStats = false;
+   }
+ 
++  public static void printStats() throws InterruptiblePragma {
++    if (Options.xmlStats.getValue())
++      printStatsXml();
++    else
++      printStatsPlain();
++  }
++
+   /**
+    * Print out statistics
+    */
+-  public static void printStats() {
++  public static void printStatsPlain() throws InterruptiblePragma {
+     if (Options.printPhaseStats.getValue())
+       printPhases();
+     printTotals();
+@@ -149,7 +163,7 @@
+   /**
+    * Print out statistics totals
+    */
+-  public static void printTotals() {
++  public static void printTotals() throws InterruptiblePragma {
+     Log.writeln("============================ MMTk Statistics Totals ============================");
+     printColumnNames();
+     Log.write((phase/2)+1); Log.write("\t");
+@@ -170,7 +184,7 @@
+   /**
+    * Print out statistics for each mutator/gc phase
+    */
+-  public static void printPhases() {
++  public static void printPhases() throws InterruptiblePragma {
+     Log.writeln("--------------------- MMTk Statistics Per GC/Mutator Phase ---------------------");
+     printColumnNames();
+     for (int p = 0; p <= phase; p += 2) {
+@@ -190,7 +204,7 @@
+   /**
+    * Print out statistics column names
+    */
+-  private static void printColumnNames() {
++  private static void printColumnNames() throws InterruptiblePragma {
+     Log.write("GC\t");
+     for (int c = 0; c < counters; c++) {
+       if (counter[c].mergePhases()) {
+@@ -206,6 +220,130 @@
+     Log.writeln();
+   }
+ 
++  /* ****************************************************************
++   * 
++   *              Statistics output in xml format
++   * 
++   */
++
++  /**
++   * Print command-line options and statistics in XML format
++   */
++  public static void printStatsXml() throws InterruptiblePragma {
++    Xml.begin();
++    Options.printOptionsXml();
++    if (Options.printPhaseStats.getValue())
++      printPhasesXml();
++    printTotalsXml();
++    Xml.closeAllTags(); // The global mmtk-stats tag
++    Xml.end();
++  }
++  
++  private static void openStatXml(String name) {
++    Xml.openMinorTag("stat");
++    Xml.attribute("name", name);
++  }
++
++  private static void closeStatXml() {
++    Xml.closeMinorTag();
++  }
++  
++  /* enum pattern */
++  static class Phase {
++    final String name;
++    private Phase(String name) { 
++      this.name = name; 
++    }
++    static final Phase MUTATOR = new Phase("mu");
++    static final Phase GC = new Phase("gc");
++    static final Phase COMBINED = new Phase("all");
++  }
++
++  /**
++   * Print out statistics totals in Xml format
++   */
++  public static void printTotalsXml() {
++    Xml.openTag("mmtk-stats-totals");
++    Xml.singleValue("gc",(phase/2)+1);
++    for (int c = 0; c < counters; c++) {
++     if (!counter[c].isComplex())
++      if (counter[c].mergePhases()) {
++        printTotalXml(counter[c],Phase.COMBINED);
++      } else {
++        printTotalXml(counter[c],Phase.MUTATOR);
++        printTotalXml(counter[c],Phase.GC);
++      }
++    }
++    Xml.singleValue("total-time",Plan.totalTime.getTotalMillis(),"ms");
++    Xml.closeTag();
++  }
++
++  /**
++   * Print a single total in an xml tag
++   * 
++   * @param c The counter
++   * @param phase The phase
++   */
++  private static void printTotalXml(Counter c, Phase phase) {
++    openStatXml(c.getName());
++    Xml.openAttribute("value");
++    if (phase == Phase.COMBINED) {
++      c.printTotal(); 
++    } else {
++      c.printTotal(phase == Phase.MUTATOR);
++      Xml.closeAttribute();
++      Xml.openAttribute("phase");
++      Log.write(phase.name);
++    }
++    Xml.closeAttribute();
++    closeStatXml();
++  }
++
++  /**
++   * Print a single phase counter in an xml tag
++   * 
++   * @param c The counter
++   * @param p The phase number
++   * @param phase The phase (null, "mu" or "gc")
++   */
++  private static void printPhaseStatXml(Counter c, int p, Phase phase) {
++    openStatXml(c.getName());
++    Xml.openAttribute("value");
++    if (phase == Phase.COMBINED) {
++      c.printCount(p); 
++    } else {
++      c.printCount(p);
++      Xml.closeAttribute();
++      Xml.openAttribute("phase");
++      Log.write(phase.name);
++   }
++    Xml.closeAttribute();
++    closeStatXml();
++  }
++
++  /**
++   * Print out statistics for each mutator/gc phase in Xml format
++   */
++  public static void printPhasesXml() {
++    Xml.openTag("mmtk-stats-per-gc");
++    for (int p = 0; p <= phase; p += 2) {
++      Xml.openTag("phase",false); 
++      Xml.attribute("gc",(p/2)+1);
++      Xml.closeMinorTag();
++      for (int c = 0; c < counters; c++) {
++       if (!counter[c].isComplex())
++        if (counter[c].mergePhases()) {
++          printPhaseStatXml(counter[c],p,Phase.COMBINED);
++        } else {
++          printPhaseStatXml(counter[c],p,Phase.MUTATOR);
++          printPhaseStatXml(counter[c],p,Phase.GC);
++        }
++      }
++      Xml.closeTag();
++    }
++    Xml.closeTag();
++  }
++
+   /** @return The GC count (inclusive of any in-progress GC) */
+   public static int gcCount() { return gcCount; }
+ 
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/utility/statistics/Timer.java ./MMTk/src/org/mmtk/utility/statistics/Timer.java
+--- ./MMTk/src/org/mmtk/utility/statistics/Timer.java	2006-11-27 10:19:30.000000000 +1100
++++ ./MMTk/src/org/mmtk/utility/statistics/Timer.java	2006-11-27 10:20:34.000000000 +1100
+@@ -136,5 +136,25 @@
+   final void printSecs(long value) {
+     Log.write(VM.statistics.cyclesToSecs(value));
+   }
++
++
++  /**
++   * Get a value in milliseconds
++   * 
++   * @param value The value to be printed
++   */
++  final double getMillis(long value) {
++    return VM.statistics.cyclesToMillis(value);
++  }
++
++  /**
++   * Get a value in milliseconds
++   * 
++   * @param value The value to be printed
++   */
++  final double getTotalMillis() {
++    return VM.statistics.cyclesToMillis(totalCount);
++  }
++
+ }
+ 
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/utility/statistics/Xml.java ./MMTk/src/org/mmtk/utility/statistics/Xml.java
+--- ./MMTk/src/org/mmtk/utility/statistics/Xml.java	1970-01-01 10:00:00.000000000 +1000
++++ ./MMTk/src/org/mmtk/utility/statistics/Xml.java	2006-11-27 10:21:46.000000000 +1100
+@@ -0,0 +1,312 @@
++/*
++ * (C) Copyright Department of Computer Science,
++ * Australian National University. 2006
++ */
++package org.mmtk.utility.statistics;
++
++import org.mmtk.utility.Log;
++import org.mmtk.vm.Assert;
++import org.mmtk.vm.VM;
++import org.vmmagic.pragma.Uninterruptible;
++import org.vmmagic.unboxed.ObjectReference;
++import org.vmmagic.unboxed.ObjectReferenceArray;
++import org.vmmagic.unboxed.Word;
++
++/**
++ * Utility class for writing statistics out in XML format.
++ * 
++ * @author Robin Garner
++ * @date $Date:$
++ * @id $Id:$
++ *
++ */
++public class Xml implements Uninterruptible {
++  
++  /*
++   * Stack of XML tags to simplify output.
++   */
++
++  /**
++   * Fixed sizxze stack - more than 64 levels of nesting would be pathological !
++   */
++  private static final int TAGSTACK = 64;
++
++  /**
++   * Top-of-stack of the tag stack
++   */
++  private static int curTag = -1;
++  
++  /**
++   * The stack of nested tags
++   */
++  private static ObjectReferenceArray tags = ObjectReferenceArray.create(TAGSTACK);
++  
++  /**
++   * Push a tag onto the tag stack
++   * 
++   * @param name
++   */
++  protected static void pushTag(String name) {
++    tags.set(++curTag,ObjectReference.fromObject(name));
++    if (VM.VERIFY_ASSERTIONS) VM.assertions._assert(curTag < TAGSTACK);
++  }
++
++  /**
++   * Pop a tag from the tag stack
++   * 
++   * @return the innermost tag
++   */
++  protected static String popTag() {
++    if (VM.VERIFY_ASSERTIONS) VM.assertions._assert(Xml.curTag >= 0);
++    String name = (String)tags.get(curTag--).toObject();
++    return name;
++  }
++
++  /**
++   * Mark the start of XML output
++   */
++  public static void begin() {
++    Log.writeln("<xml-begin/> <!-- Everything until xml-end is now valid xml -->");
++  }
++
++  /**
++   * Mark the end of XML output
++   */
++  public static void end() {
++    Log.writeln("<xml-end/> <!-- Non-xml data follows ... -->");
++  }
++
++  /**
++   * Close the innermost XML tag and pop it from the stack.
++   */
++  public static void closeTag() {
++    String name = popTag();
++    Log.write("</"); Log.write(name); Log.writeln(">");
++  }
++
++  /**
++   * Close all open XML tags and flush the tag stack
++   */
++  public static void closeAllTags() {
++    while (curTag >= 0)
++      closeTag();
++  }
++
++  /**
++   * Open an XML tag.
++   * 
++   * @param name Tag name
++   * @param endTag Should the tag be closed, or left open for 
++   *               adding additional attributes
++   */
++  static void openTag(String name, boolean endTag) {
++    pushTag(name);
++    openMinorTag(name);
++    if (endTag)
++      endTag(false);
++  }
++
++  /**
++   * Open a simple XML entity.
++   * 
++   * @param name
++   */
++  static void openTag(String name) { openTag(name,true); }
++
++  /**
++   * Output a "stat" entity, with a given name, <code>double</code>value and optionally, units.
++   * @param name
++   * @param value
++   * @param units
++   */
++  public static final void singleValue(String name, double value, String units) {
++    openMinorTag("stat");
++    attribute("name",name); 
++    attribute("value",value); 
++    if (units != null) attribute("units",units);
++    closeMinorTag();
++  }
++  
++  /**
++   * Convenience version of singleValue where units are not specified.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void singleValue(String name, double value) {
++    singleValue(name,value,null);
++  }
++
++  /**
++   * Output a "stat" entity, with a given name, <code>long</code> value and optionally, units.
++   * @param name
++   * @param value
++   * @param units
++   */
++  public static final void singleValue(String name, long value, String units) {
++    openMinorTag("stat");
++    attribute("name",name); 
++    attribute("value",value); 
++    if (units != null) attribute("units",units);
++    closeMinorTag();
++  }
++  
++  /**
++   * Convenience version of singleValue where units are not specified.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void singleValue(String name, long value) {
++    singleValue(name,value,null);
++  }
++
++  /**
++   * Add a word-valued attribute to an open XML tag.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void attribute(String name, Word value) {
++    openAttribute(name); Log.write(value); closeAttribute();
++  }
++
++  /**
++   * Add a byte[]-valued attribute to an open XML tag.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void attribute(String name, byte[] value) {
++    openAttribute(name); Log.write(value); closeAttribute();
++  }
++
++  /**
++   * Add a String-valued attribute to an open XML tag.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void attribute(String name, String value) {
++    openAttribute(name); Log.write(value); closeAttribute();
++  }
++
++  /**
++   * Add a double-valued attribute to an open XML tag.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void attribute(String name, double value) {
++    openAttribute(name); Log.write(value); closeAttribute();
++  }
++
++  /**
++   * Add a long-valued attribute to an open XML tag.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void attribute(String name, long value) {
++    openAttribute(name); Log.write(value); closeAttribute();
++  }
++
++  /**
++   * Add an int-valued attribute to an open XML tag.
++   * 
++   * @param name
++   * @param value
++   */
++  public static final void attribute(String name, int value) {
++    openAttribute(name); Log.write(value); closeAttribute();
++  }
++
++  /**
++   * Close an attribute (actually a simple close-quote)
++   */
++  public static final void closeAttribute() {
++    Log.write("\"");
++  }
++
++  /**
++   * Open an attribute (write "{name}=\")
++   * 
++   * @param name
++   */
++  public static final void openAttribute(String name) {
++    Log.write(" "); Log.write(name); Log.write("=\"");
++  }
++
++  /**
++   * Start a tag
++   */
++  public static final void startTag() {
++    Log.write("<"); 
++  }
++
++  /**
++   * End a tag, optionally closing it (if it is a simple entity)
++   * 
++   * @param close If true, close the tag with "/>" rather than ">"
++   */
++  public static final void endTag(boolean close) {
++    endTag(close,true);
++  }
++  
++  /**
++   * End a tag, optionally closing it (if it is a simple entity),
++   * and optionally printing end-of-line
++   * 
++   * @param close If true, close the tag with "/>" rather than ">"
++   * @param endLine If true end the current line.
++   */
++  public static final void endTag(boolean close, boolean endLine) {
++    if (close) Log.write("/");
++    Log.write(">"); 
++    if (endLine) Log.writeln();
++  }
++
++  /**
++   * Close a tag with a "/>"
++   */
++  public static final void closeMinorTag() {
++    endTag(true,true); 
++  }
++
++  /**
++   * Open a tag without pushing it on the tag stack - must end this
++   * with a call to closeMinorTag()
++   * 
++   * @param name
++   */
++  public static final void openMinorTag(String name) {
++    Log.write("<"); Log.write(name);
++  }
++
++  /**
++   * Open an XML comment
++   */
++  public static final void openComment() {
++	  Log.write("<!-- ");
++  }
++  
++  /**
++   * Close an XML comment
++   */
++  public static final void closeComment() {
++	  Log.write(" -->");
++  }
++  
++  /**
++   * Add a comment, bracketing it with open- and close-comment tags.
++   * 
++   * @param comment The comment.
++   */
++  public static final void comment(String comment) {
++	  openComment();
++	  Log.write(comment);
++	  closeComment();
++	  Log.writeln();
++  }
++
++}

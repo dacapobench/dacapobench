@@ -1,0 +1,206 @@
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./rvm/src/vm/compilers/harness/runtime/VM_RuntimeCompiler.java ./rvm/src/vm/compilers/harness/runtime/VM_RuntimeCompiler.java
+--- ./rvm/src/vm/compilers/harness/runtime/VM_RuntimeCompiler.java	2006-11-23 17:07:39.000000000 +1100
++++ ./rvm/src/vm/compilers/harness/runtime/VM_RuntimeCompiler.java	2006-11-23 17:08:40.000000000 +1100
+@@ -10,6 +10,7 @@
+ package com.ibm.JikesRVM;
+ 
+ import com.ibm.JikesRVM.classloader.*;
++import com.ibm.JikesRVM.memoryManagers.mmInterface.MM_Interface;
+ //-#if RVM_WITH_ADAPTIVE_SYSTEM
+ import com.ibm.JikesRVM.opt.*;
+ import com.ibm.JikesRVM.adaptive.*;
+@@ -321,7 +322,9 @@
+       start = VM_Thread.getCurrentThread().accumulateCycles();
+     }
+ 
++    MM_Interface.enterAllocationScope(MM_Interface.COMPILER_SCOPE);
+     VM_CompiledMethod cm = VM_BaselineCompiler.compile(method);
++    MM_Interface.leaveAllocationScope();
+ 
+     if (VM.MeasureCompilation || VM.BuildForAdaptiveSystem) {
+       long end = VM_Thread.getCurrentThread().accumulateCycles();
+@@ -379,7 +382,9 @@
+       start = VM_Thread.getCurrentThread().accumulateCycles();
+     }
+     
++    MM_Interface.enterAllocationScope(MM_Interface.COMPILER_SCOPE);
+     VM_CompiledMethod cm = OPT_Compiler.compile(plan);
++    MM_Interface.leaveAllocationScope();
+ 
+     if (VM.MeasureCompilation || VM.BuildForAdaptiveSystem) {
+       long end = VM_Thread.getCurrentThread().accumulateCycles();
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./rvm/src/vm/memoryManagers/JMTk/vmInterface/MM_Interface.java ./rvm/src/vm/memoryManagers/JMTk/vmInterface/MM_Interface.java
+--- ./rvm/src/vm/memoryManagers/JMTk/vmInterface/MM_Interface.java	2006-11-23 17:07:39.000000000 +1100
++++ ./rvm/src/vm/memoryManagers/JMTk/vmInterface/MM_Interface.java	2006-11-23 17:08:40.000000000 +1100
+@@ -59,6 +59,7 @@
+ import com.ibm.JikesRVM.VM_ObjectModel;
+ import com.ibm.JikesRVM.VM_Processor;
+ import com.ibm.JikesRVM.VM_Scheduler;
++import com.ibm.JikesRVM.VM_Thread;
+ 
+ /**
+  * The interface that the JMTk memory manager presents to the Jikes
+@@ -76,6 +77,16 @@
+    */
+ 
+   /**
++   * Default scope for policy-based allocation
++   */
++  public static final int DEFAULT_SCOPE = SelectedPlan.DEFAULT_SCOPE;
++  
++  /**
++   * Scope for the compiler thread
++   */
++  public static final int COMPILER_SCOPE = SelectedPlan.COMPILER_SCOPE;
++
++  /**
+    * <code>true</code> if a write barrier is required.  Specifically,
+    * if the memory manger requires that the virtual machine calls
+    * putfieldWriteBarrier, arrayStoreWriteBarrier or modifyCheck when
+@@ -222,6 +233,36 @@
+ 
+   /***********************************************************************
+    *
++  * Dynamically scoped allocation policies
++  */
++
++  /**
++    * Enter a dynamic allocation scope
++    *
++    * @param scope The allocation scope
++    */
++   public static void enterAllocationScope(int scope) {
++     SelectedMutatorContext.get().setAllocationScope(scope);
++     VM_Thread.getCurrentThread().pushAllocationScope(scope);
++   }
++  
++  /**
++   * Leave a dynamic allocation scope
++   */
++  public static void leaveAllocationScope() {
++    SelectedMutatorContext.get().setAllocationScope(VM_Thread.getCurrentThread().popAllocationScope());
++  }
++
++  /**
++   * Thread switch
++   */
++  public static void threadSwitch(VM_Thread newThread) {
++    SelectedMutatorContext.get().setAllocationScope(newThread.getCurrentAllocationScope());
++  }
++
++  
++  /***********************************************************************
++   *
+    * Write barriers
+    */
+ 
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./rvm/src/vm/scheduler/VM_Processor.java ./rvm/src/vm/scheduler/VM_Processor.java
+--- ./rvm/src/vm/scheduler/VM_Processor.java	2006-11-23 17:07:39.000000000 +1100
++++ ./rvm/src/vm/scheduler/VM_Processor.java	2006-11-23 17:08:40.000000000 +1100
+@@ -211,6 +211,8 @@
+     previousThread.endQuantum(now);
+     newThread.startQuantum(now);
+     
++    MM_Interface.threadSwitch(newThread);
++    
+     //-#if RVM_WITH_HPM
+     // set start time of thread
+     newThread.startOfWallTime = VM_Magic.getTimeBase();
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./rvm/src/vm/scheduler/VM_Thread.java ./rvm/src/vm/scheduler/VM_Thread.java
+--- ./rvm/src/vm/scheduler/VM_Thread.java	2006-11-23 17:07:39.000000000 +1100
++++ ./rvm/src/vm/scheduler/VM_Thread.java	2006-11-23 17:08:40.000000000 +1100
+@@ -1223,6 +1223,8 @@
+     this.stack = stack;
+     this.thread = thread;
+     this.myName = myName;
++    allocationScopeStack = new int [MAX_SCOPE_STACK_DEPTH];
++    allocationScopeStack[0] = MM_Interface.DEFAULT_SCOPE;
+ 
+     chosenProcessorId = (VM.runningVM ? VM_Processor.getCurrentProcessorId() : 0); // for load balancing
+     suspendLock = new VM_ProcessorLock();
+@@ -2045,4 +2047,48 @@
+   // the organizer clear the requests
+   public boolean requesting_osr = false;
+   //-#endif 
++
++
++  /**
++   * Methods supporting scoped allocation policy
++   */
++  private int[] allocationScopeStack;
++  private int scopeStackPointer = 0;
++  private static final int MAX_SCOPE_STACK_DEPTH = 100; // arbitrary
++
++  /**
++   * Push a policy onto the allocation scope stack
++   *
++   * @param policy The policy to be pushed onto the scope stack
++   */
++  public void pushAllocationScope(int scope) {
++    if (scopeStackPointer < MAX_SCOPE_STACK_DEPTH)
++      allocationScopeStack[++scopeStackPointer] = scope;
++    else
++      VM.sysFail("exceeded allocation scope stack depth"); // !!TODO: grow scope stack
++  }
++
++  /**
++   * Pop the top of the allocation scope stack
++   *
++   * @return The current top of the allocation scope stack
++   */
++  public int popAllocationScope() {
++    if (scopeStackPointer > 0)
++      return allocationScopeStack[--scopeStackPointer];
++    else {
++      VM.sysFail("scope stack underflow");
++      return -1;
++    }
++  }
++
++  /**
++   * Return the current scoped allocation policy
++   *
++   * @return The policy at the top of the scoped allocation policy stack
++   */
++  public int getCurrentAllocationScope() {
++    if (VM.VerifyAssertions) VM._assert(scopeStackPointer >= 0);
++    return allocationScopeStack[scopeStackPointer];
++  }
+ }
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/plan/MutatorContext.java ./MMTk/src/org/mmtk/plan/MutatorContext.java
+--- ./MMTk/src/org/mmtk/plan/MutatorContext.java	2006-11-23 17:07:39.000000000 +1100
++++ ./MMTk/src/org/mmtk/plan/MutatorContext.java	2006-11-23 17:08:40.000000000 +1100
+@@ -117,6 +117,17 @@
+    */
+   public abstract void collectionPhase(int phaseId, boolean primary);
+ 
++  /** Current dynamic allocation scope */
++  private int currentScope = Plan.DEFAULT_SCOPE;
++
++  /****************************************************************************
++   * Scoped allocation policy
++   */
++  public void setAllocationScope(int scope) {
++    currentScope = scope;
++  }
++
++
+   /****************************************************************************
+    * 
+    * Allocation.
+diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' ./MMTk/src/org/mmtk/plan/Plan.java ./MMTk/src/org/mmtk/plan/Plan.java
+--- ./MMTk/src/org/mmtk/plan/Plan.java	2006-11-23 17:07:39.000000000 +1100
++++ ./MMTk/src/org/mmtk/plan/Plan.java	2006-11-23 17:08:40.000000000 +1100
+@@ -140,6 +140,12 @@
+   /** Support for allocation-site identification */
+   protected static int allocationSiteCount = 0;
+ 
++  /** 
++   * Support for scope-based allocation policy
++   */
++  public static final int DEFAULT_SCOPE = 1;
++  public static final int COMPILER_SCOPE = 2;
++  
+   static {}
+ 
+   /****************************************************************************
