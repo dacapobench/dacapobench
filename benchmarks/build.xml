@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-11-16 15:33:46 +1100 (Thu, 16 Nov 2006) $
- *   $Id: build.xml 222 2006-11-16 04:33:46Z rgarner $
+ *   $Date: 2006-12-15 10:55:13 +1100 (Fri, 15 Dec 2006) $
+ *   $Id: build.xml 234 2006-12-14 23:55:13Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -101,7 +101,6 @@
 			<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
 			<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
 			<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/stub/**" excludes="**/CVS"/>
 		</zip>
 	</target>
 
@@ -171,7 +170,6 @@
 	<property name="build" location="build"/>
 	<property name="originals" location="originals"/>
 	<property name="sources" location="sources"/>
-	<property name="stub" location="stub"/>
 	<property name="data" location="data"/>
 	<property name="zipdata" location="${build}/data"/>
 	<property name="config" location="cnf"/>
@@ -264,9 +262,7 @@
 	<target name="harness" depends="init" description="compile the source ">
 		<javacc javacchome="${javacchome}" target="${src}/dacapo/parser/ConfigFile.jj"/>
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" sourcepath="${stub}" 
-		       debug="true" debuglevel="lines,vars,source"/>
-		<javac srcdir="${stub}" destdir="${build}"
+		<javac srcdir="${src}" destdir="${build}"
 		       debug="true" debuglevel="lines,vars,source"/>
 		<!-- Test data and configuration files -->
 		<copy todir="${build}/cnf">
