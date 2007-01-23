@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-01-18 12:23:38 +1100 (Thu, 18 Jan 2007) $
- *   $Id: build.xml 248 2007-01-18 01:23:38Z steveb-oss $
+ *   $Date: 2007-01-23 15:33:16 +1100 (Tue, 23 Jan 2007) $
+ *   $Id: build.xml 250 2007-01-23 04:33:16Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -191,7 +191,7 @@
 	<property name="jython.version" value="Release_2_2alpha1"/>
 	<property name="lucene.version" value="1.9.1"/>
 	<property name="pmd.version" value="3.7"/>
-	<property name="sunflow.version" value="r139"/>
+	<property name="sunflow.version" value="r157"/>
 	<property name="xalan.version" value="2_4_1"/>
 	<!-- auxilary downloads -->
 	<property name="ant.dl.version" value="1.6.5"/>
@@ -1197,7 +1197,7 @@
 		<property name="sunflow-top" value="${build_src}/sunflow/sunflow"/>
         <mkdir dir="${sunflow-top}/build"/>
 
-		<!-- Expand the pmd distribution zipfile -->
+		<!-- Expand the sunflow distribution zipfile -->
 		<unzip src="${sources}/sunflow-svn-${sunflow.version}.zip" dest="${build_src}/sunflow"/>
 
 		<!-- Build using javac, setting the classpath appropriately -->
@@ -1210,24 +1210,11 @@
 			<fileset dir="${sunflow-top}/build">
 				<include name="**/*.class"/>
 			</fileset>
-		</copy>
-		<!-- Construct the test data -->
-		<property name="sunflow-data" value="${sunflow-top}/data/sunflow"/>
-		<mkdir dir="${sunflow-data}"/>
-		<copy todir="${sunflow-data}">
-			<fileset dir="${sunflow-top}/resources">
-				<include name="*.png"/>
+			<fileset dir="${sunflow-top}/">
+				<include name="resources/golden_*.png"/>
 			</fileset>
 		</copy>
-		<copy todir="${sunflow-data}">
-			<fileset dir="${data}/sunflow">
-				<include name="*.png"/>
-			</fileset>
-		</copy>
-		
-		<!-- Install the test data -->
-		<zip basedir="${sunflow-top}/data" includes="sunflow/**" destfile="${zipdata}/sunflow.zip"/>
-		<delete dir="${sunflow-top}/data"/>
+
 			</target>
 
 	<!-- ================================= 
