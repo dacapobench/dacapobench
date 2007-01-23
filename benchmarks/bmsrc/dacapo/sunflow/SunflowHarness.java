@@ -23,9 +23,7 @@
 package dacapo.sunflow;
 
 import java.io.File;
-
 import dacapo.parser.Config;
-
 import org.sunflow.Benchmark;
 
 
@@ -37,22 +35,37 @@ public class SunflowHarness extends dacapo.Benchmark {
     super(config, scratch);
   }
 
-  protected void prepare() throws Exception {}
+  /** Do one-time prep such as unziping data.  In our case, do nothing. */
+  protected void prepare() {}
 
-  public void preIteration(String size) throws Exception {
+  /**
+   * Code to execute prior to each iteration OUTSIDE the timing loop.  In this case we
+   * create a new instance of a Sunflow benchmark, which sets up basic data structures.
+   * 
+   * @param size The "size" of the iteration (small, default, large)
+   */
+  public void preIteration(String size) {
     String[] args = config.getArgs(size);
     sunflow = new Benchmark(Integer.parseInt(args[0]), false, false, false);
     sunflow.kernelBegin();
   }
     
   /**
+   * Perform a single iteration of the benchmark.
+   * 
+   * @param size The "size" of the iteration (small, default, large)
    */
-  public void iterate(String size) throws Exception {
+  public void iterate(String size) {
     sunflow.kernelMain();
-    sunflow.kernelEnd();
   }
-
-  public void cleanup() {
-    super.cleanup();
+  
+  /**
+   * Validate the output of the benchmark, OUTSIDE the timing loop.
+   * 
+   * @param size The "size" of the iteration (small, default, large)
+   */
+  public boolean validate(String size) {
+    sunflow.kernelEnd();     
+    return super.validate(size);
   }
 }
