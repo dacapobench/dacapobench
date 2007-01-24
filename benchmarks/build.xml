@@ -32,8 +32,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-01-23 15:33:16 +1100 (Tue, 23 Jan 2007) $
- *   $Id: build.xml 250 2007-01-23 04:33:16Z steveb-oss $
+ *   $Date: 2007-01-24 16:14:37 +1100 (Wed, 24 Jan 2007) $
+ *   $Id: build.xml 254 2007-01-24 05:14:37Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -191,7 +191,7 @@
 	<property name="jython.version" value="Release_2_2alpha1"/>
 	<property name="lucene.version" value="1.9.1"/>
 	<property name="pmd.version" value="3.7"/>
-	<property name="sunflow.version" value="r157"/>
+	<property name="sunflow.version" value="0.07.1"/>
 	<property name="xalan.version" value="2_4_1"/>
 	<!-- auxilary downloads -->
 	<property name="ant.dl.version" value="1.6.5"/>
@@ -214,7 +214,7 @@
 	<property name="jython.url" value="${sourceforge.dl.url}/jython"/>
 	<property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
 	<property name="pmd.url" value="${sourceforge.dl.url}/pmd"/>
-	<property name="sunflow.url" value="${sfdata.url}"/>
+	<property name="sunflow.url" value="${sourceforge.dl.url}/sunflow"/>
 	<property name="xalan.url" value="${apache.dl.url}/xml/xalan-j"/>
 	<!-- auxilary downloads -->
 	<property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
@@ -535,8 +535,11 @@
 	</target>
 	
 	<target name="sunflow.source" depends="janino.source">
-		<get src="${sunflow.url}/sunflow-svn-${sunflow.version}.zip"
-         dest="${sources}/sunflow-svn-${sunflow.version}.zip"
+		<get src="${sunflow.url}/sunflow-src-v${sunflow.version}.zip"
+         dest="${sources}/sunflow-src-v${sunflow.version}.zip"
+       usetimestamp="true"/>
+		<get src="${sunflow.url}/sunflow-bin-v${sunflow.version}.zip"
+         dest="${sources}/sunflow-bin-v${sunflow.version}.zip"
        usetimestamp="true"/>
 	</target>
 
@@ -1194,11 +1197,11 @@
 	<!-- Build the sunflow benchmark -->
 	<target name="sunflow.benchmark" depends="init,janino" description="--> Build the sunflow benchmark">
 
-		<property name="sunflow-top" value="${build_src}/sunflow/sunflow"/>
+		<property name="sunflow-top" value="${build_src}/sunflow"/>
         <mkdir dir="${sunflow-top}/build"/>
 
 		<!-- Expand the sunflow distribution zipfile -->
-		<unzip src="${sources}/sunflow-svn-${sunflow.version}.zip" dest="${build_src}/sunflow"/>
+		<unzip src="${sources}/sunflow-src-v${sunflow.version}.zip" dest="${build_src}/sunflow"/>
 
 		<!-- Build using javac, setting the classpath appropriately -->
 		<javac srcdir="${sunflow-top}/src" source="1.5" classpath="${sunflow-top}/janino.jar" destdir="${sunflow-top}/build"
@@ -1210,12 +1213,23 @@
 			<fileset dir="${sunflow-top}/build">
 				<include name="**/*.class"/>
 			</fileset>
+		</copy>
+
+     	<!-- Extract the sunflow data from the binary dist -->
+		<unzip src="${sources}/sunflow-bin-v${sunflow.version}.zip" dest="${sunflow-top}"/>
+		<unjar src="${sunflow-top}/sunflow.jar" dest="${sunflow-top}">
+			<patternset>
+				<include name="resources/golden_*.png"/>
+			</patternset>
+			</unjar>
+		<copy todir="${build}">
 			<fileset dir="${sunflow-top}/">
 				<include name="resources/golden_*.png"/>
 			</fileset>
-		</copy>
-
-			</target>
+		</copy>		
+	
+	
+	</target>
 
 	<!-- ================================= 
         target: xalan
