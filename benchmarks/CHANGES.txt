@@ -1,3 +1,7 @@
+ - When multiple benchmarks are specified with -n, n > 1,
+   the first benchmark is run n times, and subsequent ones
+   only once.  Fixed.
+
  - jython suffered from a problem on Windows platforms which
    seems to have been traced to a timer resolution issue and
    pybench's timing thresholds.  Fixed. Thanks to Christian Wimmer

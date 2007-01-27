@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 216 2006-11-09 11:47:00Z rgarner $
- * $Date: 2006-11-09 22:47:00 +1100 (Thu, 09 Nov 2006) $
+ * $Id: TestHarness.java 266 2007-01-27 01:47:43Z steveb-oss $
+ * $Date: 2007-01-27 12:47:43 +1100 (Sat, 27 Jan 2007) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -297,7 +297,7 @@ public class TestHarness {
       /*
        * Run the benchmark for a set # of iterations
        */
-      for (; iterations > 1; iterations--)
+      for (int n = 0; n < iterations - 1; n++)
         valid = b.run(callback, size, false) && valid; // beware order of evaluation!
       valid = b.run(callback, size, true) && valid; // beware order of evaluation!
     }            
