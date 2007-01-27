@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-01-27 13:14:11 +1100 (Sat, 27 Jan 2007) $
- *   $Id: build.xml 267 2007-01-27 02:14:11Z steveb-oss $
+ *   $Date: 2007-01-27 13:16:34 +1100 (Sat, 27 Jan 2007) $
+ *   $Id: build.xml 268 2007-01-27 02:16:34Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -1406,7 +1406,7 @@
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
 	</target>
 	<!-- Copy a stand-alone xalan jar into the build -->
-	<target name="xalan.jar" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
+	<target name="xalan.jar" unless="externalize.deps" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
 		<copy file="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" todir="${build}"/>
 	</target>
 	<!-- Add external libraries to the deps -->
