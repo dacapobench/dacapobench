@@ -1,3 +1,7 @@
+ - jython suffered from a problem on Windows platforms which
+   seems to have been traced to a timer resolution issue and
+   pybench's timing thresholds.  Fixed. Thanks to Christian Wimmer
+
  - Xalan benchmark harness now closes input and output files
    explicitly.  Prevents running out of file handles in large
    heaps (where finalizers never run).
