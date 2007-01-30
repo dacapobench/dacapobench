@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-01-27 13:16:34 +1100 (Sat, 27 Jan 2007) $
- *   $Id: build.xml 268 2007-01-27 02:16:34Z steveb-oss $
+ *   $Date: 2007-01-30 13:08:45 +1100 (Tue, 30 Jan 2007) $
+ *   $Id: build.xml 275 2007-01-30 02:08:45Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -387,7 +387,7 @@
          target: depzip.basic        
          ================================= -->
 	<target name="depzip.basic" depends="dep.jars" description="--> Create a zip file containing two jar files for each benchmark; one containing the benchmark, the other containing its dependencies">
-		<zip basedir="${dep.tmp}" includes="**" destfile="${zip.basename}${zip.suffix}-deps.zip"/>
+		<zip basedir="${dep.tmp}" includes="**" destfile="${zip.basename}${zip.suffix}-xdeps.zip"/>
 	</target>
 	
 	<!-- ================================= 
