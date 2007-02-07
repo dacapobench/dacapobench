@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# Nightly regressions for dacapo
+#
+
+TOP=$1
+CONFIG=$2
+
+if [ -z "$CONFIG" ]; then
+  echo "Usage: $0 target-dir config"
+  exit 1
+fi
+
+RVM_SVNHOME=https://jikesrvm.svn.sourceforge.net/svnroot/jikesrvm
+HERE=$(dirname $0)
+
+if [ -z "$BIN" ]; then
+  . $HERE/config
+fi
+
+#
+# Pick up system-specific parameters
+#
+SYSCONFIG=$BIN/$(uname -m).nightly.config
+if [ -e $SYSCONFIG ]; then
+  . $SYSCONFIG
+fi
+
+#
+# JikesRVM configuration variabes
+#
+export RVM_ROOT=$TOP/rvm_trunk
+export RVM_HOST_CONFIG=$RVM_ROOT/config/i686-pc-linux-gnu
+export RVM_BUILD=$RVM_ROOT/builds/$CONFIG
+export PATH=$RVM_ROOT/bin:$PATH
+CLASSPATH_ROOT=classpath-0.93-generics
+CLASSPATH_ARCHIVE=${CLASSPATH_ROOT}.tar.gz
+export CLASSPATH_URL=ftp://ftp.gnu.org/gnu/classpath/${CLASSPATH_ARCHIVE}
+
+(
+  cd $TOP
+  export JAVA_HOME=$JAVA_HOME_15
+  export HOST_VM_TYPE=IBM-50
+
+  svn co $RVM_SVNHOME/rvmroot/trunk rvm_trunk
+  ( 
+    set -x
+    cd $TOP/rvm_trunk
+    [ -e classpath ] || mkdir classpath
+    [ -e $CLASSPATH_ARCHIVE ] || wget $CLASSPATH_URL
+    if [ ! -e classpath/classpath/config.guess ]; then
+      cd classpath
+      pwd; ls
+      echo $CLASSPATH_URL > stamp
+      cat stamp
+      tar -xzf ../$CLASSPATH_ARCHIVE
+      pwd; ls
+      [ -d classpath ] && rm -r classpath
+      mv ${CLASSPATH_ROOT} classpath
+      pwd; ls
+      CLASSPATH_CONFIG=$(classpath/config.guess)
+      mkdir $CLASSPATH_CONFIG
+      #
+      # Apply patches (if any)
+      #
+      cd classpath
+      pwd; ls
+      for patch in $BIN/patches/classpath/*.patch; do
+        echo "Applying patch $patch"
+        patch -p0 <$patch && echo "successful"
+      done
+      cd ../$CLASSPATH_CONFIG
+      ../classpath/configure --enable-gtk-peer --disable-plugin --disable-gconf-peer --disable-alsa
+    fi
+    set +x
+  )
+
+  # Apply jikesrvm patches
+  cd $TOP/rvm_trunk
+    pwd; ls
+  for patch in $BIN/patches/jikesrvm/*.patch
+  do
+    echo "Applying patch $patch"
+    patch -p0 <$patch && echo "successful"
+  done
+
+  mkdir -p $RVM_ROOT/builds
+
+  echo "RVM_ROOT=$RVM_ROOT"
+  echo "RVM_BUILD=$RVM_BUILD"
+  echo "RVM_HOST_CONFIG=$RVM_HOST_CONFIG"
+
+  jconfigure $CONFIG
+  cd $RVM_BUILD
+  ./jbuild 
+)

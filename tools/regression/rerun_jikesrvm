@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -x
+TODAY=$(date +%Y%m%d)
+DATE=${1:-$TODAY}
+TOP=$HOME/tmp/rerun-rvm-$DATE
+
+BIN=$HOME/dacapo_regressions
+
+[ -e $TOP ] || mkdir $TOP #|| { echo "Please cleanup $TOP before you re-run"; exit 1; }
+
+echo "Copying old results back here"
+rsync -a war:pub/dacapo/regression/results-$DATE $TOP/
+
+if [ ! -e $TOP/results-$DATE/summary.dat ]; then
+  echo "results-$DATE was not a valid run - perhaps you should redo the whole thing"
+  exit 1
+fi
+
+if [ ! -e $BIN/builds/dacapo-$DATE.jar ]; then
+  echo "There is no dacapo JAR for that date"
+  exit 1
+fi
+
+(
+  cd $TOP
+  for try in 1 2 3 LAST
+  do
+    echo "Building jikesrvm"
+    RVM_CONFIG=FastAdaptiveGenMS
+    $BIN/build_jikesrvm $TOP $RVM_CONFIG &> $TOP/results-$DATE/jikesrvm.build.$try.log
+    export RVM_ROOT=$TOP/rvm_trunk
+    export RVM_BUILD=$RVM_ROOT/builds/$RVM_CONFIG
+    if [ ! -e $RVM_BUILD/JikesRVM ]; then
+      echo "ERROR: JikesRVM failed to build."
+      [ -e $RVM_BUILD ] && rm -rf $RVM_BUILD
+      echo "Build failed on try $try"
+      if [ "$try" = "LAST" ]; then
+        echo "Giving up in disgust"
+        exit 1
+      fi
+    else
+      break;
+    fi
+  done
+
+  cp $BIN/builds/dacapo-$DATE.jar .
+  $BIN/test_dacapo $DATE JIKESRVM
+  $BIN/test_dacapo_results results-$DATE
+)

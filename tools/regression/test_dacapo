@@ -35,6 +35,11 @@ then
   SIZES=$ALL_SIZES
 fi
 
+echo "Version: $VERSION"
+echo "VMs: $VMS"
+echo "Benchmarks: $BMS"
+echo "Sizes: $SIZES"
+
 OUTDIR=results-$VERSION
 JAR=dacapo-${VERSION}.jar
 
@@ -63,14 +68,18 @@ with_timeout() {
 #       in 2 different scratch directories
 #
 
+OLD_PATH=$PATH
 for vm in $VMS
 do
-  VMFLAGS=
+  export PATH=$OLD_PATH
   case $vm in  
-  JIKESRVM)  JAVA_HOME=/usr/lib/j2se/1.4 ;;
+  JIKESRVM)  JAVA_HOME=/usr/lib/j2se/1.4 
+             export PATH=$RVM_ROOT/bin:$PATH
+             ;;
   DRLVM)     JAVA_HOME=$DRLVM_HOME ;;
   JROCKIT)   JAVA_HOME=/opt/jrockit-R26.3.0-jdk1.5.0_06 ;;
-  SUN)       JAVA_HOME=/opt/jdk1.5.0_07 ;;
+  SUN)       JAVA_HOME=/opt/jdk1.5.0 ;;
+  JDK16)     JAVA_HOME=/opt/jdk1.6.0 ;;
   BLACKDOWN) JAVA_HOME=/usr/lib/j2se/1.4 ;;
   TOKYO) case `uname -m` in
          ppc*) JAVA_HOME=/opt/IBMJava2-ppc-142;;
@@ -101,9 +110,11 @@ do
     do
       echo -n "$bm"
       HEAP=512
+      VMFLAGS=
       case $bm in
         antlr)   case $vm in
-                   DRLVM) VMFLAGS="-Xbootclasspath/p:$BIN/antlr.jar" ;;
+                   DRLVM) VMFLAGS="-Xbootclasspath/p:$BIN/antlr.jar" 
+			;;
                  esac ;;
         hsqldb)  HEAP=768 ;;
         xalan)   case $vm in
@@ -125,6 +136,9 @@ do
       
       with_timeout 1200 $vm/$bm.$size.tmp.log $JAVA $VMFLAGS $HEAPFLAGS \
         -jar $JAR $DFLAGS -scratch /tmp/$$ $bm
+      if [ -e /tmp/$$ ]; then
+        rm -rf /tmp/$$
+      fi
 
       if [ "$size" != "large" ]; then
         with_timeout 1200 $vm/$bm.$size.log $JAVA $VMFLAGS $HEAPFLAGS \
@@ -154,12 +168,16 @@ do
         luindex) HEAP=128;;
         lusearch) HEAP=128;;
         pmd) HEAP=128;;
+        sunflow) HEAP=256;;
         xalan) HEAP=128;;
         *) HEAP=512;;
       esac
       HEAPFLAGS="-Xmx${HEAP}m -Xms${HEAP}m"
       if [ "$size" == "${PERF_SIZE:-default}" ]; then
         DFLAGS="-s $size -n 3"
+        if [ "$vm" = "JIKESRVM" -a "$bm" != "eclipse" ]; then
+          VMFLAGS="$VMFLAGS -X:processors=2"
+        fi
         with_timeout 1800 $vm/$bm.$size.perf.log $JAVA $VMFLAGS $HEAPFLAGS \
           -jar $JAR $DFLAGS $bm
       fi

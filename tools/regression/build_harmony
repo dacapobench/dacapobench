@@ -1,10 +1,5 @@
 #!/bin/bash
 #
-# Build the Harmony DRLVM VM from svn head
-#
-# Revision: $Id:$
-# Date:     $Date:$
-#
 
 #
 # Command line parameters
@@ -27,25 +22,29 @@ while [ ! -z "$1" ]; do
   shift
 done
 
+echo "------------ environment ------------"
+env
+echo "------------ /environment ------------"
+
 #
 # Internal parameters
 #
 BIN=$HOME/dacapo_regressions
 VMTOP=$TOP/harmony/working_vm/
-#export JAVA_HOME=/opt/ibm-java2-i386-50
-export JAVA_HOME=/opt/jdk1.5.0_07
+export JAVA_HOME=/opt/ibm-java2-i386-50
 export PATH=$JAVA_HOME/bin:$PATH
 
 ECJ_DIR=$TOP/harmony/working_classlib/depends/jars/ecj_3.2/
-ANT_URL=http://www.apache.org/dist/ant/
-HARMONY_SVN=https://svn.apache.org/repos/asf/harmony/enhanced/trunk
+
 
 build_ant() {
   if [ ! -e $TOP/apache-ant-1.6.5 ]; then (
-    "Downloading ant"
+    echo "Downloading ant"
     cd $TOP
-    wget -c $ANT_URL/ant-current-bin.zip
-    unzip ant-current-bin.zip
+    #wget -c http://www.apache.org/dist/ant/ant-current-bin.zip
+    wget -c http://archive.apache.org/dist/ant/binaries/apache-ant-1.6.5-bin.tar.gz
+    echo "Unpacking ANT"
+    tar -xzf apache-ant-1.6.5-bin.tar.gz
   )
   fi
 }
@@ -67,26 +66,18 @@ build_vm() {
     cd $BUILD
     cp $BIN/drlvm.properties $BUILD/drlvm.properties
 
-    #
-    # Force the right gcc version.  eurgh.
-    #
-    #mkdir $VMTOP/bin_tmp
-    #ln -s /usr/bin/gcc-3.3 $VMTOP/bin_tmp/gcc
-    #ln -s /usr/bin/gcc++-3.3 $VMTOP/bin_tmp/g++
-
     echo "Updating dependencies"
     chmod +x build.sh
     $BUILD/build.sh update && {
 
       echo "Building"
-      #export PATH=$VMTOP/bin_tmp:$PATH
       $BUILD/build.sh
     }
   )
 }
 
 (
-svn co $HARMONY_SVN $TOP/harmony
+svn co https://svn.apache.org/repos/asf/harmony/enhanced/trunk $TOP/harmony
 cd $TOP/harmony
 
 echo "Populating source"

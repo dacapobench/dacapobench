@@ -14,7 +14,10 @@ fi
 DSTAMP=$(date +%Y%m%d)
 TOP=$SCRATCH/dacapo-nightly-$DSTAMP
 DACAPO_SVNHOME=https://svn.sourceforge.net/svnroot/dacapobench
+DACAPO_BRANCH=benchmarks/trunk
+#DACAPO_BRANCH=benchmarks/branches/robin
 RVM_SVNHOME=https://svn.sourceforge.net/svnroot/jikesrvm
+ANT=/usr/bin/ant
 
 #
 # Pick up system-specific parameters
@@ -27,11 +30,8 @@ fi
 #
 # JikesRVM configuration variabes
 #
-CONFIG=FastAdaptiveGenMS
+RVM_CONFIG=FastAdaptiveGenMS
 export RVM_ROOT=$TOP/rvm_trunk
-export RVM_HOST_CONFIG=$RVM_ROOT/config/i686-pc-linux-gnu
-export RVM_BUILD=$RVM_ROOT/build/$CONFIG
-export PATH=$RVM_ROOT/bin:$PATH
 
 #
 # Create the working directory and other initialization tasks
@@ -42,6 +42,7 @@ init() {
     rm -rf $TOP
   fi
   mkdir $TOP
+  mkdir $TOP/results-$DSTAMP
 }
 
 #
@@ -50,11 +51,11 @@ init() {
 build_dacapo() {
   ( 
     set -x
-    export JAVA_HOME=$JAVA_HOME_14
+    export JAVA_HOME=$JAVA_HOME_15
 
     cd $TOP
 
-    svn co $DACAPO_SVNHOME/benchmarks/trunk dacapo
+    svn co $DACAPO_SVNHOME/$DACAPO_BRANCH dacapo
 
     cd dacapo/benchmarks
     if [ -d $BIN/sources ]; then
@@ -63,27 +64,11 @@ build_dacapo() {
     else
       BUILD_PARAMS="sources dist"
     fi
-    ant $BUILD_PARAMS
+    $ANT $BUILD_PARAMS
     cp dacapo-$DSTAMP.jar $TOP 
-  )
-}
 
-build_rvm() {
-  (
-    cd $TOP
-
-    svn co $RVM_SVNHOME/rvmroot/trunk rvm_trunk
-
-    mkdir -p $RVM_ROOT/build
-
-
-    echo "RVM_ROOT=$RVM_ROOT"
-    echo "RVM_BUILD=$RVM_BUILD"
-    echo "RVM_HOST_CONFIG=$RVM_HOST_CONFIG"
-
-    jconfigure $CONFIG
-    cd $RVM_BUILD
-    ./jbuild 
+    # Archive the build
+    cp dacapo-$DSTAMP.jar $BIN/builds/
   )
 }
 
@@ -96,15 +81,16 @@ build_rvm() {
   fi
 
   if $(echo $ALL_VMS | grep JIKESRVM > /dev/null); then
-    build_rvm
-    if [ ! -e $TOP/rvm_trunk/build/$CONFIG ]; then
+    $BIN/build_jikesrvm $TOP $RVM_CONFIG &> $TOP/results-$DSTAMP/jikesrvm.build.log
+    export RVM_BUILD=$RVM_ROOT/builds/$RVM_CONFIG
+    if [ ! -e $RVM_BUILD/JikesRVM ]; then
       echo "ERROR: JikesRVM failed to build."
     fi
   fi
 
-  if $(echo $ALL_VMS | grep JIKESRVM > /dev/null); then
-    $BIN/build_harmony $TOP/harmony
-    export DRLVM_HOME=$TOP/harmony/harmony/working_vm/build/lnx_ia32_gcc_release/deploy/
+  if $(echo $ALL_VMS | grep DRLVM > /dev/null); then
+    $BIN/build_harmony $TOP/harmony &> $TOP/results-$DSTAMP/drlvm.build.log
+    export DRLVM_HOME=$TOP/harmony/harmony/working_vm/build/lnx_ia32_gcc_release/deploy/jdk
     if [ ! -e $DRLVM_HOME/jre/bin/java ]; then
       echo "ERROR: DRLVM failed to build."
     fi

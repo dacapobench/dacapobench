@@ -126,6 +126,21 @@ if true; then
   echo "</head>"
   echo "<body>"
   echo "<h1>Regression test results $(date) $(uname -m)</h1>"
+
+  #
+  # Builds
+  #
+  echo "<h2>Build results</h2>"
+  for vm in $VMS
+  do
+    case $vm in
+      JIKESRVM|DRLVM)
+        lcvm=$(echo $vm | tr 'A-Z' 'a-z')
+        echo "<a href=\"$lcvm.build.log\">$vm</a> "
+        ;; 
+    esac
+  done
+  echo "<p>"
   echo "<table columns=$cols>"
   
   #
@@ -285,6 +300,8 @@ if true; then
   done 
 fi> $PERF
 
+echo "</body>" >> $MAIN
+echo "</html>" >> $MAIN
 
 #
 # Publish the results
@@ -294,7 +311,6 @@ fi> $PERF
 find $RESULTS -type f -size +10000 | xargs $BIN/trim
 if [ $PUBLISH == "true" ]; then
   rsync -a $RESULTS $PUBLIC
+  ssh $PUBLIC_HOST "cd $PUBLIC_PATH; ./make_graphs"
 fi
-
-echo "</body>" >> $MAIN
 
