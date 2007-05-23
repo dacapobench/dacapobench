@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-01-30 13:08:45 +1100 (Tue, 30 Jan 2007) $
- *   $Id: build.xml 275 2007-01-30 02:08:45Z steveb-oss $
+ *   $Date: 2007-05-23 20:09:07 +1000 (Wed, 23 May 2007) $
+ *   $Id: build.xml 278 2007-05-23 10:09:07Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -229,7 +229,7 @@
 	<property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 	
 	<!-- benchmark locations -->
-	<property name="antlr.url" value="http://www.antlr.org/download"/>
+	<property name="antlr.url" value="http://www.antlr2.org/download"/>
 	<property name="batik.url" value="${apache.dl.url}/xml/batik"/>
 	<property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
 	<property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
