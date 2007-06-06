@@ -65,7 +65,14 @@ public class SunflowHarness extends dacapo.Benchmark {
    * @param size The "size" of the iteration (small, default, large)
    */
   public boolean validate(String size) {
-    sunflow.kernelEnd();     
+    if (!validate)
+      return true;
+    try {
+      sunflow.kernelEnd();     
+    } catch (RuntimeException e) {
+      System.err.println(e.getMessage());
+      return false;
+    }
     return super.validate(size);
   }
 }

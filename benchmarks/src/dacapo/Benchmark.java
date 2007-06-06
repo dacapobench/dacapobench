@@ -47,12 +47,12 @@ public abstract class Benchmark {
   /**
    * Perform validation
    */
-  private static boolean validate = true;
+  protected static boolean validate = true;
   
   /**
    * Don't clean up output files
    */
-  private static boolean preserve = false;
+  protected static boolean preserve = false;
   
   /**
    * Output file for writing digests
@@ -62,7 +62,7 @@ public abstract class Benchmark {
   /**
    * 
    */
-  private static boolean validationReport = false;
+  protected static boolean validationReport = false;
   
   /**
    * Saved System.out while redirected to the digest stream

@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-05-23 20:09:07 +1000 (Wed, 23 May 2007) $
- *   $Id: build.xml 278 2007-05-23 10:09:07Z steveb-oss $
+ *   $Date: 2007-06-06 18:59:44 +1000 (Wed, 06 Jun 2007) $
+ *   $Id: build.xml 280 2007-06-06 08:59:44Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -81,7 +81,7 @@
          ================================= -->
 	<target name="sources" 
     description="Download sources from their original locations"
-    depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
+    depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,chart.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
 	</target>
     	
 	<!-- ================================= 
