@@ -19,6 +19,7 @@ package dacapo.luindex;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
@@ -111,7 +112,7 @@ public class LuindexHarness extends Benchmark {
         String[] files = file.list();
         // an IO error could occur
         if (files != null) {
-          sortArray(files);
+          Arrays.sort(files);
           for (int i = 0; i < files.length; i++) {
             indexDocs(writer, new File(file, files[i]));
           }

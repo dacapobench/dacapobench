@@ -4,19 +4,25 @@
  */
 
 import dacapo.Callback;
+import dacapo.CommandLineArgs;
 
 public class MMTkCallback extends Callback {
   
   private final MMTkHarness harness = new MMTkHarness();
   
-  /* Immediatly prior to start of the benchmark */
+  public MMTkCallback(CommandLineArgs args) {
+    super(args);
+  }
+  /* Immediately prior to start of the benchmark */
   public void start(String benchmark) {
-    harness.harnessBegin();
+    if (!isWarmup())
+      harness.harnessBegin();
     super.start(benchmark);
   };
-  /* Immediatly after the end of the benchmark */
+  /* Immediately after the end of the benchmark */
   public void stop() {
     super.stop();
-    harness.harnessEnd();
+    if (!isWarmup())
+      harness.harnessEnd();
   }
 }

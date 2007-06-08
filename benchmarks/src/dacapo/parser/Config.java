@@ -22,9 +22,6 @@ import java.util.Vector;
  * file.
  * 
  * @author Robin Garner
- * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
- * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
- *
  */
 public class Config {
 
@@ -33,9 +30,6 @@ public class Config {
    * specified by a benchmark.
    * 
    * @author Robin Garner
-   * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
-   * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
-   *
    */
   class OutputFile {
     String name;                   // Output file name
@@ -62,16 +56,14 @@ public class Config {
    * a benchmark.
    * 
    * @author Robin Garner
-   * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
-   * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
    *
    */
   class Size {
     final String name;
     final String[] args;
-    HashMap outputFiles = new LinkedHashMap(20);
+    HashMap<String,OutputFile> outputFiles = new LinkedHashMap<String,OutputFile>(20);
     
-    public Size(String name, Vector args) {
+    public Size(String name, Vector<String> args) {
       this.args = (String[])args.toArray(new String[0]);
       this.name = name;
     }
@@ -87,8 +79,8 @@ public class Config {
   public String className = null;
   public String methodName = null;
   
-  HashMap sizes = new HashMap(3);
-  HashMap desc = new HashMap(6);
+  HashMap<String,Size> sizes = new HashMap<String,Size>(3);
+  HashMap<String,String> desc = new HashMap<String,String>(6);
   
   Config(String name) {
     this.name = name;
@@ -97,7 +89,7 @@ public class Config {
   void setClass(String klass) { this.className = klass; }
   void setMethod(String method) { this.methodName = method; }
   
-  void addSize(String name, Vector args) {
+  void addSize(String name, Vector<String> args) {
     sizes.put(name,new Size(name,args));
   }
   
@@ -220,7 +212,7 @@ public class Config {
    * 
    * @return A collection of strings
    */
-  public Collection getSizes() {
+  public Collection<String> getSizes() {
     return sizes.keySet();
   }
   
@@ -230,7 +222,7 @@ public class Config {
    * @param size
    * @return Set\<String\> of file names
    */
-  public Set getOutputs(String size) {
+  public Set<String> getOutputs(String size) {
     return getSize(size).outputFiles.keySet();
   }
   
@@ -340,8 +332,7 @@ public class Config {
       str.print(" method "+methodName);
     str.println(";");
     
-    for (Iterator i = getSizes().iterator(); i.hasNext(); ) {
-      String size = (String)i.next();
+    for (String size : getSizes()) {
       String[] args = getArgs(size);
       str.print("size "+size+" args \"");
       for (int j=0; j < args.length; j++) {
@@ -351,7 +342,7 @@ public class Config {
       }
       str.println("\";");
       str.print("  outputs");
-      for (Iterator v = getOutputs(size).iterator(); v.hasNext(); ) {
+      for (Iterator<String> v = getOutputs(size).iterator(); v.hasNext(); ) {
         str.println();
         String file = (String)v.next();
         OutputFile f = getSize(size).getOutputFile(file);

@@ -2,10 +2,6 @@ package dacapo;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -117,25 +113,16 @@ public abstract class Benchmark {
   public final boolean run(Callback callback, String size, boolean timing) throws Exception {
     iteration++;
     preIteration(size);
-    if (timing)
-      callback.start(config.name);
-    else
-      callback.startWarmup(config.name);
+    callback.start(config.name);
     
     startIteration();
     iterate(size);
     stopIteration();
     
-    if (timing)
-      callback.stop();
-    else
-      callback.stopWarmup();
+    callback.stop();
     
     boolean valid = validate(size);
-    if (timing)
-      callback.complete(config.name, valid);
-    else
-      callback.completeWarmup(config.name, valid);
+    callback.complete(config.name, valid);
     postIteration(size);
     return valid;
   }
@@ -250,8 +237,7 @@ public abstract class Benchmark {
       valRepFile.println("Validating "+config.name+" "+size);
     }
     boolean valid = true;
-    for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
-      String file = (String)v.next();
+    for (String file : config.getOutputs(size)) {
 
       /*
        * Validate by file digest
@@ -372,8 +358,7 @@ public abstract class Benchmark {
    * @param size
    */
   protected void postIterationCleanup(String size) {
-    for (Iterator v = config.getOutputs(size).iterator(); v.hasNext(); ) {
-      String file = (String)v.next();
+    for (String file : config.getOutputs(size)) {
       if (file.equals("$stdout") || file.equals("$stderr")) {
       } else {
         if (!config.isKept(size,file))
@@ -558,24 +543,6 @@ public abstract class Benchmark {
       lines++;
     in.close();
     return lines;
-  }
-  
-  /**
-   * Sort an array.
-   * 
-   * @param list
-   * @return
-   */
-  protected void sortArray(Comparable[] list) {
-    List l = new ArrayList(list.length);
-    for (int i=0; i < list.length; i++)
-      l.add(list[i]);
-    Collections.sort(l);
-    int j = 0;
-    for (Iterator i = l.iterator(); i.hasNext(); ) {
-      list[j++] = (Comparable)i.next();
-      //System.out.println(j+" : "+list[j-1]);
-    }
   }
   
   public static long byteCount(String file) throws IOException {

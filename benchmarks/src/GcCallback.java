@@ -3,8 +3,13 @@
  * Australian National University. 2005
  */
 import dacapo.Callback;
+import dacapo.CommandLineArgs;
 
 public class GcCallback extends Callback {
+  
+  public GcCallback(CommandLineArgs args) {
+    super(args);
+  }
   /* perform a System.gc() before starting each run */
   public void start(String benchmark) {
     System.gc();
@@ -12,6 +17,6 @@ public class GcCallback extends Callback {
   };
   public void startWarmup(String benchmark) {
     System.gc();
-    super.startWarmup(benchmark);
+    super.start(benchmark);
   };
 }
