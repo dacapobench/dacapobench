@@ -18,8 +18,8 @@ public class MMTkHarness {
     boolean found = false;
     try {
       Class harnessClass = Class.forName(harnessClassName);
-      beginMethod = harnessClass.getMethod("harnessBegin", null);        // Just check for the method
-      endMethod = harnessClass.getMethod("harnessEnd", null);          // Just check for the method
+      beginMethod = harnessClass.getMethod("harnessBegin");        // Just check for the method
+      endMethod = harnessClass.getMethod("harnessEnd");          // Just check for the method
       found = true;
     } catch (ClassNotFoundException c) {
       if (verbose)
@@ -38,7 +38,7 @@ public class MMTkHarness {
   
   public void harnessBegin() {
     try {
-      beginMethod.invoke(null, null);
+      beginMethod.invoke(null);
     } catch (Exception e) {
       throw new RuntimeException("Error running MMTk harnessBegin",e);
     }
@@ -46,7 +46,7 @@ public class MMTkHarness {
   
   public void harnessEnd() {
     try {
-      endMethod.invoke(null, null);
+      endMethod.invoke(null);
     } catch (Exception e) {
       throw new RuntimeException("Error running MMTk harnessEnd",e);
     }
