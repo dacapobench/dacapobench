@@ -29,7 +29,7 @@
  */
 
 
-package dacapo.hsqldb;
+package dacapo;
 
 /*
  * April 2006, Robin Garner, ANU

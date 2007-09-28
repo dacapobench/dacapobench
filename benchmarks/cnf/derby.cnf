@@ -1,0 +1,44 @@
+benchmark derby 
+  class dacapo.derby.DerbyHarness;
+
+size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
+                "-url","jdbc:derby:$SCRATCH/derby;create=true",
+		"-user","sa","-init",
+		"-clients","10",
+		"-tpc", "5",
+		"-tps","4","-v"
+  output 
+         stdout digest 0x76017508de1dd5dfef96fdba5061d264a3ce053b,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
+                "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
+		  "-user","sa","-init",
+		  "-clients","20",
+		  "-tpc","40",
+		  "-tps","64"
+  output 
+         stdout digest 0xfc928d96bebf7d12b0f323eacd782ba8e6ade591,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
+                "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
+		"-user","sa","-init",
+		"-clients","100",
+		"-tpc","50",
+		"-tps","128"
+  output 
+         stdout digest 0xd9e4aa9493ef4da225e4636964416bfab23d204a,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+
+description
+  short		"An SQL relational database engine written in Java",
+  long		"Derby executes a JDBC in-memory benchmark, executing a number of transactions against a model of a banking application",
+  copyright	"Copyright (c) 2001-2002, The Apache Software Foundation",
+  author	"The Apache Software Foundation",
+  license	"The Apache license v2.0.",
+  url		"http://apache.org/",
+  version	"10.3.1.4",
+  threads	"20 client threads",
+  repeats	"40 transactions per client";

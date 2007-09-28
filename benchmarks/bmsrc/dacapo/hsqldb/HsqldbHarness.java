@@ -3,6 +3,7 @@ package dacapo.hsqldb;
 import java.io.File;
 
 import dacapo.Benchmark;
+import dacapo.PseudoJDBCBench;
 import dacapo.parser.Config;
 
 public class HsqldbHarness extends Benchmark {
