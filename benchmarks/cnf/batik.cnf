@@ -1,6 +1,12 @@
 benchmark batik
   class dacapo.batik.BatikHarness;
 
+/*
+ * Validation currently limited to checking existence of output file
+ * since different product VMs produce similar looking but different
+ * image files.
+ */
+
 size small args "-scriptSecurityOff","batik/mapWaadt.svg"
   output stdout           digest 0xa8f2208c90a7e2223ff376e873fd7ddb0ece3db7,
     	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
