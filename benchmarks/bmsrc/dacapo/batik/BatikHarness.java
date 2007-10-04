@@ -18,13 +18,17 @@ public class BatikHarness extends Benchmark {
    */
   public void iterate(String size) throws Exception {
     String[] args = config.getArgs(size);
-    Vector newArgs = new Vector(args.length+2);
+    Vector<String> newArgs = new Vector<String>(args.length+2);
     newArgs.add("-d");
     newArgs.add(scratch.getPath());
     for (int i=0; i < args.length; i++) {
-      if (args[i].charAt(0) == '-')
+      if (args[i].charAt(0) == '-') {
+        if (args[i].equals("-m")) {
+          newArgs.add(args[i]);
+          newArgs.add(args[++i]);
+        } else 
         newArgs.add(args[i]);
-      else
+      } else
         newArgs.add((new File(scratch,args[i])).getPath());
     }
     String[] newArgStrings = (String[])newArgs.toArray(new String[0]);
@@ -33,6 +37,6 @@ public class BatikHarness extends Benchmark {
         System.out.print(newArgStrings[i]+" ");
       System.out.println();
     }
-    org.apache.batik.apps.rasterizer.Main.main(newArgStrings);
+    new org.apache.batik.apps.rasterizer.Main(newArgStrings).execute();
   }
 }
