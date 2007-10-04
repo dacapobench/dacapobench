@@ -188,6 +188,9 @@ public abstract class Benchmark {
    * and output streams.  stopIteration() should be its inverse.
    */
   public final void startIteration() {
+    if (verbose) {
+      System.out.println("startIteration()");
+    }
     if (validateOutput) {
       System.setOut(out);
       System.setErr(err);
@@ -220,6 +223,9 @@ public abstract class Benchmark {
       System.setOut(savedOut);
       System.setErr(savedErr);
     }
+    if (verbose) {
+      System.out.println("stopIteration()");
+    }
   }
   
   /**
@@ -230,6 +236,9 @@ public abstract class Benchmark {
    * @return true if the output was correct
    */
   public boolean validate(String size) {
+    if (verbose) {
+      System.out.println("validate("+validate+")");
+    }
     if (!validate) 
       return true;
     
@@ -567,6 +576,7 @@ public abstract class Benchmark {
       valRepFile = new PrintWriter(new BufferedWriter(new FileWriter(filename,true)));
     } catch (IOException e) {
       e.printStackTrace();
+      System.exit(1);
     }
   }
 
