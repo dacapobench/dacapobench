@@ -120,6 +120,10 @@ public class CommandLineArgs {
       } else if (args[i].equals("-noValidation")) {
         Benchmark.setValidate(false);
       } else if (args[i].equals("-validationReport")) {
+    	  if (i == args.length - 1) {
+    		  System.err.println("No validation report filename specified! (\"-h\" for usage)");
+    		  System.exit(21);          
+    	  }
         Benchmark.enableValidationReport(args[++i]);
       } else if (args[i].equals("-scratch")) {
         if (i == args.length - 1) {
@@ -133,13 +137,13 @@ public class CommandLineArgs {
       }
       } catch (NumberFormatException e) {
         System.err.println("Could not parse numeric argument to \""+args[i-1]+"\"! (\"-h\" for usage)");
-        System.exit(18);        
+        System.exit(19);        
       }
     }
     
     if (i == args.length) {
         System.err.println("No benchmarks specified! (\"-h\" for usage)");
-        System.exit(19);        
+        System.exit(20);        
     }
     
     // now get the benchmark names
@@ -183,7 +187,7 @@ public class CommandLineArgs {
     System.out.println("    -noValidation           Don't validate at all");
     System.out.println("    -preserve               Preserve output files (debug)");
     System.out.println("    -v                      Verbose output");
-    System.out.println("    -validationReport       Report digests, line counts etc");
+    System.out.println("    -validationReport <file>  Report digests, line counts etc");
   }
   
 

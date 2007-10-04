@@ -22,8 +22,8 @@ import java.security.MessageDigest;
  *   with Unix ones.  (A bit heavy handed, better alternatives are invited :)
  * 
  * @author Robin Garner
- * @date $Date: 2006-10-13 18:01:52 +1000 (Fri, 13 Oct 2006) $
- * @id $Id: FileDigest.java 169 2006-10-13 08:01:52Z rgarner $
+ * @date $Date: 2007-10-04 18:00:28 +1000 (Thu, 04 Oct 2007) $
+ * @id $Id: FileDigest.java 296 2007-10-04 08:00:28Z rgarner $
  *
  */
 public class FileDigest {
@@ -70,21 +70,21 @@ public class FileDigest {
    * @throws IOException
    */
   public static byte[] getText(File file, boolean filter, File scratch) throws IOException {
-      final MessageDigest digest = Digest.create();
-      BufferedReader in = new BufferedReader(new FileReader(file));
-      String line;
-      while ((line = in.readLine()) != null) {
-        if (filter) {
-          line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
-          line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
-          line = replaceAllFixed(line,"\\","/");
-        }
-        byte[] buf = line.getBytes();
-        for (int i=0; i < buf.length; i++)
-          digest.update(buf[i]);
+    final MessageDigest digest = Digest.create();
+    BufferedReader in = new BufferedReader(new FileReader(file));
+    String line;
+    while ((line = in.readLine()) != null) {
+      if (filter) {
+        line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
+        line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
+        line = replaceAllFixed(line,"\\","/");
       }
-      in.close();
-      return digest.digest();
+      byte[] buf = line.getBytes();
+      for (int i=0; i < buf.length; i++)
+        digest.update(buf[i]);
+    }
+    in.close();
+    return digest.digest();
   }
 
   /**
@@ -95,16 +95,16 @@ public class FileDigest {
    * @throws IOException
    */
   public static byte[] getBinary(File file) throws IOException {
-      final MessageDigest digest = Digest.create();
-      BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-      byte[] buf = new byte[BUFLEN];
-      int len;
-      while ((len=in.read()) > 0) {
-        for (int i=0; i < len; i++)
-          digest.update(buf[i]);
-      }
-      in.close();
-      return digest.digest();
+    final MessageDigest digest = Digest.create();
+    BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+    byte[] buf = new byte[BUFLEN];
+    int len;
+    while ((len=in.read(buf)) > 0) {
+      for (int i=0; i < len; i++)
+        digest.update(buf[i]);
+    }
+    in.close();
+    return digest.digest();
   }
 
   /**
