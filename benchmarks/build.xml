@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-10-03 15:09:34 +1000 (Wed, 03 Oct 2007) $
- *   $Id: build.xml 294 2007-10-03 05:09:34Z rgarner $
+ *   $Date: 2007-10-04 17:01:51 +1000 (Thu, 04 Oct 2007) $
+ *   $Id: build.xml 295 2007-10-04 07:01:51Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -803,9 +803,9 @@
             </fileset>
         </copy>
         <unjar src="${batik-top}/lib/xml-apis-ext.jar" dest="${build}"/>
+	<unjar src="${batik-top}/lib/build/crimson-1.1.3.jar" dest="${build}"/>
 
         <!-- unjar dependencies into build.deps directory -->
-        <unjar src="${batik-top}/lib/build/crimson-1.1.3.jar" dest="${build.deps}"/>
         <unjar src="${batik-top}/lib/js.jar" dest="${build.deps}"/>
         <unjar src="${batik-top}/lib/pdf-transcoder.jar" dest="${build.deps}"/>
 
