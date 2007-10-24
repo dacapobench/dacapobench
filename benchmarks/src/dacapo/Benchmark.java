@@ -98,7 +98,7 @@ public abstract class Benchmark {
   /**
    * Keep track of the number of times we have been iterated.
    */
-  private int iteration = 0;
+  protected int iteration = 0;
   
   /**
    * Run a benchmark.  This is final because individual

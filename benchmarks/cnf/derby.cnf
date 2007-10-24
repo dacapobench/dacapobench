@@ -8,7 +8,7 @@ size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
 		"-tpc", "5",
 		"-tps","4","-v"
   output 
-         stdout digest 0x76017508de1dd5dfef96fdba5061d264a3ce053b,
+         stdout digest 0x60e89eaa77b7d10beda808d737fde526306d5630,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
@@ -18,7 +18,7 @@ size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
 		  "-tpc","40",
 		  "-tps","64"
   output 
-         stdout digest 0xfc928d96bebf7d12b0f323eacd782ba8e6ade591,
+         stdout digest 0xa5260265344b87a3a49f739e90a666af5de0cc77,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
@@ -28,7 +28,7 @@ size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
 		"-tpc","50",
 		"-tps","128"
   output 
-         stdout digest 0xd9e4aa9493ef4da225e4636964416bfab23d204a,
+         stdout digest 0x5e1c9dca0fab8cbe6116c278bc3479bc222b8cdd,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 

@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-10-04 17:01:51 +1000 (Thu, 04 Oct 2007) $
- *   $Id: build.xml 295 2007-10-04 07:01:51Z rgarner $
+ *   $Date: 2007-10-24 21:46:47 +1000 (Wed, 24 Oct 2007) $
+ *   $Id: build.xml 301 2007-10-24 11:46:47Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -782,18 +782,15 @@
         <mkdir dir="${build.src}/batik"/>
 
         <!-- unpack the source files -->
-        <unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/>
+	<!--        <unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/> -->
 
         <!-- Apply the dacapo patch -->
         <fixcrlf srcdir="${batik-top}/sources" includes="**/*.java"/>
-        <!-- <patch patchfile="${patches}/batik.patch" 
-           dir="${build.src}"
-           strip="0" ignorewhitespace="yes"/> -->
 
         <!-- Build using the supplied build.xml -->
         <ant antfile="${batik-top}/build.xml" dir="${batik-top}" 
                      target="compiletest" inheritall="false">
-             <property name="dacapo.classes" location="${build}"/>
+          <property name="debug" value="on"/>
         </ant>
 
         <!-- Copy the batik class files -->
@@ -920,7 +917,7 @@
     <!-- Build the derby dacapo harness -->
     <target name="derby.harness" depends="harness" description="--> The derby dacapo harness">
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-            source="1.4"
+            source="1.5"
             includes="dacapo/derby/*,dacapo/PseudoJDBCBench.java"
             debug="true" debuglevel="lines,vars,source"/>
     </target>

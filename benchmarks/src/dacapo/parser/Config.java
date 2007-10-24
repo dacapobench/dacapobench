@@ -200,7 +200,8 @@ public class Config {
    */
   
   /**
-   * Benchmark arguments for a given run size
+   * Benchmark arguments for a given run size.  The return value
+   * is a clone so callers are free to modify it.
    */
   public String[] getArgs(String config) {
     Size s = getSize(config);
