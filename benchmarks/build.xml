@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-10-24 21:46:47 +1000 (Wed, 24 Oct 2007) $
- *   $Id: build.xml 301 2007-10-24 11:46:47Z rgarner $
+ *   $Date: 2007-10-25 18:17:22 +1000 (Thu, 25 Oct 2007) $
+ *   $Id: build.xml 302 2007-10-25 08:17:22Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -782,10 +782,7 @@
         <mkdir dir="${build.src}/batik"/>
 
         <!-- unpack the source files -->
-	<!--        <unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/> -->
-
-        <!-- Apply the dacapo patch -->
-        <fixcrlf srcdir="${batik-top}/sources" includes="**/*.java"/>
+    	<unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/>
 
         <!-- Build using the supplied build.xml -->
         <ant antfile="${batik-top}/build.xml" dir="${batik-top}" 
