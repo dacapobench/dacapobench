@@ -134,7 +134,7 @@ public class TestHarness {
     callback.init(harness.config);
     
     do {
-      valid = b.run(callback, commandLineArgs.getSize(), !callback.isWarmup()) && valid;
+      valid = b.run(callback, commandLineArgs.getSize()) && valid;
     } while (callback.runAgain());
     b.cleanup();
     

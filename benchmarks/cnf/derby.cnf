@@ -3,32 +3,32 @@ benchmark derby
 
 size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/derby;create=true",
-		"-user","sa","-init",
+		"-user","sa",
 		"-clients","10",
 		"-tpc", "5",
 		"-tps","4","-v"
   output 
-         stdout digest 0x60e89eaa77b7d10beda808d737fde526306d5630,
+         stdout digest 0x5cb9aec99a567f4783e8f98036a8d3bee52d806c,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
-		  "-user","sa","-init",
+		  "-user","sa",
 		  "-clients","20",
 		  "-tpc","40",
 		  "-tps","64"
   output 
-         stdout digest 0xa5260265344b87a3a49f739e90a666af5de0cc77,
+         stdout digest 0x69ae6f351b1bd2c6e7e66337b73b254739a758ab,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
-		"-user","sa","-init",
+		"-user","sa",
 		"-clients","100",
 		"-tpc","50",
 		"-tps","128"
   output 
-         stdout digest 0x5e1c9dca0fab8cbe6116c278bc3479bc222b8cdd,
+         stdout digest 0xf200e59b205fdda36f55e581922b08fa85439ace,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 

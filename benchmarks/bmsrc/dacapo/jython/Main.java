@@ -15,6 +15,6 @@ import dacapo.Benchmark;
 public class Main {
   public static void main(String args[]) throws Exception {
     // create dummy harness and invoke with dummy arguments
-	(new JythonHarness(null, null)).run(null, "", true);
+	(new JythonHarness(null, null)).run(null, "");
   }
 }

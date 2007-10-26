@@ -230,152 +230,141 @@ public class PseudoJDBCBench {
         //System.out.println("Complete: "
         //        + (new java.util.Date()).toString());
       }
-
-      System.out.println("* Starting Benchmark Run *");
-
-      MemoryWatcher = new MemoryWatcherThread();
-
-      MemoryWatcher.start();
-
-      transactions  = false;
-      prepared_stmt = false;
-      start_time    = System.currentTimeMillis();
-
-      for (int i = 0; i < n_clients; i++) {
-        Client = new ClientThread(n_txn_per_client, url, user,
-                password);
-
-        Client.start();
-        vClient.addElement(Client);
-      }
-
-      /*
-       ** Barrier to complete this test session
-       */
-       e = vClient.elements();
-
-       while (e.hasMoreElements()) {
-         Client = (Thread) e.nextElement();
-
-         if (debug) System.out.println("Active client threads: "+runningClients);
-         Client.join();
-       }
-       if (debug) System.out.println("All clients exited");
-
-       vClient.removeAllElements();
-       reportDone();
-
-       transactions  = true;
-       prepared_stmt = false;
-       start_time    = System.currentTimeMillis();
-
-       for (int i = 0; i < n_clients; i++) {
-         Client = new ClientThread(n_txn_per_client, url, user,
-                 password);
-
-         Client.start();
-         vClient.addElement(Client);
-       }
-
-       /*
-        ** Barrier to complete this test session
-        */
-        e = vClient.elements();
-
-        while (e.hasMoreElements()) {
-          Client = (Thread) e.nextElement();
-
-          if (debug) System.out.println("Active client threads: "+runningClients);
-          Client.join();
-        }
-        if (debug) System.out.println("All clients exited");
-
-        vClient.removeAllElements();
-        reportDone();
-
-        transactions  = false;
-        prepared_stmt = true;
-        start_time    = System.currentTimeMillis();
-
-        for (int i = 0; i < n_clients; i++) {
-          Client = new ClientThread(n_txn_per_client, url, user,
-                  password);
-
-          Client.start();
-          vClient.addElement(Client);
-        }
-
-        /*
-         ** Barrier to complete this test session
-         */
-        e = vClient.elements();
-
-        while (e.hasMoreElements()) {
-          Client = (Thread) e.nextElement();
-
-          if (debug) System.out.println("Active client threads: "+runningClients);
-          Client.join();
-        }
-        if (debug) System.out.println("All clients exited");
-
-        vClient.removeAllElements();
-        reportDone();
-
-        transactions  = true;
-        prepared_stmt = true;
-        start_time    = System.currentTimeMillis();
-
-        for (int i = 0; i < n_clients; i++) {
-          Client = new ClientThread(n_txn_per_client, url, user,
-                  password);
-
-          Client.start();
-          vClient.addElement(Client);
-        }
-
-        /*
-         ** Barrier to complete this test session
-         */
-        e = vClient.elements();
-
-        while (e.hasMoreElements()) {
-          Client = (Thread) e.nextElement();
-
-          if (debug) System.out.println("Active client threads: "+runningClients);
-          Client.join();
-        }
-        if (debug) System.out.println("All clients exited");
-
-        vClient.removeAllElements();
-        reportDone();
     } catch (Exception E) {
       System.out.println(E.getMessage());
       E.printStackTrace();
-    } finally {
-      MemoryWatcher.end();
+    }
 
+    if (n_txn_per_client > 0) {
       try {
-        MemoryWatcher.join();
+        System.out.println("* Starting Benchmark Run *");
+        MemoryWatcher = new MemoryWatcherThread();
+        MemoryWatcher.start();
+        transactions = false;
+        prepared_stmt = false;
+        start_time = System.currentTimeMillis();
+        for (int i = 0; i < n_clients; i++) {
+          Client = new ClientThread(n_txn_per_client, url, user, password);
 
-        if (ShutdownCommand.length() > 0) {
-          Connection C    = connect(url, user, password);
-          ;
-          Statement  Stmt = C.createStatement();
-
-          Stmt.execute(ShutdownCommand);
-          Stmt.close();
-          connectClose(C);
+          Client.start();
+          vClient.addElement(Client);
         }
+        /*
+         ** Barrier to complete this test session
+         */
+        e = vClient.elements();
+        while (e.hasMoreElements()) {
+          Client = (Thread) e.nextElement();
 
-        if (TabFile != null) {
-          TabFile.close();
+          if (debug)
+            System.out.println("Active client threads: " + runningClients);
+          Client.join();
         }
-      } catch (Exception E1) {
-        E1.printStackTrace();
+        if (debug)
+          System.out.println("All clients exited");
+        vClient.removeAllElements();
+        reportDone();
+        transactions = true;
+        prepared_stmt = false;
+        start_time = System.currentTimeMillis();
+        for (int i = 0; i < n_clients; i++) {
+          Client = new ClientThread(n_txn_per_client, url, user, password);
+
+          Client.start();
+          vClient.addElement(Client);
+        }
+        /*
+         ** Barrier to complete this test session
+         */
+        e = vClient.elements();
+        while (e.hasMoreElements()) {
+          Client = (Thread) e.nextElement();
+
+          if (debug)
+            System.out.println("Active client threads: " + runningClients);
+          Client.join();
+        }
+        if (debug)
+          System.out.println("All clients exited");
+        vClient.removeAllElements();
+        reportDone();
+        transactions = false;
+        prepared_stmt = true;
+        start_time = System.currentTimeMillis();
+        for (int i = 0; i < n_clients; i++) {
+          Client = new ClientThread(n_txn_per_client, url, user, password);
+
+          Client.start();
+          vClient.addElement(Client);
+        }
+        /*
+         ** Barrier to complete this test session
+         */
+        e = vClient.elements();
+        while (e.hasMoreElements()) {
+          Client = (Thread) e.nextElement();
+
+          if (debug)
+            System.out.println("Active client threads: " + runningClients);
+          Client.join();
+        }
+        if (debug)
+          System.out.println("All clients exited");
+        vClient.removeAllElements();
+        reportDone();
+        transactions = true;
+        prepared_stmt = true;
+        start_time = System.currentTimeMillis();
+        for (int i = 0; i < n_clients; i++) {
+          Client = new ClientThread(n_txn_per_client, url, user, password);
+
+          Client.start();
+          vClient.addElement(Client);
+        }
+        /*
+         ** Barrier to complete this test session
+         */
+        e = vClient.elements();
+        while (e.hasMoreElements()) {
+          Client = (Thread) e.nextElement();
+
+          if (debug)
+            System.out.println("Active client threads: " + runningClients);
+          Client.join();
+        }
+        if (debug)
+          System.out.println("All clients exited");
+        vClient.removeAllElements();
+        reportDone();
+      } catch (Exception E) {
+        System.out.println(E.getMessage());
+        E.printStackTrace();
+      } finally {
+        MemoryWatcher.end();
+
+        try {
+          MemoryWatcher.join();
+
+          if (ShutdownCommand.length() > 0) {
+            Connection C    = connect(url, user, password);
+            ;
+            Statement  Stmt = C.createStatement();
+
+            Stmt.execute(ShutdownCommand);
+            Stmt.close();
+            connectClose(C);
+          }
+
+          if (TabFile != null) {
+            TabFile.close();
+          }
+        } catch (Exception E1) {
+          E1.printStackTrace();
+        }
+        //DS. Disable System.exit(0) so that benchmark can be invoked twice from harness.
+        //System.out.println ("-" + " PseudoJDBCBench.PseudoJDBCBench " + "calling System.exit(0)");
+        //System.exit(0);
       }
-      //DS. Disable System.exit(0) so that benchmark can be invoked twice from harness.
-      //System.out.println ("-" + " PseudoJDBCBench.PseudoJDBCBench " + "calling System.exit(0)");
-      //System.exit(0);
     }
   }
 

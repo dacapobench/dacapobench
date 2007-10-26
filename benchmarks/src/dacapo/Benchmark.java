@@ -110,8 +110,10 @@ public abstract class Benchmark {
    * @return Whether the run was valid or not.
    * @throws Exception Whatever exception the target application dies with
    */
-  public final boolean run(Callback callback, String size, boolean timing) throws Exception {
+  public final boolean run(Callback callback, String size) throws Exception {
     iteration++;
+    if (iteration == 1)
+      prepare(size);
     preIteration(size);
     callback.start(config.name);
     
@@ -155,6 +157,16 @@ public abstract class Benchmark {
    */
   protected void prepare() throws Exception {
     unpackZipFileResource("data/"+config.name+".zip", scratch);
+  }
+  
+  /**
+   * One-off preparation performed once we know the benchmark size.
+   * 
+   * By default, does nothing.
+   * 
+   * @param size The size (as defined in the per-benchmark configuration file).
+   */
+  protected void prepare(String size) throws Exception {
   }
   
   /**
