@@ -24,17 +24,17 @@ size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
 size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
 		"-user","sa",
-		"-clients","100",
-		"-tpc","50",
+		"-clients","40",
+		"-tpc","80",
 		"-tps","128"
   output 
-         stdout digest 0xf200e59b205fdda36f55e581922b08fa85439ace,
+         stdout digest 0xc7511e6103d1d62f80c32d80298ae2f39f852f9f,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
 description
   short		"An SQL relational database engine written in Java",
-  long		"Derby executes a JDBC in-memory benchmark, executing a number of transactions against a model of a banking application",
+  long		"Derby executes a JDBC benchmark, executing a number of transactions against a model of a banking application",
   copyright	"Copyright (c) 2001-2002, The Apache Software Foundation",
   author	"The Apache Software Foundation",
   license	"The Apache license v2.0.",
