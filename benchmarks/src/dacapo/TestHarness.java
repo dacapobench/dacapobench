@@ -182,7 +182,7 @@ public class TestHarness {
   
   private void dump() {
     System.err.println("Class name: "+config.className);
-    System.err.println("Method name: "+config.methodName);
+    System.err.println("Threading model: "+config.getThreadModel().describe());
     
     System.err.println("Configurations:");
     config.describe(System.err);

@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-10-25 18:17:22 +1000 (Thu, 25 Oct 2007) $
- *   $Id: build.xml 302 2007-10-25 08:17:22Z rgarner $
+ *   $Date: 2007-11-08 00:29:45 +1100 (Thu, 08 Nov 2007) $
+ *   $Id: build.xml 305 2007-11-07 13:29:45Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -738,7 +738,14 @@
     <!-- ================================= 
         target: antlr 
        ================================= -->
-    <target name="antlr" description="Build antlr" depends="harness">
+    <target name="antlr" description="Build antlr" depends="harness,antlr.benchmark,antlr.harness"/>
+    <target name="antlr.harness" description="Build batik" depends="harness">
+        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
+            source="1.5"
+                 includes="dacapo/antlr/*"
+            debug="true" debuglevel="lines,vars,source"/>
+    </target>
+    <target name="antlr.benchmark" description="Build antlr" depends="harness">
         <mkdir dir="${build.src}/antlr"/>
         <untar src="${sources}/antlr-${antlr.version}.tar.gz" 
            dest="${build.src}/antlr/"
@@ -761,10 +768,6 @@
          includes="antlr/**"
          destfile="${zipdata}/antlr.zip"/>
 
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-            source="1.4"
-                 includes="dacapo/antlr/*"
-            debug="true" debuglevel="lines,vars,source"/>
     </target>
 
     <!-- ================================= 
@@ -1290,7 +1293,7 @@
     <target name="pmd" depends="pmd.benchmark,pmd.harness" description="--> build the pmd benchmark"/>
     <!-- Build the pmd dacapo harness -->
     <target name="pmd.harness" depends="harness" description="--> Build the pmd dacapo harness">
-        <javac srcdir="${bmsrc}" source="1.4" classpath="${build}" destdir="${build}" 
+        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
             includes="dacapo/pmd/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
@@ -1430,7 +1433,7 @@
     <target name="xalan" depends="xalan.jar,xalan.data,xalan.harness" description="--> build the xalan benchmark"/>
     <!-- Build the xalan dacapo harness -->
     <target name="xalan.harness" depends="harness" description="Build xalan">
-        <javac srcdir="${bmsrc}" source="1.4" classpath="${build}" destdir="${build}" 
+        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
             includes="dacapo/xalan/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>

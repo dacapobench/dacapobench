@@ -12,8 +12,8 @@ import antlr.Tool;
  * 
  * @author Robin Garner
  * @author Steve Blackburn
- * @date $Date: 2006-10-03 17:24:11 +1000 (Tue, 03 Oct 2006) $
- * @id $Id: AntlrHarness.java 137 2006-10-03 07:24:11Z rgarner $
+ * @date $Date: 2007-11-08 00:29:45 +1100 (Thu, 08 Nov 2007) $
+ * @id $Id: AntlrHarness.java 305 2007-11-07 13:29:45Z rgarner $
  *
  */
 public class AntlrHarness extends Benchmark {
@@ -37,13 +37,11 @@ public class AntlrHarness extends Benchmark {
   }
   
   public void iterate(String size) {
-    String[] args = config.getArgs(size);
+    String[] args = preprocessArgs(size);
     int firstGrammarIndex = 0;
     int nIterations = 1;
     String[] newArgs = null;
-    Vector v = new Vector(args.length);
-    v.addElement("-o");
-    v.addElement(scratch.getAbsolutePath());
+    Vector<String> v = new Vector<String>(args.length);
     for (int i=0; i < args.length; i++) {
       if (args[i].equals("-grammars")) {
         firstGrammarIndex = i+1;
@@ -54,8 +52,6 @@ public class AntlrHarness extends Benchmark {
         break;
       } else if (args[i].equals("-iterations")) {
         nIterations = Integer.parseInt(args[++i]);
-      } else if (args[i].equals("-o")) {
-        i++;
       } else {
         v.addElement(args[i]);
       }

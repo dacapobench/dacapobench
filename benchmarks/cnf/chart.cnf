@@ -1,6 +1,6 @@
-benchmark chart class dacapo.chart.ChartHarness;
+benchmark chart class dacapo.chart.ChartHarness thread-model single;
 
-size small   args "-p","compress","small","chart/compress.dat"
+size small   args "-d","${SCRATCH}","-p","compress","small","${SCRATCH}/chart/compress.dat"
   output  
     stdout digest 0x28d213f4ce7b72388ff3f87463617edc1832e5f3,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -14,7 +14,7 @@ size small   args "-p","compress","small","chart/compress.dat"
     "compress-src-mut-inf-time.pdf" exists,
     "compress-dst-mut-inf-time.pdf" exists;
      
-size default args "-p","javac","small","chart/javac.dat"
+size default args "-d","${SCRATCH}","-p","javac","small","${SCRATCH}/chart/javac.dat"
   output  
     stdout digest 0xb13dc34c376563cb0ba0f9ef5989e9b128f5fbae,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -28,7 +28,7 @@ size default args "-p","javac","small","chart/javac.dat"
     "javac-src-mut-inf-time.pdf" exists,
     "javac-dst-mut-inf-time.pdf" exists;
 	  
-size large   args "-p","javac","large","chart/javac.dat"
+size large   args "-d","${SCRATCH}","-p","javac","large","${SCRATCH}/chart/javac.dat"
   output  
     stdout digest 0xb7c9877f1d71f2bc3739ad6a89230a6c19299ce1,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -50,5 +50,4 @@ description
   license   "LGPL and MPL",
   url       "http//www.jfree.org, http://www.lowagie.com/iText/",
   version	"0.9.21, 1.0b",
-  threads	"Single threaded",
   repeats	"Single iteration plots 14 distinct graphs";

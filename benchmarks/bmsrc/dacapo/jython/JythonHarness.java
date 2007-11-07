@@ -28,8 +28,7 @@ public class JythonHarness extends Benchmark {
    * script sees.  Hence the Py.setArgv call, followed by the jython.main call.
    */
   public void iterate(String size) throws Exception {
-    String[] args = config.getArgs(size);
-    args[0] = new String(fileInScratch(args[0]));
+    String[] args = preprocessArgs(size);
     String pyargs[] = new String[args.length - 1];
     for (int i = 0; i < pyargs.length; i++) {
       pyargs[i] = args[i+1];

@@ -1,5 +1,6 @@
 benchmark fop
-  class dacapo.fop.FopHarness;
+  class dacapo.fop.FopHarness
+  thread-model single;
 
 /*
  * 'small' uses debug mode ("-d"), which puts current stats in the output,
@@ -25,5 +26,4 @@ description
   license	"Apache Public License",
   url       "http://xml.apache.org/fop/",
   version	"0.20.5",
-  threads	"Single threaded",
   repeats	"Single iteration, renders a single XSL-FO file";

@@ -1,5 +1,6 @@
 benchmark pmd
-  class dacapo.pmd.PmdHarness;
+  class dacapo.pmd.PmdHarness
+  thread-model single;
 
 size xsmall args "@pmd/small.lst","xml","pmd/rulesets/imports.xml","-debug"
   output 

@@ -1,5 +1,6 @@
 benchmark sunflow
-  class dacapo.sunflow.SunflowHarness;
+  class dacapo.sunflow.SunflowHarness
+  thread-model per_cpu;
 
 size small args "32"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,

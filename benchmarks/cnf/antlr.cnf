@@ -1,7 +1,8 @@
 benchmark antlr 
-  class dacapo.antlr.AntlrHarness;
+  class dacapo.antlr.AntlrHarness
+  thread-model single;
 
-size small args "-o","./scratch","-grammars","antlr/java.g"
+size small args "-o","${SCRATCH}","-grammars","antlr/java.g"
  output
    stdout digest 0x1fdda3f0af68c67c53cd5cdd18c94f1978499b3e,
    stderr digest 0xdad1e41f6321fe17f7fcb73a790bedd69a777d41,
@@ -10,7 +11,7 @@ size small args "-o","./scratch","-grammars","antlr/java.g"
    "JavaTokenTypes.java" digest(text) 0x531c7a3bdc41185f7db175cfe216d13b8a9bae0a,
    "JavaTokenTypes.txt" digest(text) 0x9645d441047a61dfc4c0ab6e4fa66f74d66cac17;
 
-size default args "-o","./scratch",
+size default args "-o","${SCRATCH}",
                   "-iterations","2",
 		  "-grammars","antlr/cpp/calc.g","antlr/cpp/column.g",
 		     "antlr/cpp/data.g", "antlr/cpp/expr.g", 
@@ -48,7 +49,7 @@ size default args "-o","./scratch",
     stdout digest 0x48a0c230c35d8db2d0f6affdc11d4061840eb6f6,
     stderr digest 0x459b3713364a15cb610ce084bd22f352833c3255;
 
-size large args "-o","./scratch",
+size large args "-o","${SCRATCH}",
                 "-iterations","5",
 		"-grammars","antlr/cpp/calc.g","antlr/cpp/column.g",
 		   "antlr/cpp/data.g", "antlr/cpp/expr.g","antlr/cpp/html.g",
@@ -94,5 +95,4 @@ description
   license	"Public Domain",
   url		"http://www.antlr.org",
   version	"2.7.2",
-  threads	"Single threaded",
   repeats	"Two iterations, each parses 44 distinct grammar files";

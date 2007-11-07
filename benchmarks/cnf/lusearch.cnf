@@ -1,7 +1,10 @@
 benchmark lusearch
-  class dacapo.lusearch.LusearchHarness;
+  class dacapo.lusearch.LusearchHarness
+  thread-model fixed;
 
-size small args "-index","lusearch/index-default", "-threads", "4", "-queries","lusearch/query", "-output", "lusearch.out"
+size small args "-index","lusearch/index-default",
+                "-queries","lusearch/query", "-output", "lusearch.out"
+  threads 4
   output 
     stdout digest 0x7f2910f4b0f73a6bcbf677e77b3d99e48f6932ae,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -10,7 +13,9 @@ size small args "-index","lusearch/index-default", "-threads", "4", "-queries","
     "lusearch.out2" digest(text) 0x17394045489c5967b322b8437454b5cb8405fe52,
     "lusearch.out3" digest(text) 0x299f21c2aa37c5c7605b2d940220c56e2f38dcae;
 
-size default args "-index","lusearch/index-default", "-threads", "32", "-queries","lusearch/query", "-output", "lusearch.out"
+size default args "-index","lusearch/index-default",
+                  "-queries","lusearch/query", "-output", "lusearch.out"
+  threads 32
   output 
     stdout digest 0x37393e3302d4fd917c8ff0fa33b7edeb842ec60d,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -48,7 +53,8 @@ size default args "-index","lusearch/index-default", "-threads", "32", "-queries
     "lusearch.out31" digest(text) 0xce17ef7b8f8d2cd861bf3448c404430d2d756f96;
 
 
-size large args "-index","lusearch/index-default", "-threads", "64", "-queries","lusearch/query", "-output", "lusearch.out"
+size large args "-index","lusearch/index-default", "-queries", "lusearch/query", "-output", "lusearch.out"
+  threads 64
   output 
     stdout     digest 0x1542ed9da1c0710a928b344d724c1dc3d57a9f83,
     stderr     digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -125,5 +131,4 @@ description
   license	"Apache Public License",
   url       "http://lucene.apache.org/",
   version	"1.9.1",
-  threads	"32 threads",
   repeats	"Each thread searches a large index for about 3500 distinct words";

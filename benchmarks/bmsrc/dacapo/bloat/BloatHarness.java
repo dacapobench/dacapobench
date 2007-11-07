@@ -20,7 +20,7 @@ public class BloatHarness extends Benchmark {
   }
 
   public void iterate(String size) throws Exception {
-    String[] args = config.getArgs(size);
+    String[] args = preprocessArgs(size);
     args[args.length-1] = fileInScratch(args[args.length-1]);
     EDU.purdue.cs.bloat.optimize.Main.main(args);
   }

@@ -1,3 +1,15 @@
+/*
+ * JavaCC grammar for DaCapo benchmark config files.  Parsing a config file
+ * returns a dacapo.Config object.
+ *
+ * The grammar also produces a main function for syntax checking of
+ * config files.
+ *
+ * Author: Robin Garner, April 2006
+ *
+ * (basic literal, white-space, comment parsing code borrowed liberally from 
+ *  JavaCC example files)
+ */
 options {
 	STATIC = false;
 }
@@ -43,7 +55,9 @@ SKIP :
 | "\n"
 | "\r"
 | "\f"
-}/* COMMENTS */
+}
+
+/* COMMENTS */
 
 MORE :
 {
@@ -92,14 +106,17 @@ TOKEN :
 | < DIGEST : "digest" >
 | < EXISTS : "exists" >
 | < FILTER : "filter" >
+| < FIXED : "fixed" >
 | < KEEP : "keep" >
 | < LICENSE : "license" >
 | < LINES : "lines" >
 | < LONG : "long" >
 | < METHOD : "method" >
 | < OUTPUT : "output" >
+| < PER_CPU : "per_cpu" >
 | < RAW : "raw" >
 | < SHORT : "short" >
+| < SINGLE : "single" >
 | < SIZE : "size" >
 | < STDOUT : "stdout" >
 | < STDERR : "stderr" >
@@ -107,6 +124,7 @@ TOKEN :
 | < URL : "url" >
 | < VERSION : "version" >
 | < THREADS : "threads" >
+| < THREAD_MODEL : "thread-model" >
 | < REPEATS : "repeats" >
 }
 
@@ -142,17 +160,21 @@ Config configFile() :
 }
 
 Config config() :
-{ Config config; Token name, className, methodName; }
+{ Config config; Token name; }
 {
   <BENCHMARK> name=<IDENT> 
   { config = new Config(name.image); }
-  [<CLASS> className=<IDENT> 
-    { config.setClass(className.image); }
-    [<METHOD> methodName=<IDENT>
-      { config.setMethod(methodName.image); }
-    ]] <SEMI>
+  (configOption(config))*
+  <SEMI>
   { return config; }
-} 
+}
+
+void configOption(Config config) :
+{ String className; Config.ThreadModel threadModel; }
+{
+	  <CLASS> className=identifier() { config.setClass(className); }
+	| <THREAD_MODEL> threadModel=threadModel() { config.setThreadModel(threadModel); }
+}
 
 void sizeSpec(Config config) :
 { Token size; }
@@ -163,11 +185,13 @@ void sizeSpec(Config config) :
 void sizeClause(Config config, String size) :
 {   Vector args = new Vector(); 
 	String arg;
+	int threads;
 }
 {
 	   <ARGS> [arg=string() { args.add(arg); } 
 	          (<COMMA> arg=string() { args.add(arg); })*]
        { config.addSize(size,args); }
+    |  <THREADS> threads=integer() { config.setThreadFactor(size,threads); }
     |  <OUTPUT> outputFile(config,size) (<COMMA> outputFile(config,size))*
 }
 
@@ -194,8 +218,7 @@ void outputClause(Config config, String size, String file) :
 	| <BYTES> l=longInt()   { config.setBytes(size,file,l); }
 }
 
-void digestOption(Config config, String size, String file) :
-{}
+void digestOption(Config config, String size, String file) : { }
 {
 	  <TEXT>    	{ config.setTextFile(size,file,true); }
 	| <BINARY>   	{ config.setTextFile(size,file,false); }
@@ -203,8 +226,14 @@ void digestOption(Config config, String size, String file) :
 	| <RAW>   		{ config.setFilterScratch(size,file,false); }
 }
 
-void description(Config config) :
-{}
+Config.ThreadModel threadModel() : { }
+{
+	  <SINGLE> { return Config.ThreadModel.SINGLE; }
+	| <FIXED>  { return Config.ThreadModel.FIXED; }
+	| <PER_CPU> { return Config.ThreadModel.PER_CPU; }
+}
+
+void description(Config config) : { }
 {
   <DESCRIPTION> descElement(config) (<COMMA> descElement(config))* <SEMI>
 }
@@ -216,34 +245,34 @@ void descElement(Config config) :
   { config.addDesc(id,desc); }
 }
 
-String descId() :
-{}
+String descId() : { }
 {
   (<AUTHOR> | <COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <THREADS> | <REPEATS> 
   | <URL> | <VERSION>)
   { return token.image; }
 }
 
-String string() :
-{ Token s; }
+String identifier() : { }
 {
-	s=<STRING_LITERAL> { return unQuote(s); }
+	<IDENT> { return token.image; }
 }
 
-int integer() :
-{ Token n; }
+String string() : { }
 {
-	n=<INT_LITERAL> { return Integer.parseInt(n.image); }
+	<STRING_LITERAL> { return unQuote(token); }
 }
 
-long longInt() :
-{ Token n; }
+int integer() : { }
 {
-	n=<INT_LITERAL> { return Long.parseLong(n.image); }
+	<INT_LITERAL> { return Integer.parseInt(token.image); }
 }
 
-String hex() :
-{ Token h; }
+long longInt() : { }
 {
-	h=<HEX_STRING> { return unHex(h); }
+	<INT_LITERAL> { return Long.parseLong(token.image); }
+}
+
+String hex() : { }
+{
+	<HEX_STRING> { return unHex(token); }
 }

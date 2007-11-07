@@ -48,7 +48,7 @@ public class PmdHarness extends Benchmark {
       java.io.BufferedReader reader =
         new java.io.BufferedReader(new InputStreamReader(new FileInputStream(inputFileName)));
       
-      List files = new ArrayList();
+      List<File> files = new ArrayList<File>();
       
       for (String l=reader.readLine();
       l != null;
@@ -64,10 +64,10 @@ public class PmdHarness extends Benchmark {
     
   }
   
-  private static String commaSeparate(List list) {
+  private static String commaSeparate(List<File> list) {
     String result = "";
-    for (Iterator i = list.iterator(); i.hasNext(); ) {
-      String s = ((File)i.next()).getPath();
+    for (Iterator<File> i = list.iterator(); i.hasNext(); ) {
+      String s = i.next().getPath();
       result += s;
       if (i.hasNext()) 
         result += ",";

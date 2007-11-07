@@ -1,12 +1,14 @@
 benchmark derby 
-  class dacapo.derby.DerbyHarness;
+  class dacapo.derby.DerbyHarness
+  thread-model fixed;
 
 size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/derby;create=true",
 		"-user","sa",
-		"-clients","10",
+		"-clients","${THREADS}",
 		"-tpc", "5",
 		"-tps","4","-v"
+  threads 10
   output 
          stdout digest 0x5cb9aec99a567f4783e8f98036a8d3bee52d806c,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
@@ -14,9 +16,10 @@ size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
 size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
 		  "-user","sa",
-		  "-clients","20",
+		  "-clients","${THREADS}",
 		  "-tpc","40",
 		  "-tps","64"
+  threads 20
   output 
          stdout digest 0x69ae6f351b1bd2c6e7e66337b73b254739a758ab,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
@@ -24,9 +27,10 @@ size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
 size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
 		"-user","sa",
-		"-clients","40",
+		"-clients","${THREADS}",
 		"-tpc","80",
 		"-tps","128"
+  threads 40
   output 
          stdout digest 0xc7511e6103d1d62f80c32d80298ae2f39f852f9f,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
@@ -40,5 +44,4 @@ description
   license	"The Apache license v2.0.",
   url		"http://apache.org/",
   version	"10.3.1.4",
-  threads	"20 client threads",
   repeats	"40 transactions per client";

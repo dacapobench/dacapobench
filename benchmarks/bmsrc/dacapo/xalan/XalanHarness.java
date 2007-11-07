@@ -29,16 +29,15 @@ public class XalanHarness extends Benchmark {
 
   // What version of XALAN should we have
   final String XALAN_VERSION = "Xalan Java 2.4.1";
-
-  // How may workers do we want
-  final int WORKERS = 1;
+  
+  int workers;
 
   /*
    * A simple queue of filenames that the worker threads pull jobs
    * from. 
    */
   class WorkQueue {
-    LinkedList _queue = new LinkedList();
+    LinkedList<String> _queue = new LinkedList<String>();
 
     public synchronized void push(String filename) {
       _queue.add(filename);
@@ -52,7 +51,7 @@ public class XalanHarness extends Benchmark {
         } catch (InterruptedException e) {
         }
       }
-      return (String) _queue.removeFirst();
+      return _queue.removeFirst();
     }
   }
 
@@ -156,7 +155,18 @@ public class XalanHarness extends Benchmark {
 
     // Create the work queue for jobs
     _workQueue = new WorkQueue();
+    
   }
+  
+  
+
+  @Override
+  protected void prepare(String size) throws Exception {
+    super.prepare(size);
+    workers = getThreadCount(config,size);
+  }
+
+
 
   /*
    * Create the threads, this is outside the timing loop to minimise the impact
@@ -169,8 +179,8 @@ public class XalanHarness extends Benchmark {
 
     // Setup the workers ready to roll
     if (_workers==null)
-      _workers=new XalanWorker [WORKERS];
-    for (int i=0; i<WORKERS; i++) {
+      _workers=new XalanWorker [workers];
+    for (int i=0; i<workers; i++) {
       _workers[i]=new XalanWorker(_workQueue,i);
       _workers[i].start();
     }
@@ -207,10 +217,10 @@ public class XalanHarness extends Benchmark {
     }
 
     // Kill workers and wait for death
-    for (int i = 0; i < WORKERS; i++) {
+    for (int i = 0; i < workers; i++) {
       _workQueue.push(""); // "" is a thread die signal
     }
-    for (int i = 0; i < WORKERS; i++) {
+    for (int i = 0; i < workers; i++) {
       _workers[i].join();
     }
     System.out.println("Normal completion.");

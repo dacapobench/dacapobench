@@ -1,15 +1,16 @@
 benchmark jython
-  class dacapo.jython.JythonHarness;
+  class dacapo.jython.JythonHarness
+  thread-model single;
 
-size small args "jython/sieve.py","50"
+size small args "${SCRATCH}/jython/sieve.py","50"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "jython/pybench/pybench.py", "-n", "1", "-C", "0", "-w", "20"
+size default args "${SCRATCH}/jython/pybench/pybench.py", "-n", "1", "-C", "0", "-w", "20"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "jython/pybench/pybench.py", "-n", "4", "-C", "0", "-w", "10"
+size large args "${SCRATCH}/jython/pybench/pybench.py", "-n", "4", "-C", "0", "-w", "10"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -21,5 +22,4 @@ description
   license	"Jython Software License.",
   url		"http://www.jython.org/",
   version	"2.1",
-  threads	"Single threaded",
   repeats	"Single iteration runs a single iteration of the pybench python benchmark";

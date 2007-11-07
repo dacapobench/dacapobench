@@ -1,5 +1,6 @@
 benchmark bloat
-  class dacapo.bloat.BloatHarness;
+  class dacapo.bloat.BloatHarness
+  thread-model single;
 
 size small args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
   "-f",
@@ -41,5 +42,4 @@ description
   license   "BSD-style",
   url    	"http://www.cs.purdue.edu/s3/projects/bloat/",
   version	"1.0",
-  threads	"Single threaded",
   repeats	"Single iteration, transitively optimizes classes referenced by a single root class";

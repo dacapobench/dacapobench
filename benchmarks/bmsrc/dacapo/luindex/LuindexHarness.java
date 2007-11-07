@@ -62,7 +62,7 @@ public class LuindexHarness extends Benchmark {
   public void iterate(String size) throws DacapoException, IOException {
     if (isVerbose())
       System.out.println("luindex benchmark starting");
-    String[] args = config.getArgs(size);
+    String[] args = preprocessArgs(size);
     
     final File INDEX_DIR = new File(scratch,"index");
     

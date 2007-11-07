@@ -84,7 +84,7 @@ public class LusearchHarness extends dacapo.Benchmark {
     int repeat = 0;
     boolean raw = false;
     String normsField = null;
-    int threads = 1;
+    int threads = getThreadCount(config,size);
     
     for (int i = 0; i < args.length; i++) {
       if ("-index".equals(args[i])) {
@@ -104,8 +104,6 @@ public class LusearchHarness extends dacapo.Benchmark {
       } else if ("-norms".equals(args[i])) {
         normsField = args[i+1];
         i++;
-      } else if ("-threads".equals(args[i])) {
-        threads = Integer.parseInt(args[++i]);
       } else if ("-output".equals(args[i])) {
         outBase = args[++i];
       }

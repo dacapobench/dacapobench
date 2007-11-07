@@ -17,7 +17,7 @@ public class HsqldbHarness extends Benchmark {
   }
 
   public void iterate(String size) throws Exception {
-    PseudoJDBCBench.main(config.getArgs(size));
+    PseudoJDBCBench.main(preprocessArgs(size));
   }
   
   public void postIteration(String size) {
