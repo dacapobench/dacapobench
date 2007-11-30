@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-11-30 15:39:44 +1100 (Fri, 30 Nov 2007) $
- *   $Id: build.xml 307 2007-11-30 04:39:44Z steveb-oss $
+ *   $Date: 2007-11-30 17:11:40 +1100 (Fri, 30 Nov 2007) $
+ *   $Id: build.xml 308 2007-11-30 06:11:40Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -1072,12 +1072,7 @@
                  dir="${fop-top}"
                  strip="0" ignorewhitespace="yes"/>
 
-        <!-- Build it using fop's build.xml      
-           Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
-           build.xml handles relative directories.  The classpath allows the patched
-           sources to see the test harness code.
-        -->
-        <exec executable="ant" dir="${fop-top}"/>
+    	<ant dir="${fop-top}" inheritall="false"/>
 
         <!-- Install the test data -->
     	<!-- create the zip for fop -->
