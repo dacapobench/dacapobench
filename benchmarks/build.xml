@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-11-08 00:29:45 +1100 (Thu, 08 Nov 2007) $
- *   $Id: build.xml 305 2007-11-07 13:29:45Z rgarner $
+ *   $Date: 2007-11-30 15:39:44 +1100 (Fri, 30 Nov 2007) $
+ *   $Id: build.xml 307 2007-11-30 04:39:44Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -200,6 +200,7 @@
     <property name="originals" location="originals"/>
     <property name="sources" location="sources"/>
     <property name="data" location="data"/>
+	<property name="jars" location="${build}"/>
     <property name="zipdata" location="${build}/data"/>
     <property name="config" location="cnf"/>
     <property name="prune" location="prune"/>
@@ -217,7 +218,7 @@
     <property name="derby.version" value="10.3.1.4"/>
     <property name="eclipse.version" value="3.1.2"/>
     <property name="eclipse.drop" value="200601181600"/>
-    <property name="fop.version" value="0.20.5"/>
+    <property name="fop.version" value="0.94"/>
     <property name="hsqldb.version" value="1_8_0_4"/>
     <property name="jython.version" value="Release_2_2alpha1"/>
     <property name="lucene.version" value="1.9.1"/>
@@ -242,7 +243,7 @@
     <property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
     <property name="derby.url" value="http://apache.wildit.net.au/db/derby/db-derby-${derby.version}"/>
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
-    <property name="fop.url" value="${apache.dl.url}/xml/fop/source"/>
+    <property name="fop.url" value="${apache.dl.url}/xmlgraphics/fop/source"/>
     <property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
     <property name="jython.url" value="${sourceforge.dl.url}/jython"/>
     <property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
@@ -1054,7 +1055,7 @@
     <target name="fop" depends="fop.benchmark,fop.harness" description="--> build the eclipse benchmark"/>
     <!-- Build the fop dacapo harness -->
     <target name="fop.harness" depends="harness" description="--> Build the fop harness">
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+        <javac srcdir="${bmsrc}" classpath="${build}:${jars}/fop.jar" destdir="${build}" 
             source="1.4"
             includes="dacapo/fop/*"
             debug="true" debuglevel="lines,vars,source"/>
@@ -1066,6 +1067,10 @@
         <!-- Expand the source distribution -->
         <untar src="${sources}/fop-${fop.version}-src.tar.gz" 
            dest="${build.src}/fop" compression="gzip"/>
+        <!-- Apply the dacapo patch, which allows us to set the arguments -->
+        <patch patchfile="${patches}/fop.patch" 
+                 dir="${fop-top}"
+                 strip="0" ignorewhitespace="yes"/>
 
         <!-- Build it using fop's build.xml      
            Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
@@ -1074,33 +1079,17 @@
         -->
         <exec executable="ant" dir="${fop-top}"/>
 
-        <!-- Copy the build to the distribution directory -->
-        <unjar src="${fop-top}/build/fop.jar" dest="${build}"/>
-        <antcall target="fop.libs"/>
-        <antcall target="fop.deps"/>
-
         <!-- Install the test data -->
+    	<!-- create the zip for fop -->
         <zip basedir="${data}" includes="fop/**" destfile="${zipdata}/fop.zip"/>
 
-        <!-- Build the fop dacapo harness -->
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-            source="1.4"
-            includes="dacapo/fop/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <!-- Add external libraries to the build -->
-    <target name="fop.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build}"/>
-        <unjar src="${fop-top}/lib/batik.jar" dest="${build}"/>
-    </target>
-    <!-- Add external libraries to the deps -->
-    <target name="fop.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${fop-top}/lib/batik.jar" dest="${build.deps}"/>
-        <unjar src="${fop-top}/lib/xalan-2.4.1.jar" dest="${build.deps}"/>
-        <unjar src="${fop-top}/lib/ant-1.5.1.jar" dest="${build.deps}"/>
-        <unjar src="${fop-top}/lib/xml-apis.jar" dest="${build.deps}"/>
-        <unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build.deps}"/>
-        <unjar src="${fop-top}/lib/xercesImpl-2.2.1.jar" dest="${build.deps}"/>
+    	<copy file="${fop-top}/build/fop.jar" todir="${jars}"/>
+		<copy file="${fop-top}/lib/avalon-framework-4.2.0.jar" todir="${jars}"/>
+		<copy file="${fop-top}/lib/batik-all-1.6.jar" todir="${jars}"/>
+		<copy file="${fop-top}/lib/commons-io-1.3.1.jar" todir="${jars}"/>
+		<copy file="${fop-top}/lib/commons-logging-1.0.4.jar" todir="${jars}"/>
+		<copy file="${fop-top}/lib/serializer-2.7.0.jar" todir="${jars}"/>
+		<copy file="${fop-top}/lib/xmlgraphics-commons-1.2.jar" todir="${jars}"/>
     </target>
 
     <!-- ================================= 
