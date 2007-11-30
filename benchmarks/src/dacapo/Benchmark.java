@@ -2,8 +2,10 @@ package dacapo;
 
 import java.io.*;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.List;
 
 import dacapo.parser.Config;
 
@@ -11,99 +13,104 @@ import dacapo.parser.Config;
  * Each DaCapo benchmark is represented by an instance of this
  * abstract class.  It defines the methods that the benchmark harness
  * calls during the running of the benchmark.
- * 
+ *
  * @author Robin Garner
  *
  */
 public abstract class Benchmark {
-  
+
   /*
    * Constants
    */
-  
+
   /**
    * I/O buffer size for unzipping
    */
   private static final int BUFFER_SIZE = 2048;
-  
+
   /*
    * Class variables
    */
-  
+
   /**
-   * Verbose output.  
+   * Verbose output.
    */
   private static boolean verbose = false;
-  
+
   /**
    * Perform digest operations on standard output and standard error
    */
   private static boolean validateOutput = true;
-  
+
   /**
    * Perform validation
    */
   protected static boolean validate = true;
-  
+
   /**
    * Don't clean up output files
    */
   protected static boolean preserve = false;
-  
+
   /**
    * Output file for writing digests
    */
   private static PrintWriter valRepFile = null;
-  
+
   /**
-   * 
+   *
    */
   protected static boolean validationReport = false;
-  
+
   /**
    * Saved System.out while redirected to the digest stream
    */
   private static final PrintStream savedOut = System.out;
-  
+
 
   /**
    * Saved System.err while redirected to the digest stream
    */
   private static final PrintStream savedErr = System.err;
-  
+
   /*
    * Instance fields
    */
-  
+
   /**
    * The scratch directory
    */
   protected final File scratch;
-  
+
   /**
    * Parsed version of the configuration file for this benchmark
    */
   protected final Config config;
-  
+
+  /**
+   * Classloader used to run the benchmark
+   */
+  protected ClassLoader loader;
+
   /**
    * Output stream for validating System.err
    */
   private static TeePrintStream err = null;
-  
+
   /**
    * Output stream for validating System.out
    */
   private static TeePrintStream out = null;
-  
+
   /**
    * Keep track of the number of times we have been iterated.
    */
   protected int iteration = 0;
-  
+
   /**
    * Run a benchmark.  This is final because individual
    * benchmarks should not interfere with the flow of control.
-   * 
+   *
    * @param callback The user-specified timing callback
    * @param size The size (as given on the command line)
    * @param timing Is this the timing loop ?  Affects how we call the callback.
@@ -116,65 +123,118 @@ public abstract class Benchmark {
       prepare(size);
     preIteration(size);
     callback.start(config.name);
-    
+
     startIteration();
     iterate(size);
     stopIteration();
-    
+
     callback.stop();
-    
+
     boolean valid = validate(size);
     callback.complete(config.name, valid);
     postIteration(size);
     return valid;
   }
-  
+
   /**
-   * When an instance of a Benchmark is created, it is expected to prepare 
+   * When an instance of a Benchmark is created, it is expected to prepare
    * its scratch directory, unloading files from the jar file if required.
-   * 
+   *
    * @param scratch Scratch directory
    */
   public Benchmark(Config config, File scratch) throws Exception {
     this.scratch = scratch;
     this.config = config;
+    System.setProperty("java.util.logging.config.file", fileInScratch(config.name+".log"));
     if (validate) {
       synchronized(System.out) {
-        if (out == null) 
+        if (out == null)
           out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
       }
       synchronized(System.err) {
-        if (err == null) 
+        if (err == null)
           err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
       }
     }
     prepare();
+    loader = createClassLoader(config, scratch);
   }
-  
+
+  /**
+   * Create the class loader to be used for each invocation of this benchmark
+   *
+   * @param config The config file, which contains information about the jars this benchmark depends on
+   * @param scratch The scratch directory (in which the jars will be located)
+   * @return The class loader in which this benchmark's iterations should execute.
+   * @throws Exception
+   */
+  private ClassLoader createClassLoader(Config config, File scratch) throws Exception {
+    ClassLoader rtn = null;
+    try {
+      URL[] urls = getJars(config, scratch);
+      rtn = new java.net.URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+    } catch (Exception e) {
+      System.err.println("Unable to create loader for "+config.name+":");
+      e.printStackTrace();
+      System.exit(-1);
+    }
+    return rtn;
+  }
+
+  /**
+   * Get a list of jars (if any) which should be in the classpath for this benchmark
+   *
+   * @param config The config file for this benchmark, which lists the jars
+   * @param scratch The scratch directory, in which the jars will be located
+   * @return An array of URLs, one URL for each jar
+   * @throws MalformedURLException
+   */
+  private URL[] getJars(Config config, File scratch) throws MalformedURLException {
+    List jars = new java.util.ArrayList();
+    if (config.jar != null) {
+      File jar = new File(scratch, config.jar);
+      jars.add(jar.toURL());
+    }
+    if (config.libs != null) {
+      for (int i = 0; i < config.libs.length; i++) {
+        File jar = new File(scratch, config.libs[i]);
+        jars.add(jar.toURL());
+      }
+    }
+    return (URL[]) jars.toArray(new URL[jars.size()]);
+  }
+
   /**
    * Perform pre-benchmark preparation.  By default it unpacks the zip file
    * <code>data/<i>name</i>.zip</code> into the scratch directory.
    */
   protected void prepare() throws Exception {
     unpackZipFileResource("data/"+config.name+".zip", scratch);
+    if (config.jar != null)
+      extractFileResource(config.jar, scratch);
+    if (config.libs != null) {
+      for (int i = 0; i < config.libs.length; i++) {
+        extractFileResource(config.libs[i], scratch);
+      }
+    }
   }
-  
+
   /**
    * One-off preparation performed once we know the benchmark size.
-   * 
+   *
    * By default, does nothing.
-   * 
+   *
    * @param size The size (as defined in the per-benchmark configuration file).
    */
   protected void prepare(String size) throws Exception {
   }
-  
+
   /**
    * Benchmark-specific per-iteration setup, outside the timing loop.
-   * 
+   *
    * Needs to take care of any *required* cleanup when the -preserve
    * flag us used.
-   * 
+   *
    * @param size Size as specified by the "-s" command line flag
    */
   public void preIteration(String size) throws Exception {
@@ -185,8 +245,8 @@ public abstract class Benchmark {
         System.out.print(args[i]+" ");
       System.out.println();
     }
-    
-    /* 
+
+    /*
      * Allow those benchmarks that can't tolerate overwriting prior output
      * to run in the face of the '-preserve' flag.
      */
@@ -214,11 +274,11 @@ public abstract class Benchmark {
       err.openLog();
     }
   }
-  
+
   /**
    * An actual iteration of the benchmark.  This is what is
    * timed.
-   * 
+   *
    * @param args Arguments to the benchmark
    */
   public abstract void iterate(String size) throws Exception;
@@ -239,11 +299,11 @@ public abstract class Benchmark {
       System.out.println("stopIteration()");
     }
   }
-  
+
   /**
    * Perform validation of output.  By default process the conditions
    * specified in the config file.
-   * 
+   *
    * @param size Size of the benchmark run.
    * @return true if the output was correct
    */
@@ -251,9 +311,9 @@ public abstract class Benchmark {
     if (verbose) {
       System.out.println("validate("+validate+")");
     }
-    if (!validate) 
+    if (!validate)
       return true;
-    
+
     if (validationReport) {
       valRepFile.println("Validating "+config.name+" "+size);
     }
@@ -286,11 +346,11 @@ public abstract class Benchmark {
         } else if (!digest.equals(refDigest)) {
           valid = false;
           System.err.println("Digest validation failed for "+file+", expecting 0x"+refDigest+" found 0x"+digest);
-        } else if (verbose) { 
+        } else if (verbose) {
           System.out.println("Digest validation succeeded for "+file);
         }
       }
-      
+
       /*
        * Validate by line count
        */
@@ -312,11 +372,11 @@ public abstract class Benchmark {
         if (lines != refLines) {
           valid = false;
           System.err.println("Line count validation failed for "+file+", expecting "+refLines+" found "+lines);
-        } else if (verbose) { 
+        } else if (verbose) {
           System.out.println("Line count validation succeeded for "+file);
         }
       }
-      
+
       /*
        * Validate by byte count
        */
@@ -338,11 +398,11 @@ public abstract class Benchmark {
         if (bytes != refBytes) {
           valid = false;
           System.err.println("Byte count validation failed for "+file+", expecting "+refBytes+" found "+bytes);
-        } else if (verbose) { 
+        } else if (verbose) {
           System.out.println("Byte count validation succeeded for "+file);
         }
       }
-      
+
       /*
        * Check for existence
        */
@@ -350,7 +410,7 @@ public abstract class Benchmark {
         if (!new File(scratch,file).exists()) {
           System.err.println("Expected file "+file+" does not exist");
           valid = false;
-        } else if (verbose) { 
+        } else if (verbose) {
           System.out.println("Existence validation succeeded for "+file);
         }
       }
@@ -360,11 +420,11 @@ public abstract class Benchmark {
     }
     return valid;
   }
-  
+
   /**
-   * Per-iteration cleanup, outside the timing loop.  By default it 
+   * Per-iteration cleanup, outside the timing loop.  By default it
    * deletes the named output files.
-   * 
+   *
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
@@ -375,7 +435,7 @@ public abstract class Benchmark {
 
   /**
    * Perform post-iteration cleanup.
-   * 
+   *
    * @param size
    */
   protected void postIterationCleanup(String size) {
@@ -387,7 +447,7 @@ public abstract class Benchmark {
       }
     }
   }
-  
+
   /**
    * Perform post-benchmark cleanup, deleting output files etc.
    * By default it deletes a subdirectory of the scratch directory with
@@ -398,14 +458,14 @@ public abstract class Benchmark {
       deleteTree(new File(scratch,config.name));
     }
   }
-  
+
   /*************************************************************************************
    *  Utility methods
    */
-  
+
   /**
    * Determine the multi-threading level of this benchmark size.
-   * 
+   *
    * TODO allow the user to override on the command-line
    */
   protected int getThreadCount(Config config, String size) {
@@ -421,7 +481,7 @@ public abstract class Benchmark {
       throw new RuntimeException("Unknown thread model");
     }
   }
-  
+
   /**
    * Retrieve the benchmark arguments for the given size, applying preprocessing
    * as appropriate.  The preprocessing that is currently done is:
@@ -441,20 +501,20 @@ public abstract class Benchmark {
     }
     return cooked;
   }
-  
+
   /**
    * Copy a file to the specified directory
-   * 
+   *
    * @param inputFile File to copy
    * @param outputDir Destination directory
    */
   public static void copyFileTo(File inputFile, File outputDir) throws IOException {
     copyFile(inputFile,new File(outputDir,inputFile.getName()));
   }
-  
+
   /**
    * Copy a file, specifying input and output file names.
-   * 
+   *
    * @param inputFile Name of the input file.
    * @param outputFile Name of the output file
    * @throws IOException Any exception thrown by the java.io functions used
@@ -473,10 +533,10 @@ public abstract class Benchmark {
     output.flush();
     output.close();
   }
-  
+
   /**
    * Translate a resource name into a URL.
-   * 
+   *
    * @param fn
    * @return
    */
@@ -485,12 +545,12 @@ public abstract class Benchmark {
     URL resource = cl.getResource(fn);
     if (verbose)
       System.out.println("Util.getURL: returns "+resource);
-    return resource;    
+    return resource;
   }
-  
+
   /**
    * Return a file name, relative to the specified scratch directory.
-   * 
+   *
    * @param name Name of the file, relative to the top of the scratch directory
    * @return The path name of the file
    */
@@ -500,12 +560,12 @@ public abstract class Benchmark {
 
   /**
    * Unpack a zip archive into the specified directory.
-   * 
+   *
    * @param name Name of the zip file
    * @param destination Directory to unpack into.
    * @throws IOException
    */
-  public static void unpackZipFile(String name, File destination) throws 
+  public static void unpackZipFile(String name, File destination) throws
   IOException, FileNotFoundException {
     BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(name));
     unpackZipStream(inputStream, destination);
@@ -514,19 +574,28 @@ public abstract class Benchmark {
   /**
    * Unpack a zip file resource into the specified directory.  The directory structure
    * of the zip archive is preserved.
-   * 
+   *
    * @param name
    * @param destination
    * @throws IOException
    */
-  public static void unpackZipFileResource(String name, File destination) 
+  public static void unpackZipFileResource(String name, File destination)
   throws IOException, FileNotFoundException, DacapoException {
     URL resource = getURL(name);
     if (resource == null)
       throw new DacapoException("No such zip file: \""+name+"\"");
-    
+
     BufferedInputStream inputStream = new BufferedInputStream(resource.openStream());
     unpackZipStream(inputStream, destination);
+  }
+
+  public static void extractFileResource(String name, File destination)
+  throws IOException, FileNotFoundException, DacapoException {
+    URL resource = getURL(name);
+    if (resource == null)
+      throw new DacapoException("No such file: \""+name+"\"");
+    BufferedInputStream inputStream = new BufferedInputStream(resource.openStream());
+    fileFromInputStream(inputStream, new File(destination, name));
   }
 
   /**
@@ -534,7 +603,7 @@ public abstract class Benchmark {
    * @param destination
    * @throws IOException
    */
-  private static void unpackZipStream(BufferedInputStream inputStream, File destination) 
+  private static void unpackZipStream(BufferedInputStream inputStream, File destination)
   throws IOException {
     ZipInputStream input = new ZipInputStream(inputStream);
     ZipEntry entry;
@@ -546,6 +615,14 @@ public abstract class Benchmark {
         if (!file.exists())
           file.mkdir();
       } else {
+        fileFromInputStream(input, file);
+      }
+    }
+    input.close();
+  }
+
+  private static void fileFromInputStream(InputStream input, File file)
+  throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
         BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE);
         int count;
@@ -556,12 +633,9 @@ public abstract class Benchmark {
         dest.flush();
         dest.close();
       }
-    }
-    input.close();
-  }
 
   public static void deleteTree(File tree) {
-    if (verbose) 
+    if (verbose)
       System.out.println("Deleting "+tree.getName());
     if (!tree.isDirectory())
       tree.delete();
@@ -572,14 +646,14 @@ public abstract class Benchmark {
       tree.delete();
     }
   }
-  
+
   public static void deleteFile(File file) {
-    if (verbose) 
+    if (verbose)
       System.out.println("Deleting "+file.getName());
     if (file.exists() && !file.isDirectory())
       file.delete();
   }
-  
+
   public static void deleteFiles(File dir, final String pattern) {
     FilenameFilter filter = new FilenameFilter() {
       public boolean accept(File dir, String name) {
@@ -591,11 +665,11 @@ public abstract class Benchmark {
       deleteFile(files[i]);
     }
   }
-  
+
   public static int lineCount(String file) throws IOException {
     return lineCount(new File(file));
   }
-  
+
   public static int lineCount(File file) throws IOException {
     int lines = 0;
     BufferedReader in = new BufferedReader(new FileReader(file));
@@ -604,7 +678,7 @@ public abstract class Benchmark {
     in.close();
     return lines;
   }
-  
+
   public static long byteCount(String file) throws IOException {
     return byteCount(new File(file));
   }
