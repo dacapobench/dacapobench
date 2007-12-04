@@ -1,4 +1,8 @@
-benchmark chart class dacapo.chart.ChartHarness thread-model single;
+benchmark chart 
+	class dacapo.chart.ChartHarness 
+	thread-model single
+	jar "jfreechart-1.0.8.jar"
+	libs "jcommon-1.0.12.jar", "itext-1.02b.jar";
 
 size small   args "-d","${SCRATCH}","-p","compress","small","${SCRATCH}/chart/compress.dat"
   output  

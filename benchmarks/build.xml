@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-11-30 17:11:40 +1100 (Fri, 30 Nov 2007) $
- *   $Id: build.xml 308 2007-11-30 06:11:40Z steveb-oss $
+ *   $Date: 2007-12-04 14:38:17 +1100 (Tue, 04 Dec 2007) $
+ *   $Id: build.xml 309 2007-12-04 03:38:17Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -48,7 +48,7 @@
     <!-- BEGIN USER-MODIFIABLE PROPERTIES -->
     <!-- download mirrors -->
     <property name="apache.dl.url" value="http://archive.apache.org/dist"/>
-    <property name="sourceforge.dl.url" value="http://easynews.dl.sourceforge.net/sourceforge"/>
+	<property file="ant/dacapo.properties"/>
 
     <!-- external programs -->
     <property name="make" location="/usr/bin/make"/>
@@ -84,8 +84,9 @@
          target: sources          
          ================================= -->
     <target name="sources" 
-    description="Download sources from their original locations"
-    depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,chart.source,derby.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
+      description="Download sources from their original locations"
+      depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,derby.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
+    	<ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
     </target>
 
     <!-- ================================= 
@@ -190,21 +191,7 @@
 
 
     <!-- internal directory structure -->
-    <property name="src" location="src"/>
-    <property name="extra" location="../extra"/>
-    <property name="bmsrc" location="bmsrc"/>
-    <property name="patches" location="patches"/>
-    <property name="build" location="build"/>
-    <property name="build.src" location="build_src"/>
-    <property name="build.deps" location="build_deps"/>
-    <property name="originals" location="originals"/>
-    <property name="sources" location="sources"/>
-    <property name="data" location="data"/>
-	<property name="jars" location="${build}"/>
-    <property name="zipdata" location="${build}/data"/>
-    <property name="config" location="cnf"/>
     <property name="prune" location="prune"/>
-    <property name="dep.tmp" location="deps"/>
 
     <!-- constraints -->
     <property name="constraints.gnuclasspath" value="true"/>
@@ -214,7 +201,6 @@
     <property name="batik.major.version" value="1.7"/>
     <property name="batik.version" value="${batik.major.version}beta1"/>
     <property name="bloat.version" value="1.0"/>
-    <property name="chart.version" value="1.0.0"/>
     <property name="derby.version" value="10.3.1.4"/>
     <property name="eclipse.version" value="3.1.2"/>
     <property name="eclipse.drop" value="200601181600"/>
@@ -227,7 +213,6 @@
     <property name="xalan.version" value="2_4_1"/>
     <!-- auxilary downloads -->
     <property name="ant.dl.version" value="1.6.5"/>
-    <property name="itext.version" value="1.02b"/>
     <property name="janino.version" value="2.5.2"/>
     <property name="junit.version" value="3.8.1"/>
     <property name="python.version" value="2.5"/>
@@ -240,7 +225,6 @@
     <property name="antlr.url" value="http://www.antlr2.org/download"/>
     <property name="batik.url" value="${apache.dl.url}/xmlgraphics/batik"/>
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
-    <property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
     <property name="derby.url" value="http://apache.wildit.net.au/db/derby/db-derby-${derby.version}"/>
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
     <property name="fop.url" value="${apache.dl.url}/xmlgraphics/fop/source"/>
@@ -252,7 +236,6 @@
     <property name="xalan.url" value="${apache.dl.url}/xml/xalan-j/source"/>
     <!-- auxilary downloads -->
     <property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
-    <property name="itext.url" value="${sourceforge.dl.url}/itext"/>
     <property name="janino.url" value="http://www.janino.net/download"/>
     <property name="junit.url" value="${sourceforge.dl.url}/junit"/>
     <property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
@@ -292,8 +275,9 @@
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="antlr,batik,bloat,chart,derby,eclipse,fop,hsqldb,jython,lucene,pmd,sunflow,xalan"
+    <target name="compile" depends="antlr,batik,bloat,derby,eclipse,fop,hsqldb,jython,lucene,pmd,sunflow,xalan"
           description="compile the sources for all benchmarks" >
+    	<antcall target="chart"/>
     </target>
 
     <!-- ================================= 
@@ -623,15 +607,6 @@
          usetimestamp="true"/>
     </target>
 
-    <target name="chart.source" depends="init.sources">
-        <get src="${chart.url}/jfreechart-${chart.version}.tar.gz"
-         dest="${sources}/jfreechart-${chart.version}.tar.gz"
-       usetimestamp="true"/>
-        <get src="${itext.url}/itext-${itext.version}.jar"
-         dest="${sources}/itext-${itext.version}.jar"
-       usetimestamp="true"/>
-    </target>
-
     <target name="eclipse.source" depends="init.sources">
         <get src="${eclipse.url}/eclipse-SDK-${eclipse.version}-linux-gtk.tar.gz"
          dest="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz"
@@ -862,51 +837,20 @@
     <!-- ================================= 
           target: chart              
          ================================= -->
-    <target name="chart" depends="chart.benchmark,chart.harness" description="--> build the jFreeChart benchmark"/>
-    <!-- Build the chart dacapo harness -->
-    <target name="chart.harness" depends="init" description="--> build the jFreeChart harness">
-        <javac srcdir="${bmsrc}" classpath="${build}:${deps}" destdir="${build}" 
-            source="1.4"
-            includes="dacapo/chart/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <!-- Build the chart benchmark -->
-    <target name="chart.benchmark" depends="init,harness" description="--> build the jFreeChart benchmark">
-        <property name="chart-top" value="${build.src}/chart/jfreechart-${chart.version}"/>
-
-        <!-- Untar the source distribution -->
-        <mkdir dir="${build.src}/chart/"/>
-        <untar src="${sources}/jfreechart-${chart.version}.tar.gz" dest="${build.src}/chart/" compression="gzip"/>
-
-        <!-- Build it using jfreechart's build.xml -->
-        <ant antfile="${chart-top}/ant/build.xml" dir="${chart-top}" target="compile" inheritall="false"/>
-
-        <!-- Copy files to the build directory -->
-        <unjar src="${chart-top}/jfreechart-${chart.version}.jar" dest="${build}"/>
-        <antcall target="chart.libs"/>
-        <antcall target="chart.deps"/>
-
-        <!-- Install the test data -->
-        <zip basedir="${data}" includes="chart/**" destfile="${zipdata}/chart.zip"/>
-    </target>
-    <!-- Add external libraries to the build -->
-    <target name="chart.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${build}"/>
-        <unjar src="${sources}/itext-1.02b.jar" dest="${build}"/>
-    </target>
-    <!-- Add external libraries to the deps -->
-    <target name="chart.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${chart-top}/lib/gnujaxp.jar" dest="${build.deps}"/>
-        <unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${build.deps}"/>
-        <unjar src="${chart-top}/lib/servlet.jar" dest="${build.deps}"/>
-        <unjar src="${sources}/itext-1.02b.jar" dest="${build.deps}"/>
-    </target>
+    <target name="chart" depends="init,harness" description="--> build the jFreeChart benchmark">
+    	<ant antfile="${ant.dir}/chart.xml" target="build" inheritAll="true"/>
+    </target>	
 
 
     <!-- ================================= 
           target: derby              
          ================================= -->
-    <target name="derby" depends="derby.benchmark,derby.harness" description="--> build the derby benchmark"/>
+    <property name="derby.svn.url" value="http://svn.apache.org/repos/asf/db/derby/code/trunk"/>
+    <property name="derby.svn.revision" value="595508"/>
+    <property name="derby.trunk.src" location="${build.src}/derby/trunk"/>
+    <property name="derby.test.src" location="${derby.trunk.src}/java/testing"/>
+
+    <target name="derby" depends="derby.benchmark,derby.harness,derby.tpcc.harness" description="--> build the derby benchmark"/>
 
     <!-- Derby source -->
     <target name="derby.source" depends="init.sources">
@@ -918,23 +862,69 @@
     <!-- Build the derby dacapo harness -->
     <target name="derby.harness" depends="harness" description="--> The derby dacapo harness">
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+            sourcepath="${derby.test.src}"
             source="1.5"
             includes="dacapo/derby/*,dacapo/PseudoJDBCBench.java"
-            debug="true" debuglevel="lines,vars,source"/>
+            debug="true" debuglevel="lines,vars,source">
+         <classpath>
+            <pathelement path="${build}"/>
+            <pathelement path="${junit.jar}"/>
+         </classpath>
+       </javac>
     </target>
 
-    <!-- Build the derby benchmark -->
+	<!-- The derby TPCC benchmark -->
+    <target name="derby.tpcc.harness" depends="harness" description="--> The derby dacapo harness">
+
+        <!-- Now grab the latest oe test source -->
+        <!-- <svn> -->
+        <!--    <checkout url="http://svn.apache.org/repos/asf/db/derby/code/trunk/java/testing/org/apache/derbyTesting" -->
+        <!--              destPath="${build.src}/derby/trunk/java/testing/org/apache/derbyTesting"/> -->
+        <!-- </svn> -->
+
+        <mkdir dir="${derby.test.src}"/>
+        <exec executable="svn" dir="${derby.trunk.src}/java/" failonerror="false">
+            <arg line="-r${derby.svn.revision}"/>
+            <arg line="checkout" />
+            <arg line="${derby.svn.url}/java/testing" />
+        </exec>
+
+        <!-- Derby patch -->
+        <patch patchfile="${patches}/derby.patch" dir="${derby.test.src}" strip="0"/>
+
+        <echo message="Compiling oe source in ${derby.test.src}"/>
+        <javac destdir="${build}" source="1.5"
+               srcdir="${derby.test.src}"
+               includes="org/apache/derbyTesting/system/oe/**/*.java,org/apache/derbyTesting/junit/DriverManagerConnector.java"
+               debug="true" debuglevel="lines,vars,source">
+          <sourcepath path="${derby.test.src}"/>
+          <classpath>
+            <pathelement path="${build}"/>
+            <pathelement path="${junit.jar}"/>
+          </classpath>
+        </javac>
+        <copy todir="${build}">
+            <fileset dir="${derby.test.src}">
+                <include name="**/*.properties"/>
+                <include name="**/*.sql"/>
+            </fileset>
+        </copy>
+    </target>
+	
+    <!-- Build the derby DBMS -->
     <target name="derby.benchmark" depends="harness,junit" description="--> The derby benchmark">
         <mkdir dir="${build.src}/derby}"/>
         <untar src="${sources}/db-derby-${derby.version}-src.tar.gz" dest="${build.src}/derby/" compression="gzip"/>
         <property name="derby-top" location="${build.src}/derby/db-derby-${derby.version}-src"/>
         <ant antfile="${derby-top}/build.xml" inheritall="false" dir="${derby-top}">
             <property name="j14lib" value="${java.home.14}/jre/lib"/>
+            <property name="junit" value="${junit.jar}"/>
         </ant>
         <copy todir="${build}">
             <fileset dir="${derby-top}/classes">
                 <include name="**/*.class"/>
                 <include name="**/*.properties"/>
+                <include name="**/*.sql"/>
             </fileset>
         </copy>
     </target>
@@ -1097,6 +1087,7 @@
                 <include name="junit${junit.version}/junit.jar"/>
             </patternset>
         </unzip>
+      <property name="junit.jar" location="${build.src}/junit/junit${junit.version}/junit.jar"/>
     </target>
 
 

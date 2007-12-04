@@ -1,6 +1,8 @@
 package dacapo;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
@@ -106,6 +108,8 @@ public abstract class Benchmark {
    * Keep track of the number of times we have been iterated.
    */
   protected int iteration = 0;
+
+  protected Method method;
 
   /**
    * Run a benchmark.  This is final because individual
@@ -727,6 +731,20 @@ public abstract class Benchmark {
   protected int getIteration() {
     return iteration;
   }
+
+  protected void getBenchmarkMethod() throws ClassNotFoundException,
+      NoSuchMethodException {
+        Class clazz = Class.forName("org.apache.fop.cli.Main", true, loader);
+        this.method = clazz.getMethod("startFOP", new Class[] { String[].class} );
+      }
+
+  protected void invoke(String[] args) throws IllegalAccessException,
+      InvocationTargetException {
+        ClassLoader dacapoCL = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(loader);
+        method.invoke(null, new Object[] {args});
+        Thread.currentThread().setContextClassLoader(dacapoCL);
+      }
 
   /**
    * @param validate the validate to set
