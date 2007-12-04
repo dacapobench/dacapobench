@@ -9,7 +9,8 @@ public class FopHarness extends Benchmark {
 
   public FopHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
-    getBenchmarkMethod();
+    Class<?> clazz = Class.forName("org.apache.fop.cli.Main", true, loader);
+    this.method = clazz.getMethod("startFOP", new Class[] { String[].class} );
   }
 
   public void iterate(String size) throws Exception {
@@ -19,6 +20,9 @@ public class FopHarness extends Benchmark {
       if (args[i].charAt(0) != '-')
         args[i] = fileInScratch(args[i]);
 
-    invoke(args);
+    ClassLoader dacapoCL = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(loader);
+    method.invoke(null, new Object[] {args});
+    Thread.currentThread().setContextClassLoader(dacapoCL);
   }
 }
