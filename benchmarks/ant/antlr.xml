@@ -1,0 +1,53 @@
+<project name="DacapoAntlr" default="all">
+    <description>Dacapo antlr benchmark</description>
+    
+	<property file="dacapo.properties"/>
+	
+	<property name="bm.name" value="antlr"/>
+    <property name="bm.version" value="2.7.7"/>
+    <property name="bm.url" value="http://www.antlr2.org/download"/>
+
+    <!-- Download and build -->
+    <target name="all" description="download and build the benchmark">
+      <antcall target="source"/>
+      <antcall target="build"/>
+    </target>
+    
+    <!-- Download the source -->
+    <target name="source" description="download the benchmark">
+        <get src="${bm.url}/${bm.name}-${bm.version}.tar.gz"
+         dest="${sources}/${bm.name}-${bm.version}.tar.gz"
+       usetimestamp="true"/>
+    </target>
+
+    <target name="build" depends="benchmark,harness" description="build the benchmark"/>
+	
+    <!-- Build the benchmark harness -->
+    <target name="harness">
+		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
+		   source="1.5"
+    	   includes="dacapo/${bm.name}/*"
+           debug="true" debuglevel="lines,vars,source"/>
+    </target>
+
+    <!-- Build the benchmark -->
+    <target name="benchmark" depends="source">
+        <property name="top" value="${build.src}/${bm.name}/${bm.name}-${bm.version}"/>
+
+        <!-- Untar the source distribution -->
+        <mkdir dir="${build.src}/${bm.name}/"/>
+        <untar src="${sources}/${bm.name}-${bm.version}.tar.gz" dest="${build.src}/${bm.name}/" compression="gzip"/>
+
+        <!-- Build directly with javac, classfiles into the build directory -->
+        <javac srcdir="${build.src}/${bm.name}/${bm.name}-${bm.version}/antlr/"
+            source="1.4"
+            classpath="${build}"
+            destdir="${build}"
+            debug="true" debuglevel="lines,vars,source"/>
+
+        <!-- Install the test data -->
+        <zip basedir="${data}"
+         includes="${bm.name}/**"
+         destfile="${zipdata}/${bm.name}.zip"/>
+    </target>
+</project>

@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-04 14:54:00 +1100 (Tue, 04 Dec 2007) $
- *   $Id: build.xml 310 2007-12-04 03:54:00Z steveb-oss $
+ *   $Date: 2007-12-04 15:19:08 +1100 (Tue, 04 Dec 2007) $
+ *   $Id: build.xml 311 2007-12-04 04:19:08Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -85,8 +85,9 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,data.source,ant.source,antlr.source,batik.source,bloat.source,derby.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
-    	<ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
+      depends="init.sources,data.source,ant.source,batik.source,bloat.source,derby.source,eclipse.source,fop.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
+    	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
     </target>
 
     <!-- ================================= 
@@ -197,7 +198,6 @@
     <property name="constraints.gnuclasspath" value="true"/>
 
     <!-- benchmark versions -->
-    <property name="antlr.version" value="2.7.7"/>
     <property name="batik.major.version" value="1.7"/>
     <property name="batik.version" value="${batik.major.version}beta1"/>
     <property name="bloat.version" value="1.0"/>
@@ -222,7 +222,6 @@
     <property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 
     <!-- benchmark locations -->
-    <property name="antlr.url" value="http://www.antlr2.org/download"/>
     <property name="batik.url" value="${apache.dl.url}/xmlgraphics/batik"/>
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
     <property name="derby.url" value="http://apache.wildit.net.au/db/derby/db-derby-${derby.version}"/>
@@ -589,12 +588,6 @@
        usetimestamp="true"/>
     </target>
 
-    <target name="antlr.source" depends="init.sources">
-        <get src="${antlr.url}/antlr-${antlr.version}.tar.gz"
-         dest="${sources}/antlr-${antlr.version}.tar.gz"
-       usetimestamp="true"/>
-    </target>
-
     <target name="batik.source" depends="init.sources">
         <get src="${batik.url}/batik-src-${batik.version}.zip"
          dest="${sources}/batik-src-${batik.version}.zip"
@@ -714,33 +707,10 @@
     <!-- ================================= 
         target: antlr 
        ================================= -->
-    <target name="antlr" description="Build antlr" depends="harness,antlr.benchmark,antlr.harness"/>
-    <target name="antlr.harness" description="Build batik" depends="harness">
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-            source="1.5"
-                 includes="dacapo/antlr/*"
-            debug="true" debuglevel="lines,vars,source"/>
+    <target name="antlr" depends="init,harness" description="--> build the antlr benchmark">
+    	<ant antfile="${ant.dir}/antlr.xml" target="build" inheritAll="true"/>
     </target>
-    <target name="antlr.benchmark" description="Build antlr" depends="harness">
-        <mkdir dir="${build.src}/antlr"/>
-        <untar src="${sources}/antlr-${antlr.version}.tar.gz" 
-           dest="${build.src}/antlr/"
-         compression="gzip"/>
-
-        <!-- Build directly with javac, classfiles into the build directory -->
-        <javac srcdir="${build.src}/antlr/antlr-${antlr.version}/antlr/"
-            source="1.4"
-            classpath="${build}"
-            destdir="${build}"
-            debug="true" debuglevel="lines,vars,source"/>
-
-        <!-- Install the test data -->
-        <zip basedir="${data}"
-         includes="antlr/**"
-         destfile="${zipdata}/antlr.zip"/>
-
-    </target>
-
+	
     <!-- ================================= 
         target: batik 
        ================================= -->
