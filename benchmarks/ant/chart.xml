@@ -3,55 +3,54 @@
     
 	<property file="dacapo.properties"/>
     
-    <property name="chart.version" value="1.0.8"/>
-    <property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
-    <property name="jcommon.version" value="1.0.12"/>
+	<property name="bm.name" value="chart"/>
+    <property name="bm.version" value="1.0.8"/>
+    <property name="bm.url" value="${sourceforge.dl.url}/jfreechart"/>
+    
+	<property name="jcommon.version" value="1.0.12"/>
     <property name="itext.version" value="1.02b"/>
     <property name="itext.url" value="${sourceforge.dl.url}/itext"/>
     
     <!-- Download and build -->
-    <target name="all" description="--> Download and build the jFreeChart benchmark">
+    <target name="all" description="download and build the benchmark">
       <antcall target="source"/>
       <antcall target="build"/>
     </target>
-    
-    <!-- ===========================================
-          target: build - build the chart benchmark              
-         =========================================== -->
-    <target name="build" depends="chart.benchmark,chart.harness" description="--> build the jFreeChart benchmark"/>
-
-    <!-- Build the chart dacapo harness -->
-    <target name="chart.harness" description="--> build the jFreeChart harness">
-        <javac srcdir="${bmsrc}" classpath="${build}:${deps}" destdir="${build}" 
-            source="1.4"
-            includes="dacapo/chart/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    
+	
     <!-- Download the source -->
     <target name="source">
-        <get src="${chart.url}/jfreechart-${chart.version}.tar.gz"
-         dest="${sources}/jfreechart-${chart.version}.tar.gz"
+        <get src="${bm.url}/jfreechart-${bm.version}.tar.gz"
+         dest="${sources}/jfreechart-${bm.version}.tar.gz"
        usetimestamp="true"/>
         <get src="${itext.url}/itext-${itext.version}.jar"
          dest="${sources}/itext-${itext.version}.jar"
        usetimestamp="true"/>
     </target>
+    
+	<!-- Build the benchmark and harness -->
+    <target name="build" depends="benchmark,harness" description="--> build the benchmark"/>
+
+    <!-- Build the chart dacapo harness -->
+    <target name="harness">
+        <javac srcdir="${bmsrc}" classpath="${build}:${jars}/jfreechart-${bm.version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" destdir="${build}" 
+            source="1.4"
+            includes="dacapo/${bm.name}/*"
+            debug="true" debuglevel="lines,vars,source"/>
+    </target>
 
     <!-- Build the chart benchmark -->
-    <target name="chart.benchmark" description="--> build the jFreeChart benchmark">
-        <property name="chart-top" value="${build.src}/chart/jfreechart-${chart.version}"/>
+    <target name="benchmark" depends="source" description="--> build the benchmark">
+        <property name="top" value="${build.src}/${bm.name}/jfreechart-${bm.version}"/>
 
         <!-- Untar the source distribution -->
-        <mkdir dir="${build.src}/chart/"/>
-        <untar src="${sources}/jfreechart-${chart.version}.tar.gz" dest="${build.src}/chart/" compression="gzip"/>
+        <mkdir dir="${build.src}/${bm.name}/"/>
+        <untar src="${sources}/jfreechart-${bm.version}.tar.gz" dest="${build.src}/${bm.name}/" compression="gzip"/>
 
         <!-- Build it using jfreechart's build.xml -->
-        <ant antfile="ant/build.xml" dir="${chart-top}" target="compile" inheritall="false"/>
+        <ant antfile="ant/build.xml" dir="${top}" target="compile" inheritall="false"/>
 
         <!-- Copy files to the build directory -->
-        <!-- <unjar src="${chart-top}/jfreechart-${chart.version}.jar" dest="${build}"/> -->
-        <copy file="${chart-top}/jfreechart-${chart.version}.jar" todir="${build}"/>
+        <copy file="${top}/jfreechart-${bm.version}.jar" todir="${jars}"/>
         <antcall target="chart.libs"/>
         <antcall target="chart.deps"/>
 
@@ -61,15 +60,15 @@
     
     <!-- Add external libraries to the build -->
     <target name="chart.libs" unless="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${chart-top}/lib/jcommon-${jcommon.version}.jar" todir="${build}"/>
-        <copy file="${sources}/itext-${itext.version}.jar" todir="${build}"/>
+        <copy file="${top}/lib/jcommon-${jcommon.version}.jar" todir="${jars}"/>
+        <copy file="${sources}/itext-${itext.version}.jar" todir="${jars}"/>
     </target>
     
     <!-- Add external libraries to the deps -->
     <target name="chart.deps" if="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${chart-top}/lib/gnujaxp.jar" todir="${build.deps}"/>
-        <copy file="${chart-top}/lib/jcommon-${jcommon.version}.jar" todir="${build.deps}"/>
-        <copy file="${chart-top}/lib/servlet.jar" todir="${build.deps}"/>
+        <copy file="${top}/lib/gnujaxp.jar" todir="${build.deps}"/>
+        <copy file="${top}/lib/jcommon-${jcommon.version}.jar" todir="${build.deps}"/>
+        <copy file="${top}/lib/servlet.jar" todir="${build.deps}"/>
         <copy file="${sources}/itext-${itext.version}.jar" todir="${build.deps}"/>
     </target>
 </project>
