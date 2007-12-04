@@ -39,12 +39,16 @@
         <untar src="${sources}/${bm.name}-${bm.version}.tar.gz" dest="${build.src}/${bm.name}/" compression="gzip"/>
 
         <!-- Build directly with javac, classfiles into the build directory -->
+        <mkdir dir="${build.src}/${bm.name}/classes"/>
         <javac srcdir="${build.src}/${bm.name}/${bm.name}-${bm.version}/antlr/"
             source="1.4"
             classpath="${build}"
-            destdir="${build}"
+            destdir="${build.src}/${bm.name}/classes"
             debug="true" debuglevel="lines,vars,source"/>
-
+		
+    	<!-- Create jar file -->
+    	<jar jarfile="${jars}/${bm.name}.jar" basedir="${build.src}/${bm.name}/classes"/>
+    	
         <!-- Install the test data -->
         <zip basedir="${data}"
          includes="${bm.name}/**"

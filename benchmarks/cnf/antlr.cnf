@@ -1,5 +1,6 @@
 benchmark antlr 
   class dacapo.antlr.AntlrHarness
+  jar "antlr.jar"
   thread-model single;
 
 size small args "-o","${SCRATCH}","-grammars","antlr/java.g"
