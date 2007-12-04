@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-04 14:38:17 +1100 (Tue, 04 Dec 2007) $
- *   $Id: build.xml 309 2007-12-04 03:38:17Z rgarner $
+ *   $Date: 2007-12-04 14:54:00 +1100 (Tue, 04 Dec 2007) $
+ *   $Id: build.xml 310 2007-12-04 03:54:00Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -197,7 +197,7 @@
     <property name="constraints.gnuclasspath" value="true"/>
 
     <!-- benchmark versions -->
-    <property name="antlr.version" value="2.7.2"/>
+    <property name="antlr.version" value="2.7.7"/>
     <property name="batik.major.version" value="1.7"/>
     <property name="batik.version" value="${batik.major.version}beta1"/>
     <property name="bloat.version" value="1.0"/>
@@ -726,11 +726,6 @@
         <untar src="${sources}/antlr-${antlr.version}.tar.gz" 
            dest="${build.src}/antlr/"
          compression="gzip"/>
-
-        <!-- Apply the dacapo patch -->
-        <patch patchfile="${patches}/antlr.patch" 
-           dir="${build.src}"
-           strip="0"/>
 
         <!-- Build directly with javac, classfiles into the build directory -->
         <javac srcdir="${build.src}/antlr/antlr-${antlr.version}/antlr/"

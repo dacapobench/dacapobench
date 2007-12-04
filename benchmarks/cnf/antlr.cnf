@@ -4,12 +4,12 @@ benchmark antlr
 
 size small args "-o","${SCRATCH}","-grammars","antlr/java.g"
  output
-   stdout digest 0x1fdda3f0af68c67c53cd5cdd18c94f1978499b3e,
-   stderr digest 0xdad1e41f6321fe17f7fcb73a790bedd69a777d41,
+   stdout digest 0x62b19e1d55cae2648677cae7bf46afe20dc7c4d5,
+   stderr digest 0x4aacfd937fc9cfd63ae344a4f8e1b7a3198f1a09,
    "JavaLexer.java",
    "JavaRecognizer.java",
-   "JavaTokenTypes.java" digest(text) 0x531c7a3bdc41185f7db175cfe216d13b8a9bae0a,
-   "JavaTokenTypes.txt" digest(text) 0x9645d441047a61dfc4c0ab6e4fa66f74d66cac17;
+   "JavaTokenTypes.java" digest(text) 0x299a8f4ed43b2271c0508fbb2051930aecabd7df,
+   "JavaTokenTypes.txt" digest(text) 0x8b3ad7ad891e6e2e69e6bd90ca2c1820606c96c0;
 
 size default args "-o","${SCRATCH}",
                   "-iterations","2",
@@ -46,8 +46,8 @@ size default args "-o","${SCRATCH}",
 		     "antlr/java/track.g", "antlr/java/treewalk.g", 
 		     "antlr/java/unicode.g","antlr/java/xml.g"
   output
-    stdout digest 0x48a0c230c35d8db2d0f6affdc11d4061840eb6f6,
-    stderr digest 0x459b3713364a15cb610ce084bd22f352833c3255;
+    stdout digest 0x6c967227a8250d978e2935a681c89b79155d8b65,
+    stderr digest 0xff73641efd73a9e9d19444b820033cc1cdc2ac1f;
 
 size large args "-o","${SCRATCH}",
                 "-iterations","5",
@@ -84,8 +84,8 @@ size large args "-o","${SCRATCH}",
 		   "antlr/java/treewalk.g", "antlr/java/unicode.g",
 		   "antlr/java/xml.g"
   output
-    stdout digest 0x707aadb2210e1c05cfdd4ccfef030bcfa9133053,
-    stderr digest 0xd4ed5bbee0ca30fd6f05222f60848c50f83d5eb6;
+    stdout digest 0xeda9c7f687e794ef6fd25a451ea6e2dae33d0c49,
+    stderr digest 0x9ac0215827fc337aaffa3862fb4812907722e693;
 
 description
   short		"A parser generator and translator generator",
@@ -94,5 +94,5 @@ description
   author	"Terence Parr",
   license	"Public Domain",
   url		"http://www.antlr.org",
-  version	"2.7.2",
+  version	"2.7.7",
   repeats	"Two iterations, each parses 44 distinct grammar files";

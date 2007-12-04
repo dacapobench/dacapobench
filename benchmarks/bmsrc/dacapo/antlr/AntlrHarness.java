@@ -9,25 +9,25 @@ import antlr.Tool;
 
 /**
  * Benchmark harness for the Antlr benchmark
- * 
+ *
  * @author Robin Garner
  * @author Steve Blackburn
- * @date $Date: 2007-11-08 00:29:45 +1100 (Thu, 08 Nov 2007) $
- * @id $Id: AntlrHarness.java 305 2007-11-07 13:29:45Z rgarner $
+ * @date $Date: 2007-12-04 14:54:00 +1100 (Tue, 04 Dec 2007) $
+ * @id $Id: AntlrHarness.java 310 2007-12-04 03:54:00Z steveb-oss $
  *
  */
 public class AntlrHarness extends Benchmark {
-  
+
   public AntlrHarness(Config config, File scratch) throws Exception {
     super(config,scratch);
   }
-  
+
   protected void prepare() throws Exception {
     super.prepare();
     copyFileTo(new File(scratch,"antlr/CommonTokenTypes.txt"),scratch);
   }
-  
-  /** 
+
+  /**
    * After each iteration, delete the output files
    */
   public void postIteration(String size) throws Exception {
@@ -35,7 +35,7 @@ public class AntlrHarness extends Benchmark {
     if (!isPreserve())
       deleteTree(new File(scratch,"antlr/output"));
   }
-  
+
   public void iterate(String size) {
     String[] args = preprocessArgs(size);
     int firstGrammarIndex = 0;
@@ -56,14 +56,14 @@ public class AntlrHarness extends Benchmark {
         v.addElement(args[i]);
       }
     }
-      
+
     for (int iteration=0; iteration < nIterations; iteration++) {
       for (int iGrammar=firstGrammarIndex;
            iGrammar < args.length;
            iGrammar++) {
         String grammarFile = (new File(scratch,args[iGrammar])).getPath();
         newArgs[newArgs.length-1] = grammarFile;
-        System.out.println("Running antlr on grammar "+args[iGrammar]);
+        System.out.println(args[iGrammar]);
         Tool.main(newArgs);
       }
     }
