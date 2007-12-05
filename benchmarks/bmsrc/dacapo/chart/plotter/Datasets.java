@@ -1,7 +1,8 @@
-package dacapo.chart;
+package dacapo.chart.plotter;
 
 import org.jfree.data.category.*;
 import org.jfree.data.xy.*;
+
 
 
 import java.io.*;

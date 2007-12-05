@@ -26,6 +26,10 @@ public class TeePrintStream extends PrintStream {
     super(new TeeOutputStream(dest,logFile));
   }
   
+  public void enableOutput(boolean enable) {
+    ((TeeOutputStream)out).enableOutput(enable);
+  }
+  
   /**
    * Start a new log file, creating an archived version of the current one.
    *

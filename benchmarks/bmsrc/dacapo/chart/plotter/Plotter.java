@@ -1,6 +1,8 @@
-package dacapo.chart;
+package dacapo.chart.plotter;
+
 import java.io.File;
 import java.net.URL;
+
 
 
 public class Plotter implements GraphConstants{

@@ -83,6 +83,8 @@ public class TestHarness {
       rmdir(scratch);
       scratch.mkdir();
       
+      Benchmark.setSilent(commandLineArgs.isSilent());
+      
       // now get the benchmark names and run them
       for (String bm : commandLineArgs.benchmarks()) {
         // check if it is a benchmark name

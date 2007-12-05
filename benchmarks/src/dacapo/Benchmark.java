@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import dacapo.parser.Config;
@@ -38,6 +39,11 @@ public abstract class Benchmark {
    * Verbose output.
    */
   private static boolean verbose = false;
+
+  /**
+   * Display output from the benchmark ?
+   */
+  private static boolean silent = true;
 
   /**
    * Perform digest operations on standard output and standard error
@@ -150,14 +156,16 @@ public abstract class Benchmark {
     this.scratch = scratch;
     this.config = config;
     System.setProperty("java.util.logging.config.file", fileInScratch(config.name+".log"));
-    if (validate) {
-      synchronized(System.out) {
-        if (out == null)
-          out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
+    synchronized(System.out) {
+      if (out == null) {
+        out = new TeePrintStream(System.out,new File(scratch,"stdout.log"));
+        out.enableOutput(!silent);
       }
-      synchronized(System.err) {
-        if (err == null)
-          err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
+    }
+    synchronized(System.err) {
+      if (err == null) {
+        err = new TeePrintStream(System.err,new File(scratch,"stderr.log"));
+        err.enableOutput(!silent);
       }
     }
     prepare();
@@ -176,6 +184,12 @@ public abstract class Benchmark {
     ClassLoader rtn = null;
     try {
       URL[] urls = getJars(config, scratch);
+      if (verbose) {
+        System.out.println("Benchmark classpath:");
+        for (URL url : urls) {
+          System.out.println("  "+url.toString());
+        }
+      }
       rtn = new java.net.URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
     } catch (Exception e) {
       System.err.println("Unable to create loader for "+config.name+":");
@@ -194,7 +208,7 @@ public abstract class Benchmark {
    * @throws MalformedURLException
    */
   private URL[] getJars(Config config, File scratch) throws MalformedURLException {
-    List jars = new java.util.ArrayList();
+    List<URL> jars = new ArrayList<URL>();
     if (config.jar != null) {
       File jar = new File(scratch, config.jar);
       jars.add(jar.toURL());
@@ -205,7 +219,7 @@ public abstract class Benchmark {
         jars.add(jar.toURL());
       }
     }
-    return (URL[]) jars.toArray(new URL[jars.size()]);
+    return jars.toArray(new URL[jars.size()]);
   }
 
   /**
@@ -595,6 +609,8 @@ public abstract class Benchmark {
 
   public static void extractFileResource(String name, File destination)
   throws IOException, FileNotFoundException, DacapoException {
+    if (verbose)
+      System.out.println("Extracting file "+name+" into "+destination.getCanonicalPath());
     URL resource = getURL(name);
     if (resource == null)
       throw new DacapoException("No such file: \""+name+"\"");
@@ -732,25 +748,19 @@ public abstract class Benchmark {
     return iteration;
   }
 
-  protected void getBenchmarkMethod() throws ClassNotFoundException,
-      NoSuchMethodException {
-        Class clazz = Class.forName("org.apache.fop.cli.Main", true, loader);
-        this.method = clazz.getMethod("startFOP", new Class[] { String[].class} );
-      }
-
-  protected void invoke(String[] args) throws IllegalAccessException,
-      InvocationTargetException {
-        ClassLoader dacapoCL = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(loader);
-        method.invoke(null, new Object[] {args});
-        Thread.currentThread().setContextClassLoader(dacapoCL);
-      }
-
   /**
    * @param validate the validate to set
    */
   public static void setValidate(boolean flag) {
     validate = flag;
     setValidateOutput(false);
+  }
+
+  public static boolean isSilent() {
+    return silent;
+  }
+
+  public static void setSilent(boolean silent) {
+    Benchmark.silent = silent;
   }
 }

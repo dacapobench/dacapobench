@@ -21,7 +21,9 @@ public class CommandLineArgs {
   
   public enum Methodology { ITERATE, CONVERGE; }
 
-  private boolean verbose = false;
+  private boolean verbose = false;    // 
+  private boolean debug = false;      // Enable debugging output
+  private boolean silent = true;
   private boolean allowOpenFromFileSystem = false;
   private Methodology methodology = Methodology.ITERATE;
   private double targetVar = 3.0/100;
@@ -62,6 +64,7 @@ public class CommandLineArgs {
       } else if (args[i].equals("-v")) {
         // display detailed information
         this.verbose = true;
+        this.silent = false;
       } else if (args[i].equals("-c")) {
         // use a callback
         if (i == args.length - 1) {
@@ -111,6 +114,7 @@ public class CommandLineArgs {
         this.window = Integer.parseInt(args[++i]);
       } else if (args[i].equals("-debug")) {      // Verbose benchmark output
         Benchmark.setVerbose(true);
+        debug = true;
       } else if (args[i].equals("-preserve")) {   // Preserve scratch directory contents
         Benchmark.setPreserve(true);
       } else if (args[i].equals("-noDigestOutput")) {  // 
@@ -239,5 +243,17 @@ public class CommandLineArgs {
   }
   public Iterable<String> benchmarks() {
     return benchmarks;
+  }
+
+  public boolean isSilent() {
+    return silent;
+  }
+
+  public void setSilent(boolean silent) {
+    this.silent = silent;
+  }
+
+  public boolean isDebug() {
+    return debug;
   }
 }

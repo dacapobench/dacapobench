@@ -1,20 +1,17 @@
-package dacapo.chart;
+package dacapo.chart.plotter;
 
 import org.jfree.chart.*;
 import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.*;
-import org.jfree.chart.renderer.*;
 import org.jfree.chart.renderer.category.*;
 import org.jfree.chart.renderer.xy.*;
-import org.jfree.chart.title.*;
-import org.jfree.data.*;
 import org.jfree.data.category.*;
-import org.jfree.data.general.*;
 import org.jfree.data.xy.*;
 import org.jfree.ui.*;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+
 
 
 import java.awt.*;
@@ -543,10 +540,6 @@ public class Graph implements GraphConstants {
     plot.getRangeAxis().setLabelFont(new java.awt.Font("SansSerif", 
 						      java.awt.Font.PLAIN,10));
 
- //   if (chartType == PERFECT_HEAP_COMP_HIST 
- //	|| chartType == PERFECT_INV_HEAP_COMP_HIST) {
- //      plot.getDomainAxis().setSkipCategoryLabelsToFit(true);
- //    }
   }
   
   private void makeReadable(XYPlot plot,boolean isDomainVisible,int chartType){

@@ -1,4 +1,4 @@
-package dacapo.chart;
+package dacapo.chart.plotter;
 
 public interface GraphConstants {
   

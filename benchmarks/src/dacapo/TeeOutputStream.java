@@ -24,16 +24,25 @@ public class TeeOutputStream extends FilterOutputStream {
   private OutputStream log = null;
   private int version = 0;
   private final File logFile;
+  private boolean toScreen = false;
   
   /**
-   * 
+   * Constructor.  Output is sent to both the output stream
+   * and the log file.
    */
   public TeeOutputStream(OutputStream stream, File logFile) {
     super(stream);
     this.logFile = logFile;
     newLog();
   }
-
+  
+  /**
+   * Let output through to the screen
+   */
+  public void enableOutput(boolean enable) {
+    toScreen = enable;
+  }
+  
   /**
    * Open the logfile.
    * 
@@ -79,7 +88,7 @@ public class TeeOutputStream extends FilterOutputStream {
    * @see java.io.FilterOutputStream#write(int)
    */
   public void write(int b) throws IOException {
-    super.write(b);
+    if (toScreen) super.write(b);
     if (log != null) log.write(b);
   }
 

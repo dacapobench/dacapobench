@@ -50,7 +50,7 @@ public class Callback {
     if (args.methodology() == Methodology.CONVERGE) {
       times = new long[args.getWindow()];
     }
-    verbose |= args.isVerbose();
+    verbose |= args.isDebug();
   }
   
   public void init(Config config) {

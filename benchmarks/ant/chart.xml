@@ -33,9 +33,16 @@
     <!-- Build the chart dacapo harness -->
     <target name="harness">
         <javac srcdir="${bmsrc}" classpath="${build}:${jars}/jfreechart-${bm.version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" destdir="${build}" 
-            source="1.4"
+            source="1.5"
             includes="dacapo/${bm.name}/*"
             debug="true" debuglevel="lines,vars,source"/>
+        <mkdir dir="${build.src}/${bm.name}/harness"/>
+        <javac srcdir="${bmsrc}" classpath="${jars}/jfreechart-${bm.version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" 
+	    destdir="${build.src}/${bm.name}/harness" 
+            source="1.5"
+            includes="dacapo/${bm.name}/plotter/*"
+            debug="true" debuglevel="lines,vars,source"/>
+        <jar destfile="${jars}/chart.jar" basedir="${build.src}/${bm.name}/harness"/>
     </target>
 
     <!-- Build the chart benchmark -->
