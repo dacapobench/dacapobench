@@ -99,6 +99,9 @@ public abstract class Benchmark {
    * Classloader used to run the benchmark
    */
   protected ClassLoader loader;
+  
+  /** Saved classloader across iterations */
+  private ClassLoader savedClassLoader;
 
   /**
    * Output stream for validating System.err
@@ -135,8 +138,11 @@ public abstract class Benchmark {
     callback.start(config.name);
 
     startIteration();
-    iterate(size);
-    stopIteration();
+    try {
+      iterate(size);
+    } finally {
+      stopIteration();
+    }
 
     callback.stop();
 
@@ -169,57 +175,7 @@ public abstract class Benchmark {
       }
     }
     prepare();
-    loader = createClassLoader(config, scratch);
-  }
-
-  /**
-   * Create the class loader to be used for each invocation of this benchmark
-   *
-   * @param config The config file, which contains information about the jars this benchmark depends on
-   * @param scratch The scratch directory (in which the jars will be located)
-   * @return The class loader in which this benchmark's iterations should execute.
-   * @throws Exception
-   */
-  private ClassLoader createClassLoader(Config config, File scratch) throws Exception {
-    ClassLoader rtn = null;
-    try {
-      URL[] urls = getJars(config, scratch);
-      if (verbose) {
-        System.out.println("Benchmark classpath:");
-        for (URL url : urls) {
-          System.out.println("  "+url.toString());
-        }
-      }
-      rtn = new java.net.URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
-    } catch (Exception e) {
-      System.err.println("Unable to create loader for "+config.name+":");
-      e.printStackTrace();
-      System.exit(-1);
-    }
-    return rtn;
-  }
-
-  /**
-   * Get a list of jars (if any) which should be in the classpath for this benchmark
-   *
-   * @param config The config file for this benchmark, which lists the jars
-   * @param scratch The scratch directory, in which the jars will be located
-   * @return An array of URLs, one URL for each jar
-   * @throws MalformedURLException
-   */
-  private URL[] getJars(Config config, File scratch) throws MalformedURLException {
-    List<URL> jars = new ArrayList<URL>();
-    if (config.jar != null) {
-      File jar = new File(scratch, config.jar);
-      jars.add(jar.toURL());
-    }
-    if (config.libs != null) {
-      for (int i = 0; i < config.libs.length; i++) {
-        File jar = new File(scratch, config.libs[i]);
-        jars.add(jar.toURL());
-      }
-    }
-    return jars.toArray(new URL[jars.size()]);
+    loader = DacapoClassLoader.create(config, scratch);
   }
 
   /**
@@ -291,6 +247,10 @@ public abstract class Benchmark {
       out.openLog();
       err.openLog();
     }
+    if (loader != null) {
+      savedClassLoader = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(loader);
+    }
   }
 
   /**
@@ -307,6 +267,9 @@ public abstract class Benchmark {
    * the timing loop so as not to process any output from the timing harness.
    */
   public final void stopIteration() {
+    if (loader != null) {
+      Thread.currentThread().setContextClassLoader(savedClassLoader);
+    }
     if (validateOutput) {
       out.closeLog();
       err.closeLog();

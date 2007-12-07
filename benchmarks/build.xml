@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-04 16:02:21 +1100 (Tue, 04 Dec 2007) $
- *   $Id: build.xml 312 2007-12-04 05:02:21Z steveb-oss $
+ *   $Date: 2007-12-07 12:00:41 +1100 (Fri, 07 Dec 2007) $
+ *   $Id: build.xml 316 2007-12-07 01:00:41Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -85,8 +85,9 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,data.source,ant.source,batik.source,bloat.source,derby.source,eclipse.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
+      depends="init.sources,data.source,ant.source,bloat.source,derby.source,eclipse.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/fop.xml" target="source" inheritAll="true"/>
     </target>
@@ -199,8 +200,6 @@
     <property name="constraints.gnuclasspath" value="true"/>
 
     <!-- benchmark versions -->
-    <property name="batik.major.version" value="1.7"/>
-    <property name="batik.version" value="${batik.major.version}beta1"/>
     <property name="bloat.version" value="1.0"/>
     <property name="derby.version" value="10.3.1.4"/>
     <property name="eclipse.version" value="3.1.2"/>
@@ -222,7 +221,6 @@
     <property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 
     <!-- benchmark locations -->
-    <property name="batik.url" value="${apache.dl.url}/xmlgraphics/batik"/>
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
     <property name="derby.url" value="http://apache.wildit.net.au/db/derby/db-derby-${derby.version}"/>
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
@@ -587,12 +585,6 @@
        usetimestamp="true"/>
     </target>
 
-    <target name="batik.source" depends="init.sources">
-        <get src="${batik.url}/batik-src-${batik.version}.zip"
-         dest="${sources}/batik-src-${batik.version}.zip"
-         usetimestamp="true"/>
-    </target>
-
     <target name="bloat.source" depends="init.sources">
         <get src="${bloat.url}/bloat-${bloat.version}-src.tar.gz"
          dest="${sources}/bloat-${bloat.version}-src.tar.gz"
@@ -707,56 +699,13 @@
     <!-- ================================= 
         target: batik 
        ================================= -->
-    <target name="batik" description="Build batik" depends="batik.benchmark,batik.harness"/>
-    <target name="batik.harness" description="Build batik" depends="harness">
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                includes="dacapo/batik/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <target name="batik.benchmark" description="Build batik" depends="harness,xerces">
-        <property name="batik-top" value="${build.src}/batik/batik-${batik.major.version}"/>
-
-        <mkdir dir="${build.src}/batik"/>
-
-        <!-- unpack the source files -->
-    	<unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/>
-
-        <!-- Build using the supplied build.xml -->
-        <ant antfile="${batik-top}/build.xml" dir="${batik-top}" 
-                     target="compiletest" inheritall="false">
-          <property name="debug" value="on"/>
-        </ant>
-
-        <!-- Copy the batik class files -->
-        <copy todir="${build}">
-            <fileset dir="${batik-top}/classes">
-                <include name="**/*.class"/>
-            </fileset>
-        </copy>
-        <unjar src="${batik-top}/lib/xml-apis-ext.jar" dest="${build}"/>
-	<unjar src="${batik-top}/lib/build/crimson-1.1.3.jar" dest="${build}"/>
-
-        <!-- unjar dependencies into build.deps directory -->
-        <unjar src="${batik-top}/lib/js.jar" dest="${build.deps}"/>
-        <unjar src="${batik-top}/lib/pdf-transcoder.jar" dest="${build.deps}"/>
-
-        <!-- Copy the batik resource files -->
-        <copy todir="${build}">
-            <fileset dir="${batik-top}/resources" excludes="${batik-top}/resources/**/CVS">
-                <include name="**"/>
-            </fileset>
-        </copy>
-
-        <!-- Install the test data -->
-        <zip basedir="${data}"
-         includes="batik/**"
-         destfile="${zipdata}/batik.zip"/>
-
+    <target name="batik" description="Build batik" depends="init, harness, xerces">
+    	<ant antfile="${ant.dir}/batik.xml" target="build" inheritAll="true"/>
     </target>
 
     <!-- ================================= 
-        target: bloat 
-       ================================= -->
+         target: bloat 
+         ================================= -->
     <target name="bloat" depends="bloat.benchmark,bloat.harness" description="Build bloat"/>
     <!-- Build the bloat dacapo harness -->
     <target name="bloat.harness" depends="harness" description="Build bloat">
@@ -808,7 +757,7 @@
     <property name="derby.trunk.src" location="${build.src}/derby/trunk"/>
     <property name="derby.test.src" location="${derby.trunk.src}/java/testing"/>
 
-    <target name="derby" depends="derby.benchmark,derby.harness,derby.tpcc.harness" description="--> build the derby benchmark"/>
+    <target name="derby" depends="derby.benchmark,derby.harness" description="--> build the derby benchmark"/>
 
     <!-- Derby source -->
     <target name="derby.source" depends="init.sources">
@@ -823,6 +772,7 @@
             sourcepath="${derby.test.src}"
             source="1.5"
             includes="dacapo/derby/*,dacapo/PseudoJDBCBench.java"
+        	excludes="dacapo/derby/TPCC.java"
             debug="true" debuglevel="lines,vars,source">
          <classpath>
             <pathelement path="${build}"/>
@@ -833,13 +783,7 @@
 
 	<!-- The derby TPCC benchmark -->
     <target name="derby.tpcc.harness" depends="harness" description="--> The derby dacapo harness">
-
-        <!-- Now grab the latest oe test source -->
-        <!-- <svn> -->
-        <!--    <checkout url="http://svn.apache.org/repos/asf/db/derby/code/trunk/java/testing/org/apache/derbyTesting" -->
-        <!--              destPath="${build.src}/derby/trunk/java/testing/org/apache/derbyTesting"/> -->
-        <!-- </svn> -->
-
+		
         <mkdir dir="${derby.test.src}"/>
         <exec executable="svn" dir="${derby.trunk.src}/java/" failonerror="false">
             <arg line="-r${derby.svn.revision}"/>
@@ -874,7 +818,7 @@
         <mkdir dir="${build.src}/derby}"/>
         <untar src="${sources}/db-derby-${derby.version}-src.tar.gz" dest="${build.src}/derby/" compression="gzip"/>
         <property name="derby-top" location="${build.src}/derby/db-derby-${derby.version}-src"/>
-        <ant antfile="${derby-top}/build.xml" inheritall="false" dir="${derby-top}">
+        <ant antfile="build.xml" inheritall="false" dir="${derby-top}">
             <property name="j14lib" value="${java.home.14}/jre/lib"/>
             <property name="junit" value="${junit.jar}"/>
         </ant>
@@ -927,7 +871,7 @@
 
     <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
     <target name="eclipse.plugin" depends="eclipse.benchmark,eclipse.harness" description="--> build the eclipse harness">
-        <ant antfile="${extra}/eclipse-plugin/build.xml" dir="${extra}/eclipse-plugin" 
+        <ant antfile="build.xml" dir="${extra}/eclipse-plugin" 
          target="build.update.jar" inheritall="false">
             <property name="eclipsesrc.home" location="${eclipse-top}"/>
             <property name="harness.home" location="${build}"/>
@@ -1039,7 +983,7 @@
             todir="${hsqldb-top}/hsqldb/lib/"/>
 
         <!-- Build it using hsqldb's build.xml -->
-        <ant antfile="${hsqldb-top}/hsqldb/build/build.xml" dir="${hsqldb-top}/hsqldb" 
+        <ant antfile="build/build.xml" dir="${hsqldb-top}/hsqldb" 
            target="hsqldbtest" inheritall="false"/>
 
         <!-- Copy the build to the distribution directory -->
@@ -1081,7 +1025,7 @@
         </copy>
 
         <!-- Build jython -->
-        <ant antfile="${jython-top}/jython_${jython.version}/src/java/build.xml" dir="${jython-top}/jython_${jython.version}/src/java" inheritall="false">
+        <ant antfile="build.xml" dir="${jython-top}/jython_${jython.version}/src/java" inheritall="false">
             <property name="javaccHome2" location="${javacchome}"/>
             <property name="python.lib" location="${jython-top}/jython_${jython.version}/Lib"/>
         </ant>
@@ -1150,14 +1094,14 @@
         compression="gzip"/>
 
         <!-- Build using Ant -->
-        <ant antfile="${lucene-top}/lucene-${lucene.version}/build.xml"
+        <ant antfile="build.xml"
            target="jar-core"
            dir="${lucene-top}/lucene-${lucene.version}"
            inheritall="false">
         </ant>
 
         <!-- Build using Ant -->
-        <ant antfile="${lucene-top}/lucene-${lucene.version}/build.xml"
+        <ant antfile="build.xml"
            target="jar-demo"
            dir="${lucene-top}/lucene-${lucene.version}"
            inheritall="false">
@@ -1213,7 +1157,7 @@
         <!-- Build using Ant, setting the classpath appropriately -->
         <exec dir="${pmd-top}/bin" executable="ant">
             <arg value="compile"/>
-            <env key="CLASSPATH" value=".:${build.src}/junit/junit${junit.version}/junit.jar"/>
+            <env key="CLASSPATH" value=".:${junit.jar}"/>
             <env key="ANT_HOME" value="${ant.install}"/>
         </exec>
 

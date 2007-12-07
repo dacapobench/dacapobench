@@ -29,7 +29,7 @@ import org.sunflow.Benchmark;
 
 public class SunflowHarness extends dacapo.Benchmark {
 
-  private TPCC sunflow;
+  private Benchmark sunflow;
   
   public SunflowHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
@@ -46,7 +46,7 @@ public class SunflowHarness extends dacapo.Benchmark {
    */
   public void preIteration(String size) {
     String[] args = preprocessArgs(size);
-    sunflow = new TPCC(Integer.parseInt(args[0]), false, false, false);
+    sunflow = new Benchmark(Integer.parseInt(args[0]), false, false, false);
     sunflow.kernelBegin();
   }
     

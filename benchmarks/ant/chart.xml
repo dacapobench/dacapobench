@@ -1,7 +1,7 @@
-<project name="DacapoChart" default="all">
+<project name="DacapoChart" default="all" basedir="..">
     <description>Dacapo Chart benchmark</description>
     
-	<property file="dacapo.properties"/>
+	<property file="ant/dacapo.properties"/>
     
 	<property name="bm.name" value="chart"/>
     <property name="bm.version" value="1.0.8"/>

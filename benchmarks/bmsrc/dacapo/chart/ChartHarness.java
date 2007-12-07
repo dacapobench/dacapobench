@@ -15,10 +15,7 @@ public class ChartHarness extends Benchmark {
   }
 
   public void iterate(String size) throws Exception {
-    ClassLoader dacapoCL = Thread.currentThread().getContextClassLoader();
-    Thread.currentThread().setContextClassLoader(loader);
     method.invoke(null, (Object) preprocessArgs(size));
-    Thread.currentThread().setContextClassLoader(dacapoCL);
   }
 
 }
