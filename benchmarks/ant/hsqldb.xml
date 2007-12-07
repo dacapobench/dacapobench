@@ -3,6 +3,9 @@
     
 	<property file="ant/dacapo.properties"/>
 	
+    <property name="hsqldb.version" value="1_8_0_4"/>
+    <property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
+	
 	<target name="all">
 		<ant antfile="build.xml" target="junit"/>
 		<ant antfile="ant/jdbcbench.xml" target="build"/>
@@ -10,6 +13,12 @@
 	    <antcall target="build"/>
 	</target>
 	
+    <target name="source">
+        <get src="${hsqldb.url}/hsqldb_${hsqldb.version}.zip"
+        dest="${sources}/hsqldb_${hsqldb.version}.zip"  
+       usetimestamp="true"/>
+    </target>
+
     <target name="build" depends="benchmark,harness" description="--> build the derby benchmark"/>
 
     <!-- Build the hsqldb dacapo harness -->
@@ -27,7 +36,7 @@
         <!-- Expand the source distribution -->
         <unzip src="${sources}/hsqldb_${hsqldb.version}.zip" dest="${hsqldb-top}"/>
 
-        <copy file="${junit.jar}" todir="${hsqldb-top}/hsqldb/lib/"/>
+        <copy file="${jars}/junit.jar" todir="${hsqldb-top}/hsqldb/lib/"/>
 
         <!-- Build it using hsqldb's build.xml -->
         <ant antfile="build/build.xml" dir="${hsqldb-top}/hsqldb" 
