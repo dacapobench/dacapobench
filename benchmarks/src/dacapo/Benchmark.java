@@ -183,7 +183,7 @@ public abstract class Benchmark {
    * Extract the jar files used by the benchmark
    * @throws Exception
    */
-  protected void prepareJars() throws Exception {
+  private void prepareJars() throws Exception {
     if (config.jar != null)
       extractFileResource(config.jar, scratch);
     if (config.libs != null) {

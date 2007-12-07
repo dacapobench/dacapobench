@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-07 13:38:37 +1100 (Fri, 07 Dec 2007) $
- *   $Id: build.xml 317 2007-12-07 02:38:37Z rgarner $
+ *   $Date: 2007-12-07 15:16:02 +1100 (Fri, 07 Dec 2007) $
+ *   $Id: build.xml 318 2007-12-07 04:16:02Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -85,10 +85,11 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,data.source,ant.source,bloat.source,derby.source,eclipse.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
+      depends="init.sources,data.source,ant.source,bloat.source,eclipse.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/derby.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/fop.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/janino.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/sunflow.xml" target="source" inheritAll="true"/>
@@ -203,7 +204,6 @@
 
     <!-- benchmark versions -->
     <property name="bloat.version" value="1.0"/>
-    <property name="derby.version" value="10.3.1.4"/>
     <property name="eclipse.version" value="3.1.2"/>
     <property name="eclipse.drop" value="200601181600"/>
     <property name="hsqldb.version" value="1_8_0_4"/>
@@ -222,7 +222,6 @@
 
     <!-- benchmark locations -->
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
-    <property name="derby.url" value="http://apache.wildit.net.au/db/derby/db-derby-${derby.version}"/>
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
     <property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
     <property name="jython.url" value="${sourceforge.dl.url}/jython"/>
@@ -682,7 +681,7 @@
     <!-- ================================= 
         target: batik 
        ================================= -->
-    <target name="batik" description="Build batik" depends="init, harness, xerces">
+    <target name="batik" depends="init,harness,xerces" description="Build batik">
     	<ant antfile="${ant.dir}/batik.xml" target="build" inheritAll="true"/>
     </target>
 
@@ -731,88 +730,22 @@
     	<ant antfile="${ant.dir}/chart.xml" target="build" inheritAll="true"/>
     </target>	
 
+	
+    <!-- ================================= 
+          target: jdbcbench - used by hsqldb and derby           
+         ================================= -->
+    <target name="jdbcbench" depends="init,harness" description="--> build the PseudoJDBCBench benchmark">
+    	<ant antfile="${ant.dir}/jdbcbench.xml" target="build" inheritAll="true"/>
+    </target>	
+
 
     <!-- ================================= 
           target: derby              
          ================================= -->
-    <property name="derby.svn.url" value="http://svn.apache.org/repos/asf/db/derby/code/trunk"/>
-    <property name="derby.svn.revision" value="595508"/>
-    <property name="derby.trunk.src" location="${build.src}/derby/trunk"/>
-    <property name="derby.test.src" location="${derby.trunk.src}/java/testing"/>
+    <target name="derby" depends="jdbcbench,init,harness" description="--> build the derby benchmark">
+    	<ant antfile="${ant.dir}/derby.xml" target="build" inheritAll="true"/>
+	</target>	
 
-    <target name="derby" depends="derby.benchmark,derby.harness" description="--> build the derby benchmark"/>
-
-    <!-- Derby source -->
-    <target name="derby.source" depends="init.sources">
-        <get src="${derby.url}/db-derby-${derby.version}-src.tar.gz"
-        dest="${sources}/db-derby-${derby.version}-src.tar.gz"  
-       usetimestamp="true"/>
-    </target>
-
-    <!-- Build the derby dacapo harness -->
-    <target name="derby.harness" depends="harness" description="--> The derby dacapo harness">
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-            sourcepath="${derby.test.src}"
-            source="1.5"
-            includes="dacapo/derby/*,dacapo/PseudoJDBCBench.java"
-        	excludes="dacapo/derby/TPCC.java"
-            debug="true" debuglevel="lines,vars,source">
-         <classpath>
-            <pathelement path="${build}"/>
-            <pathelement path="${junit.jar}"/>
-         </classpath>
-       </javac>
-    </target>
-
-	<!-- The derby TPCC benchmark -->
-    <target name="derby.tpcc.harness" depends="harness" description="--> The derby dacapo harness">
-		
-        <mkdir dir="${derby.test.src}"/>
-        <exec executable="svn" dir="${derby.trunk.src}/java/" failonerror="false">
-            <arg line="-r${derby.svn.revision}"/>
-            <arg line="checkout" />
-            <arg line="${derby.svn.url}/java/testing" />
-        </exec>
-
-        <!-- Derby patch -->
-        <patch patchfile="${patches}/derby.patch" dir="${derby.test.src}" strip="0"/>
-
-        <echo message="Compiling oe source in ${derby.test.src}"/>
-        <javac destdir="${build}" source="1.5"
-               srcdir="${derby.test.src}"
-               includes="org/apache/derbyTesting/system/oe/**/*.java,org/apache/derbyTesting/junit/DriverManagerConnector.java"
-               debug="true" debuglevel="lines,vars,source">
-          <sourcepath path="${derby.test.src}"/>
-          <classpath>
-            <pathelement path="${build}"/>
-            <pathelement path="${junit.jar}"/>
-          </classpath>
-        </javac>
-        <copy todir="${build}">
-            <fileset dir="${derby.test.src}">
-                <include name="**/*.properties"/>
-                <include name="**/*.sql"/>
-            </fileset>
-        </copy>
-    </target>
-	
-    <!-- Build the derby DBMS -->
-    <target name="derby.benchmark" depends="harness,junit" description="--> The derby benchmark">
-        <mkdir dir="${build.src}/derby}"/>
-        <untar src="${sources}/db-derby-${derby.version}-src.tar.gz" dest="${build.src}/derby/" compression="gzip"/>
-        <property name="derby-top" location="${build.src}/derby/db-derby-${derby.version}-src"/>
-        <ant antfile="build.xml" inheritall="false" dir="${derby-top}">
-            <property name="j14lib" value="${java.home.14}/jre/lib"/>
-            <property name="junit" value="${junit.jar}"/>
-        </ant>
-        <copy todir="${build}">
-            <fileset dir="${derby-top}/classes">
-                <include name="**/*.class"/>
-                <include name="**/*.properties"/>
-                <include name="**/*.sql"/>
-            </fileset>
-        </copy>
-    </target>
 
     <!-- ================================= 
           target: eclipse              
@@ -940,14 +873,16 @@
                 <include name="junit${junit.version}/junit.jar"/>
             </patternset>
         </unzip>
-      <property name="junit.jar" location="${build.src}/junit/junit${junit.version}/junit.jar"/>
+    	<copy srcfile="${build.src}/junit/junit${junit.version}/junit.jar"
+    		todir="${jars}"/>
+      	<property name="junit.jar" location="${build.src}/junit/junit${junit.version}/junit.jar"/>
     </target>
 
 
     <!-- ================================= 
           target: hsqldb              
        ================================= -->
-    <target name="hsqldb" depends="hsqldb.benchmark,hsqldb.harness" description="--> build the hsqldb benchmark"/>
+    <target name="hsqldb" depends="jdbcbench,hsqldb.benchmark,hsqldb.harness" description="--> build the hsqldb benchmark"/>
     <!-- Build the hsqldb dacapo harness -->
     <target name="hsqldb.harness" depends="harness" description="--> The hsqldb dacapo harness">
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 

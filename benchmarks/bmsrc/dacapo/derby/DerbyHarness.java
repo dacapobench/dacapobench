@@ -10,6 +10,8 @@ public class DerbyHarness extends Benchmark {
 
   public DerbyHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
+    Class<?> clazz = Class.forName("dacapo.PseudoJDBCBench", true, loader);
+    this.method = clazz.getMethod("main",String[].class);
   }
   
   @Override
@@ -35,12 +37,17 @@ public class DerbyHarness extends Benchmark {
     String[] initArgs = new String[args.length+1];
     System.arraycopy(args, 0, initArgs, 0, args.length);
     initArgs[initArgs.length-1] = "-init";
-    PseudoJDBCBench.main(initArgs);
+    useBenchmarkClassLoader();
+    try {
+      method.invoke(null, (Object)initArgs);
+    } finally {
+      revertClassLoader();
+    }
   }
 
   @Override
   public void iterate(String size) throws Exception {
-    PseudoJDBCBench.main(preprocessArgs(size));
+    method.invoke(null, (Object)preprocessArgs(size));
   }
   
   @Override

@@ -1,6 +1,8 @@
 benchmark derby 
   class dacapo.derby.DerbyHarness
-  thread-model fixed;
+  thread-model fixed
+  jar "jdbcbench.jar"
+  libs "derbynet.jar";
 
 size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:$SCRATCH/derby;create=true",

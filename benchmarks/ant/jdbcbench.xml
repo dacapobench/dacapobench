@@ -1,0 +1,19 @@
+<project name="jdbcbench" default="all" basedir="..">
+    <description>Dacapo PseudoJDBC benchmark</description>
+    
+	<property file="ant/dacapo.properties"/>
+	
+	<target name="all" depends="build"/>
+	
+	<target name="build">
+		<mkdir dir="${build.src}/jdbcbench"/>
+        <javac srcdir="${bmsrc}" classpath="${build}" 
+        	destdir="${build.src}/jdbcbench" 
+            source="1.5"
+            includes="dacapo/PseudoJDBCBench.java"
+            debug="true" debuglevel="lines,vars,source">
+        </javac>
+		<jar destfile="${jars}/jdbcbench.jar"
+			basedir="${build.src}/jdbcbench"/>
+	</target>
+</project>
