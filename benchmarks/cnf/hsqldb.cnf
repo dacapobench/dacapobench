@@ -1,6 +1,8 @@
 benchmark hsqldb 
   class dacapo.hsqldb.HsqldbHarness
-  thread-model fixed;
+  thread-model fixed
+  jar "jdbcbench.jar"
+  libs "hsqldbtest.jar";
 
 size small args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:mem:hsqldb",

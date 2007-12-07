@@ -1,0 +1,47 @@
+<project name="hsqldb" default="all" basedir="..">
+    <description>Dacapo Hsqldb benchmark</description>
+    
+	<property file="ant/dacapo.properties"/>
+	
+	<target name="all">
+		<ant antfile="build.xml" target="junit"/>
+		<ant antfile="ant/jdbcbench.xml" target="build"/>
+	    <antcall target="source"/>
+	    <antcall target="build"/>
+	</target>
+	
+    <target name="build" depends="benchmark,harness" description="--> build the derby benchmark"/>
+
+    <!-- Build the hsqldb dacapo harness -->
+    <target name="harness" description="--> The hsqldb dacapo harness">
+        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
+            source="1.5"
+            includes="dacapo/hsqldb/*"
+            debug="true" debuglevel="lines,vars,source"/>
+    </target>
+	
+    <!-- Build the hsqldb benchmark -->
+    <target name="benchmark" description="--> The hsqldb benchmark">
+        <mkdir dir="${build.src}/hsqldb"/>
+        <property name="hsqldb-top" value="${build.src}/hsqldb/"/>
+        <!-- Expand the source distribution -->
+        <unzip src="${sources}/hsqldb_${hsqldb.version}.zip" dest="${hsqldb-top}"/>
+
+        <copy file="${junit.jar}" todir="${hsqldb-top}/hsqldb/lib/"/>
+
+        <!-- Build it using hsqldb's build.xml -->
+        <ant antfile="build/build.xml" dir="${hsqldb-top}/hsqldb" 
+           target="hsqldbtest" inheritall="false"/>
+
+        <!-- Copy the build to the distribution directory -->
+        <copy file="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" todir="${jars}"/>
+        <antcall target="deps"/>
+    </target>
+	
+    <!-- Add external libraries to the deps -->
+    <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
+        <unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${build.deps}"/>
+        <unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${build.deps}"/>
+    </target>
+
+</project>

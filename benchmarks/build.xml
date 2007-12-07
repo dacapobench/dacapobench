@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-07 15:16:02 +1100 (Fri, 07 Dec 2007) $
- *   $Id: build.xml 318 2007-12-07 04:16:02Z rgarner $
+ *   $Date: 2007-12-07 15:45:44 +1100 (Fri, 07 Dec 2007) $
+ *   $Id: build.xml 319 2007-12-07 04:45:44Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -873,7 +873,7 @@
                 <include name="junit${junit.version}/junit.jar"/>
             </patternset>
         </unzip>
-    	<copy srcfile="${build.src}/junit/junit${junit.version}/junit.jar"
+    	<copy file="${build.src}/junit/junit${junit.version}/junit.jar"
     		todir="${jars}"/>
       	<property name="junit.jar" location="${build.src}/junit/junit${junit.version}/junit.jar"/>
     </target>
@@ -882,37 +882,9 @@
     <!-- ================================= 
           target: hsqldb              
        ================================= -->
-    <target name="hsqldb" depends="jdbcbench,hsqldb.benchmark,hsqldb.harness" description="--> build the hsqldb benchmark"/>
-    <!-- Build the hsqldb dacapo harness -->
-    <target name="hsqldb.harness" depends="harness" description="--> The hsqldb dacapo harness">
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-            source="1.4"
-            includes="dacapo/hsqldb/*,dacapo/PseudoJDBCBench.java"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <!-- Build the hsqldb benchmark -->
-    <target name="hsqldb.benchmark" depends="harness,junit" description="--> The hsqldb benchmark">
-        <mkdir dir="${build.src}/hsqldb"/>
-        <property name="hsqldb-top" value="${build.src}/hsqldb/"/>
-        <!-- Expand the source distribution -->
-        <unzip src="${sources}/hsqldb_${hsqldb.version}.zip" dest="${hsqldb-top}"/>
-
-        <copy file="${build.src}/junit/junit${junit.version}/junit.jar"
-            todir="${hsqldb-top}/hsqldb/lib/"/>
-
-        <!-- Build it using hsqldb's build.xml -->
-        <ant antfile="build/build.xml" dir="${hsqldb-top}/hsqldb" 
-           target="hsqldbtest" inheritall="false"/>
-
-        <!-- Copy the build to the distribution directory -->
-        <unjar src="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" dest="${build}"/>
-        <antcall target="hsqldb.deps"/>
-    </target>
-    <!-- Add external libraries to the deps -->
-    <target name="hsqldb.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${build.deps}"/>
-        <unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${build.deps}"/>
-    </target>
+    <target name="hsqldb" depends="jdbcbench,junit" description="--> build the hsqldb benchmark">
+    	<ant antfile="${ant.dir}/hsqldb.xml" target="build" inheritAll="true"/>
+	</target>	
 
     <!-- ================================= 
           target: jython                
