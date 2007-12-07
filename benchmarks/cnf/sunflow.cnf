@@ -1,6 +1,8 @@
 benchmark sunflow
   class dacapo.sunflow.SunflowHarness
-  thread-model per_cpu;
+  thread-model per_cpu
+  jar "sunflow-0.07.1.jar"
+  libs "janino-2.5.2.jar";
 
 size small args "32"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,

@@ -1,0 +1,38 @@
+<project name="janino" default="all" basedir="..">
+    <description>Dacapo Batik benchmark</description>
+	<property file="ant/dacapo.properties"/>
+	
+    <property name="janino.version" value="2.5.2"/>
+    <property name="janino.url" value="http://www.janino.net/download"/>
+	<property name="janino.top" location="${build.src}/janino/janino-${janino.version}"/>
+	
+    <target name="all" description="download and build the benchmark">
+      <antcall target="source"/>
+      <antcall target="build"/>
+    </target>
+	
+    <target name="source">
+        <get dest="${sources}/janino-${janino.version}.zip"
+         src="${janino.url}/janino-${janino.version}.zip"
+       usetimestamp="true"/>
+    </target>
+
+    <target name="build" description="--> The janino library - required by sunflow benchmark">
+        <condition property="build.dest" value="${build}" else="${build.deps}">
+            <not>
+                <equals arg1="${externalize.deps}" arg2="true"/>
+            </not>
+        </condition>
+    	<condition property="jdk.home" value="${java.home}" else="${java.home}/..">
+    		<not><contains string="${java.home}" substring="/jre"/></not>
+		</condition>
+
+        <!-- build janino -->
+        <unzip src="${sources}/janino-${janino.version}.zip" dest="${build.src}/janino/"/>
+		<ant antfile="build.xml" dir="${janino.top}">
+			<property name="jdk_1_2_2_home" value="${jdk.home}"/>
+		</ant>
+		<copy file="${janino.top}/lib/janino.jar" 
+			tofile="${jars}/janino-${janino.version}.jar"/>
+    </target>
+</project>

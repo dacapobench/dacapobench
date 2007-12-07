@@ -174,8 +174,23 @@ public abstract class Benchmark {
         err.enableOutput(!silent);
       }
     }
-    prepare();
+    prepareJars();
     loader = DacapoClassLoader.create(config, scratch);
+    prepare();
+  }
+
+  /**
+   * Extract the jar files used by the benchmark
+   * @throws Exception
+   */
+  protected void prepareJars() throws Exception {
+    if (config.jar != null)
+      extractFileResource(config.jar, scratch);
+    if (config.libs != null) {
+      for (int i = 0; i < config.libs.length; i++) {
+        extractFileResource(config.libs[i], scratch);
+      }
+    }
   }
 
   /**
@@ -184,13 +199,6 @@ public abstract class Benchmark {
    */
   protected void prepare() throws Exception {
     unpackZipFileResource("data/"+config.name+".zip", scratch);
-    if (config.jar != null)
-      extractFileResource(config.jar, scratch);
-    if (config.libs != null) {
-      for (int i = 0; i < config.libs.length; i++) {
-        extractFileResource(config.libs[i], scratch);
-      }
-    }
   }
 
   /**
@@ -247,10 +255,7 @@ public abstract class Benchmark {
       out.openLog();
       err.openLog();
     }
-    if (loader != null) {
-      savedClassLoader = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(loader);
-    }
+    useBenchmarkClassLoader();
   }
 
   /**
@@ -267,9 +272,7 @@ public abstract class Benchmark {
    * the timing loop so as not to process any output from the timing harness.
    */
   public final void stopIteration() {
-    if (loader != null) {
-      Thread.currentThread().setContextClassLoader(savedClassLoader);
-    }
+    revertClassLoader();
     if (validateOutput) {
       out.closeLog();
       err.closeLog();
@@ -278,6 +281,25 @@ public abstract class Benchmark {
     }
     if (verbose) {
       System.out.println("stopIteration()");
+    }
+  }
+
+  /**
+   * TODO
+   */
+  protected void useBenchmarkClassLoader() {
+    if (loader != null) {
+      savedClassLoader = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(loader);
+    }
+  }
+
+  /**
+   * TODO
+   */
+  protected void revertClassLoader() {
+    if (loader != null) {
+      Thread.currentThread().setContextClassLoader(savedClassLoader);
     }
   }
 

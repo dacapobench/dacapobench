@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-07 12:00:41 +1100 (Fri, 07 Dec 2007) $
- *   $Id: build.xml 316 2007-12-07 01:00:41Z rgarner $
+ *   $Date: 2007-12-07 13:38:37 +1100 (Fri, 07 Dec 2007) $
+ *   $Id: build.xml 317 2007-12-07 02:38:37Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -85,11 +85,13 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,data.source,ant.source,bloat.source,derby.source,eclipse.source,hsqldb.source,jython.source,lucene.source,pmd.source,sunflow.source,xalan.source,xerces.source">
+      depends="init.sources,data.source,ant.source,bloat.source,derby.source,eclipse.source,hsqldb.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/fop.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/janino.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/sunflow.xml" target="source" inheritAll="true"/>
     </target>
 
     <!-- ================================= 
@@ -208,11 +210,9 @@
     <property name="jython.version" value="Release_2_2alpha1"/>
     <property name="lucene.version" value="1.9.1"/>
     <property name="pmd.version" value="3.7"/>
-    <property name="sunflow.version" value="0.07.1"/>
     <property name="xalan.version" value="2_4_1"/>
     <!-- auxilary downloads -->
     <property name="ant.dl.version" value="1.6.5"/>
-    <property name="janino.version" value="2.5.2"/>
     <property name="junit.version" value="3.8.1"/>
     <property name="python.version" value="2.5"/>
     <property name="xerces.version" value="2.8.0"/>
@@ -228,11 +228,9 @@
     <property name="jython.url" value="${sourceforge.dl.url}/jython"/>
     <property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
     <property name="pmd.url" value="${sourceforge.dl.url}/pmd"/>
-    <property name="sunflow.url" value="${sourceforge.dl.url}/sunflow"/>
     <property name="xalan.url" value="${apache.dl.url}/xml/xalan-j/source"/>
     <!-- auxilary downloads -->
     <property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
-    <property name="janino.url" value="http://www.janino.net/download"/>
     <property name="junit.url" value="${sourceforge.dl.url}/junit"/>
     <property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
     <property name="xerces.url" value="${apache.dl.url}/xml/xerces-j/binaries"/>
@@ -633,21 +631,6 @@
     <target name="pmd.source" depends="junit.source,init.sources">
         <get src="${pmd.url}/pmd-src-${pmd.version}.zip"
          dest="${sources}/pmd-src-${pmd.version}.zip"
-       usetimestamp="true"/>
-    </target>
-
-    <target name="janino.source" depends="init.sources">
-        <get dest="${sources}/janino-${janino.version}.zip"
-         src="${janino.url}/janino-${janino.version}.zip"
-       usetimestamp="true"/>
-    </target>
-
-    <target name="sunflow.source" depends="janino.source">
-        <get src="${sunflow.url}/sunflow-src-v${sunflow.version}.zip"
-         dest="${sources}/sunflow-src-v${sunflow.version}.zip"
-       usetimestamp="true"/>
-        <get src="${sunflow.url}/sunflow-bin-v${sunflow.version}.zip"
-         dest="${sources}/sunflow-bin-v${sunflow.version}.zip"
        usetimestamp="true"/>
     </target>
 
@@ -1212,64 +1195,15 @@
     <!-- ================================= 
           target: janino             
        ================================= -->
-    <target name="janino" description="--> The janino library - required by sunflow benchmark">
-        <condition property="build.dest" value="${build}" else="${build.deps}">
-            <not>
-                <equals arg1="${externalize.deps}" arg2="true"/>
-            </not>
-        </condition>
-
-        <!-- build janino -->
-        <unzip src="${sources}/janino-${janino.version}.zip" dest="${build.src}/janino/"/>
-        <javac srcdir="${build.src}/janino/janino-${janino.version}/src" source="1.4" classpath="${build}"
-            destdir="${build.dest}" 
-            includes="org/codehaus/janino/Compiler.java"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
+	<target name="janino" description="--> The janino library - required by sunflow benchmark">
+		<ant antfile="ant/janino.xml" target="build"/>
+	</target>
 
     <!-- ================================= 
           target: sunflow  
          ================================= -->
-    <target name="sunflow" depends="sunflow.benchmark,sunflow.harness" description="--> build the sunflow benchmark"/>
-    <!-- Build the pmd dacapo harness -->
-    <target name="sunflow.harness" depends="harness" description="--> Build the sunflow dacapo harness">
-        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
-            includes="dacapo/sunflow/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <!-- Build the sunflow benchmark -->
-    <target name="sunflow.benchmark" depends="init,janino" description="--> Build the sunflow benchmark">
-
-        <property name="sunflow-top" value="${build.src}/sunflow"/>
-        <mkdir dir="${sunflow-top}/build"/>
-
-        <!-- Expand the sunflow distribution zipfile -->
-        <unzip src="${sources}/sunflow-src-v${sunflow.version}.zip" dest="${build.src}/sunflow"/>
-
-        <!-- Build using javac, setting the classpath appropriately -->
-        <javac srcdir="${sunflow-top}/src" source="1.5" classpath="${sunflow-top}/janino.jar" destdir="${sunflow-top}/build"
-            debug="true" debuglevel="lines,vars,source"/>
-
-
-        <!-- Copy the class files to the dist directory -->
-        <copy todir="${build}">
-            <fileset dir="${sunflow-top}/build">
-                <include name="**/*.class"/>
-            </fileset>
-        </copy>
-
-        <!-- Extract the sunflow data from the binary dist -->
-        <unzip src="${sources}/sunflow-bin-v${sunflow.version}.zip" dest="${sunflow-top}"/>
-        <unjar src="${sunflow-top}/sunflow.jar" dest="${sunflow-top}">
-            <patternset>
-                <include name="resources/golden_*.png"/>
-            </patternset>
-        </unjar>
-        <copy todir="${build}">
-            <fileset dir="${sunflow-top}/">
-                <include name="resources/golden_*.png"/>
-            </fileset>
-        </copy>
+    <target name="sunflow" depends="init,harness,janino" description="--> build the sunflow benchmark">
+		<ant antfile="ant/sunflow.xml" target="build"/>
     </target>
 
     <!-- ================================= 

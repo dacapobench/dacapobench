@@ -23,16 +23,27 @@
 package dacapo.sunflow;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
 import dacapo.parser.Config;
-import org.sunflow.Benchmark;
 
 
 public class SunflowHarness extends dacapo.Benchmark {
-
-  private Benchmark sunflow;
+  
+  private final Constructor<?> constructor;
+  private Object sunflow;
+  private final Method beginMethod;
+  private final Method endMethod;
   
   public SunflowHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
+    Class<?> clazz = Class.forName("org.sunflow.Benchmark", true, loader);
+    this.method = clazz.getMethod("kernelMain");
+    this.beginMethod = clazz.getMethod("kernelBegin");
+    this.endMethod = clazz.getMethod("kernelEnd");
+    this.constructor = clazz.getConstructor(
+        int.class,boolean.class,boolean.class,boolean.class);
   }
 
   /** Do one-time prep such as unziping data.  In our case, do nothing. */
@@ -44,10 +55,15 @@ public class SunflowHarness extends dacapo.Benchmark {
    * 
    * @param size The "size" of the iteration (small, default, large)
    */
-  public void preIteration(String size) {
+  public void preIteration(String size) throws Exception {
     String[] args = preprocessArgs(size);
-    sunflow = new Benchmark(Integer.parseInt(args[0]), false, false, false);
-    sunflow.kernelBegin();
+    useBenchmarkClassLoader();
+    try {
+      sunflow = constructor.newInstance(Integer.parseInt(args[0]), false, false, false);
+      beginMethod.invoke(sunflow);
+    } finally {
+      revertClassLoader();
+    }
   }
     
   /**
@@ -55,8 +71,8 @@ public class SunflowHarness extends dacapo.Benchmark {
    * 
    * @param size The "size" of the iteration (small, default, large)
    */
-  public void iterate(String size) {
-    sunflow.kernelMain();
+  public void iterate(String size) throws Exception {
+    method.invoke(sunflow);
   }
   
   /**
@@ -68,9 +84,17 @@ public class SunflowHarness extends dacapo.Benchmark {
     if (!validate)
       return true;
     try {
-      sunflow.kernelEnd();     
+      useBenchmarkClassLoader();
+      try {
+        endMethod.invoke(sunflow);
+      } finally {
+        revertClassLoader();
+      }
     } catch (RuntimeException e) {
       System.err.println(e.getMessage());
+      return false;
+    } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
     return super.validate(size);

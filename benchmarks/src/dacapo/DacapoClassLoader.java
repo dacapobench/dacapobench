@@ -95,5 +95,8 @@ public class DacapoClassLoader extends URLClassLoader {
     return jars.toArray(new URL[jars.size()]);
   }
 
-
+  @Override
+  protected Class<?> findClass(String name) throws ClassNotFoundException {
+    return super.findClass(name);
+  }
 }
