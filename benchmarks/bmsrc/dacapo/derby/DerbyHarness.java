@@ -3,7 +3,6 @@ package dacapo.derby;
 import java.io.File;
 
 import dacapo.Benchmark;
-import dacapo.PseudoJDBCBench;
 import dacapo.parser.Config;
 
 public class DerbyHarness extends Benchmark {
