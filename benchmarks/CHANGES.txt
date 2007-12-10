@@ -1,3 +1,20 @@
+
+- Update benchmark versions
+    antlr - from 2.4.2 to 2.4.7
+    chart - from 1.0.0 to 1.0.8
+    
+- Add batik benchmark back into the suite
+
+- New derby benchmark
+
+- Package benchmarks in JAR files, and use custom classloader to execute 
+  benchmarks.
+
+- Rewrite callback mechanism so that callbacks have full control over the
+  iteration process.
+
+Release 2006-10-MR2
+
  - Added new build targets for generating a "deps" zip file
    which contains "split deps" jars for each benchmark, which
    seperate the benchmark proper from their dependencies. This
