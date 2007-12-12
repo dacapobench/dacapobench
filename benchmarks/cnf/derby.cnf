@@ -2,10 +2,10 @@ benchmark derby
   class dacapo.derby.DerbyHarness
   thread-model fixed
   jar "jdbcbench.jar"
-  libs "derbynet.jar";
+  libs "derby.jar","derbynet.jar";
 
 size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
-                "-url","jdbc:derby:$SCRATCH/derby;create=true",
+                "-url","jdbc:derby:${SCRATCH}/derby;create=true",
 		"-user","sa",
 		"-clients","${THREADS}",
 		"-tpc", "5",
@@ -16,27 +16,43 @@ size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
-                "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
+                "-url","jdbc:derby:${SCRATCH}/dacapo-derby;create=true",
 		  "-user","sa",
 		  "-clients","${THREADS}",
-		  "-tpc","40",
-		  "-tps","64"
+		  "-tpc","640",
+		  "-tps","128",
+		  "-noDynamic"
   threads 20
   output 
-         stdout digest 0x69ae6f351b1bd2c6e7e66337b73b254739a758ab,
+         stdout digest 0x2f840224c5795ae657ef8139b64eddf7624e3a98,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
-                "-url","jdbc:derby:$SCRATCH/dacapo-derby;create=true",
+                "-url","jdbc:derby:${SCRATCH}/dacapo-derby;create=true",
 		"-user","sa",
 		"-clients","${THREADS}",
-		"-tpc","80",
-		"-tps","128"
+		"-tpc","2560",
+		"-tps","512",
+		  "-noDynamic"
   threads 40
   output 
-         stdout digest 0xc7511e6103d1d62f80c32d80298ae2f39f852f9f,
+         stdout digest 0xd44da3cb1c201a3fef516fe28108d10008c324dd,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
+
+/*
+ * Specifically targeted at class-unloading
+ */
+size dynamic args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
+                "-url","jdbc:derby:${SCRATCH}/dacapo-derby;create=true",
+		  "-user","sa",
+		  "-clients","${THREADS}",
+		  "-tpc","320",
+		  "-tps","128"
+  threads 20
+  output 
+         stdout digest 0x2f840224c5795ae657ef8139b64eddf7624e3a98,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"An SQL relational database engine written in Java",

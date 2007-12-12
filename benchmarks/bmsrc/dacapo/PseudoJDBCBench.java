@@ -36,6 +36,8 @@ package dacapo;
  * 
  * Modified slightly for dacapo benchmarks 1.0 to make output suitable
  * for validation.
+ * 
+ * Allow command-line selection of dynamic vs prepared, and commit vs autocommit
  */
 
 //16 December 2003: PseudoJDBCBench
@@ -56,6 +58,9 @@ import java.util.*;
 import java.io.*;
 
 public class PseudoJDBCBench {
+  
+  enum Stmt { PREPARED, DYNAMIC }
+  enum Transaction { COMMIT, AUTOCOMMIT }
 
   /* tpc bm b scaling rules */
   public static int tps       = 1;         /* the tps scaling factor: here it is 1 */
@@ -78,6 +83,9 @@ public class PseudoJDBCBench {
   static String           ShutdownCommand     = "";
   static PrintStream      TabFile             = null;
   static boolean          verbose             = false;
+  static Set<Stmt>   statementTypes      = EnumSet.allOf(Stmt.class);
+  static Set<Transaction> transactionTypes    = EnumSet.allOf(Transaction.class);
+  static boolean          do_transactions     = true;
   MemoryWatcherThread     MemoryWatcher;
 
   /* Debugging - number of clients currently active */
@@ -173,6 +181,14 @@ public class PseudoJDBCBench {
 
           tps = Integer.parseInt(Args[i]);
         }
+      } else if (Args[i].equals("-noPrepared")) {
+        statementTypes.remove(Stmt.PREPARED);
+      } else if (Args[i].equals("-noDynamic")) {
+        statementTypes.remove(Stmt.DYNAMIC);
+      } else if (Args[i].equals("-noCommit")) {
+        transactionTypes.remove(Transaction.COMMIT);
+      } else if (Args[i].equals("-noAutoCommit")) {
+        transactionTypes.remove(Transaction.AUTOCOMMIT);
       } else if (Args[i].equals("-v")) {
         verbose = true;
       }
@@ -216,10 +232,6 @@ public class PseudoJDBCBench {
   public PseudoJDBCBench(String url, String user, String password, boolean init) {
     //DS. Sept. 2004:
 
-    Vector      vClient = new Vector();
-    Thread      Client  = null;
-    Enumeration e       = null;
-
     try {
       if (init) {
         //System.out.println("Start: "
@@ -240,102 +252,14 @@ public class PseudoJDBCBench {
         System.out.println("* Starting Benchmark Run *");
         MemoryWatcher = new MemoryWatcherThread();
         MemoryWatcher.start();
-        transactions = false;
-        prepared_stmt = false;
-        start_time = System.currentTimeMillis();
-        for (int i = 0; i < n_clients; i++) {
-          Client = new ClientThread(n_txn_per_client, url, user, password);
-
-          Client.start();
-          vClient.addElement(Client);
-        }
-        /*
-         ** Barrier to complete this test session
-         */
-        e = vClient.elements();
-        while (e.hasMoreElements()) {
-          Client = (Thread) e.nextElement();
-
-          if (debug)
-            System.out.println("Active client threads: " + runningClients);
-          Client.join();
-        }
-        if (debug)
-          System.out.println("All clients exited");
-        vClient.removeAllElements();
-        reportDone();
-        transactions = true;
-        prepared_stmt = false;
-        start_time = System.currentTimeMillis();
-        for (int i = 0; i < n_clients; i++) {
-          Client = new ClientThread(n_txn_per_client, url, user, password);
-
-          Client.start();
-          vClient.addElement(Client);
-        }
-        /*
-         ** Barrier to complete this test session
-         */
-        e = vClient.elements();
-        while (e.hasMoreElements()) {
-          Client = (Thread) e.nextElement();
-
-          if (debug)
-            System.out.println("Active client threads: " + runningClients);
-          Client.join();
-        }
-        if (debug)
-          System.out.println("All clients exited");
-        vClient.removeAllElements();
-        reportDone();
-        transactions = false;
-        prepared_stmt = true;
-        start_time = System.currentTimeMillis();
-        for (int i = 0; i < n_clients; i++) {
-          Client = new ClientThread(n_txn_per_client, url, user, password);
-
-          Client.start();
-          vClient.addElement(Client);
-        }
-        /*
-         ** Barrier to complete this test session
-         */
-        e = vClient.elements();
-        while (e.hasMoreElements()) {
-          Client = (Thread) e.nextElement();
-
-          if (debug)
-            System.out.println("Active client threads: " + runningClients);
-          Client.join();
-        }
-        if (debug)
-          System.out.println("All clients exited");
-        vClient.removeAllElements();
-        reportDone();
-        transactions = true;
-        prepared_stmt = true;
-        start_time = System.currentTimeMillis();
-        for (int i = 0; i < n_clients; i++) {
-          Client = new ClientThread(n_txn_per_client, url, user, password);
-
-          Client.start();
-          vClient.addElement(Client);
-        }
-        /*
-         ** Barrier to complete this test session
-         */
-        e = vClient.elements();
-        while (e.hasMoreElements()) {
-          Client = (Thread) e.nextElement();
-
-          if (debug)
-            System.out.println("Active client threads: " + runningClients);
-          Client.join();
-        }
-        if (debug)
-          System.out.println("All clients exited");
-        vClient.removeAllElements();
-        reportDone();
+        if (transactionTypes.contains(Transaction.AUTOCOMMIT) && statementTypes.contains(Stmt.DYNAMIC))
+          executeTransactions(url, user, password, false, false);
+        if (transactionTypes.contains(Transaction.COMMIT) && statementTypes.contains(Stmt.DYNAMIC))
+          executeTransactions(url, user, password, true,  false);
+        if (transactionTypes.contains(Transaction.AUTOCOMMIT) && statementTypes.contains(Stmt.PREPARED))
+          executeTransactions(url, user, password, false, true);
+        if (transactionTypes.contains(Transaction.COMMIT) && statementTypes.contains(Stmt.PREPARED))
+          executeTransactions(url, user, password, true,  true);
       } catch (Exception E) {
         System.out.println(E.getMessage());
         E.printStackTrace();
@@ -348,10 +272,10 @@ public class PseudoJDBCBench {
           if (ShutdownCommand.length() > 0) {
             Connection C    = connect(url, user, password);
             ;
-            Statement  Stmt = C.createStatement();
+            Statement  stmt = C.createStatement();
 
-            Stmt.execute(ShutdownCommand);
-            Stmt.close();
+            stmt.execute(ShutdownCommand);
+            stmt.close();
             connectClose(C);
           }
 
@@ -366,6 +290,37 @@ public class PseudoJDBCBench {
         //System.exit(0);
       }
     }
+  }
+
+  private void executeTransactions(String url, String user, String password,
+      boolean tx, boolean prepared) throws InterruptedException {
+    Vector<Thread>      vClient = new Vector<Thread>();
+    Thread Client;
+    Enumeration<Thread> e;
+    transactions = tx;
+    prepared_stmt = prepared;
+    start_time = System.currentTimeMillis();
+    for (int i = 0; i < n_clients; i++) {
+      Client = new ClientThread(n_txn_per_client, url, user, password);
+
+      Client.start();
+      vClient.addElement(Client);
+    }
+    /*
+     ** Barrier to complete this test session
+     */
+    e = vClient.elements();
+    while (e.hasMoreElements()) {
+      Client = e.nextElement();
+
+      if (debug)
+        System.out.println("Active client threads: " + runningClients);
+      Client.join();
+    }
+    if (debug)
+      System.out.println("All clients exited");
+    vClient.removeAllElements();
+    reportDone();
   }
 
   public void reportDone() {
