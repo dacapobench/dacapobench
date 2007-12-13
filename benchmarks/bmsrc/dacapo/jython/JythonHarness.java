@@ -1,9 +1,7 @@
 package dacapo.jython;
 
 import java.io.File;
-
-import org.python.util.jython;
-import org.python.core.Py;
+import java.lang.reflect.Method;
 
 import dacapo.Benchmark;
 import dacapo.parser.Config;
@@ -11,17 +9,24 @@ import dacapo.parser.Config;
 
 public class JythonHarness extends Benchmark {
   
+  private Method pySetArgsMethod;
+  
   public JythonHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
-  }
-  
-  protected void prepare() throws Exception {
-    super.prepare();
+    Class<?> clazz = Class.forName("org.python.util.jython", true, loader);
+    this.method = clazz.getMethod("main", String[].class );
+    Class<?> pyClass = Class.forName("org.python.core.Py", true, loader);
+    pySetArgsMethod = pyClass.getMethod("setArgv", String.class, String[].class );
     System.setProperty("python.home",fileInScratch("jython"));
     System.setProperty("python.cachedir",fileInScratch("cachedir"));
-    jython.main(new String[] {fileInScratch("jython/noop.py")} );
+    useBenchmarkClassLoader();
+    try {
+      method.invoke(null, (Object)new String[] {fileInScratch("jython/noop.py")} );
+    } finally {
+      revertClassLoader();
+    }
   }
-
+  
   /**
    * jython.main doesn't expect to be called multiple times, so we've hacked
    * Py.setArgv to allow us to reset the command line arguments that the python
@@ -33,8 +38,8 @@ public class JythonHarness extends Benchmark {
     for (int i = 0; i < pyargs.length; i++) {
       pyargs[i] = args[i+1];
     }
-    Py.setArgv(args[0], pyargs);
-    jython.main(args);
+    pySetArgsMethod.invoke(null, args[0], pyargs);
+    method.invoke(null, (Object)args);
   }
 
   public void cleanup() {

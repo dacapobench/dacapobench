@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-12 20:21:41 +1100 (Wed, 12 Dec 2007) $
- *   $Id: build.xml 323 2007-12-12 09:21:41Z rgarner $
+ *   $Date: 2007-12-13 15:00:08 +1100 (Thu, 13 Dec 2007) $
+ *   $Id: build.xml 326 2007-12-13 04:00:08Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -84,13 +84,14 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,data.source,ant.source,bloat.source,eclipse.source,jython.source,lucene.source,pmd.source,xalan.source,xerces.source">
+      depends="init.sources,data.source,ant.source,bloat.source,eclipse.source,lucene.source,pmd.source,xalan.source,xerces.source">
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/derby.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/fop.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/hsqldb.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/jython.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/janino.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/sunflow.xml" target="source" inheritAll="true"/>
     </target>
@@ -116,7 +117,6 @@
             <fileset dir="${extra}/eclipse-plugin/@dot"/>
             <fileset dir="cachedir"/>
             <fileset dir="${dep.tmp}"/>
-            <!-- Jython's mess -->
             <fileset dir="scratch"/>
         </delete>
     </target>
@@ -206,14 +206,12 @@
     <property name="bloat.version" value="1.0"/>
     <property name="eclipse.version" value="3.1.2"/>
     <property name="eclipse.drop" value="200601181600"/>
-    <property name="jython.version" value="Release_2_2alpha1"/>
     <property name="lucene.version" value="1.9.1"/>
     <property name="pmd.version" value="3.7"/>
     <property name="xalan.version" value="2_4_1"/>
     <!-- auxilary downloads -->
     <property name="ant.dl.version" value="1.6.5"/>
     <property name="junit.version" value="3.8.1"/>
-    <property name="python.version" value="2.5"/>
     <property name="xerces.version" value="2.8.0"/>
     <property name="xerces._version" value="2_8_0"/>
 
@@ -222,14 +220,12 @@
     <!-- benchmark locations -->
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
-    <property name="jython.url" value="${sourceforge.dl.url}/jython"/>
     <property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
     <property name="pmd.url" value="${sourceforge.dl.url}/pmd"/>
     <property name="xalan.url" value="${apache.dl.url}/xml/xalan-j/source"/>
     <!-- auxilary downloads -->
     <property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
     <property name="junit.url" value="${sourceforge.dl.url}/junit"/>
-    <property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
     <property name="xerces.url" value="${apache.dl.url}/xml/xerces-j/binaries"/>
     <!-- data downloads -->
     <property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
@@ -595,18 +591,6 @@
          usetimestamp="true"/>
     </target>
 
-    <target name="jython.source" depends="init.sources, python.source">
-        <get src="${jython.url}/jython_${jython.version}.jar"
-         dest="${sources}/jython_${jython.version}.jar"  
-        usetimestamp="true"/>
-    </target>
-
-    <target name="python.source" depends="init.sources">
-        <get src="${python.url}/Python-${python.version}.tgz"
-         dest="${sources}/Python-${python.version}.tgz"  
-        usetimestamp="true"/>
-    </target>
-
     <target name="junit.source" depends="init.sources">
         <get dest="${sources}/junit${junit.version}.zip"
          src="${junit.url}/junit${junit.version}.zip"
@@ -881,73 +865,9 @@
     <!-- ================================= 
           target: jython                
          ================================= -->
-    <target name="jython" depends="jython.benchmark,jython.harness" description="--> build the jython benchmark"/>
-    <!-- Build the jython dacapo harness -->
-    <target name="jython.harness" depends="harness" description="--> Build the Jython dacapo harness">
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-            source="1.4"
-            includes="dacapo/jython/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <!-- Build the jython benchmark -->
-    <target name="jython.benchmark" depends="init,ant" description="--> Build the Jython benchmark">
-        <property name="jython-top" value="${build.src}/jython/"/>
-        <mkdir dir="${jython-top}/jython_${jython.version}"/>
-
-        <unzip src="${sources}/jython_${jython.version}.jar" dest="${jython-top}/jython_${jython.version}"/>
-
-        <!-- Apply the dacapo patch, which allows us to set the arguments -->
-        <patch patchfile="${patches}/jython.patch" 
-                 dir="${jython-top}/jython_${jython.version}/src/java"
-                 strip="0" ignorewhitespace="yes"/>
-
-        <!-- copy requisite files into place-->
-        <copy todir="${jython-top}/jython_${jython.version}/src/java">
-            <fileset file="${jython-top}/jython_${jython.version}/build.*"/>
-        </copy>
-
-        <!-- Build jython -->
-        <ant antfile="build.xml" dir="${jython-top}/jython_${jython.version}/src/java" inheritall="false">
-            <property name="javaccHome2" location="${javacchome}"/>
-            <property name="python.lib" location="${jython-top}/jython_${jython.version}/Lib"/>
-        </ant>
-
-        <!-- Copy files to the distribution directory -->
-        <unjar src="${jython-top}/jython_${jython.version}/src/java/dist/jython.jar" dest="${build}"/>
-        <antcall target="jython.deps"/>
-
-        <!-- Extract the pybench benchmark from the python sources -->
-        <untar src="${sources}/Python-${python.version}.tgz" dest="${jython-top}" compression="gzip">
-            <patternset>
-                <include name="Python-${python.version}/Tools/pybench/**"/>
-            </patternset>
-        </untar>
-        <move file="${jython-top}/Python-${python.version}/Tools/pybench" todir="${jython-top}/jython"/>
-
-
-        <!-- patch the pybench benchmark to allow it to work with jython -->
-        <patch patchfile="${patches}/pybench.patch" 
-                 dir="${jython-top}/jython"
-                 strip="0" ignorewhitespace="yes"/>
-        <copy todir="${jython-top}/jython/Lib">
-            <fileset dir="${jython-top}/jython_${jython.version}/Lib"/>
-        </copy>
-
-
-        <!-- Install the test data -->
-        <zip destfile="${zipdata}/jython.zip">
-            <fileset dir="${data}/" includes="jython/noop.py"/>
-            <fileset dir="${data}/" includes="jython/sieve.py"/>
-            <fileset dir="${jython-top}/" includes="jython/pybench/**"/>
-            <fileset dir="${jython-top}/" includes="jython/Lib/**"/>
-        </zip>
-    </target>
-    <!-- Add external libraries to the deps -->
-    <target name="jython.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${build.src}/ant/ant.jar" dest="${build.deps}"/>
-        <unjar src="${build.src}/ant/ant-launcher.jar" dest="${build.deps}"/>
-    </target>
-
+    <target name="jython" depends="init,harness" description="--> build the jython benchmark">
+		<ant antfile="${ant.dir}/jython.xml" target="build" inheritAll="true"/>
+	</target>
 
     <!-- ================================= 
           target: luindex    
