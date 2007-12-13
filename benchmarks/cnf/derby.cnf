@@ -1,6 +1,6 @@
 benchmark derby 
   class dacapo.derby.DerbyHarness
-  thread-model fixed
+  thread-model per_cpu
   jar "jdbcbench.jar"
   libs "derby.jar","derbynet.jar";
 
@@ -8,35 +8,35 @@ size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:${SCRATCH}/derby;create=true",
 		"-user","sa",
 		"-clients","${THREADS}",
-		"-tpc", "5",
+		"-total_trans", "50",
 		"-tps","4","-v"
-  threads 10
+  threads 2
   output 
-         stdout digest 0x5cb9aec99a567f4783e8f98036a8d3bee52d806c,
+         stdout digest 0x55403c0172d515475acec10d96b05ea33faf7331,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:${SCRATCH}/dacapo-derby;create=true",
 		  "-user","sa",
 		  "-clients","${THREADS}",
-		  "-tpc","640",
+		  "-total_trans","12800",
 		  "-tps","128",
 		  "-noDynamic"
-  threads 20
+  threads 5
   output 
-         stdout digest 0x2f840224c5795ae657ef8139b64eddf7624e3a98,
+         stdout digest 0xe27508e7ae4c5ed49334ea42865bdb1a4706fa16,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:${SCRATCH}/dacapo-derby;create=true",
 		"-user","sa",
 		"-clients","${THREADS}",
-		"-tpc","2560",
+		"-total_trans","51200",
 		"-tps","512",
 		  "-noDynamic"
-  threads 40
+  threads 10
   output 
-         stdout digest 0xd44da3cb1c201a3fef516fe28108d10008c324dd,
+         stdout digest 0xe8329bf1c584252e094774279836a7040eee449f,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
@@ -47,11 +47,11 @@ size dynamic args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
                 "-url","jdbc:derby:${SCRATCH}/dacapo-derby;create=true",
 		  "-user","sa",
 		  "-clients","${THREADS}",
-		  "-tpc","320",
-		  "-tps","128"
+		  "-total_trans","4000",
+		  "-tps","32"
   threads 20
   output 
-         stdout digest 0x2f840224c5795ae657ef8139b64eddf7624e3a98,
+         stdout digest 0x2b20faf05e30baae25244763a1ec60faf4f6d939,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

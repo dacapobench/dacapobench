@@ -22,8 +22,8 @@ import java.security.MessageDigest;
  *   with Unix ones.  (A bit heavy handed, better alternatives are invited :)
  * 
  * @author Robin Garner
- * @date $Date: 2007-10-04 18:00:28 +1000 (Thu, 04 Oct 2007) $
- * @id $Id: FileDigest.java 296 2007-10-04 08:00:28Z rgarner $
+ * @date $Date: 2007-12-13 14:20:22 +1100 (Thu, 13 Dec 2007) $
+ * @id $Id: FileDigest.java 324 2007-12-13 03:20:22Z rgarner $
  *
  */
 public class FileDigest {
@@ -51,6 +51,14 @@ public class FileDigest {
     }
   }
   
+  /**
+   * Replace all occurrences of a fixed string
+   * 
+   * @param line
+   * @param substr
+   * @param replacement
+   * @return
+   */
   private static String replaceAllFixed(String line, String substr, String replacement) {
     int start = 0;
     int match;
@@ -73,8 +81,11 @@ public class FileDigest {
     final MessageDigest digest = Digest.create();
     BufferedReader in = new BufferedReader(new FileReader(file));
     String line;
+    int unvalidated = 0;
     while ((line = in.readLine()) != null) {
       if (filter) {
+        if (line.startsWith("#NOVALIDATE#"))
+          line = "#NOVALIDATE#"+(unvalidated++);
         line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
         line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
         line = replaceAllFixed(line,"\\","/");

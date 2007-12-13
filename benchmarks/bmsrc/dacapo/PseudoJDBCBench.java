@@ -75,6 +75,7 @@ public class PseudoJDBCBench {
   int                     transaction_count   = 0;
   static int              n_clients           = 10;
   static int              n_txn_per_client    = 10;
+  static int              extra_txn           = 0;          // Some clients perform 1 more transaction
   long                    start_time          = 0;
   static boolean          transactions        = true;
   static boolean          prepared_stmt       = false;
@@ -83,7 +84,7 @@ public class PseudoJDBCBench {
   static String           ShutdownCommand     = "";
   static PrintStream      TabFile             = null;
   static boolean          verbose             = false;
-  static Set<Stmt>   statementTypes      = EnumSet.allOf(Stmt.class);
+  static Set<Stmt>        statementTypes      = EnumSet.allOf(Stmt.class);
   static Set<Transaction> transactionTypes    = EnumSet.allOf(Transaction.class);
   static boolean          do_transactions     = true;
   MemoryWatcherThread     MemoryWatcher;
@@ -104,6 +105,8 @@ public class PseudoJDBCBench {
     String  DBUser             = "";
     String  DBPassword         = "";
     boolean initialize_dataset = false;
+    int              txn_per_client    = -1;           // Exactly one of these can be
+    int              txn_all_clients   = -1;           // specified in the command-line options
 
     for (int i = 0; i < Args.length; i++) {
       if (Args[i].equals("-clients")) {
@@ -171,7 +174,13 @@ public class PseudoJDBCBench {
         if (i + 1 < Args.length) {
           i++;
 
-          n_txn_per_client = Integer.parseInt(Args[i]);
+          txn_per_client = Integer.parseInt(Args[i]);
+        }
+      } else if (Args[i].equals("-total_trans")) {
+        if (i + 1 < Args.length) {
+          i++;
+
+          txn_all_clients = Integer.parseInt(Args[i]);
         }
       } else if (Args[i].equals("-init")) {
         initialize_dataset = true;
@@ -193,6 +202,23 @@ public class PseudoJDBCBench {
         verbose = true;
       }
     }
+    
+    /*
+     * Set the number of transactions per client.  The command line can give a
+     * fixed #transactions per client, or a fixed total, divided equally among the
+     * threads.
+     */
+    if (txn_all_clients > 0 && txn_per_client > 0) {
+      System.err.println("Cannot specify -tpc and -total_trans");
+      System.exit(1);
+    } else if (txn_all_clients > 0) {
+      n_txn_per_client = txn_all_clients / n_clients;
+      extra_txn = txn_all_clients - (n_txn_per_client * n_clients);
+    } else if (txn_per_client > 0) {
+      n_txn_per_client = txn_per_client;
+    } else {
+      // Use the static default tx/client
+    }
 
     if (DriverName.length() == 0 || DBUrl.length() == 0) {
       System.out.println(
@@ -213,8 +239,8 @@ public class PseudoJDBCBench {
     "*********************************************************");
     System.out.println();
     System.out.println("Scale factor value: " + tps);
-    System.out.println("Number of clients: " + n_clients);
-    System.out.println("Number of transactions per client: "
+    System.out.println("#NOVALIDATE# Number of clients: " + n_clients);
+    System.out.println("#NOVALIDATE# Number of transactions per client: "
             + n_txn_per_client);
     System.out.println();
 
@@ -301,7 +327,7 @@ public class PseudoJDBCBench {
     prepared_stmt = prepared;
     start_time = System.currentTimeMillis();
     for (int i = 0; i < n_clients; i++) {
-      Client = new ClientThread(n_txn_per_client, url, user, password);
+      Client = new ClientThread(n_txn_per_client + (i < extra_txn ? 1 : 0), url, user, password);
 
       Client.start();
       vClient.addElement(Client);

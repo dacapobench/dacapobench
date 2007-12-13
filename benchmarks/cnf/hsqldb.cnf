@@ -1,6 +1,6 @@
 benchmark hsqldb 
   class dacapo.hsqldb.HsqldbHarness
-  thread-model fixed
+  thread-model per_cpu
   jar "jdbcbench.jar"
   libs "hsqldbtest.jar";
 
@@ -8,33 +8,36 @@ size small args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:mem:hsqldb",
 		"-user","sa","-init",
 		"-clients","${THREADS}",
-		"-tpc", "5",
+		//"-tpc", "5",
+		"-total_trans", "50",
 		"-tps","4","-v"
-  threads 10
+  threads 1
   output 
-         stdout digest 0x76017508de1dd5dfef96fdba5061d264a3ce053b,
+         stdout digest 0x7c7e68ef995292790afb15ba2185be5d76fba577,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.hsqldb.jdbcDriver",
                   "-url","jdbc:hsqldb:mem:hsqldb",
 		  "-user","sa","-init",
 		  "-clients","${THREADS}",
-		  "-tpc","40",
+		  //"-tpc","40",
+		  "-total_trans", "800",
 		  "-tps","64"
-  threads 20
+  threads 10
   output 
-         stdout digest 0x68f2be9306913c92688b6b34f8454b6311de9310,
+         stdout digest 0x280e4d4304b81979d04a9af8645705800e8c9395,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-driver","org.hsqldb.jdbcDriver",
                 "-url","jdbc:hsqldb:mem:hsqldb",
 		"-user","sa","-init",
 		"-clients","${THREADS}",
-		"-tpc","50",
+		//"-tpc","50",
+		"-total_trans", "5000",
 		"-tps","128"
-  threads 100
+  threads 40 // per CPU
   output 
-         stdout digest 0xd9e4aa9493ef4da225e4636964416bfab23d204a,
+         stdout digest 0x79ead411533175224f4018e601cb8bb7520c488a,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
