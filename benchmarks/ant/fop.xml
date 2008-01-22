@@ -32,7 +32,7 @@
     </target>
 
     <!-- Build the benchmark -->
-    <target name="benchmark" depends="source">
+    <target name="benchmark">
         <property name="top" value="${build.src}/${bm.name}/${bm.name}-${bm.version}"/>
 
         <!-- Untar the source distribution -->
