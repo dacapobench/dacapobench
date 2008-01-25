@@ -9,10 +9,11 @@ size small args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
 		"-user","sa",
 		"-clients","${THREADS}",
 		"-total_trans", "50",
-		"-tps","4","-v"
+		"-tps","4","-v",
+          "-noDynamic"
   threads 2
   output 
-         stdout digest 0x55403c0172d515475acec10d96b05ea33faf7331,
+         stdout digest 0xaf4d03a30b03e8739becd723d0bf857cfe0e0e07,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-driver","org.apache.derby.jdbc.EmbeddedDriver",
