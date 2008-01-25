@@ -14,8 +14,13 @@ import java.util.List;
 import dacapo.parser.Config;
 
 /**
- * @author Robin Garner
+ * Custom class loader for the dacapo benchmarks.  Instances of this classloader
+ * are created by passing a list of jar files.  This allows us to package a benchmark
+ * as a set of jar files, rather than having to mix the classes for all the benchmarks
+ * into the dacapo jar file.
+ * 
  * @author Steve Blackburn
+ * @author Robin Garner
  *
  */
 public class DacapoClassLoader extends URLClassLoader {
@@ -95,8 +100,30 @@ public class DacapoClassLoader extends URLClassLoader {
     return jars.toArray(new URL[jars.size()]);
   }
 
+  
+  /**
+   * Reverse the logic of the default classloader, by trying the top-level
+   * classes first.  This way, libraries packaged with the benchmarks
+   * override those provided by the runtime environment.
+   */
   @Override
-  protected Class<?> findClass(String name) throws ClassNotFoundException {
-    return super.findClass(name);
+  protected synchronized Class<?> loadClass(String name, boolean resolve)
+  throws ClassNotFoundException {
+    // First, check if the class has already been loaded
+    Class<?> c = findLoadedClass(name);
+    if (c == null) {
+      try {
+
+        // Next, try to resolve it from the dacapo JAR files
+        c = super.findClass(name);
+        if (resolve) {
+          resolveClass(c);
+        }
+      } catch (ClassNotFoundException e) {
+        // And if all else fails delegate to the parent.
+        c = super.loadClass(name,resolve);
+      }
+    }
+    return c;
   }
 }
