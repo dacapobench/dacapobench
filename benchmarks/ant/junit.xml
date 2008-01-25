@@ -1,0 +1,38 @@
+<project name="junit" default="all" basedir="..">
+    <description>JUnit library</description>
+    
+	<property file="ant/dacapo.properties"/>
+	
+    <property name="junit.version" value="3.8.1"/>
+    <property name="junit.url" value="${sourceforge.dl.url}/junit"/>
+	
+	<target name="all">
+	    <antcall target="source"/>
+	    <antcall target="build"/>
+	</target>
+	
+    <target name="source">
+        <get dest="${sources}/junit${junit.version}.zip"
+         src="${junit.url}/junit${junit.version}.zip"
+       usetimestamp="true"/>
+    </target>
+	
+	
+	<target name="junit.check" description="Ensure that junit is available">
+		<condition property="junit.build.done">
+			<available file="${junit.jar}"/>
+		</condition>
+	</target>
+
+    <target name="build" depends="junit.check" unless="junit.build.done" description="--> build the xerces library">
+        <!-- Install the junit jar file -->
+        <unzip src="${sources}/junit${junit.version}.zip" dest="${build.src}/junit/">
+            <patternset>
+                <include name="junit${junit.version}/junit.jar"/>
+            </patternset>
+        </unzip>
+    	<copy file="${build.src}/junit/junit${junit.version}/junit.jar"
+    		tofile="${junit.jar}"/>
+    </target>
+	
+</project>

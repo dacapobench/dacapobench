@@ -11,12 +11,14 @@ import java.util.List;
 import dacapo.Benchmark;
 import dacapo.parser.Config;
 
-import net.sourceforge.pmd.PMD;
-
 public class PmdHarness extends Benchmark {
+  
+  String[] args;
 
   public PmdHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
+    Class<?> clazz = Class.forName("net.sourceforge.pmd.PMD", true, loader);
+    this.method = clazz.getMethod("main",String[].class);
     
     /*
      * Explicitly set some properties that control factory methods
@@ -31,16 +33,19 @@ public class PmdHarness extends Benchmark {
     System.setProperty("javax.xml.parsers.DocumentBuilderFactory", 
         "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
   }
-
-  public void iterate(String size) throws Exception {
-    String[] args = config.getArgs(size);
+  
+  public void prepare(String size) {
+    args = config.getArgs(size);
     if (args[0].charAt(0) == '@')
       args[0] = collectFilesFromFile(fileInScratch(args[0].substring(1)));
     for (int i=2; i < args.length; i++) {
       if (args[i].charAt(0) != '-')
         args[i] = fileInScratch(args[i]);
     }
-    PMD.main(args);
+  }
+
+  public void iterate(String size) throws Exception {
+    method.invoke(null,(Object)args);
   }
 
   private String collectFilesFromFile(String inputFileName) {

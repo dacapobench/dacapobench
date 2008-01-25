@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2007-12-18 21:44:15 +1100 (Tue, 18 Dec 2007) $
- *   $Id: build.xml 328 2007-12-18 10:44:15Z rgarner $
+ *   $Date: 2008-01-25 14:28:05 +1100 (Fri, 25 Jan 2008) $
+ *   $Id: build.xml 336 2008-01-25 03:28:05Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -84,7 +84,7 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,data.source,ant.source,bloat.source,eclipse.source,lucene.source,pmd.source,xalan.source,xerces.source">
+      depends="init.sources,data.source,ant.source,bloat.source,eclipse.source,lucene.source">
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
@@ -93,7 +93,10 @@
     	<ant antfile="${ant.dir}/hsqldb.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/jython.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/janino.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/pmd.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/sunflow.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/xalan.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/xerces.xml" target="source" inheritAll="true"/>
     </target>
 
     <!-- ================================= 
@@ -207,13 +210,8 @@
     <property name="eclipse.version" value="3.1.2"/>
     <property name="eclipse.drop" value="200601181600"/>
     <property name="lucene.version" value="1.9.1"/>
-    <property name="pmd.version" value="3.7"/>
-    <property name="xalan.version" value="2_4_1"/>
     <!-- auxilary downloads -->
     <property name="ant.dl.version" value="1.6.5"/>
-    <property name="junit.version" value="3.8.1"/>
-    <property name="xerces.version" value="2.8.0"/>
-    <property name="xerces._version" value="2_8_0"/>
 
     <property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 
@@ -221,16 +219,11 @@
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
     <property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
-    <property name="pmd.url" value="${sourceforge.dl.url}/pmd"/>
-    <property name="xalan.url" value="${apache.dl.url}/xml/xalan-j/source"/>
     <!-- auxilary downloads -->
     <property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
-    <property name="junit.url" value="${sourceforge.dl.url}/junit"/>
-    <property name="xerces.url" value="${apache.dl.url}/xml/xerces-j/binaries"/>
     <!-- data downloads -->
     <property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
     <property name="bible.url" value="${sfdata.url}/kjv.zip"/>
-    <property name="xalan.data.url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/WD-xforms-20010608.zip"/>
     <property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
 
 
@@ -591,40 +584,15 @@
          usetimestamp="true"/>
     </target>
 
-    <target name="junit.source" depends="init.sources">
-        <get dest="${sources}/junit${junit.version}.zip"
-         src="${junit.url}/junit${junit.version}.zip"
-       usetimestamp="true"/>
-    </target>
-
     <target name="lucene.source" depends="init.sources">
         <get dest="${sources}/lucene-${lucene.version}-src.tar.gz"
          src="${lucene.url}/lucene-${lucene.version}-src.tar.gz"
          usetimestamp="true"/>
     </target>
 
-    <target name="pmd.source" depends="junit.source,init.sources">
-        <get src="${pmd.url}/pmd-src-${pmd.version}.zip"
-         dest="${sources}/pmd-src-${pmd.version}.zip"
-       usetimestamp="true"/>
-    </target>
-
-    <target name="xalan.source" depends="xerces.source">
-        <get src="${xalan.url}/xalan-j_${xalan.version}-src.tar.gz"
-               dest="${sources}/xalan-j_${xalan.version}-src.tar.gz"
-         usetimestamp="true"/>
-    </target>
-
-    <target name="xerces.source" depends="init.sources">
-        <get src="${xerces.url}/Xerces-J-bin.${xerces.version}.tar.gz"
-         dest="${sources}/Xerces-J-bin.${xerces.version}.tar.gz"
-       usetimestamp="true"/>
-    </target>
-
     <target name="data.source" depends="init.sources">
         <get src="${shakespeare.url}" dest="${sources}/shakespeare.tgz" usetimestamp="true"/>
         <get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
-        <get src="${xalan.data.url}" dest="${sources}/xalan.data.zip" usetimestamp="true"/>
     </target>
 
 
@@ -657,7 +625,7 @@
     <!-- ================================= 
         target: batik 
        ================================= -->
-    <target name="batik" depends="init,harness,xerces" description="Build batik">
+    <target name="batik" depends="init,harness" description="Build batik">
     	<ant antfile="${ant.dir}/batik.xml" target="build" inheritAll="true"/>
     </target>
 
@@ -708,17 +676,9 @@
 
 	
     <!-- ================================= 
-          target: jdbcbench - used by hsqldb and derby           
-         ================================= -->
-    <target name="jdbcbench" depends="init,harness" description="--> build the PseudoJDBCBench benchmark">
-    	<ant antfile="${ant.dir}/jdbcbench.xml" target="build" inheritAll="true"/>
-    </target>	
-
-
-    <!-- ================================= 
           target: derby              
          ================================= -->
-    <target name="derby" depends="jdbcbench,init,harness" description="--> build the derby benchmark">
+    <target name="derby" depends="init,harness" description="--> build the derby benchmark">
     	<ant antfile="${ant.dir}/derby.xml" target="build" inheritAll="true"/>
 	</target>	
 
@@ -840,25 +800,9 @@
     </target>
 	
     <!-- ================================= 
-          target: junit             
-       ================================= -->
-    <target name="junit" description="--> The junit library - required by some other benchmarks">
-        <!-- Install the junit jar file -->
-        <unzip src="${sources}/junit${junit.version}.zip" dest="${build.src}/junit/">
-            <patternset>
-                <include name="junit${junit.version}/junit.jar"/>
-            </patternset>
-        </unzip>
-    	<copy file="${build.src}/junit/junit${junit.version}/junit.jar"
-    		todir="${jars}"/>
-      	<property name="junit.jar" location="${build.src}/junit/junit${junit.version}/junit.jar"/>
-    </target>
-
-
-    <!-- ================================= 
           target: hsqldb              
        ================================= -->
-    <target name="hsqldb" depends="init,harness,jdbcbench,junit" description="--> build the hsqldb benchmark">
+    <target name="hsqldb" depends="init,harness" description="--> build the hsqldb benchmark">
     	<ant antfile="${ant.dir}/hsqldb.xml" target="build" inheritAll="true"/>
 	</target>	
 
@@ -937,181 +881,21 @@
     <!-- ================================= 
           target: pmd    
          ================================= -->
-    <target name="pmd" depends="pmd.benchmark,pmd.harness" description="--> build the pmd benchmark"/>
-    <!-- Build the pmd dacapo harness -->
-    <target name="pmd.harness" depends="harness" description="--> Build the pmd dacapo harness">
-        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
-            includes="dacapo/pmd/*"
-            debug="true" debuglevel="lines,vars,source"/>
+    <target name="pmd" depends="init,harness" description="--> build the pmd benchmark">
+		<ant antfile="${ant.dir}/pmd.xml" target="build"/>
     </target>
-    <!-- Build the pmd benchmark -->
-    <target name="pmd.benchmark" depends="init,ant,xerces,junit" description="--> Build the pmd benchmark">
-
-        <mkdir dir="${build.src}/pmd"/>
-        <property name="pmd-top" value="${build.src}/pmd/pmd-${pmd.version}"/>
-
-        <!-- Expand the pmd distribution zipfile -->
-        <unzip src="${sources}/pmd-src-${pmd.version}.zip" dest="${build.src}/pmd"/>
-
-        <!-- Apply the dacapo patch -->
-        <patch patchfile="${patches}/pmd.patch" dir="${build.src}" strip="0"/>
-
-        <!-- Build using Ant, setting the classpath appropriately -->
-        <exec dir="${pmd-top}/bin" executable="ant">
-            <arg value="compile"/>
-            <env key="CLASSPATH" value=".:${junit.jar}"/>
-            <env key="ANT_HOME" value="${ant.install}"/>
-        </exec>
-
-        <!-- Copy the classfiles to the dist directory -->
-        <copy todir="${build}">
-            <fileset dir="${pmd-top}/build">
-                <include name="net/**/*.class"/>
-            </fileset>
-        </copy>
-        <antcall target="pmd.libs"/>
-        <antcall target="pmd.deps"/>
-
-        <!-- Construct the test data -->
-        <property name="pmd-data" value="${pmd-top}/data/pmd"/>
-        <mkdir dir="${pmd-data}"/>
-        <copy todir="${pmd-data}">
-            <fileset dir="${pmd-top}/src">
-                <include name="net/**/*.java"/>
-            </fileset>
-        </copy>
-        <copy todir="${pmd-data}">
-            <fileset dir="${pmd-top}">
-                <include name="rulesets/**/*"/>
-            </fileset>
-        </copy>
-        <copy todir="${pmd-data}" >
-            <fileset dir="${data}/pmd">
-                <include name="*.lst"/>
-            </fileset>
-        </copy>
-
-        <!-- Install the test data -->
-        <zip basedir="${pmd-top}/data" includes="pmd/**" destfile="${zipdata}/pmd.zip"/>
-        <delete dir="${pmd-top}/data"/>
-    </target>
-    <!-- Add external libraries to the build -->
-    <target name="pmd.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build}"/>
-        <unjar src="${build.src}/junit/junit${junit.version}/junit.jar" dest="${build}"/>
-    </target>
-    <!-- Add external libraries to the deps -->
-    <target name="pmd.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" dest="${build.deps}"/>
-        <unjar src="${pmd-top}/lib/jakarta-oro-2.0.8.jar" dest="${build.deps}"/>
-        <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build.deps}"/>
-        <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${build.deps}"/>
-        <unjar src="${build.src}/junit/junit${junit.version}/junit.jar" dest="${build.deps}"/>
-        <unjar src="${build.src}/ant/ant.jar" dest="${build.deps}"/>
-        <unjar src="${build.src}/ant/ant-launcher.jar" dest="${build.deps}"/>
-    </target>
-
-    <!-- ================================= 
-          target: janino             
-       ================================= -->
-	<target name="janino" description="--> The janino library - required by sunflow benchmark">
-		<ant antfile="ant/janino.xml" target="build"/>
-	</target>
 
     <!-- ================================= 
           target: sunflow  
          ================================= -->
-    <target name="sunflow" depends="init,harness,janino" description="--> build the sunflow benchmark">
-		<ant antfile="ant/sunflow.xml" target="build"/>
+    <target name="sunflow" depends="init,harness" description="--> build the sunflow benchmark">
+		<ant antfile="${ant.dir}/sunflow.xml" target="build"/>
     </target>
 
     <!-- ================================= 
         target: xalan
        ================================= -->
-    <target name="xalan" depends="xalan.jar,xalan.data,xalan.harness" description="--> build the xalan benchmark"/>
-    <!-- Build the xalan dacapo harness -->
-    <target name="xalan.harness" depends="harness" description="Build xalan">
-        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
-            includes="dacapo/xalan/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <!-- Build the xalan input data -->
-    <target name="xalan.data" depends="init" description="Create data zip">
-        <mkdir dir="${xalan-top}/xalan-data/xalan/"/>
-        <unzip src="${sources}/xalan.data.zip" dest="${xalan-top}/xalan-data/xalan/">
-            <patternset>
-                <include name="*.xml"/>
-                <include name="xmlspec.xsl"/>
-            </patternset>
-        </unzip>
-        <zip basedir="${xalan-top}/xalan-data/" includes="xalan/**" destfile="${zipdata}/xalan.zip"/>
-    </target>
-    <!-- Build the xalan benchmark -->
-    <target name="xalan.benchmark" depends="init,xerces" description="Build xalan">
-        <property name="xalan-top" value="${build.src}/xalan/"/>
-        <property name="xalan-v" value="${xalan.version}"/>
-        <property name="xalan.xerces.jar" value="${xerces-top}/xerces-${xerces._version}/${xerces.jar}"/>
-        <property name="xalan.xercesxml.jar" value="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}"/>
-        <mkdir dir="${xalan-top}"/>
-
-        <!-- Unpack the source distribution -->
-        <untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" dest="${xalan-top}" compression="gzip"/>
-
-        <!-- Apply the dacapo patch -->
-        <patch patchfile="${patches}/xalan.patch" dir="${build.src}" strip="0"/>
-
-        <!-- Build using Ant, setting the classpath appropriately -->
-        <exec dir="${xalan-top}/xalan-j_${xalan-v}" executable="ant">
-            <env key="CLASSPATH" value=".:${build}:${xalan.xerces.jar}:${xalan.xercesxml.jar}"/>
-            <env key="ANT_HOME" value="${ant.install}"/>
-        </exec>
-
-        <antcall target="xalan.deps"/>
-
-        <!-- Grab the xalan class files from the built jar files -->
-        <unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
-    </target>
-    <!-- Copy a stand-alone xalan jar into the build -->
-    <target name="xalan.jar" unless="externalize.deps" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
-        <copy file="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" todir="${build}"/>
-    </target>
-    <!-- Add external libraries to the deps -->
-    <target name="xalan.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xml-apis.jar" dest="${build.deps}"/>
-        <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xercesImpl.jar" dest="${build.deps}"/>
-    </target>
-
-    <!-- ================================= 
-        target: xerces 
-
-         Not a benchmark in its own right, but a library that several of
-         the benchmarks rely on.
-       ================================= -->
-    <target name="xerces" description="Build xerces">
-        <property name="xerces-top" value="${build.src}/xerces/"/>
-        <mkdir dir="${xerces-top}"/>
-
-        <!-- Unpack the source distribution -->
-        <untar src="${sources}/Xerces-J-bin.${xerces.version}.tar.gz" 
-           dest="${xerces-top}" compression="gzip"/>
-
-        <condition property="xerces.jar" value="xerces.jar" else="xercesImpl.jar">
-            <contains string="${xerces.version}" substring="1.4.4"/>
-        </condition>
-        <condition property="xercesxml.jar" value="xmlParserAPIs.jar" else="xml-apis.jar">
-            <contains string="${xerces.version}" substring="2.2.1"/>
-        </condition>
-        <antcall target="xerces.libs"/>
-        <antcall target="xerces.deps"/>
-    </target>
-    <!-- Add external libraries to the build -->
-    <target name="xerces.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${build}"/>
-        <unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${build}"/>
-    </target>
-    <!-- Add external libraries to the deps -->
-    <target name="xerces.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-        <unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${build.deps}"/>
-        <unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${build.deps}"/>
-    </target>
+    <target name="xalan" depends="init,harness" description="--> build the xalan benchmark">
+		<ant antfile="${ant.dir}/xalan.xml" target="build"/>
+    </target>	
 </project>

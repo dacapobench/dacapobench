@@ -1,0 +1,57 @@
+<project name="xerces" default="all" basedir="..">
+    <description>Dacapo Xalan benchmark</description>
+    
+	<property file="ant/dacapo.properties"/>
+	
+    <property name="xerces.version" value="2.8.0"/>
+    <property name="xerces._version" value="2_8_0"/>
+    <property name="xerces.url" value="${apache.dl.url}/xml/xerces-j/binaries"/>
+	
+	<target name="all">
+	    <antcall target="source"/>
+	    <antcall target="build"/>
+	</target>
+	
+    <target name="source">
+        <get src="${xerces.url}/Xerces-J-bin.${xerces.version}.tar.gz"
+         dest="${sources}/Xerces-J-bin.${xerces.version}.tar.gz"
+       usetimestamp="true"/>
+    </target>
+	
+	<target name="xerces.check">
+		<condition property="xerces.build.done">
+			<and>
+				<available file="${build}/xercesImpl.jar"/>
+				<available file="${build}/xml-apis.jar"/>
+			</and>
+		</condition>
+	</target>
+
+    <target name="build" depends="xerces.check" unless="xerces.build.done" description="--> build the xerces library">
+        <property name="xerces-top" value="${build.src}/xerces/"/>
+        <mkdir dir="${xerces-top}"/>
+
+        <!-- Unpack the source distribution -->
+        <untar src="${sources}/Xerces-J-bin.${xerces.version}.tar.gz" 
+           dest="${xerces-top}" compression="gzip"/>
+
+        <condition property="xerces.jar" value="xerces.jar" else="xercesImpl.jar">
+            <contains string="${xerces.version}" substring="1.4.4"/>
+        </condition>
+        <condition property="xercesxml.jar" value="xmlParserAPIs.jar" else="xml-apis.jar">
+            <contains string="${xerces.version}" substring="2.2.1"/>
+        </condition>
+    	
+    	<!-- Copy the jars to the build directory and canonicalize the names -->
+    	<copy file="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" tofile="${build}/xercesImpl.jar"/>
+    	<copy file="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" tofile="${build}/xml-apis.jar"/>
+        <antcall target="deps"/>
+    </target>
+	
+    <!-- Add external libraries to the deps -->
+    <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
+        <copy src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" tofile="${build}/xercesImpl.jar"/>
+        <copy src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" tofile="${build}/xml-apis.jar"/>
+    </target>
+
+</project>

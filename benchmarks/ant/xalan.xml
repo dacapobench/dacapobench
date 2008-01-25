@@ -1,0 +1,82 @@
+<project name="xalan" default="all" basedir="..">
+    <description>Dacapo Xalan benchmark</description>
+    
+	<property file="ant/dacapo.properties"/>
+	
+    <property name="xalan.version" value="2_4_1"/>
+    <property name="xalan.url" value="${apache.dl.url}/xml/xalan-j/source"/>
+    <property name="xalan.data.url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/WD-xforms-20010608.zip"/>
+	
+	<target name="all">
+	    <antcall target="source"/>
+	    <antcall target="build"/>
+	</target>
+	
+    <target name="source">
+        <get src="${xalan.url}/xalan-j_${xalan.version}-src.tar.gz"
+               dest="${sources}/xalan-j_${xalan.version}-src.tar.gz"
+         usetimestamp="true"/>
+        <get src="${xalan.data.url}" dest="${sources}/xalan.data.zip" usetimestamp="true"/>
+    </target>
+
+    <target name="build" depends="benchmark,data,harness" description="--> build the derby benchmark"/>
+
+	<!-- Build the xalan benchmark harness -->
+	<target name="harness" depends="benchmark" description="Build xalan">
+        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
+            includes="dacapo/xalan/*"
+            debug="true" debuglevel="lines,vars,source"/>
+		<mkdir dir="${build.src}/xalan/benchmark"/>
+		<javac srcdir="${bmsrc}" source="1.5" classpath="${build}/xalan.jar" 
+			destdir="${build.src}/xalan/benchmark" 
+		    includes="dacapo/xalan/benchmark/*"
+		    debug="true" debuglevel="lines,vars,source"/>
+		<jar destfile="${build}/xalan-benchmark.jar" basedir="${build.src}/xalan/benchmark"/>
+    </target>
+	
+    <!-- Build the xalan input data -->
+    <target name="data" description="Create data zip">
+        <mkdir dir="${xalan-top}/xalan-data/xalan/"/>
+        <unzip src="${sources}/xalan.data.zip" dest="${xalan-top}/xalan-data/xalan/">
+            <patternset>
+                <include name="*.xml"/>
+                <include name="xmlspec.xsl"/>
+            </patternset>
+        </unzip>
+        <zip basedir="${xalan-top}/xalan-data/" includes="xalan/**" destfile="${zipdata}/xalan.zip"/>
+    </target>
+	
+    <!-- Build the xalan benchmark -->
+    <target name="benchmark" description="Build xalan">
+        <!-- Ensure xerces is built -->
+        <ant antfile="${ant.dir}/xerces.xml" target="build"/>
+        
+        <property name="xalan-top" value="${build.src}/xalan/xalan-j_${xalan.version}"/>
+        <property name="xalan.xerces.jar" value="${xerces-top}/xerces-${xerces._version}/${xerces.jar}"/>
+        <property name="xalan.xercesxml.jar" value="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}"/>
+        <mkdir dir="${build.src}/xalan"/>
+
+        <!-- Unpack the source distribution -->
+        <untar src="${sources}/xalan-j_${xalan.version}-src.tar.gz" dest="${build.src}/xalan" compression="gzip"/>
+
+        <!-- Apply the dacapo patch -->
+        <patch patchfile="${patches}/xalan.patch" dir="${build.src}" strip="0"/>
+
+        <!-- Build using Ant, setting the classpath appropriately -->
+        <exec dir="${xalan-top}" executable="ant">
+            <env key="CLASSPATH" value=".:${build}:${build}/xercesImpl.jar:${build}/xml-apis.jar"/>
+            <env key="ANT_HOME" value="${ant.install}"/>
+        </exec>
+
+        <antcall target="deps"/>
+
+        <!-- Grab the xalan class files from the built jar files -->
+        <copy file="${xalan-top}/build/xalan.jar" todir="${build}"/>
+    </target>
+	
+    <!-- Add external libraries to the deps -->
+    <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
+        <copy file="${xalan-top}/bin/xml-apis.jar" todir="${build.deps}"/>
+        <copy file="${xalan-top}/bin/xercesImpl.jar" todir="${build.deps}"/>
+    </target>
+</project>

@@ -31,6 +31,7 @@
 
     <!-- Build the derby dacapo harness -->
     <target name="harness" description="--> The derby dacapo harness">
+    	<ant antfile="${ant.dir}/jdbcbench.xml" target="build"/>
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
             sourcepath="${derby.test.src}"
             source="1.5"

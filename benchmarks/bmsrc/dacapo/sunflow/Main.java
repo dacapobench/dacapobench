@@ -1,7 +1,5 @@
 package dacapo.sunflow;
 
-import dacapo.Benchmark;
-
 /**
  * Stub class which exists <b>only</b> to facilitate whole program
  * static analysis on a per-benchmark basis.  See also the "split-deps"

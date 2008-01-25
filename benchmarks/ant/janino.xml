@@ -29,7 +29,7 @@
 
         <!-- build janino -->
         <unzip src="${sources}/janino-${janino.version}.zip" dest="${build.src}/janino/"/>
-		<ant antfile="build.xml" dir="${janino.top}">
+		<ant antfile="build.xml" dir="${janino.top}" inheritAll="false">
 			<property name="jdk_1_2_2_home" value="${jdk.home}"/>
 		</ant>
 		<copy file="${janino.top}/lib/janino.jar" 

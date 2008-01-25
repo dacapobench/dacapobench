@@ -13,26 +13,28 @@
     </target>
 	
     <target name="source">
-    	<ant antfile="${ant.dir}/janino.xml" target="source"/>
+        <ant antfile="${ant.dir}/janino.xml" target="source"/>
         <get src="${sunflow.url}/sunflow-src-v${sunflow.version}.zip"
-         dest="${sources}/sunflow-src-v${sunflow.version}.zip"
-       usetimestamp="true"/>
+            dest="${sources}/sunflow-src-v${sunflow.version}.zip"
+        	usetimestamp="true"/>
         <get src="${sunflow.url}/sunflow-bin-v${sunflow.version}.zip"
-         dest="${sources}/sunflow-bin-v${sunflow.version}.zip"
-       usetimestamp="true"/>
+            dest="${sources}/sunflow-bin-v${sunflow.version}.zip"
+            usetimestamp="true"/>
     </target>
 
     <target name="build" depends="harness,benchmark"/>
     
     <!-- Build the sunflow dacapo harness -->
     <target name="harness" description="--> Build the sunflow dacapo harness">
-        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
+        <javac srcdir="${bmsrc}" source="1.5" 
+        	classpath="${build}" destdir="${build}" 
             includes="dacapo/sunflow/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
     
     <!-- Build the sunflow benchmark -->
     <target name="benchmark" description="--> Build the sunflow benchmark">
+    	<ant antfile="${ant.dir}/janino.xml" target="build"/>
 
         <property name="sunflow-top" value="${build.src}/sunflow"/>
         <mkdir dir="${sunflow-top}/build"/>
@@ -41,7 +43,8 @@
         <unzip src="${sources}/sunflow-src-v${sunflow.version}.zip" dest="${build.src}/sunflow"/>
 
         <!-- Build using javac, setting the classpath appropriately -->
-        <javac srcdir="${sunflow-top}/src" source="1.5" classpath="${sunflow-top}/janino.jar" destdir="${sunflow-top}/build"
+        <javac srcdir="${sunflow-top}/src" source="1.5" 
+        	classpath="${sunflow-top}/janino.jar" destdir="${sunflow-top}/build"
             debug="true" debuglevel="lines,vars,source"/>
 
         <!-- Extract the sunflow data from the binary dist -->

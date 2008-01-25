@@ -44,7 +44,8 @@
         <copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all.jar" todir="${jars}"/>
 		<copy file="${batik-top}/lib/build/crimson-1.1.3.jar" todir="${jars}"/>
         <copy file="${batik-top}/lib/xml-apis-ext.jar" todir="${jars}"/>
-		<copy file="${batik-top}/lib/xerces_2_5_0.jar" todir="${jars}"/>
+        <copy file="${batik-top}/lib/xalan-2.6.0.jar" todir="${jars}"/>
+    	<!-- <copy file="${batik-top}/lib/xerces_2_5_0.jar" todir="${jars}"/> -->
 
         <!-- copy dependencies into build.deps directory -->
         <copy file="${batik-top}/lib/js.jar" todir="${build.deps}"/>

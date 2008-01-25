@@ -7,8 +7,6 @@
     <property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
 	
 	<target name="all">
-		<ant antfile="build.xml" target="junit"/>
-		<ant antfile="ant/jdbcbench.xml" target="build"/>
 	    <antcall target="source"/>
 	    <antcall target="build"/>
 	</target>
@@ -23,6 +21,7 @@
 
     <!-- Build the hsqldb dacapo harness -->
     <target name="harness" description="--> The hsqldb dacapo harness">
+        <ant antfile="${ant.dir}/jdbcbench.xml" target="build"/>
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
             source="1.5"
             includes="dacapo/hsqldb/*"
@@ -31,12 +30,15 @@
 	
     <!-- Build the hsqldb benchmark -->
     <target name="benchmark" description="--> The hsqldb benchmark">
+    	<!-- External dependencies -->
+		<ant antfile="${ant.dir}/junit.xml" target="build"/>
+    	
         <mkdir dir="${build.src}/hsqldb"/>
         <property name="hsqldb-top" value="${build.src}/hsqldb/"/>
         <!-- Expand the source distribution -->
         <unzip src="${sources}/hsqldb_${hsqldb.version}.zip" dest="${hsqldb-top}"/>
 
-        <copy file="${jars}/junit.jar" todir="${hsqldb-top}/hsqldb/lib/"/>
+        <copy file="${junit.jar}" todir="${hsqldb-top}/hsqldb/lib/"/>
 
         <!-- Build it using hsqldb's build.xml -->
         <ant antfile="build/build.xml" dir="${hsqldb-top}/hsqldb" 

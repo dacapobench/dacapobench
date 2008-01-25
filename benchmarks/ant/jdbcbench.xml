@@ -5,7 +5,13 @@
 	
 	<target name="all" depends="build"/>
 	
-	<target name="build">
+	<target name="check">
+		<condition property="jdbcbench.built">
+			<uptodate targetfile="${jars}/jdbcbench.jar" srcfile="${bmsrc}/dacapo/PseudoJDBCBench.java"/>
+		</condition>
+	</target>
+	
+	<target name="build" depends="check" unless="jdbcbench.built">
 		<mkdir dir="${build.src}/jdbcbench"/>
         <javac srcdir="${bmsrc}" classpath="${build}" 
         	destdir="${build.src}/jdbcbench" 
