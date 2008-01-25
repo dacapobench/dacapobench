@@ -28,13 +28,13 @@ public class DerbyHarness extends Benchmark {
 
     /* Modify the benchmark args to set -tpc to 0, and add "-init" */
     String[] args = preprocessArgs(size);
-    for (int i=0; i < args.length; i++) {
-      if (args[i].equals("-tpc") || args[i].equals("-total_trans")) {
-        args[++i] = "0";
-      }
-    }
     String[] initArgs = new String[args.length+1];
-    System.arraycopy(args, 0, initArgs, 0, args.length);
+    for (int i=0; i < args.length; i++) {
+      initArgs[i] = args[i];
+      if (args[i].equals("-tpc") || args[i].equals("-total_trans")) {
+        initArgs[++i] = "0";
+      } 
+    }
     initArgs[initArgs.length-1] = "-init";
     useBenchmarkClassLoader();
     try {
