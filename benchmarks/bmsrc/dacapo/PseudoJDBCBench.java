@@ -208,13 +208,13 @@ public class PseudoJDBCBench {
      * fixed #transactions per client, or a fixed total, divided equally among the
      * threads.
      */
-    if (txn_all_clients > 0 && txn_per_client > 0) {
+    if (txn_all_clients >= 0 && txn_per_client >= 0) {
       System.err.println("Cannot specify -tpc and -total_trans");
       System.exit(1);
-    } else if (txn_all_clients > 0) {
+    } else if (txn_all_clients >= 0) {
       n_txn_per_client = txn_all_clients / n_clients;
       extra_txn = txn_all_clients - (n_txn_per_client * n_clients);
-    } else if (txn_per_client > 0) {
+    } else if (txn_per_client >= 0) {
       n_txn_per_client = txn_per_client;
     } else {
       // Use the static default tx/client
