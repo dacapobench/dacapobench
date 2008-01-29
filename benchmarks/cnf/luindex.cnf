@@ -1,6 +1,8 @@
 benchmark luindex
   class dacapo.luindex.LuindexHarness
-  thread-model single;
+  thread-model single
+  jar "luindex.jar"
+  libs "lucene-core-1.9.2-dev.jar", "lucene-demos-1.9.2-dev.jar";
 
 size small args "luindex/william/poetry" 
   output stdout  digest 0xebb11b9e1c56c6ef5620b890cca24ec773301388,
@@ -27,5 +29,5 @@ description
   author	"Lucene Project Management Committee",
   license	"Apache Public License",
   url       "http://lucene.apache.org/",
-  version	"1.9.1",
+  version	"1.9.2",
   repeats	"Single iteration indexes two multi-file documents";

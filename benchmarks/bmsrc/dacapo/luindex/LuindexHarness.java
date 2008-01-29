@@ -17,13 +17,7 @@ package dacapo.luindex;
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.demo.FileDocument;
+import java.lang.reflect.Constructor;
 
 import dacapo.Benchmark;
 import dacapo.DacapoException;
@@ -40,8 +34,19 @@ import dacapo.parser.Config;
 
 public class LuindexHarness extends Benchmark {
   
+  private final Object benchmark;
+  
   public LuindexHarness(Config config, File scratch) throws Exception {
     super(config,scratch);
+    Class<?> clazz = Class.forName("dacapo.luindex.benchmark.LuindexBenchmark", true, loader);
+    this.method = clazz.getMethod("main", File.class, String[].class);
+    Constructor<?> cons = clazz.getConstructor(File.class);
+    useBenchmarkClassLoader();
+    try {
+      benchmark = cons.newInstance(scratch);
+    } finally {
+      revertClassLoader();
+    }
   }
   
   public void cleanup() {
@@ -59,7 +64,7 @@ public class LuindexHarness extends Benchmark {
   /** 
    * Index all text files under a directory. 
    */
-  public void iterate(String size) throws DacapoException, IOException {
+  public void iterate(String size) throws Exception {
     if (isVerbose())
       System.out.println("luindex benchmark starting");
     String[] args = preprocessArgs(size);
@@ -71,63 +76,12 @@ public class LuindexHarness extends Benchmark {
       throw new DacapoException("Cannot write to index directory");
     }
 
-    
-    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true);
-    for ( int arg = 0; arg < args.length; arg++) {
-      final File docDir = new File(scratch,args[arg]);
-      if (!docDir.exists() || !docDir.canRead()) {
-        System.out.println("Document directory '" +docDir.getAbsolutePath()+ "' does not exist or is not readable, please check the path");
-        throw new DacapoException("Cannot read from document directory");
-      }
-
-      indexDocs(writer, docDir);
-      System.out.println("Optimizing...");
-      writer.optimize();
-    }
-    writer.close();
+    method.invoke(benchmark, INDEX_DIR, args);
   }
 
   public void postIteration(String size) {
     if (!isPreserve()) {
       deleteTree(new File(scratch,"index"));
-    }
-  }
-  
-  /**
-   * Index either a file or a directory tree.
-   * 
-   * @param writer
-   * @param file
-   * @throws IOException
-   */
-  void indexDocs(IndexWriter writer, File file)
-    throws IOException {
-
-    /* Strip the absolute part of the path name from file name output */
-    int scratchP = scratch.getPath().length()+1;
-    
-    /* do not try to index files that cannot be read */
-    if (file.canRead()) {
-      if (file.isDirectory()) {
-        String[] files = file.list();
-        // an IO error could occur
-        if (files != null) {
-          Arrays.sort(files);
-          for (int i = 0; i < files.length; i++) {
-            indexDocs(writer, new File(file, files[i]));
-          }
-        }
-      } else {
-        System.out.println("adding " + file.getPath().substring(scratchP));
-        try {
-          writer.addDocument(FileDocument.Document(file));
-        }
-        // at least on windows, some temporary files raise this exception with an "access denied" message
-        // checking if the file can be read doesn't help
-        catch (FileNotFoundException fnfe) {
-          ;
-        }
-      }
     }
   }
 }

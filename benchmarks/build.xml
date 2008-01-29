@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-01-25 14:28:05 +1100 (Fri, 25 Jan 2008) $
- *   $Id: build.xml 336 2008-01-25 03:28:05Z rgarner $
+ *   $Date: 2008-01-29 15:46:25 +1100 (Tue, 29 Jan 2008) $
+ *   $Id: build.xml 339 2008-01-29 04:46:25Z rgarner $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -84,7 +84,7 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,data.source,ant.source,bloat.source,eclipse.source,lucene.source">
+      depends="init.sources,ant.source,bloat.source,eclipse.source">
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
@@ -93,6 +93,7 @@
     	<ant antfile="${ant.dir}/hsqldb.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/jython.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/janino.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/lucene.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/pmd.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/sunflow.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/xalan.xml" target="source" inheritAll="true"/>
@@ -209,21 +210,15 @@
     <property name="bloat.version" value="1.0"/>
     <property name="eclipse.version" value="3.1.2"/>
     <property name="eclipse.drop" value="200601181600"/>
-    <property name="lucene.version" value="1.9.1"/>
     <!-- auxilary downloads -->
     <property name="ant.dl.version" value="1.6.5"/>
-
-    <property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 
     <!-- benchmark locations -->
     <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
-    <property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
     <!-- auxilary downloads -->
     <property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
     <!-- data downloads -->
-    <property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
-    <property name="bible.url" value="${sfdata.url}/kjv.zip"/>
     <property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
 
 
@@ -584,18 +579,6 @@
          usetimestamp="true"/>
     </target>
 
-    <target name="lucene.source" depends="init.sources">
-        <get dest="${sources}/lucene-${lucene.version}-src.tar.gz"
-         src="${lucene.url}/lucene-${lucene.version}-src.tar.gz"
-         usetimestamp="true"/>
-    </target>
-
-    <target name="data.source" depends="init.sources">
-        <get src="${shakespeare.url}" dest="${sources}/shakespeare.tgz" usetimestamp="true"/>
-        <get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
-    </target>
-
-
     <!-- *************************************************************************** -->
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->
@@ -826,57 +809,9 @@
     <!-- ================================= 
           target: lucene    
          ================================= -->
-    <target name="lucene" depends="lucene.benchmark,lucene.harness" description="--> build the lucene benchmark"/>
-    <!-- Build the lucene dacapo harness -->
-    <target name="lucene.harness" depends="harness" description="--> Build the lucene dacapo harness">
-        <javac srcdir="${bmsrc}" source="1.4" classpath="${build}" destdir="${build}" includes="dacapo/luindex/*" debug="true" debuglevel="lines,vars,source"/>
-        <javac srcdir="${bmsrc}" source="1.4" classpath="${build}" destdir="${build}" includes="dacapo/lusearch/*"    debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    <!-- Build the lucene benchmark -->
-    <target name="lucene.benchmark" depends="init" description="--> Build the lucene benchmark">
-        <property name="lucene-top" value="${build.src}/lucene"/>
-        <mkdir dir="${lucene-top}"/>
-        <untar src="${sources}/lucene-${lucene.version}-src.tar.gz" dest="${lucene-top}"
-        compression="gzip"/>
-
-        <!-- Build using Ant -->
-        <ant antfile="build.xml"
-           target="jar-core"
-           dir="${lucene-top}/lucene-${lucene.version}"
-           inheritall="false">
-        </ant>
-
-        <!-- Build using Ant -->
-        <ant antfile="build.xml"
-           target="jar-demo"
-           dir="${lucene-top}/lucene-${lucene.version}"
-           inheritall="false">
-        </ant>
-
-        <!-- Install the lucene classes in the build directory -->
-        <unjar src="${lucene-top}/lucene-${lucene.version}/build/lucene-core-1.9.2-dev.jar" 
-             dest="${build}"/>
-        <unjar src="${lucene-top}/lucene-${lucene.version}/build/lucene-demos-1.9.2-dev.jar" 
-             dest="${build}"/>
-
-        <!-- Install the luindex test data -->
-        <mkdir dir="${data}/luindex"/>
-        <mkdir dir="${data}/luindex/william"/>
-        <untar src="${sources}/shakespeare.tgz" dest="${data}/luindex/william" compression="gzip"/>
-        <mkdir dir="${data}/luindex/kjv"/>
-        <unzip src="${sources}/kjv.zip" dest="${data}/luindex/kjv"/>
-        <zip destfile="${zipdata}/luindex.zip">
-            <fileset dir="${data}/" includes="luindex/kjv/**/*"/>
-            <fileset dir="${data}/" includes="luindex/william/**/*"/>
-        </zip>
-        <delete dir="${data}/luindex"/>
-
-        <!-- Install the lusearch test data -->
-        <zip destfile="${zipdata}/lusearch.zip">
-            <fileset dir="${data}" includes="lusearch/query*" />
-            <fileset dir="${data}" includes="lusearch/index-default/**" />
-        </zip>
-    </target>
+    <target name="lucene" depends="init, harness" description="--> build the lucene benchmark">
+        <ant antfile="${ant.dir}/lucene.xml" target="build" inheritAll="true"/>
+	</target>
 
     <!-- ================================= 
           target: pmd    

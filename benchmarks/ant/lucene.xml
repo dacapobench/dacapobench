@@ -1,0 +1,109 @@
+<project name="DacapoLucene" default="all" basedir="..">
+    <description>Dacapo lucene benchmarks (lusearch and luindex)</description>
+    
+	<property file="ant/dacapo.properties"/>
+	
+    <property name="lucene.version" value="1.9.1"/>
+    <property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
+    <property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
+    <property name="bible.url" value="${sfdata.url}/kjv.zip"/>
+	
+    <!-- Download and build -->
+    <target name="all" description="download and build the benchmark">
+      <antcall target="source"/>
+      <antcall target="build"/>
+    </target>
+    
+	<!-- Download the source -->
+	<target name="source" depends="data.source" description="download the benchmark">
+        <get dest="${sources}/lucene-${lucene.version}-src.tar.gz"
+         src="${lucene.url}/lucene-${lucene.version}-src.tar.gz"
+         usetimestamp="true"/>
+	</target>
+
+    <target name="data.source">
+        <get src="${shakespeare.url}" dest="${sources}/shakespeare.tgz" usetimestamp="true"/>
+        <get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
+    </target>
+
+	<!-- Build the benchmark and harness -->
+    <target name="build" depends="benchmark,harness" description="build the benchmark"/>
+	
+    <!-- Build the benchmark harness -->
+    <target name="harness" depends="benchmark">
+        <!-- The luindex benchmark itself -->
+        <mkdir dir="${build.src}/luindex"/>
+        <javac srcdir="${bmsrc}" source="1.5" 
+            classpath="${build}:${jars}/lucene-core-1.9.2-dev.jar:${jars}/lucene-demos-1.9.2-dev.jar" 
+            destdir="${build.src}/luindex" 
+            includes="dacapo/luindex/benchmark/*" debug="true" debuglevel="lines,vars,source"/>
+        <jar destfile="${jars}/luindex.jar" basedir="${build.src}/luindex"/>
+        
+            <!-- The lusearch benchmark itself -->
+            <mkdir dir="${build.src}/lusearch"/>
+            <javac srcdir="${bmsrc}" source="1.5" 
+                classpath="${build}:${jars}/lucene-core-1.9.2-dev.jar:${jars}/lucene-demos-1.9.2-dev.jar" 
+                destdir="${build.src}/lusearch" 
+                includes="dacapo/lusearch/benchmark/*" debug="true" debuglevel="lines,vars,source"/>
+            <jar destfile="${jars}/lusearch.jar" basedir="${build.src}/lusearch"/>
+            
+    	
+        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
+        	includes="dacapo/luindex/*" debug="true" debuglevel="lines,vars,source"/>
+        <javac srcdir="${bmsrc}" source="1.5" 
+        	classpath="${build}:${jars}/lucene-core-1.9.2-dev.jar:${jars}/lucene-demos-1.9.2-dev.jar" 
+        	destdir="${build}" 
+        	includes="dacapo/lusearch/*" debug="true" debuglevel="lines,vars,source"/>
+    </target>
+
+    <!-- Build the benchmark -->
+    <target name="benchmark">
+        <property name="lucene-top" value="${build.src}/lucene"/>
+        <mkdir dir="${lucene-top}"/>
+        <untar src="${sources}/lucene-${lucene.version}-src.tar.gz" dest="${lucene-top}"
+            compression="gzip"/>
+
+        <!-- Build using Ant -->
+        <ant antfile="build.xml"
+           target="jar-core"
+           dir="${lucene-top}/lucene-${lucene.version}"
+           inheritall="false">
+        </ant>
+
+        <!-- Build using Ant -->
+        <ant antfile="build.xml"
+           target="jar-demo"
+           dir="${lucene-top}/lucene-${lucene.version}"
+           inheritall="false">
+        </ant>
+
+        <!-- Install the lucene classes in the build directory -->
+        <copy file="${lucene-top}/lucene-${lucene.version}/build/lucene-core-1.9.2-dev.jar" 
+             todir="${jars}"/>
+        <copy file="${lucene-top}/lucene-${lucene.version}/build/lucene-demos-1.9.2-dev.jar" 
+             todir="${jars}"/>
+
+        <!-- Install the luindex test data -->
+        <mkdir dir="${data}/luindex"/>
+        <mkdir dir="${data}/luindex/william"/>
+        <untar src="${sources}/shakespeare.tgz" dest="${data}/luindex/william" compression="gzip"/>
+        <mkdir dir="${data}/luindex/kjv"/>
+        <unzip src="${sources}/kjv.zip" dest="${data}/luindex/kjv"/>
+        <zip destfile="${zipdata}/luindex.zip">
+            <fileset dir="${data}/" includes="luindex/kjv/**/*"/>
+            <fileset dir="${data}/" includes="luindex/william/**/*"/>
+        </zip>
+        <delete dir="${data}/luindex"/>
+
+        <!-- Install the lusearch test data -->
+        <zip destfile="${zipdata}/lusearch.zip">
+            <fileset dir="${data}" includes="lusearch/query*" />
+            <fileset dir="${data}" includes="lusearch/index-default/**" />
+        </zip>
+    </target>
+	
+	<!-- external dependencies -->
+	<target name="deps">
+	</target>
+
+</project>
