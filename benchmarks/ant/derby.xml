@@ -4,7 +4,7 @@
 	<property file="ant/dacapo.properties"/>
 	
     <property name="derby.version" value="10.3.2.1"/>
-    <property name="derby.url" value="http://apache.wildit.net.au/db/derby/db-derby-${derby.version}"/>
+    <property name="derby.url" value="${apache.dl.url}/db/derby/db-derby-${derby.version}"/>
     <property name="derby.svn.url" value="http://svn.apache.org/repos/asf/db/derby/code/trunk"/>
     <property name="derby.svn.revision" value="595508"/>
     <property name="derby-top" location="${build.src}/derby/db-derby-${derby.version}-src"/>
@@ -50,7 +50,8 @@
         <mkdir dir="${build.src}/derby}"/>
         <untar src="${sources}/db-derby-${derby.version}-src.tar.gz" dest="${build.src}/derby/" compression="gzip"/>
         <ant antfile="build.xml" inheritall="false" dir="${derby-top}">
-            <property name="j14lib" value="${java.home.14}/jre/lib"/>
+            <property name="j14lib" value="${java14.lib}"/>
+        	<property name="java14compile.classpath" value="${java14.compile.classpath}"/>
             <property name="junit" value="${junit.jar}"/>
         	<target name="buildsource"/>
         	<target name="buildjars"/>

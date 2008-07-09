@@ -12,6 +12,8 @@
 	</target>
 	
     <target name="source">
+    	<!-- External dependencies -->
+		<ant antfile="${ant.dir}/junit.xml" target="source"/>
         <get src="${hsqldb.url}/hsqldb_${hsqldb.version}.zip"
         dest="${sources}/hsqldb_${hsqldb.version}.zip"  
        usetimestamp="true"/>

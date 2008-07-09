@@ -38,32 +38,15 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-01-29 15:46:25 +1100 (Tue, 29 Jan 2008) $
- *   $Id: build.xml 339 2008-01-29 04:46:25Z rgarner $
+ *   $Date: 2008-07-09 15:26:37 +1000 (Wed, 09 Jul 2008) $
+ *   $Id: build.xml 351 2008-07-09 05:26:37Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
     <description>Dacapo benchmarks</description>
 
-    <!-- BEGIN USER-MODIFIABLE PROPERTIES -->
-    <!-- download mirrors -->
-    <property name="apache.dl.url" value="http://archive.apache.org/dist"/>
-	<property file="ant/dacapo.properties"/>
-
-    <!-- external programs -->
-    <property name="make" location="/usr/bin/make"/>
-    <property name="javacchome" location="/usr/share/java"/>
-
-    <!-- tested jres -->
-    <property name="j9" value="/opt/ibm-java2-i386-50"/>
-    <property name="jrockit" value="/opt/jrockit-R26.3.0-jdk1.5.0_06"/>
-    <property name="sun" value="/opt/jdk1.5.0_07"/>
-    <property name="blackdown" value="/usr/lib/j2se/1.4"/>
-
-    <!-- required libraries -->
-    <!-- debian standard location -->
-
-    <!-- END USER-MODIFIABLE PROPERTIES -->
+	<property file="ant/user.properties"/>
+ 	<property file="ant/dacapo.properties"/>
 
     <!-- BEGIN PUBLIC TARGETS -->
 
@@ -75,9 +58,7 @@
     <!-- ================================= 
          target: sourcedist              
          ================================= -->
-    <target name="sourcedist" depends="sources,dist" 
-      description="--> Download the source and then build">
-    </target>
+    <target name="sourcedist" depends="sources,dist" description="--> Download the source and then build"/>
 
     <!-- ================================= 
          target: sources          
@@ -430,125 +411,6 @@
             <fileset dir="${src}/META-INF"/>
         </copy>
     </target>
-
-    <!-- ================================= 
-          target: prune            
-         ================================= -->
-    <target name="prune" depends="jar" description="prune out the jar file">
-        <property name="prune.timestamp" value="${prune}/timestamp"/>
-        <property name="prune.scratch" value="${prune}/scratch"/>
-        <mkdir dir="${prune.scratch}"/>
-        <mkdir dir="${prune}/full"/>
-        <unjar src="dacapo-${DSTAMP}-full.jar" dest="${prune}/full"/>
-        <touch>
-            <fileset dir="${prune}/full"/>
-        </touch>
-        <touch file="${prune.timestamp}"/>
-        <!--        <antcall target="prune.eclipse"/> -->
-        <antcall target="fullrun"/>
-        <exec dir="${prune}/full" executable="find">
-            <arg line="${prune}/full/ ! -anewer ../timestamp -delete"/>
-        </exec>
-        <antcall target="meta-inf">
-            <param name="jarroot" value="${prune}/full"/>
-        </antcall>
-        <jar jarfile="dacapo-${DSTAMP}-prune.jar" basedir="${prune}/full" index="true"
-         manifest="${prune}/full/META-INF/MANIFEST.MF"/>
-        <delete dir="${prune}"/>
-    </target>
-
-    <!-- ================================= 
-          target: fullrun        
-         ================================= -->
-    <target name="fullrun" description="execute all benchmarks at all sizes for all jres">
-        <antcall target="jrerun">
-            <param name="jre" value="${j9}"/>
-        </antcall>
-        <antcall target="jrerun">
-            <param name="jre" value="${sun}"/>
-        </antcall>
-        <antcall target="jrerun">
-            <param name="jre" value="${jrockit}"/>
-        </antcall>
-        <antcall target="jrerun">
-            <param name="jre" value="${blackdown}"/>
-        </antcall>
-    </target>
-
-    <!-- ================================= 
-          target: jrerun        
-         ================================= -->
-    <target name="jrerun" description="execute all benchmarks at all sizes for one jre">
-        <antcall target="sizerun">
-            <param name="size" value="small"/>
-        </antcall>
-        <antcall target="sizerun">
-            <param name="size" value="default"/>
-        </antcall>
-        <antcall target="sizerun">
-            <param name="size" value="large"/>
-        </antcall>
-    </target>
-
-    <!-- ================================= 
-          target: sizerun        
-         ================================= -->
-    <target name="sizerun" description="execute all benchmarks at one size">
-        <antcall target="run">
-            <param name="bm" value="antlr" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="batik" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="bloat" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="chart" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="derby" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="eclipse" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="fop" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="hsqldb" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="jython" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="luindex" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="lusearch" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="pmd" />
-        </antcall>
-        <antcall target="run">
-            <param name="bm" value="xalan" />
-        </antcall>
-    </target>
-
-    <!-- ================================= 
-          target: run        
-         ================================= -->
-    <target name="run" description="execute one benchmark at one size">
-        <echo message="${jre} -classpath ${prune}/full Harness -s ${size} ${bm}" />
-        <java classname="Harness" fork="yes" jvm="${jre}/bin/java" newenvironment="true">
-            <env key="JAVA_HOME" value="${jre}"/>
-            <arg line="-scratch ${prune.scratch} -s ${size} ${bm}" />
-            <classpath>
-                <pathelement path="${prune}/full" />
-            </classpath>
-        </java>
-    </target>
-
 
     <!-- *************************************************************************** -->
     <!--                        Fetch sources                                        -->
