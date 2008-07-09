@@ -1,0 +1,53 @@
+<project name="bloat" default="all" basedir="..">
+    <description>Dacapo Bloat benchmark</description>
+	<property file="ant/dacapo.properties"/>
+	
+    <property name="bloat.version" value="1.0"/>
+    <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
+	
+    <target name="source">
+        <get src="${bloat.url}/bloat-${bloat.version}-src.tar.gz"
+         dest="${sources}/bloat-${bloat.version}-src.tar.gz"
+         usetimestamp="true"/>
+    </target>
+	
+    <!-- Download and build -->
+    <target name="all" description="download and build the benchmark">
+      <antcall target="source"/>
+      <antcall target="build"/>
+    </target>
+	
+    <target name="build" depends="harness,benchmark"/>
+    
+    <target name="harness" description="Build bloat">
+        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
+                includes="dacapo/batik/*"
+            debug="true" debuglevel="lines,vars,source"/>
+    </target>
+    
+    <target name="benchmark" description="Build bloat">
+        <property name="bloat-top" value="${build.src}/bloat"/>
+        <mkdir dir="${bloat-top}"/>
+
+        <!-- Un-tar the source distribution -->
+        <untar src="${sources}/bloat-${bloat.version}-src.tar.gz" 
+           dest="${bloat-top}"
+         compression="gzip"/>
+
+        <!-- Apply the dacapo patch -->
+        <patch patchfile="${patches}/bloat.patch" 
+               dir="${bloat-top}"
+               strip="0" ignorewhitespace="yes"/>
+
+        <!-- Build bloat -->
+        <exec executable="${make}" dir="${bloat-top}/src/EDU/purdue/cs/bloat/"/>
+
+        <!-- Copy the class files into the build directory -->
+        <copy todir="${build}">
+            <fileset dir="${bloat-top}/src" excludes="${bloat-top}/resources/**/CVS">
+                <include name="**/*.class"/>
+            </fileset>
+        </copy>
+    </target>
+    
+</project>
