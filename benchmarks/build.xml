@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-07-09 17:18:38 +1000 (Wed, 09 Jul 2008) $
- *   $Id: build.xml 354 2008-07-09 07:18:38Z steveb-oss $
+ *   $Date: 2008-07-09 22:16:31 +1000 (Wed, 09 Jul 2008) $
+ *   $Id: build.xml 355 2008-07-09 12:16:31Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -65,13 +65,14 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,eclipse.source">
+      depends="init.sources">
     	<ant antfile="${ant.dir}/ant.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/bloat.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/derby.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/eclipse.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/fop.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/hsqldb.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/jython.xml" target="source" inheritAll="true"/>
@@ -186,14 +187,6 @@
     <!-- constraints -->
     <property name="constraints.gnuclasspath" value="true"/>
 
-    <!-- benchmark versions -->
-    <property name="eclipse.version" value="3.1.2"/>
-    <property name="eclipse.drop" value="200601181600"/>
-    <!-- auxilary downloads -->
-
-    <!-- benchmark locations -->
-
-    <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
     <!-- auxilary downloads -->
     <!-- data downloads -->
     <property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
@@ -417,15 +410,6 @@
     </target>
 
 
-    <target name="eclipse.source" depends="init.sources">
-        <get src="${eclipse.url}/eclipse-SDK-${eclipse.version}-linux-gtk.tar.gz"
-         dest="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz"
-         usetimestamp="true"/>
-        <get src="${eclipse.url}/eclipse-Automated-Tests-${eclipse.version}.zip"
-         dest="${sources}/eclipse-Automated-Tests-${eclipse.version}.zip"
-         usetimestamp="true"/>
-    </target>
-
     <!-- *************************************************************************** -->
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->
@@ -478,112 +462,10 @@
     <!-- ================================= 
           target: eclipse              
          ================================= -->
-    <target name="eclipse" depends="eclipse.data,eclipse.harness" description="--> build the eclipse benchmark"/>
+    <target name="eclipse" depends="init,harness" description="--> build the eclipse benchmark">
+    	<ant antfile="${ant.dir}/eclipse.xml" target="build" inheritAll="true"/>
+	</target>	
 
-    <!-- Build the eclipse dacapo harness -->
-    <target name="eclipse.harness" depends="init,harness" description="--> build the eclipse harness">
-        <javac     srcdir="${bmsrc}" 
-            source="1.4"
-                destdir="${build}" includes="dacapo/eclipse/*.java"
-                debug="true" debuglevel="lines,vars,source">
-            <classpath>
-                <pathelement path="${build}"/>
-                <pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
-                <pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.core.runtime_${eclipse.version}.jar"/>
-                <pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
-            </classpath>
-        </javac>
-    </target>
-
-    <!-- Build the eclipse benchmark -->
-    <target name="eclipse.benchmark" depends="init" description="--> build the eclipse benchmark">
-        <property name="eclipse-top" value="${build.src}/eclipse/eclipse"/>
-
-        <untar src="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz" dest="${build.src}/eclipse/" compression="gzip"/>
-        <unzip src="${sources}/eclipse-Automated-Tests-${eclipse.version}.zip" dest="${build.src}/eclipse/">
-            <patternset>
-                <include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
-            </patternset>
-        </unzip>
-        <unzip dest="${build.src}/eclipse/">
-            <fileset dir="${build.src}/eclipse/eclipse-testing/">
-                <include name="eclipse-junit-tests-M*.zip"/>
-            </fileset>
-        </unzip>
-        <delete dir="${build.src}/eclipse/eclipse-testing"/>
-    </target>
-
-    <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
-    <target name="eclipse.plugin" depends="eclipse.benchmark,eclipse.harness" description="--> build the eclipse harness">
-        <ant antfile="build.xml" dir="${extra}/eclipse-plugin" 
-         target="build.update.jar" inheritall="false">
-            <property name="eclipsesrc.home" location="${eclipse-top}"/>
-            <property name="harness.home" location="${build}"/>
-            <property name="plugin.destination" location="${eclipse-top}/plugins/"/>
-        </ant>
-    </target>
-
-    <!-- only delete the directories if not constrained by Jikes RVM -->
-    <target name="eclipse.clearosgi" unless="constraints.jikesrvm">
-        <delete dir="${osgihack}/org"/>
-    </target>
-
-    <!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
-    <target name="eclipse.osgiclasses" depends="eclipse.benchmark">
-        <property name="osgihack" value="${build.src}/eclipse/osgihack"/>
-        <!-- unzip the jar -->
-        <unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
-        <!-- copy out the class files -->
-        <copy todir="${build}">
-            <fileset dir="${osgihack}" includes="org/**/*"/>
-        </copy>
-        <!-- conditionally clean out the stuff we've duplicated -->
-        <!--    <antcall target="eclipse.clearosgi"/> -->
-        <delete dir="${osgihack}/org"/>
-        <!-- jar up the remainder -->
-        <zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
-        <delete dir="${osgihack}"/>
-    </target>
-
-    <!-- Create the eclipse data file -->
-    <target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin,eclipse.osgiclasses" description="--> build the eclipse data file">
-        <!-- Create the fake jre -->
-        <unzip dest="${build.src}/eclipse/dummyjre" src="${data}/eclipse/dummyjre.zip"/>
-
-        <!-- Install the test data -->
-        <zip destfile="${zipdata}/eclipse.zip">
-            <!-- The dummy jre -->
-            <fileset dir="${build.src}/eclipse/" includes="dummyjre/**"/>
-
-            <!-- The eclipse runtime.  We just include as little as we can, -->
-            <!-- using an empirically derived list of what we really need.  -->
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/*"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/about_files/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/configuration/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/features/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/readme/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/dacapo.eclipse_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.apache.ant_*/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.expressions_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.resources_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime.compatibility_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.variables_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.debug.core_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.builder_*/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.compiler_*/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.performance_*/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.launching_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.debug_*/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.osgi_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.test.performance_*/**"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.text_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.update.configurator_*.jar"/>
-            <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/>
-        </zip>
-    </target>
-	
     <!-- ================================= 
         target: fop 
        ================================= -->
