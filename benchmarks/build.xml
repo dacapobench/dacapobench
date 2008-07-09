@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-07-09 16:59:12 +1000 (Wed, 09 Jul 2008) $
- *   $Id: build.xml 353 2008-07-09 06:59:12Z steveb-oss $
+ *   $Date: 2008-07-09 17:18:38 +1000 (Wed, 09 Jul 2008) $
+ *   $Id: build.xml 354 2008-07-09 07:18:38Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -65,7 +65,8 @@
          ================================= -->
     <target name="sources" 
       description="Download sources from their original locations"
-      depends="init.sources,ant.source,eclipse.source">
+      depends="init.sources,eclipse.source">
+    	<ant antfile="${ant.dir}/ant.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/bloat.xml" target="source" inheritAll="true"/>
@@ -182,9 +183,6 @@
     <!-- END PUBLIC TARGETS -->
 
 
-    <!-- internal directory structure -->
-    <property name="prune" location="prune"/>
-
     <!-- constraints -->
     <property name="constraints.gnuclasspath" value="true"/>
 
@@ -192,13 +190,11 @@
     <property name="eclipse.version" value="3.1.2"/>
     <property name="eclipse.drop" value="200601181600"/>
     <!-- auxilary downloads -->
-    <property name="ant.dl.version" value="1.6.5"/>
 
     <!-- benchmark locations -->
 
     <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
     <!-- auxilary downloads -->
-    <property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
     <!-- data downloads -->
     <property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
 
@@ -420,11 +416,6 @@
         <mkdir dir="${sources}"/>
     </target>
 
-    <target name="ant.source" depends="init.sources">
-        <get dest="${sources}/apache-ant-${ant.dl.version}-bin.zip"
-         src="${ant.url}/apache-ant-${ant.dl.version}-bin.zip"
-       usetimestamp="true"/>
-    </target>
 
     <target name="eclipse.source" depends="init.sources">
         <get src="${eclipse.url}/eclipse-SDK-${eclipse.version}-linux-gtk.tar.gz"
@@ -443,15 +434,7 @@
           target: ant            
        ================================= -->
     <target name="ant" description="--> The ant library - required by some other benchmarks">
-        <!-- Install the ant jar file -->
-        <unzip src="${sources}/apache-ant-${ant.dl.version}-bin.zip" dest="${build.src}/ant/">
-            <patternset>
-                <include name="apache-ant-${ant.dl.version}/lib/ant.jar"/>
-                <include name="apache-ant-${ant.dl.version}/lib/ant-launcher.jar"/>
-            </patternset>
-        </unzip>
-        <move file="${build.src}/ant/apache-ant-${ant.dl.version}/lib/ant.jar" tofile="${build.src}/ant/ant.jar"/>
-        <move file="${build.src}/ant/apache-ant-${ant.dl.version}/lib/ant-launcher.jar" tofile="${build.src}/ant/ant-launcher.jar"/>
+    	<ant antfile="${ant.dir}/ant.xml" target="build" inheritAll="true"/>
     </target>
 
     <!-- ================================= 
