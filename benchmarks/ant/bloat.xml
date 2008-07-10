@@ -42,12 +42,11 @@
         <!-- Build bloat -->
         <exec executable="${make}" dir="${bloat-top}/src/EDU/purdue/cs/bloat/"/>
 
-        <!-- Copy the class files into the build directory -->
-        <copy todir="${build}">
-            <fileset dir="${bloat-top}/src" excludes="${bloat-top}/resources/**/CVS">
-                <include name="**/*.class"/>
-            </fileset>
-        </copy>
+    	<!-- Create jar file -->
+    	<jar jarfile="${jars}/bloat.jar"
+    		 basedir="${bloat-top}/src"
+    	 	 includes="**/*.class"
+    		 excludes="${bloat-top}/resources/**/CVS"/>
     </target>
     
 </project>
