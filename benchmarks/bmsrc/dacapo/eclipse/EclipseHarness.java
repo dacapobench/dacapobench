@@ -19,11 +19,7 @@ public class EclipseHarness extends Benchmark {
   
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
-    File wsdir = new File(scratch, wsDirectory);
-    if (wsdir.exists())
-      deleteTree(new File(scratch,wsDirectory));
-    wsdir.mkdir();
-    unpackZipFile(fileInScratch(ECLIPSE_SOURCE_ZIP),wsdir);
+    createWorkspace();
     if (!EclipseStarter.isRunning()) {
       startup(size);
     }
@@ -51,6 +47,14 @@ public class EclipseHarness extends Benchmark {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+  
+  private void createWorkspace() throws Exception {
+    File wsdir = new File(scratch, wsDirectory);
+    if (wsdir.exists())
+      deleteTree(new File(scratch,wsDirectory));
+    wsdir.mkdir();
+    unpackZipFile(fileInScratch(ECLIPSE_SOURCE_ZIP),wsdir);
   }
 
   private void startup(String size) {

@@ -11,7 +11,7 @@ public class ChartHarness extends Benchmark {
   public ChartHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
     Class<?> clazz = Class.forName("dacapo.chart.plotter.Plotter", true, loader);
-    this.method = clazz.getMethod("main", String[].class );
+    this.method = clazz.getMethod("main", String[].class);
   }
 
   public void iterate(String size) throws Exception {
