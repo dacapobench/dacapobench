@@ -2,8 +2,8 @@ package dacapo.eclipse;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.adaptor.EclipseStarter;
-
+//import org.eclipse.core.runtime.adaptor.EclipseStarter;
+import java.lang.reflect.Method;
 import dacapo.Benchmark;
 import dacapo.parser.Config;
 
@@ -13,14 +13,24 @@ public class EclipseHarness extends Benchmark {
   static final String wsDirectory = "workspace";
   static String oldJavaHome = null;
   
+  private final Method isRunning;
+  private final Method run;
+  private final Method shutdown;
+  
   public EclipseHarness(Config config, File scratch) throws Exception {
     super(config, scratch);
+    Class<?> clazz = Class.forName("org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
+    this.method = clazz.getMethod("startup", String[].class, Runnable.class);
+    this.isRunning = clazz.getMethod("isRunning");
+    this.run = clazz.getMethod("run", Object.class);
+    this.shutdown = clazz.getMethod("shutdown");
   }
   
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
     createWorkspace();
-    if (!EclipseStarter.isRunning()) {
+    //if (!EclipseStarter.isRunning()) {
+    if (!((Boolean) isRunning.invoke(null, (Object[]) null)).booleanValue()) {
       startup(size);
     }
     setJavaHomeIfRequired();
@@ -28,7 +38,7 @@ public class EclipseHarness extends Benchmark {
   
   public void iterate(String size) throws Exception {
     try {
-      EclipseStarter.run(null);
+      run.invoke(null, new Object[] { null });
     } catch (Exception e) {
       e.printStackTrace();
     } 
@@ -43,7 +53,7 @@ public class EclipseHarness extends Benchmark {
   
   public void cleanup() {
     try {
-      EclipseStarter.shutdown();
+      shutdown.invoke(null, (Object[]) null);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -83,7 +93,8 @@ public class EclipseHarness extends Benchmark {
       args[3] = "dacapo.eclipse.dacapoHarness";
       for (int i = 0; i < pluginArgs.length; i++)
         args[4+i] = pluginArgs[i];
-      EclipseStarter.startup(args, null);
+//      EclipseStarter.startup(args, null);
+      method.invoke(null, new Object[] {args, null});
     } catch (Exception e) {
         e.printStackTrace();
     }

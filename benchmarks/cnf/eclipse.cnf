@@ -1,6 +1,7 @@
 benchmark eclipse
   class dacapo.eclipse.EclipseHarness
-  thread-model single;
+  thread-model single
+  jar "eclipse.jar";
 
 size small   args "-level", "0", "-ast"
   output stdout digest 0x46c53f7395877fc376fed4ced7500aa1ac76acdb,

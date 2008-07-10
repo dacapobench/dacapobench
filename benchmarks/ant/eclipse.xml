@@ -21,11 +21,10 @@
       <antcall target="build"/>
     </target>
 	
-    <target name="build" depends="benchmark,data,harness"/>
+    <target name="build" depends="benchmark,harness,osgiclasses,plugin,data"/>
     
     <target name="harness" description="Build eclipse">
         <javac     srcdir="${bmsrc}" 
-            source="1.4"
                 destdir="${build}" includes="dacapo/eclipse/*.java"
                 debug="true" debuglevel="lines,vars,source">
             <classpath>
@@ -54,8 +53,41 @@
         <delete dir="${build.src}/eclipse/eclipse-testing"/> 
     </target>
 	
+	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
+    <target name="osgiclasses">
+        <property name="osgihack" value="${build.src}/eclipse/osgihack"/>
+        <!-- unzip the jar -->
+        <unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+        <!-- copy out the class files -->
+       	<jar jarfile="${jars}/eclipse.jar">
+            <fileset dir="${osgihack}" includes="org/**/*"/>
+        </jar>
+    	<!--
+    	<copy todir="${build}">
+            <fileset dir="${osgihack}" includes="org/**/*"/>
+        </copy>
+        -->
+        <!-- conditionally clean out the stuff we've duplicated -->
+        <!--    <antcall target="eclipse.clearosgi"/> -->
+        <delete dir="${osgihack}/org"/>
+        <!-- jar up the remainder -->
+        <zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+        <delete dir="${osgihack}"/>
+    </target>
+	
+
+    <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
+    <target name="plugin" description="--> build the eclipse harness">
+        <ant antfile="build.xml" dir="${extra}/eclipse-plugin" 
+         target="build.update.jar" inheritall="false">
+            <property name="eclipsesrc.home" location="${eclipse-top}"/>
+            <property name="harness.home" location="${build}"/>
+            <property name="plugin.destination" location="${eclipse-top}/plugins/"/>
+        </ant>
+    </target>
+	
     <!-- Create the eclipse data file -->
-	<target name="data" depends="benchmark,plugin,osgiclasses" description="--> build the eclipse data file">
+	<target name="data" description="--> build the eclipse data file">
 		<!-- Create the fake jre -->
 	    <unzip dest="${build.src}/eclipse/dummyjre" src="${data}/eclipse/dummyjre.zip"/>
 
@@ -92,31 +124,4 @@
 	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/>
 	    </zip>
 	</target>
-
-	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
-    <target name="osgiclasses" depends="benchmark">
-        <property name="osgihack" value="${build.src}/eclipse/osgihack"/>
-        <!-- unzip the jar -->
-        <unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
-        <!-- copy out the class files -->
-        <copy todir="${build}">
-            <fileset dir="${osgihack}" includes="org/**/*"/>
-        </copy>
-        <!-- conditionally clean out the stuff we've duplicated -->
-        <!--    <antcall target="eclipse.clearosgi"/> -->
-        <delete dir="${osgihack}/org"/>
-        <!-- jar up the remainder -->
-        <zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
-        <delete dir="${osgihack}"/>
-    </target>
-	
-    <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
-    <target name="plugin" depends="benchmark,harness" description="--> build the eclipse harness">
-        <ant antfile="build.xml" dir="${extra}/eclipse-plugin" 
-         target="build.update.jar" inheritall="false">
-            <property name="eclipsesrc.home" location="${eclipse-top}"/>
-            <property name="harness.home" location="${build}"/>
-            <property name="plugin.destination" location="${eclipse-top}/plugins/"/>
-        </ant>
-    </target>
    </project>
