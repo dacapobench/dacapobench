@@ -1,37 +1,38 @@
 benchmark bloat
   class dacapo.bloat.BloatHarness
-  thread-model single;
+  thread-model single
+  jar "bloat.jar";
 
 size small args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f",
+  "-f", "-classpath/p", "scratch/bloat.jar",
   	      "EDU.purdue.cs.bloat.trans.ValueNumbering",
           "optimizedcode"
   output 
-    stdout digest 0x5fb37c0ffc128deb595abd3d69b79f6380875cc9,
+    stdout digest 0x1fc1bf326fc507ca424de5ccc9180f01f58173f8,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f",
+  "-f", "-classpath/p", "scratch/bloat.jar",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer",
 		  "optimizedcode"
   output  
-    stdout digest 0xfb2a1a7b07ee13b1bd0756c6fc7c4d23b536c3e7,
+    stdout digest 0x3f202e7fc0be5425f7e71acb13adaf043f005770,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f",
+  "-f", "-classpath/p", "scratch/bloat.jar",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.SSAPRE",
 		  "optimizedcode"
   output 
-    stdout digest 0x4313caf5abdf6e4da3167f5b4dacb53d85854511,
+    stdout digest 0x4da1fa0c6e118be2d7545755ad4f1b017292acd7,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f",
+  "-f", "-classpath/p", "scratch/bloat.jar",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.StackPRE", "EDU.purdue.cs.bloat.trans.SSAPRE",
 		  "optimizedcode"
   output 
-    stdout digest 0xccf514f2612016fdf8afb1d35b66116feaa56eab,
+    stdout digest 0xf26bed8211b33231ff14084a65cad0a2597857a9,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

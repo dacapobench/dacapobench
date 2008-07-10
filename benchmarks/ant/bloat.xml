@@ -21,7 +21,7 @@
     
     <target name="harness" description="Build bloat">
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                includes="dacapo/batik/*"
+                includes="dacapo/bloat/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
     
