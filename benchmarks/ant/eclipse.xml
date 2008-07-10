@@ -21,7 +21,7 @@
       <antcall target="build"/>
     </target>
 	
-    <target name="build" depends="harness,benchmark,data"/>
+    <target name="build" depends="benchmark,data,harness"/>
     
     <target name="harness" description="Build eclipse">
         <javac     srcdir="${bmsrc}" 
