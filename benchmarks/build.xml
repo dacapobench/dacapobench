@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-07-09 22:16:31 +1000 (Wed, 09 Jul 2008) $
- *   $Id: build.xml 355 2008-07-09 12:16:31Z steveb-oss $
+ *   $Date: 2008-07-13 20:42:34 +1000 (Sun, 13 Jul 2008) $
+ *   $Id: build.xml 362 2008-07-13 10:42:34Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -200,6 +200,7 @@
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}"/>
+        <mkdir dir="${jars}"/>
         <mkdir dir="${build.src}"/>
         <mkdir dir="${build.deps}"/>
         <mkdir dir="${build}/cnf"/>

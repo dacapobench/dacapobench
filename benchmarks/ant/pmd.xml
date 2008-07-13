@@ -81,10 +81,12 @@
         <zip basedir="${pmd-top}/data" includes="pmd/**" destfile="${zipdata}/pmd.zip"/>
         <delete dir="${pmd-top}/data"/>
     </target>
+	
     <target name="libs" unless="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${pmd-top}/lib/jaxen-1.1-beta-7.jar" todir="${build}"/>
+        <copy file="${pmd-top}/lib/jaxen-1.1-beta-7.jar" todir="${jars}"/>
     </target>
-    <!-- Add external libraries to the deps -->
+    
+	<!-- Add external libraries to the deps -->
     <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
         <copy file="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" todir="${build.deps}"/>
         <copy file="${pmd-top}/lib/jakarta-oro-2.0.8.jar" todir="${build.deps}"/>

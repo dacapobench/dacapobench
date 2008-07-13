@@ -43,8 +43,8 @@
         </condition>
     	
     	<!-- Copy the jars to the build directory and canonicalize the names -->
-    	<copy file="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" tofile="${build}/xercesImpl.jar"/>
-    	<copy file="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" tofile="${build}/xml-apis.jar"/>
+    	<copy file="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" tofile="${jars}/xercesImpl.jar"/>
+    	<copy file="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" tofile="${jars}/xml-apis.jar"/>
         <antcall target="deps"/>
     </target>
 	

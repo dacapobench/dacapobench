@@ -62,11 +62,6 @@
        	<jar jarfile="${jars}/eclipse.jar">
             <fileset dir="${osgihack}" includes="org/**/*"/>
         </jar>
-    	<!--
-    	<copy todir="${build}">
-            <fileset dir="${osgihack}" includes="org/**/*"/>
-        </copy>
-        -->
         <!-- conditionally clean out the stuff we've duplicated -->
         <!--    <antcall target="eclipse.clearosgi"/> -->
         <delete dir="${osgihack}/org"/>

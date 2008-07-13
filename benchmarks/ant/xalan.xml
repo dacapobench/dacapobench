@@ -27,11 +27,11 @@
             includes="dacapo/xalan/*"
             debug="true" debuglevel="lines,vars,source"/>
 		<mkdir dir="${build.src}/xalan/benchmark"/>
-		<javac srcdir="${bmsrc}" source="1.5" classpath="${build}/xalan.jar" 
+		<javac srcdir="${bmsrc}" source="1.5" classpath="${jars}/xalan.jar" 
 			destdir="${build.src}/xalan/benchmark" 
 		    includes="dacapo/xalan/benchmark/*"
 		    debug="true" debuglevel="lines,vars,source"/>
-		<jar destfile="${build}/xalan-benchmark.jar" basedir="${build.src}/xalan/benchmark"/>
+		<jar destfile="${jars}/xalan-benchmark.jar" basedir="${build.src}/xalan/benchmark"/>
     </target>
 	
     <!-- Build the xalan input data -->
@@ -71,7 +71,7 @@
         <antcall target="deps"/>
 
         <!-- Grab the xalan class files from the built jar files -->
-        <copy file="${xalan-top}/build/xalan.jar" todir="${build}"/>
+        <copy file="${xalan-top}/build/xalan.jar" todir="${jars}"/>
     </target>
 	
     <!-- Add external libraries to the deps -->

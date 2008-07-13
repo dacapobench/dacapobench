@@ -1,14 +1,10 @@
 package dacapo;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import dacapo.parser.Config;
 
@@ -184,11 +180,14 @@ public abstract class Benchmark {
    * @throws Exception
    */
   private void prepareJars() throws Exception {
+    File file = new File(scratch+"/jar");
+    if (!file.exists())
+      file.mkdir();
     if (config.jar != null)
-      extractFileResource(config.jar, scratch);
+      extractFileResource("jar/"+config.jar, scratch);
     if (config.libs != null) {
       for (int i = 0; i < config.libs.length; i++) {
-        extractFileResource(config.libs[i], scratch);
+        extractFileResource("jar/"+config.libs[i], scratch);
       }
     }
   }
@@ -198,7 +197,7 @@ public abstract class Benchmark {
    * <code>data/<i>name</i>.zip</code> into the scratch directory.
    */
   protected void prepare() throws Exception {
-    unpackZipFileResource("data/"+config.name+".zip", scratch);
+    unpackZipFileResource("dat/"+config.name+".zip", scratch);
   }
 
   /**

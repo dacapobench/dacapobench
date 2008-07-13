@@ -4,35 +4,35 @@ benchmark bloat
   jar "bloat.jar";
 
 size small args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f", "-classpath/p", "scratch/bloat.jar",
+  "-f", "-classpath/p", "scratch/jar/bloat.jar",
   	      "EDU.purdue.cs.bloat.trans.ValueNumbering",
           "optimizedcode"
   output 
-    stdout digest 0x1fc1bf326fc507ca424de5ccc9180f01f58173f8,
+    stdout digest 0x4e0d3ea08e34695b8bc98907c4779aed20399693,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f", "-classpath/p", "scratch/bloat.jar",
+  "-f", "-classpath/p", "scratch/jar/bloat.jar",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer",
 		  "optimizedcode"
   output  
-    stdout digest 0x3f202e7fc0be5425f7e71acb13adaf043f005770,
+    stdout digest 0x5a820b49e6a046c3b85582ac9cea9d48da6ca2e8,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f", "-classpath/p", "scratch/bloat.jar",
+  "-f", "-classpath/p", "scratch/jar/bloat.jar",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.SSAPRE",
 		  "optimizedcode"
   output 
-    stdout digest 0x4da1fa0c6e118be2d7545755ad4f1b017292acd7,
+    stdout digest 0xce546ce08aa1c26d72119f5f4baffe8632b7ab05,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "-only", "EDU.purdue.cs.bloat.trans", "-pre", "-dce", "-diva", "-prop", "-stack-alloc", "-peel-loops", "all",
-  "-f", "-classpath/p", "scratch/bloat.jar",
+  "-f", "-classpath/p", "scratch/jar/bloat.jar",
 		  "EDU.purdue.cs.bloat.trans.CompactArrayInitializer", "EDU.purdue.cs.bloat.trans.StackPRE", "EDU.purdue.cs.bloat.trans.SSAPRE",
 		  "optimizedcode"
   output 
-    stdout digest 0xf26bed8211b33231ff14084a65cad0a2597857a9,
+    stdout digest 0xbe93b35d8fbceee5a7b5bc17260376dd674a0409,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
