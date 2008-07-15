@@ -3,14 +3,18 @@
     
 	<property file="ant/dacapo.properties"/>
 	
-    <property name="derby.version" value="10.3.2.1"/>
-    <property name="derby.url" value="${apache.dl.url}/db/derby/db-derby-${derby.version}"/>
-    <property name="derby.svn.url" value="http://svn.apache.org/repos/asf/db/derby/code/trunk"/>
-    <property name="derby.svn.revision" value="595508"/>
-    <property name="derby-top" location="${build.src}/derby/db-derby-${derby.version}-src"/>
-    <property name="derby.trunk.src" location="${build.src}/derby/trunk"/>
-    <property name="derby.test.src" location="${derby.trunk.src}/java/testing"/>
-    <property name="derby.test.build" location="${derby.trunk.src}/build"/>
+	<property name="bm.name" value="derby"/>
+    <property name="bm.version" value="10.3.2.1"/>
+    <property name="bm.url" value="${apache.dl.url}/db/derby/db-derby-${bm.version}"/>
+    <property name="bm.svn.url" value="http://svn.apache.org/repos/asf/db/derby/code/trunk"/>
+    <property name="bm.svn.revision" value="595508"/>
+    <property name="bm.trunk.src" location="${build.src}/derby/trunk"/>
+    <property name="bm.test.src" location="${bm.trunk.src}/java/testing"/>
+    <property name="bm.test.build" location="${bm.trunk.src}/build"/>
+	<property name="bm.top" value="${build.src}/${bm.name}"/>
+	<property name="bm.files" value="${basedir}/${bm.name}"/>
+	<property name="bm.src" value="db-derby-${bm.version}-src.tar.gz"/>
+    <property name="derby-top" location="${bm.top}/db-derby-${bm.version}-src"/>
 
 	<target name="all">
 		<ant antfile="ant/jdbcbench.xml" target="build"/>
@@ -24,16 +28,16 @@
 
     <!-- Derby source -->
     <target name="source">
-        <get src="${derby.url}/db-derby-${derby.version}-src.tar.gz"
-        dest="${sources}/db-derby-${derby.version}-src.tar.gz"  
+        <get src="${bm.url}/${bm.src}" dest="${sources}/${bm.src}"  
        usetimestamp="true"/>
     </target>
 
     <!-- Build the derby dacapo harness -->
     <target name="harness" description="--> The derby dacapo harness">
-    	<ant antfile="${ant.dir}/jdbcbench.xml" target="build"/>
+		<copy file="${bm.files}/${bm.name}.cnf" todir="${build}/cnf"/>
+   		<ant antfile="${ant.dir}/jdbcbench.xml" target="build"/>
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-            sourcepath="${derby.test.src}"
+            sourcepath="${bm.test.src}"
             source="1.5"
             includes="dacapo/derby/*"
         	excludes="dacapo/derby/TPCC.java"
@@ -48,7 +52,7 @@
     <!-- Build the derby DBMS -->
     <target name="benchmark" description="--> The derby benchmark">
         <mkdir dir="${build.src}/derby}"/>
-        <untar src="${sources}/db-derby-${derby.version}-src.tar.gz" dest="${build.src}/derby/" compression="gzip"/>
+        <untar src="${sources}/${bm.src}" dest="${build.src}/derby/" compression="gzip"/>
         <ant antfile="build.xml" inheritall="false" dir="${derby-top}">
             <property name="j14lib" value="${java14.lib}"/>
         	<property name="java14compile.classpath" value="${java14.compile.classpath}"/>
@@ -63,7 +67,7 @@
 	<!-- WORK IN PROGRESS -->
 	
     <target name="tpcc.harness" description="--> The derby dacapo harness">
-    	<javac destdir="${derby.test.build}" source="1.5"
+    	<javac destdir="${bm.test.build}" source="1.5"
     		srcdir="${bmsrc}"
             debug="true" debuglevel="lines,vars,source"
     		includes="dacapo/derby/TPCC.java">
@@ -72,7 +76,7 @@
               <pathelement path="${jars}/junit.jar"/>
             </classpath>
     	</javac>
-        <jar destfile="${jars}/derby-tpcc.jar" basedir="${derby.test.build}">
+        <jar destfile="${jars}/derby-tpcc.jar" basedir="${bm.test.build}">
         	<include name="dacapo/derby/TPCC*.class"/>
         </jar>
 	</target>	
@@ -80,33 +84,33 @@
 	<!-- The derby TPCC benchmark -->
     <target name="tpcc.benchmark" description="--> The derby dacapo harness">
 		
-        <mkdir dir="${derby.test.src}"/>
-        <mkdir dir="${derby.test.build}"/>
-        <exec executable="svn" dir="${derby.trunk.src}/java/" failonerror="false">
-            <arg line="-r${derby.svn.revision}"/>
+        <mkdir dir="${bm.test.src}"/>
+        <mkdir dir="${bm.test.build}"/>
+        <exec executable="svn" dir="${bm.trunk.src}/java/" failonerror="false">
+            <arg line="-r${bm.svn.revision}"/>
             <arg line="checkout"/>
-            <arg line="${derby.svn.url}/java/testing"/>
+            <arg line="${bm.svn.url}/java/testing"/>
         </exec>
 
         <!-- Derby patch -->
-        <patch patchfile="${patches}/derby.patch" dir="${derby.test.src}" strip="0"/>
+        <patch patchfile="${patches}/{bm.name}.patch" dir="${bm.test.src}" strip="0"/>
 
-        <echo message="Compiling oe source in ${derby.test.src}"/>
-        <javac destdir="${derby.test.build}" source="1.4"
-               srcdir="${derby.test.src}"
+        <echo message="Compiling oe source in ${bm.test.src}"/>
+        <javac destdir="${bm.test.build}" source="1.4"
+               srcdir="${bm.test.src}"
                includes="org/apache/derbyTesting/system/oe/**/*.java,org/apache/derbyTesting/junit/DriverManagerConnector.java"
                debug="true" debuglevel="lines,vars,source">
-          <sourcepath path="${derby.test.src}"/>
+          <sourcepath path="${bm.test.src}"/>
           <classpath>
             <pathelement path="${derby-top}/classes"/>
             <pathelement path="${jars}/junit.jar"/>
           </classpath>
         </javac>
         <jar destfile="${jars}/derby-oe.jar">
-            <fileset dir="${derby.test.build}">
+            <fileset dir="${bm.test.build}">
                 <include name="**/*.class"/>
             </fileset>
-            <fileset dir="${derby.test.src}">
+            <fileset dir="${bm.test.src}">
                 <include name="**/*.properties"/>
                 <include name="**/*.sql"/>
             </fileset>

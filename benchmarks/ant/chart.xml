@@ -3,10 +3,12 @@
     
 	<property file="ant/dacapo.properties"/>
     
-	<property name="bm.name" value="chart"/>
-    <property name="bm.version" value="1.0.8"/>
-    <property name="bm.url" value="${sourceforge.dl.url}/jfreechart"/>
-    
+	<property name="bm-name" value="chart"/>
+    <property name="bm-version" value="1.0.8"/>
+    <property name="bm-url" value="${sourceforge.dl.url}/jfreechart"/>
+	<property name="bm-top" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
+
 	<property name="jcommon.version" value="1.0.12"/>
     <property name="itext.version" value="1.02b"/>
     <property name="itext.url" value="${sourceforge.dl.url}/itext"/>
@@ -19,8 +21,8 @@
 	
     <!-- Download the source -->
     <target name="source">
-        <get src="${bm.url}/jfreechart-${bm.version}.tar.gz"
-         dest="${sources}/jfreechart-${bm.version}.tar.gz"
+        <get src="${bm-url}/jfreechart-${bm-version}.tar.gz"
+         dest="${sources}/jfreechart-${bm-version}.tar.gz"
        usetimestamp="true"/>
         <get src="${itext.url}/itext-${itext.version}.jar"
          dest="${sources}/itext-${itext.version}.jar"
@@ -32,32 +34,33 @@
 
     <!-- Build the chart dacapo harness -->
     <target name="harness">
-        <javac srcdir="${bmsrc}" classpath="${build}:${jars}/jfreechart-${bm.version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" destdir="${build}" 
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
+        <javac srcdir="${bmsrc}" classpath="${build}:${jars}/jfreechart-${bm-version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" destdir="${build}" 
             source="1.5"
-            includes="dacapo/${bm.name}/*"
+            includes="dacapo/${bm-name}/*"
             debug="true" debuglevel="lines,vars,source"/>
-        <mkdir dir="${build.src}/${bm.name}/harness"/>
-        <javac srcdir="${bmsrc}" classpath="${jars}/jfreechart-${bm.version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" 
-	    destdir="${build.src}/${bm.name}/harness" 
+        <mkdir dir="${build.src}/${bm-name}/harness"/>
+        <javac srcdir="${bmsrc}" classpath="${jars}/jfreechart-${bm-version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" 
+	    destdir="${build.src}/${bm-name}/harness" 
             source="1.5"
-            includes="dacapo/${bm.name}/plotter/*"
+            includes="dacapo/${bm-name}/plotter/*"
             debug="true" debuglevel="lines,vars,source"/>
-        <jar destfile="${jars}/chart.jar" basedir="${build.src}/${bm.name}/harness"/>
+        <jar destfile="${jars}/chart.jar" basedir="${build.src}/${bm-name}/harness"/>
     </target>
 
     <!-- Build the chart benchmark -->
     <target name="benchmark" depends="source" description="--> build the benchmark">
-        <property name="top" value="${build.src}/${bm.name}/jfreechart-${bm.version}"/>
+        <property name="top" value="${build.src}/${bm-name}/jfreechart-${bm-version}"/>
 
         <!-- Untar the source distribution -->
-        <mkdir dir="${build.src}/${bm.name}/"/>
-        <untar src="${sources}/jfreechart-${bm.version}.tar.gz" dest="${build.src}/${bm.name}/" compression="gzip"/>
+        <mkdir dir="${build.src}/${bm-name}/"/>
+        <untar src="${sources}/jfreechart-${bm-version}.tar.gz" dest="${build.src}/${bm-name}/" compression="gzip"/>
 
         <!-- Build it using jfreechart's build.xml -->
         <ant antfile="ant/build.xml" dir="${top}" target="compile" inheritall="false"/>
 
         <!-- Copy files to the build directory -->
-        <copy file="${top}/jfreechart-${bm.version}.jar" todir="${jars}"/>
+        <copy file="${top}/jfreechart-${bm-version}.jar" todir="${jars}"/>
         <antcall target="chart.libs"/>
         <antcall target="chart.deps"/>
 

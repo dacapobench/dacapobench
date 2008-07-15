@@ -3,10 +3,13 @@
     
 	<property file="ant/dacapo.properties"/>
 	
-	<property name="bm.name" value="pmd"/>
-    <property name="pmd.version" value="3.7"/>
-    <property name="pmd.url" value="${sourceforge.dl.url}/pmd"/>
-
+	<property name="bm-name" value="pmd"/>
+    <property name="bm-version" value="3.7"/>
+    <property name="bm-url" value="${sourceforge.dl.url}/pmd"/>
+	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
+	<property name="bm-top" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
+	
     <!-- Download and build -->
     <target name="all" description="download and build the benchmark">
       <antcall target="source"/>
@@ -15,9 +18,7 @@
     
     <!-- Download the source -->
     <target name="source" description="download the benchmark">
-        <get src="${pmd.url}/pmd-src-${pmd.version}.zip"
-         dest="${sources}/pmd-src-${pmd.version}.zip"
-       usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
     </target>
 
 	<!-- Build the benchmark and harness -->
@@ -25,8 +26,9 @@
 	
     <!-- Build the benchmark harness -->
     <target name="harness">
-        <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
-            includes="dacapo/pmd/*"
+       <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
+       <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
+            includes="dacapo/${bm-name}/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
 
@@ -36,14 +38,14 @@
 		<ant antfile="${ant.dir}/junit.xml" target="build"/>
 		<ant antfile="${ant.dir}/xerces.xml" target="build"/>
     	
-        <mkdir dir="${build.src}/pmd"/>
-        <property name="pmd-top" value="${build.src}/pmd/pmd-${pmd.version}"/>
+        <mkdir dir="${bm-top}"/>
+        <property name="pmd-top" value="${bm-top}/pmd-${bm-version}"/>
 
         <!-- Expand the pmd distribution zipfile -->
-        <unzip src="${sources}/pmd-src-${pmd.version}.zip" dest="${build.src}/pmd"/>
+        <unzip src="${sources}/${bm-src}" dest="${bm-top}"/>
 
         <!-- Apply the dacapo patch -->
-        <patch patchfile="${patches}/pmd.patch" dir="${build.src}" strip="0"/>
+        <patch patchfile="${patches}/${bm-name}.patch" dir="${build.src}" strip="0"/>
 
     	<echo message="Junit JAR = ${junit.jar}"/>
         <!-- Build using Ant, setting the classpath appropriately -->
@@ -54,7 +56,7 @@
         </exec>
 
         <!-- Copy the classfiles to the dist directory -->
-        <copy file="${pmd-top}/lib/pmd-${pmd.version}.jar" todir="${jars}"/>
+        <copy file="${pmd-top}/lib/pmd-${bm-version}.jar" todir="${jars}"/>
         <antcall target="libs"/>
         <antcall target="deps"/>
 

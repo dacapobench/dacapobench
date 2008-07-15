@@ -3,12 +3,16 @@
     
 	<property file="ant/dacapo.properties"/>
 	
-	<property name="bm.name" value="jython"/>
-    <property name="bm.version" value="2.2.1"/>
-    <property name="bm._version" value="2_2.1"/>
-    <property name="bm.url" value="${sourceforge.dl.url}/jython"/>
-    <property name="python.version" value="2.5"/>
-    <property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
+	<property name="bm-name" value="jython"/>
+    <property name="bm-version" value="2.2.1"/>
+    <property name="bm-_version" value="2_2.1"/>
+    <property name="bm-url" value="${sourceforge.dl.url}/jython"/>
+	<property name="bm-src" value="${bm-name}_installer-${bm-version}.jar"/>
+	<property name="bm-top" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
+	<property name="py-version" value="2.5"/>
+    <property name="py-url" value="http://www.python.org/ftp/python/${py-version}/"/>
+	<property name="py-src" value="Python-${py-version}.tgz"/>
 
     <!-- Download and build -->
     <target name="all" description="download and build the benchmark">
@@ -18,12 +22,8 @@
     
 	<!-- Download the source -->
 	<target name="source" description="download the benchmark">
-		<get src="${bm.url}/${bm.name}_installer-${bm.version}.jar"
-	     	dest="${sources}/${bm.name}_installer-${bm.version}.jar"
-	   		usetimestamp="true"/>
-		<get src="${python.url}/Python-${python.version}.tgz"
-		 	dest="${sources}/Python-${python.version}.tgz"  
-			usetimestamp="true"/>
+		<get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
+		<get src="${py-url}/${py-src}" dest="${sources}/${py-src}" usetimestamp="true"/>
 	</target>
 
 	<!-- Build the benchmark and harness -->
@@ -31,54 +31,55 @@
 	
     <!-- Build the benchmark harness -->
     <target name="harness">
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
             source="1.5"
-            includes="dacapo/${bm.name}/*"
+            includes="dacapo/${bm-name}/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
 
     <!-- Build the benchmark -->
     <target name="benchmark">
-        <property name="jython-top" value="${build.src}/jython/"/>
-        <mkdir dir="${jython-top}/jython_${bm._version}"/>
+    	<property name="jython-top" value="${bm-top}/jython_${bm-_version}"/>
+        <mkdir dir="${jython-top}"/>
 
-        <unzip src="${sources}/jython_installer-${bm.version}.jar" dest="${jython-top}/jython_${bm.version}"/>
+        <unzip src="${sources}/${bm-src}" dest="${jython-top}"/>
 
         <!-- Apply the dacapo patch, which allows us to set the arguments -->
-        <patch patchfile="${patches}/jython.patch" 
-                 dir="${jython-top}/jython_${bm.version}/src/java"
+        <patch patchfile="${patches}/${bm-name}.patch" 
+                 dir="${jython-top}/src/java"
                  strip="0" ignorewhitespace="yes"/>
 
         <!-- copy requisite files into place-->
-        <copy todir="${jython-top}/jython_${bm.version}/src/java">
-            <fileset file="${jython-top}/jython_${bm.version}/build.*"/>
+        <copy todir="${jython-top}/src/java">
+            <fileset file="${jython-top}/build.*"/>
         </copy>
 
         <!-- Build jython -->
-        <ant antfile="build.xml" dir="${jython-top}/jython_${bm.version}/src/java" inheritall="false">
+        <ant antfile="build.xml" dir="${jython-top}/src/java" inheritall="false">
             <property name="javaccHome2" location="${javacchome}"/>
-            <property name="python.lib" location="${jython-top}/jython_${bm.version}/Lib"/>
+            <property name="python.lib" location="${jython-top}/Lib"/>
         </ant>
 
         <!-- Copy files to the distribution directory -->
-        <copy file="${jython-top}/jython_${bm.version}/src/java/dist/jython.jar" todir="${jars}"/>
+        <copy file="${jython-top}/src/java/dist/jython.jar" todir="${jars}"/>
         <antcall target="deps"/>
 
         <!-- Extract the pybench benchmark from the python sources -->
-        <untar src="${sources}/Python-${python.version}.tgz" dest="${jython-top}" compression="gzip">
+        <untar src="${sources}/${py-src}" dest="${bm-top}" compression="gzip">
             <patternset>
-                <include name="Python-${python.version}/Tools/pybench/**"/>
+                <include name="Python-${py-version}/Tools/pybench/**"/>
             </patternset>
         </untar>
-        <move file="${jython-top}/Python-${python.version}/Tools/pybench" todir="${jython-top}/jython"/>
+        <move file="${bm-top}/Python-${py-version}/Tools/pybench" todir="${bm-top}/jython"/>
 
 
         <!-- patch the pybench benchmark to allow it to work with jython -->
         <patch patchfile="${patches}/pybench.patch" 
-                 dir="${jython-top}/jython"
+                 dir="${bm-top}/jython"
                  strip="0" ignorewhitespace="yes"/>
-        <copy todir="${jython-top}/jython/Lib">
-            <fileset dir="${jython-top}/jython_${bm.version}/Lib"/>
+        <copy todir="${bm-top}/jython/Lib">
+            <fileset dir="${jython-top}/Lib"/>
         </copy>
 
 
@@ -86,8 +87,8 @@
         <zip destfile="${zipdata}/jython.zip">
             <fileset dir="${data}/" includes="jython/noop.py"/>
             <fileset dir="${data}/" includes="jython/sieve.py"/>
-            <fileset dir="${jython-top}/" includes="jython/pybench/**"/>
-            <fileset dir="${jython-top}/" includes="jython/Lib/**"/>
+            <fileset dir="${bm-top}/" includes="jython/pybench/**"/>
+            <fileset dir="${bm-top}/" includes="jython/Lib/**"/>
         </zip>
     </target>
 	

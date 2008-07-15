@@ -3,8 +3,12 @@
     
 	<property file="ant/dacapo.properties"/>
 	
-    <property name="hsqldb.version" value="1_8_0_4"/>
-    <property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
+	<property name="bm-name" value="hsqldb"/>
+    <property name="bm-version" value="1_8_0_4"/>
+    <property name="bm-url" value="${sourceforge.dl.url}/hsqldb"/>
+	<property name="bm-src" value="hsqldb_${bm-version}.zip"/>
+	<property name="bm-top" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
 	
 	<target name="all">
 	    <antcall target="source"/>
@@ -14,19 +18,17 @@
     <target name="source">
     	<!-- External dependencies -->
 		<ant antfile="${ant.dir}/junit.xml" target="source"/>
-        <get src="${hsqldb.url}/hsqldb_${hsqldb.version}.zip"
-        dest="${sources}/hsqldb_${hsqldb.version}.zip"  
-       usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
     </target>
 
     <target name="build" depends="benchmark,harness" description="--> build the derby benchmark"/>
 
     <!-- Build the hsqldb dacapo harness -->
     <target name="harness" description="--> The hsqldb dacapo harness">
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
         <ant antfile="${ant.dir}/jdbcbench.xml" target="build"/>
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-            source="1.5"
-            includes="dacapo/hsqldb/*"
+             includes="dacapo/${bm-name}/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
 	
@@ -35,26 +37,25 @@
     	<!-- External dependencies -->
 		<ant antfile="${ant.dir}/junit.xml" target="build"/>
     	
-        <mkdir dir="${build.src}/hsqldb"/>
-        <property name="hsqldb-top" value="${build.src}/hsqldb/"/>
-        <!-- Expand the source distribution -->
-        <unzip src="${sources}/hsqldb_${hsqldb.version}.zip" dest="${hsqldb-top}"/>
+        <mkdir dir="${bm-top}"/>
+         <!-- Expand the source distribution -->
+        <unzip src="${sources}/${bm-src}" dest="${bm-top}"/>
 
-        <copy file="${junit.jar}" todir="${hsqldb-top}/hsqldb/lib/"/>
+        <copy file="${junit.jar}" todir="${bm-top}/hsqldb/lib/"/>
 
         <!-- Build it using hsqldb's build.xml -->
-        <ant antfile="build/build.xml" dir="${hsqldb-top}/hsqldb" 
+        <ant antfile="build/build.xml" dir="${bm-top}/hsqldb" 
            target="hsqldbtest" inheritall="false"/>
 
         <!-- Copy the build to the distribution directory -->
-        <copy file="${hsqldb-top}/hsqldb/lib/hsqldbtest.jar" todir="${jars}"/>
+        <copy file="${bm-top}/hsqldb/lib/hsqldbtest.jar" todir="${jars}"/>
         <antcall target="deps"/>
     </target>
 	
     <!-- Add external libraries to the deps -->
     <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
-        <unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${build.deps}"/>
-        <unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${build.deps}"/>
+        <unjar src="${bm-top}/hsqldb/lib/servlet.jar" dest="${build.deps}"/>
+        <unjar src="${bm-top}/hsqldb/lib/junit.jar" dest="${build.deps}"/>
     </target>
 
 </project>

@@ -32,6 +32,7 @@
     <!-- Build the benchmark harness -->
     <target name="harness" depends="benchmark">
         <!-- The luindex benchmark itself -->
+        <copy file="${basedir}/luindex/luindex.cnf" todir="${build}/cnf"/>
         <mkdir dir="${build.src}/luindex"/>
         <javac srcdir="${bmsrc}" source="1.5" 
             classpath="${build}:${jars}/lucene-core-1.9.2-dev.jar:${jars}/lucene-demos-1.9.2-dev.jar" 
@@ -40,6 +41,7 @@
         <jar destfile="${jars}/luindex.jar" basedir="${build.src}/luindex"/>
         
             <!-- The lusearch benchmark itself -->
+        <copy file="${basedir}/lusearch/lusearch.cnf" todir="${build}/cnf"/>
             <mkdir dir="${build.src}/lusearch"/>
             <javac srcdir="${bmsrc}" source="1.5" 
                 classpath="${build}:${jars}/lucene-core-1.9.2-dev.jar:${jars}/lucene-demos-1.9.2-dev.jar" 

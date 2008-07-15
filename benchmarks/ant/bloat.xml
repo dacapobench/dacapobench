@@ -2,13 +2,15 @@
     <description>Dacapo Bloat benchmark</description>
 	<property file="ant/dacapo.properties"/>
 	
-    <property name="bloat.version" value="1.0"/>
-    <property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
+	<property name="bm-name" value="bloat"/>
+    <property name="bm-version" value="1.0"/>
+    <property name="bm-url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
+	<property name="bm-src" value="bloat-${bm-version}-src.tar.gz"/>
+	<property name="bm-top" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
 	
     <target name="source">
-        <get src="${bloat.url}/bloat-${bloat.version}-src.tar.gz"
-         dest="${sources}/bloat-${bloat.version}-src.tar.gz"
-         usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
     </target>
 	
     <!-- Download and build -->
@@ -20,33 +22,29 @@
     <target name="build" depends="harness,benchmark"/>
     
     <target name="harness" description="Build bloat">
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
         <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                includes="dacapo/bloat/*"
+                includes="dacapo/${bm-name}/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
     
     <target name="benchmark" description="Build bloat">
-        <property name="bloat-top" value="${build.src}/bloat"/>
-        <mkdir dir="${bloat-top}"/>
+        <mkdir dir="${bm-top}"/>
 
         <!-- Un-tar the source distribution -->
-        <untar src="${sources}/bloat-${bloat.version}-src.tar.gz" 
-           dest="${bloat-top}"
-         compression="gzip"/>
+        <untar src="${sources}/${bm-src}" dest="${bm-top}" compression="gzip"/>
 
         <!-- Apply the dacapo patch -->
-        <patch patchfile="${patches}/bloat.patch" 
-               dir="${bloat-top}"
-               strip="0" ignorewhitespace="yes"/>
+        <patch patchfile="${patches}/${bm-name}.patch" dir="${bm-top}" strip="0" ignorewhitespace="yes"/>
 
         <!-- Build bloat -->
-        <exec executable="${make}" dir="${bloat-top}/src/EDU/purdue/cs/bloat/"/>
+        <exec executable="${make}" dir="${bm-top}/src/EDU/purdue/cs/bloat/"/>
 
     	<!-- Create jar file -->
-    	<jar jarfile="${jars}/bloat.jar"
-    		 basedir="${bloat-top}/src"
+    	<jar jarfile="${jars}/${bm-name}.jar"
+    		 basedir="${bm-top}/src"
     	 	 includes="**/*.class"
-    		 excludes="${bloat-top}/resources/**/CVS"/>
+    		 excludes="${bm-top}/resources/**/CVS"/>
     </target>
     
 </project>

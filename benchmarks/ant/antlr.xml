@@ -3,9 +3,12 @@
     
 	<property file="ant/dacapo.properties"/>
 	
-	<property name="bm.name" value="antlr"/>
-    <property name="bm.version" value="2.7.7"/>
-    <property name="bm.url" value="http://www.antlr2.org/download"/>
+	<property name="bm-name" value="antlr"/>
+    <property name="bm-version" value="2.7.7"/>
+    <property name="bm-url" value="http://www.antlr2.org/download"/>
+	<property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
+	<property name="bm-top" location="${build.src}/${bm-name}"/>
+	<property name="bm-files" location="${basedir}/${bm-name}"/>
 
     <!-- Download and build -->
     <target name="all" description="download and build the benchmark">
@@ -15,43 +18,37 @@
     
     <!-- Download the source -->
     <target name="source" description="download the benchmark">
-        <get src="${bm.url}/${bm.name}-${bm.version}.tar.gz"
-         dest="${sources}/${bm.name}-${bm.version}.tar.gz"
-       usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
     </target>
 
     <target name="build" depends="benchmark,harness" description="build the benchmark"/>
 	
     <!-- Build the benchmark harness -->
     <target name="harness">
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
 		<javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-		   source="1.5"
-    	   includes="dacapo/${bm.name}/*"
+    	   includes="dacapo/${bm-name}/*"
            debug="true" debuglevel="lines,vars,source"/>
     </target>
 
     <!-- Build the benchmark -->
     <target name="benchmark">
-        <property name="top" value="${build.src}/${bm.name}/${bm.name}-${bm.version}"/>
-
         <!-- Untar the source distribution -->
-        <mkdir dir="${build.src}/${bm.name}/"/>
-        <untar src="${sources}/${bm.name}-${bm.version}.tar.gz" dest="${build.src}/${bm.name}/" compression="gzip"/>
+        <mkdir dir="${build.src}/${bm-name}/"/>
+        <untar src="${sources}/${bm-src}" dest="${build.src}/${bm-name}/" compression="gzip"/>
 
         <!-- Build directly with javac, classfiles into the build directory -->
-        <mkdir dir="${build.src}/${bm.name}/classes"/>
-        <javac srcdir="${build.src}/${bm.name}/${bm.name}-${bm.version}/antlr/"
+        <mkdir dir="${bm-top}/classes"/>
+        <javac srcdir="${bm-top}/${bm-name}-${bm-version}/antlr/"
             source="1.4"
             classpath="${build}"
-            destdir="${build.src}/${bm.name}/classes"
+            destdir="${bm-top}/classes"
             debug="true" debuglevel="lines,vars,source"/>
 		
     	<!-- Create jar file -->
-    	<jar jarfile="${jars}/${bm.name}.jar" basedir="${build.src}/${bm.name}/classes"/>
+    	<jar jarfile="${jars}/${bm-name}.jar" basedir="${build.src}/${bm-name}/classes"/>
     	
         <!-- Install the test data -->
-        <zip basedir="${data}"
-         includes="${bm.name}/**"
-         destfile="${zipdata}/${bm.name}.zip"/>
+        <zip basedir="${data}" includes="${bm-name}/**" destfile="${zipdata}/${bm-name}.zip"/>
     </target>
 </project>

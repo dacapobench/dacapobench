@@ -2,17 +2,18 @@
     <description>Dacapo Eclipse benchmark</description>
 	<property file="ant/dacapo.properties"/>
 	
-    <property name="eclipse.version" value="3.1.2"/>
-    <property name="eclipse.drop" value="200601181600"/>
-    <property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
-   	
+	<property name="bm-name" value="eclipse"/>
+    <property name="bm-version" value="3.1.2"/>
+    <property name="bm-drop" value="200601181600"/>
+    <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${bm-version}-${bm-drop}"/>
+	<property name="bm-src" value="eclipse-SDK-${bm-version}-linux.gtk.tar.gz"/>
+	<property name="bm-src-at" value="eclipse-Automated-Tests-${bm-version}.zip"/>
+	<property name="bm-top" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
+
     <target name="source">
-        <get src="${eclipse.url}/eclipse-SDK-${eclipse.version}-linux-gtk.tar.gz"
-         dest="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz"
-         usetimestamp="true"/>
-        <get src="${eclipse.url}/eclipse-Automated-Tests-${eclipse.version}.zip"
-         dest="${sources}/eclipse-Automated-Tests-${eclipse.version}.zip"
-         usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src-at}" dest="${sources}/${bm-src-at}.zip" usetimestamp="true"/>
     </target>
     
     <!-- Download and build -->
@@ -24,40 +25,40 @@
     <target name="build" depends="benchmark,harness,osgiclasses,plugin,data"/>
     
     <target name="harness" description="Build eclipse">
-        <javac     srcdir="${bmsrc}" 
-                destdir="${build}" includes="dacapo/eclipse/*.java"
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
+        <javac srcdir="${bmsrc}" destdir="${build}" includes="dacapo/${bm-name}/*.java"
                 debug="true" debuglevel="lines,vars,source">
             <classpath>
                 <pathelement path="${build}"/>
-                <pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
-                <pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.core.runtime_${eclipse.version}.jar"/>
-                <pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
+                <pathelement path="${bm-top}/eclipse/plugins/org.eclipse.osgi_${bm-version}.jar"/>
+                <pathelement path="${bm-top}/eclipse/plugins/org.eclipse.core.runtime_${bm-version}.jar"/>
+                <pathelement path="${bm-top}/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
             </classpath>
         </javac>
     </target>
     
     <target name="benchmark" description="Build eclipse">
-        <property name="eclipse-top" value="${build.src}/eclipse/eclipse"/>
+        <property name="eclipse-top" value="${bm-top}/eclipse"/>
 
-        <untar src="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz" dest="${build.src}/eclipse/" compression="gzip"/>
-        <unzip src="${sources}/eclipse-Automated-Tests-${eclipse.version}.zip" dest="${build.src}/eclipse/">
+        <untar src="${sources}/${bm-src}" dest="${bm-top}" compression="gzip"/>
+        <unzip src="${sources}/${bm-src-at}" dest="${bm-top}">
             <patternset>
                 <include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
             </patternset>
         </unzip>
-        <unzip dest="${build.src}/eclipse/">
-            <fileset dir="${build.src}/eclipse/eclipse-testing/">
+        <unzip dest="${bm-top}">
+            <fileset dir="${bm-top}/eclipse-testing/">
                 <include name="eclipse-junit-tests-M*.zip"/>
             </fileset>
         </unzip>
-        <delete dir="${build.src}/eclipse/eclipse-testing"/> 
+        <delete dir="${bm-top}/eclipse-testing"/> 
     </target>
 	
 	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
     <target name="osgiclasses">
-        <property name="osgihack" value="${build.src}/eclipse/osgihack"/>
+        <property name="osgihack" value="${bm-top}/osgihack"/>
         <!-- unzip the jar -->
-        <unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+        <unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${bm-version}.jar"/>
         <!-- copy out the class files -->
        	<jar jarfile="${jars}/eclipse.jar">
             <fileset dir="${osgihack}" includes="org/**/*"/>
@@ -66,7 +67,7 @@
         <!--    <antcall target="eclipse.clearosgi"/> -->
         <delete dir="${osgihack}/org"/>
         <!-- jar up the remainder -->
-        <zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+        <zip basedir="${osgihack}" includes="**/*" destfile="${eclipse-top}/plugins/org.eclipse.osgi_${bm-version}.jar"/>
         <delete dir="${osgihack}"/>
     </target>
 	
@@ -84,39 +85,39 @@
     <!-- Create the eclipse data file -->
 	<target name="data" description="--> build the eclipse data file">
 		<!-- Create the fake jre -->
-	    <unzip dest="${build.src}/eclipse/dummyjre" src="${data}/eclipse/dummyjre.zip"/>
+	    <unzip dest="${bm-top}/dummyjre" src="${data}/${bm-name}/dummyjre.zip"/>
 
 	    <!-- Install the test data -->
-	    <zip destfile="${zipdata}/eclipse.zip">
+	    <zip destfile="${zipdata}/${bm-name}.zip">
 	    	<!-- The dummy jre -->
-	        <fileset dir="${build.src}/eclipse/" includes="dummyjre/**"/>
+	        <fileset dir="${bm-top}/" includes="dummyjre/**"/>
 
 	        <!-- The eclipse runtime.  We just include as little as we can, -->
 	        <!-- using an empirically derived list of what we really need.  -->
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/*"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/about_files/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/configuration/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/features/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/readme/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/dacapo.eclipse_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.apache.ant_*/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.expressions_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.resources_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime.compatibility_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.variables_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.debug.core_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.builder_*/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.compiler_*/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.performance_*/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.launching_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.debug_*/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.osgi_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.test.performance_*/**"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.text_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.update.configurator_*.jar"/>
-	        <fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/*"/>
+	        <fileset dir="${bm-top}" includes="eclipse/about_files/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/configuration/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/features/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/readme/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/dacapo.eclipse_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.apache.ant_*/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.core.expressions_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.core.resources_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.core.runtime.compatibility_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.core.runtime_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.core.variables_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.debug.core_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.jdt.core.tests.builder_*/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.jdt.core.tests.compiler_*/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.jdt.core.tests.performance_*/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.jdt.core_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.jdt.launching_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.jdt.debug_*/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.osgi_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.test.performance_*/**"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.text_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.eclipse.update.configurator_*.jar"/>
+	        <fileset dir="${bm-top}" includes="eclipse/plugins/org.junit_*/**"/>
 	    </zip>
 	</target>
    </project>

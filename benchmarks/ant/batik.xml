@@ -2,14 +2,16 @@
     <description>Dacapo Batik benchmark</description>
 	<property file="ant/dacapo.properties"/>
 	
+	<property name="bm-name" value="batik"/>
     <property name="batik.major.version" value="1.7"/>
-    <property name="batik.version" value="${batik.major.version}beta1"/>
-    <property name="batik.url" value="${apache.dl.url}/xmlgraphics/batik"/>
+    <property name="bm-version" value="${batik.major.version}beta1"/>
+	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
+    <property name="bm-url" value="${apache.dl.url}/xmlgraphics/batik"/>
+	<property name="bm-top" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
 
     <target name="source">
-        <get src="${batik.url}/batik-src-${batik.version}.zip"
-         dest="${sources}/batik-src-${batik.version}.zip"
-         usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
     </target>
     
     <!-- Download and build -->
@@ -21,18 +23,18 @@
     <target name="build" depends="harness,benchmark"/>
     
     <target name="harness" description="Build batik">
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
+       <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
                 includes="dacapo/batik/*"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
     
     <target name="benchmark" description="Build batik">
-        <property name="batik-top" value="${build.src}/batik/batik-${batik.major.version}"/>
-
-        <mkdir dir="${build.src}/batik"/>
+        <property name="batik-top" value="${bm-top}/batik-${batik.major.version}"/>
+        <mkdir dir="${bm-top}"/>
 
         <!-- unpack the source files -->
-    	<unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/>
+    	<unzip src="${sources}/${bm-src}" dest="${bm-top}"/>
 
         <!-- Build using the supplied build.xml -->
         <ant antfile="build.xml" dir="${batik-top}" 
@@ -52,18 +54,8 @@
         <copy file="${batik-top}/lib/js.jar" todir="${build.deps}"/>
         <copy file="${batik-top}/lib/pdf-transcoder.jar" todir="${build.deps}"/>
 
-        <!-- Copy the batik resource files -->
-        <!-- <copy todir="${build}">
-            <fileset dir="${batik-top}/resources" excludes="${batik-top}/resources/**/CVS">
-                <include name="**"/>
-            </fileset>
-        </copy> -->
-
         <!-- Install the test data -->
-        <zip basedir="${data}"
-         includes="batik/**"
-         destfile="${zipdata}/batik.zip"/>
-
+        <zip basedir="${data}" includes="${bm-name}/**" destfile="${zipdata}/${bm-name}.zip"/>
     </target>
     
 </project>
