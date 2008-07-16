@@ -13,7 +13,7 @@
 
     <target name="source">
         <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
-        <get src="${bm-url}/${bm-src-at}" dest="${sources}/${bm-src-at}.zip" usetimestamp="true"/>
+        <get src="${bm-url}/${bm-src-at}" dest="${sources}/${bm-src-at}" usetimestamp="true"/>
     </target>
     
     <!-- Download and build -->
