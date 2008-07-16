@@ -18,7 +18,7 @@
 	
     <target name="source">
         <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
-        <get src="${bm-data-url}" dest="${sources}/xalan.data.zip" usetimestamp="true"/>
+        <get src="${bm-dat-url}" dest="${sources}/xalan.data.zip" usetimestamp="true"/>
     </target>
 
     <target name="build" depends="benchmark,data,harness" description="--> build the derby benchmark"/>
