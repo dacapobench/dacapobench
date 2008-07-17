@@ -3,9 +3,16 @@
  */
 package dacapo;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.jar.JarEntry;
 
 /**
  * Command line arguments for a dacapo benchmark run.
@@ -61,6 +68,11 @@ public class CommandLineArgs {
         this.info = true;
       } else if (args[i].equals("-h")) {
         printUsage();
+        System.exit(0);
+      } else if (args[i].equals("-l")) {
+        // list benchmarks
+        printBenchmarks();
+        System.exit(0);
       } else if (args[i].equals("-v")) {
         // display detailed information
         this.verbose = true;
@@ -174,6 +186,7 @@ public class CommandLineArgs {
     System.out.println("Usage: java -jar dacapo-<version>.jar [options ...] [benchmarks ...]");
     System.out.println("    -c <callback>           Use class <callback> to bracket benchmark runs");
     System.out.println("    -h                      Print this help");
+    System.out.println("    -l                      List available benchmarks");
     System.out.println("    -i                      Display benchmark information");
     System.out.println("    -s small|default|large  Size of input data");
     System.out.println();
@@ -194,7 +207,45 @@ public class CommandLineArgs {
     System.out.println("    -validationReport <file>  Report digests, line counts etc");
   }
   
-
+  /**
+   * List all the benchmarks supported by this release
+   */
+  static void printBenchmarks() throws IOException {
+    List<String> benchmarks = new ArrayList<String>();
+    URL url = CommandLineArgs.class.getClassLoader().getResource("cnf");
+    String protocol = url.getProtocol();
+    if (protocol.equals("jar")) {
+      JarURLConnection jarConnection = (JarURLConnection) url.openConnection();
+      for (Enumeration<?> entries = jarConnection.getJarFile().entries(); entries.hasMoreElements(); ) {
+        String entry = ((JarEntry) entries.nextElement()).getName();
+        if (entry.endsWith(".cnf")) {
+          entry = entry.replace("cnf/", "").replace(".cnf", "");
+          benchmarks.add(entry);
+        }
+      }
+    } else if (protocol.equals("file")) {
+      File dir = new File(url.getFile());
+      if (dir.isDirectory()) {
+        File[] files = dir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+          String entry = files[i].toString();
+          entry = entry.substring(entry.lastIndexOf('/')+1, entry.length());
+          entry = entry.replace(".cnf", "");
+          benchmarks.add(entry);
+        } 
+      } 
+    }
+    Iterator<String> iter = benchmarks.iterator();
+    
+    for (; iter.hasNext(); ) {
+      System.out.print(iter.next());
+      if (iter.hasNext()) {
+        System.out.print(" ");
+      }
+    }
+    System.out.println();
+  }
+  
   /*
    * Getter methods
    */
