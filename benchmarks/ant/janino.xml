@@ -1,38 +1,32 @@
-<project name="janino" default="all" basedir="..">
-    <description>Dacapo Batik benchmark</description>
-	<property file="ant/dacapo.properties"/>
+<project name="janino" default="library" basedir="..">
+    <description>janino library, required by sunflow</description>
 	
-    <property name="janino.version" value="2.5.2"/>
-    <property name="janino.url" value="http://www.janino.net/download"/>
-	<property name="janino.top" location="${build.src}/janino/janino-${janino.version}"/>
+	<property name="lib-name" value="janino"/>
+    <property name="lib-version" value="2.5.2"/>
+    <property name="lib-url" value="http://www.janino.net/download"/>
+	<property name="lib-src" value="janino-${lib-version}.zip"/>
 	
-    <target name="all" description="download and build the benchmark">
-      <antcall target="source"/>
-      <antcall target="build"/>
-    </target>
-	
-    <target name="source">
-        <get dest="${sources}/janino-${janino.version}.zip"
-         src="${janino.url}/janino-${janino.version}.zip"
-       usetimestamp="true"/>
-    </target>
+	<import file="../lib-common.xml"/>
 
-    <target name="build" description="--> The janino library - required by sunflow benchmark">
-        <condition property="build.dest" value="${build}" else="${build.deps}">
-            <not>
-                <equals arg1="${externalize.deps}" arg2="true"/>
-            </not>
-        </condition>
-    	<condition property="jdk.home" value="${java.home}" else="${java.home}/..">
-    		<not><contains string="${java.home}" substring="/jre"/></not>
+	<property name="lib-build-top" value="${lib-build-dir}/janino-${lib-version}"/>
+	
+	<target name="library" depends="lib-unzip, lib-build, lib-jar"/>
+	
+	<target name="lib-build">
+	    <condition property="build.dest" value="${build}" else="${build.deps}">
+	        <not>
+	            <equals arg1="${externalize.deps}" arg2="true"/>
+	        </not>
+	    </condition>
+		<condition property="jdk.home" value="${java.home}" else="${java.home}/..">
+			<not><contains string="${java.home}" substring="/jre"/></not>
 		</condition>
-
-        <!-- build janino -->
-        <unzip src="${sources}/janino-${janino.version}.zip" dest="${build.src}/janino/"/>
-		<ant antfile="build.xml" dir="${janino.top}" inheritAll="false">
+		<ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
 			<property name="jdk_1_2_2_home" value="${jdk.home}"/>
 		</ant>
-		<copy file="${janino.top}/lib/janino.jar" 
-			tofile="${jars}/janino-${janino.version}.jar"/>
-    </target>
+	</target>
+
+	<target name="lib-jar">
+		<copy file="${lib-build-top}/lib/janino.jar" tofile="${lib-jar-name}"/>
+	</target>
 </project>

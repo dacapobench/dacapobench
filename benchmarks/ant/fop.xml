@@ -1,4 +1,4 @@
-<project name="DacapoFop" default="all" basedir="..">
+<project name="fop" default="all" basedir="..">
     <description>Dacapo fop benchmark</description>
     
 	<property file="ant/dacapo.properties"/>
@@ -7,55 +7,23 @@
     <property name="bm-version" value="0.94"/>
     <property name="bm-url" value="${apache.dl.url}/xmlgraphics/fop/source"/>
 	<property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz"/>
-	<property name="bm-top" value="${build.src}/${bm-name}"/>
-	<property name="bm-files" value="${basedir}/${bm-name}"/>
+	<property name="bm-harness-classpath" value="${build}:${jars}/fop.jar"/>
 	
-    <!-- Download and build -->
-    <target name="all" description="download and build the benchmark">
-      <antcall target="source"/>
-      <antcall target="build"/>
-    </target>
-    
-    <!-- Download the source -->
-    <target name="source" description="download the benchmark">
-        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
-    </target>
+    <import file="../common.xml"/>
 
-	<!-- Build the benchmark and harness -->
-    <target name="build" depends="benchmark,harness" description="build the benchmark"/>
+	<property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}"/>
 	
-    <!-- Build the benchmark harness -->
-    <target name="harness">
-        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
-		<javac srcdir="${bmsrc}" classpath="${build}:${jars}/fop.jar" destdir="${build}"
-	   	   includes="dacapo/${bm-name}/*"
-           debug="true" debuglevel="lines,vars,source"/>
-    </target>
+	<target name="bm-build" depends="bm-patch">
+    	<ant dir="${bm-build-top}" inheritall="false"/>
+	</target>
 
-    <!-- Build the benchmark -->
-    <target name="benchmark">
-    	<property name="fop-top" value="${bm-top}/${bm-name}-${bm-version}"/>
-    	
-        <!-- Untar the source distribution -->
-        <mkdir dir="${bm-top}/"/>
-        <untar src="${sources}/${bm-src}" dest="${bm-top}" compression="gzip"/>
-
-        <!-- Apply the dacapo patch, which allows us to set the arguments -->
-        <patch patchfile="${patches}/${bm-name}.patch" dir="${fop-top}" strip="0" ignorewhitespace="yes"/>
-    	
-        <!-- Build with ant -->
-    	<ant dir="${bm-top}/${bm-name}-${bm-version}" inheritall="false"/>
-
-        <!-- Install the test data -->
-        <zip basedir="${data}" includes="${bm-name}/**" destfile="${zipdata}/${bm-name}.zip"/>
-    	
-    	<!-- Install the jars -->
-    	<copy file="${fop-top}/build/fop.jar" todir="${jars}"/>
-		<copy file="${fop-top}/lib/avalon-framework-4.2.0.jar" todir="${jars}"/>
-		<copy file="${fop-top}/lib/batik-all-1.6.jar" todir="${jars}"/>
-		<copy file="${fop-top}/lib/commons-io-1.3.1.jar" todir="${jars}"/>
-		<copy file="${fop-top}/lib/commons-logging-1.0.4.jar" todir="${jars}"/>
-		<copy file="${fop-top}/lib/serializer-2.7.0.jar" todir="${jars}"/>
-		<copy file="${fop-top}/lib/xmlgraphics-commons-1.2.jar" todir="${jars}"/>
-    </target>
+	<target name="bm-jar">
+    	<copy file="${bm-build-top}/build/fop.jar" todir="${jars}"/>
+		<copy file="${bm-build-top}/lib/avalon-framework-4.2.0.jar" todir="${jars}"/>
+		<copy file="${bm-build-top}/lib/batik-all-1.6.jar" todir="${jars}"/>
+		<copy file="${bm-build-top}/lib/commons-io-1.3.1.jar" todir="${jars}"/>
+		<copy file="${bm-build-top}/lib/commons-logging-1.0.4.jar" todir="${jars}"/>
+		<copy file="${bm-build-top}/lib/serializer-2.7.0.jar" todir="${jars}"/>
+		<copy file="${bm-build-top}/lib/xmlgraphics-commons-1.2.jar" todir="${jars}"/>
+	</target>
 </project>

@@ -1,0 +1,46 @@
+<project name="luindex" default="all" basedir="..">
+    <description>DaCapo luindex benchmark</description>
+	<property file="ant/dacapo.properties"/>
+
+	<property name="bm-name" value="luindex"/>
+
+	<import file="../common.xml"/>
+	
+    <property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
+    <property name="bible.url" value="${sfdata.url}/kjv.zip"/>
+	
+	<target name="source">
+		<ant antfile="${ant.dir}/lucene.xml" target="lib-source"/>	
+        <get src="${shakespeare.url}" dest="${sources}/shakespeare.tgz" usetimestamp="true"/>
+        <get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
+ 	</target>
+
+	<target name="benchmark" depends="bm-build, bm-jar, bm-data"/>
+	
+	<target name="bm-build">
+		<ant antfile="${ant.dir}/lucene.xml" target="library"/>
+       <mkdir dir="${bm-build-dir}"/>
+		<javac srcdir="${bmsrc}" source="1.5" 
+           classpath="${build}:${jars}/lucene-core-1.9.2-dev.jar:${jars}/lucene-demos-1.9.2-dev.jar" 
+           destdir="${bm-build-dir}" 
+           includes="dacapo/luindex/benchmark/*" debug="true" debuglevel="lines,vars,source"/>
+	</target>
+	
+	<target name="bm-jar">
+        <jar destfile="${jars}/luindex.jar" basedir="${bm-build-dir}"/>     
+	</target>
+
+	<target name="bm-data">
+        <mkdir dir="${data}/luindex"/>
+        <mkdir dir="${data}/luindex/william"/>
+        <untar src="${sources}/shakespeare.tgz" dest="${data}/luindex/william" compression="gzip"/>
+        <mkdir dir="${data}/luindex/kjv"/>
+        <unzip src="${sources}/kjv.zip" dest="${data}/luindex/kjv"/>
+        <zip destfile="${zipdata}/luindex.zip">
+            <fileset dir="${data}/" includes="luindex/kjv/**/*"/>
+            <fileset dir="${data}/" includes="luindex/william/**/*"/>
+        </zip>
+        <delete dir="${data}/luindex"/>
+	</target>
+	
+</project>

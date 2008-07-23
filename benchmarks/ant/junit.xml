@@ -1,38 +1,36 @@
-<project name="junit" default="all" basedir="..">
-    <description>JUnit library</description>
+<project name="junit" default="library" basedir="..">
+    <description>junit library, required by pmd, hsqldb and derby</description>
     
 	<property file="ant/dacapo.properties"/>
 	
-    <property name="junit.version" value="3.8.1"/>
-    <property name="junit.url" value="${sourceforge.dl.url}/junit"/>
+	<property name="lib-name" value="junit"/>
+    <property name="lib-version" value="3.8.1"/>
+    <property name="lib-url" value="${sourceforge.dl.url}/junit"/>
+	<property name="lib-src" value="junit${lib-version}.zip"/>
 	
-	<target name="all">
-	    <antcall target="source"/>
-	    <antcall target="build"/>
-	</target>
+	<import file="../lib-common.xml"/>
 	
-    <target name="source">
-        <get dest="${sources}/junit${junit.version}.zip"
-         src="${junit.url}/junit${junit.version}.zip"
-       usetimestamp="true"/>
-    </target>
+	<property name="junit-jar-name" value="${lib-name}-${lib-version}.jar"/>
+	<property name="junit-jar" value="${jars}/${junit-jar-name}"/>
+		
+	<target name="library" depends="lib-unzip, lib-build, lib-jar"/>	
 	
-	
-	<target name="junit.check" description="Ensure that junit is available">
-		<condition property="junit.build.done">
-			<available file="${junit.jar}"/>
-		</condition>
+	<target name="lib-unzip">
+		<mkdir dir="${lib-build-dir}/"/>
+		<unzip src="${sources}/${lib-src}" dest="${lib-build-dir}/">
+        	<patternset>
+            	<include name="junit${lib-version}/junit.jar"/>
+        	</patternset>
+   		</unzip>
 	</target>
 
-    <target name="build" depends="junit.check" unless="junit.build.done" description="--> build the xerces library">
-        <!-- Install the junit jar file -->
-        <unzip src="${sources}/junit${junit.version}.zip" dest="${build.src}/junit/">
-            <patternset>
-                <include name="junit${junit.version}/junit.jar"/>
-            </patternset>
-        </unzip>
-    	<copy file="${build.src}/junit/junit${junit.version}/junit.jar"
-    		tofile="${junit.jar}"/>
-    </target>
-	
+	<target name="lib-jar" depends="junit-jar-check" unless="junit-build-done">
+    	<copy file="${lib-build-dir}/junit${lib-version}/junit.jar" tofile="${junit-jar}"/>
+	</target>
+
+	<target name="junit-jar-check">
+		<condition property="junit-build-done">
+			<available file="${junit-jar}"/>
+		</condition>
+	</target>
 </project>

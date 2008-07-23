@@ -1,0 +1,53 @@
+<project name="common">
+
+	<property name="bm-build-dir" value="${build.src}/${bm-name}"/>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
+	<property name="bm-harness-classpath" value="${build}"/>
+	
+	<target name="all" description="download and build the benchmark">
+		<antcall target="source"/>
+		<antcall target="build"/>
+	</target>
+
+    <target name="source" description="download the benchmark">
+        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
+    </target>
+    	
+    <target name="build" depends="benchmark, config, harness"/>
+
+    <target name="harness">
+		<javac srcdir="${bmsrc}" classpath="${bm-harness-classpath}" destdir="${build}"
+    	   includes="dacapo/${bm-name}/*"
+           debug="true" debuglevel="lines,vars,source"/>
+    </target>
+	
+	<target name="benchmark" depends="bm-untar, bm-build, bm-jar, bm-data"/>
+	
+	<target name="config">
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
+	</target>
+	
+	<target name="bm-build"/>
+	
+	<target name="bm-patch">
+		<patch patchfile="${patches}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes"/>
+	</target>
+	
+	<target name="bm-untar">
+        <mkdir dir="${bm-build-dir}"/>
+        <untar src="${sources}/${bm-src}" dest="${bm-build-dir}/" compression="gzip"/>
+	</target>
+
+	<target name="bm-unzip">
+        <mkdir dir="${bm-build-dir}/"/>
+        <unzip src="${sources}/${bm-src}" dest="${bm-build-dir}/"/>
+	</target>
+	
+	<target name="bm-data">
+        <zip basedir="${data}" includes="${bm-name}/**" destfile="${zipdata}/${bm-name}.zip"/>
+	</target>
+
+	<target name="bm-jar">
+    	<jar jarfile="${jars}/${bm-name}.jar" basedir="${bm-build-dir}/classes"/>
+	</target>	
+</project>

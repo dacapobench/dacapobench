@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-07-15 10:55:50 +1000 (Tue, 15 Jul 2008) $
- *   $Id: build.xml 363 2008-07-15 00:55:50Z steveb-oss $
+ *   $Date: 2008-07-23 12:56:24 +1000 (Wed, 23 Jul 2008) $
+ *   $Id: build.xml 369 2008-07-23 02:56:24Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -184,6 +184,19 @@
 
     <!-- END PUBLIC TARGETS -->
 
+	<!-- 
+	<project name="test" default="jar">
+
+	  <target name="jar" >
+	    <pathconvert property="cnf-files" pathsep=" ">
+	      <map from="${basedir}/cnf/" to=""/>
+	      <path>
+	        <fileset dir="cnf" includes="*.cnf"/>
+	      </path>
+	    </pathconvert>
+	    <echo file="benchmarks" message="${cnf-files}"/>
+	  </target>
+	</project> -->
 
     <!-- constraints -->
     <property name="constraints.gnuclasspath" value="true"/>
@@ -222,7 +235,7 @@
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="antlr,batik,bloat,derby,eclipse,fop,hsqldb,jython,lucene,pmd,sunflow,xalan"
+    <target name="compile" depends="antlr,batik,bloat,derby,eclipse,fop,hsqldb,jython,luindex,lusearch,pmd,sunflow,xalan"
           description="compile the sources for all benchmarks" >
     	<antcall target="chart"/>
     </target>
@@ -488,18 +501,15 @@
     <!-- ================================= 
           target: luindex    
          ================================= -->
-    <target name="luindex" depends="lucene"/>
+    <target name="luindex" depends="init,harness">
+		<ant antfile="${ant.dir}/luindex.xml" target="build"/>
+	</target>
 
     <!-- ================================= 
           target: lusearch   
          ================================= -->
-    <target name="lusearch" depends="lucene"/>
-
-    <!-- ================================= 
-          target: lucene    
-         ================================= -->
-    <target name="lucene" depends="init, harness" description="--> build the lucene benchmark">
-        <ant antfile="${ant.dir}/lucene.xml" target="build" inheritAll="true"/>
+    <target name="lusearch" depends="init,harness">
+		<ant antfile="${ant.dir}/lusearch.xml" target="build"/>
 	</target>
 
     <!-- ================================= 

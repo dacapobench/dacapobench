@@ -7,55 +7,35 @@
     <property name="bm-version" value="1_8_0_4"/>
     <property name="bm-url" value="${sourceforge.dl.url}/hsqldb"/>
 	<property name="bm-src" value="hsqldb_${bm-version}.zip"/>
-	<property name="bm-top" value="${build.src}/${bm-name}"/>
-	<property name="bm-files" value="${basedir}/${bm-name}"/>
+
+    <import file="../common.xml"/>
 	
-	<target name="all">
-	    <antcall target="source"/>
-	    <antcall target="build"/>
+    <target name="source" depends="common.source">
+		<ant antfile="${ant.dir}/junit.xml" target="source"/>
+     </target>
+
+    <target name="harness" depends="jdbcbench, common.harness"/>
+	
+	<target name="jdbcbench"> 
+        <ant antfile="${ant.dir}/jdbcbench.xml" target="library"/>
+	</target>
+		
+    <target name="benchmark" depends="bm-unzip, bm-build, bm-jar, bm-data"/>
+	
+	<target name="bm-build">
+		<ant antfile="${ant.dir}/junit.xml" target="library"/>
+        <copy file="${junit-jar}" todir="${bm-build-dir}/hsqldb/lib/"/>
+        <ant antfile="build/build.xml" dir="${bm-build-dir}/hsqldb" 
+           target="hsqldbtest" inheritall="false"/>
+    </target>
+	
+	<target name="bm-jar" depends="deps">
+        <copy file="${bm-build-dir}/hsqldb/lib/hsqldbtest.jar" todir="${jars}"/>
 	</target>
 	
-    <target name="source">
-    	<!-- External dependencies -->
-		<ant antfile="${ant.dir}/junit.xml" target="source"/>
-        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
-    </target>
-
-    <target name="build" depends="benchmark,harness" description="--> build the derby benchmark"/>
-
-    <!-- Build the hsqldb dacapo harness -->
-    <target name="harness" description="--> The hsqldb dacapo harness">
-        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
-        <ant antfile="${ant.dir}/jdbcbench.xml" target="build"/>
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}" 
-             includes="dacapo/${bm-name}/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-	
-    <!-- Build the hsqldb benchmark -->
-    <target name="benchmark" description="--> The hsqldb benchmark">
-    	<!-- External dependencies -->
-		<ant antfile="${ant.dir}/junit.xml" target="build"/>
-    	
-        <mkdir dir="${bm-top}"/>
-         <!-- Expand the source distribution -->
-        <unzip src="${sources}/${bm-src}" dest="${bm-top}"/>
-
-        <copy file="${junit.jar}" todir="${bm-top}/hsqldb/lib/"/>
-
-        <!-- Build it using hsqldb's build.xml -->
-        <ant antfile="build/build.xml" dir="${bm-top}/hsqldb" 
-           target="hsqldbtest" inheritall="false"/>
-
-        <!-- Copy the build to the distribution directory -->
-        <copy file="${bm-top}/hsqldb/lib/hsqldbtest.jar" todir="${jars}"/>
-        <antcall target="deps"/>
-    </target>
-	
-    <!-- Add external libraries to the deps -->
-    <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
-        <unjar src="${bm-top}/hsqldb/lib/servlet.jar" dest="${build.deps}"/>
-        <unjar src="${bm-top}/hsqldb/lib/junit.jar" dest="${build.deps}"/>
+    <target name="deps" if="externalize.deps">
+        <unjar src="${bm-build-dir}/hsqldb/lib/servlet.jar" dest="${build.deps}"/>
+        <unjar src="${bm-build-dir}/hsqldb/lib/junit.jar" dest="${build.deps}"/>
     </target>
 
 </project>

@@ -1,0 +1,34 @@
+<project name="pybench" default="pybench" basedir="..">
+    <description>pybench benchmark, used by jython</description>
+	
+	<property name="py-version" value="2.5"/>
+    <property name="py-url" value="http://www.python.org/ftp/python/${py-version}/"/>
+	<property name="py-src" value="Python-${py-version}.tgz"/>
+	
+	<target name="py-source">
+		<get src="${py-url}/${py-src}" dest="${sources}/${py-src}" usetimestamp="true"/>
+	</target>
+
+	<target name="pybench" depends="py-untar, py-patch, py-build"/>
+	
+	<target name="py-untar">
+        <untar src="${sources}/${py-src}" dest="${bm-build-dir}" compression="gzip">
+            <patternset>
+                <include name="Python-${py-version}/Tools/pybench/**"/>
+            </patternset>
+        </untar>
+        <move file="${bm-build-dir}/Python-${py-version}/Tools/pybench" todir="${bm-build-dir}/jython"/>
+	</target>
+
+	<target name="py-patch">
+        <patch patchfile="${patches}/pybench.patch" 
+                 dir="${bm-build-dir}/jython"
+                 strip="0" ignorewhitespace="yes"/>
+	</target>
+		
+	<target name="py-build">
+        <copy todir="${bm-build-dir}/jython/Lib">
+            <fileset dir="${bm-build-dir}/Lib"/>
+        </copy>
+	</target>
+</project>

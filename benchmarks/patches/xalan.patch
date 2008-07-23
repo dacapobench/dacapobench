@@ -1,5 +1,5 @@
 --- xalan.orig/xalan-j_2_4_1/build.xml	2007-01-17 14:35:08.000000000 +1100
-+++ xalan/xalan-j_2_4_1/build.xml	2007-01-17 14:35:16.000000000 +1100
++++ xalan-j_2_4_1/build.xml	2007-01-17 14:35:16.000000000 +1100
 @@ -182,6 +182,7 @@
           compatibility with 1.1.x.  If you omit this property, compatability
           with 1.1.x will not be checked even though javac specifies a target of 1.1 -->
@@ -159,7 +159,7 @@
   
 diff -N -u -r xalan.orig/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java xalan/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java
 --- xalan.orig/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java	2006-10-21 07:25:15.000000000 +1000
-+++ xalan/xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java	2006-10-21 07:25:49.000000000 +1000
++++ xalan-j_2_4_1/src/org/apache/xalan/serialize/Encodings.java	2006-10-21 07:25:49.000000000 +1000
 @@ -149,7 +149,7 @@
     */
    public static Object getCharToByteConverter(String encoding)

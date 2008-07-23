@@ -1,50 +1,26 @@
 <project name="bloat" default="all" basedir="..">
-    <description>Dacapo Bloat benchmark</description>
+    <description>DaCapo bloat benchmark</description>
 	<property file="ant/dacapo.properties"/>
 	
 	<property name="bm-name" value="bloat"/>
     <property name="bm-version" value="1.0"/>
     <property name="bm-url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
 	<property name="bm-src" value="bloat-${bm-version}-src.tar.gz"/>
-	<property name="bm-top" value="${build.src}/${bm-name}"/>
-	<property name="bm-files" value="${basedir}/${bm-name}"/>
-	
-    <target name="source">
-        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
-    </target>
-	
-    <!-- Download and build -->
-    <target name="all" description="download and build the benchmark">
-      <antcall target="source"/>
-      <antcall target="build"/>
-    </target>
-	
-    <target name="build" depends="harness,benchmark"/>
+
+    <import file="../common.xml"/>
     
-    <target name="harness" description="Build bloat">
-        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
-        <javac srcdir="${bmsrc}" classpath="${build}" destdir="${build}"
-                includes="dacapo/${bm-name}/*"
-            debug="true" debuglevel="lines,vars,source"/>
+    <target name="benchmark" depends="bm-untar, bm-build, bm-jar"/>
+  
+	<target name="bm-build" depends="bm-patch">
+        <exec executable="${make}" dir="${bm-build-dir}/src/EDU/purdue/cs/bloat/">
+        	<env key="JAVA_HOME" value="${java.home}"/>
+		</exec>
     </target>
-    
-    <target name="benchmark" description="Build bloat">
-        <mkdir dir="${bm-top}"/>
-
-        <!-- Un-tar the source distribution -->
-        <untar src="${sources}/${bm-src}" dest="${bm-top}" compression="gzip"/>
-
-        <!-- Apply the dacapo patch -->
-        <patch patchfile="${patches}/${bm-name}.patch" dir="${bm-top}" strip="0" ignorewhitespace="yes"/>
-
-        <!-- Build bloat -->
-        <exec executable="${make}" dir="${bm-top}/src/EDU/purdue/cs/bloat/"/>
-
-    	<!-- Create jar file -->
+	
+	<target name="bm-jar">
     	<jar jarfile="${jars}/${bm-name}.jar"
-    		 basedir="${bm-top}/src"
+    		 basedir="${bm-build-dir}/src"
     	 	 includes="**/*.class"
-    		 excludes="${bm-top}/resources/**/CVS"/>
-    </target>
-    
+    		 excludes="${bm-build-dir}/resources/**/CVS"/>	
+	</target>
 </project>

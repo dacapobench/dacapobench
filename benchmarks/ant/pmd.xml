@@ -1,75 +1,47 @@
-<project name="DacapoPmd" default="all" basedir="..">
-    <description>Dacapo pmd benchmark</description>
-    
+<project name="pmd" default="all" basedir="..">
+    <description>DaCapo pmd benchmark</description>
 	<property file="ant/dacapo.properties"/>
 	
 	<property name="bm-name" value="pmd"/>
     <property name="bm-version" value="3.7"/>
     <property name="bm-url" value="${sourceforge.dl.url}/pmd"/>
 	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
-	<property name="bm-top" value="${build.src}/${bm-name}"/>
-	<property name="bm-files" value="${basedir}/${bm-name}"/>
 	
-    <!-- Download and build -->
-    <target name="all" description="download and build the benchmark">
-      <antcall target="source"/>
-      <antcall target="build"/>
-    </target>
-    
-    <!-- Download the source -->
-    <target name="source" description="download the benchmark">
-        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
-    </target>
+	<import file="../common.xml"/>
 
-	<!-- Build the benchmark and harness -->
-    <target name="build" depends="benchmark,harness" description="build the benchmark"/>
+    <property name="bm-build-top" value="${bm-build-dir}/pmd-${bm-version}"/>
+
+	<target name="benchmark" depends="bm-unzip, bm-build, bm-jar, bm-data"/>
 	
-    <!-- Build the benchmark harness -->
-    <target name="harness">
-       <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
-       <javac srcdir="${bmsrc}" source="1.5" classpath="${build}" destdir="${build}" 
-            includes="dacapo/${bm-name}/*"
-            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-
-    <!-- Build the benchmark -->
-    <target name="benchmark">
-    	<!-- Dependencies on external libraries -->
-		<ant antfile="${ant.dir}/junit.xml" target="build"/>
-		<ant antfile="${ant.dir}/xerces.xml" target="build"/>
-    	
-        <mkdir dir="${bm-top}"/>
-        <property name="pmd-top" value="${bm-top}/pmd-${bm-version}"/>
-
-        <!-- Expand the pmd distribution zipfile -->
-        <unzip src="${sources}/${bm-src}" dest="${bm-top}"/>
-
-        <!-- Apply the dacapo patch -->
-        <patch patchfile="${patches}/${bm-name}.patch" dir="${build.src}" strip="0"/>
-
-    	<echo message="Junit JAR = ${junit.jar}"/>
-        <!-- Build using Ant, setting the classpath appropriately -->
-        <exec dir="${pmd-top}/bin" executable="ant">
+	<target name="source" depends="common.source">
+		<ant antfile="${ant.dir}/junit.xml" target="lib-source"/>
+		<ant antfile="${ant.dir}/xerces.xml" target="lib-source"/>
+	</target>
+	
+	<target name="bm-build" depends="bm-patch">
+		<ant antfile="${ant.dir}/junit.xml" target="library"/>
+		<ant antfile="${ant.dir}/xerces.xml" target="library"/>
+        <exec dir="${bm-build-top}/bin" executable="ant">
             <arg value="jar"/>
-            <env key="CLASSPATH" value=".:${junit.jar}"/>
+            <env key="CLASSPATH" value=".:${junit-jar}"/>
             <env key="ANT_HOME" value="${ant.install}"/>
         </exec>
-
-        <!-- Copy the classfiles to the dist directory -->
-        <copy file="${pmd-top}/lib/pmd-${bm-version}.jar" todir="${jars}"/>
-        <antcall target="libs"/>
-        <antcall target="deps"/>
-
-        <!-- Construct the test data -->
-        <property name="pmd-data" value="${pmd-top}/data/pmd"/>
+	</target>
+		
+	<target name="bm-jar" depends="libs, deps">
+        <copy file="${bm-build-top}/lib/pmd-${bm-version}.jar" todir="${jars}"/>
+	</target>
+	
+	<target name="bm-data">
+        <property name="pmd-data" value="${bm-build-top}/data/pmd"/>
         <mkdir dir="${pmd-data}"/>
         <copy todir="${pmd-data}">
-            <fileset dir="${pmd-top}/src">
+            <fileset dir="${bm-build-top}/src">
                 <include name="net/**/*.java"/>
             </fileset>
         </copy>
         <copy todir="${pmd-data}">
-            <fileset dir="${pmd-top}">
+            <fileset dir="${bm-build-top}">
                 <include name="rulesets/**/*"/>
             </fileset>
         </copy>
@@ -78,22 +50,19 @@
                 <include name="*.lst"/>
             </fileset>
         </copy>
+        <zip basedir="${bm-build-top}/data" includes="pmd/**" destfile="${zipdata}/pmd.zip"/>
+        <delete dir="${bm-build-top}/data"/>
+	</target>
 
-        <!-- Install the test data -->
-        <zip basedir="${pmd-top}/data" includes="pmd/**" destfile="${zipdata}/pmd.zip"/>
-        <delete dir="${pmd-top}/data"/>
-    </target>
-	
     <target name="libs" unless="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${pmd-top}/lib/jaxen-1.1-beta-7.jar" todir="${jars}"/>
+        <copy file="${bm-build-top}/lib/jaxen-1.1-beta-7.jar" todir="${jars}"/>
     </target>
     
-	<!-- Add external libraries to the deps -->
     <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" todir="${build.deps}"/>
-        <copy file="${pmd-top}/lib/jakarta-oro-2.0.8.jar" todir="${build.deps}"/>
-        <copy file="${pmd-top}/lib/jaxen-1.1-beta-7.jar" todir="${build.deps}"/>
-        <copy file="${pmd-top}/lib/xercesImpl-2.6.2.jar" todir="${build.deps}"/>
+        <copy file="${bm-build-top}/lib/xmlParserAPIs-2.6.2.jar" todir="${build.deps}"/>
+        <copy file="${bm-build-top}/lib/jakarta-oro-2.0.8.jar" todir="${build.deps}"/>
+        <copy file="${bm-build-top}/lib/jaxen-1.1-beta-7.jar" todir="${build.deps}"/>
+        <copy file="${bm-build-top}/lib/xercesImpl-2.6.2.jar" todir="${build.deps}"/>
         <copy file="${build.src}/junit/junit${junit.version}/junit.jar" todir="${build.deps}"/>
         <copy file="${build.src}/ant/ant.jar" todir="${build.deps}"/>
         <copy file="${build.src}/ant/ant-launcher.jar" todir="${build.deps}"/>

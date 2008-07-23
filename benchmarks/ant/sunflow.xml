@@ -1,6 +1,5 @@
 <project name="sunflow" default="all" basedir="..">
-
-    <description>Dacapo Sunflow benchmark</description>
+    <description>DaCapo Sunflow benchmark</description>
 	<property file="ant/dacapo.properties"/>
 	
 	<property name="bm-name" value="sunflow"/>
@@ -8,62 +7,41 @@
     <property name="bm-url" value="${sourceforge.dl.url}/sunflow"/>
 	<property name="bm-src" value="${bm-name}-src-v${bm-version}.zip"/>
 	<property name="bm-bin" value="${bm-name}-bin-v${bm-version}.zip"/>
-	<property name="bm-top" value="${build.src}/${bm-name}"/>
-	<property name="bm-files" value="${basedir}/${bm-name}"/>
-	
-    <!-- Download and build -->
-    <target name="all" description="download and build the benchmark">
-      <antcall target="source"/>
-      <antcall target="build"/>
-    </target>
-	
-    <target name="source">
-        <ant antfile="${ant.dir}/janino.xml" target="source"/>
-        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
+
+    <import file="../common.xml"/>
+	<import file="janino.xml"/>
+		
+    <target name="source" depends="common.source, lib-source">
         <get src="${bm-url}/${bm-bin}" dest="${sources}/${bm-bin}" usetimestamp="true"/>
     </target>
 
-    <target name="build" depends="harness,benchmark"/>
-    
-    <!-- Build the sunflow dacapo harness -->
-    <target name="harness" description="--> Build the sunflow dacapo harness">
-        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
-        <javac srcdir="${bmsrc}" source="1.5" 
-        	classpath="${build}" destdir="${build}" 
-            includes="dacapo/${bm-name}/*"
+    <target name="benchmark" depends="bm-unzip, bm-build, bm-jar, bm-data"/>
+
+	<target name="bm-build" depends="library">
+        <mkdir dir="${bm-build-dir}/build"/>
+		<javac srcdir="${bm-build-dir}/src" source="1.5" 
+        	classpath="${lib-jar-name}" destdir="${bm-build-dir}/build"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
-    
-    <!-- Build the sunflow benchmark -->
-    <target name="benchmark" description="--> Build the sunflow benchmark">
-    	<ant antfile="${ant.dir}/janino.xml" target="build"/>
-
-        <mkdir dir="${bm-top}/build"/>
-
-        <!-- Expand the sunflow distribution zipfile -->
-        <unzip src="${sources}/${bm-src}" dest="${build.src}/${bm-name}"/>
-
-        <!-- Build using javac, setting the classpath appropriately -->
-        <javac srcdir="${bm-top}/src" source="1.5" 
-        	classpath="${bm-top}/janino.jar" destdir="${bm-top}/build"
-            debug="true" debuglevel="lines,vars,source"/>
-
-        <!-- Extract the sunflow data from the binary dist -->
-        <unzip src="${sources}/${bm-bin}" dest="${bm-top}"/>
-        <unjar src="${bm-top}/${bm-name}.jar" dest="${bm-top}">
+            	
+	<target name="bm-data">
+        <unzip src="${sources}/${bm-bin}" dest="${bm-build-dir}"/>
+        <unjar src="${bm-build-dir}/${bm-name}.jar" dest="${bm-build-dir}">
             <patternset>
                 <include name="resources/golden_*.png"/>
             </patternset>
         </unjar>
+	</target>
 
-        <!-- Build the jar file used at runtime -->
+	<target name="bm-jar" depends="bm-data">
         <jar destfile="${jars}/${bm-name}-${bm-version}.jar">
-            <fileset dir="${bm-top}/build">
+            <fileset dir="${bm-build-dir}/build">
             	<include name="**/*.class"/>
         	</fileset>
-            <fileset dir="${bm-top}">
+            <fileset dir="${bm-build-dir}">
                 <include name="resources/golden_*.png"/>
         	</fileset>
         </jar>
-    </target>
+	</target>
+
 </project>

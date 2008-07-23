@@ -1,0 +1,55 @@
+<project name="tpcc" default="library" basedir="..">
+    <description>tpcc library, as used by derby</description>
+    
+	<property name="tpcc-svn-revision" value="595508"/>
+	<property name="tpcc-svn-url" value="http://svn.apache.org/repos/asf/db/derby/code/trunk"/>
+	
+	<property name="lib-name" value="tpcc"/>
+	<property name="lib-version" value="${tpcc-svn-revision}"/>
+	<property name="lib-url" value="${tpcc-svn-url}"/>
+	<property name="lib-src" value="tpcc-${lib-version}.tgz"/>	
+	
+	<import file="../lib-common.xml"/>
+	
+	<property name="tmp-dir" value="${lib-build-dir}/tmp"/>
+	
+	<target name="lib-source">
+		<mkdir dir="${tmp-dir}"/>
+        <exec executable="svn" dir="${tmp-dir}/java/" failonerror="false">
+            <arg line="-r${tpcc-svn-revision}"/>
+            <arg line="checkout"/>
+            <arg line="${tpcc-svn-url}/java/testing"/>
+        </exec>
+		<tar destfile="${lib-src}" basedir="${tmp-dir}/java/testing" compression="gzip"/>
+        <delete dir="${tmp-dir}"/>
+	</target>
+	
+	<target name="library" depends="lib-untar, lib-build, lib-jar"/>
+	
+	<target name="lib-build" depends="lib-patch">
+        <javac destdir="${bm.test.build}" source="1.4"
+               srcdir="${bm.test.src}"
+               includes="org/apache/derbyTesting/system/oe/**/*.java,org/apache/derbyTesting/junit/DriverManagerConnector.java"
+               debug="true" debuglevel="lines,vars,source">
+          <sourcepath path="${bm.test.src}"/>
+          <classpath>
+            <pathelement path="${derby-top}/classes"/>
+            <pathelement path="${jars}/junit.jar"/>
+          </classpath>
+        </javac>
+	</target>
+		
+	<target name="lib-jar">
+        <jar destfile="${jars}/derby-oe.jar">
+            <fileset dir="${bm.test.build}">
+                <include name="**/*.class"/>
+            </fileset>
+            <fileset dir="${bm.test.src}">
+                <include name="**/*.properties"/>
+                <include name="**/*.sql"/>
+            </fileset>
+        </jar>
+        <copy file="${derby-top}/jars/insane/derbytools.jar" todir="${jars}"/>
+	</target>
+
+</project>
