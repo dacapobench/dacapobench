@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-07-23 12:56:24 +1000 (Wed, 23 Jul 2008) $
- *   $Id: build.xml 369 2008-07-23 02:56:24Z steveb-oss $
+ *   $Date: 2008-07-23 13:08:33 +1000 (Wed, 23 Jul 2008) $
+ *   $Id: build.xml 371 2008-07-23 03:08:33Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -77,12 +77,12 @@
     	<ant antfile="${ant.dir}/fop.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/hsqldb.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/jython.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/janino.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/lucene.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/janino.xml" target="lib-source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/lucene.xml" target="lib-source" inheritAll="true"/>
         <ant antfile="${ant.dir}/pmd.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/sunflow.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/xalan.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/xerces.xml" target="source" inheritAll="true"/>
+        <ant antfile="${ant.dir}/xerces.xml" target="lib-source" inheritAll="true"/>
     </target>
 
     <!-- ================================= 

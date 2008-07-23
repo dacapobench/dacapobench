@@ -11,7 +11,7 @@
     <import file="../common.xml"/>
 	
     <target name="source" depends="common.source">
-		<ant antfile="${ant.dir}/junit.xml" target="source"/>
+		<ant antfile="${ant.dir}/junit.xml" target="lib-source"/>
      </target>
 
     <target name="harness" depends="jdbcbench, common.harness"/>
