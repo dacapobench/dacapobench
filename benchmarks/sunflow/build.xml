@@ -9,18 +9,18 @@
 	<property name="bm-bin" value="${bm-name}-bin-v${bm-version}.zip"/>
 
     <import file="../common.xml"/>
-	<import file="janino.xml"/>
 		
-    <target name="source" depends="common.source, lib-source">
+    <target name="source" depends="common.source">
         <get src="${bm-url}/${bm-bin}" dest="${sources}/${bm-bin}" usetimestamp="true"/>
     </target>
 
     <target name="benchmark" depends="bm-unzip, bm-build, bm-jar, bm-data"/>
 
-	<target name="bm-build" depends="library">
+	<target name="bm-build">
+		<ant antfile="${ant.dir}/janino.xml" target="library"/>
         <mkdir dir="${bm-build-dir}/build"/>
 		<javac srcdir="${bm-build-dir}/src" source="1.5" 
-        	classpath="${lib-jar-name}" destdir="${bm-build-dir}/build"
+        	classpath="${jars}/janino-2.5.2.jar" destdir="${bm-build-dir}/build"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
             	

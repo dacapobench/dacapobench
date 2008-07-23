@@ -38,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2008-07-23 15:07:09 +1000 (Wed, 23 Jul 2008) $
- *   $Id: build.xml 373 2008-07-23 05:07:09Z steveb-oss $
+ *   $Date: 2008-07-23 17:08:41 +1000 (Wed, 23 Jul 2008) $
+ *   $Id: build.xml 376 2008-07-23 07:08:41Z steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -67,22 +67,22 @@
     <target name="sources" 
       description="Download sources from their original locations"
       depends="init.sources">
+    	<ant antfile="antlr/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="batik/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="bloat/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="chart/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="derby/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="eclipse/build.xml" target="source" inheritAll="true"/>
+    	<ant antfile="fop/build.xml" target="source" inheritAll="true"/>
+    	<ant antfile="hsqldb/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="jython/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="luindex/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="pmd/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="sunflow/build.xml" target="source" inheritAll="true"/>
+        <ant antfile="xalan/build.xml" target="source" inheritAll="true"/>
     	<ant antfile="${ant.dir}/ant.xml" target="source" inheritAll="true"/>
-    	<ant antfile="${ant.dir}/antlr.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/batik.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/bloat.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/chart.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/derby.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/eclipse.xml" target="source" inheritAll="true"/>
-    	<ant antfile="${ant.dir}/fop.xml" target="source" inheritAll="true"/>
-    	<ant antfile="${ant.dir}/hsqldb.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/jython.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/janino.xml" target="lib-source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/luindex.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/lucene.xml" target="lib-source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/pmd.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/sunflow.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/xalan.xml" target="source" inheritAll="true"/>
         <ant antfile="${ant.dir}/xerces.xml" target="lib-source" inheritAll="true"/>
     </target>
 
@@ -437,21 +437,21 @@
         target: antlr 
        ================================= -->
     <target name="antlr" depends="init,harness" description="--> build the antlr benchmark">
-    	<ant antfile="${ant.dir}/antlr.xml" target="build" inheritAll="true"/>
+    	<ant antfile="antlr/build.xml" target="build" inheritAll="true"/>
     </target>
 	
     <!-- ================================= 
         target: batik 
        ================================= -->
     <target name="batik" depends="init,harness" description="Build batik">
-    	<ant antfile="${ant.dir}/batik.xml" target="build" inheritAll="true"/>
+    	<ant antfile="batik/build.xml" target="build" inheritAll="true"/>
     </target>
 
     <!-- ================================= 
          target: bloat 
          ================================= -->
     <target name="bloat" depends="init,harness" description="Build bloat">
-    	<ant antfile="${ant.dir}/bloat.xml" target="build" inheritAll="true"/>
+    	<ant antfile="bloat/build.xml" target="build" inheritAll="true"/>
     </target>
 
 
@@ -459,7 +459,7 @@
           target: chart              
          ================================= -->
     <target name="chart" depends="init,harness" description="--> build the jFreeChart benchmark">
-    	<ant antfile="${ant.dir}/chart.xml" target="build" inheritAll="true"/>
+    	<ant antfile="chart/build.xml" target="build" inheritAll="true"/>
     </target>	
 
 	
@@ -467,7 +467,7 @@
           target: derby              
          ================================= -->
     <target name="derby" depends="init,harness" description="--> build the derby benchmark">
-    	<ant antfile="${ant.dir}/derby.xml" target="build" inheritAll="true"/>
+    	<ant antfile="derby/build.xml" target="build" inheritAll="true"/>
 	</target>	
 
 
@@ -475,62 +475,62 @@
           target: eclipse              
          ================================= -->
     <target name="eclipse" depends="init,harness" description="--> build the eclipse benchmark">
-    	<ant antfile="${ant.dir}/eclipse.xml" target="build" inheritAll="true"/>
+    	<ant antfile="eclipse/build.xml" target="build" inheritAll="true"/>
 	</target>	
 
     <!-- ================================= 
         target: fop 
        ================================= -->
     <target name="fop" depends="init,harness" description="--> build the fop benchmark">
-    	<ant antfile="${ant.dir}/fop.xml" target="build" inheritAll="true"/>
+    	<ant antfile="fop/build.xml" target="build" inheritAll="true"/>
     </target>
 	
     <!-- ================================= 
           target: hsqldb              
        ================================= -->
     <target name="hsqldb" depends="init,harness" description="--> build the hsqldb benchmark">
-    	<ant antfile="${ant.dir}/hsqldb.xml" target="build" inheritAll="true"/>
+    	<ant antfile="hsqldb/build.xml" target="build" inheritAll="true"/>
 	</target>	
 
     <!-- ================================= 
           target: jython                
          ================================= -->
     <target name="jython" depends="init,harness,ant" description="--> build the jython benchmark">
-		<ant antfile="${ant.dir}/jython.xml" target="build" inheritAll="true"/>
+		<ant antfile="jython/build.xml" target="build" inheritAll="true"/>
 	</target>
 
     <!-- ================================= 
           target: luindex    
          ================================= -->
     <target name="luindex" depends="init,harness">
-		<ant antfile="${ant.dir}/luindex.xml" target="build"/>
+		<ant antfile="luindex/build.xml" target="build"/>
 	</target>
 
     <!-- ================================= 
           target: lusearch   
          ================================= -->
     <target name="lusearch" depends="init,harness">
-		<ant antfile="${ant.dir}/lusearch.xml" target="build"/>
+		<ant antfile="lusearch/build.xml" target="build"/>
 	</target>
 
     <!-- ================================= 
           target: pmd    
          ================================= -->
     <target name="pmd" depends="init,harness" description="--> build the pmd benchmark">
-		<ant antfile="${ant.dir}/pmd.xml" target="build"/>
+		<ant antfile="pmd/build.xml" target="build"/>
     </target>
 
     <!-- ================================= 
           target: sunflow  
          ================================= -->
     <target name="sunflow" depends="init,harness" description="--> build the sunflow benchmark">
-		<ant antfile="${ant.dir}/sunflow.xml" target="build"/>
+		<ant antfile="sunflow/build.xml" target="build"/>
     </target>
 
     <!-- ================================= 
         target: xalan
        ================================= -->
     <target name="xalan" depends="init,harness" description="--> build the xalan benchmark">
-		<ant antfile="${ant.dir}/xalan.xml" target="build"/>
+		<ant antfile="xalan/build.xml" target="build"/>
     </target>	
 </project>
