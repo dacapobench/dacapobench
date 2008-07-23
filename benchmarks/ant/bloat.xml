@@ -4,12 +4,12 @@
 	
 	<property name="bm-name" value="bloat"/>
     <property name="bm-version" value="1.0"/>
-    <property name="bm-url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
-	<property name="bm-src" value="bloat-${bm-version}-src.tar.gz"/>
+    <property name="bm-url" value="${sourceforge.dl.url}/javabloat/"/>
+	<property name="bm-src" value="bloat-${bm-version}.src.jar"/>
 
     <import file="../common.xml"/>
     
-    <target name="benchmark" depends="bm-untar, bm-build, bm-jar"/>
+    <target name="benchmark" depends="bm-unzip, bm-build, bm-jar"/>
   
 	<target name="bm-build" depends="bm-patch">
         <exec executable="${make}" dir="${bm-build-dir}/src/EDU/purdue/cs/bloat/">
