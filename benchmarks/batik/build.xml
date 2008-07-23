@@ -12,17 +12,13 @@
 	
     <property name="batik-top" value="${bm-build-dir}/batik-${batik.major.version}"/>
 
-	<target name="benchmark" depends="bm-unzip, bm-build, bm-jar, bm-data"/>
-    
-    <target name="bm-build" description="Build batik">
-        <ant antfile="build.xml" dir="${batik-top}" 
-                     target="all-jar" inheritall="false">
-          <property name="debug" value="on"/>
+    <target name="bm-build" depends="bm-unzip">
+        <ant antfile="build.xml" dir="${batik-top}" target="all-jar" inheritall="false">
+      		<property name="debug" value="on"/>
         </ant>
     </target>
 	
 	<target name="bm-jar">
-        <!-- Copy the batik jar files -->
         <copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all.jar" todir="${jars}"/>
 		<copy file="${batik-top}/lib/build/crimson-1.1.3.jar" todir="${jars}"/>
         <copy file="${batik-top}/lib/xalan-2.6.0.jar" todir="${jars}"/>

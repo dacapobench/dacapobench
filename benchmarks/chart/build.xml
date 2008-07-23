@@ -34,7 +34,7 @@
         <jar destfile="${jars}/chart.jar" basedir="${build.src}/${bm-name}/harness"/>
     </target>
 
-    <target name="bm-build">
+    <target name="bm-build" depends="bm-untar">
         <ant antfile="ant/build.xml" dir="${bm-build-top}" target="compile" inheritall="false"/>
     </target>
     

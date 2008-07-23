@@ -9,9 +9,7 @@
 
     <import file="../common.xml"/>
     
-    <target name="benchmark" depends="bm-unzip, bm-build, bm-jar"/>
-  
-	<target name="bm-build" depends="bm-patch">
+	<target name="bm-build" depends="bm-unzip, bm-patch">
 		<condition property="jdk.home" value="${java.home}" else="${java.home}/..">
 			<not><contains string="${java.home}" substring="/jre"/></not>
 		</condition>

@@ -9,8 +9,7 @@
 
     <import file="../common.xml"/>
 	
-    <target name="bm-build">
-        <!-- Build directly with javac, classfiles into the build directory -->
+    <target name="bm-build" depends="bm-untar">
         <mkdir dir="${bm-build-dir}/classes"/>
         <javac srcdir="${bm-build-dir}/${bm-name}-${bm-version}/antlr/"
             source="1.4"

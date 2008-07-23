@@ -11,14 +11,14 @@
 
     <property name="bm-build-top" value="${bm-build-dir}/pmd-${bm-version}"/>
 
-	<target name="benchmark" depends="bm-unzip, bm-build, bm-jar, bm-data"/>
+	<target name="benchmark" depends="bm-build, bm-jar, bm-data"/>
 	
 	<target name="source" depends="common.source">
 		<ant antfile="${ant.dir}/junit.xml" target="lib-source"/>
 		<ant antfile="${ant.dir}/xerces.xml" target="lib-source"/>
 	</target>
 	
-	<target name="bm-build" depends="bm-patch">
+	<target name="bm-build" depends="bm-unzip, bm-patch">
 		<ant antfile="${ant.dir}/junit.xml" target="library"/>
 		<ant antfile="${ant.dir}/xerces.xml" target="library"/>
         <exec dir="${bm-build-top}/bin" executable="ant">

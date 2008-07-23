@@ -13,7 +13,7 @@
 
 	<property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}"/>
 	
-	<target name="bm-build" depends="bm-patch">
+	<target name="bm-build" depends="bm-untar, bm-patch">
     	<ant dir="${bm-build-top}" inheritall="false"/>
 	</target>
 

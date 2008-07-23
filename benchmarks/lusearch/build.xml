@@ -11,8 +11,6 @@
 		<ant antfile="${ant.dir}/lucene.xml" target="lib-source"/>	
 	</target>
 	
-	<target name="benchmark" depends="bm-build, bm-jar, bm-data"/>
-	
 	<target name="bm-build">
 		<ant antfile="${ant.dir}/lucene.xml" target="library"/>
         <mkdir dir="${bm-build-dir}"/>

@@ -26,7 +26,7 @@
 		<jar destfile="${jars}/xalan-benchmark.jar" basedir="${build.src}/xalan/benchmark"/>
  	</target>
 
-	<target name="bm-build" depends="bm-patch">
+	<target name="bm-build" depends="bm-untar, bm-patch">
 		<ant antfile="${ant.dir}/xerces.xml" target="library"/>
 		<exec dir="${xalan-top}" executable="ant">
             <env key="CLASSPATH" value=".:${build}:${build}/${xerces-impl-jar-name}:${build}/${xerces-api-jar-name}"/>

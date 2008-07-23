@@ -12,9 +12,7 @@
 	
 	<target name="source" depends="common.source, py-source"/>
 
-	<target name="benchmark" depends="bm-unzip, bm-patch, bm-build, bm-jar, bm-data"/>
-	
-	<target name="bm-build" depends="bm-patch">
+	<target name="bm-build" depends="bm-unzip, bm-patch">
         <copy todir="${bm-build-dir}/src/java">
             <fileset file="${bm-build-dir}/build.*"/>
         </copy>

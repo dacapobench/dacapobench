@@ -21,7 +21,7 @@
            debug="true" debuglevel="lines,vars,source"/>
     </target>
 	
-	<target name="benchmark" depends="bm-untar, bm-build, bm-jar, bm-data"/>
+	<target name="benchmark" depends="bm-build, bm-jar, bm-data"/>
 	
 	<target name="config">
         <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
@@ -30,7 +30,7 @@
 	<target name="bm-build"/>
 	
 	<target name="bm-patch">
-		<patch patchfile="${patches}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes"/>
+		<patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes"/>
 	</target>
 	
 	<target name="bm-untar">

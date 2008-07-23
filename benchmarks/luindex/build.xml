@@ -14,8 +14,6 @@
         <get src="${shakespeare.url}" dest="${sources}/shakespeare.tgz" usetimestamp="true"/>
         <get src="${bible.url}" dest="${sources}/kjv.zip" usetimestamp="true"/>
  	</target>
-
-	<target name="benchmark" depends="bm-build, bm-jar, bm-data"/>
 	
 	<target name="bm-build">
 		<ant antfile="${ant.dir}/lucene.xml" target="library"/>

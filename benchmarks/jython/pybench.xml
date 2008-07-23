@@ -21,7 +21,7 @@
 	</target>
 
 	<target name="py-patch">
-        <patch patchfile="${patches}/pybench.patch" 
+        <patch patchfile="${bm-files}/pybench.patch" 
                  dir="${bm-build-dir}/jython"
                  strip="0" ignorewhitespace="yes"/>
 	</target>

@@ -19,7 +19,7 @@
 	<target name="lib-build"/>
 	
 	<target name="lib-patch">
-		<patch patchfile="${patches}/${lib-name}.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
+		<patch patchfile="${lib-files}/${lib-name}.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
 	</target>
 	
 	<target name="lib-untar">

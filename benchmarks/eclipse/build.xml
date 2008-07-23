@@ -17,7 +17,7 @@
         <get src="${bm-url}/${bm-src-at}" dest="${sources}/${bm-src-at}" usetimestamp="true"/>
     </target>
     
-    <target name="harness" description="Build eclipse">
+    <target name="harness">
         <javac srcdir="${bmsrc}" destdir="${build}" includes="dacapo/${bm-name}/*.java"
                 debug="true" debuglevel="lines,vars,source">
             <classpath>
@@ -29,7 +29,7 @@
         </javac>
     </target>
     
-	<target name="bm-build"> 
+	<target name="bm-build" depends="bm-untar"> 
 		<unzip src="${sources}/${bm-src-at}" dest="${bm-build-dir}">
 			<patternset>
 				<include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>

@@ -19,10 +19,8 @@
 	<target name="jdbcbench"> 
         <ant antfile="${ant.dir}/jdbcbench.xml" target="library"/>
 	</target>
-		
-    <target name="benchmark" depends="bm-unzip, bm-build, bm-jar, bm-data"/>
 	
-	<target name="bm-build">
+	<target name="bm-build" depends="bm-unzip">
 		<ant antfile="${ant.dir}/junit.xml" target="library"/>
         <copy file="${junit-jar}" todir="${bm-build-dir}/hsqldb/lib/"/>
         <ant antfile="build/build.xml" dir="${bm-build-dir}/hsqldb" 
