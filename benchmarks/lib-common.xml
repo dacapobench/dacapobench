@@ -1,0 +1,38 @@
+<project name="lib-common">
+
+	<property name="lib-build-dir" value="${build.src}/${lib-name}"/>
+	<property name="lib-files" value="${basedir}/${lib-name}"/>
+	<property name="lib-harness-classpath" value="${build}"/>
+	<property name="lib-jar-name" value="${jars}/${lib-name}-${lib-version}.jar"/>
+	
+	<target name="all" description="library">
+		<antcall target="lib-source"/>
+		<antcall target="library"/>
+	</target>
+
+    <target name="lib-source">
+        <get src="${lib-url}/${lib-src}" dest="${sources}/${lib-src}" usetimestamp="true"/>
+    </target>
+	
+	<target name="library" depends="lib-untar, lib-build, lib-jar"/>
+	
+	<target name="lib-build"/>
+	
+	<target name="lib-patch">
+		<patch patchfile="${patches}/${lib-name}.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
+	</target>
+	
+	<target name="lib-untar">
+        <mkdir dir="${lib-build-dir}"/>
+        <untar src="${sources}/${lib-src}" dest="${lib-build-dir}/" compression="gzip"/>
+	</target>
+
+	<target name="lib-unzip">
+        <mkdir dir="${lib-build-dir}/"/>
+        <unzip src="${sources}/${lib-src}" dest="${lib-build-dir}/"/>
+	</target>
+
+	<target name="lib-jar">
+    	<jar jarfile="${jars}/${lib-name}.jar" basedir="${lib-build-dir}/classes"/>
+	</target>	
+</project>
