@@ -1,7 +1,6 @@
 <project name="util">
 	
 	<target name="check-source" if="target-file">
-	<!--	<checksum file="${target-dir}/${target-file}"/> -->
 		<condition property="up-to-date">
 			<and>
 				<available file="${target-dir}/${target-file}"/>
@@ -12,7 +11,6 @@
 			<param name="target-dir" value="${target-dir}"/>
 			<param name="target-url" value="${target-url}"/>
 			<param name="target-file" value="${target-file}"/>
-			<param name="up-to-date" value="${up-to-date}"/>
 		</antcall>	
 	</target>
 	
