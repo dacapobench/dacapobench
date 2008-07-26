@@ -1,0 +1,31 @@
+<project name="harness" default="all" basedir="..">
+    <description>DaCapo benchmark harness</description>
+	<property file="ant/local.properties"/>
+	<property file="ant/dacapo.properties"/>
+	
+	<property name="base-dir" value="harness"/>
+	<property name="src" value="${base-dir}/src"/>
+	<property name="output-dir" value="${base-dir}/dist"/>
+	
+	<target name="all" depends="clean, init, harness, jar"/>
+	
+	<target name="clean">
+		<delete dir="${output-dir}"/>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${output-dir}"/>
+	</target>
+	
+	<target name="parser">
+        <javacc javacchome="${javacchome}" target="${src}/org/dacapo/parser/ConfigFile.jj"/>
+	</target>
+	
+	<target name="harness" depends="init, parser">
+        <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
+	</target>
+	
+	<target name="jar">
+		<jar jarfile="${jar-target}" basedir="${output-dir}" update="false" manifest="${src}/META-INF/MANIFEST.MF"/>
+	</target>
+</project>
