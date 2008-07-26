@@ -9,8 +9,6 @@
 	
 	<import file="../common.xml"/>
 
-	<property name="janino-jar" value="${lib-jars}/janino-${lib-version}.jar"/>
-
 	<property name="lib-build-top" value="${lib-build-dir}/janino-${lib-version}"/>
 	
 	<target name="unpack" depends="unzip"/>

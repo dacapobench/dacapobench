@@ -9,8 +9,7 @@
 	
 	<property name="jdbc-file" value="org/dacapo/jdbcbench/PseudoJDBCBench.java"/>
 	<property name="jdbc-src-dir" value="${lib-src-dir}"/>
-	<property name="jdbc-jar" value="${lib-jars}/jdbcbench.jar"/>
-	
+
 	<target name="lib-source"/>
 	
 	<target name="build" depends="lib-build, lib-jar"/>
@@ -26,12 +25,12 @@
 	</target>
 		
 	<target name="lib-jar">
-		<jar destfile="${jdbc-jar}" basedir="${lib-build-dir}"/>
+		<jar destfile="${jdbcbench-jar}" basedir="${lib-build-dir}"/>
 	</target>
 	
 	<target name="jdbc-jar-check">
 		<condition property="jdbc-built">
-			<uptodate targetfile="${jdbc-jar}" srcfile="${jdbc-src-dir}/${jdbc-file}"/>
+			<uptodate targetfile="${jdbcbench-jar}" srcfile="${jdbc-src-dir}/${jdbc-file}"/>
 		</condition>
 	</target>
 </project>

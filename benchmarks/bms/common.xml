@@ -1,7 +1,11 @@
 <project name="common">
-	<import file="util.xml"/>
-	
-	<property name="bm-files" value="${basedir}/${bm-name}"/>
+	<import file="../util.xml"/>
+	<import file="../libs/libs.xml"/>
+	<property file="dacapo.properties"/>
+	<property file="local.properties"/>
+	<property file="default.properties"/>
+
+	<property name="bm-files" value="${basedir}/bms/${bm-name}"/>
 	<property name="bm-build-dir" value="${bm-files}/build"/>
 	<property name="bm-output-dir" value="${bm-files}/dist"/>
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>

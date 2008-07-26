@@ -9,9 +9,6 @@
 	
 	<import file="../common.xml"/>
 	
-	<property name="junit-jar-name" value="${lib-name}-${lib-version}.jar"/>
-	<property name="junit-jar" value="${lib-jars}/${junit-jar-name}"/>
-	
 	<target name="unpack" depends="unzip"/>
 	
 	<target name="unzip">

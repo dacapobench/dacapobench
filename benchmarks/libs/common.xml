@@ -1,6 +1,7 @@
 <project name="lib-common">
 	<import file="../util.xml"/>
-
+	<import file="libs.xml"/>
+	
 	<property name="lib-build-dir" value="libs/${lib-name}/build"/>
 	<property name="lib-output-dir" value="libs/${lib-name}/dist"/>
 	<property name="lib-jars" value="${lib-output-dir}/jar"/>

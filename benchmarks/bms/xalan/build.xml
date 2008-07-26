@@ -1,6 +1,6 @@
-<project name="xalan" default="all" basedir="..">
+<project name="xalan" default="all" basedir="../..">
     <description>DaCapo xalan benchmark</description>
-	<property file="ant/dacapo.properties"/>
+	<property file="dacapo.properties"/>
 	
 	<property name="bm-name" value="xalan"/>
     <property name="bm-version" value="2_4_1"/>
@@ -10,10 +10,6 @@
 	<property name="bm-dat-file" value="WD-xforms-20010608.zip"/>
 	
 	<import file="../common.xml"/>
-	
-	<property name="xerces-impl-jar-name" value="xercesImpl.jar"/>
-	<property name="xerces-api-jar-name" value="xml-apis.jar"/>
-	<property name="xerces-jars" value="libs/xerces/dist/jar"/>
 	
     <property name="xalan-top" value="${bm-build-dir}/xalan-j_${bm-version}"/>
 		
@@ -27,8 +23,7 @@
 	
 	<target name="unpack" depends="untar, patch"/>
 	
-	<target name="bm-build">
-		<ant antfile="libs/xerces/build.xml"/>
+	<target name="bm-build" depends="xerces">
 		<exec dir="${xalan-top}" executable="ant">
             <env key="CLASSPATH" value=".:${xerces-jars}/${xerces-impl-jar-name}:${xerces-jars}/${xerces-api-jar-name}"/>
             <env key="ANT_HOME" value="${ant.install}"/>

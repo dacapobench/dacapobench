@@ -11,9 +11,7 @@
 	<import file="../common.xml"/>
 	
     <property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-_version}"/>
-	<property name="xerces-impl-jar-name" value="xercesImpl.jar"/>
-	<property name="xerces-api-jar-name" value="xml-apis.jar"/>
-	
+
 	<target name="unpack" depends="untar"/>
 		
 	<target name="build">

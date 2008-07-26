@@ -1,6 +1,6 @@
-<project name="luindex" default="all" basedir="..">
+<project name="luindex" default="all" basedir="../..">
     <description>DaCapo luindex benchmark</description>
-	<property file="ant/dacapo.properties"/>
+	<property file="dacapo.properties"/>
 
 	<property name="bm-name" value="luindex"/>
 
@@ -8,7 +8,6 @@
 	
     <property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
     <property name="bible.url" value="${sfdata.url}/kjv.zip"/>
-	<property name="lu-jars" value="libs/lucene/dist/jar"/>
 	
 	<target name="source">
 		<antcall target="check-source">
@@ -23,18 +22,16 @@
         </antcall>
  	</target>
 	
-
 	<target name="bm-harness">
 		<javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}"
     	   includes="**" excludes="org/dacapo/luindex/*"
            debug="true" debuglevel="lines,vars,source"/>
     </target>
 			
-	<target name="bm-build">
-		<ant antfile="libs/lucene/build.xml"/>
+	<target name="bm-build" depends="lucene">
       	<mkdir dir="${bm-build-dir}"/>
 		<javac srcdir="${bm-src-dir}" source="1.5"
-           classpath="${harness-classpath}:${lu-jars}/lucene-core-1.9.2-dev.jar:${lu-jars}/lucene-demos-1.9.2-dev.jar" 
+           classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}" 
            destdir="${bm-build-dir}" 
            includes="org/dacapo/luindex/*" debug="true" debuglevel="lines,vars,source"/>
 	</target>

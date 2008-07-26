@@ -25,15 +25,6 @@
     	<move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
    	</target>
 
-
-    <!-- constraints -->
-    <property name="constraints.gnuclasspath" value="true"/>
-
-    <!-- auxilary downloads -->
-    <!-- data downloads -->
-    <property name="shakespeare.xml.url" value="http://metalab.unc.edu/bosak/xml/eg/shaks200.zip"/>
-
-
     <target name="init">
         <!-- Create the time stamp -->
         <tstamp/>
@@ -55,104 +46,46 @@
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->
 
-    <!-- ================================= 
-        target: antlr 
-       ================================= -->
-    <target name="antlr" depends="init,harness" description="--> build the antlr benchmark">
-    	<ant antfile="antlr/build.xml" target="incremental" inheritAll="true"/>
+    <target name="antlr" depends="init,harness">
+    	<ant antfile="bms/antlr/build.xml" target="incremental" inheritAll="true"/>
     </target>
-	
-    <!-- ================================= 
-        target: batik 
-       ================================= -->
-    <target name="batik" depends="init,harness" description="Build batik">
-    	<ant antfile="batik/build.xml" target="incremental" inheritAll="true"/>
+    <target name="batik" depends="init,harness">
+    	<ant antfile="bms/batik/build.xml" target="incremental" inheritAll="true"/>
     </target>
-
-    <!-- ================================= 
-         target: bloat 
-         ================================= -->
-    <target name="bloat" depends="init,harness" description="Build bloat">
-    	<ant antfile="bloat/build.xml" target="incremental" inheritAll="true"/>
+    <target name="bloat" depends="init,harness">
+    	<ant antfile="bms/bloat/build.xml" target="incremental" inheritAll="true"/>
     </target>
-
-
-    <!-- ================================= 
-          target: chart              
-         ================================= -->
-    <target name="chart" depends="init,harness" description="--> build the jFreeChart benchmark">
-    	<ant antfile="chart/build.xml" target="incremental" inheritAll="true"/>
+    <target name="chart" depends="init,harness">
+    	<ant antfile="bms/chart/build.xml" target="incremental" inheritAll="true"/>
     </target>	
-
-	
-    <!-- ================================= 
-          target: derby              
-         ================================= -->
-    <target name="derby" depends="init,harness" description="--> build the derby benchmark">
-    	<ant antfile="derby/build.xml" target="incremental" inheritAll="true"/>
+    <target name="derby" depends="init,harness">
+    	<ant antfile="bms/derby/build.xml" target="incremental" inheritAll="true"/>
 	</target>	
-
-
-    <!-- ================================= 
-          target: eclipse              
-         ================================= -->
-    <target name="eclipse" depends="init,harness" description="--> build the eclipse benchmark">
-    	<ant antfile="eclipse/build.xml" target="incremental" inheritAll="true"/>
+    <target name="eclipse" depends="init,harness">
+    	<ant antfile="bms/eclipse/build.xml" target="incremental" inheritAll="true"/>
 	</target>	
-
-    <!-- ================================= 
-        target: fop 
-       ================================= -->
-    <target name="fop" depends="init,harness" description="--> build the fop benchmark">
-    	<ant antfile="fop/build.xml" target="incremental" inheritAll="true"/>
+    <target name="fop" depends="init,harness">
+    	<ant antfile="bms/fop/build.xml" target="incremental" inheritAll="true"/>
     </target>
-	
-    <!-- ================================= 
-          target: hsqldb              
-       ================================= -->
-    <target name="hsqldb" depends="init,harness" description="--> build the hsqldb benchmark">
-    	<ant antfile="hsqldb/build.xml" target="incremental" inheritAll="true"/>
-	</target>	
-
-    <!-- ================================= 
-          target: jython                
-         ================================= -->
-    <target name="jython" depends="init,harness" description="--> build the jython benchmark">
-		<ant antfile="jython/build.xml" target="incremental" inheritAll="true"/>
+    <target name="hsqldb" depends="init,harness">
+    	<ant antfile="bms/hsqldb/build.xml" target="incremental" inheritAll="true"/>
 	</target>
-
-    <!-- ================================= 
-          target: luindex    
-         ================================= -->
+    <target name="jython" depends="init,harness">
+		<ant antfile="bms/jython/build.xml" target="incremental" inheritAll="true"/>
+	</target>
     <target name="luindex" depends="init,harness">
-		<ant antfile="luindex/build.xml" target="incremental"/>
+		<ant antfile="bms/luindex/build.xml" target="incremental"/>
 	</target>
-
-    <!-- ================================= 
-          target: lusearch   
-         ================================= -->
     <target name="lusearch" depends="init,harness">
-		<ant antfile="lusearch/build.xml" target="incremental"/>
+		<ant antfile="bms/lusearch/build.xml" target="incremental"/>
 	</target>
-
-    <!-- ================================= 
-          target: pmd    
-         ================================= -->
     <target name="pmd" depends="init,harness" description="--> build the pmd benchmark">
-		<ant antfile="pmd/build.xml" target="incremental"/>
+		<ant antfile="bms/pmd/build.xml" target="incremental"/>
     </target>
-
-    <!-- ================================= 
-          target: sunflow  
-         ================================= -->
     <target name="sunflow" depends="init,harness" description="--> build the sunflow benchmark">
-		<ant antfile="sunflow/build.xml" target="incremental"/>
+		<ant antfile="bms/sunflow/build.xml" target="incremental"/>
     </target>
-
-    <!-- ================================= 
-        target: xalan
-       ================================= -->
     <target name="xalan" depends="init,harness" description="--> build the xalan benchmark">
-		<ant antfile="xalan/build.xml" target="incremental"/>
+		<ant antfile="bms/xalan/build.xml" target="incremental"/>
     </target>	
 </project>

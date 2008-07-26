@@ -1,6 +1,6 @@
-<project name="pmd" default="all" basedir="..">
+<project name="pmd" default="all" basedir="../..">
     <description>DaCapo pmd benchmark</description>
-	<property file="ant/dacapo.properties"/>
+	<property file="dacapo.properties"/>
 	
 	<property name="bm-name" value="pmd"/>
     <property name="bm-version" value="3.7"/>
@@ -8,14 +8,13 @@
 	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
 	
 	<import file="../common.xml"/>
-
+	
     <property name="bm-build-top" value="${bm-build-dir}/pmd-${bm-version}"/>
 	
 	<target name="unpack" depends="unzip, patch"/>
 	
-	<target name="bm-build">
+	<target name="bm-build" depends="xerces">
 		<ant antfile="libs/junit/build.xml"/>
-		<ant antfile="libs/xerces/build.xml"/>
         <exec dir="${bm-build-top}/bin" executable="ant">
             <arg value="jar"/>
             <env key="CLASSPATH" value=".:${junit-jar}"/>

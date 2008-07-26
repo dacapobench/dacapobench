@@ -1,14 +1,12 @@
-<project name="sunflow" default="all" basedir="..">
+<project name="sunflow" default="all" basedir="../..">
     <description>DaCapo Sunflow benchmark</description>
-	<property file="ant/dacapo.properties"/>
+	<property file="dacapo.properties"/>
 	
 	<property name="bm-name" value="sunflow"/>
     <property name="bm-version" value="0.07.1"/>
     <property name="bm-url" value="${sourceforge.dl.url}/sunflow"/>
 	<property name="bm-src" value="${bm-name}-src-v${bm-version}.zip"/>
 	<property name="bm-bin" value="${bm-name}-bin-v${bm-version}.zip"/>
-
-	<property name="janino" value="libs/janino/dist/jar/janino-2.5.2.jar"/>
 	
     <import file="../common.xml"/>
 		
@@ -22,11 +20,10 @@
 
 	<target name="unpack" depends="unzip"/>
 	
-	<target name="bm-build">
-		<ant antfile="libs/janino/build.xml"/>
+	<target name="bm-build" depends="janino">
         <mkdir dir="${bm-build-dir}/build"/>
 		<javac srcdir="${bm-build-dir}/src" source="1.5" 
-        	classpath="${janino}" destdir="${bm-build-dir}/build"
+        	classpath="${janino-jar}" destdir="${bm-build-dir}/build"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
             	

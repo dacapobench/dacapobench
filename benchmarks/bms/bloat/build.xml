@@ -1,7 +1,6 @@
-<project name="bloat" default="all" basedir="..">
+<project name="bloat" default="all" basedir="../..">
     <description>DaCapo bloat benchmark</description>
-	<property file="ant/local.properties"/>
-	<property file="ant/dacapo.properties"/>
+	<property file="dacapo.properties"/>
 	
 	<property name="bm-name" value="bloat"/>
     <property name="bm-version" value="1.0"/>
