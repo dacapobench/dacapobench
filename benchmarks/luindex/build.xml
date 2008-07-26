@@ -13,12 +13,12 @@
 	<target name="source">
 		<antcall target="check-source">
 			<param name="target-dir" value="${bm-downloads}"/>
-			<param name="target-url" value="${shakespeare.url}"/>
+			<param name="target-url" value="${sfdata.url}"/>
 			<param name="target-file" value="shakespeare.tgz"/>
         </antcall>
 		<antcall target="check-source">
 			<param name="target-dir" value="${bm-downloads}"/>
-			<param name="target-url" value="${bible.url}"/>
+			<param name="target-url" value="${sfdata.url}"/>
 			<param name="target-file" value="kjv.zip"/>
         </antcall>
  	</target>
