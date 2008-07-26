@@ -487,7 +487,7 @@
     <!-- ================================= 
           target: jython                
          ================================= -->
-    <target name="jython" depends="init,harness,ant" description="--> build the jython benchmark">
+    <target name="jython" depends="init,harness" description="--> build the jython benchmark">
 		<ant antfile="jython/build.xml" target="incremental" inheritAll="true"/>
 	</target>
 
