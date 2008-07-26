@@ -1,7 +1,7 @@
 <project name="util">
 	
 	<target name="check-source" if="target-file">
-		<checksum file="${target-dir}/${target-file}"/>
+	<!--	<checksum file="${target-dir}/${target-file}"/> -->
 		<condition property="up-to-date">
 			<and>
 				<available file="${target-dir}/${target-file}"/>
