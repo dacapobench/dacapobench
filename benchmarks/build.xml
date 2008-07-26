@@ -62,27 +62,7 @@
     <!-- ================================= 
          target: sources          
          ================================= -->
-    <target name="sources" 
-      description="Download sources from their original locations"
-      depends="init.sources">
-    	<ant antfile="antlr/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="batik/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="bloat/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="chart/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="derby/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="eclipse/build.xml" target="source" inheritAll="true"/>
-    	<ant antfile="fop/build.xml" target="source" inheritAll="true"/>
-    	<ant antfile="hsqldb/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="jython/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="luindex/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="pmd/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="sunflow/build.xml" target="source" inheritAll="true"/>
-        <ant antfile="xalan/build.xml" target="source" inheritAll="true"/>
-    	<ant antfile="${ant.dir}/ant.xml" target="source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/janino.xml" target="lib-source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/lucene.xml" target="lib-source" inheritAll="true"/>
-        <ant antfile="${ant.dir}/xerces.xml" target="lib-source" inheritAll="true"/>
-    </target>
+    <target name="sources" />
 
     <!-- ================================= 
          target: srczip              
