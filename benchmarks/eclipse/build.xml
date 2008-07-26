@@ -8,29 +8,37 @@
     <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${bm-version}-${bm-drop}"/>
 	<property name="bm-src" value="eclipse-SDK-${bm-version}-linux-gtk.tar.gz"/>
 	
+	<property name="extra" value="../extra"/>
+	
     <import file="../common.xml"/>
 
 	<property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
 	<property name="bm-src-at" value="eclipse-Automated-Tests-${bm-version}.zip"/>
 
     <target name="source" depends="common.source">
-        <get src="${bm-url}/${bm-src-at}" dest="${sources}/${bm-src-at}" usetimestamp="true"/>
+		<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${bm-url}"/>
+			<param name="target-file" value="${bm-src-at}"/>
+        </antcall>
     </target>
     
-    <target name="harness">
-        <javac srcdir="${bmsrc}" destdir="${build}" includes="dacapo/${bm-name}/*.java"
+    <target name="bm-harness">
+        <javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" excludes="org/dacapo/eclipse/*.java"
                 debug="true" debuglevel="lines,vars,source">
             <classpath>
-                <pathelement path="${build}"/>
+                <pathelement path="${harness-classpath}"/>
                 <pathelement path="${bm-build-dir}/eclipse/plugins/org.eclipse.osgi_${bm-version}.jar"/>
                 <pathelement path="${bm-build-dir}/eclipse/plugins/org.eclipse.core.runtime_${bm-version}.jar"/>
                 <pathelement path="${bm-build-dir}/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
             </classpath>
         </javac>
     </target>
+	
+	<target name="unpack" depends="untar"/>
     
-	<target name="bm-build" depends="bm-untar"> 
-		<unzip src="${sources}/${bm-src-at}" dest="${bm-build-dir}">
+	<target name="bm-build"> 
+		<unzip src="${bm-downloads}/${bm-src-at}" dest="${bm-build-dir}">
 			<patternset>
 				<include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
 			</patternset>
@@ -44,12 +52,12 @@
 	</target>
 
 	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
-    <target name="bm-jar">
+    <target name="jar">
         <property name="osgihack" value="${bm-build-dir}/osgihack"/>
         <!-- unzip the jar -->
         <unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${bm-version}.jar"/>
         <!-- copy out the class files -->
-       	<jar jarfile="${jars}/eclipse.jar">
+       	<jar jarfile="${bm-jars}/eclipse.jar">
             <fileset dir="${osgihack}" includes="org/**/*"/>
         </jar>
         <!-- conditionally clean out the stuff we've duplicated -->
@@ -72,12 +80,12 @@
     </target>
 	
     <!-- Create the eclipse data file -->
-	<target name="bm-data" depends="plugin">
+	<target name="data" depends="plugin">
 		<!-- Create the fake jre -->
-	    <unzip dest="${bm-build-dir}/dummyjre" src="${data}/${bm-name}/dummyjre.zip"/>
+	    <unzip dest="${bm-build-dir}/dummyjre" src="${bm-data}/dummyjre.zip"/>
 
 	    <!-- Install the test data -->
-	    <zip destfile="${zipdata}/${bm-name}.zip">
+	    <zip destfile="${bm-dat}/${bm-name}.zip">
 	    	<!-- The dummy jre -->
 	        <fileset dir="${bm-build-dir}/" includes="dummyjre/**"/>
 

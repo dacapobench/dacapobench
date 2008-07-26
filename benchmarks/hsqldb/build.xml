@@ -11,24 +11,26 @@
     <import file="../common.xml"/>
 	
     <target name="source" depends="common.source">
-		<ant antfile="${ant.dir}/junit.xml" target="lib-source"/>
+		<ant antfile="libs/junit/build.xml" target="source"/>
      </target>
 
-    <target name="harness" depends="jdbcbench, common.harness"/>
+    <target name="bm-harness" depends="jdbcbench, common.bm-harness"/>
 	
 	<target name="jdbcbench"> 
-        <ant antfile="${ant.dir}/jdbcbench.xml" target="library"/>
+        <ant antfile="libs/jdbcbench/build.xml"/>
 	</target>
 	
-	<target name="bm-build" depends="bm-unzip">
-		<ant antfile="${ant.dir}/junit.xml" target="library"/>
+	<target name="unpack" depends="unzip"/>
+	
+	<target name="bm-build">
+		<ant antfile="libs/junit/build.xml"/>
         <copy file="${junit-jar}" todir="${bm-build-dir}/hsqldb/lib/"/>
         <ant antfile="build/build.xml" dir="${bm-build-dir}/hsqldb" 
            target="hsqldbtest" inheritall="false"/>
     </target>
 	
-	<target name="bm-jar" depends="deps">
-        <copy file="${bm-build-dir}/hsqldb/lib/hsqldbtest.jar" todir="${jars}"/>
+	<target name="jar" depends="deps">
+        <copy file="${bm-build-dir}/hsqldb/lib/hsqldbtest.jar" todir="${bm-jars}"/>
 	</target>
 	
     <target name="deps" if="externalize.deps">

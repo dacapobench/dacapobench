@@ -7,46 +7,54 @@
     <property name="bm-url" value="${apache.dl.url}/xml/xalan-j/source"/>
     <property name="bm-dat-url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/WD-xforms-20010608.zip"/>
 	<property name="bm-src" value="${bm-name}-j_${bm-version}-src.tar.gz"/>
-
+	<property name="bm-dat-file" value="xalan.data.zip"/>
+	
 	<import file="../common.xml"/>
+	
+	<property name="xerces-impl-jar-name" value="xercesImpl.jar"/>
+	<property name="xerces-api-jar-name" value="xml-apis.jar"/>
+	<property name="xerces-jars" value="libs/xerces/dist/jar"/>
 	
     <property name="xalan-top" value="${bm-build-dir}/xalan-j_${bm-version}"/>
 		
     <target name="source" depends="common.source">
-		<ant antfile="${ant.dir}/xerces.xml" target="lib-source"/>
-		<get src="${bm-dat-url}" dest="${sources}/xalan.data.zip" usetimestamp="true"/>
+		<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${bm-dat-file}"/>
+			<param name="target-file" value="xalan.data.zip"/>
+        </antcall>
     </target>
 	
-	<target name="harness" depends="common.harness">
-		<mkdir dir="${bm-build-dir}/benchmark"/>
-		<javac srcdir="${bmsrc}" source="1.5" classpath="${jars}/xalan.jar" 
-			destdir="${bm-build-dir}/benchmark/" 
-		    includes="dacapo/xalan/benchmark/*"
-		    debug="true" debuglevel="lines,vars,source"/>
-		<jar destfile="${jars}/xalan-benchmark.jar" basedir="${build.src}/xalan/benchmark"/>
- 	</target>
-
-	<target name="bm-build" depends="bm-untar, bm-patch">
-		<ant antfile="${ant.dir}/xerces.xml" target="library"/>
+	<target name="unpack" depends="untar, patch"/>
+	
+	<target name="bm-build">
+		<ant antfile="libs/xerces/build.xml"/>
 		<exec dir="${xalan-top}" executable="ant">
-            <env key="CLASSPATH" value=".:${build}:${build}/${xerces-impl-jar-name}:${build}/${xerces-api-jar-name}"/>
+            <env key="CLASSPATH" value=".:${xerces-jars}/${xerces-impl-jar-name}:${xerces-jars}/${xerces-api-jar-name}"/>
             <env key="ANT_HOME" value="${ant.install}"/>
         </exec>
+		<mkdir dir="${bm-build-dir}/benchmark"/>
+		<javac srcdir="${bm-src-dir}" source="1.5" classpath="${xalan-top}/build/xalan.jar" 
+			destdir="${bm-build-dir}/benchmark/" 
+		    includes="org/dacapo/xalan/*"
+		    debug="true" debuglevel="lines,vars,source"/>
+		<jar destfile="${bm-jars}/xalan-benchmark.jar" basedir="${bm-build-dir}/benchmark"/>
 	</target>
 	
-	<target name="bm-jar" depends="deps">
-        <copy file="${xalan-top}/build/xalan.jar" todir="${jars}"/>
+	<target name="jar" depends="deps">
+        <copy file="${xalan-top}/build/xalan.jar" todir="${bm-jars}"/>
 	</target>
 	
-    <target name="bm-data">
-        <mkdir dir="${xalan-top}/xalan-data/xalan/"/>
-        <unzip src="${sources}/xalan.data.zip" dest="${xalan-top}/xalan-data/xalan/">
+    <target name="data">
+        <mkdir dir="${bm-data}/xalan"/>
+        <unzip src="${bm-downloads}/${bm-dat-file}" dest="${bm-data}/xalan">
             <patternset>
                 <include name="*.xml"/>
                 <include name="xmlspec.xsl"/>
             </patternset>
         </unzip>
-        <zip basedir="${xalan-top}/xalan-data/" includes="xalan/**" destfile="${zipdata}/xalan.zip"/>
+        <zip basedir="${bm-data}" includes="xalan/**" destfile="${bm-dat}/xalan.zip"/>
+    	<delete dir="${bm-data}"/>
     </target>
 	
     <target name="deps" if="externalize.deps">

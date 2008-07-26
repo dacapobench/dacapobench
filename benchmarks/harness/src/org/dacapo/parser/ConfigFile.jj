@@ -1,0 +1,290 @@
+/*
+ * JavaCC grammar for DaCapo benchmark config files.  Parsing a config file
+ * returns a dacapo.Config object.
+ *
+ * The grammar also produces a main function for syntax checking of
+ * config files.
+ *
+ * Author: Robin Garner, April 2006
+ *
+ * (basic literal, white-space, comment parsing code borrowed liberally from 
+ *  JavaCC example files)
+ */
+options {
+	STATIC = false;
+}
+PARSER_BEGIN(ConfigFile)
+package org.dacapo.parser;
+
+import java.io.*;
+import java.util.Vector;
+import java.util.ArrayList;
+
+class ConfigFile {
+  public static void main(String[] args) {
+    ConfigFile parser;
+    try {
+      parser = new ConfigFile(new FileInputStream(args[0]));
+      parser.configFile();
+    } catch (ParseException p) {
+    	System.err.println("Parse exception");
+    	p.printStackTrace();
+    	return;
+    } catch (FileNotFoundException e) {
+        System.err.println("File " + args[0] + " not found.");
+        return;
+    }
+    System.out.println("Success!");
+  }
+  
+  private static String unQuote(Token token) {
+  	return token.image.substring(1,token.image.length()-1);
+  }
+  
+  private static String unHex(Token token) {
+  	return token.image.substring(2).toLowerCase();
+  }
+}
+PARSER_END(ConfigFile)
+
+/* WHITE SPACE */
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+/* COMMENTS */
+
+MORE :
+{
+  "//" : IN_SINGLE_LINE_COMMENT
+|
+  <"/**" ~["/"]> { input_stream.backup(1); } : IN_FORMAL_COMMENT
+|
+  "/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_SINGLE_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "\n" | "\r" | "\r\n" > : DEFAULT
+}
+
+<IN_FORMAL_COMMENT>
+SPECIAL_TOKEN :
+{
+  <FORMAL_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_MULTI_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <MULTI_LINE_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_SINGLE_LINE_COMMENT,IN_FORMAL_COMMENT,IN_MULTI_LINE_COMMENT>
+MORE :
+{
+  < ~[] >
+}
+
+/* Reserved words */
+TOKEN :
+{
+  < ARGS : "args" >
+| < AUTHOR : "author" >
+| < BENCHMARK : "benchmark" >
+| < BINARY : "binary" >
+| < BYTES : "bytes" >
+| < CLASS : "class" >
+| < COPYRIGHT : "copyright" >
+| < DESCRIPTION : "description" >
+| < DIGEST : "digest" >
+| < EXISTS : "exists" >
+| < FILTER : "filter" >
+| < FIXED : "fixed" >
+| < JAR : "jar" >
+| < KEEP : "keep" >
+| < LIBS : "libs" >
+| < LICENSE : "license" >
+| < LINES : "lines" >
+| < LONG : "long" >
+| < METHOD : "method" >
+| < OUTPUT : "output" >
+| < PER_CPU : "per_cpu" >
+| < RAW : "raw" >
+| < SHORT : "short" >
+| < SINGLE : "single" >
+| < SIZE : "size" >
+| < STDOUT : "stdout" >
+| < STDERR : "stderr" >
+| < TEXT : "text" >
+| < URL : "url" >
+| < VERSION : "version" >
+| < THREADS : "threads" >
+| < THREAD_MODEL : "thread-model" >
+| < REPEATS : "repeats" >
+}
+
+/* Literals */
+TOKEN:
+{                 
+  < IDENT : ["a"-"z","A"-"Z","_","$"] (["a"-"z","A"-"Z","0"-"9","_","-","$","."])* >
+| < HEX_STRING : "0" ["x","X"] (["a"-"f","A"-"F","0"-"9"])* >
+| < STRING_LITERAL:
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+| < INT_LITERAL : (["0"-"9"])+ >
+| < COMMA : "," >
+| < LPAREN : "(" >
+| < RPAREN : ")" >
+| < SEMI : ";" >
+}
+
+Config configFile() :
+{ Config config;  }
+{
+  config=config() (sizeSpec(config) | description(config))+
+  { return config; }
+}
+
+Config config() :
+{ Config config; Token name; }
+{
+  <BENCHMARK> name=<IDENT> 
+  { config = new Config(name.image); }
+  (configOption(config))*
+  <SEMI>
+  { return config; }
+}
+
+void configOption(Config config) :
+{ String className; Config.ThreadModel threadModel; String jar;}
+{
+	  <CLASS> className=identifier() { config.setClass(className); }
+	| <THREAD_MODEL> threadModel=threadModel() { config.setThreadModel(threadModel); }
+	| <JAR> jar=string() { config.setJar(jar); }
+	| <LIBS> libraries(config)
+}
+
+void libraries(Config config) :
+{ ArrayList libs = new ArrayList(); String lib; }
+{
+	lib=string() { libs.add(lib); } (<COMMA> lib=string() { libs.add(lib); })*
+	{ config.setLibs((String[]) libs.toArray(new String[0])); }
+}
+
+void sizeSpec(Config config) :
+{ Token size; }
+{
+  <SIZE> size=<IDENT> (sizeClause(config,size.image))+ <SEMI>
+}
+
+void sizeClause(Config config, String size) :
+{   Vector args = new Vector(); 
+	String arg;
+	int threads;
+}
+{
+	   <ARGS> [arg=string() { args.add(arg); } 
+	          (<COMMA> arg=string() { args.add(arg); })*]
+       { config.addSize(size,args); }
+    |  <THREADS> threads=integer() { config.setThreadFactor(size,threads); }
+    |  <OUTPUT> outputFile(config,size) (<COMMA> outputFile(config,size))*
+}
+
+void outputFile(Config config, String size) :
+{ String file; }
+{
+	(file=string() 
+	| <STDOUT> { file = "stdout.log"; }
+	| <STDERR> { file = "stderr.log"; }
+	)
+	{ config.addOutputFile(size,file); }
+	(outputClause(config,size,file))*
+}
+
+void outputClause(Config config, String size, String file) :
+{ String digest; int n; long l; }
+{
+	  <DIGEST> [<LPAREN> digestOption(config,size,file) 
+	         (<COMMA> digestOption(config,size,file))* <RPAREN>]
+	  digest=hex() { config.setDigest(size,file,digest); }
+	| <EXISTS>              { config.setExists(size,file); }
+	| <KEEP>                { config.setKeep(size,file); }
+	| <LINES> n=integer()   { config.setLines(size,file,n); }
+	| <BYTES> l=longInt()   { config.setBytes(size,file,l); }
+}
+
+void digestOption(Config config, String size, String file) : { }
+{
+	  <TEXT>    	{ config.setTextFile(size,file,true); }
+	| <BINARY>   	{ config.setTextFile(size,file,false); }
+	| <FILTER>   	{ config.setFilterScratch(size,file,true); }
+	| <RAW>   		{ config.setFilterScratch(size,file,false); }
+}
+
+Config.ThreadModel threadModel() : { }
+{
+	  <SINGLE> { return Config.ThreadModel.SINGLE; }
+	| <FIXED>  { return Config.ThreadModel.FIXED; }
+	| <PER_CPU> { return Config.ThreadModel.PER_CPU; }
+}
+
+void description(Config config) : { }
+{
+  <DESCRIPTION> descElement(config) (<COMMA> descElement(config))* <SEMI>
+}
+
+void descElement(Config config) :
+{ String id, desc; }
+{
+  id=descId() desc=string()
+  { config.addDesc(id,desc); }
+}
+
+String descId() : { }
+{
+  (<AUTHOR> | <COPYRIGHT> | <LICENSE> | <LONG> | <SHORT> | <THREADS> | <REPEATS> 
+  | <URL> | <VERSION>)
+  { return token.image; }
+}
+
+String identifier() : { }
+{
+	<IDENT> { return token.image; }
+}
+
+String string() : { }
+{
+	<STRING_LITERAL> { return unQuote(token); }
+}
+
+int integer() : { }
+{
+	<INT_LITERAL> { return Integer.parseInt(token.image); }
+}
+
+long longInt() : { }
+{
+	<INT_LITERAL> { return Long.parseLong(token.image); }
+}
+
+String hex() : { }
+{
+	<HEX_STRING> { return unHex(token); }
+}

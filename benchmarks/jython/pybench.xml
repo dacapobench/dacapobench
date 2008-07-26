@@ -6,13 +6,17 @@
 	<property name="py-src" value="Python-${py-version}.tgz"/>
 	
 	<target name="py-source">
-		<get src="${py-url}/${py-src}" dest="${sources}/${py-src}" usetimestamp="true"/>
+		<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${py-url}"/>
+			<param name="target-file" value="${py-src}"/>
+        </antcall>
 	</target>
 
 	<target name="pybench" depends="py-untar, py-patch, py-build"/>
 	
 	<target name="py-untar">
-        <untar src="${sources}/${py-src}" dest="${bm-build-dir}" compression="gzip">
+        <untar src="${bm-downloads}/${py-src}" dest="${bm-build-dir}" compression="gzip">
             <patternset>
                 <include name="Python-${py-version}/Tools/pybench/**"/>
             </patternset>

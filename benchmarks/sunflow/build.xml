@@ -8,22 +8,30 @@
 	<property name="bm-src" value="${bm-name}-src-v${bm-version}.zip"/>
 	<property name="bm-bin" value="${bm-name}-bin-v${bm-version}.zip"/>
 
+	<property name="janino" value="libs/janino/dist/jar/janino-2.5.2.jar"/>
+	
     <import file="../common.xml"/>
 		
     <target name="source" depends="common.source">
-        <get src="${bm-url}/${bm-bin}" dest="${sources}/${bm-bin}" usetimestamp="true"/>
+		<antcall target="check-source">
+    		<param name="target-dir" value="${bm-downloads}"/>
+    		<param name="target-url" value="${bm-url}"/>
+    		<param name="target-file" value="${bm-bin}"/>
+    	</antcall>
     </target>
 
-	<target name="bm-build" depends="bm-unzip">
-		<ant antfile="${ant.dir}/janino.xml" target="library"/>
+	<target name="unpack" depends="unzip"/>
+	
+	<target name="bm-build">
+		<ant antfile="libs/janino/build.xml"/>
         <mkdir dir="${bm-build-dir}/build"/>
 		<javac srcdir="${bm-build-dir}/src" source="1.5" 
-        	classpath="${jars}/janino-2.5.2.jar" destdir="${bm-build-dir}/build"
+        	classpath="${janino}" destdir="${bm-build-dir}/build"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
             	
 	<target name="bm-data">
-        <unzip src="${sources}/${bm-bin}" dest="${bm-build-dir}"/>
+        <unzip src="${bm-downloads}/${bm-bin}" dest="${bm-build-dir}"/>
         <unjar src="${bm-build-dir}/${bm-name}.jar" dest="${bm-build-dir}">
             <patternset>
                 <include name="resources/golden_*.png"/>
@@ -31,8 +39,8 @@
         </unjar>
 	</target>
 
-	<target name="bm-jar" depends="bm-data">
-        <jar destfile="${jars}/${bm-name}-${bm-version}.jar">
+	<target name="jar" depends="bm-data">
+        <jar destfile="${bm-jars}/${bm-name}-${bm-version}.jar">
             <fileset dir="${bm-build-dir}/build">
             	<include name="**/*.class"/>
         	</fileset>

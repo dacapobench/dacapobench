@@ -1,53 +1,99 @@
 <project name="common">
-
-	<property name="bm-build-dir" value="${build.src}/${bm-name}"/>
-	<property name="bm-files" value="${basedir}/${bm-name}"/>
-	<property name="bm-harness-classpath" value="${build}"/>
+	<import file="util.xml"/>
 	
-	<target name="all" description="download and build the benchmark">
-		<antcall target="source"/>
-		<antcall target="build"/>
-	</target>
+	<property name="bm-files" value="${basedir}/${bm-name}"/>
+	<property name="bm-build-dir" value="${bm-files}/build"/>
+	<property name="bm-output-dir" value="${bm-files}/dist"/>
+	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
+	<property name="bm-data" value="${bm-files}/data"/>
+	<available file="${bm-data}" property="bm-data-exists" type="dir"/>
+	<property name="bm-src-dir" value="${bm-files}/src"/>
+	<property name="bm-downloads" value="${bm-files}/downloads"/>
 
-    <target name="source" description="download the benchmark">
-        <get src="${bm-url}/${bm-src}" dest="${sources}/${bm-src}" usetimestamp="true"/>
+	<property name="bm-jars" value="${bm-output-dir}/jar"/>
+	<property name="bm-dat" value="${bm-output-dir}/dat"/>
+	<property name="bm-cnf" value="${bm-output-dir}/cnf"/>
+	
+	<property name="harness-classpath" value="harness/dist"/>
+	
+	<target name="all" depends="source, pre-build, build, complete"/>
+
+	<target name="incremental">
+		<property name="incremental-build" value="true"/>
+		<antcall target="all"/>
+	</target>
+	
+    <target name="source" if="bm-src">
+		<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${bm-url}"/>
+			<param name="target-file" value="${bm-src}"/>
+        </antcall>
     </target>
     	
-    <target name="build" depends="benchmark, config, harness"/>
+	<target name="pre-build" depends="clean, init, unpack"/>
 
-    <target name="harness">
-		<javac srcdir="${bmsrc}" classpath="${bm-harness-classpath}" destdir="${build}"
-    	   includes="dacapo/${bm-name}/*"
+	<target name="clean">
+		<delete dir="${bm-output-dir}"/>
+		<delete dir="${bm-build-dir}"/>
+		<delete dir="${bm-deps-output-dir}"/>
+	</target>
+	
+	<target name="init" depends="clean">
+		<mkdir dir="${bm-output-dir}"/>		
+        <mkdir dir="${bm-jars}"/>		
+        <mkdir dir="${bm-dat}"/>		
+        <mkdir dir="${bm-cnf}"/>		
+	</target>
+	
+	<target name="unpack"/>
+	
+    <target name="build" depends="dacapo-harness, benchmark, config, harness"/>
+
+	<target name="benchmark" depends="bm-build, jar, data"/>
+
+	<target name="bm-build"/>
+	
+	<target name="config">
+        <copy file="${bm-files}/${bm-name}.cnf" todir="${bm-cnf}"/>
+	</target>
+	
+	<target name="harness" depends="bm-harness"/>
+        	
+	<target name="bm-harness">
+		<javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}"
+    	   includes="org/dacapo/harness/**"
            debug="true" debuglevel="lines,vars,source"/>
     </target>
 	
-	<target name="benchmark" depends="bm-build, bm-jar, bm-data"/>
-	
-	<target name="config">
-        <copy file="${bm-files}/${bm-name}.cnf" todir="${build}/cnf"/>
+	<target name="dacapo-harness" unless="incremental-build">
+		<ant antfile="harness/build.xml"/>
 	</target>
-	
-	<target name="bm-build"/>
-	
-	<target name="bm-patch">
+		
+	<target name="patch">
 		<patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes"/>
 	</target>
 	
-	<target name="bm-untar">
-        <mkdir dir="${bm-build-dir}"/>
-        <untar src="${sources}/${bm-src}" dest="${bm-build-dir}/" compression="gzip"/>
+	<target name="untar" depends="build-init">
+        <untar src="${bm-downloads}/${bm-src}" dest="${bm-build-dir}/" compression="gzip"/>
 	</target>
 
-	<target name="bm-unzip">
-        <mkdir dir="${bm-build-dir}/"/>
-        <unzip src="${sources}/${bm-src}" dest="${bm-build-dir}/"/>
+	<target name="unzip" depends="build-init">
+        <unzip src="${bm-downloads}/${bm-src}" dest="${bm-build-dir}/"/>
+	</target>
+
+	<target name="build-init">
+        <mkdir dir="${bm-build-dir}"/>		
 	</target>
 	
-	<target name="bm-data">
-        <zip basedir="${data}" includes="${bm-name}/**" destfile="${zipdata}/${bm-name}.zip"/>
+	<target name="jar"/>
+		
+	<target name="data" if="bm-data-exists">
+        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+	</target>
+	
+	<target name="complete">
+		<jar jarfile="${jar-target}" basedir="${bm-output-dir}" update="true"/>
 	</target>
 
-	<target name="bm-jar">
-    	<jar jarfile="${jars}/${bm-name}.jar" basedir="${bm-build-dir}/classes"/>
-	</target>	
 </project>

@@ -1,5 +1,6 @@
 <project name="bloat" default="all" basedir="..">
     <description>DaCapo bloat benchmark</description>
+	<property file="ant/local.properties"/>
 	<property file="ant/dacapo.properties"/>
 	
 	<property name="bm-name" value="bloat"/>
@@ -9,7 +10,9 @@
 
     <import file="../common.xml"/>
     
-	<target name="bm-build" depends="bm-unzip, bm-patch">
+	<target name="unpack" depends="unzip, patch"/>
+	
+	<target name="bm-build">
 		<condition property="jdk.home" value="${java.home}" else="${java.home}/..">
 			<not><contains string="${java.home}" substring="/jre"/></not>
 		</condition>
@@ -18,8 +21,8 @@
 		</exec>
     </target>
 	
-	<target name="bm-jar">
-    	<jar jarfile="${jars}/${bm-name}.jar"
+	<target name="jar">
+    	<jar jarfile="${bm-jars}/${bm-name}.jar"
     		 basedir="${bm-build-dir}/src"
     	 	 includes="**/*.class"
     		 excludes="${bm-build-dir}/resources/**/CVS"/>	

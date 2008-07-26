@@ -9,7 +9,9 @@
 
     <import file="../common.xml"/>
 	
-    <target name="bm-build" depends="bm-untar">
+	<target name="unpack" depends="untar"/>
+    
+	<target name="bm-build">
         <mkdir dir="${bm-build-dir}/classes"/>
         <javac srcdir="${bm-build-dir}/${bm-name}-${bm-version}/antlr/"
             source="1.4"
@@ -18,4 +20,7 @@
             debug="true" debuglevel="lines,vars,source"/>
     </target>
 	
+	<target name="jar">
+    	<jar jarfile="${bm-jars}/${bm-name}.jar" basedir="${bm-build-dir}/classes"/>
+	</target>
 </project>

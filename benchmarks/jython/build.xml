@@ -12,7 +12,9 @@
 	
 	<target name="source" depends="common.source, py-source"/>
 
-	<target name="bm-build" depends="bm-unzip, bm-patch">
+	<target name="unpack" depends="unzip, patch"/>
+	
+	<target name="bm-build">
         <copy todir="${bm-build-dir}/src/java">
             <fileset file="${bm-build-dir}/build.*"/>
         </copy>
@@ -22,21 +24,23 @@
         </ant>
 	</target>
 
-	<target name="bm-jar" depends="deps">
-        <copy file="${bm-build-dir}/src/java/dist/jython.jar" todir="${jars}"/>
+	<target name="jar">
+        <copy file="${bm-build-dir}/src/java/dist/jython.jar" todir="${bm-jars}"/>
 	</target>
 	
-	<target name="bm-data" depends="pybench">
- 		<zip destfile="${zipdata}/jython.zip">
-        	<fileset dir="${data}/" includes="jython/noop.py"/>
-            <fileset dir="${data}/" includes="jython/sieve.py"/>
+	<target name="data" depends="pybench">
+ 		<zip destfile="${bm-dat}/jython.zip">
+        	<fileset dir="${bm-data}/" includes="jython/noop.py"/>
+            <fileset dir="${bm-data}/" includes="jython/sieve.py"/>
             <fileset dir="${bm-build-dir}/" includes="jython/pybench/**"/>
             <fileset dir="${bm-build-dir}/" includes="jython/Lib/**"/>
         </zip>
 	</target>
 
-	<target name="deps">
-    	<copy file="${build.src}/ant/ant.jar" todir="${build.deps}"/>
-    	<copy file="${build.src}/ant/ant-launcher.jar" todir="${build.deps}"/>
+	<!--
+	<target name="deps" if="externalize.deps">
+    	<copy file="${bm-build-dir}/ant/ant.jar" todir="${bm-deps-output-dir}"/>
+    	<copy file="${bm-build-dir}/ant/ant-launcher.jar" todir="${bm-deps-output-dir}"/>
 	</target>
+	-->
 </project>

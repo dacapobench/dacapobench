@@ -10,17 +10,12 @@
 	<import file="../common.xml"/>
 
     <property name="bm-build-top" value="${bm-build-dir}/pmd-${bm-version}"/>
-
-	<target name="benchmark" depends="bm-build, bm-jar, bm-data"/>
 	
-	<target name="source" depends="common.source">
-		<ant antfile="${ant.dir}/junit.xml" target="lib-source"/>
-		<ant antfile="${ant.dir}/xerces.xml" target="lib-source"/>
-	</target>
+	<target name="unpack" depends="unzip, patch"/>
 	
-	<target name="bm-build" depends="bm-unzip, bm-patch">
-		<ant antfile="${ant.dir}/junit.xml" target="library"/>
-		<ant antfile="${ant.dir}/xerces.xml" target="library"/>
+	<target name="bm-build">
+		<ant antfile="libs/junit/build.xml"/>
+		<ant antfile="libs/xerces/build.xml"/>
         <exec dir="${bm-build-top}/bin" executable="ant">
             <arg value="jar"/>
             <env key="CLASSPATH" value=".:${junit-jar}"/>
@@ -28,11 +23,11 @@
         </exec>
 	</target>
 		
-	<target name="bm-jar" depends="libs, deps">
-        <copy file="${bm-build-top}/lib/pmd-${bm-version}.jar" todir="${jars}"/>
+	<target name="jar" depends="libs, deps">
+        <copy file="${bm-build-top}/lib/pmd-${bm-version}.jar" todir="${bm-jars}"/>
 	</target>
 	
-	<target name="bm-data">
+	<target name="data">
         <property name="pmd-data" value="${bm-build-top}/data/pmd"/>
         <mkdir dir="${pmd-data}"/>
         <copy todir="${pmd-data}">
@@ -46,16 +41,16 @@
             </fileset>
         </copy>
         <copy todir="${pmd-data}" >
-            <fileset dir="${data}/pmd">
+            <fileset dir="${bm-data}/pmd">
                 <include name="*.lst"/>
             </fileset>
         </copy>
-        <zip basedir="${bm-build-top}/data" includes="pmd/**" destfile="${zipdata}/pmd.zip"/>
+        <zip basedir="${bm-build-top}/data" includes="pmd/**" destfile="${bm-dat}/pmd.zip"/>
         <delete dir="${bm-build-top}/data"/>
 	</target>
 
-    <target name="libs" unless="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${bm-build-top}/lib/jaxen-1.1-beta-7.jar" todir="${jars}"/>
+    <target name="libs" unless="externalize.deps">
+        <copy file="${bm-build-top}/lib/jaxen-1.1-beta-7.jar" todir="${bm-jars}"/>
     </target>
     
     <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">

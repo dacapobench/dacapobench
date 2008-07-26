@@ -1,0 +1,22 @@
+<project name="util">
+	
+	<target name="check-source" if="target-file">
+		<checksum file="${target-dir}/${target-file}"/>
+		<condition property="up-to-date">
+			<and>
+				<available file="${target-dir}/${target-file}"/>
+				<checksum file="${target-dir}/${target-file}"/>
+			</and>
+		</condition>
+		<antcall target="get-source">
+			<param name="target-dir" value="${target-dir}"/>
+			<param name="target-url" value="${target-url}"/>
+			<param name="target-file" value="${target-file}"/>
+			<param name="up-to-date" value="${up-to-date}"/>
+		</antcall>	
+	</target>
+	
+	<target name="get-source" unless="up-to-date">
+        <get src="${target-url}/${target-file}" dest="${target-dir}/${target-file}" usetimestamp="true"/>
+	</target>
+</project>

@@ -1,0 +1,37 @@
+<project name="jdbcbench" default="all" basedir="../..">
+    <description>jdbcbench library, as used by hsqldb and derby</description>
+	<property file="ant/local.properties"/>
+	<property file="ant/dacapo.properties"/>
+	
+	<property name="lib-name" value="jdbcbench"/>
+	
+	<import file="../common.xml"/>
+	
+	<property name="jdbc-file" value="org/dacapo/jdbcbench/PseudoJDBCBench.java"/>
+	<property name="jdbc-src-dir" value="${lib-src-dir}"/>
+	<property name="jdbc-jar" value="${lib-jars}/jdbcbench.jar"/>
+	
+	<target name="lib-source"/>
+	
+	<target name="build" depends="lib-build, lib-jar"/>
+	
+	<target name="lib-build" depends="jdbc-jar-check" unless="jdbc-built">
+		<mkdir dir="${lib-build-dir}"/>
+		<javac srcdir="${jdbc-src-dir}" classpath="${build}" 
+        	destdir="${lib-build-dir}" 
+            source="1.5"
+            includes="${jdbc-file}"
+            debug="true" debuglevel="lines,vars,source">
+        </javac>
+	</target>
+		
+	<target name="lib-jar">
+		<jar destfile="${jdbc-jar}" basedir="${lib-build-dir}"/>
+	</target>
+	
+	<target name="jdbc-jar-check">
+		<condition property="jdbc-built">
+			<uptodate targetfile="${jdbc-jar}" srcfile="${jdbc-src-dir}/${jdbc-file}"/>
+		</condition>
+	</target>
+</project>

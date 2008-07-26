@@ -1,0 +1,25 @@
+<project name="lucene" default="all" basedir="../..">
+    <description>lucene library, required by lusearch and luindex</description>
+	<property file="ant/dacapo.properties"/>
+	
+	<property name="lib-name" value="lucene"/>
+    <property name="lib-version" value="1.9.1"/>
+    <property name="lib-url" value="${apache.dl.url}/lucene/java"/>
+	<property name="lib-src" value="lucene-${lib-version}-src.tar.gz"/>
+	
+	<import file="../common.xml"/>
+
+	<property name="lib-build-top" value="${lib-build-dir}/lucene-${lib-version}"/>
+
+	<target name="unpack" depends="untar"/>
+	
+	<target name="build">
+		<ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
+        <ant antfile="build.xml" target="jar-demo" dir="${lib-build-top}" inheritall="false"/>
+	</target>
+	
+	<target name="jar">
+        <copy file="${lib-build-top}/build/lucene-core-1.9.2-dev.jar" todir="${lib-jars}"/>
+        <copy file="${lib-build-top}/build/lucene-demos-1.9.2-dev.jar" todir="${lib-jars}"/>
+	</target>
+</project>

@@ -1,56 +1,60 @@
 <project name="chart" default="all" basedir="..">
     <description>DaCapo chart benchmark</description>
+	<property file="ant/local.properties"/>
 	<property file="ant/dacapo.properties"/>
     
 	<property name="bm-name" value="chart"/>
     <property name="bm-version" value="1.0.8"/>
     <property name="bm-url" value="${sourceforge.dl.url}/jfreechart"/>
 	<property name="bm-src" value="jfreechart-${bm-version}.tar.gz"/>
-
+	
     <import file="../common.xml"/>
 
 	<property name="jcommon.version" value="1.0.12"/>
     <property name="itext.version" value="1.02b"/>
     <property name="itext.url" value="${sourceforge.dl.url}/itext"/>
-    <property name="bm-build-top" value="${bm-build-dir}/jfreechart-${bm-version}"/>
- 
+    <property name="jfree-top" value="${bm-build-dir}/jfreechart-${bm-version}"/>
+	<property name="plotter-top" value="${bm-build-dir}/plotter"/>
+	<property name="jfree-jar" value="${jfree-top}/jfreechart-${bm-version}.jar"/>
+	<property name="itext-jar" value="${bm-downloads}/itext-${itext.version}.jar"/>
+	<property name="jcommon-jar" value="${jfree-top}/lib/jcommon-${jcommon.version}.jar"/>
+	<property name="jfree-cp" value="${jfree-jar}:${itext-jar}:${jcommon-jar}"/>
+	<property name="bm-harness-classpath" value="${jfree-cp}"/>
+	
     <target name="source" depends="common.source">
-        <get src="${itext.url}/itext-${itext.version}.jar"
-         dest="${sources}/itext-${itext.version}.jar"
-       usetimestamp="true"/>
-    </target>
-    
-    <target name="harness">
-        <javac srcdir="${bmsrc}" classpath="${build}:${jars}/jfreechart-${bm-version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" destdir="${build}" 
-            source="1.5"
-            includes="dacapo/${bm-name}/*"
-            debug="true" debuglevel="lines,vars,source"/>
-        <mkdir dir="${build.src}/${bm-name}/harness"/>
-        <javac srcdir="${bmsrc}" classpath="${jars}/jfreechart-${bm-version}.jar:${jars}/jcommon-${jcommon.version}.jar:${jars}/itext-${itext.version}.jar" 
-	    destdir="${build.src}/${bm-name}/harness" 
-            source="1.5"
-            includes="dacapo/${bm-name}/plotter/*"
-            debug="true" debuglevel="lines,vars,source"/>
-        <jar destfile="${jars}/chart.jar" basedir="${build.src}/${bm-name}/harness"/>
+		<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${itext.url}"/>
+			<param name="target-file" value="itext-${itext.version}.jar"/>
+        </antcall>
     </target>
 
-    <target name="bm-build" depends="bm-untar">
-        <ant antfile="ant/build.xml" dir="${bm-build-top}" target="compile" inheritall="false"/>
-    </target>
-    
-	<target name="bm-jar" depends="libs, deps">
-        <copy file="${bm-build-top}/jfreechart-${bm-version}.jar" todir="${jars}"/>
+	<target name="unpack" depends="untar"/>
+
+    <target name="bm-build">
+    	<ant antfile="ant/build.xml" dir="${jfree-top}" target="compile" inheritall="false"/>
+    	<mkdir dir="${plotter-top}"/>
+	 	<javac srcdir="${bm-src-dir}" classpath="${jfree-cp}" 
+			 	destdir="${plotter-top}" 
+ 		   source="1.5"
+   		 includes="org/dacapo/chart/*"
+   		 debug="true" debuglevel="lines,vars,source"/>
+	</target>
+
+	<target name="jar" depends="libs, deps">
+	   <jar  basedir="${plotter-top}" destfile="${bm-jars}/chart.jar"/>
+       <copy file="${jfree-jar}" todir="${bm-jars}"/>
 	</target>
 	
-    <target name="libs" unless="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${bm-build-top}/lib/jcommon-${jcommon.version}.jar" todir="${jars}"/>
-        <copy file="${sources}/itext-${itext.version}.jar" todir="${jars}"/>
+    <target name="libs" unless="externalize.deps">
+        <copy file="${jcommon-jar}" todir="${bm-jars}"/>
+        <copy file="${itext-jar}" todir="${bm-jars}"/>
     </target>
     
-    <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${bm-build-top}/lib/gnujaxp.jar" todir="${build.deps}"/>
-        <copy file="${bm-build-top}/lib/jcommon-${jcommon.version}.jar" todir="${build.deps}"/>
-        <copy file="${bm-build-top}/lib/servlet.jar" todir="${build.deps}"/>
-        <copy file="${sources}/itext-${itext.version}.jar" todir="${build.deps}"/>
+    <target name="deps" if="externalize.deps">
+        <copy file="${jfree-top}/lib/gnujaxp.jar" todir="${build.deps}"/>
+        <copy file="${jcommon-jar}" todir="${build.deps}"/>
+        <copy file="${jfree-top}/lib/servlet.jar" todir="${build.deps}"/>
+        <copy file="${itext-jar}.jar" todir="${build.deps}"/>
     </target>
 </project>
