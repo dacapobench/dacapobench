@@ -5,9 +5,9 @@
 	<property name="bm-name" value="xalan"/>
     <property name="bm-version" value="2_4_1"/>
     <property name="bm-url" value="${apache.dl.url}/xml/xalan-j/source"/>
-    <property name="bm-dat-url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/WD-xforms-20010608.zip"/>
+    <property name="bm-dat-url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/"/>
 	<property name="bm-src" value="${bm-name}-j_${bm-version}-src.tar.gz"/>
-	<property name="bm-dat-file" value="xalan.data.zip"/>
+	<property name="bm-dat-file" value="WD-xforms-20010608.zip"/>
 	
 	<import file="../common.xml"/>
 	
@@ -20,8 +20,8 @@
     <target name="source" depends="common.source">
 		<antcall target="check-source">
 			<param name="target-dir" value="${bm-downloads}"/>
-			<param name="target-url" value="${bm-dat-file}"/>
-			<param name="target-file" value="xalan.data.zip"/>
+			<param name="target-url" value="${bm-dat-url}"/>
+			<param name="target-file" value="WD-xforms-20010608.zip"/>
         </antcall>
     </target>
 	
