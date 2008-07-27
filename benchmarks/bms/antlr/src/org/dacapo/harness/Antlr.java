@@ -11,8 +11,8 @@ import org.dacapo.parser.Config;
  *
  * @author Robin Garner
  * @author Steve Blackburn
- * @date $Date: 2008-07-26 11:23:30 +1000 (Sat, 26 Jul 2008) $
- * @id $Id: Antlr.java 379 2008-07-26 01:23:30Z steveb-oss $
+ * @date $Date: 2008-07-27 12:53:06 +1000 (Sun, 27 Jul 2008) $
+ * @id $Id: Antlr.java 397 2008-07-27 02:53:06Z steveb-oss $
  *
  */
 public class Antlr extends Benchmark {
@@ -81,5 +81,18 @@ public class Antlr extends Benchmark {
         method.invoke(null, new Object[] {antlrToolArgs});
       }
     }
- }
+  }
+  
+  /**
+   * Stub which exists <b>only</b> to facilitate whole program
+   * static analysis on a per-benchmark basis.  See also the "split-deps"
+   * ant build target, which is also provided to enable whole program
+   * static analysis.
+   * 
+   * @author Eric Bodden
+   */
+  public static void main(String args[]) throws Exception {
+    // create dummy harness and invoke with dummy arguments
+      (new Antlr(null, null)).run(null, "");
+  }
 }
