@@ -302,13 +302,17 @@ sub process_log() {
 
   open(LOG, "$dir/$logfile");
   $$pass = 0;
+  my $fail = 0;
   while (<LOG>) {
     if (/==== DaCapo .* in .* msec ====/) {
       my $time;
       ($time) = /in (\d+) msec/;
       push @$times, $time;
-      if (/PASSED/) {
+      if (/PASSED/ && !$fail) {
 	$$pass = 1;
+      } elsif (/FAILED/) {
+	$fail = 1;
+	$$pass = 0;
       }
     } elsif (/^(Start|Finish)ed at .* \(\d+\)/) {
       my $time;
