@@ -12,7 +12,7 @@ my $image_width = 640;
 my $plot_r_margin = 0.015;
 my $plot_l_margin = 0.15;
 my $plot_t_margin = 0.09;
-my $plot_b_margin = 0.13;
+my $plot_b_margin = 0.15;
 my $tick_height = 0.025;
 my $font_height = 0.04;
 my $line_stroke = 3;
@@ -28,8 +28,38 @@ my $max_hour_id = get_hour_id_from_time($plot_time);
 
 my $bm;
 
-foreach $bm (@old_bm_list) {
-  plot_graphs("$bm", "2006-10-MR2");
+my %bmlist;
+
+get_targets(\%bmlist);
+
+my $jar;
+foreach $jar (sort keys %bmlist) {
+  foreach $bm (sort keys %{$bmlist{$jar}}) {
+    print "-$jar--$bm-\n";
+    plot_graphs($bm, $jar);
+  }
+}
+
+my $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
+print "$job\n";
+system($job);
+
+sub get_targets() {
+  my ($bmlistref) = @_;
+
+  my $vm;
+  my %jars;
+  foreach $vm (@vms) {
+    my @files;
+    ls_to_array("$root_dir/$csv_path/$vm", \@files);
+    my $f;
+    foreach $f (@files) {
+      if ($f =~ /^perf/) {
+	my ($pre, $jar, $bm, $suf) = split(/_/, $f);
+	${$$bmlistref{$jar}}{$bm} = 1;
+      }
+    }
+  }
 }
 
 sub plot_graphs() {
@@ -39,32 +69,28 @@ sub plot_graphs() {
   my %linedata;
   my $vm;
   foreach $vm (@vms) {
-    get_line_data("csv/$vm/perf_".$jar."_".$bm."_default.csv", \%{$linedata{$vm}}, \@min);
+    get_line_data("$root_dir/$csv_path/$vm/perf_".$jar."_".$bm."_default.csv", \%{$linedata{$vm}}, \@min);
   }
   my $iteration;
-  for ($iteration = 0; $iteration < 10; $iteration++) {
+  my $iterations = scalar(@min);
+  for ($iteration = 0; $iteration < $iterations; $iteration++) {
     my $output;
     my $name = $jar."_".$bm."_".($iteration+1).".svg";
-    open $output, (">svg/$name");
+    open $output, (">$root_dir/$svg_path/$name");
     my $writer = XML::Writer->new(OUTPUT => $output);
     start_plot_canvas($writer);
     do_plot_background($writer);
     do_axes($writer);
     do_title($writer, "$bm", "dacapo-$jar, iteration ".($iteration+1));
-    foreach $vm (@vms) {
-      do_line_points($writer, \%{$linedata{$vm}}, @min[$iteration], $iteration, $vm_color{$vm});
+    foreach $vm (sort @vms) {
+      do_line_points($writer, \%{$linedata{$vm}}, @min[$iteration], $iterations, $iteration, $vm_color{$vm});
     }
     my $i = 0;
-    foreach $vm (@vms) {
-      do_line_mean($writer, \%{$linedata{$vm}}, @min[$iteration], $iteration, $vm_color{$vm});
+    foreach $vm (sort @vms) {
+      do_line_mean($writer, \%{$linedata{$vm}}, @min[$iteration], $iterations, $iteration, $vm_color{$vm});
       do_legend($writer, $vm_str{$vm}, $vm_color{$vm}, $i, scalar(@vms));
       $i++;
     }
-#  do_line_points($writer, \%{$linedata{$vm}}, @min[9], 9, "green");
-#  do_line_mean($writer, \%{$linedata{$vm}}, @min[9], 0, "red");
-#  do_line_mean($writer, \%{$linedata{$vm}}, @min[9], 9, "green");
-#  do_legend($writer, "Line A", "red", 0, 2);
-#  do_legend($writer, "Line B", "green", 1, 2);
     finish_plot_canvas($writer);
 
     close $output;
@@ -159,8 +185,10 @@ sub do_title() {
 
 sub do_legend() {
   my ($writer, $title, $color, $num, $tot) = @_;
-  my $font_size = .75*$font_height;
+  my $font_size = .8*$font_height;
   my $yoffset = 0.08 + $font_size;
+  my $rows = 2;
+  my $cols = int(($tot+1)/$rows);
 
   my $font_pix = int($plot_height * $font_size);
   my $ticksize = 0.1;
@@ -168,12 +196,14 @@ sub do_legend() {
   my $font = "text-anchor:end;font-family:$font_family;font-size:".$font_pix."px";
 
   my $space = $margin/2;
-  my $legend_width = int($plot_width/$tot);
-  my $xright = ($num + 1) * $legend_width;
+  my $legend_width = int($plot_width/$cols);
+  my $col = int($num/$rows);
+  my $row = ($num % $rows);
+  my $xright = ($col +1) * $legend_width;
   my $tick_start = int($xright - ($legend_width * ($ticksize + $margin)));
   my $tick_width = int($legend_width * $ticksize);
   my $text_right = int($tick_start - ($legend_width * $space));
-  my $y = $plot_height + int(($yoffset)* $plot_height);
+  my $y = $plot_height + int(($yoffset + (($row == 1) ? $font_size : 0))* $plot_height);
   my $xleft = $xright - $legend_width;
   $y += $font_pix;
   $writer->startTag('text',
@@ -326,7 +356,7 @@ sub finish_plot_canvas() {
 }
 
 sub do_line_mean() {
-  my($writer, $linedataref, $divisor, $iter, $color) = @_;
+  my($writer, $linedataref, $divisor, $iters, $iter, $color) = @_;
 
   my $hr_id;
   my $path;
@@ -337,8 +367,10 @@ sub do_line_mean() {
       my $s;
       my $mean = 0;
       for ($s = 0; $s < @$set; $s++) {
+	if (@{$$set[$s]} != $iters) { next; }
 	$mean += $$set[$s][$iter];
       }
+      if ($mean == 0) { next; }
       $mean = $mean/@$set;
       my $y = $plot_height - int($plot_height*($divisor/$mean));
       if ($path) {
@@ -368,7 +400,7 @@ sub do_line_mean() {
 
 
 sub do_line_points() {
-  my($writer, $linedataref, $divisor, $iter, $color) = @_;
+  my($writer, $linedataref, $divisor, $iters, $iter, $color) = @_;
 
   my $hr_id;
   foreach $hr_id (sort keys %$linedataref) {
@@ -377,6 +409,7 @@ sub do_line_points() {
     if ($set) {
       my $s;
       for ($s = 0; $s < @$set; $s++) {
+	if (@{$$set[$s]} != $iters) { next; }
 	my $y = $plot_height- int($plot_height*($divisor/($$set[$s][$iter])));
 	$writer->emptyTag('circle',
 			  cx => $x,
@@ -397,6 +430,7 @@ sub do_line_points() {
 sub get_line_data() {
   my($csvfilename, $linedataref, $minref) = @_;
   my $csvfile;
+  
   open $csvfile, ($csvfilename);
   while (<$csvfile>) {
     if (!/^\s*#/) {
@@ -456,4 +490,18 @@ sub hours_ago_to_pos() {
       return $year_pos/$divisions;
     }
   }
+}
+
+#
+# perform an ls on a directory, saving results to an array
+#
+sub ls_to_array() {
+  my ($dir, $entries) = @_;
+  my $line;
+
+  open(DIR, "ls $dir |");
+  while (chomp($line = <DIR>)) {
+    push @$entries, $line;
+  }
+  close DIR;
 }

@@ -13,6 +13,8 @@ require Exporter;
 	     $pub_path
 	     $csv_path
 	     $bin_path
+	     $png_path
+	     $svg_path
 	     $csv_header
 	     $processed_log_suffix
 	     $ant
@@ -23,12 +25,15 @@ require Exporter;
 ($b,$path,$s) = fileparse($0);
 $root_dir = abs_path("$path../");
 
+#$begining_of_time_hrs = (int 1216636062/ (60 * 60));
 $begining_of_time_hrs = (int 1217240423/ (60 * 60));
 
 $log_path = "log";
 $pub_path = "pub";
 $csv_path = "csv";
 $bin_path = "bin";
+$svg_path = "svg";
+$png_path = "png";
 $processed_log_suffix = ".plog";
 $max_sanity_log_bytes = 10 * 1024;
 $verbose = 1;
