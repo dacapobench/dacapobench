@@ -12,20 +12,23 @@ require Exporter;
 	     $log_path
 	     $pub_path
 	     $csv_path
+	     $bin_path
 	     $csv_header
 	     $processed_log_suffix
 	     $ant
 	     $max_sanity_log_bytes
-	     $begining_of_time_hrs);
+	     $begining_of_time_hrs
+	     $upload_target);
 
 ($b,$path,$s) = fileparse($0);
 $root_dir = abs_path("$path../");
 
-$begining_of_time_hrs = (int 1216636062/ (60 * 60));
+$begining_of_time_hrs = (int 1217240423/ (60 * 60));
 
 $log_path = "log";
 $pub_path = "pub";
 $csv_path = "csv";
+$bin_path = "bin";
 $processed_log_suffix = ".plog";
 $max_sanity_log_bytes = 10 * 1024;
 $verbose = 1;
@@ -38,3 +41,5 @@ my $ant_opts = "-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128"
 $ant = "export ANT_OPTS=\"$ant_opts\" && export JAVA_HOME=$java_home && ant ";
 
 $csv_header = "\"#\n# comma-separated values\n# <id>, <hr number>, <elapsed sec for job>, <time itr 0>, ... , <time itr N-1>\n#\"";
+
+$upload_target = "dacapo\@dacapo.anu.edu.au";

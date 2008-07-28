@@ -7,9 +7,16 @@ use RunConfig;
 
 my $id, $hour_id, $target_finish;
 
+update();
 command_line(\$id, \$hour_id, \$target_finish);
 regression($id, $hour_id, $target_finish);
 
+#
+# Refresh all scripts before starting
+#
+sub update() {
+  system("svn update");
+}
 
 #
 # Run one full regression
@@ -19,6 +26,20 @@ sub regression() {
   do_build($id);
   do_sanity($id, $hour_id, $target_finish);
   do_perf($id, $hour_id, $target_finish);
+  do_upload($id);
+}
+
+#
+# Upload results
+#
+sub do_upload() {
+  my ($id) = @_;
+  my $log;
+  init_log($id, "upload", \$log);
+  
+  do_system($log, "rsync -a $root_dir/csv_path $upload_target:$root_dir");
+  do_system($log, "rsync -a $root_dir/$log_path/$id $upload_target:$root_dir/$log_path");
+  do_system($log, "ssh $upload_target $root_dir/$bin_path/plot.pl");
 }
 
 ##
