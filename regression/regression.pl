@@ -37,7 +37,7 @@ sub do_upload() {
   my $log;
   init_log($id, "upload", \$log);
   
-  do_system($log, "rsync -a $root_dir/csv_path $upload_target:$root_dir");
+  do_system($log, "rsync -a $root_dir/$csv_path $upload_target:$root_dir");
   do_system($log, "rsync -a $root_dir/$log_path/$id $upload_target:$root_dir/$log_path");
   do_system($log, "ssh $upload_target $root_dir/$bin_path/plot.pl");
 }
