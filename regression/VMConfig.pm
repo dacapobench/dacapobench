@@ -16,6 +16,7 @@ require Exporter;
 	     @sanity_vms
 	     %vm_str
 	     %vm_exe
+	     %vm_color
 	     %vm_scm_clean
 	     %vm_scm_co
 	     %vm_scm_co_str
@@ -62,13 +63,26 @@ $vm_canonical = "ibm-java-i386-60";
 #	   "cacao-hg" => "Cacao hg"
 	  );
 
+%vm_color =  ("ibm-java-i386-60" => "darkblue",
+	   "jdk1.5.0_12" => "crimson",
+	   "jdk1.6.0_06" => "red",
+	   "jrmc-3.0.3-1.6.0" => "darkgreen",
+	   "jikesrvm-2.9.3" => "darkmagenta",
+	   "jikesrvm-svn" => "darkviolet",
+	   "drlvm-svn" => "darkorange",
+#	   "cacao-hg" => "Cacao hg"
+	  );
+
+my $jikesrvm_flags = "-X:processors=all ";
+my $sun_flags = "-server ";
+
 # full path for java executible (or equivalent)
 %vm_exe = ("ibm-java-i386-60" => "$vm_rel_path/ibm-java-i386-60/bin/java $vm_run_args",
-	   "jdk1.5.0_12" => "$vm_rel_path/jdk1.5.0_12/bin/java -server $vm_run_args",
-	   "jdk1.6.0_06" => "$vm_rel_path/jdk1.6.0_06/bin/java -server $vm_run_args",
+	   "jdk1.5.0_12" => "$vm_rel_path/jdk1.5.0_12/bin/java $sun_flags $vm_run_args",
+	   "jdk1.6.0_06" => "$vm_rel_path/jdk1.6.0_06/bin/java $sun_flags $vm_run_args",
 	   "jrmc-3.0.3-1.6.0" => "$vm_rel_path/jrmc-3.0.3-1.6.0/bin/java $vm_run_args",
-	   "jikesrvm-2.9.3" => "$vm_rel_path/jikesrvm-2.9.3/dist/production_ia32-linux/rvm $vm_run_args",
-	   "jikesrvm-svn" => "$vm_scm_path/jikesrvm-svn/dist/production_ia32-linux/rvm $vm_run_args",
+	   "jikesrvm-2.9.3" => "$vm_rel_path/jikesrvm-2.9.3/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
+	   "jikesrvm-svn" => "$vm_scm_path/jikesrvm-svn/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "drlvm-svn" => "$vm_scm_path/drlvm-svn/working_vm/deploy/jdk/jre/bin/java $vm_run_args",
 #	   "cacao-hg" => "$vm_scm_path/cacao/"
 	  );
