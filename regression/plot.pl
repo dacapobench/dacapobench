@@ -41,6 +41,10 @@ make_all_svg(\%bmlist);
 make_all_png();
 make_all_tables(\%bmlist);
 
+system("cp www/*.html /home/dacapo/www/regression/perf");
+system("cp png/*.png /home/dacapo/www/regression/perf/png");
+
+
 sub make_all_tables() {
   my ($bmlistref) = @_; 
   my $jar;
