@@ -7,9 +7,13 @@ use RunConfig;
 use strict;
 use XML::Writer;
 
-my $image_height = 400;
-my $image_width = 640;
-my $small_image_resize = "28.125%";
+#my $image_height = 400;
+#my $image_width = 640;
+#my $small_image_resize = "28.125%";
+my $image_height = 450;
+my $image_width = 700;
+my $small_image_resize = "33%";
+
 my $plot_r_margin = 0.015;
 my $plot_l_margin = 0.15;
 my $plot_t_margin = 0.09;
@@ -100,6 +104,7 @@ sub get_targets() {
   }
 }
 
+
 sub produce_html() {
 
   my ($jar, $bmsref) = @_;
@@ -109,11 +114,19 @@ sub produce_html() {
   my $writer = XML::Writer->new(OUTPUT => $output); 
   $writer->startTag('html');
   $writer->startTag('head');
+  $writer->emptyTag('link',
+		    rel => "stylesheet",
+		    type =>"text/css",
+		    href => "dacapo.css");
   $writer->startTag('title');
   $writer->characters("Performance Results For dacapo-$jar");
   $writer->endTag('title');
   $writer->endTag('head');
   $writer->startTag('body');
+  $writer->startTag('center');
+  $writer->characters("Each graph plots performance over time for a number of JVMs. To see details, click on a graph.");
+  $writer->emptyTag('p');
+  $writer->endTag('center');
   my $small = "_small.png";
   my $large = ".png";
 
@@ -122,9 +135,9 @@ sub produce_html() {
   $writer->startTag('tr');
 
   $writer->emptyTag('th');
-  do_cell($writer, 'th', "../png/iteration_1_name$small",);
-  do_cell($writer, 'th', "../png/iteration_3_name$small",);
-  do_cell($writer, 'th', "../png/iteration_10_name$small",);
+  do_cell($writer, 'th', "png/iteration_1_name$small",);
+  do_cell($writer, 'th', "png/iteration_3_name$small",);
+  do_cell($writer, 'th', "png/iteration_10_name$small",);
 
   $writer->endTag('tr');
 
@@ -133,10 +146,10 @@ sub produce_html() {
     my $pre = $jar."_".$bm."_";
     $writer->startTag('tr');
  
-    do_cell($writer, 'td', "../png/".$pre."name$small",);
-    do_cell($writer, 'td', "../png/".$pre."1$small", "../png/".$pre."1$large");
-    do_cell($writer, 'td', "../png/".$pre."3$small", "../png/".$pre."3$large");
-    do_cell($writer, 'td', "../png/".$pre."10$small", "../png/".$pre."10$large");
+    do_cell($writer, 'td', "png/".$pre."name$small",);
+    do_cell($writer, 'td', "png/".$pre."1$small", "png/".$pre."1$large");
+    do_cell($writer, 'td', "png/".$pre."3$small", "png/".$pre."3$large");
+    do_cell($writer, 'td', "png/".$pre."10$small", "png/".$pre."10$large");
 
     $writer->endTag('tr');
   }
@@ -529,7 +542,11 @@ sub do_y_axis() {
 		    transform => "translate($xt2, $y_mid) rotate(-90)",
 		    style => "$lablefont",
 		    fill => $color);
-  $writer->characters("Performance (normalized to best)");
+  if ($normalize_to_iteration) {
+    $writer->characters("Performance (normalized to iteration best)");
+  } else {
+    $writer->characters("Performance (normalized to overall best)");
+  }
   $writer->endTag('text');
   
   my $ydivs = 10;
