@@ -24,22 +24,41 @@ sub update() {
 sub regression() {
   my ($id, $hour_id, $target_finish) = @_;
   do_build($id);
+  do_versions($id);
   do_sanity($id, $hour_id, $target_finish);
   do_perf($id, $hour_id, $target_finish);
-  do_upload($id);
+  do_upload($id, $hour_id);
 }
 
 #
 # Upload results
 #
 sub do_upload() {
-  my ($id) = @_;
+  my ($id, $hour_id) = @_;
   my $log;
   init_log($id, "upload", \$log);
   
   do_system($log, "rsync -a $root_dir/$csv_path $upload_target:$root_dir");
   do_system($log, "rsync -a $root_dir/$log_path/$id $upload_target:$root_dir/$log_path");
-  do_system($log, "ssh $upload_target $root_dir/$bin_path/plot.pl");
+  do_system($log, "ssh $upload_target $root_dir/$bin_path/plot.pl $id $hour_id");
+}
+
+
+#
+# Dump per-run version info
+#
+sub do_versions() {
+  my ($id) = @_;
+  my $log;
+  init_log($id, "versions", \$log);
+
+  my $vm;
+  foreach $vm (@sanity_vms) { 
+    my $java = $root_dir."/".$vm_exe{$vm};
+    do_system($log, "$java -version > $root_dir/$log_path/$id/$vm-version.txt 2>&1");
+  }
+  do_system($log, "cat /proc/cpu > $root_dir/$log_path/$id/cpu-version.txt");
+  do_system($log, "uname -a > $root_dir/$log_path/$id/os-version.txt");
 }
 
 ##
@@ -47,6 +66,7 @@ sub do_upload() {
 ## Sanity and performance runs
 ##
 ##
+
 
 #
 # Do a complete set of sanity (correctness) runs and extract results
