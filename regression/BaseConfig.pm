@@ -15,6 +15,7 @@ require Exporter;
 	     $bin_path
 	     $png_path
 	     $svg_path
+	     $www_path
 	     $csv_header
 	     $processed_log_suffix
 	     $ant
@@ -34,6 +35,8 @@ $csv_path = "csv";
 $bin_path = "bin";
 $svg_path = "svg";
 $png_path = "png";
+$www_path = "www";
+
 $processed_log_suffix = ".plog";
 $max_sanity_log_bytes = 10 * 1024;
 $verbose = 1;
