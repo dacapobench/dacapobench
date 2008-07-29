@@ -53,7 +53,7 @@ sub do_versions() {
   init_log($id, "versions", \$log);
 
   my $vm;
-  foreach $vm (@sanity_vms) { 
+  foreach $vm (@vms) { 
     my $java = $root_dir."/".$vm_exe{$vm};
     do_system($log, "$java -version > $root_dir/$log_path/$id/$vm-version.txt 2>&1");
   }
