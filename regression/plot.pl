@@ -29,10 +29,10 @@ my $plot_y_offset = int ($image_height * $plot_t_margin);
 my $plot_width = int($image_width * (1-($plot_l_margin+$plot_r_margin)));
 my $plot_x_offset = int ($image_height * $plot_l_margin);
 
-my $plot_time = 1217179695;
-my $max_hour_id = get_hour_id_from_time($plot_time);
+#my $plot_time = 1217179695;
+#my $max_hour_id = get_hour_id_from_time($plot_time);
 
-my $bm;
+my ($id, $max_hour_id) = @ARGV;
 
 my %bmlist;
 
@@ -51,13 +51,21 @@ sub make_all_tables() {
 }
 sub make_all_svg() {
   my ($bmlistref) = @_; 
-  my $jar;
-  my $iter;
 
+
+  my $iter;
   for($iter = 1; $iter <= 10; $iter++) {
     produce_iteration_name($iter);
   }
+
+  my $vm;
+  foreach $vm (@vms) {
+    produce_vm_legend($vm);
+  }
+
+  my $jar;
   foreach $jar (sort keys %$bmlistref) {
+    my $bm;
     foreach $bm (sort keys %{$$bmlistref{$jar}}) {
       print "o";
       produce_bm_name($bm, $jar);
@@ -124,8 +132,9 @@ sub produce_html() {
   $writer->endTag('head');
   $writer->startTag('body');
   $writer->startTag('center');
-  $writer->characters("Each graph plots performance over time for a number of JVMs. To see details, click on a graph.");
+  $writer->characters("Each graph plots performance over time for a number of JVMs. Click on graphs to enlarge, click on legend for details on VMs.");
   $writer->emptyTag('p');
+  do_vm_legend_html($writer);
   $writer->endTag('center');
   my $small = "_small.png";
   my $large = ".png";
@@ -146,17 +155,13 @@ sub produce_html() {
     my $pre = $jar."_".$bm."_";
     $writer->startTag('tr');
  
-    do_cell($writer, 'td', "png/".$pre."name$small",);
-    do_cell($writer, 'td', "png/".$pre."1$small", "png/".$pre."1$large");
-    do_cell($writer, 'td', "png/".$pre."3$small", "png/".$pre."3$large");
-    do_cell($writer, 'td', "png/".$pre."10$small", "png/".$pre."10$large");
+    do_cell($writer, 'td', "png/".$pre."name$small",,$bm);
+    do_cell($writer, 'td', "png/".$pre."1$small", "png/".$pre."1$large",$bm);
+    do_cell($writer, 'td', "png/".$pre."3$small", "png/".$pre."3$large",$bm);
+    do_cell($writer, 'td', "png/".$pre."10$small", "png/".$pre."10$large",$bm);
 
     $writer->endTag('tr');
   }
-#<img
-#src="images/Steve.Blackburn.jpg" hspace="40" vspace="10"
-#style="height: 217px; width: 160px;" align="left" title="" alt="Steve
-#Blackburn"> 
 
   $writer->endTag('table');
 
@@ -165,8 +170,25 @@ sub produce_html() {
   close $output;
 }
 
+sub do_vm_legend_html() {
+  my ($writer) = @_;
+  my $vm;
+  foreach $vm (sort @vms) {
+    my $img = "png/$vm"."_legend.png";
+    my $ref = "$vm-version.txt";
+    $writer->startTag('a',
+		      href => $ref);
+    $writer->emptyTag('img',
+		      src => $img,
+		      align => 'center',
+		      border => 0,
+		      alt => $vm);
+    $writer->endTag('a');
+  }
+}
+
 sub do_cell() {
-  my ($writer, $type, $main, $secondary) = @_;
+  my ($writer, $type, $main, $secondary, $bm) = @_;
   $writer->startTag($type);
   if ($secondary) {
     $writer->startTag('a',
@@ -272,6 +294,46 @@ sub produce_iteration_name() {
   close $output;
 }
 
+
+sub produce_vm_legend() {
+  my ($vm) = @_;
+
+  my $legend_width = int (0.15 * $image_width);
+  my $font_size = 0.8 * $font_height;
+  
+  my $font_pix = int($plot_height * $font_size);
+  my $font = "text-anchor:end;font-family:$font_family;font-size:".$font_pix."px";
+
+  my $legend_height = int (1.2 * $font_pix);
+
+  my $output;
+  my $name = $vm."_legend.svg";
+  open $output, (">$root_dir/$svg_path/$name");
+#  print "-->$name\n";
+  my $writer = XML::Writer->new(OUTPUT => $output); 
+  $writer->xmlDecl('UTF-8');
+  $writer->doctype('svg', '-//W3C//DTD SVG 20001102//EN',
+'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd');
+  $writer->startTag('svg',
+                   height => $legend_height,
+                   width  => $legend_width,
+		   xmlns => "http://www.w3.org/2000/svg");
+
+
+  $writer->emptyTag('rect',
+		    height => $legend_height,
+		    width  => $legend_width,
+		    fill   => "white");
+
+
+  do_legend($writer, $legend_width, 0, $legend_width, $font, $font_pix, $vm);
+
+   $writer->endTag('svg');
+  $writer->end();
+  close $output;
+}
+
+
 sub plot_graphs() {
   my ($bm, $jar) = @_;
 
@@ -311,7 +373,7 @@ sub plot_graphs() {
     my $i = 0;
     foreach $vm (sort @vms) {
       do_line_mean($writer, \%{$linedata{$vm}}, $norm, $iterations, $iteration, $vm_color{$vm});
-      do_legend($writer, $vm_str{$vm}, $vm_color{$vm}, $i, scalar(@vms));
+      do_mainlegend($writer, $vm, $i, scalar(@vms));
       $i++;
     }
     finish_plot_canvas($writer);
@@ -349,24 +411,28 @@ $writer->emptyTag('rect',
   $writer->startTag('g',
 		    id => 'plot',
 		    transform => 'translate('.$plot_x_offset.','.$plot_y_offset.')',
-		    style => 'font-size:42;font-weight:bold;');
+#		    style => 'font-size:42;font-weight:bold;'
+		   );
 
 
 }
 
 sub do_plot_background() {
   my ($writer) = @_;
+#  my $gray = "#f0f0f0";
+  my $gray = "#e0e0e0";
+
   for (my $y = 0; $y < 5; $y++) {
     $writer->emptyTag('rect',
 		      x => 0,
 		      y => (($plot_height/10) * 2* $y), 
 		      height => ($plot_height/10),
 		      width => $plot_width,
-		      fill => "#f0f0f0");
+		      fill => $gray);
   }
   for (my $y = 0; $y < 10; $y++) {
     my $yval = (($plot_height/10) * (.5 + $y));
-    my $color = ($y % 2 == 1) ? "#f0f0f0" : "white";
+    my $color = ($y % 2 == 1) ? $gray : "white";
     $writer->emptyTag('line',
 		      x1 => 0,
 		      y1 => $yval, 
@@ -391,13 +457,15 @@ sub do_title() {
   $writer->startTag('text',
 		    transform => "translate($x, $y)",
 		    style => $font,
-		    fill => "#808080");
+#		    fill => "#808080"
+		    fill => "black"
+		   );
   $writer->characters($subtitle);
   $writer->endTag('text');
   $y -= int(1.5*$font_px);
 
   $font_px = int ($font_height * $plot_height);
-  $font = $base_font."font-size:".$font_px."px";
+  $font = $base_font."font-size:".$font_px."px;font-weight:bold";
   $writer->startTag('text',
 		    transform => "translate($x, $y)",
 		    style => $font,
@@ -406,33 +474,48 @@ sub do_title() {
   $writer->endTag('text');
 }
 
-sub do_legend() {
-  my ($writer, $title, $color, $num, $tot) = @_;
+sub do_mainlegend() {
+  my ($writer, $vm, $num, $tot) = @_;
   my $font_size = .8*$font_height;
   my $yoffset = 0.08 + $font_size;
   my $rows = 2;
   my $cols = int(($tot+1)/$rows);
 
   my $font_pix = int($plot_height * $font_size);
-  my $ticksize = 0.1;
-  my $margin = 0.05;
   my $font = "text-anchor:end;font-family:$font_family;font-size:".$font_pix."px";
 
-  my $space = $margin/2;
   my $legend_width = int($plot_width/$cols);
   my $col = int($num/$rows);
   my $row = ($num % $rows);
   my $xright = ($col +1) * $legend_width;
+
+  my $y = $plot_height + int(($yoffset + (($row == 1) ? $font_size : 0))* $plot_height);
+
+  do_legend($writer, $xright, $y, $legend_width, $font, $font_pix, $vm);
+}
+
+sub do_legend() {
+  my ($writer, $xright, $y, $legend_width, $font, $font_pix, $vm) = @_;
+
+  my $title = $vm_str{$vm};
+  my $color = $vm_color{$vm};
+  my $ticksize = 0.1;
+  my $margin = 0.05;
+  my $space = $margin/2;
   my $tick_start = int($xright - ($legend_width * ($ticksize + $margin)));
   my $tick_width = int($legend_width * $ticksize);
   my $text_right = int($tick_start - ($legend_width * $space));
-  my $y = $plot_height + int(($yoffset + (($row == 1) ? $font_size : 0))* $plot_height);
   my $xleft = $xright - $legend_width;
+
+
+
   $y += $font_pix;
   $writer->startTag('text',
 		    transform => "translate($text_right, $y)",
 		    style => $font,
-		    fill => "#808080");
+#		    fill => "#808080"
+		    fill => "black"
+		   );
   $writer->characters($title);
   $writer->endTag('text');
   $y -= int($font_pix/3);
@@ -443,13 +526,15 @@ sub do_legend() {
 		    y2 => $y,
 		    'stroke-width' => $line_stroke,
 		    stroke => $color);  
+
 }
 
 sub do_axes() {
   my ($writer) = @_;
 
 
-  my $color = "#808080";
+#  my $color = "#808080";
+  my $color = "black";
   my $tick_px = int ($tick_height * $plot_height);
   my $font_px = int ($font_height * $plot_height);
   my $font = "font-family:$font_family;font-size:".$font_px."px;text-anchor:middle";
@@ -545,7 +630,7 @@ sub do_y_axis() {
   if ($normalize_to_iteration) {
     $writer->characters("Performance (normalized to iteration best)");
   } else {
-    $writer->characters("Performance (normalized to overall best)");
+    $writer->characters("Performance (normalized to best for all iterations)");
   }
   $writer->endTag('text');
   
