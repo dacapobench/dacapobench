@@ -9,6 +9,7 @@ use XML::Writer;
 
 my $image_height = 400;
 my $image_width = 640;
+my $small_image_resize = "28.125%";
 my $plot_r_margin = 0.015;
 my $plot_l_margin = 0.15;
 my $plot_t_margin = 0.09;
@@ -17,6 +18,7 @@ my $tick_height = 0.025;
 my $font_height = 0.04;
 my $line_stroke = 3;
 my $font_family = "verdana";
+my $normalize_to_iteration = 0;
 
 my $plot_height = int ($image_height * (1-($plot_t_margin+$plot_b_margin)));
 my $plot_y_offset = int ($image_height * $plot_t_margin);
@@ -31,18 +33,54 @@ my $bm;
 my %bmlist;
 
 get_targets(\%bmlist);
+make_all_svg(\%bmlist);
+make_all_png();
+make_all_tables(\%bmlist);
 
-my $jar;
-foreach $jar (sort keys %bmlist) {
-  foreach $bm (sort keys %{$bmlist{$jar}}) {
-    print "-$jar--$bm-\n";
-    plot_graphs($bm, $jar);
+sub make_all_tables() {
+  my ($bmlistref) = @_; 
+  my $jar;
+  foreach $jar (sort keys %$bmlistref) {
+    my @bms = sort keys %{$$bmlistref{$jar}};
+    produce_html($jar, \@bms);
+  }
+}
+sub make_all_svg() {
+  my ($bmlistref) = @_; 
+  my $jar;
+  my $iter;
+
+  for($iter = 1; $iter <= 10; $iter++) {
+    produce_iteration_name($iter);
+  }
+  foreach $jar (sort keys %$bmlistref) {
+    foreach $bm (sort keys %{$$bmlistref{$jar}}) {
+      print "o";
+      produce_bm_name($bm, $jar);
+      plot_graphs($bm, $jar);
+    }
   }
 }
 
-my $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
-print "$job\n";
-system($job);
+sub make_all_png() {
+  my $job;
+  $job = "rm -f $root_dir/$png_path/*_small.png";
+  system($job);
+  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
+  system($job);
+  my @large_pngs;
+  ls_to_array("$root_dir/$png_path", \@large_pngs);
+  my $large;
+  foreach $large (@large_pngs) {
+    print ".";
+    my $small = $large;
+    $small =~ s/.png$/_small.png/;
+    $job = "cp -f $root_dir/$png_path/$large $root_dir/$png_path/$small";
+    system($job);
+    $job = "mogrify -resize $small_image_resize $root_dir/$png_path/$small";
+    system($job);
+  }
+}
 
 sub get_targets() {
   my ($bmlistref) = @_;
@@ -62,6 +100,165 @@ sub get_targets() {
   }
 }
 
+sub produce_html() {
+
+  my ($jar, $bmsref) = @_;
+  my $name = "$jar.html";
+  my $output;
+  open $output, (">$root_dir/$www_path/$name");
+  my $writer = XML::Writer->new(OUTPUT => $output); 
+  $writer->startTag('html');
+  $writer->startTag('head');
+  $writer->startTag('title');
+  $writer->characters("Performance Results For dacapo-$jar");
+  $writer->endTag('title');
+  $writer->endTag('head');
+  $writer->startTag('body');
+  my $small = "_small.png";
+  my $large = ".png";
+
+  $writer->startTag('table',
+		   border => 0);
+  $writer->startTag('tr');
+
+  $writer->emptyTag('th');
+  do_cell($writer, 'th', "../png/iteration_1_name$small",);
+  do_cell($writer, 'th', "../png/iteration_3_name$small",);
+  do_cell($writer, 'th', "../png/iteration_10_name$small",);
+
+  $writer->endTag('tr');
+
+  my $bm;
+  foreach $bm (@$bmsref) { 
+    my $pre = $jar."_".$bm."_";
+    $writer->startTag('tr');
+ 
+    do_cell($writer, 'td', "../png/".$pre."name$small",);
+    do_cell($writer, 'td', "../png/".$pre."1$small", "../png/".$pre."1$large");
+    do_cell($writer, 'td', "../png/".$pre."3$small", "../png/".$pre."3$large");
+    do_cell($writer, 'td', "../png/".$pre."10$small", "../png/".$pre."10$large");
+
+    $writer->endTag('tr');
+  }
+#<img
+#src="images/Steve.Blackburn.jpg" hspace="40" vspace="10"
+#style="height: 217px; width: 160px;" align="left" title="" alt="Steve
+#Blackburn"> 
+
+  $writer->endTag('table');
+
+  $writer->endTag('body');
+  $writer->endTag('html');
+  close $output;
+}
+
+sub do_cell() {
+  my ($writer, $type, $main, $secondary) = @_;
+  $writer->startTag($type);
+  if ($secondary) {
+    $writer->startTag('a',
+		      href => $secondary);
+  }
+  $writer->emptyTag('img',
+		    src => $main,
+		    align => 'right',
+		    border => 0,
+		    alt => $bm);
+  if ($secondary) {
+    $writer->endTag('a');
+  }
+  $writer->endTag($type);
+}
+
+sub produce_bm_name() {
+  my ($bm, $jar) = @_;
+
+  my $text_width = int( 0.1 * $image_width);
+  my $main_font_px = int( 0.75 * $text_width);
+  my $sub_font_px =  int( 0.25 * $text_width);
+  my $main_offset = int(0.85 * $main_font_px);
+  my $sub_offset = int(0.95 * $text_width);
+  my $output;
+  my $name = $jar."_".$bm."_name.svg";
+  open $output, (">$root_dir/$svg_path/$name");
+  my $writer = XML::Writer->new(OUTPUT => $output); 
+  $writer->xmlDecl('UTF-8');
+  $writer->doctype('svg', '-//W3C//DTD SVG 20001102//EN',
+'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd');
+  $writer->startTag('svg',
+                   height => $image_height,
+                   width  => $text_width,
+		   xmlns => "http://www.w3.org/2000/svg");
+
+  $writer->emptyTag('rect',
+		    height => $image_height,
+		    width  => $text_width,
+		    fill   => "white");
+
+  my $basefont = "font-family:$font_family;text-anchor:middle;font-weight:bold;font-size:";
+
+  my $font = $basefont.$main_font_px."px";
+  $writer->startTag('text',
+		    transform => " translate($main_offset,".(int($image_height/2)).")  rotate(-90)",
+		    style => $font,
+		    fill => "black");
+  $writer->characters($bm);
+  $writer->endTag('text');
+
+  $font = $basefont.$sub_font_px."px";#;font-style:italic";
+  $writer->startTag('text',
+		    transform => " translate($sub_offset,".(int($image_height/2)).")  rotate(-90)",
+		    style => $font,
+		    fill => "black");
+  $writer->characters("dacapo-".$jar);
+  $writer->endTag('text');
+
+   $writer->endTag('svg');
+  $writer->end();
+  close $output;
+}
+
+sub produce_iteration_name() {
+  my ($iter) = @_;
+  my $text_height = int( 0.1 * $image_width);
+  my $main_font_px = int( 0.75 * $text_height);
+  my $sub_font_px =  int( 0.25 * $text_height);
+  my $main_offset = int(0.85 * $main_font_px);
+  my $sub_offset = int(0.95 * $text_height);
+  my $output;
+  my $name = "iteration_$iter"."_name.svg";
+  open $output, (">$root_dir/$svg_path/$name");
+  my $writer = XML::Writer->new(OUTPUT => $output); 
+  $writer->xmlDecl('UTF-8');
+  $writer->doctype('svg', '-//W3C//DTD SVG 20001102//EN',
+'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd');
+  $writer->startTag('svg',
+                   height => $text_height,
+                   width  => $image_width,
+		   xmlns => "http://www.w3.org/2000/svg");
+
+
+  $writer->emptyTag('rect',
+		    height => $text_height,
+		    width  => $image_width,
+		    fill   => "white");
+
+
+  my $basefont = "font-family:$font_family;text-anchor:middle;font-weight:bold;font-size:";
+
+  my $font = $basefont.$main_font_px."px";
+  $writer->startTag('text',
+		    transform => " translate(".(int($image_width/2)).",$main_offset) ",
+		    style => $font,
+		    fill => "black");
+  $writer->characters("Iteration $iter");
+  $writer->endTag('text');
+
+   $writer->endTag('svg');
+  $writer->end();
+  close $output;
+}
+
 sub plot_graphs() {
   my ($bm, $jar) = @_;
 
@@ -73,6 +270,15 @@ sub plot_graphs() {
   }
   my $iteration;
   my $iterations = scalar(@min);
+  my $norm;
+  if (!$normalize_to_iteration) {
+    $norm = $min[0];
+    my $value;
+    foreach $value (@min) {
+      if ($value < $norm) {$norm = $value;}
+    }
+  }
+
   for ($iteration = 0; $iteration < $iterations; $iteration++) {
     my $output;
     my $name = $jar."_".$bm."_".($iteration+1).".svg";
@@ -82,12 +288,16 @@ sub plot_graphs() {
     do_plot_background($writer);
     do_axes($writer);
     do_title($writer, "$bm", "dacapo-$jar, iteration ".($iteration+1));
+    if ($normalize_to_iteration) {
+      $norm = $min[$iteration];
+    }
+#    print "$bm $iteration $norm\n";
     foreach $vm (sort @vms) {
-      do_line_points($writer, \%{$linedata{$vm}}, @min[$iteration], $iterations, $iteration, $vm_color{$vm});
+      do_line_points($writer, \%{$linedata{$vm}}, $norm, $iterations, $iteration, $vm_color{$vm});
     }
     my $i = 0;
     foreach $vm (sort @vms) {
-      do_line_mean($writer, \%{$linedata{$vm}}, @min[$iteration], $iterations, $iteration, $vm_color{$vm});
+      do_line_mean($writer, \%{$linedata{$vm}}, $norm, $iterations, $iteration, $vm_color{$vm});
       do_legend($writer, $vm_str{$vm}, $vm_color{$vm}, $i, scalar(@vms));
       $i++;
     }
@@ -114,14 +324,14 @@ $writer->emptyTag('rect',
                    height => $image_height,
                    width  => $image_width,
                    fill   => "white");
-$writer->startTag('defs');
-$writer->startTag('filter',
-		  id => "Guassian_Blur");
-$writer->emptyTag('feGaussianBlur',
-		  in => 'SourceGraphic',
-		  stdDeviation => 3);
-$writer->endTag('filter');
-$writer->endTag('defs');
+#$writer->startTag('defs');
+#$writer->startTag('filter',
+#		  id => "Guassian_Blur");
+#$writer->emptyTag('feGaussianBlur',
+#		  in => 'SourceGraphic',
+#		  stdDeviation => 3);
+#$writer->endTag('filter');
+#$writer->endTag('defs');
 
   $writer->startTag('g',
 		    id => 'plot',
