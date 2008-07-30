@@ -12,9 +12,9 @@ use Image::Magick;
 #my $image_height = 400;
 #my $image_width = 640;
 #my $small_image_resize = "28.125%";
-my $image_height = 450;
-my $image_width = 700;
-my $small_image_resize = "33%";
+my $image_height = 400;
+my $image_width = 600;
+my $small_image_resize = "30%";
 
 my $publish_png = "/home/dacapo/www/regression/perf/png";
 my $publish_html = "/home/dacapo/www/regression/perf";
@@ -39,10 +39,12 @@ my $plot_x_offset = int ($image_height * $plot_l_margin);
 
 my ($id, $max_hour_id) = @ARGV;
 
+#print "---->$id---->$max_hour_id<---\n";
+
 my %bmlist;
 
 get_targets(\%bmlist);
-make_all_svg(\%bmlist);
+make_all_svg(\%bmlist, $max_hour_id);
 make_all_png();
 make_all_tables(\%bmlist);
 system("cp ../log/$id/*version.txt $publish_html");
@@ -59,13 +61,15 @@ sub make_all_tables() {
   }
 }
 sub make_all_svg() {
-  my ($bmlistref) = @_; 
-
+  my ($bmlistref, $max_hour_id) = @_; 
+#  print "==>$max_hour_id\n";
 
   my $iter;
   for($iter = 1; $iter <= 10; $iter++) {
-    produce_iteration_name($iter);
+    produce_column_name("iteration_$iter"."_name.svg", "Iteration $iter");
+#  produce_iteration_name($iter);
   }
+  produce_column_name("warmup_name.svg", "Warmup");
 
   my $vm;
   foreach $vm (@vms) {
@@ -78,7 +82,7 @@ sub make_all_svg() {
     foreach $bm (sort keys %{$$bmlistref{$jar}}) {
       print "o";
       produce_bm_name($bm, $jar);
-      plot_graphs($bm, $jar);
+      plot_graphs($bm, $jar, $max_hour_id);
     }
   }
 }
@@ -112,22 +116,24 @@ sub make_all_png() {
   }
 } else {
   my $job;
-  $job = "rm -f $publish_png/*_small.png";
-  system($job);
+#  $job = "rm -f $publish_png/*_small.png";
+#  system($job);
 #  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
   $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $publish_png";
   system($job);
-  my @large_pngs;
-  ls_to_array("$publish_png", \@large_pngs);
+  my @pngs;
+  ls_to_array("$publish_png", \@pngs);
   my $large;
-  foreach $large (@large_pngs) {
-    print ".";
-    my $small = $large;
-    $small =~ s/.png$/_small.png/;
-    $job = "cp -f $publish_png/$large $publish_png/$small";
-    system($job);
-    $job = "mogrify -resize $small_image_resize $publish_png/$small";
-    system($job);
+  foreach $large (@pngs) {
+    if (!($large =~ /_small.png$/)) {
+      print ".";
+      my $small = $large;
+      $small =~ s/.png$/_small.png/;
+      $job = "cp -f $publish_png/$large $publish_png/$small";
+      system($job);
+      $job = "mogrify -resize $small_image_resize $publish_png/$small";
+      system($job);
+    }
   }
 }
 }
@@ -198,6 +204,7 @@ sub produce_html() {
   do_cell($writer, 'th', "png/iteration_1_name$small",);
   do_cell($writer, 'th', "png/iteration_3_name$small",);
   do_cell($writer, 'th', "png/iteration_10_name$small",);
+  do_cell($writer, 'th', "png/warmup_name$small",);
 
   $writer->endTag('tr');
 
@@ -206,16 +213,17 @@ sub produce_html() {
     my $pre = $jar."_".$bm."_";
     $writer->startTag('tr');
  
-    do_cell($writer, 'td', "png/".$pre."name$small",,$bm);
-    do_cell($writer, 'td', "png/".$pre."1$small", "png/".$pre."1$large",$bm);
-    do_cell($writer, 'td', "png/".$pre."3$small", "png/".$pre."3$large",$bm);
-    do_cell($writer, 'td', "png/".$pre."10$small", "png/".$pre."10$large",$bm);
+    do_cell($writer, 'td', "png/".$pre."name$small",$bm);
+    do_cell($writer, 'td', "png/".$pre."1$small", $bm, "png/".$pre."1$large");
+    do_cell($writer, 'td', "png/".$pre."3$small", $bm, "png/".$pre."3$large");
+    do_cell($writer, 'td', "png/".$pre."10$small", $bm, "png/".$pre."10$large");
+    do_cell($writer, 'td', "png/".$pre."warmup$small", $bm, "png/".$pre."warmup$large");
 
     $writer->endTag('tr');
   }
 
   $writer->endTag('table');
-  $writer->characters("Methodology: Every 12 hours or so, the DaCapo suite is checked out from svn and built, as are a number of JVMs. After correctness testing (reported elsewhere), each JVM (both those built and those binary-released) executes each of the benchmarks in the latest DaCapo release and each of the benchmarks in the svn head.  Each benchmark is run for 10 iterations to allow for warm-up of the JVM.   In the graphs on this page we report times for the 1st, 3rd and 10th iterations.  To minimize systematic disturbance, the JVMs are altered in the inner loop.  Once all benchmarks in both the release and svn versions of DaCapo have beenn run, a time check is made, and if time remains in the 12 hour period, another iteration of performance tests are run.   Generally we perform about 4 or 5 complete runs in a 12 hour period.  The graphs below show a dot for each of the 4 or 5 results at each time period, and plot the mean of the results for a given time period. It is beyond the scope of these experiments to perform cross-JVM heap size sensitivy comparisons, so all benchmarks are run with the same minimum and maximum heap sizes for all VMs.");
+  $writer->characters("Methodology: Every 12 hours or so, the DaCapo suite is checked out from svn and built, as are a number of JVMs. After correctness testing (reported elsewhere), each JVM (both those built and those binary-released) executes each of the benchmarks in the latest DaCapo release and each of the benchmarks in the svn head.  Each benchmark is run for 10 iterations to allow for warm-up of the JVM.   In the graphs on this page we report times for the 1st, 3rd and 10th iterations.  To minimize bias due to systematic disturbance, the JVMs are iterated in the inner loop.  Once all benchmarks in both the release and svn versions of DaCapo have beenn run, a time check is made, and if time remains in the 12 hour period, another iteration of performance tests are run.   Generally we perform about 4 or 5 complete runs in a 12 hour period.  The graphs below show a dot for each of the 4 or 5 results at each time period, and plot the mean of the results for a given time period. It is beyond the scope of these experiments to perform cross-JVM heap size sensitivy comparisons, so all benchmarks are run with the same minimum and maximum heap sizes for all VMs (click on the VM name in the legend at top to see the command-line arguments used).");
   $writer->endTag('font');
   $writer->endTag('body');
   $writer->endTag('html');
@@ -240,7 +248,7 @@ sub do_vm_legend_html() {
 }
 
 sub do_cell() {
-  my ($writer, $type, $main, $secondary, $bm) = @_;
+  my ($writer, $type, $main, $bm, $secondary) = @_;
   $writer->startTag($type);
   if ($secondary ne "") {
     $writer->startTag('a',
@@ -307,16 +315,16 @@ sub produce_bm_name() {
   close $output;
 }
 
-sub produce_iteration_name() {
-  my ($iter) = @_;
+sub produce_column_name() {
+  my ($filename, $text) = @_;
+
   my $text_height = int( 0.08 * $image_width);
   my $main_font_px = int( 0.6 * $text_height);
   my $sub_font_px =  int( 0.25 * $text_height);
   my $main_offset = int(0.85 * $main_font_px);
   my $sub_offset = int(0.95 * $text_height);
   my $output;
-  my $name = "iteration_$iter"."_name.svg";
-  open $output, (">$root_dir/$svg_path/$name");
+  open $output, (">$root_dir/$svg_path/$filename");
   my $writer = XML::Writer->new(OUTPUT => $output); 
   $writer->xmlDecl('UTF-8');
   $writer->pi('xml-stylesheet', 'href="../bin/plot.css" type="text/css"');
@@ -341,7 +349,7 @@ sub produce_iteration_name() {
 		    transform => " translate(".(int($image_width/2)).",$main_offset) ",
 		    style => $font,
 		    fill => "black");
-  $writer->characters("Iteration $iter");
+  $writer->characters($text);
   $writer->endTag('text');
 
    $writer->endTag('svg');
@@ -391,7 +399,8 @@ sub produce_vm_legend() {
 
 
 sub plot_graphs() {
-  my ($bm, $jar) = @_;
+  my ($bm, $jar, $max_hour_id) = @_;
+#  print "===>$max_hour_id\n";
 
   my @min;
   my %linedata;
@@ -401,13 +410,16 @@ sub plot_graphs() {
   }
   my $iteration;
   my $iterations = scalar(@min);
+  my $globalmin;
+  $globalmin = $min[0];
+  my $value;
+  foreach $value (@min) {
+    if ($value < $globalmin) {$globalmin = $value;}
+  }
+
   my $norm;
   if (!$normalize_to_iteration) {
-    $norm = $min[0];
-    my $value;
-    foreach $value (@min) {
-      if ($value < $norm) {$norm = $value;}
-    }
+    $norm = $globalmin;
   }
 
   for ($iteration = 0; $iteration < $iterations; $iteration++) {
@@ -417,7 +429,7 @@ sub plot_graphs() {
     my $writer = XML::Writer->new(OUTPUT => $output);
     start_plot_canvas($writer);
     do_plot_background($writer);
-    do_axes($writer);
+    do_axes($writer, 0);
     do_title($writer, "$bm", "dacapo-$jar, iteration ".($iteration+1));
     if ($normalize_to_iteration) {
       $norm = $min[$iteration];
@@ -436,6 +448,24 @@ sub plot_graphs() {
 
     close $output;
   }
+
+  my $output;
+  my $name = $jar."_".$bm."_warmup.svg";
+  open $output, (">$root_dir/$svg_path/$name");
+  my $writer = XML::Writer->new(OUTPUT => $output);
+  start_plot_canvas($writer);
+  do_plot_background($writer);
+  do_axes($writer, 1);
+  do_title($writer, "$bm", "dacapo-$jar, warmup");
+  my $i = 0;
+  $norm = $globalmin;
+  foreach $vm (sort @vms) {
+    do_line_points_warmup($writer, \%{$linedata{$vm}}, $norm, $iterations, $max_hour_id, $vm_color{$vm});
+    do_line_mean_warmup($writer, \%{$linedata{$vm}}, $norm, $iterations, $max_hour_id, $vm_color{$vm});
+    do_mainlegend($writer, $vm, $i, scalar(@vms));
+    $i++;     
+  }
+  finish_plot_canvas($writer);
 }
 
 
@@ -588,7 +618,7 @@ sub do_legend() {
 }
 
 sub do_axes() {
-  my ($writer) = @_;
+  my ($writer, $warmup) = @_;
 
 
 #  my $color = "#808080";
@@ -598,7 +628,11 @@ sub do_axes() {
   my $font = "font-size:".$font_px."px;text-anchor:middle";
   my $lablefont = $font.";font-style:italic";
 
-  do_x_axis($writer, $color, $tick_px, $font_px, $font, $lablefont);
+  if ($warmup == 1) {
+    do_x_axis_warmup($writer, $color, $tick_px, $font_px, $font, $lablefont);
+  } else {
+    do_x_axis($writer, $color, $tick_px, $font_px, $font, $lablefont);
+  }
   do_y_axis($writer, $color, $tick_px, $font_px, $font, $lablefont);
 }
 
@@ -630,6 +664,44 @@ sub do_x_axis() {
     if ($limit_hours > $max_hour_id) { $limit_hours = $max_hour_id; }
     do_x_axis_period($writer, $period, $period_hours, $limit_hours, $color, $font, $lablefont, $y1, $y2, $yt, $yt2);
   }
+}
+
+sub do_x_axis_warmup() {
+  my ($writer, $color, $tick_px, $font_px, $font, $lablefont) = @_;
+
+  my ($x, $y1, $y2, $yt, $yt2);
+  $y1 = $plot_height;
+  $y2 = $plot_height + $tick_px;
+  $yt = int($y2 + (1.0*$font_px));
+  $yt2 = int($yt  + (1.0*$font_px));
+  $writer->emptyTag('line',
+		    x1 => 0,
+		    y1 => $plot_height, 
+		    x2 => $plot_width,
+		    y2 => $plot_height,
+		    stroke => $color);  
+  my $iteration;
+  for ($iteration = 0; $iteration < 10; $iteration++) {
+    $x = $iteration * ($plot_width/9);
+    $writer->emptyTag('line',
+		      x1 => $x,
+		      y1 => $y1, 
+		      x2 => $x,
+		      y2 => $y2,
+		      stroke => $color);
+    $writer->startTag('text',
+		      transform => "translate($x, $yt)",
+		      style => $font,
+		      fill => $color);
+    $writer->characters(($iteration+1));
+    $writer->endTag('text');
+  }
+  $writer->startTag('text',
+		    transform => "translate(".($plot_width/2).", $yt2)",
+		    style => $lablefont,
+		    fill => $color);
+  $writer->characters("Iteration");
+  $writer->endTag('text');
 }
 
 sub do_x_axis_period() {
@@ -734,6 +806,7 @@ sub do_line_mean() {
     my $set = $$linedataref{$hr_id};
     my $x = int($plot_width*hour_id_to_pos($hr_id));
     if ($set) {
+#      print "->$hr_id<-";
       my $s;
       my $mean = 0;
       my $skipped = 0;
@@ -769,6 +842,74 @@ sub do_line_mean() {
 
 }
 
+sub do_line_mean_warmup() {
+  my($writer, $linedataref, $divisor, $iters, $hour_id, $color) = @_;
+
+  my $path;
+  my $set = $$linedataref{$hour_id};
+#  print "$divisor - $iters - $hour_id - $color";
+  if ($set) {
+#    print " :-) \n";
+    my $iteration;
+    for ($iteration = 0; $iteration < $iters; $iteration++) {
+      my $x = int($iteration * ($plot_width/($iters-1)));
+      my $s;
+      my $mean = 0;
+      my $skipped = 0;
+      for ($s = 0; $s < @$set; $s++) {
+	if (@{$$set[$s]} != $iters) { $skipped++; next; }
+	$mean += $$set[$s][$iteration];
+      }
+      if ($mean == 0) { next; }
+      $mean = $mean/(@$set - $skipped);
+      my $y = $plot_height - int($plot_height*($divisor/$mean));
+      if ($path) {
+	$path .= "L $x,$y ";
+      } else {
+	$path = "M $x,$y ";
+      }
+    }
+    
+    #  my $blur = "filter:url(#Gaussian_Blur)";
+    $writer->emptyTag('path',
+		      d => $path,
+		      fill => 'none',
+		      stroke => "#000000",
+		      'stroke-width' => (int(1.5*$line_stroke)),
+		      opacity => .2,
+		      transform => "translate(2, 2)",
+		      #		   style => $blur
+		     );
+    $writer->emptyTag('path',
+		    d => $path,
+		      fill => 'none',
+		      stroke => $color,
+		      'stroke-width' => $line_stroke);
+  }
+}
+sub do_line_points_warmup() {
+  my($writer, $linedataref, $divisor, $iters, $hour_id, $color) = @_;
+
+
+  my $set = $$linedataref{$hour_id};
+  if ($set) {
+    my $iteration;
+    for ($iteration = 0; $iteration < $iters; $iteration++) {
+      my $x = int($iteration * ($plot_width/($iters-1)));
+      my $s;
+      for ($s = 0; $s < @$set; $s++) {
+	if (@{$$set[$s]} != $iters) { next; }
+	my $y = $plot_height- int($plot_height*($divisor/($$set[$s][$iteration])));
+	$writer->emptyTag('circle',
+			  cx => $x,
+			  cy => $y,
+			  r => 2,
+			  opacity => .2,
+			  fill => $color);
+      }
+    }
+  }
+}
 
 sub do_line_points() {
   my($writer, $linedataref, $divisor, $iters, $iter, $color) = @_;
@@ -806,7 +947,9 @@ sub get_line_data() {
   while (<$csvfile>) {
     if (!/^\s*#/) {
       chomp;
+      s/\s+//g;
       my ($str, $hr_id, $elapsed, @iterations) = split /,/;
+      
       push @{$$linedataref{$hr_id}}, [ @iterations ];
       my $i;
       for ($i = 0; $i < @iterations; $i++) {
