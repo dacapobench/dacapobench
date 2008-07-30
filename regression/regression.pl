@@ -53,13 +53,19 @@ sub do_versions() {
   init_log($id, "versions", \$log);
 
   my $vm;
+  my $job;
   foreach $vm (@vms) { 
     my $java = $root_dir."/".$vm_exe{$vm};
-    do_system($log, "echo \"$java\" > $root_dir/$log_path/$id/$vm-version.txt 2>&1");
-    do_system($log, "$java -version >> $root_dir/$log_path/$id/$vm-version.txt 2>&1");
+    my $job = "$java -version";
+    do_system($log, "echo \"$job\" > $root_dir/$log_path/$id/$vm-version.txt 2>&1");
+    do_system($log, "$job >> $root_dir/$log_path/$id/$vm-version.txt 2>&1");
   }
-  do_system($log, "cat /proc/cpuinfo > $root_dir/$log_path/$id/cpu-version.txt");
-  do_system($log, "uname -a > $root_dir/$log_path/$id/os-version.txt");
+  $job = "cat /proc/cpuinfo";
+  do_system($log, "echo \"$job\" > $root_dir/$log_path/$id/cpu-version.txt");
+  do_system($log, "$job >> $root_dir/$log_path/$id/cpu-version.txt");
+  $job = "uname -a";
+  do_system($log, "echo \"$job\" > $root_dir/$log_path/$id/cpu-version.txt");
+  do_system($log, "$job >> $root_dir/$log_path/$id/os-version.txt");
 }
 
 ##
