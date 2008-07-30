@@ -45,7 +45,7 @@ get_targets(\%bmlist);
 make_all_svg(\%bmlist);
 make_all_png();
 make_all_tables(\%bmlist);
-
+system("cp ../log/$id/*version.txt $publish_html");
 #system("cp www/*.html /home/dacapo/www/regression/perf");
 #system("cp png/*.png /home/dacapo/www/regression/perf/png");
 
@@ -115,7 +115,7 @@ sub make_all_png() {
   $job = "rm -f $root_dir/$png_path/*_small.png";
   system($job);
 #  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
-  $job = "cjava -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
+  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
   system($job);
   my @large_pngs;
   ls_to_array("$root_dir/$png_path", \@large_pngs);
