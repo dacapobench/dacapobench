@@ -56,7 +56,7 @@ $vm_canonical = "ibm-java-i386-60";
 %vm_str = ("ibm-java-i386-60" => "IBM 1.6",
 	   "jdk1.5.0_12" => "Sun 1.5",
 	   "jdk1.6.0_06" => "Sun 1.6",
-	   "jrmc-3.0.3-1.6.0" => "Oracle 1.6",
+	   "jrmc-3.0.3-1.6.0" => "JRockit 1.6",
 	   "jikesrvm-2.9.3" => "JikesRVM 2.9.3",
 	   "jikesrvm-svn" => "JikesRVM svn",
 	   "drlvm-svn" => "DRLVM svn",

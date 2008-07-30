@@ -17,7 +17,7 @@ my $image_width = 700;
 my $small_image_resize = "33%";
 
 my $publish_png = "/home/dacapo/www/regression/perf/png";
-my $publish_html = "/home/dacapo/www/regression/perf/png";
+my $publish_html = "/home/dacapo/www/regression/perf";
 
 my $plot_r_margin = 0.015;
 my $plot_l_margin = 0.15;
@@ -170,7 +170,15 @@ sub produce_html() {
   $writer->endTag('head');
   $writer->startTag('body');
   $writer->startTag('center');
-  $writer->characters("Each graph plots performance over time for a number of JVMs. Click on graphs to enlarge, click on legend for details on VMs.");
+  $writer->characters("Each graph plots performance over time for a number of JVMs. Click on graphs to enlarge, click on legend for version details on each VM. OS details are ");
+  $writer->startTag('a', href => "os-version.txt");
+  $writer->characters("here");
+  $writer->endTag('a');
+  $writer->characters(", and hardware details are ");
+  $writer->startTag('a', href => "cpu-version.txt");
+  $writer->characters("here");
+  $writer->endTag('a');
+  $writer->characters(".");
   $writer->emptyTag('p');
   do_vm_legend_html($writer);
   $writer->endTag('center');
@@ -268,6 +276,7 @@ sub produce_bm_name() {
 		    width  => $text_width,
 		    fill   => "white");
 
+#  my $basefont = "font-family:$font_family;text-anchor:middle;font-size:";
   my $basefont = "font-family:$font_family;text-anchor:middle;font-weight:bold;font-size:";
 
   my $font = $basefont.$main_font_px."px";
@@ -504,6 +513,7 @@ sub do_title() {
 
   $font_px = int ($font_height * $plot_height);
   $font = $base_font."font-size:".$font_px."px;font-weight:bold";
+#  $font = $base_font."font-size:".$font_px."px";
   $writer->startTag('text',
 		    transform => "translate($x, $y)",
 		    style => $font,
@@ -820,7 +830,7 @@ sub hours_ago_to_pos() {
   my ($ago) = @_;
   if (1) {
     my $foo = 40;
-    my $value = $ago + 1;
+    my $value = $ago; # + 1;
 
     my $offset = 1-((log ($foo))/(log ($max_hour_id + $foo)));
     return (1-((log ($value + $foo))/(log ($max_hour_id + $foo))))/$offset;
