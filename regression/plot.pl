@@ -88,6 +88,7 @@ sub make_all_png() {
   my @svgs;
   ls_to_array("$root_dir/$svg_path", \@svgs);
   my $svg;
+  if (0) {
   foreach $svg (@svgs) {
     print ".";
     my $err;
@@ -109,24 +110,23 @@ sub make_all_png() {
 
     @$image = ();
   }
-  
-  if (0) {
+} else {
   my $job;
-  $job = "rm -f $root_dir/$png_path/*_small.png";
+  $job = "rm -f $publish_png/*_small.png";
   system($job);
 #  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
-  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
+  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $publish_png";
   system($job);
   my @large_pngs;
-  ls_to_array("$root_dir/$png_path", \@large_pngs);
+  ls_to_array("$publish_png", \@large_pngs);
   my $large;
   foreach $large (@large_pngs) {
     print ".";
     my $small = $large;
     $small =~ s/.png$/_small.png/;
-    $job = "cp -f $root_dir/$png_path/$large $root_dir/$png_path/$small";
+    $job = "cp -f $publish_png/$large $publish_png/$small";
     system($job);
-    $job = "mogrify -resize $small_image_resize $root_dir/$png_path/$small";
+    $job = "mogrify -resize $small_image_resize $publish_png/$small";
     system($job);
   }
 }
@@ -169,7 +169,8 @@ sub produce_html() {
   $writer->endTag('title');
   $writer->endTag('head');
   $writer->startTag('body');
-  $writer->startTag('center');
+  $writer->startTag('font', size => -4);
+  
   $writer->characters("Each graph plots performance over time for a number of JVMs. Click on graphs to enlarge, click on legend for version details on each VM. OS details are ");
   $writer->startTag('a', href => "os-version.txt");
   $writer->characters("here");
@@ -178,10 +179,14 @@ sub produce_html() {
   $writer->startTag('a', href => "cpu-version.txt");
   $writer->characters("here");
   $writer->endTag('a');
-  $writer->characters(".");
+  $writer->characters(".  Methodology notes appear at the end of this page.");
+   
   $writer->emptyTag('p');
   do_vm_legend_html($writer);
-  $writer->endTag('center');
+
+  $writer->emptyTag('p');
+  $writer->emptyTag('p');
+
   my $small = "_small.png";
   my $large = ".png";
 
@@ -210,7 +215,8 @@ sub produce_html() {
   }
 
   $writer->endTag('table');
-
+  $writer->characters("Methodology: Every 12 hours or so, the DaCapo suite is checked out from svn and built, as are a number of JVMs. After correctness testing (reported elsewhere), each JVM (both those built and those binary-released) executes each of the benchmarks in the latest DaCapo release and each of the benchmarks in the svn head.  Each benchmark is run for 10 iterations to allow for warm-up of the JVM.   In the graphs on this page we report times for the 1st, 3rd and 10th iterations.  To minimize systematic disturbance, the JVMs are altered in the inner loop.  Once all benchmarks in both the release and svn versions of DaCapo have beenn run, a time check is made, and if time remains in the 12 hour period, another iteration of performance tests are run.   Generally we perform about 4 or 5 complete runs in a 12 hour period.  The graphs below show a dot for each of the 4 or 5 results at each time period, and plot the mean of the results for a given time period. It is beyond the scope of these experiments to perform cross-JVM heap size sensitivy comparisons, so all benchmarks are run with the same minimum and maximum heap sizes for all VMs.");
+  $writer->endTag('font');
   $writer->endTag('body');
   $writer->endTag('html');
   close $output;
@@ -236,7 +242,7 @@ sub do_vm_legend_html() {
 sub do_cell() {
   my ($writer, $type, $main, $secondary, $bm) = @_;
   $writer->startTag($type);
-  if ($secondary) {
+  if ($secondary ne "") {
     $writer->startTag('a',
 		      href => $secondary);
   }
@@ -245,7 +251,7 @@ sub do_cell() {
 		    align => 'right',
 		    border => 0,
 		    alt => $bm);
-  if ($secondary) {
+  if ($secondary ne "") {
     $writer->endTag('a');
   }
   $writer->endTag($type);
@@ -264,6 +270,7 @@ sub produce_bm_name() {
   open $output, (">$root_dir/$svg_path/$name");
   my $writer = XML::Writer->new(OUTPUT => $output); 
   $writer->xmlDecl('UTF-8');
+  $writer->pi('xml-stylesheet', 'href="../bin/plot.css" type="text/css"');
   $writer->doctype('svg', '-//W3C//DTD SVG 20001102//EN',
 'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd');
   $writer->startTag('svg',
@@ -277,7 +284,7 @@ sub produce_bm_name() {
 		    fill   => "white");
 
 #  my $basefont = "font-family:$font_family;text-anchor:middle;font-size:";
-  my $basefont = "font-family:$font_family;text-anchor:middle;font-weight:bold;font-size:";
+  my $basefont = "text-anchor:middle;font-weight:bold;font-size:";
 
   my $font = $basefont.$main_font_px."px";
   $writer->startTag('text',
@@ -302,8 +309,8 @@ sub produce_bm_name() {
 
 sub produce_iteration_name() {
   my ($iter) = @_;
-  my $text_height = int( 0.1 * $image_width);
-  my $main_font_px = int( 0.75 * $text_height);
+  my $text_height = int( 0.08 * $image_width);
+  my $main_font_px = int( 0.6 * $text_height);
   my $sub_font_px =  int( 0.25 * $text_height);
   my $main_offset = int(0.85 * $main_font_px);
   my $sub_offset = int(0.95 * $text_height);
@@ -312,6 +319,7 @@ sub produce_iteration_name() {
   open $output, (">$root_dir/$svg_path/$name");
   my $writer = XML::Writer->new(OUTPUT => $output); 
   $writer->xmlDecl('UTF-8');
+  $writer->pi('xml-stylesheet', 'href="../bin/plot.css" type="text/css"');
   $writer->doctype('svg', '-//W3C//DTD SVG 20001102//EN',
 'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd');
   $writer->startTag('svg',
@@ -326,7 +334,7 @@ sub produce_iteration_name() {
 		    fill   => "white");
 
 
-  my $basefont = "font-family:$font_family;text-anchor:middle;font-weight:bold;font-size:";
+  my $basefont = "text-anchor:middle;font-weight:bold;font-size:";
 
   my $font = $basefont.$main_font_px."px";
   $writer->startTag('text',
@@ -349,7 +357,7 @@ sub produce_vm_legend() {
   my $font_size = 0.8 * $font_height;
   
   my $font_pix = int($plot_height * $font_size);
-  my $font = "text-anchor:end;font-family:$font_family;font-size:".$font_pix."px";
+  my $font = "text-anchor:end;font-size:".$font_pix."px";
 
   my $legend_height = int (1.2 * $font_pix);
 
@@ -359,6 +367,7 @@ sub produce_vm_legend() {
 #  print "-->$name\n";
   my $writer = XML::Writer->new(OUTPUT => $output); 
   $writer->xmlDecl('UTF-8');
+  $writer->pi('xml-stylesheet', 'href="../bin/plot.css" type="text/css"');
   $writer->doctype('svg', '-//W3C//DTD SVG 20001102//EN',
 'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd');
   $writer->startTag('svg',
@@ -437,6 +446,7 @@ sub start_plot_canvas() {
 $writer->xmlDecl('UTF-8');
 $writer->doctype('svg', '-//W3C//DTD SVG 20001102//EN',
 'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd');
+ $writer->pi('xml-stylesheet', 'href="../bin/plot.css" type="text/css"');
 $writer->startTag('svg',
                    height => $image_height,
                    width  => $image_width,
@@ -496,7 +506,7 @@ sub do_title() {
   my $sub_font_height = 0.03;
   my $yoffset = int(-0.007 * $plot_height);
   my $x = int ($plot_width/2);
-  my $base_font = "font-family:$font_family;text-anchor:middle;";
+  my $base_font = "text-anchor:middle;";
  
   my $font_px = int ($sub_font_height * $plot_height);
   my $y = $yoffset + int (-$font_px/2);
@@ -530,7 +540,7 @@ sub do_mainlegend() {
   my $cols = int(($tot+1)/$rows);
 
   my $font_pix = int($plot_height * $font_size);
-  my $font = "text-anchor:end;font-family:$font_family;font-size:".$font_pix."px";
+  my $font = "text-anchor:end;font-size:".$font_pix."px";
 
   my $legend_width = int($plot_width/$cols);
   my $col = int($num/$rows);
@@ -585,7 +595,7 @@ sub do_axes() {
   my $color = "black";
   my $tick_px = int ($tick_height * $plot_height);
   my $font_px = int ($font_height * $plot_height);
-  my $font = "font-family:$font_family;font-size:".$font_px."px;text-anchor:middle";
+  my $font = "font-size:".$font_px."px;text-anchor:middle";
   my $lablefont = $font.";font-style:italic";
 
   do_x_axis($writer, $color, $tick_px, $font_px, $font, $lablefont);
