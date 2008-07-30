@@ -6,6 +6,8 @@ use JarConfig;
 use RunConfig;
 use strict;
 use XML::Writer;
+use Image::Magick;
+
 
 #my $image_height = 400;
 #my $image_width = 640;
@@ -14,6 +16,9 @@ my $image_height = 450;
 my $image_width = 700;
 my $small_image_resize = "33%";
 
+my $publish_png = "/home/dacapo/www/regression/perf/png";
+my $publish_html = "/home/dacapo/www/regression/perf/png";
+
 my $plot_r_margin = 0.015;
 my $plot_l_margin = 0.15;
 my $plot_t_margin = 0.09;
@@ -21,7 +26,7 @@ my $plot_b_margin = 0.15;
 my $tick_height = 0.025;
 my $font_height = 0.04;
 my $line_stroke = 3;
-my $font_family = "verdana";
+my $font_family = "arial";
 my $normalize_to_iteration = 0;
 
 my $plot_height = int ($image_height * (1-($plot_t_margin+$plot_b_margin)));
@@ -41,8 +46,8 @@ make_all_svg(\%bmlist);
 make_all_png();
 make_all_tables(\%bmlist);
 
-system("cp www/*.html /home/dacapo/www/regression/perf");
-system("cp png/*.png /home/dacapo/www/regression/perf/png");
+#system("cp www/*.html /home/dacapo/www/regression/perf");
+#system("cp png/*.png /home/dacapo/www/regression/perf/png");
 
 
 sub make_all_tables() {
@@ -79,10 +84,38 @@ sub make_all_svg() {
 }
 
 sub make_all_png() {
+
+  my @svgs;
+  ls_to_array("$root_dir/$svg_path", \@svgs);
+  my $svg;
+  foreach $svg (@svgs) {
+    print ".";
+    my $err;
+    my $image = Image::Magick->new;
+    $err = $image->Read("$root_dir/$svg_path/$svg");
+    warn "$err" if "$err";
+
+    my $basename = $svg;
+    $basename =~ s/.svg//;
+
+    $err = $image->Write("$publish_png/$basename.png");
+    warn "$err" if "$err";
+
+    $err = $image->Scale(geometry=>$small_image_resize);
+    warn  "$err" if "$err";
+
+    $err = $image->Write("$publish_png/$basename"."_small.png");
+    warn "$err" if "$err";
+
+    @$image = ();
+  }
+  
+  if (0) {
   my $job;
   $job = "rm -f $root_dir/$png_path/*_small.png";
   system($job);
-  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
+#  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
+  $job = "cjava -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
   system($job);
   my @large_pngs;
   ls_to_array("$root_dir/$png_path", \@large_pngs);
@@ -96,6 +129,7 @@ sub make_all_png() {
     $job = "mogrify -resize $small_image_resize $root_dir/$png_path/$small";
     system($job);
   }
+}
 }
 
 sub get_targets() {
@@ -122,7 +156,7 @@ sub produce_html() {
   my ($jar, $bmsref) = @_;
   my $name = "$jar.html";
   my $output;
-  open $output, (">$root_dir/$www_path/$name");
+  open $output, (">$publish_html/$name");
   my $writer = XML::Writer->new(OUTPUT => $output); 
   $writer->startTag('html');
   $writer->startTag('head');
@@ -682,12 +716,13 @@ sub do_line_mean() {
     if ($set) {
       my $s;
       my $mean = 0;
+      my $skipped = 0;
       for ($s = 0; $s < @$set; $s++) {
-	if (@{$$set[$s]} != $iters) { next; }
+	if (@{$$set[$s]} != $iters) { $skipped++; next; }
 	$mean += $$set[$s][$iter];
       }
       if ($mean == 0) { next; }
-      $mean = $mean/@$set;
+      $mean = $mean/(@$set - $skipped);
       my $y = $plot_height - int($plot_height*($divisor/$mean));
       if ($path) {
 	$path .= "L $x,$y ";
