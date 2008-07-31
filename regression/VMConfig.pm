@@ -88,7 +88,7 @@ my $sun_flags = "-server ";
 	  );
 
 # command used to check out scm head
-%vm_scm_co = ("jikesrvm-svn" => "svn co https://jikesrvm.svn.sourceforge.net/svnroot/jikesrvm/rvmroot/trunk jikesrvm-svn",
+%vm_scm_co = ("jikesrvm-svn" => "svn co http://dacapo.anu.edu.au/svnroot/jikesrvm/rvmroot/trunk jikesrvm-svn",
 	      "drlvm-svn" => "svn co http://svn.apache.org/repos/asf/harmony/enhanced/trunk drlvm-svn",
 #	  "cacao-hg" => "hg clone http://mips.complang.tuwien.ac.at/hg/cacao cacao"
 	 );
