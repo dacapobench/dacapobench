@@ -456,7 +456,9 @@ sub plot_graphs() {
   start_plot_canvas($writer);
   do_plot_background($writer);
   do_axes($writer, 1);
-  do_title($writer, "$bm", "dacapo-$jar, warmup, $max_hour_id");
+  my $name = $id;
+  $name =~ s/_.*$//;
+  do_title($writer, "$bm", "dacapo-$jar, warmup, $name");
   my $i = 0;
   $norm = $globalmin;
   foreach $vm (sort @vms) {

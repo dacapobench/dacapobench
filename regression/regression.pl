@@ -40,7 +40,8 @@ sub do_upload() {
   
   do_system($log, "rsync -a $root_dir/$csv_path $upload_target:$root_dir");
   do_system($log, "rsync -a $root_dir/$log_path/$id $upload_target:$root_dir/$log_path");
-  do_system($log, "ssh $upload_target $root_dir/$bin_path/plot.pl $id $hour_id");
+  my $job = "ssh $upload_target \"cd $root_dir/$bin_path && ./plot.pl $id $hour_id\"";
+  do_system($log, $job);
 }
 
 
