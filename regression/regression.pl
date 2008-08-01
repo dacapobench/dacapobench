@@ -65,7 +65,7 @@ sub do_versions() {
   do_system($log, "echo \"$job\" > $root_dir/$log_path/$id/cpu-version.txt");
   do_system($log, "$job >> $root_dir/$log_path/$id/cpu-version.txt");
   $job = "uname -a";
-  do_system($log, "echo \"$job\" > $root_dir/$log_path/$id/cpu-version.txt");
+  do_system($log, "echo \"$job\" > $root_dir/$log_path/$id/os-version.txt");
   do_system($log, "$job >> $root_dir/$log_path/$id/os-version.txt");
 }
 
