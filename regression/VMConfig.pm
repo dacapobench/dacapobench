@@ -65,6 +65,8 @@ $vm_canonical = "ibm-java-i386-60";
 #	   "cacao-hg" => "Cacao hg"
 	  );
 
+
+# see http://www.w3.org/TR/SVG/types.html#ColorKeywords
 %vm_color =  ("ibm-java-i386-60" => "darkblue",
 	   "jdk1.5.0_12" => "crimson",
 	   "jdk1.6.0_06" => "red",
