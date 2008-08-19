@@ -8,12 +8,9 @@ use strict;
 use XML::Writer;
 use Image::Magick;
 
-
-#my $image_height = 400;
-#my $image_width = 640;
-#my $small_image_resize = "28.125%";
 my $image_height = 400;
 my $image_width = 600;
+my $font_family = "arial";
 my $small_image_resize = "30%";
 
 my $publish_png = "/home/dacapo/www/regression/perf/png";
@@ -26,7 +23,6 @@ my $plot_b_margin = 0.15;
 my $tick_height = 0.025;
 my $font_height = 0.04;
 my $line_stroke = 3;
-my $font_family = "arial";
 my $normalize_to_iteration = 0;
 
 my $plot_height = int ($image_height * (1-($plot_t_margin+$plot_b_margin)));
@@ -34,12 +30,7 @@ my $plot_y_offset = int ($image_height * $plot_t_margin);
 my $plot_width = int($image_width * (1-($plot_l_margin+$plot_r_margin)));
 my $plot_x_offset = int ($image_height * $plot_l_margin);
 
-#my $plot_time = 1217179695;
-#my $max_hour_id = get_hour_id_from_time($plot_time);
-
 my ($id, $max_hour_id) = @ARGV;
-
-#print "---->$id---->$max_hour_id<---\n";
 
 my %bmlist;
 
@@ -48,8 +39,6 @@ make_all_svg(\%bmlist, $max_hour_id);
 make_all_png();
 make_all_tables(\%bmlist);
 system("cp ../log/$id/*version.txt $publish_html");
-#system("cp www/*.html /home/dacapo/www/regression/perf");
-#system("cp png/*.png /home/dacapo/www/regression/perf/png");
 
 
 sub make_all_tables() {
@@ -60,14 +49,26 @@ sub make_all_tables() {
     produce_html($jar, \@bms);
   }
 }
+
 sub make_all_svg() {
   my ($bmlistref, $max_hour_id) = @_; 
-#  print "==>$max_hour_id\n";
 
+  produce_legends();
+
+  my $jar;
+  foreach $jar (sort keys %$bmlistref) {
+    my $bm;
+    foreach $bm (sort keys %{$$bmlistref{$jar}}) {
+      produce_bm_name($bm, $jar);
+      plot_graphs($bm, $jar, $max_hour_id);
+    }
+  }
+}
+
+sub produce_legends() {
   my $iter;
   for($iter = 1; $iter <= 10; $iter++) {
     produce_column_name("iteration_$iter"."_name.svg", "Iteration $iter");
-#  produce_iteration_name($iter);
   }
   produce_column_name("warmup_name.svg", "Warmup");
 
@@ -75,50 +76,12 @@ sub make_all_svg() {
   foreach $vm (@vms) {
     produce_vm_legend($vm);
   }
-
-  my $jar;
-  foreach $jar (sort keys %$bmlistref) {
-    my $bm;
-    foreach $bm (sort keys %{$$bmlistref{$jar}}) {
-      print "o";
-      produce_bm_name($bm, $jar);
-      plot_graphs($bm, $jar, $max_hour_id);
-    }
-  }
 }
 
 sub make_all_png() {
-
   my @svgs;
   ls_to_array("$root_dir/$svg_path", \@svgs);
   my $svg;
-  if (0) {
-  foreach $svg (@svgs) {
-    print ".";
-    my $err;
-    my $image = Image::Magick->new;
-    $err = $image->Read("$root_dir/$svg_path/$svg");
-    warn "$err" if "$err";
-
-    my $basename = $svg;
-    $basename =~ s/.svg//;
-
-    $err = $image->Write("$publish_png/$basename.png");
-    warn "$err" if "$err";
-
-    $err = $image->Scale(geometry=>$small_image_resize);
-    warn  "$err" if "$err";
-
-    $err = $image->Write("$publish_png/$basename"."_small.png");
-    warn "$err" if "$err";
-
-    @$image = ();
-  }
-} else {
-  my $job;
-#  $job = "rm -f $publish_png/*_small.png";
-#  system($job);
-#  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $root_dir/$png_path";
   $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $publish_png";
   system($job);
   my @pngs;
@@ -135,7 +98,6 @@ sub make_all_png() {
       system($job);
     }
   }
-}
 }
 
 sub get_targets() {
@@ -488,16 +450,8 @@ $writer->emptyTag('rect',
                    height => $image_height,
                    width  => $image_width,
                    fill   => "white");
-#$writer->startTag('defs');
-#$writer->startTag('filter',
-#		  id => "Guassian_Blur");
-#$writer->emptyTag('feGaussianBlur',
-#		  in => 'SourceGraphic',
-#		  stdDeviation => 3);
-#$writer->endTag('filter');
-#$writer->endTag('defs');
 
-  $writer->startTag('g',
+ $writer->startTag('g',
 		    id => 'plot',
 		    transform => 'translate('.$plot_x_offset.','.$plot_y_offset.')',
 #		    style => 'font-size:42;font-weight:bold;'
@@ -603,7 +557,6 @@ sub do_legend() {
   $writer->startTag('text',
 		    transform => "translate($text_right, $y)",
 		    style => $font,
-#		    fill => "#808080"
 		    fill => "black"
 		   );
   $writer->characters($title);
@@ -849,9 +802,7 @@ sub do_line_mean_warmup() {
 
   my $path;
   my $set = $$linedataref{$hour_id};
-#  print "$divisor - $iters - $hour_id - $color";
   if ($set) {
-#    print " :-) \n";
     my $iteration;
     for ($iteration = 0; $iteration < $iters; $iteration++) {
       my $x = int($iteration * ($plot_width/($iters-1)));
@@ -872,7 +823,6 @@ sub do_line_mean_warmup() {
       }
     }
     
-    #  my $blur = "filter:url(#Gaussian_Blur)";
     $writer->emptyTag('path',
 		      d => $path,
 		      fill => 'none',
@@ -1021,3 +971,4 @@ sub ls_to_array() {
   }
   close DIR;
 }
+
