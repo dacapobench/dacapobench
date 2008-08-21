@@ -19,6 +19,7 @@ require Exporter;
 	     $csv_header
 	     $processed_log_suffix
 	     $ant
+             $ant_opts
 	     $max_sanity_log_bytes
 	     $begining_of_time_hrs
 	     $upload_target);
@@ -43,8 +44,8 @@ $verbose = 1;
 #my $regression_period_hrs = 3;
 #$regression_period_sec = $regression_period_hrs * 60 * 60;
 
-my $java_home = "/usr/lib/jvm/java-1.5.0-sun";
-my $ant_opts = "-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128";
+my $java_home = "/usr/lib/jvm/java-6-sun";
+$ant_opts = "-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128";
 # -Dhttp.proxyHost=ra0.anu.edu.au -Dhttp.proxyPort=3128";
 $ant = "export ANT_OPTS=\"$ant_opts\" && export JAVA_HOME=$java_home && ant ";
 
