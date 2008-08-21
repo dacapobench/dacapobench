@@ -1,4 +1,4 @@
-package org.dacapo.eclipse;
+package dacapo.eclipse;
 
 
 import java.io.File;

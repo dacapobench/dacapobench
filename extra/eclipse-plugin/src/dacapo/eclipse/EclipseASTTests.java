@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.dacapo.eclipse;
+package dacapo.eclipse;
 
 import java.util.List;
 import org.eclipse.jdt.core.dom.*;

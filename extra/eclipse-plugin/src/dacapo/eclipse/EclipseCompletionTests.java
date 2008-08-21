@@ -1,4 +1,4 @@
-package org.dacapo.eclipse;
+package dacapo.eclipse;
 
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.ICompilationUnit;

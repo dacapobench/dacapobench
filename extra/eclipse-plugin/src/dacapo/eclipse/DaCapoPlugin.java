@@ -1,4 +1,4 @@
-package org.dacapo.eclipse;
+package dacapo.eclipse;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

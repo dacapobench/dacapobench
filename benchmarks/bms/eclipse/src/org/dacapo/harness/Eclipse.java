@@ -90,7 +90,7 @@ public class Eclipse extends Benchmark {
       args[0] = "-data";
       args[1] = fileInScratch("workspace");
       args[2] = "-application";
-      args[3] = "org.dacapo.eclipse.dacapoHarness";
+      args[3] = "dacapo.eclipse.dacapoHarness";
       for (int i = 0; i < pluginArgs.length; i++)
         args[4+i] = pluginArgs[i];
 //      EclipseStarter.startup(args, null);

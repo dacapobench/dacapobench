@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.dacapo.eclipse;
+package dacapo.eclipse;
 
 import java.io.*;
 import java.net.URL;

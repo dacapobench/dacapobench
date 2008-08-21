@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="org.dacapo.eclipse" default="build.jars" basedir=".">
+<project name="dacapo.eclipse" default="build.jars" basedir=".">
 
 	<property name="basews" value="${ws}"/>
 	<property name="baseos" value="${os}"/>
@@ -40,18 +40,18 @@
 
 	</target>
 
-	<target name="build.update.jar" depends="init" description="Build the plug-in: org.dacapo.eclipse for an update site.">
+	<target name="build.update.jar" depends="init" description="Build the plug-in: dacapo.eclipse for an update site.">
 		<delete dir="${temp.folder}"/>
 		<mkdir dir="${temp.folder}"/>
 		<antcall target="build.jars"/>
 		<antcall target="gather.bin.parts">
 			<param name="destination.temp.folder" value="${temp.folder}/"/>
 		</antcall>
-		<zip destfile="${plugin.destination}/org.dacapo.eclipse_1.0.0.jar" basedir="${temp.folder}/org.dacapo.eclipse_1.0.0" filesonly="false" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/dacapo.eclipse_1.0.0.jar" basedir="${temp.folder}/dacapo.eclipse_1.0.0" filesonly="false" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
-	<target name="@dot" depends="init" unless="@dot" description="Create jar: org.dacapo.eclipse @dot.">
+	<target name="@dot" depends="init" unless="@dot" description="Create jar: dacapo.eclipse @dot.">
 		<delete dir="${temp.folder}/@dot.bin"/>
 		<mkdir dir="${temp.folder}/@dot.bin"/>
 		<!-- compile the source code -->
@@ -163,7 +163,7 @@
 		</zip>
 	</target>
 
-	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: org.dacapo.eclipse.">
+	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: dacapo.eclipse.">
 		<available property="@dot" file="${build.result.folder}/@dot"/>
 		<antcall target="@dot"/>
 	</target>
@@ -174,11 +174,11 @@
 	</target>
 
 	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/org.dacapo.eclipse_1.0.0"/>
-		<copy todir="${destination.temp.folder}/org.dacapo.eclipse_1.0.0" failonerror="true" overwrite="false">
+		<mkdir dir="${destination.temp.folder}/dacapo.eclipse_1.0.0"/>
+		<copy todir="${destination.temp.folder}/dacapo.eclipse_1.0.0" failonerror="true" overwrite="false">
 			<fileset dir="${build.result.folder}/@dot" includes="**"			/>
 		</copy>
-		<copy todir="${destination.temp.folder}/org.dacapo.eclipse_1.0.0" failonerror="true" overwrite="false">
+		<copy todir="${destination.temp.folder}/dacapo.eclipse_1.0.0" failonerror="true" overwrite="false">
 			<fileset dir="${basedir}" includes="META-INF/,null,plugin.xml"			/>
 		</copy>
 	</target>
@@ -187,20 +187,20 @@
 	</target>
 
 	<target name="gather.sources" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/org.dacapo.eclipse_1.0.0"/>
-		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/org.dacapo.eclipse_1.0.0" failonerror="false" overwrite="false"/>
+		<mkdir dir="${destination.temp.folder}/dacapo.eclipse_1.0.0"/>
+		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/dacapo.eclipse_1.0.0" failonerror="false" overwrite="false"/>
 	</target>
 
 	<target name="gather.logs" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/org.dacapo.eclipse_1.0.0"/>
-		<copy file="${temp.folder}/@dot.bin.log" todir="${destination.temp.folder}/org.dacapo.eclipse_1.0.0" failonerror="false" overwrite="false"/>
+		<mkdir dir="${destination.temp.folder}/dacapo.eclipse_1.0.0"/>
+		<copy file="${temp.folder}/@dot.bin.log" todir="${destination.temp.folder}/dacapo.eclipse_1.0.0" failonerror="false" overwrite="false"/>
 	</target>
 
-	<target name="clean" depends="init" description="Clean the plug-in: org.dacapo.eclipse of all the zips, jars and logs created.">
+	<target name="clean" depends="init" description="Clean the plug-in: dacapo.eclipse of all the zips, jars and logs created.">
 		<delete dir="${build.result.folder}/@dot"/>
 		<delete file="${build.result.folder}/src.zip"/>
-		<delete file="${plugin.destination}/org.dacapo.eclipse_1.0.0.jar"/>
-		<delete file="${plugin.destination}/org.dacapo.eclipse_1.0.0.zip"/>
+		<delete file="${plugin.destination}/dacapo.eclipse_1.0.0.jar"/>
+		<delete file="${plugin.destination}/dacapo.eclipse_1.0.0.zip"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
@@ -209,7 +209,7 @@
 		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
 	</target>
 
-	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: org.dacapo.eclipse.">
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: dacapo.eclipse.">
 		<delete dir="${temp.folder}"/>
 		<mkdir dir="${temp.folder}"/>
 		<antcall target="build.jars"/>
@@ -223,7 +223,7 @@
 		<delete>
 			<fileset dir="${temp.folder}" includes="**/*.bin.log"			/>
 		</delete>
-		<zip destfile="${plugin.destination}/org.dacapo.eclipse_1.0.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/dacapo.eclipse_1.0.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
