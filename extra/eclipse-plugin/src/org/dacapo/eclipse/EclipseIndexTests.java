@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package dacapo.eclipse;
+package org.dacapo.eclipse;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;

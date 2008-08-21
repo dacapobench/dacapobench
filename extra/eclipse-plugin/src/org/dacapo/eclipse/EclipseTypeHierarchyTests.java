@@ -1,4 +1,4 @@
-package dacapo.eclipse;
+package org.dacapo.eclipse;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
