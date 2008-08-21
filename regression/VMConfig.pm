@@ -92,10 +92,11 @@ my $sun_flags = "-server ";
 	   "drlvm-svn" => "$vm_scm_path/drlvm-svn/working_vm/deploy/jdk/jre/bin/java $vm_run_args",
 #	   "cacao-hg" => "$vm_scm_path/cacao/"
 	  );
-
+my $harmonysvn = "http://dacapo.anu.edu.au/svnroot/harmony/";
 # command used to check out scm head
 %vm_scm_co = ("jikesrvm-svn" => "svn co http://dacapo.anu.edu.au/svnroot/jikesrvm/rvmroot/trunk jikesrvm-svn",
-	      "drlvm-svn" => "svn co http://svn.apache.org/repos/asf/harmony/enhanced/trunk drlvm-svn",
+#	      "drlvm-svn" => "svn co http://svn.apache.org/repos/asf/harmony/enhanced/trunk drlvm-svn",
+	      "drlvm-svn" => "svn co ".$harmonysvn."harmony/enhanced/trunk drlvm-svn",
 #	  "cacao-hg" => "hg clone http://mips.complang.tuwien.ac.at/hg/cacao cacao"
 	 );
 
@@ -104,7 +105,7 @@ my $sun_flags = "-server ";
 		 );
 
 %vm_scm_build = ("jikesrvm-svn" => "/usr/bin/yes | ./bin/buildit -p localhost production",
-		 "drlvm-svn" => "$ant -Dauto.fetch=true -Dhy.javac.compiler=modern all");
+		 "drlvm-svn" => "$ant -Dsvn.root=".$harmonysvn." -Dauto.fetch=true -Dhy.javac.compiler=modern all");
 
 %vm_scm_build_str = ("jikesrvm-svn" => "Config  : production \[SUCCESS",
 		     "drlvm-svn" => "BUILD SUCCESSFUL"
