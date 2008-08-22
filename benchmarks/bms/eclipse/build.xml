@@ -8,13 +8,15 @@
     <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${bm-version}-${bm-drop}"/>
 	<property name="bm-src" value="eclipse-SDK-${bm-version}-linux-gtk.tar.gz"/>
 	
-	<property name="extra" value="../extra"/>
-	
     <import file="../common.xml"/>
 
 	<property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
 	<property name="bm-src-at" value="eclipse-Automated-Tests-${bm-version}.zip"/>
 
+	<target name="clean" depends="common.clean">
+		<delete dir="${bm-files}/@dot"/>
+	</target>
+		
     <target name="source" depends="common.source">
 		<antcall target="check-source">
 			<param name="target-dir" value="${bm-downloads}"/>
@@ -24,7 +26,7 @@
     </target>
     
     <target name="bm-harness">
-        <javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" excludes="org/dacapo/eclipse/*.java"
+        <javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" includes="org/dacapo/harness/*.java" excludes="org/dacapo/eclipse/*.java"
                 debug="true" debuglevel="lines,vars,source">
             <classpath>
                 <pathelement path="${harness-classpath}"/>
@@ -71,8 +73,7 @@
 
     <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
     <target name="plugin">
-        <ant antfile="build.xml" dir="${extra}/eclipse-plugin" 
-         target="build.update.jar" inheritall="false">
+        <ant antfile="plugin-build.xml" dir="${bm-files}" target="build.update.jar" inheritall="false">
             <property name="eclipsesrc.home" location="${eclipse-top}"/>
             <property name="harness.home" location="${build}"/>
             <property name="plugin.destination" location="${eclipse-top}/plugins/"/>

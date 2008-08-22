@@ -55,7 +55,7 @@
 		<delete dir="${temp.folder}/@dot.bin"/>
 		<mkdir dir="${temp.folder}/@dot.bin"/>
 		<!-- compile the source code -->
-		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
+		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" includes="dacapo/eclipse/**" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
 			<compilerarg line="${compilerArg}"/>
 			<classpath>
 				<pathelement path="${harness.home}"/>
