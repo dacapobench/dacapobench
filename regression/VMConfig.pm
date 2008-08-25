@@ -80,6 +80,7 @@ $vm_canonical = "ibm-java-i386-60";
 
 my $jikesrvm_flags = "-X:processors=all ";
 my $sun_flags = "-server ";
+my $drlvm_flags = "-Xem:server ";
 
 # full path for java executible (or equivalent)
 %vm_exe = ("ibm-java-i386-60" => "$vm_rel_path/ibm-java-i386-60/bin/java $vm_run_args",
@@ -89,7 +90,7 @@ my $sun_flags = "-server ";
 	   "jikesrvm-2.9.3" => "$vm_rel_path/jikesrvm-2.9.3/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "jikesrvm-3.0.0" => "$vm_rel_path/jikesrvm-3.0.0/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "jikesrvm-svn" => "$vm_scm_path/jikesrvm-svn/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
-	   "drlvm-svn" => "$vm_scm_path/drlvm-svn/working_vm/deploy/jdk/jre/bin/java $vm_run_args",
+	   "drlvm-svn" => "$vm_scm_path/drlvm-svn/working_vm/deploy/jdk/jre/bin/java $drlvm_flags $vm_run_args",
 #	   "cacao-hg" => "$vm_scm_path/cacao/"
 	  );
 my $harmonysvn = "http://dacapo.anu.edu.au/svnroot/harmony/";
