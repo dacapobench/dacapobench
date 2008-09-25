@@ -28,6 +28,25 @@ sub regression() {
   do_sanity($id, $hour_id, $target_finish);
   do_perf($id, $hour_id, $target_finish);
   do_upload($id, $hour_id);
+  do_mailout($id, $hour_id, $mail_recipients)
+}
+
+#
+# Mail out status
+#
+sub do_mailout() {
+  my($id, $hour_id, $recipients) = @_;
+  
+  my $sendmail = "mail";
+  my $subject = "Subject: [dacapo-regress] $id\n";
+  my $send_to = "To: ".$recipients."\n";
+  my $content = "";
+  open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail: $!";
+  print SENDMAIL $subject;
+  print SENDMAIL $send_to;
+  print SENDMAIL "Content-type: text/plain\n\n";
+  print SENDMAIL $content;
+  close(SENDMAIL);
 }
 
 #
@@ -43,7 +62,6 @@ sub do_upload() {
   my $job = "ssh $upload_target \"cd $root_dir/$bin_path && ./plot.pl $id $hour_id\"";
   do_system($log, $job);
 }
-
 
 #
 # Dump per-run version info
@@ -157,7 +175,11 @@ sub run_bm() {
   my $timeout = get_timeout($vm, $name."_".$run_id, $iterations);
   do_system($log, "$timedrun $timeout $java -jar $jar -s $size -n $iterations $bm >> $logname 2>&1");
 
+  # now kill anything residual
+  do_system($log, "killall -9 java; killall -9 rvm");
+
   echo_stamp($logname, "end");
+  
 }
 
 #

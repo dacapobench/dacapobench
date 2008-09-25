@@ -22,7 +22,8 @@ require Exporter;
              $ant_opts
 	     $max_sanity_log_bytes
 	     $begining_of_time_hrs
-	     $upload_target);
+	     $upload_target
+	     $mail_recipients);
 
 ($b,$path,$s) = fileparse($0);
 $root_dir = abs_path("$path../");
@@ -52,3 +53,5 @@ $ant = "export ANT_OPTS=\"$ant_opts\" && export JAVA_HOME=$java_home && ant ";
 $csv_header = "\"#\n# comma-separated values\n# <id>, <hr number>, <elapsed sec for job>, <time itr 0>, ... , <time itr N-1>\n#\"";
 
 $upload_target = "dacapo\@dacapo.anu.edu.au";
+
+$mail_recipients = "steve.blackburn\@anu.edu.au";
