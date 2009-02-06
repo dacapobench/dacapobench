@@ -33,7 +33,7 @@
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="antlr,batik,bloat,chart,derby,eclipse,fop,hsqldb,jython,luindex,lusearch,pmd,sunflow,xalan"/>
+    <target name="compile" depends="antlr,batik,bloat,chart,derby,eclipse,fop,hsqldb,jython,luindex,lusearch,pmd,sunflow,tomcat,xalan"/>
 
     <!-- ================================= 
          target: harness           
@@ -84,6 +84,9 @@
     </target>
     <target name="sunflow" depends="init,harness" description="--> build the sunflow benchmark">
 		<ant antfile="bms/sunflow/build.xml" target="incremental"/>
+    </target>
+    <target name="tomcat" depends="init,harness" description="--> build the tomcat benchmark">
+		<ant antfile="bms/tomcat/build.xml" target="incremental"/>
     </target>
     <target name="xalan" depends="init,harness" description="--> build the xalan benchmark">
 		<ant antfile="bms/xalan/build.xml" target="incremental"/>

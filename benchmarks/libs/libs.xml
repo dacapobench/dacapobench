@@ -1,6 +1,27 @@
 <project name="libs">
 	<property name="lib-base" value="${basedir}/libs"/>
 	
+	<!-- Jakarta commons HTTP Client -->
+	<property name="commons-httpclient-jar" 
+		value="${lib-base}/commons-httpclient/dist/jar/commons-httpclient.jar"/>
+	<target name="commons-httpclient" depends="commons-logging,commons-codec">
+		<ant antfile="${lib-base}/commons-httpclient/build.xml"/>
+	</target>
+	
+	<!-- Jakarta commons Logging -->
+	<property name="commons-logging-jar" 
+		value="${lib-base}/commons-logging/dist/jar/commons-logging.jar"/>
+	<target name="commons-logging">
+		<ant antfile="${lib-base}/commons-logging/build.xml"/>
+	</target>
+	
+	<!-- Jakarta commons Codec -->
+	<property name="commons-codec-jar" 
+		value="${lib-base}/commons-codec/dist/jar/commons-codec.jar"/>
+	<target name="commons-codec">
+		<ant antfile="${lib-base}/commons-codec/build.xml"/>
+	</target>
+	
 	<!-- janino -->
 	<property name="janino-jar" value="${lib-base}/janino/dist/jar/janino-2.5.2.jar"/>
 	<target name="janino">
