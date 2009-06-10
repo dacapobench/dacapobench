@@ -33,7 +33,7 @@
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="antlr,batik,bloat,chart,derby,eclipse,fop,hsqldb,jython,luindex,lusearch,pmd,sunflow,tomcat,xalan"/>
+    <target name="compile" depends="batik,derby,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tomcat,xalan"/>
 
     <!-- ================================= 
          target: harness           
@@ -46,18 +46,9 @@
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->
 
-    <target name="antlr" depends="init,harness">
-    	<ant antfile="bms/antlr/build.xml" target="incremental" inheritAll="true"/>
-    </target>
     <target name="batik" depends="init,harness">
     	<ant antfile="bms/batik/build.xml" target="incremental" inheritAll="true"/>
     </target>
-    <target name="bloat" depends="init,harness">
-    	<ant antfile="bms/bloat/build.xml" target="incremental" inheritAll="true"/>
-    </target>
-    <target name="chart" depends="init,harness">
-    	<ant antfile="bms/chart/build.xml" target="incremental" inheritAll="true"/>
-    </target>	
     <target name="derby" depends="init,harness">
     	<ant antfile="bms/derby/build.xml" target="incremental" inheritAll="true"/>
 	</target>	
@@ -67,9 +58,6 @@
     <target name="fop" depends="init,harness">
     	<ant antfile="bms/fop/build.xml" target="incremental" inheritAll="true"/>
     </target>
-    <target name="hsqldb" depends="init,harness">
-    	<ant antfile="bms/hsqldb/build.xml" target="incremental" inheritAll="true"/>
-	</target>
     <target name="jython" depends="init,harness">
 		<ant antfile="bms/jython/build.xml" target="incremental" inheritAll="true"/>
 	</target>
