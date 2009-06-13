@@ -67,16 +67,22 @@
     <target name="lusearch" depends="init,harness">
 		<ant antfile="bms/lusearch/build.xml" target="incremental"/>
 	</target>
-    <target name="pmd" depends="init,harness" description="--> build the pmd benchmark">
+    <target name="pmd" depends="init,harness">
 		<ant antfile="bms/pmd/build.xml" target="incremental"/>
     </target>
-    <target name="sunflow" depends="init,harness" description="--> build the sunflow benchmark">
+    <target name="sunflow" depends="init,harness">
 		<ant antfile="bms/sunflow/build.xml" target="incremental"/>
     </target>
-    <target name="tomcat" depends="init,harness" description="--> build the tomcat benchmark">
+    <target name="tomcat" depends="init,harness">
 		<ant antfile="bms/tomcat/build.xml" target="incremental"/>
     </target>
-    <target name="xalan" depends="init,harness" description="--> build the xalan benchmark">
+    <target name="tradebeans" depends="init,harness">
+		<ant antfile="bms/tradebeans/build.xml" target="incremental"/>
+    </target>
+    <target name="tradesoap" depends="init,harness">
+		<ant antfile="bms/tradesoap/build.xml" target="incremental"/>
+    </target>
+	<target name="xalan" depends="init,harness">
 		<ant antfile="bms/xalan/build.xml" target="incremental"/>
     </target>	
 </project>

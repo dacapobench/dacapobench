@@ -2,18 +2,29 @@
 	<import file="../util.xml"/>
 	<import file="libs.xml"/>
 	
-	<property name="lib-build-dir" value="libs/${lib-name}/build"/>
-	<property name="lib-output-dir" value="libs/${lib-name}/dist"/>
-	<property name="lib-jars" value="${lib-output-dir}/jar"/>
-	<property name="lib-downloads" value="libs/${lib-name}/downloads"/>
-	<property name="lib-src-dir" value="libs/${lib-name}/src"/>
+	<property name="lib-build-dir" location="libs/${lib-name}/build"/>
+	<property name="lib-output-dir" location="libs/${lib-name}/dist"/>
+	<property name="lib-jars" location="${lib-output-dir}/jar"/>
+	<property name="lib-dat" value="${bm-output-dir}/dat"/>
+	<property name="lib-downloads" location="libs/${lib-name}/downloads"/>
+	<property name="lib-src-dir" location="libs/${lib-name}/src"/>
+	<property name="lib-data" location="libs/${lib-name}/data"/>
 
-	<target name="all" depends="source, pre-build, build, jar, complete"/>
+	<target name="all" depends="url-source, svn-source, pre-build, build, jar, complete"/>
 
-    <target name="source" if="lib-src">
+    <target name="url-source" if="lib-url">
 		<antcall target="check-source">
 			<param name="target-dir" value="${lib-downloads}"/>
 			<param name="target-url" value="${lib-url}"/>
+			<param name="target-file" value="${lib-src}"/>
+        </antcall>
+    </target>
+	
+    <target name="svn-source" if="lib-svn-url">
+		<antcall target="check-svn-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="svn-url" value="${lib-svn-url}"/>
+			<param name="svn-revison" value="${lib-svn-revision}"/>
 			<param name="target-file" value="${lib-src}"/>
         </antcall>
     </target>
@@ -35,7 +46,7 @@
 	<target name="build"/>
 	
 	<target name="patch">
-		<patch patchfile="${lib-name}.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
+		<patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
 	</target>
 	
 	<target name="untar">

@@ -1,7 +1,7 @@
 <project name="util">
 	
 	<target name="check-source" if="target-file">
-		<!--<checksum file="${target-dir}/${target-file}"/>-->
+		<!-- <checksum file="${target-dir}/${target-file}"/> -->
 		<condition property="up-to-date">
 			<and>
 				<available file="${target-dir}/${target-file}"/>
@@ -18,4 +18,34 @@
 	<target name="get-source" unless="up-to-date">
         <get src="${target-url}/${target-file}" dest="${target-dir}/${target-file}" usetimestamp="true"/>
 	</target>
+	
+	<target name="check-svn-source" if="target-file">
+	 <!--	<checksum file="${target-dir}/${target-file}"/> -->
+		<condition property="up-to-date">
+			<and>
+				<available file="${target-dir}/${target-file}"/>
+				<checksum file="${target-dir}/${target-file}"/>
+			</and>
+		</condition>
+		<antcall target="get-svn-source">
+			<param name="target-dir" value="${target-dir}"/>
+			<param name="svn-url" value="${svn-url}"/>
+			<param name="svn-revision" value="${svn-revison}"/>
+			<param name="target-file" value="${target-file}"/>
+		</antcall>	
+	</target>
+	
+	<target name="get-svn-source" unless="up-to-date">
+		<property name="svn-tmp" value="svn-tmp"/>
+        <exec executable="svn" failonerror="false">
+            <arg line="-r${svn-revision}"/>
+            <arg line="checkout"/>
+            <arg line="${svn-url}"/>
+            <arg line="${svn-tmp}"/>
+        </exec>
+		<zip destfile="${target-dir}/${target-file}" basedir="${svn-tmp}"/>
+        <delete dir="${svn-tmp}"/>
+	</target>
+	
+	
 </project>

@@ -1,0 +1,127 @@
+<project name="daytrader" default="all" basedir="../..">
+    <description>daytrader application, required by tradebeans and tradesoap</description>
+	<property file="ant/dacapo.properties"/>
+	
+	<property name="lib-name" value="daytrader"/>
+
+	<property name="lib-svn-url" value="http://svn.apache.org/repos/asf/geronimo/daytrader/trunk"/>
+	<property name="lib-svn-revision" value="767347"/>
+	<property name="lib-version" value="svn-${lib-svn-revision}"/>
+	<property name="lib-src" value="daytrader-${lib-version}-src.zip"/>
+
+    <property name="ger-version" value="2.1.4"/>
+    <property name="ger-name" value="geronimo-jetty6-javaee5"/>
+    <property name="ger-url" value="${apache.dl.url}/geronimo/${ger-version}"/>
+	<property name="ger-bin" value="${ger-name}-${ger-version}-bin.tar.gz"/>
+	<import file="../common.xml"/>
+
+	<property name="dt-build" location="${lib-build-dir}/daytrader"/>
+	<property name="launcher-build" location="${lib-build-dir}/launcher"/>
+	<property name="ger-home" location="${lib-build-dir}/${ger-name}-${ger-version}"/>
+	<property name="ger-cli-jar" value="${ger-home}/lib/geronimo-cli-${ger-version}.jar"/>
+	<property name="ger-kernel-jar" value="${ger-home}/lib/geronimo-kernel-${ger-version}.jar"/>
+	
+	<condition property="shell-exe" value="cmd.exe">
+		<os family="windows"/>
+	</condition>
+	<property name="shell-exe" value="sh"/>
+	<condition property="gsh-exe" value="gsh.bat">
+		<os family="windows"/>
+	</condition>
+	<property name="gsh-exe" value="gsh"/>
+	
+    <target name="url-source" if="ger-url">
+		<antcall target="check-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="target-url" value="${ger-url}"/>
+			<param name="target-file" value="${ger-bin}"/>
+        </antcall>
+    </target>
+	
+	<target name="unpack">
+		<untar src="${lib-downloads}/${ger-bin}" dest="${lib-build-dir}" compression="gzip"/>
+		<patch patchfile="libs/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
+
+		<mkdir dir="${dt-build}"/>
+        <unzip src="${lib-downloads}/${lib-src}" dest="${dt-build}/"/>
+		<copy file="${lib-data}/stocks.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
+		<copy file="${lib-data}/users.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
+		<copy file="${lib-data}/workload.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
+		<patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${dt-build}" strip="0" ignorewhitespace="yes"/>
+	</target>
+	
+	<target name="build" depends="data"> 
+		<mkdir dir="${launcher-build}/"/>
+		<javac srcdir="${lib-src-dir}" destdir="${launcher-build}" classpath="${ger-cli-jar}:${ger-kernel-jar}" debug="true" debuglevel="lines,vars,source"/>
+	</target>
+	
+	<target name="jar" depends="build">
+		<jar destfile="${lib-jars}/${lib-name}.jar">
+            <fileset dir="${launcher-build}">
+            	<include name="**/*.class"/>
+        	</fileset>
+		</jar>
+	</target>
+	
+	<target name="data">
+		<!-- build daytrader -->
+        <exec executable="${mvn}" dir="${dt-build}">
+        	<env key="GERONIMO_HOME" value="${ger-home}"/>
+        	<env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
+        	<arg line="clean"/>
+            <arg line="install"/>
+        </exec>
+		
+		<!-- deploy daytrader to geronimo -->
+		<antcall target="start-geronimo"/>
+		<antcall target="deploy">
+			<param name="deploy-subject" value="daytrader-derby-datasource/target/daytrader-derby-datasource-2.2-SNAPSHOT.car"/>
+		</antcall>
+		<antcall target="deploy">
+			<param name="deploy-subject" value="daytrader-jetty/target/daytrader-jetty-2.2-SNAPSHOT.car"/>
+		</antcall>
+		<antcall target="deploy">
+			<param name="deploy-subject" value="daytrader-jetty/target/daytrader-dacapo-2.2-SNAPSHOT.car"/>
+		</antcall>
+		<antcall target="deploy">
+			<param name="deploy-subject" value="daytrader-jetty/target/daytrader-ws-client-2.2-SNAPSHOT.car"/>
+		</antcall>
+		<antcall target="stop-geronimo"/>
+		
+		<!-- package the resulting geronimo install as a zip -->
+		<zip destfile="${lib-dat}/${lib-name}.zip">
+	        <fileset dir="${lib-build-dir}" includes="${ger-name}-${ger-version}/**"/>
+		</zip>
+	</target>
+	
+	<target name="start-geronimo">
+        <exec executable="${shell-exe}" dir="${ger-home}" spawn="true">
+			<env key="GERONIMO_HOME" path="${ger-home}"/>
+       		<arg path="${ger-home}/bin/${gsh-exe}"/>
+       		<arg value="-c"/>
+       		<arg value="geronimo/start-server"/>
+        </exec>
+		<echo message="Waiting for geronimo startup..."/>
+		<waitfor maxwait="2" maxwaitunit="minute" checkevery="1000">
+		        <http url="http://localhost:8080/console/login.jsp"/>
+		</waitfor>
+		<echo message="Established connection..."/>
+		<sleep seconds="1"/>
+	</target>
+	<target name="stop-geronimo">
+        <exec executable="${shell-exe}" dir="${ger-home}">
+			<env key="GERONIMO_HOME" path="${ger-home}"/>
+       		<arg path="${ger-home}/bin/${gsh-exe}"/>
+       		<arg value="-c"/>
+       		<arg value="geronimo/stop-server -u system -w manager"/>
+        </exec>
+	</target>
+	<target name="deploy">
+        <exec executable="${shell-exe}" dir="${dt-build}">
+			<env key="GERONIMO_HOME" path="${ger-home}"/>
+       		<arg path="${ger-home}/bin/${gsh-exe}"/>
+       		<arg value="-c"/>
+       		<arg value="deploy/install-plugin -u system -w manager ${deploy-subject}"/>
+        </exec>
+	</target>
+</project>
