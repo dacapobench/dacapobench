@@ -15,9 +15,9 @@ import org.dacapo.parser.Config;
 
 public class Tradesoap extends Benchmark {
   private Method initializeMethod;
-  
+    
   public Tradesoap(Config config, File scratch) throws Exception {
-    super(config,scratch);
+    super(config,scratch,false);
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
     this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, Integer.TYPE, String.class, Boolean.TYPE } );
     this.method = clazz.getMethod("performIteration", new Class[] { } );
