@@ -1,8 +1,8 @@
 benchmark pmd
   class org.dacapo.harness.Pmd
   thread-model single
-  jar "pmd-3.7.jar"
-  libs "jaxen-1.1-beta-7.jar", "junit-3.8.1.jar", "xercesImpl.jar", "xml-apis.jar";
+  jar "pmd-4.2.5.jar"
+  libs "jaxen-1.1.1.jar", "asm-3.1.jar", "junit-3.8.1.jar", "xercesImpl.jar", "xml-apis.jar";
 
 size xsmall args "@pmd/small.lst","xml","pmd/rulesets/imports.xml","-debug"
   output 
@@ -52,7 +52,7 @@ size default args "@pmd/default.lst","text",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
   output
-    stdout digest 0x15443d38fce80cd97026c5ca650fe3dae0a30e01,
+    stdout digest 0x69c1f71a71d4dac5e1c09d967d2b0d75ce66600a,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size large args "@pmd/large.lst","text",
@@ -75,7 +75,7 @@ size large args "@pmd/large.lst","text",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
   output 
-    stdout digest 0xfb000ef34052f879946f886b125e378e96c108c1,
+    stdout digest 0xd30c5f9a3c9ce4d8836a9e8dfd199a0b9a010421,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
@@ -85,6 +85,6 @@ description
   author	"Tom Copeland",
   license	"BSD-style",
   url		"http://pmd.sourceforge.net/",
-  version	"1.8",
+  version	"4.2.5",
   threads	"Single threaded",
-  repeats	"Single iteration checks a single large source file against 18 coding rules";
+  repeats	"Single iteration checks numerous sources file against 18 coding rules";

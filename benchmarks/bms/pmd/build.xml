@@ -3,9 +3,11 @@
 	<property file="dacapo.properties"/>
 	
 	<property name="bm-name" value="pmd"/>
-    <property name="bm-version" value="3.7"/>
+    <property name="bm-version" value="4.2.5"/>
     <property name="bm-url" value="${sourceforge.dl.url}/pmd"/>
 	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
+	<property name="jaxen-version" value="1.1.1"/>
+	<property name="asm-version" value="3.1"/>
 	
 	<import file="../common.xml"/>
 	
@@ -49,7 +51,8 @@
 	</target>
 
     <target name="libs" unless="externalize.deps">
-        <copy file="${bm-build-top}/lib/jaxen-1.1-beta-7.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/jaxen-${jaxen-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/asm-${asm-version}.jar" todir="${bm-jars}"/>
     </target>
     
     <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
