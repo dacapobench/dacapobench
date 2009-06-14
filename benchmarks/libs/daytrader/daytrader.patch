@@ -494,7 +494,7 @@ Index: modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/Da
 ===================================================================
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java	(revision 0)
 +++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java	(revision 0)
-@@ -0,0 +1,598 @@
+@@ -0,0 +1,599 @@
 +package org.apache.geronimo.samples.daytrader.dacapo;
 +
 +import java.io.BufferedReader;
@@ -653,6 +653,7 @@ Index: modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/Da
 +			if (i != OP_NQ)
 +				System.out.format("\t"+OP_NAMES[i]+" "+dots.substring(OP_NAMES[i].length())+"%6d (%4.1f%%)%n",  opCount[i], 100*((float) opCount[i]/(total-nested)));
 +		}
++		System.out.flush();
 +	}
 +	
 +  public static void initializeTrade(String size) {
