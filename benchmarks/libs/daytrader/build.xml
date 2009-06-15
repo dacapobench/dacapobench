@@ -13,6 +13,12 @@
     <property name="ger-name" value="geronimo-jetty6-javaee5"/>
     <property name="ger-url" value="${apache.dl.url}/geronimo/${ger-version}"/>
 	<property name="ger-bin" value="${ger-name}-${ger-version}-bin.tar.gz"/>
+
+    <property name="amq-version" value="4.1.2"/>
+    <property name="amq-name" value="apache-activemq"/>
+    <property name="amq-url" value="${apache.dl.url}/activemq/${amq-name}/${amq-version}"/>
+	<property name="amq-bin" value="${amq-name}-${amq-version}-bin.tar.gz"/>
+	
 	<import file="../common.xml"/>
 
 	<property name="dt-build" location="${lib-build-dir}/daytrader"/>
@@ -40,12 +46,24 @@
 			<param name="target-url" value="${ger-url}"/>
 			<param name="target-file" value="${ger-bin}"/>
         </antcall>
+		<antcall target="check-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="target-url" value="${amq-url}"/>
+			<param name="target-file" value="${amq-bin}"/>
+        </antcall>
     </target>
+	
 	
 	<target name="unpack">
 		<untar src="${lib-downloads}/${ger-bin}" dest="${lib-build-dir}" compression="gzip"/>
 		<patch patchfile="libs/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
+		<untar src="${lib-downloads}/${amq-bin}" dest="${lib-build-dir}" compression="gzip">
+	    <patternset>
+	        <include name="${amq-name}-${amq-version}/${amq-name}-${amq-version}.jar"/>
+	    </patternset>
+	</untar>
 
+		
 		<mkdir dir="${dt-build}"/>
         <unzip src="${lib-downloads}/${lib-src}" dest="${dt-build}/"/>
 		<copy file="${lib-data}/stocks.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
@@ -68,15 +86,25 @@
 	</target>
 	
 	<target name="data">
-		<!-- build daytrader -->
 		<property name="mvn" location="${toolsdir}/apache-maven-${mvn.version}/bin/${mvn-exe}"/>
-		<echo message="${mvn}"/>
 		
-        <exec executable="${mvn}" dir="${dt-build}">
+		<!-- install activemq -->
+        <property name="amq-jar" location="${lib-build-dir}/${amq-name}-${amq-version}/${amq-name}-${amq-version}.jar"/>
+		<exec executable="${mvn}" dir="${dt-build}">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.activemq"/>
+            <arg value="-DartifactId=activemq-core"/>
+            <arg value="-Dversion=${amq-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${amq-jar}"/>
+         </exec>
+
+		<!-- build daytrader -->
+		<exec executable="${mvn}" dir="${dt-build}">
         	<env key="GERONIMO_HOME" value="${ger-home}"/>
         	<env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
-        	<arg line="clean"/>
-            <arg line="install"/>
+        	<arg value="clean"/>
+            <arg value="install"/>
         </exec>
 		
 		<!-- deploy daytrader to geronimo -->

@@ -1,7 +1,7 @@
 <project name="util">
 	
 	<target name="check-source" if="target-file">
-		<!-- <checksum file="${target-dir}/${target-file}"/> -->
+		<!--	 	<checksum file="${target-dir}/${target-file}"/> -->
 		<condition property="up-to-date">
 			<and>
 				<available file="${target-dir}/${target-file}"/>
@@ -20,8 +20,8 @@
 	</target>
 	
 	<target name="check-svn-source" if="target-file">
-	 <!--	<checksum file="${target-dir}/${target-file}"/> -->
-		<condition property="up-to-date">
+		<!--	 	<checksum file="${target-dir}/${target-file}"/> -->
+		<condition property="svn-up-to-date">
 			<and>
 				<available file="${target-dir}/${target-file}"/>
 				<checksum file="${target-dir}/${target-file}"/>
@@ -35,7 +35,7 @@
 		</antcall>	
 	</target>
 	
-	<target name="get-svn-source" unless="up-to-date">
+	<target name="get-svn-source" unless="svn-up-to-date">
 		<property name="svn-tmp" value="svn-tmp"/>
         <exec executable="svn" failonerror="false">
             <arg line="-r${svn-revision}"/>
