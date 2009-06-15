@@ -11,7 +11,8 @@
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
     <description>Dacapo benchmarks</description>
-
+	<property name="toolsdir" location="../tools"/>
+	
 	<property file="local.properties"/>
 	<property file="default.properties"/>
  	<property file="dacapo.properties"/>

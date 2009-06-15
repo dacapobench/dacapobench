@@ -20,14 +20,14 @@
 	
 	<property name="harness-classpath" value="harness/dist"/>
 	
-	<target name="all" depends="source, pre-build, build, complete"/>
+	<target name="all" depends="source, svn-source, pre-build, build, complete"/>
 
 	<target name="incremental">
 		<property name="incremental-build" value="true"/>
 		<antcall target="all"/>
 	</target>
 	
-    <target name="source" if="bm-src">
+    <target name="source" if="bm-url">
 		<antcall target="check-source">
 			<param name="target-dir" value="${bm-downloads}"/>
 			<param name="target-url" value="${bm-url}"/>
@@ -35,6 +35,16 @@
         </antcall>
     </target>
     	
+    <target name="svn-source" if="bm-svn-url">
+		<antcall target="check-svn-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="svn-url" value="${bm-svn-url}"/>
+			<param name="svn-revison" value="${bm-svn-revision}"/>
+			<param name="target-file" value="${bm-src}"/>
+        </antcall>
+    </target>
+	
+	
 	<target name="pre-build" depends="clean, init, unpack"/>
 
 	<target name="clean">
