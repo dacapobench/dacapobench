@@ -47,7 +47,11 @@
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->
 
-    <target name="batik" depends="init,harness">
+
+    <target name="avrora" depends="init,harness">
+    	<ant antfile="bms/avrora/build.xml" target="incremental" inheritAll="true"/>
+    </target>
+	<target name="batik" depends="init,harness">
     	<ant antfile="bms/batik/build.xml" target="incremental" inheritAll="true"/>
     </target>
     <target name="derby" depends="init,harness">
