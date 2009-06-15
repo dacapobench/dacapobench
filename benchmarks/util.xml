@@ -47,5 +47,26 @@
         <delete dir="${svn-tmp}"/>
 	</target>
 	
+	<target name="check-cvs-source" if="target-file">
+		<!--	 	<checksum file="${target-dir}/${target-file}"/> -->
+		<condition property="cvs-up-to-date">
+			<and>
+				<available file="${target-dir}/${target-file}"/>
+				<checksum file="${target-dir}/${target-file}"/>
+			</and>
+		</condition>
+		<antcall target="get-cvs-source">
+			<param name="target-dir" value="${target-dir}"/>
+			<param name="cvs-root" value="${cvs-root}"/>
+			<param name="cvs-date" value="${cvs-date}"/>
+			<param name="target-file" value="${target-file}"/>
+		</antcall>	
+	</target>
 	
+	<target name="get-cvs-source" unless="cvs-up-to-date">
+		<property name="cvs-tmp" value="cvs-tmp"/>
+        <cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date}" compression="true"/>
+		<tar destfile="${target-dir}/${target-file}" basedir="${cvs-tmp}" compression="gzip"/>
+        <delete dir="${cvs-tmp}"/>
+	</target>	
 </project>

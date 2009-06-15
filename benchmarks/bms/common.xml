@@ -20,7 +20,7 @@
 	
 	<property name="harness-classpath" value="harness/dist"/>
 	
-	<target name="all" depends="source, svn-source, pre-build, build, complete"/>
+	<target name="all" depends="source, svn-source, cvs-source, pre-build, build, complete"/>
 
 	<target name="incremental">
 		<property name="incremental-build" value="true"/>
@@ -44,6 +44,15 @@
         </antcall>
     </target>
 	
+    <target name="cvs-source" if="bm-cvs-root">
+		<antcall target="check-cvs-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="cvs-root" value="${bm-cvs-root}"/>
+			<param name="cvs-package" value="${bm-cvs-package}"/>
+			<param name="cvs-date" value="${bm-cvs-date}"/>
+			<param name="target-file" value="${bm-src}"/>
+        </antcall>
+    </target>
 	
 	<target name="pre-build" depends="clean, init, unpack"/>
 
