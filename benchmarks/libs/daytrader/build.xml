@@ -7,17 +7,19 @@
 	<property name="lib-svn-url" value="http://svn.apache.org/repos/asf/geronimo/daytrader/trunk"/>
 	<property name="lib-svn-revision" value="767347"/>
 	<property name="lib-version" value="svn-${lib-svn-revision}"/>
-	<property name="lib-src" value="daytrader-${lib-version}-src.zip"/>
+	<property name="lib-src" value="daytrader-${lib-version}-src.tar.gz"/>
 
     <property name="ger-version" value="2.1.4"/>
     <property name="ger-name" value="geronimo-jetty6-javaee5"/>
     <property name="ger-url" value="${apache.dl.url}/geronimo/${ger-version}"/>
 	<property name="ger-bin" value="${ger-name}-${ger-version}-bin.tar.gz"/>
 
-    <property name="amq-version" value="4.1.2"/>
-    <property name="amq-name" value="apache-activemq"/>
-    <property name="amq-url" value="${apache.dl.url}/activemq/${amq-name}/${amq-version}"/>
-	<property name="amq-bin" value="${amq-name}-${amq-version}-bin.tar.gz"/>
+	<property name="ger-svn-repo-url" value="http://svn.apache.org/repos/asf/geronimo/server/branches/2.1/repository"/>
+	
+    <property name="amq-version" value="4.1.2-G20090207"/>
+    <property name="amq-name" value="activemq-core"/>
+    <property name="amq-url" value="${ger-svn-repo-url}/org/apache/activemq/activemq-core/4.1.2-G20090207/"/>
+	<property name="amq-jar" value="${amq-name}-${amq-version}.jar"/>
 	
 	<import file="../common.xml"/>
 
@@ -49,7 +51,7 @@
 		<antcall target="check-source">
 			<param name="target-dir" value="${lib-downloads}"/>
 			<param name="target-url" value="${amq-url}"/>
-			<param name="target-file" value="${amq-bin}"/>
+			<param name="target-file" value="${amq-jar}"/>
         </antcall>
     </target>
 	
@@ -57,15 +59,9 @@
 	<target name="unpack">
 		<untar src="${lib-downloads}/${ger-bin}" dest="${lib-build-dir}" compression="gzip"/>
 		<patch patchfile="libs/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
-		<untar src="${lib-downloads}/${amq-bin}" dest="${lib-build-dir}" compression="gzip">
-	    <patternset>
-	        <include name="${amq-name}-${amq-version}/${amq-name}-${amq-version}.jar"/>
-	    </patternset>
-	</untar>
-
 		
 		<mkdir dir="${dt-build}"/>
-        <unzip src="${lib-downloads}/${lib-src}" dest="${dt-build}/"/>
+        <untar src="${lib-downloads}/${lib-src}" dest="${dt-build}/" compression="gzip"/>
 		<copy file="${lib-data}/stocks.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
 		<copy file="${lib-data}/users.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
 		<copy file="${lib-data}/workload.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
@@ -89,14 +85,14 @@
 		<property name="mvn" location="${toolsdir}/apache-maven-${mvn.version}/bin/${mvn-exe}"/>
 		
 		<!-- install activemq -->
-        <property name="amq-jar" location="${lib-build-dir}/${amq-name}-${amq-version}/${amq-name}-${amq-version}.jar"/>
+        <property name="amq-jar-loc" location="${lib-downloads}/${amq-jar}"/>
 		<exec executable="${mvn}" dir="${dt-build}">
             <arg value="install:install-file"/>
             <arg value="-DgroupId=org.apache.activemq"/>
             <arg value="-DartifactId=activemq-core"/>
             <arg value="-Dversion=${amq-version}"/>
             <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${amq-jar}"/>
+            <arg value="-Dfile=${amq-jar-loc}"/>
          </exec>
 
 		<!-- build daytrader -->

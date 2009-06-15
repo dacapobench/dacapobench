@@ -43,7 +43,7 @@
             <arg line="${svn-url}"/>
             <arg line="${svn-tmp}"/>
         </exec>
-		<zip destfile="${target-dir}/${target-file}" basedir="${svn-tmp}"/>
+		<tar destfile="${target-dir}/${target-file}" basedir="${svn-tmp}" compression="gzip"/>
         <delete dir="${svn-tmp}"/>
 	</target>
 	
