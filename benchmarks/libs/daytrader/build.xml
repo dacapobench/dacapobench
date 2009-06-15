@@ -29,6 +29,10 @@
 		<os family="windows"/>
 	</condition>
 	<property name="gsh-exe" value="gsh"/>
+	<condition property="mvn-exe" value="mvn.bat">
+		<os family="windows"/>
+	</condition>
+	<property name="mvn-exe" value="mvn"/>
 	
     <target name="url-source" if="ger-url">
 		<antcall target="check-source">
@@ -65,6 +69,9 @@
 	
 	<target name="data">
 		<!-- build daytrader -->
+		<property name="mvn" location="${toolsdir}/apache-maven-${mvn.version}/bin/${mvn-exe}"/>
+		<echo message="${mvn}"/>
+		
         <exec executable="${mvn}" dir="${dt-build}">
         	<env key="GERONIMO_HOME" value="${ger-home}"/>
         	<env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
