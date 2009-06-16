@@ -15,10 +15,11 @@ public class Jython extends Benchmark {
     super(config, scratch);
     Class<?> clazz = Class.forName("org.python.util.jython", true, loader);
     this.method = clazz.getMethod("main", String[].class );
-    Class<?> pyClass = Class.forName("org.python.core.Py", true, loader);
-    pySetArgsMethod = pyClass.getMethod("setArgv", String.class, String[].class );
+    Class<?> pyClass = Class.forName("org.python.core.PySystemState", true, loader);
+    pySetArgsMethod = pyClass.getMethod("setArgv", String[].class );
     System.setProperty("python.home",fileInScratch("jython"));
     System.setProperty("python.cachedir",fileInScratch("cachedir"));
+    System.setProperty("python.verbose","warning");
     useBenchmarkClassLoader();
     try {
       method.invoke(null, (Object)new String[] {fileInScratch("jython/noop.py")} );
@@ -34,12 +35,8 @@ public class Jython extends Benchmark {
    */
   public void iterate(String size) throws Exception {
     String[] args = preprocessArgs(size);
-    String pyargs[] = new String[args.length - 1];
-    for (int i = 0; i < pyargs.length; i++) {
-      pyargs[i] = args[i+1];
-    }
-    pySetArgsMethod.invoke(null, args[0], pyargs);
-    method.invoke(null, (Object)args);
+    pySetArgsMethod.invoke(null, (Object) args);
+    method.invoke(null, (Object) args);
   }
 
   public void cleanup() {

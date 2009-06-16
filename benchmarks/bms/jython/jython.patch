@@ -1,12 +1,16 @@
-diff -r -N -w -u -I '[$]Id:' --exclude='*.class' --exclude='.*' --exclude='*.orig' --exclude='*.rej' --exclude=CVS --exclude='#*' --exclude='*~' org.orig/python/core/Py.java org/python/core/Py.java
---- src/org.orig/python/core/Py.java	2008-01-17 19:11:45.000000000 +1100
-+++ src/java/src/org/python/core/Py.java	2008-01-17 19:12:36.000000000 +1100
-@@ -720,7 +720,7 @@
-         }
+Only in src: java
+diff -ur ../clean/src/org/python/core/PySystemState.java src/org/python/core/PySystemState.java
+--- ../clean/src/org/python/core/PySystemState.java	2009-06-14 21:51:38.000000000 +1000
++++ src/org/python/core/PySystemState.java	2009-06-16 22:15:24.000000000 +1000
+@@ -952,6 +952,11 @@
+         packageManager = new SysPackageManager(pkgdir, props);
      }
  
--    private static void setArgv(String arg0, String[] args) {
-+    public static void setArgv(String arg0, String[] args) {
-         PyObject argv[] = new PyObject[args.length+1];
-         argv[0] = new PyString(arg0);
-         for(int i=1; i<argv.length; i++)
++    public static void setArgv(String[] args) {
++	defaultArgv = initArgv(args);
++	Py.defaultSystemState.argv = (PyList)defaultArgv.repeat(1);
++    }
++
+     private static PyList initArgv(String[] args) {
+         PyList argv = new PyList();
+         if (args != null) {

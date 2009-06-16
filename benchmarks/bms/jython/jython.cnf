@@ -1,17 +1,18 @@
 benchmark jython
   class org.dacapo.harness.Jython
   thread-model single
-  jar "jython.jar";
+  jar "jython.jar"
+  libs "antlr-3.1.2.jar", "asm-3.1.jar", "asm-commons-3.1.jar", "constantine-0.4.jar", "jna-posix.jar", "jna.jar";
 
 size small args "${SCRATCH}/jython/sieve.py","50"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "${SCRATCH}/jython/pybench/pybench.py", "-n", "1", "-C", "0", "-w", "20"
+size default args "${SCRATCH}/jython/pybench/pybench.py", "--with-gc", "--debug", "-n", "1", "-C", "0", "-w", "20"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "${SCRATCH}/jython/pybench/pybench.py", "-n", "4", "-C", "0", "-w", "10"
+size large args "${SCRATCH}/jython/pybench/pybench.py", "--with-gc", "--debug", "-n", "4", "-C", "0", "-w", "10"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -22,5 +23,5 @@ description
   author	"Jim Hugunin and Barry Warsaw",
   license	"Jython Software License.",
   url		"http://www.jython.org/",
-  version	"2.1",
+  version	"2.5rc4",
   repeats	"Single iteration runs a single iteration of the pybench python benchmark";
