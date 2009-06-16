@@ -6,7 +6,6 @@ benchmark pmd
 
 size xsmall args "@pmd/small.lst","xml","pmd/rulesets/imports.xml","-debug"
   output 
-    stdout digest 0xeed330117ac3825c8747c2c648381fefabc82b89,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size small args "@pmd/small.lst","text",
@@ -29,7 +28,6 @@ size small args "@pmd/small.lst","text",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
   output 
-    stdout digest 0xeed330117ac3825c8747c2c648381fefabc82b89,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size default args "@pmd/default.lst","text",
@@ -52,7 +50,6 @@ size default args "@pmd/default.lst","text",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
   output
-    stdout digest 0x69c1f71a71d4dac5e1c09d967d2b0d75ce66600a,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size large args "@pmd/large.lst","text",
@@ -75,7 +72,6 @@ size large args "@pmd/large.lst","text",
 		"pmd/rulesets/strings.xml",
 		"pmd/rulesets/unusedcode.xml"
   output 
-    stdout digest 0xd30c5f9a3c9ce4d8836a9e8dfd199a0b9a010421,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
