@@ -9,8 +9,8 @@ size small args "-seconds=30",
         "-nodecount=3,3",
 		"-stagger-start=1000000",
 		"test/tinyos/CntToRfm.elf",
-		"test/tinyos/RfmToLeds.elf";
-  output stdout digest 0xeed330117ac3825c8747c2c648381fefabc82b89,
+		"test/tinyos/RfmToLeds.elf"
+  output 
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size default args "-seconds=30",
@@ -19,8 +19,8 @@ size default args "-seconds=30",
         "-nodecount=3,3",
 		"-stagger-start=1000000",
 		"test/tinyos/CntToRfm.elf",
-		"test/tinyos/RfmToLeds.elf";
-  output stdout digest 0xeed330117ac3825c8747c2c648381fefabc82b89,
+		"test/tinyos/RfmToLeds.elf"
+  output 
     	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
  
 size large args "-seconds=30",
@@ -29,18 +29,18 @@ size large args "-seconds=30",
         "-nodecount=3,3",
 		"-stagger-start=1000000",
 		"test/tinyos/CntToRfm.elf",
-		"test/tinyos/RfmToLeds.elf";
-  output stdout digest 0xeed330117ac3825c8747c2c648381fefabc82b89,
+		"test/tinyos/RfmToLeds.elf"
+  output 
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
 description
   short		"XXXXXXX",
   long		"XXXXXXX",
-  copyright	"XXXXXXX",
+  copyright	"2004-2005, Regents of the University of California",
   author	"Ben L. Titzer",
-  license	"XXXXXXX",
+  license	"UCLA",
   url		"http://compilers.cs.ucla.edu/avrora/",
   version	"cvs-20090612",
   threads	"Single threaded",
-  repeats	"XXXXXXX";
+  repeats	"Each execution simulates XXXXX";

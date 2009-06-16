@@ -15,6 +15,17 @@ public class Avrora extends Benchmark {
     this.method = clazz.getMethod("main",String[].class);
   }
 
+  @Override
+  protected void prepare(String size) throws Exception {
+    super.prepare(size);
+    args = preprocessArgs(size);
+    /* Retarget input/output files into scratch directory */
+    for (int i=0; i < args.length; i++) {
+      if (args[i].charAt(0) != '-')
+        args[i] = fileInScratch(args[i]);
+    }
+  }
+  
   public void iterate(String size) throws Exception {
     method.invoke(null,(Object)args);
   }
