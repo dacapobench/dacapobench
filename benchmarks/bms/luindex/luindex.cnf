@@ -2,25 +2,25 @@ benchmark luindex
   class org.dacapo.harness.Luindex
   thread-model single
   jar "luindex.jar"
-  libs "lucene-core-1.9.2-dev.jar", "lucene-demos-1.9.2-dev.jar";
+  libs "lucene-core-2.4.jar", "lucene-demos-2.4.jar";
 
 size small args "luindex/william/poetry" 
   output stdout  digest 0xebb11b9e1c56c6ef5620b890cca24ec773301388,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/deletable" bytes 4,
-	 "index/segments"  bytes 27;
+	 "index/segments.gen" bytes 20,
+	 "index/segments_2"  bytes 62;
 
 size default args "luindex/william","luindex/kjv"
   output stdout  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
          stderr      digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/deletable" bytes 4,
-	 "index/segments"  bytes 29;
+	 "index/segments.gen" bytes 20,
+	 "index/segments_2"  bytes 62;
 
 size large args "luindex/william","luindex/kjv"
   output stdout  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/deletable" bytes 4,
-	 "index/segments"  bytes 29;
+	 "index/segments.gen" bytes 20,
+	 "index/segments_2"  bytes 62;
 
 description
   short		"A text indexing tool",
@@ -29,5 +29,5 @@ description
   author	"Lucene Project Management Committee",
   license	"Apache Public License",
   url       "http://lucene.apache.org/",
-  version	"1.9.2",
+  version	"2.4.1",
   repeats	"Single iteration indexes two multi-file documents";

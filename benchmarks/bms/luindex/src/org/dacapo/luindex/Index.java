@@ -47,7 +47,7 @@ public class Index {
    * Index all text files under a directory. 
    */
   public void main(final File INDEX_DIR, final String[] args) throws DacapoException, IOException {
-    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true);
+    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
     for ( int arg = 0; arg < args.length; arg++) {
       final File docDir = new File(scratch,args[arg]);
       if (!docDir.exists() || !docDir.canRead()) {

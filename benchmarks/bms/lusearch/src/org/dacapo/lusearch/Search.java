@@ -1,11 +1,12 @@
 package org.dacapo.lusearch;
 
 /**
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -18,29 +19,29 @@ package org.dacapo.lusearch;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.FilterIndexReader;
-import org.apache.lucene.search.Searcher;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.queryParser.QueryParser;
-
-import org.dacapo.parser.Config;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Searcher;
+import org.apache.lucene.search.TopDocCollector;
 
 /** Simple command-line based search demo. */
 public class Search {
+
+  static final int MAX_DOCS_TO_COLLECT = 20;
   public int completed = 0;
-  
+ 
   /** Use the norms from one field for all fields.  Norms are read into memory,
    * using a byte of memory per document per searched field.  This can cause
    * search of large collections with a large number of fields to run out of
@@ -48,35 +49,37 @@ public class Search {
    * are all identical, then single norm vector may be shared. */
   private static class OneNormsReader extends FilterIndexReader {
     private String field;
-    
+
     public OneNormsReader(IndexReader in, String field) {
       super(in);
       this.field = field;
     }
-    
+
     public byte[] norms(String field) throws IOException {
       return in.norms(this.field);
     }
   }
-  
-  
-  
+
+  public Search() {}
+
   /** Simple command-line based search demo. */
   public void main(String[] args) throws Exception {
     String usage =
-      "Usage: java org.apache.lucene.demo.SearchFiles [-index dir] [-field f] [-repeat n] [-queries file] [-raw] [-norms field]";
+      "Usage:\tjava org.dacapo.lusearch.Search [-index dir] [-field f] [-repeat n] [-queries file] [-raw] [-norms field] [-paging hitsPerPage]";
+    usage += "\n\tSpecify 'false' for hitsPerPage to use streaming instead of paging search.";
     if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
       System.out.println(usage);
       System.exit(0);
     }
-    
+
     String index = "index";
     String field = "contents";
     String queryBase = null;
-    String outBase = null;
     int repeat = 0;
     boolean raw = false;
     String normsField = null;
+    int hitsPerPage = 10;
+    String outBase = null;
     int threads = 1;
     
     for (int i = 0; i < args.length; i++) {
@@ -97,15 +100,20 @@ public class Search {
       } else if ("-norms".equals(args[i])) {
         normsField = args[i+1];
         i++;
+      } else if ("-paging".equals(args[i])) {
+        hitsPerPage = Integer.parseInt(args[i+1]);
+        i++;
       } else if ("-output".equals(args[i])) {
-        outBase = args[++i];
+        outBase = args[i+1];
+        i++;
       } else if ("-threads".equals(args[i])) {
-        threads = Integer.parseInt(args[++i]);
+        threads = Integer.parseInt(args[i+1]);
+        i++;
       }
     }
     completed = 0;
     for (int j = 0; j < threads; j++) {
-      new QueryThread("Query"+j, j, index, outBase, queryBase, field, normsField, repeat, raw, this).start();
+      new QueryThread(this, "Query"+j, j, index, outBase, queryBase, field, normsField, raw, hitsPerPage).start();
     }
     synchronized (this) {
       while (completed != threads) {
@@ -115,36 +123,39 @@ public class Search {
       }
     }
   }
-  
-  
+    
   public class QueryThread extends Thread {
+
+    Search parent;
+    String field;
+    int hitsPerPage;
+    boolean raw;
+    
+    IndexReader reader;
     Searcher searcher;
     BufferedReader in;
     PrintWriter out;
-    IndexReader reader;
-    String field;
-    int repeat;
-    boolean raw;
-    Search parent;
     
-    public QueryThread(String str, int id, String index, String outBase, String queryBase,
-        String field, String normsField, int repeat, boolean raw, Search parent) {
-      super(str);
+    public QueryThread(Search parent, String name, int id, String index, String outBase, String queryBase,
+        String field, String normsField, boolean raw, int hitsPerPage) {
+      super(name);
+      this.parent = parent;
+      this.field = field;
+      this.raw = raw;
+      this.hitsPerPage = hitsPerPage;
       try {
         reader = IndexReader.open(index);
-        this.field = field;
-        if (normsField != null) reader = new OneNormsReader(reader, normsField);
+        if (normsField != null)
+          reader = new OneNormsReader(reader, normsField);
         searcher = new IndexSearcher(reader);
-        /* String inName = String.format("%s%2d.txt",queryBase,id); // supported in 1.5+ only :-( */
-        String inName = queryBase + (id < 10 ? "0" : "") + id + ".txt";
-        in = new BufferedReader(new FileReader(inName));
+        
+        String query = queryBase + (id < 10 ? "0" : "") + id + ".txt";
+        in = new BufferedReader(new FileReader(query));
         out = new PrintWriter(new BufferedWriter(new FileWriter(outBase + id)));
+        
       } catch (Exception e) {
         e.printStackTrace();
       }
-      this.repeat = repeat;
-      this.raw = raw;
-      this.parent = parent;
     }
     
     public void run() {
@@ -157,60 +168,32 @@ public class Search {
     
     private void runQuery() throws java.io.IOException {
       Analyzer analyzer = new StandardAnalyzer();
+      QueryParser parser = new QueryParser(field, analyzer);
       
       while (true) {
         String line = in.readLine();
-        
+
         if (line == null || line.length() == -1)
           break;
-        
+
+        line = line.trim();
+        if (line.length() == 0)
+          break;
+
         Query query = null;
         try {
-          query = QueryParser.parse(line, field, analyzer);
-        } catch (Exception e){
+          query = parser.parse(line);
+        } catch (Exception e) {
           e.printStackTrace(); 
         }
-        out.println("Searching for: " + query.toString(field));
-        
-        Hits hits = searcher.search(query);
-        
-        if (repeat > 0) {                           // repeat & time as benchmark
-          for (int i = 0; i < repeat; i++) {
-            hits = searcher.search(query);
-          }
-        }
-        
-        out.println(hits.length() + " total matching documents");
-        
-        final int HITS_PER_PAGE = 10;
-        for (int start = 0; start < hits.length(); start += HITS_PER_PAGE) {
-          int end = Math.min(hits.length(), start + HITS_PER_PAGE);
-          for (int i = start; i < end; i++) {
-            
-            if (raw) {                              // output raw format
-              out.println("doc="+hits.id(i)+" score="+hits.score(i));
-              continue;
-            }
-            
-            Document doc = hits.doc(i);
-            String path = doc.get("path");
-            if (path != null) {
-              out.println((i+1) + ". " + path);
-              String title = doc.get("title");
-              if (title != null) {
-                out.println("   Title: " + doc.get("title"));
-              }
-            } else {
-              out.println((i+1) + ". " + "No path for this document");
-            }
-          }
-          
-          break;
-        }
+        searcher.search(query, null, 10);
+
+        doPagingSearch(query);
       }
+      
+      reader.close();
       out.flush();
       out.close();
-      reader.close();
       synchronized (parent) {
         parent.completed++;
         if (parent.completed % 4 == 0) {
@@ -219,6 +202,55 @@ public class Search {
         parent.notify();
       }
     }
+
+    /**
+     * This demonstrates a typical paging search scenario, where the search engine presents 
+     * pages of size n to the user. The user can then go to the next page if interested in
+     * the next hits.
+     * 
+     * When the query is executed for the first time, then only enough results are collected
+     * to fill 5 result pages. If the user wants to page beyond this limit, then the query
+     * is executed another time and all hits are collected.
+     * 
+     */
+    public void doPagingSearch(Query query) throws IOException {
+
+      // Collect enough docs to show 5 pages
+      TopDocCollector collector = new TopDocCollector(MAX_DOCS_TO_COLLECT);
+      searcher.search(query, collector);
+      ScoreDoc[] hits = collector.topDocs().scoreDocs;
+
+      int numTotalHits = collector.getTotalHits();
+      if (numTotalHits > 0)
+        out.println(numTotalHits + " total matching documents for " + query.toString(field));
+
+      int start = 0;
+      int end = Math.min(numTotalHits, hitsPerPage);
+
+      while (start < Math.min(MAX_DOCS_TO_COLLECT, numTotalHits)) {
+        end = Math.min(hits.length, start + hitsPerPage);
+
+        for (int i = start; i < end; i++) {
+          if (raw) {                              // output raw format
+            out.println("doc="+hits[i].doc+" score="+hits[i].score);
+            continue;
+          }
+
+          Document doc = searcher.doc(hits[i].doc);
+          String path = doc.get("path");
+          if (path != null) {
+            out.println("\t"+(i+1) + ". " + path);
+            String title = doc.get("title");
+            if (title != null) {
+              out.println("   Title: " + doc.get("title"));
+            }
+          } else {
+            out.println((i+1) + ". " + "No path for this document");
+          }
+
+        }
+        start = end;
+      }
+    }
   }
 }
-

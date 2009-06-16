@@ -44,8 +44,8 @@
 	
 	<!-- lucene -->
 	<property name="lucene-jars" value="${lib-base}/lucene/dist/jar"/>
-	<property name="lucene-core-jar-name" value="lucene-core-1.9.2-dev.jar"/>
-	<property name="lucene-demos-jar-name" value="lucene-demos-1.9.2-dev.jar"/>
+	<property name="lucene-core-jar-name" value="lucene-core-2.4.jar"/>
+	<property name="lucene-demos-jar-name" value="lucene-demos-2.4.jar"/>
 	<target name="lucene">
 		<ant antfile="${lib-base}/lucene/build.xml"/>
 	</target>
