@@ -10,7 +10,7 @@
 	<property name="bm-svn-url" value="https://jython.svn.sourceforge.net/svnroot/jython/trunk/jython"/>
 	<property name="bm-svn-revision" value="6474"/> <!-- 2.5rc4 -->
 	<property name="bm-version" value="svn-${bm-svn-revision}"/>
-	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
+	<property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
 
 	<property name="antlr-version" value="3.1.2"/>
 	<property name="asm-version" value="3.1"/>
@@ -20,7 +20,7 @@
 	
 	<target name="source" depends="common.source, py-source"/>
 
-	<target name="unpack" depends="unzip, patch"/>
+	<target name="unpack" depends="untar, patch"/>
 	
 	<target name="bm-build">
         <copy todir="${bm-build-dir}/src/java">
