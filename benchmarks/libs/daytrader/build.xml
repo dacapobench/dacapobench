@@ -59,7 +59,7 @@
 	<target name="unpack">
 		<untar src="${lib-downloads}/${ger-bin}" dest="${lib-build-dir}" compression="gzip"/>
 		<patch patchfile="libs/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
-		
+		<chmod dir="${ger-home}/bin" includes="**" perm="u+x"/>
 		<mkdir dir="${dt-build}"/>
         <untar src="${lib-downloads}/${lib-src}" dest="${dt-build}/" compression="gzip"/>
 		<copy file="${lib-data}/stocks.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
@@ -82,7 +82,8 @@
 	</target>
 	
 	<target name="data">
-		<property name="mvn" location="${toolsdir}/apache-maven-${mvn.version}/bin/${mvn-exe}"/>
+		<property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+		<property name="mvn" location="${mvn-home}/${mvn-exe}"/>
 		
 		<!-- install activemq -->
         <property name="amq-jar-loc" location="${lib-downloads}/${amq-jar}"/>
@@ -98,6 +99,8 @@
 		<!-- build daytrader -->
 		<exec executable="${mvn}" dir="${dt-build}">
         	<env key="GERONIMO_HOME" value="${ger-home}"/>
+   <!--     	<env key="PATH" path="${env.PATH}:${mvn-home}"/> -->
+        	<env key="JAVA_HOME" path="${java.home}"/>
         	<env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
         	<arg value="clean"/>
             <arg value="install"/>
@@ -106,16 +109,16 @@
 		<!-- deploy daytrader to geronimo -->
 		<antcall target="start-geronimo"/>
 		<antcall target="deploy">
-			<param name="deploy-subject" value="daytrader-derby-datasource/target/daytrader-derby-datasource-2.2-SNAPSHOT.car"/>
+			<param name="deploy-subject" value="${dt-build}/daytrader-derby-datasource/target/daytrader-derby-datasource-2.2-SNAPSHOT.car"/>
 		</antcall>
 		<antcall target="deploy">
-			<param name="deploy-subject" value="daytrader-jetty/target/daytrader-jetty-2.2-SNAPSHOT.car"/>
+			<param name="deploy-subject" value="${dt-build}/daytrader-jetty/target/daytrader-jetty-2.2-SNAPSHOT.car"/>
 		</antcall>
 		<antcall target="deploy">
-			<param name="deploy-subject" value="daytrader-jetty/target/daytrader-dacapo-2.2-SNAPSHOT.car"/>
+			<param name="deploy-subject" value="${dt-build}/daytrader-jetty/target/daytrader-dacapo-2.2-SNAPSHOT.car"/>
 		</antcall>
 		<antcall target="deploy">
-			<param name="deploy-subject" value="daytrader-jetty/target/daytrader-ws-client-2.2-SNAPSHOT.car"/>
+			<param name="deploy-subject" value="${dt-build}/daytrader-jetty/target/daytrader-ws-client-2.2-SNAPSHOT.car"/>
 		</antcall>
 		<antcall target="stop-geronimo"/>
 		
@@ -126,9 +129,9 @@
 	</target>
 	
 	<target name="start-geronimo">
-        <exec executable="${shell-exe}" dir="${ger-home}" spawn="true">
+		<echo message="${ger-home}/bin/${gsh-exe}"/>
+        <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="true">
 			<env key="GERONIMO_HOME" path="${ger-home}"/>
-       		<arg path="${ger-home}/bin/${gsh-exe}"/>
        		<arg value="-c"/>
        		<arg value="geronimo/start-server"/>
         </exec>
@@ -140,17 +143,15 @@
 		<sleep seconds="1"/>
 	</target>
 	<target name="stop-geronimo">
-        <exec executable="${shell-exe}" dir="${ger-home}">
+        <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="false">
 			<env key="GERONIMO_HOME" path="${ger-home}"/>
-       		<arg path="${ger-home}/bin/${gsh-exe}"/>
        		<arg value="-c"/>
        		<arg value="geronimo/stop-server -u system -w manager"/>
         </exec>
 	</target>
 	<target name="deploy">
-        <exec executable="${shell-exe}" dir="${dt-build}">
-			<env key="GERONIMO_HOME" path="${ger-home}"/>
-       		<arg path="${ger-home}/bin/${gsh-exe}"/>
+        <exec executable="${ger-home}/bin/${gsh-exe}">
+ 			<env key="GERONIMO_HOME" path="${ger-home}"/>
        		<arg value="-c"/>
        		<arg value="deploy/install-plugin -u system -w manager ${deploy-subject}"/>
         </exec>
