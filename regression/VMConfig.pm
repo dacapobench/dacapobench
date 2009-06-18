@@ -36,7 +36,8 @@ $vm_run_args = "-Xms128M -Xmx1024M";
 	    "jdk1.6.0_06",
 	    "jrmc-3.0.3-1.6.0",
 #	    "jikesrvm-2.9.3"
-	    "jikesrvm-3.0.0");
+#	    "jikesrvm-3.0.0"
+	    "jikesrvm-3.0.1");
 
 # VM to be used for fallback (should be most robust well performing release VM)
 $vm_canonical = "ibm-java-i386-60"; 
@@ -60,6 +61,7 @@ $vm_canonical = "ibm-java-i386-60";
 	   "jrmc-3.0.3-1.6.0" => "JRockit 1.6",
 	   "jikesrvm-2.9.3" => "JikesRVM 2.9.3",
 	   "jikesrvm-3.0.0" => "JikesRVM 3.0.0",
+	   "jikesrvm-3.0.1" => "JikesRVM 3.0.1",
 	   "jikesrvm-svn" => "JikesRVM svn",
 	   "drlvm-svn" => "DRLVM svn",
 #	   "cacao-hg" => "Cacao hg"
@@ -72,6 +74,7 @@ $vm_canonical = "ibm-java-i386-60";
 	   "jdk1.6.0_06" => "red",
 	   "jrmc-3.0.3-1.6.0" => "darkgreen",
 	   "jikesrvm-2.9.3" => "darkmagenta",
+	   "jikesrvm-3.0.0" => "darkorchid",
 	   "jikesrvm-3.0.0" => "darkorchid",
 	   "jikesrvm-svn" => "darkviolet",
 	   "drlvm-svn" => "darkorange",
@@ -89,6 +92,7 @@ my $drlvm_flags = "-Xem:server ";
 	   "jrmc-3.0.3-1.6.0" => "$vm_rel_path/jrmc-3.0.3-1.6.0/bin/java $vm_run_args",
 	   "jikesrvm-2.9.3" => "$vm_rel_path/jikesrvm-2.9.3/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "jikesrvm-3.0.0" => "$vm_rel_path/jikesrvm-3.0.0/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
+	   "jikesrvm-3.0.1" => "$vm_rel_path/jikesrvm-3.0.1/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "jikesrvm-svn" => "$vm_scm_path/jikesrvm-svn/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "drlvm-svn" => "$vm_scm_path/drlvm-svn/working_vm/deploy/jdk/jre/bin/java $drlvm_flags $vm_run_args",
 #	   "cacao-hg" => "$vm_scm_path/cacao/"
