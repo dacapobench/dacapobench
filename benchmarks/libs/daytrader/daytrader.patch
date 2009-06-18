@@ -619,6 +619,8 @@ Index: modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/Da
 +				available = true;
 +			} else {              // we're done
 +				consumed[0]++;
++				if (alreadyConsumed  == tradeSessions.length + threads - 1)
++				printReport();
 +			}
 +			consumed.notify();
 +		}
@@ -627,8 +629,6 @@ Index: modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/Da
 +		
 +		if (available && sessionBound % (50 * sessionStride) == 0)
 +			System.out.println(sessionBound+" trade sessions...");
-+		if (alreadyConsumed  == tradeSessions.length + threads - 1)
-+			printReport();
 +		return available;
 +	}
 +	
