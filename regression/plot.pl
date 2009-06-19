@@ -118,7 +118,7 @@ sub get_targets() {
     foreach $f (@files) {
       if ($f =~ /^perf/) {
 	my ($pre, $jar, $bm, $suf) = split(/_/, $f);
-	if (!(is_retired($bm))) {
+	if (!($jar eq "head") && is_retired($bm))) {
 	  ${$$bmlistref{$jar}}{$bm} = 1;
 	}
       }
