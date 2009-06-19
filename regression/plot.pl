@@ -82,8 +82,14 @@ sub make_all_png() {
   my @svgs;
   ls_to_array("$root_dir/$svg_path", \@svgs);
   my $svg;
-  $job = "java -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path -d $publish_png";
-  system($job);
+  my $job;
+  foreach $svg (@svgs) {
+    $_ = $svg;
+    if (/_1.svg/ || /_3.svg/ || /_10.svg/) {
+    $job = "java -Xms200M -Xmx500M -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path/$svg -d $publish_png";
+    system($job);
+  }
+  }
   my @pngs;
   ls_to_array("$publish_png", \@pngs);
   my $large;
@@ -112,10 +118,23 @@ sub get_targets() {
     foreach $f (@files) {
       if ($f =~ /^perf/) {
 	my ($pre, $jar, $bm, $suf) = split(/_/, $f);
-	${$$bmlistref{$jar}}{$bm} = 1;
+	if (!(is_retired($bm))) {
+	  ${$$bmlistref{$jar}}{$bm} = 1;
+	}
       }
     }
   }
+}
+
+sub is_retired() {
+  my ($bm) = @_;
+  my $b;
+  foreach $b (@retired_bm_list) {
+    if ($b eq $bm) {
+      return 1;
+    }
+  }
+  return 0;
 }
 
 

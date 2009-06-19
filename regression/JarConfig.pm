@@ -14,6 +14,7 @@ require Exporter;
 	     $dacapo_co
 	     $dacapo_build
 	     @old_bm_list
+	     @retired_bm_list
 	   );
 
 $jar_path ="jar";
@@ -27,4 +28,5 @@ my $dacapoant = "export ANT_OPTS=\"$ant_opts\" && export JAVA_HOME=$dacapo_java_
 $dacapo_build = "(cd $dacapo_svn_dir/benchmarks && $dacapoant dist && mv dacapo-*.jar $root_dir/$jar_path/dacapo-$dacapo_head_jar.jar)";
 
 @old_bm_list = ("antlr", "bloat", "chart", "eclipse", "fop", "hsqldb", "jython", "lusearch", "luindex", "pmd", "xalan");
+@retired_bm_list = ("antlr", "bloat", "chart", "hsqldb");
 
