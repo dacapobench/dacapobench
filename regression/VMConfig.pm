@@ -33,11 +33,10 @@ $vm_run_args = "-Xms128M -Xmx1024M";
 # VMs to be tested against a release
 @vms_rel = ("ibm-java-i386-60",
 	    "jdk1.5.0_12",
-	    "jdk1.6.0_06",
-	    "jrmc-3.0.3-1.6.0",
+	    "jdk1.6.0_14",
+	    "jrmc-3.1.0-1.6.0",
 #	    "jikesrvm-2.9.3"
-#	    "jikesrvm-3.0.0"
-	    "jikesrvm-3.0.1");
+	    "jikesrvm-3.1.0");
 
 # VM to be used for fallback (should be most robust well performing release VM)
 $vm_canonical = "ibm-java-i386-60"; 
@@ -45,7 +44,7 @@ $vm_canonical = "ibm-java-i386-60";
 # VMs to be tested via scm checkout
 @vms_scm = (
 	    "jikesrvm-svn",
-	    "drlvm-svn",
+#	    "drlvm-svn",
 #	    "cacao-hg"
 	   );
 
@@ -58,10 +57,12 @@ $vm_canonical = "ibm-java-i386-60";
 %vm_str = ("ibm-java-i386-60" => "IBM 1.6",
 	   "jdk1.5.0_12" => "Sun 1.5",
 	   "jdk1.6.0_06" => "Sun 1.6",
+	   "jdk1.6.0_14" => "Sun 1.6",
 	   "jrmc-3.0.3-1.6.0" => "JRockit 1.6",
+	   "jrmc-3.1.0-1.6.0" => "JRockit 1.6",
 	   "jikesrvm-2.9.3" => "JikesRVM 2.9.3",
 	   "jikesrvm-3.0.0" => "JikesRVM 3.0.0",
-	   "jikesrvm-3.0.1" => "JikesRVM 3.0.1",
+	   "jikesrvm-3.1.0" => "JikesRVM 3.1.0",
 	   "jikesrvm-svn" => "JikesRVM svn",
 	   "drlvm-svn" => "DRLVM svn",
 #	   "cacao-hg" => "Cacao hg"
@@ -72,10 +73,11 @@ $vm_canonical = "ibm-java-i386-60";
 %vm_color =  ("ibm-java-i386-60" => "darkblue",
 	   "jdk1.5.0_12" => "crimson",
 	   "jdk1.6.0_06" => "red",
+	   "jdk1.6.0_14" => "red",
 	   "jrmc-3.0.3-1.6.0" => "darkgreen",
+	   "jrmc-3.1.0-1.6.0" => "darkgreen",
 	   "jikesrvm-2.9.3" => "darkmagenta",
-	   "jikesrvm-3.0.0" => "darkorchid",
-	   "jikesrvm-3.0.0" => "darkorchid",
+	   "jikesrvm-3.1.0" => "darkorchid",
 	   "jikesrvm-svn" => "darkviolet",
 	   "drlvm-svn" => "darkorange",
 #	   "cacao-hg" => "Cacao hg"
@@ -89,10 +91,10 @@ my $drlvm_flags = "-Xem:server ";
 %vm_exe = ("ibm-java-i386-60" => "$vm_rel_path/ibm-java-i386-60/bin/java $vm_run_args",
 	   "jdk1.5.0_12" => "$vm_rel_path/jdk1.5.0_12/bin/java $sun_flags $vm_run_args",
 	   "jdk1.6.0_06" => "$vm_rel_path/jdk1.6.0_06/bin/java $sun_flags $vm_run_args",
+	   "jdk1.6.0_14" => "$vm_rel_path/jdk1.6.0_14/bin/java $sun_flags $vm_run_args",
 	   "jrmc-3.0.3-1.6.0" => "$vm_rel_path/jrmc-3.0.3-1.6.0/bin/java $vm_run_args",
 	   "jikesrvm-2.9.3" => "$vm_rel_path/jikesrvm-2.9.3/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "jikesrvm-3.0.0" => "$vm_rel_path/jikesrvm-3.0.0/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
-	   "jikesrvm-3.0.1" => "$vm_rel_path/jikesrvm-3.0.1/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "jikesrvm-svn" => "$vm_scm_path/jikesrvm-svn/dist/production_ia32-linux/rvm  $jikesrvm_flags $vm_run_args",
 	   "drlvm-svn" => "$vm_scm_path/drlvm-svn/working_vm/deploy/jdk/jre/bin/java $drlvm_flags $vm_run_args",
 #	   "cacao-hg" => "$vm_scm_path/cacao/"
