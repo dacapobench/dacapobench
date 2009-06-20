@@ -35,10 +35,11 @@ my ($id, $max_hour_id) = @ARGV;
 my %bmlist;
 
 get_targets(\%bmlist);
-make_all_svg(\%bmlist, $max_hour_id);
-make_all_png();
+#make_all_svg(\%bmlist, $max_hour_id);
+#make_all_png();
 make_all_tables(\%bmlist);
 system("cp ../log/$id/*version.txt $publish_html");
+system("cp ../jar/*.jar $publish_html");
 
 
 sub make_all_tables() {
@@ -152,13 +153,19 @@ sub produce_html() {
 		    type =>"text/css",
 		    href => "dacapo.css");
   $writer->startTag('title');
-  $writer->characters("Performance Results For dacapo-$jar");
+  $writer->characters("Performance Results For dacapo-$jar, $id");
   $writer->endTag('title');
   $writer->endTag('head');
   $writer->startTag('body');
   $writer->startTag('font', size => -4);
   
-  $writer->characters("Each graph plots performance over time for a number of JVMs. Click on graphs to enlarge, click on legend for version details on each VM. OS details are ");
+  $writer->characters("Each graph plots performance over time for a number of JVMs. Click on graphs to enlarge, click on legend for version details on each VM.");
+  $writer->emptyTag('p');
+  $writer->characters("The jar used for the $id execution is ");
+  $writer->startTag('a', href => "dacapo-$jar.jar");
+  $writer->characters("here");
+  $writer->endTag('a');
+  $writer->characters(". OS details are ");
   $writer->startTag('a', href => "os-version.txt");
   $writer->characters("here");
   $writer->endTag('a');
