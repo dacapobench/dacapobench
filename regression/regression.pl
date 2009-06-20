@@ -230,8 +230,26 @@ sub get_bms() {
     open(BMS, "java -jar $root_dir/$jar_path/dacapo-$jar_base.jar -l|");
     chomp($line = <BMS>);
     close BMS;
-    @$bms = split(/ /,$line);
+    my @tmp = split(/ /,$line);
+    my $bm;
+    foreach $bm (@tmp) {
+      if (!dont_run($bm)) {
+	push @$bms, $bm;
+      }
+    } 
   }
+}
+
+sub dont_run() {
+  my ($bm) = @_;
+
+  my $b;
+  foreach $b (@dontrun_bm_list) {
+    if ($b eq $bm) {
+      return 1;
+    }
+  }
+  return 0;
 }
 
 #
