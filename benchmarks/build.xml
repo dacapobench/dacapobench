@@ -1,17 +1,40 @@
-<!--
- * Ant build file for the DaCapo benchmark suite.
- *       
- * Public targets are 
- * - dist (default) compile from source and create the dacapo jar file. 
- * External tools required (apart from a JDK and Ant)
- *   - make
- *   - javacc, assumed to be on the path, with library files in 
- *     /usr/share/javacc/lib
--->
-
 <project name="DacapoBenchmarks" default="dist" basedir=".">
     <description>Dacapo benchmarks</description>
 	<property name="toolsdir" location="../tools"/>
+	<target name="help">
+	<echo>Building the DaCapo benchmark suite.
+
+Prerequisites:
+		
+   - javacc (http://javacc.dev.java.net/)
+   - maven  (http://maven.apache.org/)
+For convinience, both are included in the tools directory:
+		${toolsdir}
+
+		
+Building:
+			
+	1. Set your JAVA_HOME environment variable appropriately:
+		On Mac OS X:
+			export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home			
+		On Ubuntu 9.04:
+			export JAVA_HOME=/usr/lib/jvm/java-6-sun
+			
+	2. Copy default.properties to local.properties and edit it
+	   for your environment.
+			   
+	3. Ensure maven (mvn) is in your execution path.  You can use
+	   the version that we include in our tools directory if you wish.
+	   On unix/MacOS X:
+			export PATH=${toolsdir}/apache-maven-2.1.0/bin:$PATH   
+	   We have had some problems with older versions of maven.
+			
+	4. Run ant:
+	   		ant     	[builds all benchmarks]
+	   		ant bm  	[builds a specific benchmark, bm]
+			ant help 	[this help message]
+	</echo>
+	</target>
 	
 	<property file="local.properties"/>
 	<property file="default.properties"/>

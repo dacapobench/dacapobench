@@ -1,9 +1,11 @@
 The DaCapo Benchmark Suite
 --------------------------
 
-This benchmark suite is intend as a tool for the the memory management
-research community.  It consists of a set of open source, real world
-applications with non-trivial memory loads.
+Last updated 2009-06-26
+
+This benchmark suite is intend as a tool for the research community.  It
+consists of a set of open source, real world applications with non-trivial
+memory loads.
 
 Guidelines for use
 ------------------
@@ -14,52 +16,65 @@ When quoting results in publications, the authors strongly request that
    credit in academic research.
 
 For more information see the Dacapo Benchmark web page, 
-  http://www-ali.cs.umass.edu/DaCapo/gcbm.html
+  http://dacapobench.org
 
 
 Building
 --------
 
 The easiest way to obtain the benchmark suite is to download the pre-built
-jar file from the DaCapo Benchmark web site above.  If, however, you want 
-to build from source read on:
+jar file from the DaCapo Benchmark web site above.
 
-The suite is built using ant, from a build.xml in this directory.  The most
-useful targets are:
+If, however, you want to build from source read on...
 
-dist (default) - build the dacapo jar file from sources
-sourcedist     - Download sources and build
+The suite is built using ant.  You will need the following tools:
+	- ant 		(you need to install this yourself if you don't already have it http://ant.apache.org)
+	- javacc	(included in our tools directory, or download at http://javacc.dev.java.net/)
+	- maven		(included in our tools directory, or download at http://maven.apache.org/download.html)
 
-Note the suite will currently only build using a Java 1.4 compatible SDK,
-although the resulting jar file will happily run under the Sun 1.5 VM.
 
-Some external tools are required to build the suite.  These include
- - ant      http://ant.apache.org/
- - javacc   http://javacc.dev.java.net/
+IMPORTANT: before trying to build the suite:
 
-Directories
+	1. Set your JAVA_HOME environment variable appropriately
+	
+	2. Copy default.properties to local.properties and edit it
+	   for your environment.
+	   
+	3. Ensure maven (mvn) is in your execution path.  You can use
+	   the version that we include in our tools directory if you wish.
+	   We have had some problems with older versions of maven.
+
+	
+For more information, invoke ant with the help target in the benchmarks
+directory ("ant help").
+
+
+Structure:  Files and Directories
 -----------
 
-src	Source files for the DaCapo test harness
+harness	The benchmark harness
 
-stub	Stub files to allow the test harness to compile
+	This directory includes all of the source code for the DaCapo harness,
+	which is used to invoke the benchmarks, validate output, etc.
+	
+	
+bms		The benchmarks
 
-sources	Source distributions for the packages used in
-	the benchmark suite.  All files in this directory
-	can be downloaded using the ant target 'sources'.
+	bms/<bm>/src		Source written by the DaCapo group to drive the benchmark <bm>
+	bms/<bm>/downloads	MD5 sums for each of the requisite downloads.  These are used to
+						cache the downloads (avoiding re-downloading on each build)
+	bms/<bm>/data		Directory containing any data used to drive the benchmark
+	bms/<bm>/<bm>.cnf	Configuration file for <bm>
+	bms/<bm>/<bm>.patch	Patches against the orginal sources (if any)
+	bms/<bm>/build.xml	Local build file for <bm>
+	bms/<bm>/build		[Directory where building occurs.  This is only created at build time]
+	bms/<bm>/dist		[Directory where the result of the build goes.  This is only created at build time]
 
-originals
-	Source distributions for packages that are not available
-	publicly (currently only 'ps').
 
-patches	Some of the packages require minor changes to work in the
-	benchmark suite.  These patches are applied to the source
-	distributions before they are compiled.
+libs	Common code used by one or more benchmarks.
 
-cnf	Configuration files that tell the test harness how to run each
-	of the benchmarks.
+	Each of these directories more or less mirror the bm directories.
 
-data	Test data
 
 
 License
