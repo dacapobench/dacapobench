@@ -45,8 +45,7 @@ IMPORTANT: before trying to build the suite:
 	   We have had some problems with older versions of maven.
 
 	
-For more information, invoke ant with the help target in the benchmarks
-directory ("ant help").
+For more information, run "ant -p" in the benchmarks directory.
 
 
 Structure:  Files and Directories
