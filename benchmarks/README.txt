@@ -32,6 +32,10 @@ The suite is built using ant.  You will need the following tools:
 	- javacc	(included in our tools directory, or download at http://javacc.dev.java.net/)
 	- maven		(included in our tools directory, or download at http://maven.apache.org/download.html)
 
+NOTE:
+	1. The Tomcat does not build with Java 6 VM.
+	
+	2. The Xalan benchmark does not build with the Java 6 VM.
 
 IMPORTANT: before trying to build the suite:
 
