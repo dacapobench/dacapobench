@@ -21,6 +21,22 @@
     <property name="amq-url" value="${ger-svn-repo-url}/org/apache/activemq/activemq-core/4.1.2-G20090207/"/>
 	<property name="amq-jar" value="${amq-name}-${amq-version}.jar"/>
 	
+    <property name="tomcat-version" value="6.0.18-G678601"/>
+    <property name="tomcat-name" value="tomcat"/>
+    <property name="tomcat-version-name" value="catalina"/>
+    <property name="tomcat-url" value="${ger-svn-repo-url}/org/apache/${tomcat-name}/${tomcat-version-name}/${tomcat-version}/"/>
+	<property name="tomcat-jar" value="${tomcat-version-name}-${tomcat-version}.jar"/>
+	
+    <property name="jasper-version" value="6.0.18-G678601"/>
+    <property name="jasper-name" value="jasper"/>
+    <property name="jasper-url" value="${ger-svn-repo-url}/org/apache/tomcat/${jasper-name}/${jasper-version}/"/>
+	<property name="jasper-jar" value="${jasper-name}-${jasper-version}.jar"/>
+	
+    <property name="jasper-el-version" value="6.0.18-G678601"/>
+    <property name="jasper-el-name" value="jasper-el"/>
+    <property name="jasper-el-url" value="${ger-svn-repo-url}/org/apache/tomcat/${jasper-el-name}/${jasper-el-version}/"/>
+	<property name="jasper-el-jar" value="${jasper-el-name}-${jasper-el-version}.jar"/>
+	
 	<import file="../common.xml"/>
 
 	<property name="dt-build" location="${lib-build-dir}/daytrader"/>
@@ -52,7 +68,22 @@
 			<param name="target-dir" value="${lib-downloads}"/>
 			<param name="target-url" value="${amq-url}"/>
 			<param name="target-file" value="${amq-jar}"/>
-        </antcall>
+    </antcall>
+		<antcall target="check-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="target-url" value="${tomcat-url}"/>
+			<param name="target-file" value="${tomcat-jar}"/>
+    </antcall>
+		<antcall target="check-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="target-url" value="${jasper-url}"/>
+			<param name="target-file" value="${jasper-jar}"/>
+    </antcall>
+		<antcall target="check-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="target-url" value="${jasper-el-url}"/>
+			<param name="target-file" value="${jasper-el-jar}"/>
+    </antcall>
     </target>
 	
 	
@@ -87,13 +118,46 @@
 		
 		<!-- install activemq -->
         <property name="amq-jar-loc" location="${lib-downloads}/${amq-jar}"/>
-		<exec executable="${mvn}" dir="${dt-build}">
+		<exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
             <arg value="install:install-file"/>
             <arg value="-DgroupId=org.apache.activemq"/>
             <arg value="-DartifactId=activemq-core"/>
             <arg value="-Dversion=${amq-version}"/>
             <arg value="-Dpackaging=jar"/>
             <arg value="-Dfile=${amq-jar-loc}"/>
+         </exec>
+
+		<!-- install tomcat -->
+        <property name="tomcat-jar-loc" location="${lib-downloads}/${tomcat-jar}"/>
+		<exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.tomcat"/>
+            <arg value="-DartifactId=catalina"/>
+            <arg value="-Dversion=${tomcat-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${tomcat-jar-loc}"/>
+         </exec>
+
+		<!-- install jasper -->
+        <property name="jasper-jar-loc" location="${lib-downloads}/${jasper-jar}"/>
+		<exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.tomcat"/>
+            <arg value="-DartifactId=jasper"/>
+            <arg value="-Dversion=${jasper-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${jasper-jar-loc}"/>
+         </exec>
+
+		<!-- install jasper-el -->
+        <property name="jasper-el-jar-loc" location="${lib-downloads}/${jasper-el-jar}"/>
+		<exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.tomcat"/>
+            <arg value="-DartifactId=jasper-el"/>
+            <arg value="-Dversion=${jasper-el-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${jasper-el-jar-loc}"/>
          </exec>
 
 		<!-- build daytrader -->
