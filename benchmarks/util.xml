@@ -49,10 +49,12 @@
   
     <!-- verify that the checksum is the expected checksum (i.e. not generated this run) -->
     <target name="get-source-verify-checksum" if="target-available-checksum" >
+        <!--
         <condition property="target-verified">
             <checksum file="${target-filename}" fileext=".${checksum-alg}" algorithm="${checksum-alg}" />
         </condition>
         <fail message="File ${target-filename} failed to validate against checksum" unless="target-verified" />
+        -->
     </target>
 
     
