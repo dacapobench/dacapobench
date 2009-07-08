@@ -24,7 +24,7 @@
 		<antcall target="check-svn-source">
 			<param name="target-dir" value="${lib-downloads}"/>
 			<param name="svn-url" value="${lib-svn-url}"/>
-			<param name="svn-revison" value="${lib-svn-revision}"/>
+			<param name="svn-revision" value="${lib-svn-revision}"/>
 			<param name="target-file" value="${lib-src}"/>
         </antcall>
     </target>

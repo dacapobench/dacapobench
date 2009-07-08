@@ -1,72 +1,164 @@
 <project name="util">
-	
-	<target name="check-source" if="target-file">
-		<!--	 	<checksum file="${target-dir}/${target-file}"/> -->
-		<condition property="up-to-date">
-			<and>
-				<available file="${target-dir}/${target-file}"/>
-				<checksum file="${target-dir}/${target-file}"/>
-			</and>
-		</condition>
-		<antcall target="get-source">
-			<param name="target-dir" value="${target-dir}"/>
-			<param name="target-url" value="${target-url}"/>
-			<param name="target-file" value="${target-file}"/>
-		</antcall>	
-	</target>
-	
-	<target name="get-source" unless="up-to-date">
-        <get src="${target-url}/${target-file}" dest="${target-dir}/${target-file}" usetimestamp="true"/>
-	</target>
-	
-	<target name="check-svn-source" if="target-file">
-		<!--	 	<checksum file="${target-dir}/${target-file}"/> -->
-		<condition property="svn-up-to-date">
-			<and>
-				<available file="${target-dir}/${target-file}"/>
-				<checksum file="${target-dir}/${target-file}"/>
-			</and>
-		</condition>
-		<antcall target="get-svn-source">
-			<param name="target-dir" value="${target-dir}"/>
-			<param name="svn-url" value="${svn-url}"/>
-			<param name="svn-revision" value="${svn-revison}"/>
-			<param name="target-file" value="${target-file}"/>
-		</antcall>	
-	</target>
-	
-	<target name="get-svn-source" unless="svn-up-to-date">
-		<property name="svn-tmp" value="svn-tmp"/>
+        
+    <!-- single source file -->
+    <target name="check-source" if="target-file">
+        <property name="checksum-alg" value="MD5" />
+        <property  name="target-filename" value="${target-dir}/${target-file}" />
+        <property  name="target-checksum" value="${target-dir}/${target-file}.${checksum-alg}" />
+
+        <!-- check if the desired file is currently cached -->
+        <!-- check if there is a checksum for the currently cached file -->
+        <available property="target-available" file="${target-dir}/${target-file}" />
+        <available property="target-available-checksum" file="${target-checksum}" />
+  
+        <!-- check if the there is a valid checksum for the current file -->
+        <condition property="target-valid-md5">
+            <and>
+                <isset property="target-available" />
+                <isset property="target-available-checksum" />
+                <checksum file="${target-filename}" fileext=".${checksum-alg}" algorithm="${checksum-alg}" />
+            </and>
+        </condition>
+
+        <antcall target="get-source">
+            <param name="target-filename" value="${target-filename}"/>
+            <param name="target-url" value="${target-url}/${target-file}"/>
+            <param name="checksum-alg" value="${checksum-alg}"/>
+        </antcall>
+
+        <antcall target="get-source-fix-checksum">
+            <param name="target-filename" value="${target-filename}" />
+            <param name="checksum-alg" value="${checksum-alg}"/>
+        </antcall>
+
+        <antcall target="get-source-verify-checksum">
+            <param name="target-filename" value="${target-filename}" />
+            <param name="checksum-alg" value="${checksum-alg}"/>
+        </antcall>
+    </target>
+        
+    <!-- get the source if necessary -->
+    <target name="get-source" unless="target-valid-md5">
+        <get src="${target-url}" dest="${target-filename}" />
+    </target>
+
+    <!-- if there is no checksum then generate one -->
+    <target name="get-source-fix-checksum" unless="target-available-checksum">
+        <checksum file="${target-filename}" fileext=".${checksum-alg}" algorithm="${checksum-alg}" />
+    </target>
+  
+    <!-- verify that the checksum is the expected checksum (i.e. not generated this run) -->
+    <target name="get-source-verify-checksum" if="target-available-checksum" >
+        <condition property="target-verified">
+            <checksum file="${target-filename}" fileext=".${checksum-alg}" algorithm="${checksum-alg}" />
+        </condition>
+        <fail message="File ${target-filename} failed to validate against checksum" unless="target-verified" />
+    </target>
+
+    
+    <!-- source obtained from svn -->
+    <target name="check-svn-source" if="target-file">
+        <property name="checksum-alg" value="MD5" />
+        <property  name="target-filename" value="${target-dir}/${target-file}" />
+        <property  name="target-checksum" value="${target-dir}/${target-file}.${checksum-alg}" />
+
+        <!-- check if the desired file is currently cached -->
+        <!-- check if there is a checksum for the currently cached file -->
+        <available property="target-available" file="${target-dir}/${target-file}" />
+        <available property="target-available-checksum" file="${target-checksum}" />
+  
+        <!-- check if the there is a valid checksum for the current file -->
+        <condition property="target-valid-md5">
+            <and>
+                <isset property="target-available" />
+                <isset property="target-available-checksum" />
+                <checksum file="${target-filename}" fileext=".${checksum-alg}" algorithm="${checksum-alg}" />
+            </and>
+        </condition>
+
+        <antcall target="get-svn-source">
+            <param name="svn-url" value="${svn-url}"/>
+            <param name="svn-revision" value="${svn-revision}"/>
+            <param name="target-filename" value="${target-filename}"/>
+        </antcall>
+
+        <antcall target="get-source-fix-checksum">
+            <param name="target-filename" value="${target-filename}" />
+            <param name="checksum-alg" value="${checksum-alg}"/>
+        </antcall>
+
+        <antcall target="get-source-verify-checksum">
+            <param name="target-filename" value="${target-filename}" />
+            <param name="checksum-alg" value="${checksum-alg}"/>
+        </antcall>
+    </target>
+        
+    <!-- get the source from svn and tar up if necessary -->
+    <target name="get-svn-source" unless="target-valid-md5">
+        <property name="svn-tmp" value="svn-tmp"/>
         <exec executable="svn" failonerror="false">
             <arg line="-r${svn-revision}"/>
             <arg line="checkout"/>
             <arg line="${svn-url}"/>
             <arg line="${svn-tmp}"/>
         </exec>
-		<tar destfile="${target-dir}/${target-file}" basedir="${svn-tmp}" compression="gzip"/>
+        <!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->
+        <touch datetime="01/01/2006 12:00 am">
+            <fileset dir="${svn-tmp}"/>
+        </touch>
+        <tar destfile="${target-filename}" basedir="${svn-tmp}" compression="gzip" excludes=".svn/**,**/.svn/**"/>
         <delete dir="${svn-tmp}"/>
-	</target>
-	
-	<target name="check-cvs-source" if="target-file">
-		<!--	 	<checksum file="${target-dir}/${target-file}"/> -->
-		<condition property="cvs-up-to-date">
-			<and>
-				<available file="${target-dir}/${target-file}"/>
-				<checksum file="${target-dir}/${target-file}"/>
-			</and>
-		</condition>
-		<antcall target="get-cvs-source">
-			<param name="target-dir" value="${target-dir}"/>
-			<param name="cvs-root" value="${cvs-root}"/>
-			<param name="cvs-date" value="${cvs-date}"/>
-			<param name="target-file" value="${target-file}"/>
-		</antcall>	
-	</target>
-	
-	<target name="get-cvs-source" unless="cvs-up-to-date">
-		<property name="cvs-tmp" value="cvs-tmp"/>
+    </target>
+
+    <!-- get source from cvs repository -->
+    <target name="check-cvs-source" if="target-file">
+        <property name="checksum-alg" value="MD5" />
+        <property  name="target-filename" value="${target-dir}/${target-file}" />
+        <property  name="target-checksum" value="${target-dir}/${target-file}.${checksum-alg}" />
+
+        <!-- check if the desired file is currently cached -->
+        <!-- check if there is a checksum for the currently cached file -->
+        <available property="target-available" file="${target-dir}/${target-file}" />
+        <available property="target-available-checksum" file="${target-checksum}" />
+  
+        <!-- check if the there is a valid checksum for the current file -->
+        <condition property="target-valid-md5">
+            <and>
+                <isset property="target-available" />
+                <isset property="target-available-checksum" />
+                <checksum file="${target-filename}" fileext=".${checksum-alg}" algorithm="${checksum-alg}" />
+            </and>
+        </condition>
+
+        <antcall target="get-cvs-source">
+            <param name="cvs-root" value="${cvs-root}"/>
+            <param name="cvs-package" value="${cvs-package}"/>
+            <param name="cvs-date" value="${cvs-date}"/>
+            <param name="target-filename" value="${target-filename}"/>
+        </antcall>
+
+        <antcall target="get-source-fix-checksum">
+            <param name="target-filename" value="${target-filename}" />
+            <param name="checksum-alg" value="${checksum-alg}"/>
+        </antcall>
+
+        <antcall target="get-source-verify-checksum">
+            <param name="target-filename" value="${target-filename}" />
+            <param name="checksum-alg" value="${checksum-alg}"/>
+        </antcall>
+    </target>
+        
+    <!-- get the source from cvs and tar up if necessary -->
+    <target name="get-cvs-source" unless="target-valid-md5">
+        <property name="cvs-tmp" value="cvs-tmp"/>
         <cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date}" compression="true"/>
-		<tar destfile="${target-dir}/${target-file}" basedir="${cvs-tmp}" compression="gzip"/>
+        <!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->
+        <touch datetime="01/01/2006 12:00 am">
+            <fileset dir="${cvs-tmp}"/>
+        </touch>
+        <tar destfile="${target-filename}" basedir="${cvs-tmp}" compression="gzip" excludes=".cvs*/**,**/.cvs*/**"/>
         <delete dir="${cvs-tmp}"/>
-	</target>	
+    </target>       
+
+
 </project>
