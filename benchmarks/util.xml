@@ -66,7 +66,7 @@
             <mkdir dir="${tmpfile}"/>
             <untar src="@{file}" dest="${tmpfile}" compression="@{compression}" />
             <touch file="${tmpfile}.chk" />
-            <concat destfile="${tmpfile}.chk">
+            <concat destfile="${tmpfile}.chk" binary="yes">
                 <fileset dir="${tmpfile}" />
             </concat>
             <copy file="@{file}.@{checksum-alg}" tofile="${tmpfile}.chk.@{checksum-alg}" />
@@ -89,7 +89,7 @@
             <mkdir dir="${tmpfile}"/>
             <untar src="@{file}" dest="${tmpfile}" compression="@{compression}" />
             <touch file="${tmpfile}.chk" />
-            <concat destfile="${tmpfile}.chk">
+            <concat destfile="${tmpfile}.chk" binary="yes">
                 <fileset dir="${tmpfile}" />
             </concat>
             <checksum file="${tmpfile}.chk" fileext=".@{checksum-alg}" algorithm="@{checksum-alg}" />
@@ -149,7 +149,7 @@
     <!-- get the source from svn and tar up if necessary -->
     <target name="get-svn-source" unless="target-valid-md5">
         <tempfile property="svn-tmp"/>
-        <exec executable="svn" failonerror="false">
+        <exec executable="svn" failonerror="yes">
             <arg line="-r${svn-revision}"/>
             <arg line="checkout"/>
             <arg line="${svn-url}"/>
@@ -204,11 +204,12 @@
         
     <!-- get the source from cvs and tar up if necessary -->
     <target name="get-cvs-source" unless="target-valid-md5">
-        <property name="cvs-tmp" value="cvs-tmp"/>
-        <cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date}" compression="true"/>
+        <tempfile property="cvs-tmp"/>
+        <mkdir dir="${cvs-tmp}"/>
+        <cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date}" compression="yes" failonerror="yes" />
         <!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->
         <tar destfile="${target-filename}" basedir="${cvs-tmp}" compression="gzip" excludes=".cvs*/**,**/.cvs*/**"/>
-        <delete dir="${cvs-tmp}"/>
+        <!-- <delete dir="${cvs-tmp}"/> -->
     </target>       
 
     <target name="check-cvs-source.checkandupdate" if="target-available-for-verify">
