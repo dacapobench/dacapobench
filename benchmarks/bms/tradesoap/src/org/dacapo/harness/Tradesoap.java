@@ -42,7 +42,7 @@ public class Tradesoap extends Benchmark {
     System.out.println("Shutting down Geronimo...");
     if (!isPreserve()) {
       deleteTree(new File(scratch,"tradesoap"));
-      deleteTree(new File(scratch,"geronimo-jetty6-javaee5-2.1.4"));
+      deleteTree(new File(scratch,"geronimo-jetty6-minimal-2.1.4"));
     }
   }
   

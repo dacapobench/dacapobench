@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Launcher {
   private final static String GVERSION = "2.1.4";
-  private final static String GTYPE = false ? "minimal" : "javaee5";
+  private final static String GTYPE = true ? "minimal" : "javaee5";
   private final static String GDIRECTORY = "geronimo-jetty6-"+GTYPE+"-"+GVERSION;
   private final static String CAR_NAME = "org.apache.geronimo.daytrader/daytrader-dacapo/2.2-SNAPSHOT/car";
   private final static String CLIENT_CLI_ENTRYPOINT = "org.dacapo.daytrader.DaCapoCLI";
