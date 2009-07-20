@@ -1,42 +1,51 @@
 <project name="DacapoBenchmarks" default="dist" basedir=".">
-	<property name="toolsdir" location="../tools"/>
-	<description>
-			The DaCapo Benchmark Suite
+    <property name="toolsdir" location="../tools"/>
+    <property name="log.dir" value="${basedir}/log"/>
+    <description>
+            The DaCapo Benchmark Suite
 
 DEPENDENCIES:
-		
+        
    - javacc (http://javacc.dev.java.net/)
    - maven  (http://maven.apache.org/)
-		
+        
 For convinience, both are included in the tools directory:
-	${toolsdir}
+    ${toolsdir}
 
-		
+        
 BUILDING:
-			
-	1. Set your JAVA_HOME environment variable appropriately:
-		On Mac OS X:
-			export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home			
-		On Ubuntu 9.04:
-			export JAVA_HOME=/usr/lib/jvm/java-6-sun
-			
-	2. Copy default.properties to local.properties and edit local.properties
-	   for your environment.
-			   
-	3. Ensure maven (mvn) is in your execution path.  You may use
-	   the version that we include in our tools directory if you wish.
-	   On unix/MacOS X:
-			export PATH=${toolsdir}/apache-maven-2.1.0/bin:$PATH   
-	   We have had some problems with older versions of maven.
-			
-	4. Run ant:
-	   		ant     	[builds all benchmarks]
-	   		ant bm  	[builds a specific benchmark, bm]
+            
+    1. Set your JAVA_HOME environment variable appropriately:
+        On Mac OS X:
+            export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home            
+        On Ubuntu 9.04:
+            export JAVA_HOME=/usr/lib/jvm/java-6-sun
+            
+    2. Copy default.properties to local.properties and edit local.properties
+       for your environment.
+               
+    3. Ensure maven (mvn) is in your execution path.  You may use
+       the version that we include in our tools directory if you wish.
+       On unix/MacOS X:
+            export PATH=${toolsdir}/apache-maven-2.1.0/bin:$PATH   
+       We have had some problems with older versions of maven.
+            
+    4. Run ant:
+               ant         [builds all benchmarks]
+               ant bm      [builds a specific benchmark, bm]
 </description>
-	
-	<property file="local.properties"/>
-	<property file="default.properties"/>
- 	<property file="dacapo.properties"/>
+    
+    <property file="local.properties"/>
+    <property file="default.properties"/>
+    <property file="dacapo.properties"/>
+    <tstamp>
+      <format property="build.time" pattern="yyyyMMdd-hhmm"/>
+    </tstamp>
+    <property name="log.build.dir" value="${log.dir}/${build.time}"/>
+    <property name="log.build.report" value="${log.dir}/${build.time}/status.txt"/>
+    <property name="log.build.pass" value="${log.dir}/${build.time}/pass.txt"/>
+    <property name="log.build.fail" value="${log.dir}/${build.time}/fail.txt"/>
+
 
     <!-- BEGIN PUBLIC TARGETS -->
 
@@ -44,71 +53,117 @@ BUILDING:
          target: dist              
          ================================= -->
     <target name="dist" depends="harness,compile">
-    	<move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
-   	</target>
+        <move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
+       </target>
 
     <target name="init">
         <!-- Create the time stamp -->
         <tstamp/>
+        <delete dir="${log.build.dir}" />
+        <mkdir dir="${log.build.dir}" />
     </target>
 
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,derby,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tomcat,xalan"/>
+    <target name="compile" depends="avrora,batik,derby,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+        <antcall target="build.status.fail" />
+        <antcall target="build.status.pass" />
+    </target>
 
     <!-- ================================= 
          target: harness           
          ================================= -->
     <target name="harness" depends="init" description="compile the source ">
-		<ant antfile="harness/build.xml"/>
+        <ant antfile="harness/build.xml"/>
     </target>
 
     <!-- *************************************************************************** -->
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->
-
+    <target name="build.status.fail" if="build.failed">
+        <echo level="error" message="build: FAIL${line.separator}"/>
+        <echo file="${log.build.fail}" level="error" message="build: FAIL${line.separator}"/>
+    </target>
+    
+    <target name="build.status.pass" unless="build.failed">
+        <echo level="error" message="build: PASS${line.separator}"/>
+        <echo file="${log.build.pass}" level="error" message="build: PASS${line.separator}"/>
+    </target>
+    
+    <macrodef name="build.bm">
+        <attribute name="benchmark"/>
+        <sequential>
+            <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="@{benchmark}-status">
+                <arg value="-buildfile"/>
+                <arg value="bms/@{benchmark}/build.xml"/>
+                <arg value="incremental"/>
+            </exec>
+            <condition property="@{benchmark}.failed">
+                <isfailure code="${@{benchmark}-status}"/>
+            </condition>
+            <condition property="@{benchmark}.message" value="FAIL" else="PASS">
+                <isset property="@{benchmark}.failed"/>
+            </condition>
+            <condition property="build.failed">
+                <and>
+                    <not><isset property="build.failed"/></not>
+                    <isset property="@{benchmark}.failed"/>
+                </and>
+            </condition>
+            <echo level="error" message="@{benchmark}: ${@{benchmark}.message}${line.separator}"/>
+            <echo file="${log.build.report}" append="true" level="error" message="@{benchmark}: ${@{benchmark}.message}${line.separator}"/>
+            <fail message="@{benchmark}: FAIL">
+                <condition>
+                    <and>
+                        <istrue value="${build.failonerror}"/>
+                        <isset property="@{benchmark}.failed"/>
+                    </and>
+                </condition>
+            </fail>
+        </sequential>
+    </macrodef>
 
     <target name="avrora" depends="init,harness">
-    	<ant antfile="bms/avrora/build.xml" target="incremental" inheritAll="true"/>
+        <build.bm benchmark="avrora"/> 
     </target>
-	<target name="batik" depends="init,harness">
-    	<ant antfile="bms/batik/build.xml" target="incremental" inheritAll="true"/>
+    <target name="batik" depends="init,harness">
+        <build.bm benchmark="batik"/> 
     </target>
     <target name="derby" depends="init,harness">
-    	<ant antfile="bms/derby/build.xml" target="incremental" inheritAll="true"/>
-	</target>	
+        <build.bm benchmark="derby"/> 
+    </target>    
     <target name="eclipse" depends="init,harness">
-    	<ant antfile="bms/eclipse/build.xml" target="incremental" inheritAll="true"/>
-	</target>	
+        <build.bm benchmark="eclipse"/> 
+    </target>    
     <target name="fop" depends="init,harness">
-    	<ant antfile="bms/fop/build.xml" target="incremental" inheritAll="true"/>
+        <build.bm benchmark="fop"/> 
     </target>
     <target name="jython" depends="init,harness">
-		<ant antfile="bms/jython/build.xml" target="incremental" inheritAll="true"/>
-	</target>
+        <build.bm benchmark="jython"/> 
+    </target>
     <target name="luindex" depends="init,harness">
-		<ant antfile="bms/luindex/build.xml" target="incremental"/>
-	</target>
+        <build.bm benchmark="luindex"/> 
+    </target>
     <target name="lusearch" depends="init,harness">
-		<ant antfile="bms/lusearch/build.xml" target="incremental"/>
-	</target>
+        <build.bm benchmark="lusearch"/> 
+    </target>
     <target name="pmd" depends="init,harness">
-		<ant antfile="bms/pmd/build.xml" target="incremental"/>
+        <build.bm benchmark="pmd"/> 
     </target>
     <target name="sunflow" depends="init,harness">
-		<ant antfile="bms/sunflow/build.xml" target="incremental"/>
+        <build.bm benchmark="sunflow"/> 
     </target>
     <target name="tomcat" depends="init,harness">
-		<ant antfile="bms/tomcat/build.xml" target="incremental"/>
+        <build.bm benchmark="tomcat"/> 
     </target>
     <target name="tradebeans" depends="init,harness">
-		<ant antfile="bms/tradebeans/build.xml" target="incremental"/>
+        <build.bm benchmark="tradebeans"/> 
     </target>
     <target name="tradesoap" depends="init,harness">
-		<ant antfile="bms/tradesoap/build.xml" target="incremental"/>
+        <build.bm benchmark="tradesoap"/> 
     </target>
-	<target name="xalan" depends="init,harness">
-		<ant antfile="bms/xalan/build.xml" target="incremental"/>
-    </target>	
+    <target name="xalan" depends="init,harness">
+        <build.bm benchmark="xalan"/> 
+    </target>    
 </project>
