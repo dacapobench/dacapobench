@@ -62,7 +62,8 @@
         <attribute name="compression" default="gzip" />
         <sequential>
             <echo>checksum-verify</echo>
-            <tempfile property="tmpfile"/>
+            <property name="tmpfile" value="chksum-${build.time}"/>
+            <delete dir="${tmpfile}" />
             <mkdir dir="${tmpfile}"/>
             <untar src="@{file}" dest="${tmpfile}" compression="@{compression}" />
             <touch file="${tmpfile}.chk" />
@@ -85,7 +86,9 @@
         <attribute name="compression" default="gzip" />
         <sequential>
             <echo>checksum-write</echo>
+            <property name="tmpfile" value="chksum-${build.time}"/>
             <tempfile property="tmpfile"/>
+            <delete dir="${tmpfile}" />
             <mkdir dir="${tmpfile}"/>
             <untar src="@{file}" dest="${tmpfile}" compression="@{compression}" />
             <touch file="${tmpfile}.chk" />
@@ -148,7 +151,7 @@
         
     <!-- get the source from svn and tar up if necessary -->
     <target name="get-svn-source" unless="target-valid-md5">
-        <tempfile property="svn-tmp"/>
+        <property name="svn-tmp" value="svn-${build.time}"/>
         <exec executable="svn" failonerror="yes">
             <arg line="-r${svn-revision}"/>
             <arg line="checkout"/>
@@ -204,7 +207,7 @@
         
     <!-- get the source from cvs and tar up if necessary -->
     <target name="get-cvs-source" unless="target-valid-md5">
-        <tempfile property="cvs-tmp"/>
+        <property name="cvs-tmp" value="cvs-${build.time}"/>
         <mkdir dir="${cvs-tmp}"/>
         <cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date}" compression="yes" failonerror="yes" />
         <!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->

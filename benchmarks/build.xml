@@ -109,6 +109,8 @@ See ${log.build.report} for a summary of benchmark build status.
         <sequential>
             <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="@{benchmark}-status">
                 <arg value="-Dtoolsdir=${toolsdir}"/>
+                <arg value="-Dbuild.time=${build.time}"/>
+                <arg value="-Dlog.build.dir=${log.build.dir}"/>
                 <arg value="-buildfile"/>
                 <arg value="bms/@{benchmark}/build.xml"/>
                 <arg value="incremental"/>
