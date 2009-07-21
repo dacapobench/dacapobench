@@ -1,6 +1,9 @@
 <project name="DacapoBenchmarks" default="dist" basedir=".">
     <property name="toolsdir" location="../tools"/>
     <property name="log.dir" value="${basedir}/log"/>
+    <tstamp>
+      <format property="build.time" pattern="yyyyMMdd-hhmm"/>
+    </tstamp>
     <description>
             The DaCapo Benchmark Suite
 
@@ -33,14 +36,21 @@ BUILDING:
     4. Run ant:
                ant         [builds all benchmarks]
                ant bm      [builds a specific benchmark, bm]
+
+    5. A log of directory is created under this benchmark directory
+       for benchmark build status and build success or failure files
+       to be stored.  The directory log directory is normally of the
+       form
+           ${basedir}/log/${build.time}
+       and contains status.txt where each benchmark build status is recorded,
+       and either pass.txt if all benchmarks build, or fail.txt if one or
+       more benchmarks fail to build. Note: that either fail.txt or pass.txt
+       is created when a full build is performed.
 </description>
     
     <property file="local.properties"/>
     <property file="default.properties"/>
     <property file="dacapo.properties"/>
-    <tstamp>
-      <format property="build.time" pattern="yyyyMMdd-hhmm"/>
-    </tstamp>
     <property name="log.build.dir" value="${log.dir}/${build.time}"/>
     <property name="log.build.report" value="${log.dir}/${build.time}/status.txt"/>
     <property name="log.build.pass" value="${log.dir}/${build.time}/pass.txt"/>
@@ -82,7 +92,10 @@ BUILDING:
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->
     <target name="build.status.fail" if="build.failed">
-        <echo level="error" message="build: FAIL${line.separator}"/>
+        <echo level="error">
+build: FAIL
+See ${log.build.report} for a summary of benchmark build status.
+	</echo>
         <echo file="${log.build.fail}" level="error" message="build: FAIL${line.separator}"/>
     </target>
     
