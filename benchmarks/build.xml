@@ -95,6 +95,7 @@ BUILDING:
         <attribute name="benchmark"/>
         <sequential>
             <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="@{benchmark}-status">
+                <arg value="-Dtoolsdir=${toolsdir}"/>
                 <arg value="-buildfile"/>
                 <arg value="bms/@{benchmark}/build.xml"/>
                 <arg value="incremental"/>
