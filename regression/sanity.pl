@@ -15,7 +15,7 @@ my $log_rel_dir = "regression/log";
 my $log_dir = "$root_dir/$log_rel_dir";
 my $publish_html = "$root_dir/www/regression/sanity/$id";
 
-system("mkdir -p $publish_html");
+system("mkdir -p $publish_html/log");
 make_sanity_set($id);
 
 sub make_sanity_set() {
@@ -26,7 +26,7 @@ sub make_sanity_set() {
   ls_to_array("$log_dir/$id/run-sanity",\@vms);
 
   foreach $vm (@vms) {
-    $_ = $vm;
+    system("mkdir -p $publish_html/log/$vm");
     produce_sanity_vm_html($id,$vm);
   }
   produce_sanity_index_html($id,@vms);
@@ -151,7 +151,8 @@ sub produce_benchmarks_html() {
         write_cell($writer, 'td', "passed",);
       }
       else {
-        write_cell($writer, 'td', "failed","../../../../$log_rel_dir/$id/run-sanity/$vm/$$bm_logfile{$bm}{$size}");
+        system("cp $log_dir/$id/run-sanity/$vm/$$bm_logfile{$bm}{$size} $publish_html/log/$vm/$$bm_logfile{$bm}{$size}");
+        write_cell($writer, 'td', "failed","log/$vm/$$bm_logfile{$bm}{$size}");
       }
     }
     $writer->endTag('tr');
