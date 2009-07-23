@@ -234,14 +234,14 @@ sub find_status() {
   open RESULTFILE, "<$log_dir/$id/run-sanity/$vm/$result" or return 0;
 
   while (<RESULTFILE>) {
-    if (/FAILED/) {
+    if (/PASSED/) {
       close RESULTFILE;
-      return 0;
+      return 1;
     }
   } 
 
   close RESULTFILE;
-  return 1;
+  return 0;
 }
 
 #
