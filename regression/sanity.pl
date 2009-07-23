@@ -8,6 +8,7 @@ use strict;
 use XML::Writer;
 use Image::Magick;
 
+# strictly we only use the $id
 my ($id, $max_hour_id) = @ARGV;
 
 my $root_dir = "/home/dacapo";
@@ -18,20 +19,31 @@ my $publish_html = "$root_dir/www/regression/sanity/$id";
 system("mkdir -p $publish_html/log");
 make_sanity_set($id);
 
+# make the complete set of sanity html pages and logs copies for
+# a given id.
 sub make_sanity_set() {
   my ($id) = @_;
   my @vms;
   my $vm;
 
+  # obtain the set of vms from the run-sanity directory,
+  # each VM has its own directory of the same name under which its logs are kept
   ls_to_array("$log_dir/$id/run-sanity",\@vms);
 
+  # process each vm
   foreach $vm (@vms) {
+    # create a space for the fail logs to be copied to so that they are 
+    # visible through the web server
     system("mkdir -p $publish_html/log/$vm");
+ 
+    # create the sanity results page for a vm
     produce_sanity_vm_html($id,$vm);
   }
+  # create the index page which links to the results of each vm
   produce_sanity_index_html($id,@vms);
 }
 
+# produce the index page which links to each vm's sanity results
 sub produce_sanity_index_html() {
   my ($id,@vms) = @_;
   my $name="index.html";
@@ -39,12 +51,17 @@ sub produce_sanity_index_html() {
   my $vm;
   open $output, (">$publish_html/$name");
   my $writer = XML::Writer->new(OUTPUT => $output);
+
+  # create header
   $writer->startTag('html');
   $writer->startTag('head');
+
+  # note that the sanity pages are expected to live in ../../sanity/$id/...
   $writer->emptyTag('link',
                     rel => "stylesheet",
                     type =>"text/css",
                     href => "../../perf/dacapo.css");
+
   $writer->startTag('title');
   $writer->characters("Sanity Results for dacapo.jar head, $id");
   $writer->endTag('title');
@@ -53,10 +70,10 @@ sub produce_sanity_index_html() {
 
   $writer->characters("The table below is a list of links to the sanity results for the DaCapo head (of $id) were run for each VM tested.");
 
-  # write table start
+  # write a table of VM sanity page links
   $writer->startTag('table', border => 0);
 
-  # write rows
+  # write links for each VM (sort the VMs alphabetically)
   foreach $vm (sort(@vms)) {
     $writer->startTag('tr');
     write_cell($writer, 'td', "$vm","$vm.html");
@@ -72,6 +89,7 @@ sub produce_sanity_index_html() {
   close $output;
 }
 
+#
 sub produce_sanity_vm_html() {
   my ($id,$vm) = @_;
   my @results;
@@ -139,10 +157,11 @@ sub produce_benchmarks_html() {
   }
   $writer->endTag('tr');
 
-  # write rows
+  # write each benchmark's results
   foreach $bm (@bms) {
     $writer->startTag('tr');
     write_cell($writer, 'th', $bm,);
+    # write the results for each size for this benchmark
     foreach $size (sort(@$sizes)) {
       if (! $$bm_results{$bm}) {
         write_cell($writer, 'td', "MISSING",);
@@ -151,6 +170,7 @@ sub produce_benchmarks_html() {
         write_cell($writer, 'td', "passed",);
       }
       else {
+        # we only copy the logs for each sanity result that failed
         system("cp $log_dir/$id/run-sanity/$vm/$$bm_logfile{$bm}{$size} $publish_html/log/$vm/$$bm_logfile{$bm}{$size}");
         write_cell($writer, 'td', "failed","log/$vm/$$bm_logfile{$bm}{$size}");
       }
@@ -167,16 +187,8 @@ sub produce_benchmarks_html() {
   close $output;
 }
 
-sub write_table() {
-  my ($writer,$id,$vm,$sizes,$bm_results) = @_;
-  my $size;
-  my $bm;
-
-  my @bms = sort(keys %$bm_results);
-  # output the document
-
-}
-
+# write a table data element (cell), in this case a cell either contains
+# text or a link and associated text label.
 sub write_cell() {
   my ($writer,$tag,$text,$ref) = @_;
   
@@ -193,6 +205,7 @@ sub write_cell() {
   $writer->endTag($tag);
 }
 
+# unique add to a list
 sub add_unique() {
   my ($v,$listref) = @_;
   if (! contains($v,$listref)) {
@@ -200,6 +213,7 @@ sub add_unique() {
   }
 }
 
+# check if a list contains an element
 sub contains() {
   my ($v,$listref) = @_;
   my $lv;
@@ -212,6 +226,8 @@ sub contains() {
   return 0;
 }
 
+# get the status of a log file, if one or more FAILED messages 
+# are in the log then the result is assumed to be a fail.
 sub find_status() {
   my ($id,$vm,$result) = @_;
 
