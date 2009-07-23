@@ -166,6 +166,10 @@ sub produce_html() {
   $writer->startTag('a', href => "dacapo-$jar.jar");
   $writer->characters("here");
   $writer->endTag('a');
+  $writer->characters(" and the sanity runs for each VM and benchmark can be view ");
+  $writer->startTag('a', href => "../sanity/$id/index.html");
+  $writer->characters("here");
+  $writer->endTag('a');
   $writer->characters(". OS details are ");
   $writer->startTag('a', href => "os-version.txt");
   $writer->characters("here");
