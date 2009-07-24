@@ -152,7 +152,8 @@
     <!-- get the source from svn and tar up if necessary -->
     <target name="get-svn-source" unless="target-valid-md5">
         <property name="svn-tmp" value="svn-${build.time}"/>
-        <exec executable="svn" failonerror="yes">
+        <!-- set the input string to "p" to get around a bug where svn asks about unknown certificates -->
+        <exec executable="svn" failonerror="yes" inputstring="p${line.separator}" >
             <arg line="-r${svn-revision}"/>
             <arg line="checkout"/>
             <arg line="${svn-url}"/>

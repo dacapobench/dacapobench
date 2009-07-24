@@ -3,14 +3,14 @@ diff -ur ../clean/src/org/python/core/PySystemState.java src/org/python/core/PyS
 --- ../clean/src/org/python/core/PySystemState.java	2009-06-14 21:51:38.000000000 +1000
 +++ src/org/python/core/PySystemState.java	2009-06-16 22:15:24.000000000 +1000
 @@ -952,6 +952,11 @@
-         packageManager = new SysPackageManager(pkgdir, props);
-     }
- 
+        packageManager = new SysPackageManager(pkgdir, props);
+    }
+
 +    public static void setArgv(String[] args) {
 +	defaultArgv = initArgv(args);
 +	Py.defaultSystemState.argv = (PyList)defaultArgv.repeat(1);
 +    }
 +
-     private static PyList initArgv(String[] args) {
-         PyList argv = new PyList();
-         if (args != null) {
+    private static PyList initArgv(String[] args) {
+        PyList argv = new PyList();
+        if (args != null) {
