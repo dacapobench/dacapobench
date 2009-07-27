@@ -23,7 +23,7 @@ public class XSLTBench {
   final boolean verbose = false;
 
   // What version of XALAN should we have
-  private final String XALAN_VERSION = "Xalan Java 2.4.1";
+  private final String XALAN_VERSION = "Xalan Java 2.7.1";
   private final File scratch;
   
   int workers;

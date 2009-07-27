@@ -3,7 +3,7 @@
 	<property file="dacapo.properties"/>
 	
 	<property name="bm-name" value="xalan"/>
-    <property name="bm-version" value="2_4_1"/>
+    <property name="bm-version" value="2_7_1"/>
     <property name="bm-url" value="${apache.dl.url}/xml/xalan-j/source"/>
     <property name="bm-dat-url" value="http://www.w3.org/TR/2001/WD-xforms-20010608/"/>
 	<property name="bm-src" value="${bm-name}-j_${bm-version}-src.tar.gz"/>
@@ -21,7 +21,7 @@
         </antcall>
     </target>
 	
-	<target name="unpack" depends="untar, patch"/>
+	<target name="unpack" depends="untar"/> 
 	
 	<target name="bm-build" depends="xerces">
 		<exec dir="${xalan-top}" executable="ant">
@@ -38,6 +38,7 @@
 	
 	<target name="jar" depends="deps">
         <copy file="${xalan-top}/build/xalan.jar" todir="${bm-jars}"/>
+        <copy file="${xalan-top}/build/serializer.jar" todir="${bm-jars}"/>
 	</target>
 	
     <target name="data">
