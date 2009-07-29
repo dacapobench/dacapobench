@@ -137,7 +137,7 @@ sub do_runs() {
     print $log "$i";
     foreach $jar_base (@$jars) {
       my @bms;
-      get_bms($jar_base, \@bms);
+      get_bms($name, $jar_base, \@bms);
       print $log "$jar_base\n";
       foreach $bm (@bms) {
 	print $log "$bm(";
@@ -225,7 +225,7 @@ sub get_last_good_elapsed() {
 # Get the list of bms
 #
 sub get_bms() {
-  my ($jar_base, $bms) = @_;
+  my ($name, $jar_base, $bms) = @_;
   if ($jar_base eq "2006-10-MR2") {
     @$bms = @old_bm_list;
   } else {
@@ -235,18 +235,18 @@ sub get_bms() {
     my @tmp = split(/ /,$line);
     my $bm;
     foreach $bm (@tmp) {
-      if (!dont_run($bm)) {
+      if (($name eq "sanity" || !dont_run_perf($bm)) { #
 	push @$bms, $bm;
       }
     } 
   }
 }
 
-sub dont_run() {
+sub dont_run_perf() {
   my ($bm) = @_;
 
   my $b;
-  foreach $b (@dontrun_bm_list) {
+  foreach $b (@dont_run_perf_bm_list) {
     if ($b eq $bm) {
       return 1;
     }
