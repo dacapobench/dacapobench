@@ -21,7 +21,7 @@ produce_sanity_head_redirect_html($id);
 # produce the index page which links to each vm's sanity results
 sub produce_sanity_head_redirect_html() {
   my ($id) = @_;
-  my $name="head.html";
+  my $name="latest.html";
   my $output;
   open $output, (">$publish_html/$name");
   my $writer = XML::Writer->new(OUTPUT => $output);
