@@ -53,10 +53,10 @@ sub make_all_tables() {
 
 sub make_all_svg() {
   my ($bmlistref, $max_hour_id) = @_; 
+  system("rm -f $root_dir/$svg_path/*.svg");
 
   produce_legends();
 
-  system("rm -f $root_dir/$svg_path/*.svg");
   my $jar;
   foreach $jar (sort keys %$bmlistref) {
     my $bm;
@@ -87,7 +87,7 @@ sub make_all_png() {
   my $job;
   foreach $svg (@svgs) {
     $_ = $svg;
-    if (/_1.svg/ || /_3.svg/ || /_10.svg/ || /warmup.svg/ ) {
+    if (/_1.svg/ || /_3.svg/ || /_10.svg/ || /warmup.svg/ || /legend.svg/ ) {
     $job = "java -Xms200M -Xmx500M -jar $root_dir/$bin_path/batik-1.7/batik-rasterizer.jar $root_dir/$svg_path/$svg -d $publish_png";
     system($job);
   }
