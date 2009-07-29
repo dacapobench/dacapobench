@@ -64,6 +64,8 @@ sub do_upload() {
   do_system($log, $plot_job);
   my $sanity_job = "ssh $upload_target \"cd $root_dir/$bin_path && ./sanity.pl $id $hour_id\"";
   do_system($log, $sanity_job);
+  my $sanity_head_redirect_job = "ssh $upload_target \"cd $root_dir/$bin_path && ./sanity-head-redirect.pl $id $hour_id\"";
+  do_system($log, $sanity_head_redirect_job);
 }
 
 #
