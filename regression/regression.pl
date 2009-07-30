@@ -237,7 +237,7 @@ sub get_bms() {
     my @tmp = split(/ /,$line);
     my $bm;
     foreach $bm (@tmp) {
-      if (($name eq "sanity" || !dont_run_perf($bm)) { #
+      if ($name eq "sanity" || !dont_run_perf($bm)) { #
 	push @$bms, $bm;
       }
     } 
