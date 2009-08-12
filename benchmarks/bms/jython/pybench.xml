@@ -1,7 +1,7 @@
 <project name="pybench" default="pybench" basedir="..">
     <description>pybench benchmark, used by jython</description>
         
-    <property name="py-version" value="2.5"/>
+    <property name="py-version" value="2.5.4"/>
     <property name="py-url" value="http://www.python.org/ftp/python/${py-version}"/>
     <property name="py-src" value="Python-${py-version}.tgz"/>
         
@@ -10,17 +10,28 @@
             <param name="target-dir" value="${bm-downloads}"/>
             <param name="target-url" value="${py-url}"/>
             <param name="target-file" value="${py-src}"/>
-    </antcall>
+        </antcall>
     </target>
 
     <target name="pybench" depends="py-untar, py-patch, py-build"/>
         
-    <target name="py-untar">
+    <target name="py-untar-src">
         <untar src="${bm-downloads}/${py-src}" dest="${bm-build-dir}" compression="gzip">
             <patternset>
                 <include name="Python-${py-version}/Tools/pybench/**"/>
+                <include name="Python-${py-version}/Lib/**"/>
             </patternset>
         </untar>
+    </target>
+
+    <target name="py-untar-jython" depends="py-untar-src">
+        <mkdir dir="${bm-build-dir}/CPythonLib"/>
+        <move todir="${bm-build-dir}/CPythonLib">
+            <fileset dir="${bm-build-dir}/Python-${py-version}/Lib" includes="**" />
+        </move>
+    </target>
+
+    <target name="py-untar" depends="py-untar-src">
         <move file="${bm-build-dir}/Python-${py-version}/Tools/pybench" todir="${bm-build-dir}/jython"/>
     </target>
 

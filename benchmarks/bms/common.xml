@@ -36,15 +36,22 @@
     </target>
         
     <target name="svn-source" if="bm-svn-url">
+        <condition property="fail-on-error" value="no" else="yes">
+            <isset property="bm-ignore-failure"/>
+        </condition>
         <antcall target="check-svn-source">
             <param name="target-dir" value="${bm-downloads}"/>
             <param name="svn-url" value="${bm-svn-url}"/>
             <param name="svn-revision" value="${bm-svn-revision}"/>
             <param name="target-file" value="${bm-src}"/>
+            <param name="fail-on-error" value="${bm-fail-on-error}"/>
         </antcall>
     </target>
     
     <target name="cvs-source" if="bm-cvs-root">
+        <condition property="fail-on-error" value="no" else="yes">
+            <isset property="bm-ignore-failure"/>
+        </condition>
         <antcall target="check-cvs-source">
             <param name="target-dir" value="${bm-downloads}"/>
             <param name="cvs-root" value="${bm-cvs-root}"/>

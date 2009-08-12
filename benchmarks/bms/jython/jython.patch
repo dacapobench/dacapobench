@@ -14,3 +14,37 @@ diff -ur ../clean/src/org/python/core/PySystemState.java src/org/python/core/PyS
     private static PyList initArgv(String[] args) {
         PyList argv = new PyList();
         if (args != null) {
+diff -ur CPythonLib.orig/distutils/command/bdist_msi.py CPythonLib/distutils/command/bdist_msi.py
+--- CPythonLib.orig/distutils/command/bdist_msi.py	2009-08-12 19:11:05.000000000 +1000
++++ CPythonLib/distutils/command/bdist_msi.py	2009-08-12 18:09:57.000000000 +1000
+@@ -1,5 +1,5 @@
+ # -*- coding: iso-8859-1 -*-
+-# Copyright (C) 2005, 2006 Martin v. Löwis
++# Copyright (C) 2005, 2006 Martin v. Loewis
+ # Licensed to PSF under a Contributor Agreement.
+ # The bdist_wininst command proper
+ # based on bdist_wininst
+diff -ur CPythonLib.orig/encodings/punycode.py CPythonLib/encodings/punycode.py
+--- CPythonLib.orig/encodings/punycode.py	2009-08-12 19:11:05.000000000 +1000
++++ CPythonLib/encodings/punycode.py	2009-08-12 18:12:17.000000000 +1000
+@@ -1,7 +1,7 @@
+ # -*- coding: iso-8859-1 -*-
+ """ Codec for the Punicode encoding, as specified in RFC 3492
+ 
+-Written by Martin v. Löwis.
++Written by Martin v. Loewis.
+ """
+ 
+ import codecs
+diff -ur CPythonLib.orig/encodings/string_escape.py CPythonLib/encodings/string_escape.py
+--- CPythonLib.orig/encodings/string_escape.py	2009-08-12 19:11:05.000000000 +1000
++++ CPythonLib/encodings/string_escape.py	2009-08-12 18:08:19.000000000 +1000
+@@ -2,7 +2,7 @@
+ """ Python 'escape' Codec
+ 
+ 
+-Written by Martin v. Löwis (martin@v.loewis.de).
++Written by Martin v. Loeis (martin@v.loewis.de).
+ 
+ """
+ import codecs

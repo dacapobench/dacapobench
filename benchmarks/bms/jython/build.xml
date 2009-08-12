@@ -6,7 +6,14 @@
     <property name="bm-svn-url" value="https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_5_0/jython"/>
     <property name="bm-svn-revision" value="6571"/> <!-- 2.5.0 -->
     <property name="bm-version" value="svn-${bm-svn-revision}"/>
+    <property name="bm-ignore-failure" value="yes" />
     <property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
+    <!-- grab the jython from the jython release and benchmarks from the Python release
+
+    	http://dinsdale.python.org/ftp/python/2.5.4/Python-2.5.4.tgz
+        <property name="bm-url" value="${sourceforge.dl.url}/jython/files/jython/jython_installer-2.5.0.jar"/>
+        <property name="bm-src" value="jython_installer-2.5.0.jar"/>
+     -->
 
     <property name="antlr-version" value="3.1.2"/>
     <property name="asm-version" value="3.1"/>
@@ -16,13 +23,18 @@
     
     <target name="source" depends="common.source, py-source"/>
 
-    <target name="unpack" depends="untar, patch"/>
+    <!-- unjar and patch -->
+    <target name="unpack" depends="untar">
+        <antcall target="py-untar-jython"/>
+        <antcall target="patch"/>
+    </target>
+
     
     <target name="bm-build">
         <copy todir="${bm-build-dir}/src/java">
             <fileset file="${bm-build-dir}/build.*"/>
         </copy>
-        <ant antfile="build.xml" dir="${bm-build-dir}" inheritall="false"/>
+        <ant antfile="build.xml" dir="${bm-build-dir}" inheritall="false"/> 
     </target>
 
     <target name="jar">

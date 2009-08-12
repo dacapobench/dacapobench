@@ -132,12 +132,14 @@
             <param name="svn-url" value="${svn-url}"/>
             <param name="svn-revision" value="${svn-revision}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
   
         <antcall target="check-svn-source.update">
             <param name="svn-url" value="${svn-url}"/>
             <param name="svn-revision" value="${svn-revision}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
   
         <antcall target="check-source.checksum.update">
@@ -153,7 +155,7 @@
     <target name="get-svn-source" unless="target-valid-md5">
         <property name="svn-tmp" value="svn-${build.time}"/>
         <!-- set the input string to "p" to get around a bug where svn asks about unknown certificates -->
-        <exec executable="svn" failonerror="yes" inputstring="p${line.separator}" >
+        <exec executable="svn" failonerror="${fail-on-error}" inputstring="p${line.separator}" >
             <arg line="-r${svn-revision}"/>
             <arg line="checkout"/>
             <arg line="${svn-url}"/>
@@ -170,6 +172,7 @@
             <param name="svn-url" value="${svn-url}"/>
             <param name="svn-revision" value="${svn-revision}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
     </target>
 
@@ -178,6 +181,7 @@
             <param name="svn-url" value="${svn-url}"/>
             <param name="svn-revision" value="${svn-revision}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
     </target>
 
@@ -188,6 +192,7 @@
             <param name="cvs-package" value="${cvs-package}"/>
             <param name="cvs-date" value="${cvs-date}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
   
         <antcall target="check-cvs-source.update">
@@ -195,6 +200,7 @@
             <param name="cvs-package" value="${cvs-package}"/>
             <param name="cvs-date" value="${cvs-date}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
   
         <antcall target="check-source.checksum.update">
@@ -223,6 +229,7 @@
             <param name="cvs-package" value="${cvs-package}"/>
             <param name="cvs-date" value="${cvs-date}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
     </target>
 
@@ -232,17 +239,16 @@
             <param name="cvs-package" value="${cvs-package}"/>
             <param name="cvs-date" value="${cvs-date}"/>
             <param name="target-filename" value="${target-filename}"/>
+            <param name="fail-on-error" value="${fail-on-error}"/>
         </antcall>
     </target>
 
     <!-- utility targets -->
     <target name="check-source.checksum.update" unless="target-available-checksum">
-<echo>check-source.checksum</echo>
         <checksum-write file="${target-filename}"/>
     </target>
 
     <target name="check-source.checksum.verify" if="target-available-checksum">
-<echo>check-source.checksum</echo>
         <checksum-verify file="${target-filename}" property="target-verify-md5"/>
         <fail unless="target-verify-md5">Checksum verify for ${target-filename} failed.</fail>
     </target>
