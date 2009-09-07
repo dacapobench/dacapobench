@@ -4,7 +4,10 @@
     
     <property name="lib-name" value="daytrader"/>
 
-    <property name="lib-svn-url" value="http://svn.apache.org/repos/asf/geronimo/daytrader/trunk"/>
+    <property name="apache-svn-url" value="http://svn.apache.org/repos/asf"/>
+    <property name="java-dev-url" value="https://maven-repository.dev.java.net/repository"/>
+
+    <property name="lib-svn-url" value="${apache-svn-url}/geronimo/daytrader/trunk"/>
     <property name="lib-svn-revision" value="767347"/>
     <property name="lib-version" value="svn-${lib-svn-revision}"/>
     <property name="lib-src" value="daytrader-${lib-version}-src.tar.gz"/>
@@ -14,12 +17,13 @@
     <property name="ger-url" value="${apache.dl.url}/geronimo/${ger-version}"/>
     <property name="ger-bin" value="${ger-name}-${ger-version}-bin.tar.gz"/>
 
-    <property name="ger-plugins-url" value="http://svn.apache.org/repos/asf/geronimo/server/tags/${ger-version}/plugins"/>
+    <property name="ger-plugins-url" value="${apache-svn-url}/geronimo/server/tags/${ger-version}/plugins"/>
     <property name="ger-plugins-revision" value="794961"/>
     <property name="ger-plugins-bin" value="${ger-name}-${ger-version}-plugins.tar.gz"/>
 
-    <property name="ger-svn-repo-url" value="http://svn.apache.org/repos/asf/geronimo/server/branches/2.1/repository"/>
-    
+    <!-- <property name="ger-svn-repo-url" value="http://svn.apache.org/repos/asf/geronimo/server/branches/2.1/repository"/> -->
+    <property name="ger-svn-repo-url" value="${apache-svn-url}/geronimo/server/tags/${ger-version}/repository"/>
+
     <property name="amq-version" value="4.1.2-G20090207"/>
     <property name="amq-name" value="activemq-core"/>
     <property name="amq-url" value="${ger-svn-repo-url}/org/apache/activemq/activemq-core/4.1.2-G20090207/"/>
@@ -41,6 +45,11 @@
     <property name="jasper-el-url" value="${ger-svn-repo-url}/org/apache/tomcat/${jasper-el-name}/${jasper-el-version}/"/>
     <property name="jasper-el-jar" value="${jasper-el-name}-${jasper-el-version}.jar"/>
     
+    <property name="jstl-version" value="1.2"/>
+    <property name="jstl-name" value="jstl"/>
+    <property name="jstl-url" value="${java-dev-url}/${jstl-name}/jars"/>
+    <property name="jstl-jar" value="${jstl-name}-${jstl-version}.jar"/>
+
     <import file="../common.xml"/>
 
     <property name="dt-build" location="${lib-build-dir}/daytrader"/>
@@ -79,6 +88,26 @@
             <param name="target-url" value="${amq-url}"/>
             <param name="target-file" value="${amq-jar}"/>
         </antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${lib-downloads}"/>
+            <param name="target-url" value="${jstl-url}"/>
+            <param name="target-file" value="${jstl-jar}"/>
+        </antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${lib-downloads}"/>
+            <param name="target-url" value="${tomcat-url}"/>
+            <param name="target-file" value="${tomcat-jar}"/>
+        </antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${lib-downloads}"/>
+            <param name="target-url" value="${jasper-url}"/>
+            <param name="target-file" value="${jasper-jar}"/>
+        </antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${lib-downloads}"/>
+            <param name="target-url" value="${jasper-el-url}"/>
+            <param name="target-file" value="${jasper-el-jar}"/>
+        </antcall>
     </target>
     
     <target name="unpack">
@@ -113,11 +142,16 @@
     </target>
    
     <target name="data" depends="build.init">
-        <!-- build required plugins -->
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes"/>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes"/>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes"/>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes"/>
+        <!-- install jstl -->
+        <property name="jstl-jar-loc" location="${lib-downloads}/${jstl-jar}"/>
+        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=jstl"/>
+            <arg value="-DartifactId=jstl"/>
+            <arg value="-Dversion=${jstl-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${jstl-jar-loc}"/>
+        </exec>
 
         <!-- install activemq -->
         <property name="amq-jar-loc" location="${lib-downloads}/${amq-jar}"/>
@@ -128,7 +162,47 @@
             <arg value="-Dversion=${amq-version}"/>
             <arg value="-Dpackaging=jar"/>
             <arg value="-Dfile=${amq-jar-loc}"/>
-         </exec>
+        </exec>
+
+        <!-- install jasper -->
+        <property name="jasper-jar-loc" location="${lib-downloads}/${jasper-jar}"/>
+        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.tomcat"/>
+            <arg value="-DartifactId=${jasper-name}"/>
+            <arg value="-Dversion=${jasper-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${jasper-jar-loc}"/>
+        </exec>
+
+        <!-- install jasper-el -->
+        <property name="jasper-el-jar-loc" location="${lib-downloads}/${jasper-el-jar}"/>
+        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.tomcat"/>
+            <arg value="-DartifactId=${jasper-el-name}"/>
+            <arg value="-Dversion=${jasper-el-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${jasper-el-jar-loc}"/>
+        </exec>
+
+
+        <!-- install tomcat -->
+        <property name="tomcat-jar-loc" location="${lib-downloads}/${tomcat-jar}"/>
+        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.tomcat"/>
+            <arg value="-DartifactId=${tomcat-version-name}"/>
+            <arg value="-Dversion=${tomcat-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${tomcat-jar-loc}"/>
+        </exec>
+
+        <!-- build required plugins -->
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes"/>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes"/>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes"/>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes"/>
 
         <!-- build daytrader -->
         <exec executable="${mvn}" dir="${dt-build}">
