@@ -1,5 +1,8 @@
 <project name="daytrader" default="all" basedir="../..">
     <description>daytrader application, required by tradebeans and tradesoap</description>
+
+    <property environment="env"/>
+
     <property file="ant/dacapo.properties"/>
     
     <property name="lib-name" value="daytrader"/>
@@ -145,6 +148,7 @@
         <!-- install jstl -->
         <property name="jstl-jar-loc" location="${lib-downloads}/${jstl-jar}"/>
         <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
             <arg value="install:install-file"/>
             <arg value="-DgroupId=jstl"/>
             <arg value="-DartifactId=jstl"/>
@@ -156,6 +160,7 @@
         <!-- install activemq -->
         <property name="amq-jar-loc" location="${lib-downloads}/${amq-jar}"/>
         <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
             <arg value="install:install-file"/>
             <arg value="-DgroupId=org.apache.activemq"/>
             <arg value="-DartifactId=activemq-core"/>
@@ -167,6 +172,7 @@
         <!-- install jasper -->
         <property name="jasper-jar-loc" location="${lib-downloads}/${jasper-jar}"/>
         <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
             <arg value="install:install-file"/>
             <arg value="-DgroupId=org.apache.tomcat"/>
             <arg value="-DartifactId=${jasper-name}"/>
@@ -178,6 +184,7 @@
         <!-- install jasper-el -->
         <property name="jasper-el-jar-loc" location="${lib-downloads}/${jasper-el-jar}"/>
         <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
             <arg value="install:install-file"/>
             <arg value="-DgroupId=org.apache.tomcat"/>
             <arg value="-DartifactId=${jasper-el-name}"/>
@@ -190,6 +197,7 @@
         <!-- install tomcat -->
         <property name="tomcat-jar-loc" location="${lib-downloads}/${tomcat-jar}"/>
         <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
             <arg value="install:install-file"/>
             <arg value="-DgroupId=org.apache.tomcat"/>
             <arg value="-DartifactId=${tomcat-version-name}"/>
@@ -206,6 +214,7 @@
 
         <!-- build daytrader -->
         <exec executable="${mvn}" dir="${dt-build}">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
             <env key="GERONIMO_HOME" value="${ger-home}"/>
             <!-- <env key="PATH" path="${env.PATH}:${mvn-home}"/> -->
             <env key="JAVA_HOME" path="${java.home}"/>
