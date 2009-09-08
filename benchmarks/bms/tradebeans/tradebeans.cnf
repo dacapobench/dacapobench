@@ -5,17 +5,17 @@ benchmark tradebeans
 
 size small args "small" 
   threads 1
-  output stdout  digest 0xebb11b9e1c56c6ef5620b890cca24ec773301388,
+  output stdout  digest 0xbea66a139b711b34efb08bd6fdcdecbe04c5055e,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "medium"
   threads 2
-  output stdout  digest 0xfa3e4a1b471247726fb6c3a6f42e5853f2522d22,
+  output stdout  digest 0x462e57010d2298a84497b4e33145add43916d09a,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "large"
   threads 2
-  output stdout  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
+  output stdout  digest 0x994570a5d82cbd68f105ca69403288c3e19ee758,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
