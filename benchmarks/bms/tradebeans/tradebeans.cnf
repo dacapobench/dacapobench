@@ -5,25 +5,22 @@ benchmark tradebeans
 
 size small args "small" 
   threads 1
-  output stdout  digest 0xbea66a139b711b34efb08bd6fdcdecbe04c5055e,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "medium"
   threads 2
-  output stdout  digest 0x462e57010d2298a84497b4e33145add43916d09a,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "large"
   threads 2
-  output stdout  digest 0x994570a5d82cbd68f105ca69403288c3e19ee758,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
-  short		"XXXXX",
-  long		"XXXXX",
+  short		"Tradebeans Daytrader benchmark",
+  long		"Tradebeans is EJB container version benchmark from the Daytrader benchmark from Apache.",
   copyright	"Copyright (C) The Apache Software Foundation",
-  author	"XXXXX Lucene Project Management Committee",
+  author	"IBM",
   license	"Apache Public License",
-  url       "http://lucene.apache.org/",
+  url       "http://geronimo.apache.org/",
   version	"2.1.4",
-  repeats	"XXXXX Single iteration indexes two multi-file documents";
+  repeats	"Populates a database of investments and clients, and then performs a set of trades on that data.";
