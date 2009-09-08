@@ -5,7 +5,7 @@ benchmark tradesoap
 
 size small args "small" 
   threads 1
-  output stdout  digest 0xebb11b9e1c56c6ef5620b890cca24ec773301388,
+  output stdout  digest 0x7a214488a9a0f009e8266dc03cbc6742fe1e91cf,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "small"
@@ -15,7 +15,7 @@ size default args "small"
 
 size large args "medium"
   threads 2
-  output stdout  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
+  output stdout  digest 0x29194ac5c73563166a5ecd553f9eca0a5d4195ef,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
