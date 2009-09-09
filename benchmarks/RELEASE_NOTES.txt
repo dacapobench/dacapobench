@@ -1,0 +1,214 @@
+dacapo-9.10-beta0 
+
+RELEASE NOTES  2009-09-10
+
+************************************************************************
+* IMPORTANT: This beta release is NOT SUITABLE AS A RESEARCH TOOL.     *
+*                                                                      *
+* Please wait for the full release before using the suite for research *
+* purposes. The benchmarks in this beta release are:                   *
+*                                                                      *
+*    1) not fully tuned,                                               *
+*    2) not fully evaluated,                                           *
+*    3) known to have various limitations and bugs, and                *
+*    4) subject to change without notice.                              *
+*                                                                      *
+************************************************************************
+
+
+This is the first beta release of the anticipated 9.10 release of the
+DaCapo benchmark suite.  These notes are structured as follows:
+
+    1. Purpose
+    2. Overview
+    3. Changes
+    4. Known problems and limitations
+
+
+
+1. Purpose
+----------
+
+This beta release exists specifically (and only) to allow community
+feedback and contribution to the upcoming major release, and to allow
+JVM vendors to test against the suite prior to the final release. We
+strongly encourage the community to explore and evaluate these
+benchmarks and to send feedback to the dacapo research group via the
+mailing list and/or bug tracker. Please check the list of known issues
+(below) before sending feedback.
+
+
+   mailing list: dacapobench-researchers@lists.sourceforge.net
+     (subscribe via: http://sourceforge.net/mail/?group_id=172498)
+
+   bug tracker: http://sourceforge.net/tracker/?group_id=172498&atid=861957
+
+
+We are particularly interested in feedback on the following:
+
+    o the decision to add benchmarks "avrora", "batik", "derby",
+      "sunflow", "tomcat", "tradebeans", and "tradesoap" (see 3.1
+      below).
+
+    o the decision to "retire" benchmarks "antlr", "bloat", "chart",
+      and "hsqldb" (see 3.2 below).
+
+    o the tuning / running time of each of the benchmarks in their
+      default settings
+
+    o the structure and behavior of the tradebeans, tradesoap and
+      tomcat client/server benchmarks
+
+
+2. Overview
+-----------
+
+The DaCapo benchmark suite is slated to be updated every few years.
+The 9.10 release will be the first major update of the suite, and is
+strictly incompatible with previous releases: new benchmarks have been
+added, old benchmarks have been removed, all other benchmarks have
+been substantially updated. It is for this reason that in any
+published use of the suite, the version of the suite must be
+explicitly stated.
+
+The release sees the retirement of a number of single-threaded
+benchmarks (antlr, bloat and chart), the replacement of hsqldb by
+derby, the addition of six completely new benchmarks, and the upgrade
+of all other benchmarks to reflect the current release state of the
+applications from which the benchmarks were derived. These changes are
+consistent with the original goals of the DaCapo project, which
+include the desire for the suite to remain relevant and reflect the
+current state of deployed Java applications.
+
+Each of these benchmarks is tested for both performance* and
+correctness nightly. Results are available here:
+
+    o performance:  http://dacapo.anu.edu.au/regression/perf/head.html
+    o sanity:  http://dacapo.anu.edu.au/regression/sanity/latest/
+
+      * tradebeans and tradesoap are not yet running performance tests
+
+
+3. Changes
+----------
+
+
+3.1. Additions
+
+      avrora: AVRORA is a set of simulation and analysis tools in a
+              framework for AVR microcontrollers. The benchmark
+              exhibits a great deal of fine-grained concurrency. The
+              benchmark is courtesy of Ben Titzer (Sun Microsystems)
+              and was developed at UCLA.
+
+       batik: Batik is an SVG toolkit produced by the Apache foundation.
+              The benchmark renders a number of svg files.
+
+       derby: Derby is an in-memory database benchmark, using the
+              Derby database produced by the Apache foundation, and
+              executing the pseudojdbc workload previously used by
+              hsqldb.  Derby replaces hsqldb.
+
+     sunflow: Sunflow is a rendering system for photo-realistic images
+              based on raytracing engine.
+
+      tomcat: Tomcat uses the Apache Tomcat servelet container to run
+              some sample web applications.
+
+  tradebeans: Tradebeans runs the Apache daytrader workload "directly"
+              (via EJB) within a Geronimo application server.  Daytrader
+              is derived from the IBM Trade6 benchmark.
+
+   tradesoap: Tradesoap is identical to the tradebeans workload, except
+              that client/server communications is via soap protocols
+              (and the workloads are reduced in size to compensate the
+              substantially higher overhead).
+
+Tradebeans and tradesoap were added as a pair specifically to allow
+researchers to analyze overheads associated with the widely used soap
+protocol.
+             
+
+
+3.2. Deletions
+ 
+       antlr: Antlr is single threaded and highly repetitive. The
+              most recent version of jython uses antlr; so antlr
+              remains represented within the DaCapo suite.
+
+       bloat: Bloat is not as widely used as our other workloads
+              and the code exhibited some pathologies that were
+              arguably not representive or desirable in a suite that
+              was to be representive of modern Java applications.
+
+       chart: Chart was repetitive and used a framework that appears
+              not to be as widely used as most of the other DaCapo
+              benchmarks.  The Batik workload has some similarities
+              with chart (both are render vector graphics), but is
+              part of a larger heavyly used framework from Apache.
+
+      hsqldb: Hsqldb has been replaced by derby, which runs the same
+              workload but uses a much more widely used database
+              engine.
+
+
+3.3. Updates
+
+
+All other benchmarks have been updated to reflect the latest release
+of the underlying application (with the exception of eclipse, where
+the update to 3.5 is underway).
+
+
+3.4. Other Notable Changes
+
+The packaging of the DaCapo suite has been completely re-worked and
+the source code is entirely re-organized.
+
+
+4. Known Issues
+---------------
+
+Please consult the bug tracker for a complete and up to date list of
+known issues (http://sourceforge.net/tracker/?group_id=172498&atid=861957).
+
+DaCapo is an open source community project. We welcome all assistance
+in addressing bugs and shortcomings in the suite.
+
+
+A few notable high priority issues are listed here:
+
+
+4.1 Trade benchmarks
+
+The trade benchmarks currently do not reliably run beyond one or two
+iterations (and consequently don't appear in our peformance regression
+results since those regressions perform 10 iterations). The benchmarks
+are known to suffer from memory leaks and database deadlocks.
+
+
+4.2 Concurrency
+
+We intend to conduct a concurrency audit, analyzing and documenting
+the level of concurrency in each of the workloads. The per-benchmark
+documentation available at the commandline (with the -i switch) should
+report the level of threading for each benchmark. Although most
+benchmarks exhibit significant concurrency, we have made the concious
+decision to continue to include a few single-threaded benchmarks. We
+do this because as long as there exist a significant number of single
+threaded applications in popular use, the single-threaded performance
+of a JVM is important.
+
+
+4.3 Eclipse
+
+We are in the process of updating eclipse, but have not yet completed
+this, so at present eclipse runs the same version as it did in the
+2006 release.
+
+
+4.4 Derby runs PseudoJDBC
+
+We intend to move to using a TCPC workload rather than PseudoJDBC for
+derby.
+
