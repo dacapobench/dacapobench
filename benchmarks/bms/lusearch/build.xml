@@ -1,34 +1,34 @@
 <project name="lusearch" default="all" basedir="../..">
     <description>DaCapo lusearch benchmark</description>
-   	<property file="dacapo.properties"/>
+       <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="lusearch"/>
-	
-	<import file="../common.xml"/>
+    <property name="bm-name" value="lusearch"/>
+    
+    <import file="../common.xml"/>
 
-	<target name="bm-harness">
-		<javac srcdir="${bm-src-dir}" classpath="${harness-classpath}" destdir="${bm-output-dir}"
-    	   includes="**" excludes="org/dacapo/lusearch/*"
+    <target name="bm-harness">
+        <javac srcdir="${bm-src-dir}" classpath="${harness-classpath}" destdir="${bm-output-dir}"
+           includes="**" excludes="org/dacapo/lusearch/*"
            debug="true" debuglevel="lines,vars,source"/>
     </target>
-			
-	<target name="bm-build" depends="lucene">
+            
+    <target name="bm-build" depends="lucene">
         <mkdir dir="${bm-build-dir}"/>
         <javac srcdir="${bm-src-dir}" source="1.5" 
-   		   classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}" 
+              classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}" 
            destdir="${bm-build-dir}" 
            includes="org/dacapo/lusearch/*" debug="true" debuglevel="lines,vars,source"/>
-	</target>
+    </target>
 
-	<target name="jar">
-		 <jar destfile="${bm-jars}/lusearch.jar" basedir="${bm-build-dir}"/>
-	</target>
-	
-	<target name="bm-data">
+    <target name="jar">
+         <jar destfile="${bm-jars}/lusearch.jar" basedir="${bm-build-dir}"/>
+    </target>
+    
+    <target name="bm-data">
         <zip destfile="${bm-dat}/lusearch.zip">
             <fileset dir="${bm-data}" includes="lusearch/query*" />
             <fileset dir="${bm-data}" includes="lusearch/index-default/**" />
         </zip>
-	</target>
+    </target>
 
 </project>
