@@ -209,15 +209,7 @@ in addressing bugs and shortcomings in the suite.
 A few notable high priority issues are listed here:
 
 
-5.1 Trade benchmarks
-
-The trade benchmarks currently do not reliably run beyond one or two
-iterations (and consequently don't appear in our peformance regression
-results since those regressions perform 10 iterations). The benchmarks
-are known to suffer from memory leaks and database deadlocks.
-
-
-5.2 Concurrency
+5.1 Concurrency
 
 We intend to conduct a concurrency audit, analyzing and documenting
 the level of concurrency in each of the workloads. The per-benchmark
@@ -227,7 +219,15 @@ benchmarks exhibit significant concurrency, we have made the concious
 decision to continue to include a few single-threaded benchmarks. We
 do this because as long as there exist a significant number of single
 threaded applications in popular use, the single-threaded performance
-of a JVM is important.
+of a JVM is important. 
+
+
+5.2 Trade
+
+The trade benchmarks currently do not reliably run beyond one or two
+iterations (and consequently don't appear in our peformance regression
+results since those regressions perform 10 iterations). The benchmarks
+are known to suffer from memory leaks and database deadlocks.
 
 
 5.3 Eclipse
@@ -237,8 +237,14 @@ this, so at present eclipse runs the same version as it did in the
 2006 release.
 
 
-5.4 Derby runs PseudoJDBC
+5.4 Derby
 
 We intend to move to using a TCPC workload rather than PseudoJDBC for
 derby.
 
+
+5.5 Tomcat
+
+We intend to make the tomcat workload more interesting. Performacne
+results show that tomcat currently has a remarkably flat warm-up curve
+when compared to other benchmarks.
