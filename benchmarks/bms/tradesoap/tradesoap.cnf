@@ -22,8 +22,9 @@ description
   short		"TradeSOAP Daytrader benchmark",
   long		"TradeSOAP a SOAP version of the Daytrader benchmark from Apache",
   copyright	"Copyright (C) The Apache Software Foundation",
-  author	"IBM",
-  license	"Apache Public License",
-  url       "http://geronimo.apache.org/",
+  author        "Apache Geronimo, donated by IBM",
+  license       "Apache License, Version 2.0",
+  url           "http://geronimo.apache.org/",
   version	"2.1.4",
-  repeats	"Populates a database of th 1098 stocks and 384 users, and then 639 trader actions in 32 trade sesions.";
+  repeats	"Populates a database of th 1098 stocks and 384 users, and then 639 trader actions in 32 trade sesions",
+  threads       "Multi-threaded; Server thread plus 1, 2 or 3 client threads per CPU";

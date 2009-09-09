@@ -19,8 +19,9 @@ description
   short		"Tradebeans Daytrader benchmark",
   long		"Tradebeans is EJB container version benchmark from the Daytrader benchmark from Apache.",
   copyright	"Copyright (C) The Apache Software Foundation",
-  author	"IBM",
-  license	"Apache Public License",
-  url       "http://geronimo.apache.org/",
+  author	"Apache Geronimo, donated by IBM",
+  license	"Apache License, Version 2.0",
+  url           "http://geronimo.apache.org/",
   version	"2.1.4",
-  repeats	"Populates a database of stock and then performs 4098 trader actions in 256 trade sessions.";
+  repeats	"Populates a database of stock and then performs 4098 trader actions in 256 trade sessions",
+  threads       "Multi-threaded; Server thread plus 1, 2 or 3 client threads per CPU";
