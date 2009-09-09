@@ -2,7 +2,7 @@
     <property name="toolsdir" location="../tools"/>
     <property name="log.dir" value="${basedir}/log"/>
     <tstamp>
-      <format property="build.time" pattern="yyyyMMdd-hhmm"/>
+        <format property="build.time" pattern="yyyyMMdd-hhmm"/>
     </tstamp>
     <description>
             The DaCapo Benchmark Suite
@@ -64,7 +64,7 @@ BUILDING:
          ================================= -->
     <target name="dist" depends="harness,compile">
         <move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
-       </target>
+    </target>
 
     <target name="init">
         <!-- Create the time stamp -->
