@@ -21,8 +21,9 @@ DaCapo benchmark suite.  These notes are structured as follows:
 
     1. Purpose
     2. Overview
-    3. Changes
-    4. Known problems and limitations
+    3. Usage
+    4. Changes
+    5. Known problems and limitations
 
 
 
@@ -89,11 +90,40 @@ correctness nightly. Results are available here:
       * tradebeans and tradesoap are not yet running performance tests
 
 
-3. Changes
+3. Usage
+--------
+
+3.1 Downloading
+
+  o Download the binary jar and/or source zip from:
+      https://sourceforge.net/projects/dacapobench/files/
+  
+  o Access the source from subversion via
+      svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench dacapobench
+
+3.2 Running
+
+  o Run a benchmark:
+      java -jar <dacapo-jar-name>.jar <benchmark>
+
+  o For usage information, run with no arguments.
+
+
+3.3 Building
+
+  o You must have a working, recent version of ant installed. Change
+    to the benchmarks directory and then run:
+
+       ant -p
+
+    for instructions on how to build.
+
+
+4. Changes
 ----------
 
 
-3.1. Additions
+4.1. Additions
 
       avrora: AVRORA is a set of simulation and analysis tools in a
               framework for AVR microcontrollers. The benchmark
@@ -130,7 +160,7 @@ protocol.
              
 
 
-3.2. Deletions
+4.2. Deletions
  
        antlr: Antlr is single threaded and highly repetitive. The
               most recent version of jython uses antlr; so antlr
@@ -152,7 +182,7 @@ protocol.
               engine.
 
 
-3.3. Updates
+4.3. Updates
 
 
 All other benchmarks have been updated to reflect the latest release
@@ -160,13 +190,13 @@ of the underlying application (with the exception of eclipse, where
 the update to 3.5 is underway).
 
 
-3.4. Other Notable Changes
+4.4. Other Notable Changes
 
 The packaging of the DaCapo suite has been completely re-worked and
 the source code is entirely re-organized.
 
 
-4. Known Issues
+5. Known Issues
 ---------------
 
 Please consult the bug tracker for a complete and up to date list of
@@ -179,7 +209,7 @@ in addressing bugs and shortcomings in the suite.
 A few notable high priority issues are listed here:
 
 
-4.1 Trade benchmarks
+5.1 Trade benchmarks
 
 The trade benchmarks currently do not reliably run beyond one or two
 iterations (and consequently don't appear in our peformance regression
@@ -187,7 +217,7 @@ results since those regressions perform 10 iterations). The benchmarks
 are known to suffer from memory leaks and database deadlocks.
 
 
-4.2 Concurrency
+5.2 Concurrency
 
 We intend to conduct a concurrency audit, analyzing and documenting
 the level of concurrency in each of the workloads. The per-benchmark
@@ -200,14 +230,14 @@ threaded applications in popular use, the single-threaded performance
 of a JVM is important.
 
 
-4.3 Eclipse
+5.3 Eclipse
 
 We are in the process of updating eclipse, but have not yet completed
 this, so at present eclipse runs the same version as it did in the
 2006 release.
 
 
-4.4 Derby runs PseudoJDBC
+5.4 Derby runs PseudoJDBC
 
 We intend to move to using a TCPC workload rather than PseudoJDBC for
 derby.
