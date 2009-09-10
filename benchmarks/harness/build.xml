@@ -23,6 +23,7 @@
 	
 	<target name="harness" depends="init, parser">
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
+	<copy file="${basedir}/RELEASE_NOTES.txt" todir="${output-dir}" />
 	</target>
 	
 	<target name="jar">

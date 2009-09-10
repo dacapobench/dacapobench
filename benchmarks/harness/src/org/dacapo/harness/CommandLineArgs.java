@@ -4,6 +4,8 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.JarURLConnection;
@@ -25,6 +27,7 @@ import java.util.jar.JarEntry;
  */
 public class CommandLineArgs {
   
+  private static final String RELEASE_NOTES = "RELEASE_NOTES.txt";
   
   public enum Methodology { ITERATE, CONVERGE; }
 
@@ -44,6 +47,7 @@ public class CommandLineArgs {
   private boolean info = false;
   
   private List<String> benchmarks = new ArrayList<String>();
+
   
   CommandLineArgs(String[] args) throws Exception {
     /* No options - print usage and die */
@@ -68,6 +72,9 @@ public class CommandLineArgs {
         this.info = true;
       } else if (args[i].equals("-h")) {
         printUsage();
+        System.exit(0);
+      } else if (args[i].equals("-r")) {
+        printReleaseNotes();
         System.exit(0);
       } else if (args[i].equals("-l")) {
         // list benchmarks
@@ -186,6 +193,7 @@ public class CommandLineArgs {
     System.out.println("Usage: java -jar dacapo-<version>.jar [options ...] [benchmarks ...]");
     System.out.println("    -c <callback>           Use class <callback> to bracket benchmark runs");
     System.out.println("    -h                      Print this help");
+    System.out.println("    -r                      Print the release notes");
     System.out.println("    -l                      List available benchmarks");
     System.out.println("    -i                      Display benchmark information");
     System.out.println("    -s small|default|large  Size of input data");
@@ -205,6 +213,22 @@ public class CommandLineArgs {
     System.out.println("    -preserve               Preserve output files (debug)");
     System.out.println("    -v                      Verbose output");
     System.out.println("    -validationReport <file>  Report digests, line counts etc");
+  }
+  
+  /**
+   * Print the release notes to System.out
+   */
+  static void printReleaseNotes() {
+    BufferedReader releaseNotes = new BufferedReader(new InputStreamReader(CommandLineArgs.class.getClassLoader().getResourceAsStream(RELEASE_NOTES)));
+	
+    try {
+      String line;
+      while ((line = releaseNotes.readLine()) != null) {
+        System.out.println(line);
+      }
+    } catch (IOException e) {
+      System.err.println("Error reading release notes.");
+    }
   }
   
   /**
