@@ -278,6 +278,14 @@
         </antcall>
         <antcall target="stop-geronimo"/>
         
+        <!-- hack to get geronimo to correctly load RMIClassLoaderSpiImpl
+             which it only seems to load from the jar that dacapo is contained in -->
+        <unjar src="${lib-build-dir}/${ger-name}-${ger-version}/lib/geronimo-kernel-${ger-version}.jar" dest="${bm-output-dir}">
+            <patternset>
+                <include name="**org/apache/geronimo/kernel/rmi/RMIClassLoaderSpiImpl.class"/>
+            </patternset>
+        </unjar>
+
         <!-- package the resulting geronimo install as a zip -->
         <zip destfile="${lib-dat}/${lib-name}.zip">
             <fileset dir="${lib-build-dir}" includes="${ger-name}-${ger-version}/**"/>
