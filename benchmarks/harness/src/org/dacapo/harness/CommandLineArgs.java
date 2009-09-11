@@ -197,6 +197,7 @@ public class CommandLineArgs {
     System.out.println("    -l                      List available benchmarks");
     System.out.println("    -i                      Display benchmark information");
     System.out.println("    -s small|default|large  Size of input data");
+    System.out.println("    -scratch <dir>          Specify an alternate scratch directory");
     System.out.println();
     System.out.println("  Measurement methodology options");
     System.out.println("    -converge               Allow benchmark times to converge before timing");
@@ -213,7 +214,18 @@ public class CommandLineArgs {
     System.out.println("    -preserve               Preserve output files (debug)");
     System.out.println("    -v                      Verbose output");
     System.out.println("    -validationReport <file>  Report digests, line counts etc");
-  }
+    System.out.println();
+    System.out.println("  General usage");
+    System.out.println("    Please see the DaCapo web page (http://www.dacapobench.org) and");
+    System.out.println("    the release notes included in this jar for general advice on");
+    System.out.println("    using this suite (\"-r\" will print release notes).");
+    System.out.println();
+    System.out.println("    Please be sure to always quote the version number of the suite");
+    System.out.println("    when reporting results.  In accordance with the usual standards");
+    System.out.println("    of acknowledging credit in academic research, please cite the");
+    System.out.println("    suite appropriately (http://doi.acm.org/10.1145/1167473.1167488).");
+
+    }
   
   /**
    * Print the release notes to System.out
