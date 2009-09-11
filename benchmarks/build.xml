@@ -50,6 +50,32 @@ BUILDING:
     <property name="log.build.pass" value="${log.dir}/${build.time}/pass.txt"/>
     <property name="log.build.fail" value="${log.dir}/${build.time}/fail.txt"/>
 
+    <target name="check-svn-present">
+        <available property="svn.present" file=".svn" type="dir"/>
+        <property name="svn.exe" value="svn"/>
+    </target>
+
+    <target name="extract-svn-revision" depends="check-svn-present" if="svn.present">
+        <exec executable="${svn.exe}" failonerror="no" failifexecutionfails="no">
+            <arg value="info"/>
+            <redirector outputproperty="svn.revision">
+                <outputfilterchain>
+                    <linecontains>
+                        <contains value="Revision: "/>
+                    </linecontains>
+                    <tokenfilter>
+                        <replacestring from="Revision: " to=""/>
+                    </tokenfilter>
+                </outputfilterchain>
+            </redirector>
+        </exec>
+    </target>
+
+    <target name="get-svn-revision" depends="extract-svn-revision">
+        <!-- set property if not already set -->
+        <property name="svn.revision" value="unknown"/>
+    </target>
+
 
     <!-- BEGIN PUBLIC TARGETS -->
 
@@ -60,11 +86,16 @@ BUILDING:
         <move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
     </target>
 
-    <target name="init">
+    <target name="init" depends="get-svn-revision">
         <!-- Create the time stamp -->
         <tstamp/>
         <delete dir="${log.build.dir}" />
         <mkdir dir="${log.build.dir}" />
+        <property name="build.nickname" value="development"/>
+        <property name="build.version"  value="head-r${svn.revision}"/>
+
+        <echo>build.nickname=${build.nickname}</echo>
+        <echo>build.version=${build.version}</echo>
     </target>
 
     <!-- ================================= 

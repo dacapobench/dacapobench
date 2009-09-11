@@ -4,11 +4,15 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.jar.JarFile;
 
 import org.dacapo.parser.Config;
 
@@ -22,11 +26,29 @@ import org.dacapo.parser.Config;
  *
  */
 public class TestHarness {
+  public static final String PROP_BUILD_NICKNAME = "build.nickname";
+  public static final String PROP_BUILD_VERSION  = "build.version";
+
+  public static final String BUILD_NICKNAME = "Specification-Version";
+  public static final String BUILD_VERSION  = "Implementation-Version";
+
+  // these hold the build nick name and version strings respectively
+  private static String BuildNickName;
+  private static String BuildVersion;
+
   private final Config config;
   private static CommandLineArgs commandLineArgs;
   
   public static final DecimalFormat two_dp = twoDecimalPlaces();
   
+  public static String getBuildNickName() {
+    return BuildNickName;
+  }
+
+  public static String getBuildVersion() {
+    return BuildVersion;
+  }
+
   private static URL getURL(String fn) {
     ClassLoader cl = TestHarness.class.getClassLoader();
     if (commandLineArgs.isVerbose())
@@ -207,4 +229,23 @@ public class TestHarness {
       return null;  // not reached
     }
   }
+
+  {
+    try {
+      JarFile jarFile = new JarFile(new File(TestHarness.class.getProtectionDomain().getCodeSource().getLocation().getFile()));
+
+      Manifest manifest = jarFile.getManifest();
+      Attributes attributes = manifest.getMainAttributes();
+
+      String nickname = attributes.get(new Attributes.Name(BUILD_NICKNAME)).toString();
+      String version  = attributes.get(new Attributes.Name(BUILD_VERSION)).toString();
+
+      BuildNickName   = nickname;
+      BuildVersion    = version;
+    } catch (Exception e) {
+      BuildNickName   = "Unknown";
+      BuildVersion    = "unknown";
+    }
+  }
+
 }
