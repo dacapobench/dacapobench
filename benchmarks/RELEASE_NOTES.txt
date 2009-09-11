@@ -42,7 +42,10 @@ mailing list and/or bug tracker. Please check the list of known issues
    mailing list: dacapobench-researchers@lists.sourceforge.net
      (subscribe via: http://sourceforge.net/mail/?group_id=172498)
 
-   bug tracker: http://sourceforge.net/tracker/?group_id=172498&atid=861957
+   bug tracker:
+       http://sourceforge.net/tracker/?group_id=172498&atid=861957
+     or navigate to it from
+       http://sourceforge.net/projects/dacapobench/develop
 
 
 We are particularly interested in feedback on the following:
@@ -59,6 +62,9 @@ We are particularly interested in feedback on the following:
 
     o The structure and behavior of the tradebeans, tradesoap and
       tomcat client/server benchmarks.
+
+    o Any issues associated with building, running and usability of
+      the suite.
 
 
 2. Overview
@@ -215,7 +221,7 @@ We intend to conduct a concurrency audit, analyzing and documenting
 the level of concurrency in each of the workloads. The per-benchmark
 documentation available at the commandline (with the -i switch) should
 report the level of threading for each benchmark. Although most
-benchmarks exhibit significant concurrency, we have made the concious
+benchmarks exhibit significant concurrency, we have made the conscious
 decision to continue to include a few single-threaded benchmarks. We
 do this because as long as there exist a significant number of single
 threaded applications in popular use, the single-threaded performance

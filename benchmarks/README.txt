@@ -1,64 +1,85 @@
 The DaCapo Benchmark Suite
 --------------------------
 
-Last updated 2009-06-26
+Last updated 2009-09-10
 
-This benchmark suite is intend as a tool for the research community.  It
-consists of a set of open source, real world applications with non-trivial
-memory loads.
+This benchmark suite is intend as a tool for the research community.
+It consists of a set of open source, real world applications with
+non-trivial memory loads.
+
 
 Guidelines for use
 ------------------
 
-When quoting results in publications, the authors strongly request that
- - The exact version number of the suite be given
- - The suite be cited in accordance with the usual standards of acknowledging
-   credit in academic research.
+When quoting results in publications, the authors of this suite
+strongly request that:
 
-For more information see the Dacapo Benchmark web page, 
+ - The exact version of the suite be given (number & name)
+
+ - The suite be cited in accordance with the usual standards of
+   acknowledging credit in academic research.
+
+   Please cite the 2006 OOPSLA paper (http://doi.acm.org/10.1145/1167473.1167488)
+
+
+For more information see the Dacapo Benchmark web page,
+
   http://dacapobench.org
+
 
 
 Building
 --------
 
-The easiest way to obtain the benchmark suite is to download the pre-built
-jar file from the DaCapo Benchmark web site above.
+The easiest way to obtain the benchmark suite is to download the
+pre-built jar file from the DaCapo Benchmark web site above.
 
 If, however, you want to build from source read on...
 
 The suite is built using ant.  You will need the following tools:
-	- ant 		(you need to install this yourself if you don't already have it http://ant.apache.org)
-	- javacc	(included in our tools directory, or download at http://javacc.dev.java.net/)
-	- maven		(included in our tools directory, or download at http://maven.apache.org/download.html)
+
+  - ant
+     You need to install this yourself if you don't already have it
+       http://ant.apache.org
+
+  - javacc
+     Included in our tools directory, or download at
+       http://javacc.dev.java.net/
+
+  - maven
+     Included in our tools directory, or download at
+       http://maven.apache.org/download.html
+
 
 NOTE:
-	1. The Tomcat does not build with Java 6 VM.
+
+    1. A number of benchmarks including trade and tomcat do not
+       reliably _build_ under Java 6 (all run under Java 6). Therefore
+       you must explicitly use a Java 5 VM at build time (see below).
 	
-	2. The Xalan benchmark does not build with the Java 6 VM.
 
 IMPORTANT: before trying to build the suite:
 
-	1. Set your JAVA_HOME environment variable appropriately
-	
-	2. Copy default.properties to local.properties and edit it
-	   for your environment.
-	   
-	3. Ensure maven (mvn) is in your execution path.  You can use
-	   the version that we include in our tools directory if you wish.
-	   We have had some problems with older versions of maven.
+    1. Set your JAVA_HOME environment variable appropriately (it must
+       be set and be consistent with the VM that will be used to build
+       the suite).
+
+    2. Copy default.properties to local.properties and edit it for
+       your environment.
 
 	
 For more information, run "ant -p" in the benchmarks directory.
 
 
-Structure:  Files and Directories
------------
+
+Source Code Structure
+---------------------
 
 harness	The benchmark harness
 
-	This directory includes all of the source code for the DaCapo harness,
-	which is used to invoke the benchmarks, validate output, etc.
+	This directory includes all of the source code for the DaCapo
+	harness, which is used to invoke the benchmarks, validate
+	output, etc.
 	
 	
 bms		The benchmarks
@@ -83,13 +104,13 @@ libs	Common code used by one or more benchmarks.
 License
 -------
 
-The DaCapo Benchmark Suite conmprises several open source or public domain
-programs, plus a test harness, some patches to enable the benchmarks to
-run under the test harness, and a packaging process.  The benchmarks are
-distributed under their own licenses and the remaining component is 
-distributed under the Apache License, version 2.0.
+The DaCapo Benchmark Suite conmprises several open source or public
+domain programs, plus a test harness, some patches to enable the
+benchmarks to run under the test harness, and a packaging process. The
+benchmarks are distributed under their own licenses and the remaining
+component is distributed under the Apache License, version 2.0.
 
-   Copyright 2005 The DaCapo Project,
+   Copyright 2009 The DaCapo Project,
    Department of Computer Science
    University of Massachusetts,
    Amherst MA. 01003, USA
@@ -105,4 +126,3 @@ distributed under the Apache License, version 2.0.
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
