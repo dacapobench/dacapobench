@@ -17,7 +17,7 @@ require Exporter;
 	     $sanity_invocations
 	   );
 
-$default_timeout = 90;
+$default_timeout = 180;
 $timeout_margin = 1.5;         # kill a job if it is > 50% slower than recent runs by same VM
 $timeout_fallback_margin = 3;  # kill a job if it is > 3 X slower than recent runs by canonical VM
 $timedrun = "./timedrun.pl -t ";
