@@ -29,6 +29,8 @@ BUILDING:
 
     3. Run ant:
                ant         [builds all benchmarks]
+               ant dist    [builds all benchmarks, this is the default]
+               ant source  [builds a source distribution including benchmarks and tools]
                ant bm      [builds a specific benchmark, bm]
 
     4. A log of directory is created under this benchmark directory
@@ -76,8 +78,75 @@ BUILDING:
         <property name="svn.revision" value="unknown"/>
     </target>
 
+    <target name="set-build-version-info" depends="get-svn-revision">
+        <property name="build.nickname" value="development"/>
+        <property name="build.version"  value="head-r${svn.revision}"/>
+    </target>
+    
 
     <!-- BEGIN PUBLIC TARGETS -->
+
+    <!-- =================================
+         target: source
+         ================================= -->
+    <target name="source" depends="set-build-version-info">
+         <echo file="SOURCE_README.txt">This source distribution was built from DaCapo ${build.nickname} version ${build.version}${line.separator}</echo>
+
+         <zip destfile="dacapo-src.zip" level="9" whenempty="create">
+             <zipfileset dir="${basedir}/.." defaultexcludes="yes" filemode="755">
+                 <include name="tools/*/bin/**"/>
+             </zipfileset>
+             <zipfileset dir="${basedir}/.." defaultexcludes="yes">
+                 <!-- add source readme indicating where this is from -->
+                 <include name="benchmarks/SOURCE_README.txt"/>
+
+                 <!-- benchmark top level source -->
+                 <include name="benchmarks/*.xml"/>
+                 <include name="benchmarks/dacapo.properties"/>
+                 <include name="benchmarks/default.properties"/>
+                 <include name="benchmarks/CHANGES.txt"/>
+                 <include name="benchmarks/LICENSE-2.0.txt"/>
+                 <include name="benchmarks/README.txt"/>
+                 <include name="benchmarks/RELEASE_NOTES.txt"/>
+
+                 <!-- benchmark harness source -->
+                 <include name="benchmarks/harness/*.xml"/>
+                 <include name="benchmarks/harness/src/**"/>
+
+                 <!-- libs source -->
+                 <include name="benchmarks/libs/*.xml"/>
+                 <include name="benchmarks/libs/*/*.xml"/>
+                 <include name="benchmarks/libs/*/*.patch"/>
+                 <include name="benchmarks/libs/*/*.pl"/>
+                 <include name="benchmarks/libs/*/data/**"/>
+                 <include name="benchmarks/libs/*/downloads/**.MD5"/>
+                 <include name="benchmarks/libs/*/src/**"/>
+
+                 <!-- add benchmark xml -->
+                 <include name="benchmarks/bms/*.xml"/>
+
+                 <!-- add each benchmark -->
+                 <include name="benchmarks/bms/*/*.cnf"/>
+                 <include name="benchmarks/bms/*/*.patch"/>
+                 <include name="benchmarks/bms/*/*.xml"/>
+                 <include name="benchmarks/bms/*/*.properties"/>
+                 <include name="benchmarks/bms/*/META-INF/**"/>
+                 <include name="benchmarks/bms/*/data/**"/>
+                 <include name="benchmarks/bms/*/downloads/**.MD5"/>
+                 <include name="benchmarks/bms/*/src/**"/>
+
+                 <!-- add tools -->
+                 <include name="tools/**"/>
+
+                 <!-- exclude defunct benchmarks -->
+                 <exclude name="benchmarks/bms/antlr/**"/>
+                 <exclude name="benchmarks/bms/bloat/**"/>
+                 <exclude name="benchmarks/bms/chart/**"/>
+                 <exclude name="benchmarks/bms/hsqldb/**"/>
+                 <exclude name="tools/*/bin/**"/>
+             </zipfileset>
+         </zip>
+    </target>
 
     <!-- ================================= 
          target: dist              
@@ -86,14 +155,12 @@ BUILDING:
         <move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
     </target>
 
-    <target name="init" depends="get-svn-revision">
+    <target name="init" depends="set-build-version-info">
         <!-- Create the time stamp -->
         <tstamp/>
         <delete dir="${log.build.dir}" />
         <mkdir dir="${log.build.dir}" />
-        <property name="build.nickname" value="development"/>
-        <property name="build.version"  value="head-r${svn.revision}"/>
-
+        
         <echo>build.nickname=${build.nickname}</echo>
         <echo>build.version=${build.version}</echo>
     </target>
