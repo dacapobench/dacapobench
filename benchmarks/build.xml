@@ -27,6 +27,12 @@ BUILDING:
     2. Copy default.properties to local.properties and edit local.properties
        for your environment.
 
+            o Specifically, ensure that you have set java14.lib to point to a 
+              Java 1.4 installation and java14.compile.classpath to correctly
+              capture the libraries for that installation (derby requires 1.4
+              libraries at build time). 
+
+
     3. Run ant:
                ant         [builds all benchmarks]
                ant dist    [builds all benchmarks, this is the default]

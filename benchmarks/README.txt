@@ -67,6 +67,11 @@ IMPORTANT: before trying to build the suite:
     2. Copy default.properties to local.properties and edit it for
        your environment.
 
+       o Specifically, you must set java14.lib to point to a Java 1.4
+         installation and java14.compile.classpath to correctly
+         capture the libraries for that installation(otherwise derby
+         will not build correctly)
+
 	
 For more information, run "ant -p" in the benchmarks directory.
 
