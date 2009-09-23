@@ -36,17 +36,13 @@ public class Config {
     public String describe() { return description; }
   };
 
-  private static final String ANY_JVM_ID = "";
-
-  
   /**
    * Inner class that keeps details of one of the output files
    * specified by a benchmark.
    */
   class OutputFile {
     String name;                   // Output file name
-    LinkedHashMap<String,String> digests = new LinkedHashMap<String,String>(10); // mapping of JVM IDs to SHA1-digest
-    //String digest = null;          // SHA1-digest - check if non-null
+    String digest = null;          // SHA1-digest - check if non-null
     boolean keep = false;          // keep this file
     boolean existence = false;     // Check file exists
     int lines = -1;                // Check for #lines
@@ -59,15 +55,7 @@ public class Config {
     OutputFile(String name) {
       this.name = name;
     }
-    boolean hasDigest() {
-      boolean found = digests.get(makeJVMIdentifier())!=null;
-      
-      if (!found)
-    	found = digests.get(ANY_JVM_ID)!=null;
-      
-      return found;
-    }
-    // boolean hasDigest() { return hasDigest(null); }
+    boolean hasDigest() { return digest != null; }
     boolean hasLines() { return lines != -1; }
     boolean hasBytes() { return bytes != -1; }
   }
@@ -342,12 +330,11 @@ public class Config {
     }
   }
 
-  /** Add the expected digest for an output file */
-  void addDigest(String size, String file, String jvmId, String digest) {
-	String id = jvmId = jvmId==null?ANY_JVM_ID:jvmId;
-	getSize(size).getOutputFile(file).digests.put(id,digest);
+  /** Set the expected digest for an output file */
+  void setDigest(String size, String file, String digest) {
+    getSize(size).getOutputFile(file).digest = digest;
   }
-  
+
   /** Set the expected line count for an output file */
   void setLines(String size, String file, int lines) {
     getSize(size).getOutputFile(file).lines = lines;
@@ -452,20 +439,10 @@ public class Config {
    * @param size benchmark size
    * @param file output file
    */
-  public String getDigest(String size, String file, String jvmId) {
-	String id = jvmId==null?ANY_JVM_ID:jvmId;
-    return getSize(size).getOutputFile(file).digests.get(id);
+  public String getDigest(String size, String file) {
+    return getSize(size).getOutputFile(file).digest;
   }
 
-  public String getDigest(String size, String file) {
-	String digest = getSize(size).getOutputFile(file).digests.get(makeJVMIdentifier());
-	
-	if (digest==null)
-	  digest = getSize(size).getOutputFile(file).digests.get(ANY_JVM_ID);
-	
-	return digest;
-  }
-  
   /**
    * Does the given size/file pair have an expected file digest ?
    * @param size benchmark size
@@ -474,7 +451,7 @@ public class Config {
   public boolean hasDigest(String size, String file) {
     return getSize(size).getOutputFile(file).hasDigest();
   }
-  
+
   /**
    * Is this a text file (affects how it is read)
    *
@@ -610,13 +587,7 @@ public class Config {
         String file = (String)v.next();
         OutputFile f = getSize(size).getOutputFile(file);
         str.print("    \""+file+"\"");
-        for(Iterator<String> it=f.digests.keySet().iterator(); it.hasNext();) {
-        	String key = it.next();
-        	if (key!=ANY_JVM_ID)
-        	  str.print(" digest 0x"+f.digests.get(key));
-        	else
-        	  str.print(" digest jvm \"" + key + "\" 0x"+f.digests.get(key));
-        }
+        if (f.hasDigest()) str.print(" digest 0x"+f.digest);
         if (f.keep) str.print(" keep");
         if (v.hasNext())
           str.print(",");
@@ -633,9 +604,6 @@ public class Config {
    *
    */
 
-  private final static String PROP_JAVA_VENDOR  = "java.vendor";
-  private final static String PROP_JAVA_VERSION = "java.version";
-  
   /**
    * Extract the named size from the available sizes in this benchmark, handling pesky
    * epistemological issues.
@@ -651,7 +619,4 @@ public class Config {
     return s;
   }
 
-  private static String makeJVMIdentifier() {
-	return System.getProperty(PROP_JAVA_VENDOR)+" "+System.getProperty(PROP_JAVA_VERSION);
-  }
 }

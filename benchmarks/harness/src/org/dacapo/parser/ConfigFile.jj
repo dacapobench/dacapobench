@@ -129,7 +129,6 @@ TOKEN :
 | < THREADS : "threads" >
 | < THREAD_MODEL : "thread-model" >
 | < REPEATS : "repeats" >
-| < JVM: "jvm" >
 }
 
 /* Literals */
@@ -220,15 +219,15 @@ void outputFile(Config config, String size) :
 }
 
 void outputClause(Config config, String size, String file) :
-{ String digest; int n; long l; String jvmid=null; }
+{ String digest; int n; long l; }
 {
-	  <DIGEST> [ <JVM> jvmid=string() ] [<LPAREN> digestOption(config,size,file) 
+	  <DIGEST> [<LPAREN> digestOption(config,size,file) 
 	         (<COMMA> digestOption(config,size,file))* <RPAREN>]
-	  digest=hex() { config.addDigest(size,file,jvmid,digest); }
-	| <EXISTS>               { config.setExists(size,file); }
-	| <KEEP>                 { config.setKeep(size,file); }
-	| <LINES> n=integer()    { config.setLines(size,file,n); }
-	| <BYTES> l=longInt()    { config.setBytes(size,file,l); }
+	  digest=hex() { config.setDigest(size,file,digest); }
+	| <EXISTS>              { config.setExists(size,file); }
+	| <KEEP>                { config.setKeep(size,file); }
+	| <LINES> n=integer()   { config.setLines(size,file,n); }
+	| <BYTES> l=longInt()   { config.setBytes(size,file,l); }
 }
 
 void digestOption(Config config, String size, String file) : { }
