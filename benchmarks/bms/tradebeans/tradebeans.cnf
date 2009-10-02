@@ -5,15 +5,18 @@ benchmark tradebeans
 
 size small args "small" 
   threads 1
-  output stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout  digest 0xbea66a139b711b34efb08bd6fdcdecbe04c5055e,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "medium"
   threads 2
-  output stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout  digest 0xfa3e4a1b471247726fb6c3a6f42e5853f2522d22,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "large"
   threads 2
-  output stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"Tradebeans Daytrader benchmark",
