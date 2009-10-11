@@ -133,12 +133,14 @@
 	<target name="data" depends="plugin, workspace-zips">
 		
 		<!-- where possible, replace jars with empty stubs -->
+		<!-- remove this optimization for now; it fails with ant 1.7.0 (but not 1.7.1) sigh.
 		<delete>
 			<fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
 		</delete>
 		<touch>
 			<fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
 		</touch>
+		-->
 		
 	    <!-- Install the test data -->
 	    <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
