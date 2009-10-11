@@ -125,7 +125,8 @@
         	<target name="clean"/>
         	<target name="build.update.jar"/>
         </ant>
-    	<patch patchfile="${bm-files}/patches/add-bundle-to-configurator.patch" dir="${bm-build-dir}" strip="1"/>
+    	<!-- add our bundle to the configurator metadata -->
+    	<patch patchfile="${bm-files}/eclipse.patch" dir="${bm-build-dir}" strip="1"/>
     </target>
 	
     <!-- Create the eclipse data file -->
