@@ -1,28 +1,28 @@
 benchmark eclipse
   class org.dacapo.harness.Eclipse
-  thread-model single
+  thread-model per_cpu
   jar "eclipse.jar";
 
-size small   args "-level", "0", "-ast"
-  output stdout digest 0x46c53f7395877fc376fed4ced7500aa1ac76acdb,
+size small   args "setup"
+  output stdout digest 0x8a493303fc3999aa72c0ee17fbd4a057e3f5bfe6,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "-level", "0"
-  output stdout digest 0xaa95d655898cb9228f2a3fd3cdc5e150cebb94ae,
+size default args "setup", "alltests"
+  output stdout digest 0x590b467a965f90a9ca704b475218d8da45bc174e,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large   args "-level", "1"
-  output stdout digest 0x3ccf21842a9962460ac4f7351108b50174b408e1,
+size large   args "setup", "alltests"
+  output stdout digest 0x6c866eb11af6f8f8bf95326759bfa91a5bb06b3b,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short 	"An integrated development environment",
-  long  	"Run a series of eclipse jdt (non-gui) performance tests",
+  long  	"Run eclipse's jdt (non-gui) performance tests",
   copyright	"Eclipse Foundation",
   author	"Eclipse Foundation",
   license	"Eclipse Public License",
   url 		"http://www.eclipse.org/",
-  version	"3.1.2",
-  threads	"Workload is single threaded, but Eclipse uses multiple threads internally",
+  version	"3.5.1",
+  threads	"Eclipse uses multiple threads internally (the workload is not explicitly parallel)",
   repeats	"Single iteration, performs multiple distinct Eclipse tasks";
 

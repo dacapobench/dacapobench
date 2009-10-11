@@ -9,16 +9,20 @@ import org.dacapo.parser.Config;
 
 public class Eclipse extends Benchmark {
   
-  protected static final String ECLIPSE_SOURCE_ZIP = "eclipse/plugins/org.eclipse.jdt.core.tests.performance_3.1.2/full-source-R3_0.zip";
-  static final String wsDirectory = "workspace";
+  static final String WKSP_DIRECTORY_RELATIVE_TO_SCRATCH = "workspace";
+  static final String PLUGIN_ID = "org.dacapo.eclipse.Harness";
+  static final String OSGI_BOOTSTRAP_JAR = "eclipse"+File.separator+"plugins"+File.separator+"org.eclipse.osgi_3.5.1.R35x_v20090827.jar";
+
   static String oldJavaHome = null;
-  
+  static Eclipse eclipse;
+  static String size;
+
   private final Method isRunning;
   private final Method run;
   private final Method shutdown;
   
   public Eclipse(Config config, File scratch) throws Exception {
-    super(config, scratch);
+    super(config, scratch, false);
     Class<?> clazz = Class.forName("org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
     this.method = clazz.getMethod("startup", String[].class, Runnable.class);
     this.isRunning = clazz.getMethod("isRunning");
@@ -28,27 +32,38 @@ public class Eclipse extends Benchmark {
   
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
-    createWorkspace();
-    //if (!EclipseStarter.isRunning()) {
     if (!((Boolean) isRunning.invoke(null, (Object[]) null)).booleanValue()) {
       startup(size);
     }
     setJavaHomeIfRequired();
+    try {
+      String[] largePluginArgs = {"large", "unzip"};
+      String[] pluginArgs = {"unzip"};
+      run.invoke(null, new Object[] {size.equals("large") ? largePluginArgs : pluginArgs});
+    } catch (Exception e) {
+      e.printStackTrace();
+    } 
   }
   
   public void iterate(String size) throws Exception {
     try {
-      run.invoke(null, new Object[] { null });
+ //     String[] pluginArgs = {"setup", "alltests" }; // get this from the bm config
+      String[] pluginArgs = config.getArgs(size);
+      run.invoke(null, new Object[] {pluginArgs});
     } catch (Exception e) {
       e.printStackTrace();
     } 
   } 
   
   public void postIteration(String size) throws Exception {
+    try {
+      String[] pluginArgs = {"teardown"};
+      run.invoke(null, new Object[] {pluginArgs});
+    } catch (Exception e) {
+      e.printStackTrace();
+    } 
     super.postIteration(size);
     restoreJavaHomeIfRequired();
-    if (!isPreserve())
-      deleteTree(new File(scratch,wsDirectory));
   }
   
   public void cleanup() {
@@ -58,14 +73,6 @@ public class Eclipse extends Benchmark {
       e.printStackTrace();
     }
   }
-  
-  private void createWorkspace() throws Exception {
-    File wsdir = new File(scratch, wsDirectory);
-    if (wsdir.exists())
-      deleteTree(new File(scratch,wsDirectory));
-    wsdir.mkdir();
-    unpackZipFile(fileInScratch(ECLIPSE_SOURCE_ZIP),wsdir);
-  }
 
   private void startup(String size) {
     try {
@@ -74,26 +81,14 @@ public class Eclipse extends Benchmark {
       System.setProperty("osgi.arch","x86");
       System.setProperty("osgi.install.area",  "file:"+fileInScratch("eclipse/"));
       System.setProperty("osgi.noShutdown", "true");
-      System.setProperty("osgi.framework","file:"+fileInScratch("eclipse/plugins/org.eclipse.osgi_3.1.2.jar"));
-      System.setProperty("eclipse.java.home", fileInScratch("dummyjre"));
-      /*
-       * Hard-wire some properties that could otherwise be overriden in the
-       * environment. 
-       */
-      System.setProperty("javax.xml.parsers.DocumentBuilderFactory", 
-                "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-      
+      System.setProperty("osgi.framework","file:"+fileInScratch(OSGI_BOOTSTRAP_JAR));
       setJavaHomeIfRequired();
       
-      String[] pluginArgs = config.getArgs(size);
-      String[] args = new String[4 + pluginArgs.length];
-      args[0] = "-data";
-      args[1] = fileInScratch("workspace");
-      args[2] = "-application";
-      args[3] = "org.dacapo.eclipse.dacapoHarness";
-      for (int i = 0; i < pluginArgs.length; i++)
-        args[4+i] = pluginArgs[i];
-//      EclipseStarter.startup(args, null);
+      String[] args = new String[4];
+      args[0] = "-data";        // identify the workspace
+      args[1] = fileInScratch(WKSP_DIRECTORY_RELATIVE_TO_SCRATCH);
+      args[2] = "-application"; // identify the plugin
+      args[3] = PLUGIN_ID;
       method.invoke(null, new Object[] {args, null});
     } catch (Exception e) {
         e.printStackTrace();
@@ -111,18 +106,5 @@ public class Eclipse extends Benchmark {
   private void restoreJavaHomeIfRequired() {
     if (oldJavaHome != null)
       System.setProperty("java.home", oldJavaHome);
-  }
-  
-  /**
-   * Stub which exists <b>only</b> to facilitate whole program
-   * static analysis on a per-benchmark basis.  See also the "split-deps"
-   * ant build target, which is also provided to enable whole program
-   * static analysis.
-   * 
-   * @author Eric Bodden
-   */
-  public static void main(String args[]) throws Exception {
-    // create dummy harness and invoke with dummy arguments
-    (new Eclipse(null, null)).run(null, "");
   }
 }
