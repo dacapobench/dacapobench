@@ -4,11 +4,11 @@ benchmark eclipse
   jar "eclipse.jar";
 
 size small   args "setup"
-  output stdout digest 0x8a493303fc3999aa72c0ee17fbd4a057e3f5bfe6,
+  output stdout digest 0x9d0460a842b72206720942a60581729eaed17d9f,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "setup", "alltests"
-  output stdout digest 0x6cb32ddecd05f331a85179aa483230d450f2d87a,
+  output stdout digest 0x883c142aebf68c13c630dae7dcc488b32d565e3d,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large   args "setup", "alltests"
