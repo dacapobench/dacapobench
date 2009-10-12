@@ -13,6 +13,7 @@ package org.eclipse.jdt.core.tests.performance;
 
 import java.text.NumberFormat;
 
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
@@ -36,6 +37,8 @@ public class FullSourceWorkspaceCompleteSearchTests extends FullSourceWorkspaceS
       FullSourceWorkspaceCompleteSearchTests s = new FullSourceWorkspaceCompleteSearchTests();
       if (DACAPO_PRINT) System.out.print("Search ");
       s.testSearchStringConstructorReferences();
+      if (DACAPO_PRINT) { System.out.println(); System.out.print("       "); }
+      s.testSearchStringMethodReferences();
       if (DACAPO_PRINT) System.out.println();
     } catch (Exception e) {
       System.err.println("Caught exception performing search tests: ");
@@ -73,10 +76,12 @@ public class FullSourceWorkspaceCompleteSearchTests extends FullSourceWorkspaceS
         searchFor,
         limitTo,
         matchMode | SearchPattern.R_CASE_SENSITIVE);
+    
+    IJavaSearchScope scope = org.eclipse.jdt.core.search.SearchEngine.createJavaSearchScope(ALL_PROJECTS, org.eclipse.jdt.core.search.IJavaSearchScope.SOURCES);     
     new SearchEngine().search(
         pattern,
         new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
-        SearchEngine.createWorkspaceScope(),
+        scope,
         resultCollector,
         null);
   }
