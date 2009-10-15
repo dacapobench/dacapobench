@@ -4,55 +4,71 @@
     
     <property name="bm-name" value="derby"/>
     <property name="bm-version" value="10.5.3.0"/>
-    <property name="bm-url" value="${apache.dl.url}/db/derby/db-derby-${bm-version}"/>
+    <property name="bm-url" value="${apache.dl.url}/db/derby/db-derby-${bm-version}"/> 
     <property name="bm-src" value="db-derby-${bm-version}-src.tar.gz"/>
 
-    <import file="../common.xml"/>
+	<import file="../common.xml"/>
         
     <property name="bm-build-top" location="${bm-build-dir}/db-derby-${bm-version}-src"/>
 
-     <target name="bm-harness" depends="jdbcbench">
-        <javac srcdir="${bm-src-dir}" classpath="${bm-output-dir}:${harness-classpath}" destdir="${bm-output-dir}" 
-            sourcepath="${bm.test.src}"
+    <target name="bm-harness" depends="junit">
+        <javac srcdir="${bm-src-dir}"  destdir="${bm-output-dir}" 
+            sourcepath="${bm-src-dir}"
             source="1.5"
-            excludes="dacapo/derby/TPCC.java"
             debug="true" debuglevel="lines,vars,source">
-       </javac>
-    </target>
+	      <classpath>
+	      	 <!-- note that the jars build are either in the jars/sane or jars/insane
+	      	      directory depending upon the build environment, however, they are 
+	      	      never in both directories -->
+       	     <pathelement location="${bm-build-top}/jars/sane/derby.jar"/>
+      	     <pathelement location="${bm-build-top}/jars/sane/derbyclient.jar"/>
+      	     <pathelement location="${bm-build-top}/jars/sane/derbytools.jar"/>
+     	     <pathelement location="${bm-build-top}/jars/sane/derbyTesting.jar"/>
 
+	      	 <pathelement location="${bm-build-top}/jars/insane/derby.jar"/>
+     	     <pathelement location="${bm-build-top}/jars/insane/derbyclient.jar"/>
+     	     <pathelement location="${bm-build-top}/jars/insane/derbytools.jar"/>
+    	     <pathelement location="${bm-build-top}/jars/insane/derbyTesting.jar"/>
+	      	
+	      	 <pathelement path="${bm-output-dir}"/>
+	      	 <pathelement path="${harness-classpath}"/>
+       	  </classpath>
+        </javac>
+        <jar destfile="${bm-jars}/tpcc.jar">
+        	<fileset dir="${bm-output-dir}">
+        		<include name="org/dacapo/derby/**"/>
+        	</fileset>
+    	</jar>
+    	<delete dir="${bm-output-dir}/org/dacapo/derby"/>
+    </target>
+	
     <target name="unpack" depends="untar"/>
     
-    <target name="bm-build">
+    <target name="bm-build" depends="junit">
+        <copy tofile="${bm-build-top}/tools/java/junit.jar">
+            <fileset dir="${basedir}/libs/junit/dist/jar">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
         <ant antfile="build.xml" inheritall="false" dir="${bm-build-top}">
-            <property name="j14lib" value="${java14.lib}"/>
-            <property name="java14compile.classpath" value="${java14.compile.classpath}"/>
-             <target name="buildsource"/>
+            <target name="all"/>
             <target name="buildjars"/>
         </ant>
     </target>
     
     <target name="jar">
-        <copy file="${bm-build-top}/jars/insane/derby.jar" todir="${bm-jars}"/>
-        <copy file="${bm-build-top}/jars/insane/derbynet.jar" todir="${bm-jars}"/>
+    	<!-- not that the derby jars are located in either jars/sane or jars/insane 
+    	     depending upon the build environment, however, these will only be in
+    	     one of those directories and not both -->
+    	<copy todir="${bm-jars}" flatten="true">
+    		<fileset dir="${bm-build-top}">
+    			<include name="jars/*/derby.jar"/>
+    			<include name="jars/*/derbytools.jar"/>
+				<include name="jars/*/derbyTesting.jar"/>
+				<include name="tools/java/junit.jar"/>
+    		</fileset>
+	    </copy>
     </target>
 
-    <!-- WORK IN PROGRESS -->
-    <property name="bm.trunk.src" location="${build.src}/derby/trunk"/>
-    <property name="bm.test.src" location="${bm.trunk.src}/java/testing"/>
-    <property name="bm.test.build" location="${bm.trunk.src}/build"/>
-    <target name="tpcc.harness" description="--> The derby dacapo harness">
-        <javac destdir="${bm.test.build}" source="1.5"
-            srcdir="${bmsrc}"
-            debug="true" debuglevel="lines,vars,source"
-            includes="dacapo/derby/TPCC.java">
-            <classpath>
-              <pathelement path="${jars}/derby-oe.jar"/>
-              <pathelement path="${jars}/junit.jar"/>
-            </classpath>
-        </javac>
-        <jar destfile="${jars}/derby-tpcc.jar" basedir="${bm.test.build}">
-            <include name="dacapo/derby/TPCC*.class"/>
-        </jar>
-    </target>    
-
 </project>
+

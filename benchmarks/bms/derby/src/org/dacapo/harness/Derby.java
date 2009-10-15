@@ -1,57 +1,89 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
 public class Derby extends Benchmark {
 
+  // 
+  private Object tpcc;
+  private Method makeTPCC;
+  private Method prepareTPCC;
+  private Method preIterationTPCC;
+  private Method iterationTPCC;
+  private Method postIterationTPCC;
+  
   public Derby(Config config, File scratch) throws Exception {
     super(config, scratch);
-    Class<?> clazz = Class.forName("org.dacapo.jdbcbench.PseudoJDBCBench", true, loader);
-    this.method = clazz.getMethod("main",String[].class);
   }
   
   @Override
   protected void prepare() throws Exception {
+    useBenchmarkClassLoader();
     /* Don't call super.prepare - we don't have a data zip file to unpack */
+    try {
+      Class<?> tpccClazz  = Class.forName("org.dacapo.derby.TPCC",true,loader);
+      this.makeTPCC = tpccClazz.getMethod("make", Config.class, File.class);
+      this.prepareTPCC = tpccClazz.getMethod("prepare", String.class);
+      this.preIterationTPCC = tpccClazz.getMethod("preIteration", String.class);
+      this.iterationTPCC = tpccClazz.getMethod("iteration", String.class);
+      this.postIterationTPCC = tpccClazz.getMethod("postIteration", String.class);
+
+      // construct the benchmark
+      this.tpcc = this.makeTPCC.invoke(null, config, scratch);
+    } finally {
+      revertClassLoader();
+    }
   }
 
   
   /**
-   * The pre-iteration 
+   * The benchmark run 
    */
   @Override
   public void prepare(String size) throws Exception {
     System.out.println("Populating the database");
 
-    /* Modify the benchmark args to set -tpc to 0, and add "-init" */
-    String[] args = preprocessArgs(size);
-    String[] initArgs = new String[args.length+1];
-    for (int i=0; i < args.length; i++) {
-      initArgs[i] = args[i];
-      if (args[i].equals("-tpc") || args[i].equals("-total_trans")) {
-        initArgs[++i] = "0";
-      } 
-    }
-    initArgs[initArgs.length-1] = "-init";
     useBenchmarkClassLoader();
     try {
-      method.invoke(null, (Object)initArgs);
+      this.prepareTPCC.invoke(this.tpcc, size);
     } finally {
       revertClassLoader();
     }
   }
 
   @Override
+  public void preIteration(String size) throws Exception {
+    useBenchmarkClassLoader();
+    try {
+      this.preIterationTPCC.invoke(this.tpcc, size);
+    } finally {
+      revertClassLoader();
+    }
+  }
+  
+  @Override
   public void iterate(String size) throws Exception {
-    method.invoke(null, (Object)preprocessArgs(size));
+    useBenchmarkClassLoader();
+    try {
+      this.iterationTPCC.invoke(this.tpcc, size);
+    } finally {
+      revertClassLoader();
+    }
   }
   
   @Override
   public void postIteration(String size) throws Exception {
-    super.postIteration(size);
+    useBenchmarkClassLoader();
+    try {
+      this.postIterationTPCC.invoke(this.tpcc, size);
+    } finally {
+      revertClassLoader();
+      super.postIteration(size);
+    }
   }
   
   /**
