@@ -10,10 +10,7 @@ size small args "-numberOfTerminals","${THREADS}",
 		"-deadlockTimeout", "3",
 		"-transactionTimeout", "20",
 		"-retryLimit", "10"
-  threads 1
-  output 
-         stdout digest 0x049ff1a5a146c0b7fdd8e085be62ba736d99733f,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  threads 1;
 
 size default args "-numberOfTerminals","${THREADS}",
 		"-totalTransactions","400",
@@ -22,10 +19,7 @@ size default args "-numberOfTerminals","${THREADS}",
 		"-deadlockTimeout", "3",
 		"-transactionTimeout", "20",
 		"-retryLimit", "10"
-  threads 1
-  output 
-         stdout digest 0x9e9eeff9acdad04cda468b7abd95f9381588c327,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  threads 1;
 
 size large args "-numberOfTerminals","${THREADS}",
 		"-totalTransactions","800",
@@ -34,10 +28,7 @@ size large args "-numberOfTerminals","${THREADS}",
 		"-deadlockTimeout", "3",
 		"-transactionTimeout", "20",
 		"-retryLimit", "10"
-  threads 1
-  output 
-         stdout digest 0x56ccf094a4d90495995848da426d59d400a282a7,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  threads 1;
 
 
 /*
