@@ -627,8 +627,8 @@ Index: modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/Da
 +
 +		for (int i = 0; i < OP_NAMES.length; i++) localOpCount[i] = 0;
 +		
-+		if (available && sessionBound % (50 * sessionStride) == 0)
-+			System.out.println(sessionBound+" trade sessions...");
++//		if (available && sessionBound % (50 * sessionStride) == 0)
++//			System.out.println(sessionBound+" trade sessions...");
 +		return available;
 +	}
 +	

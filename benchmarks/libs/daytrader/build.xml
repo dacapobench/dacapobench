@@ -283,6 +283,7 @@
         <unjar src="${lib-build-dir}/${ger-name}-${ger-version}/lib/geronimo-kernel-${ger-version}.jar" dest="${bm-output-dir}">
             <patternset>
                 <include name="**org/apache/geronimo/kernel/rmi/RMIClassLoaderSpiImpl.class"/>
+                <include name="**org/apache/geronimo/kernel/rmi/RMIClassLoaderSpiImpl$ClassLoaderServerAware.class"/>
             </patternset>
         </unjar>
 

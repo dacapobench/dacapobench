@@ -4,18 +4,26 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Launcher {
+  // Geronimo configuration
   private final static String GVERSION = "2.1.4";
-  private final static String GTYPE = true ? "minimal" : "javaee5";
-  private final static String GDIRECTORY = "geronimo-jetty6-"+GTYPE+"-"+GVERSION;
+  private final static String GTYPE = "minimal";
+  private final static String GDIRECTORY = "geronimo-jetty6-" + GTYPE + "-" + GVERSION;
+  
+  // The daytrader-dacapo application 
   private final static String CAR_NAME = "org.apache.geronimo.daytrader/daytrader-dacapo/2.2-SNAPSHOT/car";
-  private final static String CLIENT_CLI_ENTRYPOINT = "org.dacapo.daytrader.DaCapoCLI";
-  private final static String SERVER_CLI_ENTRYPOINT = "org.apache.geronimo.cli.daemon.DaemonCLI";
+  
+  // These jars hold configuration information for the client and server geronimo environments.
   private final static String[] CLIENT_BIN_JARS = { "client.jar"};
   private final static String[] SERVER_BIN_JARS = { "server.jar"};
+  
+  // This jar contains the code that knows how to create and communicate with geronimo environments 
   private final static String[] DACAPO_CLI_JAR = { "jar/daytrader.jar"};
+  
   // The following list is defined in the "Class-Path:" filed of MANIFEST.MF for the client and server jars
   private final static String[] GERONIMO_LIB_JARS = { "geronimo-cli-"+GVERSION+".jar", "geronimo-kernel-"+GVERSION+".jar", "geronimo-transformer-"+GVERSION+".jar", "asm-3.1.jar", "asm-commons-3.1.jar", "commons-cli-1.0.jar", "commons-logging-1.0.4.jar", "cglib-nodep-2.1_3.jar", "log4j-1.2.14.jar", "xpp3-1.1.3.4.0.jar", "xstream-1.2.2.jar"};
 
@@ -25,79 +33,38 @@ public class Launcher {
   
   private static ClassLoader serverCLoader = null;
   private static ClassLoader clientCLoader = null;
+  private static Method clientMethod = null;
   private static File scratch = null;
-
-  private static ServerThread serverThread;
   
   public static void initialize(File scratchdir, int threads, String dtSize, boolean beans) {
     numThreads = threads;
     size = dtSize;
     useBeans = beans;
     scratch = new File(scratchdir.getAbsolutePath());
+    setGeronimoProperties();
+    ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
     
-    serverThread = new ServerThread();
-    serverThread.start();
-    invokeGeronimoClientCLI(getArgs(true));
-  }
-  
-  public static void performIteration() {
-    if (numThreads == -1) {
-      System.err.println("Trying to run Daytrader before initializing.  Exiting.");
-      System.exit(0);
-    }
-    invokeGeronimoClientCLI(getArgs(false));
-  }
-  
-  private static String[] getArgs(boolean init) {
-    int argCount = 5 + (init ? 1 : 0) + (useBeans ? 1: 0);
-    String[] args = new String[argCount];
-    args[0] = CAR_NAME;
-    args[1] = "-t";
-    args[2] = Integer.toString(numThreads);
-    args[3] = "-s";
-    args[4] = size;
-    if (useBeans) {
-      args[5] = "-b";
-    }
-    if (init) {
-      args[argCount - 1] = "-i";
-    }
-
-   return args; 
-  }
-  
-  static void invokeGeronimoClientCLI(String[] args) {
     try {
-      setGeronimoProperties();
-    
-      if (clientCLoader == null)  clientCLoader = createGeronimoClassLoader(false);
-
-      Thread.currentThread().setContextClassLoader(clientCLoader);
-
-      Class<?> clazz = clientCLoader.loadClass(CLIENT_CLI_ENTRYPOINT);
-      Method method = clazz.getMethod("main", new Class[] { String[].class});
-      method.invoke(null, new Object[] {args});
-    } catch (Exception e) {
-      System.err.print("Caught exception invoking client:"+e.toString());
-      e.printStackTrace();
-    }
-  }
-  
-  static void startServer(String[] args) {
-    try {
-      setGeronimoProperties();
-    
-      if (serverCLoader == null) {
-        serverCLoader = createGeronimoClassLoader(true);
-      }
+      // Create a server environment
+      serverCLoader = createGeronimoClassLoader(originalCLoader, true);
       Thread.currentThread().setContextClassLoader(serverCLoader);
-      
-      Class<?> clazz = serverCLoader.loadClass(SERVER_CLI_ENTRYPOINT);
-      Method method = clazz.getMethod("main", new Class[] { String[].class});
-      method.invoke(null, new Object[] {args});
+      Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
+      Method method = clazz.getMethod("initialize", new Class[] {});
+      method.invoke(null, new Object[] {});
+
+      // Create a client environment
+      clientCLoader = createGeronimoClassLoader(originalCLoader, false);
+      Thread.currentThread().setContextClassLoader(clientCLoader);
+      clazz = clientCLoader.loadClass("org.dacapo.daytrader.DaCapoClientRunner");
+      method = clazz.getMethod("initialize", new Class[] { String.class, String.class, int.class, boolean.class });
+      method.invoke(null, new Object[] { CAR_NAME, size, numThreads, useBeans });
+      clientMethod = clazz.getMethod("runIteration", new Class[] { String.class, int.class, boolean.class });
     } catch (Exception e) {
-      System.err.print("Caught exception invoking server:"+e.toString());
+      System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
+      System.exit(-1);
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalCLoader);
     }
   }
   
@@ -107,74 +74,90 @@ public class Launcher {
     System.setProperty("java.ext.dirs", geronimo.getPath() + "/lib/ext:" +System.getProperty("java.home")+"/lib/ext");
     System.setProperty("java.io.tmpdir", geronimo.getPath() + "/var/temp");
   }
-  
-  private static ClassLoader createGeronimoClassLoader(boolean server) throws Exception {
-    File geronimo = new File(scratch, GDIRECTORY).getAbsoluteFile();
-    ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
-    ClassLoader binCL = createClassLoader(oldCL, getGeronimoBinaryJar(geronimo, server), false);
-    ClassLoader libCL = createClassLoader(binCL, getGeronimoLibraryJars(geronimo, server), true);
-    return libCL;
- }
-  
-  private static ClassLoader createClassLoader(ClassLoader oldCL, URL[] urls, boolean inverted) throws Exception {
-    ClassLoader rtn = null;
-    try {
-      if (inverted) 
-        rtn = new InvertedURLClassLoader(urls, oldCL);
-      else
-        rtn = new java.net.URLClassLoader(urls, oldCL);
-    } catch (Exception e) {
-      Thread.currentThread().setContextClassLoader(oldCL);
-      System.err.println("Unable to create loader: ");
-      e.printStackTrace();
-      System.exit(-1);
+
+  public static void performIteration() {
+    if (numThreads == -1) {
+      System.err.println("Trying to run Daytrader before initializing.  Exiting.");
+      System.exit(0);
     }
-    return rtn;
+    ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(clientCLoader);
+      clientMethod.invoke(null, new Object[] { size, numThreads, useBeans });
+    } catch (Exception e) {
+      System.err.println("Exception during iteration: " + e.toString());
+      e.printStackTrace();
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassloader);
+    }
   }
-  
+ 
   /**
-   * Get a list of jars (if any) which should be in the classpath for this benchmark
+   * Create the classloader from within which to start the Geronimo client and/or server kernels.
    *
-   * @param config The config file for this benchmark, which lists the jars
-   * @param scratch The scratch directory, in which the jars will be located
-   * @return An array of URLs, one URL for each jar
-   * @throws MalformedURLException
+   * @param server Is this the server (or client) classloader
+   * @return The classloader
+   * @throws Exception
    */
-  private static URL[] getGeronimoLibraryJars(File geronimo, boolean server) throws MalformedURLException {
-    List jars = new java.util.ArrayList();
+  private static ClassLoader createGeronimoClassLoader(ClassLoader parent, boolean server) {
+    File geronimo = new File(scratch, GDIRECTORY).getAbsoluteFile();
+    ClassLoader binCL = new URLClassLoader(getGeronimoBinaryJars(geronimo, server), parent);
+    ClassLoader libCL = new InvertedURLClassLoader(getGeronimoLibraryJars(geronimo, server), binCL);
+    return libCL;
+  }
+
+  /**
+   * Get a list of jars (if any) which should be in the library classpath for this benchmark
+   *
+   * @param geronimo The base directory for the jars
+   * @return An array of URLs, one URL for each jar
+   */
+  private static URL[] getGeronimoLibraryJars(File geronimo, boolean server) {
+    List<URL> jars = new ArrayList<URL>();
 
     if (server) {
       File endorsed = new File(geronimo, "lib/endorsed");
       addJars(jars, endorsed, endorsed.list());
-    } else {
-      addJars(jars, scratch, DACAPO_CLI_JAR);
     }
+    addJars(jars, scratch, DACAPO_CLI_JAR);
    
     File lib = new File(geronimo, "lib");
     addJars(jars, lib, GERONIMO_LIB_JARS);
     
-    return (URL[]) jars.toArray(new URL[jars.size()]);
+    return jars.toArray(new URL[jars.size()]);
   }
 
-  private static URL[] getGeronimoBinaryJar(File geronimo, boolean server) throws MalformedURLException {
-    List jars = new java.util.ArrayList();
+  /**
+   * Get a list of jars (if any) which should be in the binary classpath for this benchmark.
+   *
+   * @param geronimo The base directory for the jars
+   * @return An array of URLs, one URL for each jar
+   */
+  private static URL[] getGeronimoBinaryJars(File geronimo, boolean server) {
+    List<URL> jars = new ArrayList<URL>();
     addJars(jars, new File(geronimo, "bin"), (server ? SERVER_BIN_JARS : CLIENT_BIN_JARS ));
-    return (URL[]) jars.toArray(new URL[jars.size()]);
+    return jars.toArray(new URL[jars.size()]);
   }
   
   /**
-   * Get a list of jars (if any) which should be in the classpath for this benchmark
+   * Compile a list of paths to jars from a base directory and relative paths.
    *
    * @param config The config file for this benchmark, which lists the jars
    * @param scratch The scratch directory, in which the jars will be located
    * @return An array of URLs, one URL for each jar
-   * @throws MalformedURLException
    */
-  private static void addJars(List jars, File directory, String[] jarNames) throws MalformedURLException {
+  private static void addJars(List<URL> jars, File directory, String[] jarNames) {
     if (jarNames != null) {
       for (int i = 0; i < jarNames.length; i++) {
         File jar = new File(directory, jarNames[i]);
-        jars.add(jar.toURL());
+        try {
+          URL url = jar.toURI().toURL();
+          jars.add(url);
+        } catch (MalformedURLException e) {
+          System.err.println("Unable to create URL for jar: " + jarNames[i] + " in " + directory.toString());
+          e.printStackTrace();
+          System.exit(-1);
+        }
       }
     }
   }
