@@ -98,8 +98,8 @@ public class CommandLineArgs {
           System.err.println("Could not find callback class "+args[i]);
           System.exit(12);
         } 
-        if (!(Class.forName("dacapo.Callback").isAssignableFrom(cls))) {
-          System.err.println(args[i] + " is not an instance of dacapo.Callback");
+        if (!(Callback.class.isAssignableFrom(cls))) {
+          System.err.println(args[i] + " is not an instance of Callback");
           System.exit(13);
         } else {
           Constructor<?> cons = cls.getConstructor(new Class[] { CommandLineArgs.class });
