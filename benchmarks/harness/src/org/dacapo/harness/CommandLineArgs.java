@@ -43,6 +43,7 @@ public class CommandLineArgs {
   private int iterations = 1;
   private String size = "default";
   private String scratchDir = "./scratch";
+  private String cnf = null;
   private Callback callback = null;
   private boolean info = false;
   
@@ -113,6 +114,12 @@ public class CommandLineArgs {
         this.iterations = Integer.parseInt(args[++i]);
       } else if (args[i].equals("-converge")) {   // Run until times converge
         this.methodology = Methodology.CONVERGE;
+      } else if (args[i].equals("-cnf")) {
+        if (i == args.length - 1) {
+          System.err.println("No cnf file specified! (\"-h\" for usage)");
+          System.exit(21);    
+        }
+        this.cnf = args[++i];     
       } else if (args[i].equals("-max_iterations")) { // Max iterations for convergence
         if (i == args.length - 1) {
           System.err.println("No max specified! (\"-h\" for usage)");
@@ -324,6 +331,9 @@ public class CommandLineArgs {
   }
   public Callback getCallback() {
     return callback;
+  }
+  public String getCnfOverride() {
+    return cnf;
   }
   public boolean isInfo() {
     return info;

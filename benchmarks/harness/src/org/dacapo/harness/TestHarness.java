@@ -5,6 +5,7 @@ package org.dacapo.harness;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -111,11 +112,22 @@ public class TestHarness {
       for (String bm : commandLineArgs.benchmarks()) {
         // check if it is a benchmark name
         // name of file containing configurations
-        String cnf = "cnf/"+bm+".cnf";
-        InputStream ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
-        if (ins == null) {
-          System.err.println("Unknown benchmark: "+bm);
-          System.exit(20);
+        InputStream ins = null;
+        if (commandLineArgs.getCnfOverride() == null) {
+          String cnf = "cnf/"+bm+".cnf";
+          ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
+          if (ins == null) {
+            System.err.println("Unknown benchmark: "+bm);
+            System.exit(20);
+          }
+        } else {
+          String cnf = commandLineArgs.getCnfOverride();
+          try {
+            ins = new FileInputStream(cnf);
+          } catch (FileNotFoundException e) {
+            System.err.println("Count not find cnf file: '" + cnf + "'");
+            System.exit(20);
+          }
         }
         
         TestHarness harness = new TestHarness(ins);
