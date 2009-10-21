@@ -30,4 +30,4 @@ $dacapo_build = "(cd $dacapo_svn_dir/benchmarks && $dacapoant dist && mv dacapo-
 
 @old_bm_list = ("antlr", "bloat", "chart", "eclipse", "fop", "hsqldb", "jython", "lusearch", "luindex", "pmd", "xalan");
 @retired_bm_list = ("antlr", "bloat", "chart", "hsqldb");
-@dont_run_perf_bm_list = (); # ("tradebeans", "tradesoap");
+@dont_run_perf_bm_list = ("tradesoap");
