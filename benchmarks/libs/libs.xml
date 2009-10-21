@@ -37,6 +37,16 @@
 		<ant antfile="${lib-base}/jdbcbench/build.xml"/>
 	</target>
 	
+	<!-- derby -->
+	<property name="derby-jar" value="${lib-base}/derby/dist/jar/derby.jar"/>
+	<property name="derbyclient-jar" value="${lib-base}/derby/dist/jar/derbyclient.jar"/>
+	<property name="derbynet-jar" value="${lib-base}/derby/dist/jar/derbynet.jar"/>
+	<property name="derbytools-jar" value="${lib-base}/derby/dist/jar/derbytools.jar"/>
+	<property name="derbytesting-jar" value="${lib-base}/derby/dist/jar/derbyTesting.jar"/>
+	<target name="derby">
+		<ant antfile="${lib-base}/derby/build.xml"/>
+	</target>
+	
 	<!-- junit -->
 	<property name="junit-jar" value="${lib-base}/junit/dist/jar/junit-3.8.1.jar"/>
 	<target name="junit">

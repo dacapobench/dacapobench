@@ -1,0 +1,105 @@
+/*
+ * 
+ */
+package org.dacapo.h2;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
+/**
+ * Simple DataSource for providing a wrapped connection for the
+ * Derby TPC-C to populate the database.
+ */
+public class TPCCDataSource implements DataSource {
+
+	private final static String USERNAME = "user";
+	private final static String PASSWORD = "password";
+	private final static String USER = "derby";
+	private final static String PASS = "derby";
+
+	private Driver      driver;
+	private String      dbname;
+	private Properties  properties;
+	private PrintWriter logWriter;
+	private int         loginTimeout = 100;
+	
+	public TPCCDataSource(Driver driver, String dbname, Properties properties) {
+		this.driver     = driver;
+		this.dbname     = dbname;
+		this.properties = properties;
+		this.logWriter  = new PrintWriter(new NullWriter());
+	}
+
+	@Override
+	public Connection getConnection() throws SQLException {
+		return driver.connect(dbname, properties);
+	}
+
+	@Override
+	public Connection getConnection(String username, String password)
+			throws SQLException {
+		Properties props = (Properties) properties.clone();
+
+		props.setProperty(USERNAME, USER);
+		props.setProperty(PASSWORD, PASS);
+
+		return driver.connect(dbname, properties);
+	}
+
+	@Override
+	public PrintWriter getLogWriter() throws SQLException {
+		return logWriter;
+	}
+
+	@Override
+	public int getLoginTimeout() throws SQLException {
+		return 100;
+	}
+
+	@Override
+	public void setLogWriter(PrintWriter logWriter) throws SQLException {
+		this.logWriter    = logWriter;
+	}
+
+	@Override
+	public void setLoginTimeout(int loginTimeout) throws SQLException {
+		this.loginTimeout = loginTimeout;
+	}
+
+	@Override
+	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public <T> T unwrap(Class<T> arg0) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private class NullWriter extends Writer {
+
+		@Override
+		public void close() throws IOException {
+		}
+
+		@Override
+		public void flush() throws IOException {
+		}
+
+		@Override
+		public void write(char[] arg0, int arg1, int arg2) throws IOException {
+		}
+		
+	};
+}
+
+

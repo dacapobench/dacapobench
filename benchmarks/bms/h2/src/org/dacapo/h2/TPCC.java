@@ -1,19 +1,21 @@
-package org.dacapo.derby;
+package org.dacapo.h2;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.security.AccessController;
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.derbyTesting.junit.JDBCDataSource;
 import org.apache.derbyTesting.system.oe.client.Display;
 import org.apache.derbyTesting.system.oe.client.Load;
 import org.apache.derbyTesting.system.oe.client.MultiThreadSubmitter;
@@ -21,26 +23,20 @@ import org.apache.derbyTesting.system.oe.client.Operations;
 import org.apache.derbyTesting.system.oe.client.Submitter;
 import org.apache.derbyTesting.system.oe.load.ThreadInsert;
 import org.apache.derbyTesting.system.oe.util.OERandom;
-import org.apache.derby.tools.ij;
-import org.apache.derby.jdbc.EmbeddedDriver;
 
 import org.dacapo.parser.Config;
+import org.h2.tools.RunScript;
 
 public class TPCC
 {
-
-  // Transaction timeouts, note thats DEADLOCK_TIMEOUT < TRANSACTION_TIMEOUT
-  // for deadlock detection to be meaningful. Times are in seconds.
-  public final static String  PROP_DEADLOCK_TIMEOUT         = "derby.locks.deadlockTimeout";
-  public final static String  PROP_TRANSACTION_TIMEOUT      = "derby.locks.waitTimeout";
-
-  public final static String  DEADLOCK_TIMEOUT              = "4";
-  public final static String  TRANSACTION_TIMEOUT           = "20";
   public final static int     RETRY_LIMIT                   = 5;
 
-  // database
-  private final static String URL_BASE                      = "jdbc:derby:";
-  private final static String DATABASE_NAME                 = "testderbydb";
+  // h2 driver settings
+  private final static String DRIVER_NAME                   = "org.h2.Driver";
+  private final static String URL_BASE                      = "jdbc:h2:";
+  private final static String DATABASE_NAME                 = "mem:testdb";
+  private final static String CREATE_SUFFIX                 = "";
+
   private final static String USERNAME                      = "user";
   private final static String PASSWORD                      = "password";
   private final static String USER                          = "derby";
@@ -56,10 +52,6 @@ public class TPCC
   // number of warehoueses (see TPC-C documentation)
   private final static short  DEF_NUM_OF_WAREHOUSES         = 1;
 
-  // Some defaults for running tests
-  private final static String SMALL                         = "small";
-  private static int          NUMBER_OF_ITERATIONS          = 2;
-
   // Basic configurable items
   // number of threads to perform loading of the database
   private int                 loaderThreads                 = 1;
@@ -71,10 +63,8 @@ public class TPCC
   private int                 transactionsPerTerminal       = DEF_TRANSACTIONS_PER_TERMINAL;
   private short               numberOfWarehouses            = DEF_NUM_OF_WAREHOUSES;
 
-  // Time for last iteration
-  private long                iterationTime;
-
   // OLTP runners
+  private Connection[]        connections;
   private Submitter[]         submitters;
   private Display[]           displays;
   private OERandom[]          rands;
@@ -85,51 +75,16 @@ public class TPCC
   private Properties          properties;
   private Connection          conn;
 
-  // transaction failure configuration  
-  private String              deadlockTimeout               = DEADLOCK_TIMEOUT;
-  private String              transactionTimeout            = TRANSACTION_TIMEOUT;
-  private int                 retryLimit                    = RETRY_LIMIT;
-  
   // Location of the database, this specifies the directory (folder) on a file
   // system where the database is stored. This application must have be able to 
   // create this directory (folder)
-  private File                database;
+  private String              database;
 
+  private String              createSuffix                  = CREATE_SUFFIX;
+  
   // A random seed for initializing the database and the OLTP terminals.
   private final static long   SEED                          = 897523978813691l;
   private final static int    SEED_STEP                     = 100000;
-
-  /**
-   * @param args
-   */
-  public static void main(String[] args) throws Exception
-  {
-    System.out.println("Started");
-
-    TPCC m = make(null, new File("."));
-
-    System.out.println("going to perform setup");
-
-    m.prepare(SMALL);
-
-    System.out.println("completed setup");
-
-    for (int i = 1; i <= NUMBER_OF_ITERATIONS; i++)
-    {
-      System.out.println("performing preIteration " + i);
-      m.preIteration(SMALL);
-      System.out.println("performing iteration " + i);
-      m.iteration(SMALL);
-      System.out.println("performing postIteration " + i);
-      m.postIteration(SMALL);
-    }
-
-    System.out.println("performing cleanup");
-
-    m.cleanup();
-
-    System.out.println("finished");
-  }
 
   public static TPCC make(Config config, File scratch) throws Exception
   {
@@ -141,14 +96,16 @@ public class TPCC
     this.config = config;
 
     // seem to need to set this early and in the system properties
-    System.setProperty(PROP_DEADLOCK_TIMEOUT, DEADLOCK_TIMEOUT);
-    System.setProperty(PROP_TRANSACTION_TIMEOUT, TRANSACTION_TIMEOUT);
-
-    driver = new EmbeddedDriver();
+    Class.forName(DRIVER_NAME);
+    driver = DriverManager.getDriver(URL_BASE + DATABASE_NAME);
+    
     properties = (Properties) System.getProperties().clone();
 
     // make the database relative to the scratch location
-    database = new File(scratch, DATABASE_NAME);
+    if (inMemoryDB())
+      database = DATABASE_NAME;
+    else
+      database = new File(scratch, DATABASE_NAME).getAbsolutePath();
 
     properties.setProperty(USERNAME, USER);
     properties.setProperty(PASSWORD, PASS);
@@ -168,13 +125,14 @@ public class TPCC
     displays = new Display[numberOfTerminals];
 
     // create a set of Submitter each with a Standard operations implementation
-    submitters = new Submitter[numberOfTerminals];
+    connections = new Connection[numberOfTerminals];
+    submitters  = new Submitter[numberOfTerminals];
+  }
 
-    // ensure any preserved database is removed
-    deleteDatabase();
-
-    // create database
-    createDatabase();
+  public void preIteration(String size) throws Exception
+  {
+    // we can't change size after the initial prepare(size)
+    assert this.size.equalsIgnoreCase(size);
 
     // create schema
     createSchema();
@@ -185,14 +143,7 @@ public class TPCC
     // create constraints (post load, may want to move this pre load)
     createConstraints();
 
-    // close the connection for initializing the database
-    closeConnection();
-  }
-
-  public void preIteration(String size) throws Exception
-  {
-    // we can't change size after the initial prepare(size)
-    assert this.size.equalsIgnoreCase(size);
+    // hang on to the connection until after the iteration is complete
 
     // make sure we have the same seeds each run
     for (int i = 0; i < rands.length; i++)
@@ -204,9 +155,11 @@ public class TPCC
     // org.apache.derbyTesting.system.oe.client.MultiThreadSubmitter.multiRun
     for (int i = 0; i < submitters.length; i++)
     {
-      Operations ops = new Operation(makeConnection(false), retryLimit);
+      connections[i] = makeConnection(false);
+      
+      Operations ops = new Operation(connections[i]);
 
-      submitters[i] = new Submitter(null, ops, rands[i], numberOfWarehouses);
+      submitters[i] = new TPCCSubmitter(null, ops, rands[i], numberOfWarehouses);
     }
     
     // clean up any hang-over from previous iterations
@@ -218,10 +171,11 @@ public class TPCC
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
-    iterationTime = MultiThreadSubmitter.multiRun(submitters, displays,
-        transactionsPerTerminal);
-
-    report();
+    MultiThreadSubmitter.multiRun(submitters, displays, transactionsPerTerminal);
+    
+    System.out.println();
+    
+    report(System.err);
   }
 
   public void postIteration(String size) throws Exception
@@ -231,8 +185,12 @@ public class TPCC
 
     for (int i = 0; i < submitters.length; i++)
     {
-      submitters[i] = null;
+      submitters[i]  = null;
+      connections[i].close();
+      connections[i] = null;
     }
+    
+    closeConnection();
   }
 
   public void cleanup() throws Exception
@@ -241,33 +199,23 @@ public class TPCC
   }
 
   // ----------------------------------------------------------------------------------
-  private void report()
+  private void report(PrintStream os)
   {
-    System.out.println("BEGIN: transaction count report");
+	os.println("BEGIN: transaction count report");
     for (int i = 0; i < submitters.length; i++)
     {
-      submitters[i].printReport(System.out);
+      submitters[i].printReport(os);
     }
-    System.out.println("END: transaction count report");
-  }
-
-  private void createDatabase() throws Exception
-  {
-    DataSource ds = JDBCDataSource.getDataSource(getDatabaseName());
-
-    JDBCDataSource.setBeanProperty(ds, "createDatabase", "create");
-
-    ds.getConnection().close();
+    os.println("END: transaction count report");
   }
 
   private void createSchema() throws Exception
   {
     // create schema
     runScript("schema.sql");
-    runScript("dataroutines.sql");
     runScript("delivery.sql");
   }
-
+  
   private void createConstraints() throws Exception
   {
     // create key constraints
@@ -284,8 +232,8 @@ public class TPCC
     // different implementations, the loading mechanism will need
     // to be configurable taking an option from the command line
     // arguments.
-    DataSource ds = JDBCDataSource.getDataSource(getDatabaseName());
-
+    DataSource ds = new TPCCDataSource(driver, database, properties);
+    
     Load loader = new ThreadInsert(ds);
     loader.setSeed(SEED);
     loader.setupLoad(getConnection(), scale);
@@ -364,20 +312,11 @@ public class TPCC
 
   public int runScript(InputStream script, String encoding) throws Exception
   {
-    // Sink output.
-    OutputStream sink = new OutputStream() {
-
-      public void write(byte[] b, int off, int len)
-      {
-      }
-
-      public void write(int b)
-      {
-      }
-    };
-
-    // Use the same encoding as the input for the output.
-    return ij.runScript(getConnection(), script, encoding, sink, encoding);
+    ResultSet results = RunScript.execute(getConnection(), new InputStreamReader(script));
+    
+	if (results!=null) results.close();
+	
+    return 0;
   }
 
   // helper function for getting database setup and creation scripts 
@@ -420,25 +359,28 @@ public class TPCC
       prop.setProperty("create", "true");
     }
 
-    // seem to need to set this early and in the system properties
-    prop.setProperty(PROP_DEADLOCK_TIMEOUT, deadlockTimeout);
-    prop.setProperty(PROP_TRANSACTION_TIMEOUT, transactionTimeout);
-
-    return driver.connect(URL_BASE + getDatabaseName(), prop);
+    return driver.connect(URL_BASE + getDatabaseName() + (create?createSuffix:""), prop);
   }
 
   // database name helper functions
   private String getDatabaseName()
   {
-    return database.getAbsolutePath();
+    return database;
   }
 
   // helper function for recursively deleting the database directory
   private boolean deleteDatabase()
   {
-    return deleteDirectory(database);
+	if (inMemoryDB())
+	  return true;
+	else
+      return deleteDirectory(new File(database));
   }
 
+  private boolean inMemoryDB() {
+	return DATABASE_NAME.startsWith("mem:") || DATABASE_NAME.startsWith("memory:"); //  || true;
+  }
+  
   private static boolean deleteDirectory(File path)
   {
     if (path.exists())
@@ -478,15 +420,9 @@ public class TPCC
       } else if ("-numberOfWarehouses".equalsIgnoreCase(args[i]))
       {
         this.numberOfWarehouses = Short.parseShort(args[++i]);
-      } else if ("-deadlockTimeout".equalsIgnoreCase(args[i]))
+      } else if ("-createSuffix".equalsIgnoreCase(args[i]))
       {
-        this.deadlockTimeout = args[++i];
-      } else if ("-transactionTimeout".equalsIgnoreCase(args[i]))
-      {
-        this.transactionTimeout = args[++i];
-      } else if ("-retryLimit".equalsIgnoreCase(args[i]))
-      {
-        this.retryLimit = Integer.parseInt(args[++i]);
+    	this.createSuffix = args[++i];
       }
     }
     // calculate the transactions per terminals now that we know the 
@@ -498,13 +434,11 @@ public class TPCC
         + (this.transactionsPerTerminal * this.numberOfTerminals));
     System.out.println("scale                = " + this.scale);
     System.out.println("number of warehouses = " + this.numberOfWarehouses);
-    System.out.println("deadlock timeout     = " + this.deadlockTimeout);
-    System.out.println("transaction timeout  = " + this.transactionTimeout);
-    System.out.println("retry limit          = " + this.retryLimit);
+    System.out.println("create suffix        = " + this.createSuffix);
   }
 
   /*************************************************************************************
-   * These methods should really live on the Config class
+   * These methods are taken from Benchmark, but should really live on the Config
    */
 
   // Determine the multi-threading level of this benchmark size.

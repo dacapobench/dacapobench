@@ -27,12 +27,6 @@ BUILDING:
     2. Copy default.properties to local.properties and edit local.properties
        for your environment.
 
-            o Specifically, ensure that you have set java14.lib to point to a 
-              Java 1.4 installation and java14.compile.classpath to correctly
-              capture the libraries for that installation (derby requires 1.4
-              libraries at build time). 
-
-
     3. Run ant:
                ant         [builds all benchmarks]
                ant dist    [builds all benchmarks, this is the default]
@@ -174,7 +168,7 @@ BUILDING:
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,derby,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+    <target name="compile" depends="avrora,batik,h2,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -244,8 +238,8 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="batik" depends="init,harness">
         <build.bm benchmark="batik"/> 
     </target>
-    <target name="derby" depends="init,harness">
-        <build.bm benchmark="derby"/> 
+    <target name="h2" depends="init,harness">
+        <build.bm benchmark="h2"/> 
     </target>    
     <target name="eclipse" depends="init,harness">
         <build.bm benchmark="eclipse"/> 

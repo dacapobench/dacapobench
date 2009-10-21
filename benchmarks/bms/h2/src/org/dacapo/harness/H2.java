@@ -6,9 +6,18 @@ import java.lang.reflect.Method;
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
-public class Derby extends Benchmark {
+/**
+ * Dacapo benchmark harness for TPC-C like workload running on H2.
+ * 
+ * Apache authored the original TPC-C like workload.
+ * H2 Group, H2 authored the database H2.
+ * 
+ * @author Apache
+ * @author H2
+ *
+ */
+public class H2 extends Benchmark {
 
-  // 
   private Object tpcc;
   private Method makeTPCC;
   private Method prepareTPCC;
@@ -16,7 +25,7 @@ public class Derby extends Benchmark {
   private Method iterationTPCC;
   private Method postIterationTPCC;
   
-  public Derby(Config config, File scratch) throws Exception {
+  public H2(Config config, File scratch) throws Exception {
     super(config, scratch);
   }
   
@@ -25,7 +34,7 @@ public class Derby extends Benchmark {
     useBenchmarkClassLoader();
     /* Don't call super.prepare - we don't have a data zip file to unpack */
     try {
-      Class<?> tpccClazz  = Class.forName("org.dacapo.derby.TPCC",true,loader);
+      Class<?> tpccClazz  = Class.forName("org.dacapo.h2.TPCC",true,loader);
       this.makeTPCC = tpccClazz.getMethod("make", Config.class, File.class);
       this.prepareTPCC = tpccClazz.getMethod("prepare", String.class);
       this.preIterationTPCC = tpccClazz.getMethod("preIteration", String.class);
@@ -45,8 +54,6 @@ public class Derby extends Benchmark {
    */
   @Override
   public void prepare(String size) throws Exception {
-    System.out.println("Populating the database");
-
     useBenchmarkClassLoader();
     try {
       this.prepareTPCC.invoke(this.tpcc, size);
@@ -86,6 +93,18 @@ public class Derby extends Benchmark {
     }
   }
   
+  @Override
+  public void cleanup() {
+	this.tpcc = null;
+	this.makeTPCC = null;
+	this.prepareTPCC = null;
+	this.preIterationTPCC = null;
+	this.iterationTPCC = null;
+	this.postIterationTPCC = null;
+	
+	super.cleanup();
+  }
+  
   /**
    * Stub which exists <b>only</b> to facilitate whole program
    * static analysis on a per-benchmark basis.  See also the "split-deps"
@@ -96,6 +115,6 @@ public class Derby extends Benchmark {
    */
   public static void main(String args[]) throws Exception {
     // create dummy harness and invoke with dummy arguments
-    (new Derby(null, null)).run(null, "");
+    (new H2(null, null)).run(null, "");
   }
 }
