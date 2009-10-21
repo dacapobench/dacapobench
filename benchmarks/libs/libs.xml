@@ -3,6 +3,7 @@
 
 	<!-- daytrader -->
 	<target name="daytrader">
+		<ant antfile="${lib-base}/h2/build.xml"/>
 		<ant antfile="${lib-base}/daytrader/build.xml"/>
 	</target>
 	
@@ -40,6 +41,13 @@
 	<property name="junit-jar" value="${lib-base}/junit/dist/jar/junit-3.8.1.jar"/>
 	<target name="junit">
 		<ant antfile="${lib-base}/junit/build.xml"/>
+	</target>
+	
+	<!-- h2-->
+	<property name="h2-version" value="1.2.121"/>
+	<property name="h2-jar" value="${lib-base}/h2/dist/jar/h2-${h2-version}.jar"/>
+	<target name="h2">
+		<ant antfile="${lib-base}/h2/build.xml"/>
 	</target>
 	
 	<!-- lucene -->

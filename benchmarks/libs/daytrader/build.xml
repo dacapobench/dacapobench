@@ -192,7 +192,6 @@
             <arg value="-Dfile=${jasper-el-jar-loc}"/>
         </exec>
 
-
         <!-- install tomcat -->
         <property name="tomcat-jar-loc" location="${lib-downloads}/${tomcat-jar}"/>
         <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
@@ -204,6 +203,9 @@
             <arg value="-Dpackaging=jar"/>
             <arg value="-Dfile=${tomcat-jar-loc}"/>
         </exec>
+
+        <mkdir dir="${ger-home}/repository/org/h2/h2/${h2-version}"/>
+        <copy file="${h2-jar}" todir="${ger-home}/repository/org/h2/h2/${h2-version}"/>
 
         <!-- build required plugins -->
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes"/>
@@ -221,7 +223,7 @@
             <arg value="clean"/>
             <arg value="install"/>
         </exec>
-        
+
         <!-- deploy daytrader to geronimo -->
         <antcall target="start-geronimo"/>
         
@@ -264,9 +266,6 @@
         </antcall>
 
         <!-- daytrader -->
-        <antcall target="deploy">
-            <param name="deploy-subject" value="${dt-build}/daytrader-derby-datasource/target/daytrader-derby-datasource-2.2-SNAPSHOT.car"/>
-        </antcall>
         <antcall target="deploy">
             <param name="deploy-subject" value="${dt-build}/daytrader-jetty/target/daytrader-jetty-2.2-SNAPSHOT.car"/>
         </antcall>
