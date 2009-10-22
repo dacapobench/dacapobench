@@ -6,29 +6,29 @@ benchmark h2
 size small args "-numberOfTerminals","${THREADS}",
 		"-totalTransactions", "3200",
 		"-scale","1",
-		"-numberOfWarehouses", "1",
+		"-numberOfWarehouses", "8",
 		"-retryLimit", "10",
 		"-createSuffix", ";MVCC=true"
   threads 1
   output stdout digest 0xc288238cd21fe6190545de5c9cd896b0e5b66a9d;
   
 size default args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions","12800",
+		"-totalTransactions","76800",
 		"-scale","1",
-		"-numberOfWarehouses", "1",
+		"-numberOfWarehouses", "8",
 		"-retryLimit", "10",
 		"-createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0x782c90958012af6327f433b70a85a1b1841a0606;
+  output stdout digest 0xc16b7f82719cfe7a04eb27ef1096ff5352ec9b10;
 
 size large args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions","51200",
+		"-totalTransactions","256000",
 		"-scale","1",
-		"-numberOfWarehouses", "1",
+		"-numberOfWarehouses", "8",
 		"-retryLimit", "10",
 		"-createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xe50827b7a55671b6455676390db41f2edc77c994;
+  output stdout digest 0xe632ca79b79897c123106fb9c9e96d3c6f188df4;
 
 
 description
