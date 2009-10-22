@@ -1,39 +1,6 @@
-diff -urNw dt-a/bin/dbscripts/derby/Table.ddl dt-c/bin/dbscripts/derby/Table.ddl
---- bin/dbscripts/derby/Table.ddl	2009-10-13 15:17:40.000000000 +1100
-+++ bin/dbscripts/derby/Table.ddl	2009-10-20 11:22:33.000000000 +1100
-@@ -13,7 +13,7 @@
- --    See the License for the specific language governing permissions and
- --    limitations under the License.
- 
--CONNECT 'jdbc:derby://localhost:1527/DaytraderDatabase;create=true';
-+-- CONNECT 'jdbc:derby://localhost:1527/DaytraderDatabase;create=true';
- 
- DROP TABLE HOLDINGEJB;
- DROP TABLE ACCOUNTPROFILEEJB;
-diff -urNw dt-a/daytrader-derby-datasource/src/main/plan/plan.xml dt-c/daytrader-derby-datasource/src/main/plan/plan.xml
---- daytrader-derby-datasource/src/main/plan/plan.xml	2009-10-13 15:17:48.000000000 +1100
-+++ daytrader-derby-datasource/src/main/plan/plan.xml	2009-10-20 11:24:16.000000000 +1100
-@@ -28,7 +28,7 @@
-                     <config-property-setting name="UserName"></config-property-setting>
-                     <config-property-setting name="Password"></config-property-setting>
-                     <config-property-setting name="DatabaseName">DaytraderDatabase</config-property-setting>
--                    <config-property-setting name="CreateDatabase">true</config-property-setting>
-+                    <!--<config-property-setting name="CreateDatabase">True</config-property-setting>-->
-                     <connectionmanager>
-                         <xa-transaction>
-                             <transaction-caching/>
-@@ -47,7 +47,7 @@
-                     <config-property-setting name="UserName"></config-property-setting>
-                     <config-property-setting name="Password"></config-property-setting>
-                     <config-property-setting name="DatabaseName">DaytraderDatabase</config-property-setting>
--                    <config-property-setting name="CreateDatabase">true</config-property-setting>
-+                    <!--<config-property-setting name="CreateDatabase">true</config-property-setting>-->
-                     <connectionmanager>
-                         <no-transaction/>
-                         <single-pool>
-diff -urNw dt-a/daytrader-h2-datasource/pom.xml dt-c/daytrader-h2-datasource/pom.xml
+diff -urNw dt-a/daytrader-h2-datasource/pom.xml dt-e/daytrader-h2-datasource/pom.xml
 --- daytrader-h2-datasource/pom.xml	1970-01-01 10:00:00.000000000 +1000
-+++ daytrader-h2-datasource/pom.xml	2009-10-20 16:20:24.000000000 +1100
++++ daytrader-h2-datasource/pom.xml	2009-10-22 16:39:16.000000000 +1100
 @@ -0,0 +1,118 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -69,7 +36,7 @@ diff -urNw dt-a/daytrader-h2-datasource/pom.xml dt-c/daytrader-h2-datasource/pom
 +    <dependencies>
 +        <dependency>
 +            <groupId>org.tranql</groupId>
-+            <artifactId>tranql-connector-ra</artifactId>
++            <artifactId>tranql-connector-h2-xa</artifactId>
 +            <type>rar</type>
 +            <version>1.4</version>
 +            <scope>provided</scope>
@@ -96,7 +63,7 @@ diff -urNw dt-a/daytrader-h2-datasource/pom.xml dt-c/daytrader-h2-datasource/pom
 +            <scope>provided</scope>
 +        </dependency>
 +        <dependency>
-+            <groupId>org.h2</groupId>
++            <groupId>com.h2database</groupId>
 +            <artifactId>h2</artifactId>
 +            <version>1.2.121</version>
 +            <type>jar</type>
@@ -126,7 +93,7 @@ diff -urNw dt-a/daytrader-h2-datasource/pom.xml dt-c/daytrader-h2-datasource/pom
 +                    </deploymentConfigs>
 +                    <module>
 +                        <groupId>org.tranql</groupId>
-+                        <artifactId>tranql-connector-ra</artifactId>
++                        <artifactId>tranql-connector-h2-xa</artifactId>
 +                        <type>rar</type>
 +                    </module>
 +                    <commonInstance>
@@ -153,9 +120,9 @@ diff -urNw dt-a/daytrader-h2-datasource/pom.xml dt-c/daytrader-h2-datasource/pom
 +        </plugins>
 +    </build>
 +</project>
-diff -urNw dt-a/daytrader-h2-datasource/src/main/plan/plan.xml dt-c/daytrader-h2-datasource/src/main/plan/plan.xml
+diff -urNw dt-a/daytrader-h2-datasource/src/main/plan/plan.xml dt-e/daytrader-h2-datasource/src/main/plan/plan.xml
 --- daytrader-h2-datasource/src/main/plan/plan.xml	1970-01-01 10:00:00.000000000 +1000
-+++ daytrader-h2-datasource/src/main/plan/plan.xml	2009-10-21 09:30:18.000000000 +1100
++++ daytrader-h2-datasource/src/main/plan/plan.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,66 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -185,11 +152,12 @@ diff -urNw dt-a/daytrader-h2-datasource/src/main/plan/plan.xml dt-c/daytrader-h2
 +                <connectiondefinition-instance>
 +                    <name>jdbc/TradeDataSource</name>
 +                    <config-property-setting name="Password">password</config-property-setting>
-+                    <config-property-setting name="Driver">org.h2.Driver</config-property-setting>
 +                    <config-property-setting name="UserName">user</config-property-setting>
 +                    <config-property-setting name="ConnectionURL">jdbc:h2:mem:trade;MVCC=true</config-property-setting>
 +                    <connectionmanager>
-+                        <local-transaction/>
++                        <xa-transaction>
++                            <transaction-caching/>
++                        </xa-transaction>
 +                        <single-pool>
 +                            <max-size>16</max-size>
 +                            <min-size>0</min-size>
@@ -207,7 +175,6 @@ diff -urNw dt-a/daytrader-h2-datasource/src/main/plan/plan.xml dt-c/daytrader-h2
 +                <connectiondefinition-instance>
 +                    <name>jdbc/NoTxTradeDataSource</name>
 +                    <config-property-setting name="Password">password</config-property-setting>
-+                    <config-property-setting name="Driver">org.h2.Driver</config-property-setting>
 +                    <config-property-setting name="UserName">user</config-property-setting>
 +                    <config-property-setting name="ConnectionURL">jdbc:h2:mem:trade;MVCC=true</config-property-setting>
 +                    <connectionmanager>
@@ -223,9 +190,9 @@ diff -urNw dt-a/daytrader-h2-datasource/src/main/plan/plan.xml dt-c/daytrader-h2
 +        </outbound-resourceadapter>
 +    </resourceadapter>
 +</connector>
-diff -urNw dt-a/daytrader-jetty/pom.xml dt-c/daytrader-jetty/pom.xml
+diff -urNw dt-a/daytrader-jetty/pom.xml dt-e/daytrader-jetty/pom.xml
 --- daytrader-jetty/pom.xml	2009-10-13 15:17:48.000000000 +1100
-+++ daytrader-jetty/pom.xml	2009-10-20 16:38:55.000000000 +1100
++++ daytrader-jetty/pom.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -40,7 +40,7 @@
          </dependency>
          <dependency>
@@ -333,9 +300,9 @@ diff -urNw dt-a/daytrader-jetty/pom.xml dt-c/daytrader-jetty/pom.xml
          </plugins>
      </build>
      <profiles>
-diff -urNw dt-a/daytrader-jetty/src/main/plan/plan.xml dt-c/daytrader-jetty/src/main/plan/plan.xml
+diff -urNw dt-a/daytrader-jetty/src/main/plan/plan.xml dt-e/daytrader-jetty/src/main/plan/plan.xml
 --- daytrader-jetty/src/main/plan/plan.xml	2009-10-13 15:17:48.000000000 +1100
-+++ daytrader-jetty/src/main/plan/plan.xml	2009-10-20 11:21:47.000000000 +1100
++++ daytrader-jetty/src/main/plan/plan.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -179,4 +179,26 @@
          </application-client>
      </module>
@@ -363,9 +330,9 @@ diff -urNw dt-a/daytrader-jetty/src/main/plan/plan.xml dt-c/daytrader-jetty/src/
 +    </module>
 +
  </application>
-diff -urNw dt-a/daytrader-tomcat/pom.xml dt-c/daytrader-tomcat/pom.xml
+diff -urNw dt-a/daytrader-tomcat/pom.xml dt-e/daytrader-tomcat/pom.xml
 --- daytrader-tomcat/pom.xml	2009-10-13 15:17:40.000000000 +1100
-+++ daytrader-tomcat/pom.xml	2009-10-20 16:39:05.000000000 +1100
++++ daytrader-tomcat/pom.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -39,7 +39,7 @@
          </dependency>
          <dependency>
@@ -375,9 +342,9 @@ diff -urNw dt-a/daytrader-tomcat/pom.xml dt-c/daytrader-tomcat/pom.xml
              <version>${version}</version>
              <type>car</type>
          </dependency>
-diff -urNw dt-a/modules/dacapo/LICENSE dt-c/modules/dacapo/LICENSE
+diff -urNw dt-a/modules/dacapo/LICENSE dt-e/modules/dacapo/LICENSE
 --- modules/dacapo/LICENSE	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/LICENSE	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/LICENSE	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,203 @@
 +
 +                                 Apache License
@@ -582,9 +549,9 @@ diff -urNw dt-a/modules/dacapo/LICENSE dt-c/modules/dacapo/LICENSE
 +   See the License for the specific language governing permissions and
 +   limitations under the License.
 +
-diff -urNw dt-a/modules/dacapo/NOTICE dt-c/modules/dacapo/NOTICE
+diff -urNw dt-a/modules/dacapo/NOTICE dt-e/modules/dacapo/NOTICE
 --- modules/dacapo/NOTICE	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/NOTICE	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/NOTICE	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,9 @@
 +Apache Geronimo 
 +Copyright 2003-2009 The Apache Software Foundation
@@ -595,9 +562,9 @@ diff -urNw dt-a/modules/dacapo/NOTICE dt-c/modules/dacapo/NOTICE
 +Portions of this software were developed at IBM and donated to the 
 +ASF under the Apache 2.0 license.  The former work was referred to 
 +as Trade 6.
-diff -urNw dt-a/modules/dacapo/pom.xml dt-c/modules/dacapo/pom.xml
+diff -urNw dt-a/modules/dacapo/pom.xml dt-e/modules/dacapo/pom.xml
 --- modules/dacapo/pom.xml	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/pom.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/pom.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,135 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -734,9 +701,9 @@ diff -urNw dt-a/modules/dacapo/pom.xml dt-c/modules/dacapo/pom.xml
 +        </plugins>
 +    </build>
 +</project>
-diff -urNw dt-a/modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrader/dacapoclient/DaCapoClient.java dt-c/modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrader/dacapoclient/DaCapoClient.java
+diff -urNw dt-a/modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrader/dacapoclient/DaCapoClient.java dt-e/modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrader/dacapoclient/DaCapoClient.java
 --- modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrader/dacapoclient/DaCapoClient.java	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrader/dacapoclient/DaCapoClient.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrader/dacapoclient/DaCapoClient.java	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,63 @@
 +/**
 + *  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -802,9 +769,9 @@ diff -urNw dt-a/modules/dacapo/src/main/java/org/apache/geronimo/samples/daytrad
 +	}
 +}
 \ No newline at end of file
-diff -urNw dt-a/modules/dacapo/src/main/resources/LICENSE dt-c/modules/dacapo/src/main/resources/LICENSE
+diff -urNw dt-a/modules/dacapo/src/main/resources/LICENSE dt-e/modules/dacapo/src/main/resources/LICENSE
 --- modules/dacapo/src/main/resources/LICENSE	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/LICENSE	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/LICENSE	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,203 @@
 +
 +                                 Apache License
@@ -1009,9 +976,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/LICENSE dt-c/modules/dacapo/sr
 +   See the License for the specific language governing permissions and
 +   limitations under the License.
 +
-diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/application-client.xml dt-c/modules/dacapo/src/main/resources/META-INF/application-client.xml
+diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/application-client.xml dt-e/modules/dacapo/src/main/resources/META-INF/application-client.xml
 --- modules/dacapo/src/main/resources/META-INF/application-client.xml	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/META-INF/application-client.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/META-INF/application-client.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,42 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -1055,9 +1022,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/application-client.xm
 +		</port-component-ref>
 +	</service-ref>
 +</application-client>
-diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/LICENSE dt-c/modules/dacapo/src/main/resources/META-INF/LICENSE
+diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/LICENSE dt-e/modules/dacapo/src/main/resources/META-INF/LICENSE
 --- modules/dacapo/src/main/resources/META-INF/LICENSE	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/META-INF/LICENSE	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/META-INF/LICENSE	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,203 @@
 +
 +                                 Apache License
@@ -1262,9 +1229,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/LICENSE dt-c/modules/
 +   See the License for the specific language governing permissions and
 +   limitations under the License.
 +
-diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/MANIFEST.MF dt-c/modules/dacapo/src/main/resources/META-INF/MANIFEST.MF
+diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/MANIFEST.MF dt-e/modules/dacapo/src/main/resources/META-INF/MANIFEST.MF
 --- modules/dacapo/src/main/resources/META-INF/MANIFEST.MF	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/META-INF/MANIFEST.MF	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/META-INF/MANIFEST.MF	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,6 @@
 +Manifest-Version: 1.0
 +Class-Path: ejb.jar
@@ -1272,9 +1239,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/MANIFEST.MF dt-c/modu
 +Ant-Version: Apache Ant 1.5.4 
 +Main-Class: org.apache.geronimo.samples.daytrader.dacapoclient.DaCapoClient
 +
-diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/NOTICE dt-c/modules/dacapo/src/main/resources/META-INF/NOTICE
+diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/NOTICE dt-e/modules/dacapo/src/main/resources/META-INF/NOTICE
 --- modules/dacapo/src/main/resources/META-INF/NOTICE	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/META-INF/NOTICE	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/META-INF/NOTICE	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,9 @@
 +Apache Geronimo 
 +Copyright 2003-2009 The Apache Software Foundation
@@ -1285,9 +1252,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/NOTICE dt-c/modules/d
 +Portions of this software were developed at IBM and donated to the 
 +ASF under the Apache 2.0 license.  The former work was referred to 
 +as Trade 6.
-diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/TradeServices_mapping.xml dt-c/modules/dacapo/src/main/resources/META-INF/TradeServices_mapping.xml
+diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/TradeServices_mapping.xml dt-e/modules/dacapo/src/main/resources/META-INF/TradeServices_mapping.xml
 --- modules/dacapo/src/main/resources/META-INF/TradeServices_mapping.xml	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/META-INF/TradeServices_mapping.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/META-INF/TradeServices_mapping.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,1036 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -2325,9 +2292,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/TradeServices_mapping
 +        </service-endpoint-method-mapping>
 +    </service-endpoint-interface-mapping>
 +</java-wsdl-mapping>
-diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.wsdl dt-c/modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.wsdl
+diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.wsdl dt-e/modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.wsdl
 --- modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.wsdl	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.wsdl	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.wsdl	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,1629 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -3958,9 +3925,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/META-INF/wsdl/TradeServices.ws
 +	</wsdl:service>
 +
 +</wsdl:definitions>
-diff -urNw dt-a/modules/dacapo/src/main/resources/NOTICE dt-c/modules/dacapo/src/main/resources/NOTICE
+diff -urNw dt-a/modules/dacapo/src/main/resources/NOTICE dt-e/modules/dacapo/src/main/resources/NOTICE
 --- modules/dacapo/src/main/resources/NOTICE	1970-01-01 10:00:00.000000000 +1000
-+++ modules/dacapo/src/main/resources/NOTICE	2009-10-20 11:21:47.000000000 +1100
++++ modules/dacapo/src/main/resources/NOTICE	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,9 @@
 +Apache Geronimo 
 +Copyright 2003-2009 The Apache Software Foundation
@@ -3971,9 +3938,9 @@ diff -urNw dt-a/modules/dacapo/src/main/resources/NOTICE dt-c/modules/dacapo/src
 +Portions of this software were developed at IBM and donated to the 
 +ASF under the Apache 2.0 license.  The former work was referred to 
 +as Trade 6.
-diff -urNw dt-a/modules/ear/pom.xml dt-c/modules/ear/pom.xml
+diff -urNw dt-a/modules/ear/pom.xml dt-e/modules/ear/pom.xml
 --- modules/ear/pom.xml	2009-10-13 15:17:44.000000000 +1100
-+++ modules/ear/pom.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/ear/pom.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -58,6 +58,11 @@
              <artifactId>daytrader-wsappclient</artifactId>
              <version>${version}</version>
@@ -3999,9 +3966,9 @@ diff -urNw dt-a/modules/ear/pom.xml dt-c/modules/ear/pom.xml
                      </modules>
                      <!--
                      HACK: Include legal muck from maven-remote-resources-plugin
-diff -urNw dt-a/modules/ejb/pom.xml dt-c/modules/ejb/pom.xml
+diff -urNw dt-a/modules/ejb/pom.xml dt-e/modules/ejb/pom.xml
 --- modules/ejb/pom.xml	2009-10-13 15:17:42.000000000 +1100
-+++ modules/ejb/pom.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/pom.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -173,6 +173,17 @@
                      </archive>
                  </configuration>
@@ -4020,9 +3987,9 @@ diff -urNw dt-a/modules/ejb/pom.xml dt-c/modules/ejb/pom.xml
          </plugins>
      </build>
  </project>
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoDBBuilder.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoDBBuilder.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoDBBuilder.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoDBBuilder.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoDBBuilder.java	1970-01-01 10:00:00.000000000 +1000
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoDBBuilder.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoDBBuilder.java	2009-10-22 17:38:45.000000000 +1100
 @@ -0,0 +1,332 @@
 +package org.apache.geronimo.samples.daytrader.dacapo;
 +
@@ -4356,9 +4323,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +    return resource;
 +  }
 +}
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoRunner.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoRunner.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoRunner.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoRunner.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoRunner.java	1970-01-01 10:00:00.000000000 +1000
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoRunner.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoRunner.java	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,67 @@
 +/**
 + *  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -4428,9 +4395,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +	}
 +}
 \ No newline at end of file
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java	1970-01-01 10:00:00.000000000 +1000
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java	2009-10-21 12:05:04.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java	2009-10-22 17:38:38.000000000 +1100
 @@ -0,0 +1,599 @@
 +package org.apache.geronimo.samples.daytrader.dacapo;
 +
@@ -4731,7 +4698,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[OP_L]++;
 +				return rtn;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[OP_L] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_L] - 1) {
 +					System.out.println("Error logging in "+uid+": " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -4748,7 +4715,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[OP_O]++;
 +				return 1;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[OP_O] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_O] - 1) {
 +					System.out.println("Error logging out "+uid+": " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -4784,7 +4751,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[OP_H]++;
 +				return rtn;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[OP_H] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_H] - 1) {
 +					System.err.println("Error getting home page for user "+uid+": " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -4820,7 +4787,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				return rtn;
 +			} catch (Exception e) {
 +				localOpCount[OP_NQ] = initNQCount;  // don't count aborted ops
-+				if (i == MAX_OP_ATTEMPTS[OP_P] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_P] - 1) {
 +					System.err.println("Error getting portfolio for "+uid+": " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -4843,7 +4810,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[nested ? OP_NQ : OP_Q]++;
 +				return rtn;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[nested ? OP_NQ : OP_Q] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[nested ? OP_NQ : OP_Q] - 1) {
 +					System.err.println("Error getting quote of "+symbol+": " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -4872,7 +4839,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[OP_B]++;
 +				return rtn;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[OP_B] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_B] - 1) {
 +					System.out.println("Error performing buy of "+request+" for "+uid+": " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -4903,7 +4870,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +					localOpCount[OP_S]++;
 +					return rtn;
 +				} catch (Exception e) {
-+					if (i == MAX_OP_ATTEMPTS[OP_S] - 1) {
++					if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_S] - 1) {
 +						System.out.println("Error performing sell of "+request+" for "+uid+": " + e.toString());
 +						e.printStackTrace();
 +					}
@@ -4930,7 +4897,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +					}
 +				}
 +			} catch (Exception e) {
-+				if (i == MAX_TRANSACTION_RETRIES - 1) {
++				if (VERBOSE || i == MAX_TRANSACTION_RETRIES - 1) {
 +					System.out.println("Error getting holdings: " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -4962,7 +4929,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[OP_U]++;
 +				return rtn;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[OP_U]) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_U]) {
 +  				System.out.println("Error updating profile: " + e.toString());
 +  				e.printStackTrace();
 +				}
@@ -4995,7 +4962,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[OP_O]++;
 +				break;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[OP_O] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_O] - 1) {
 +					System.out.println("Error logging out: " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -5008,7 +4975,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +				localOpCount[OP_R]++;
 +				break;
 +			} catch (Exception e) {
-+				if (i == MAX_OP_ATTEMPTS[OP_R] - 1) {
++				if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_R] - 1) {
 +					System.out.println("Error registering new user: " + e.toString());
 +					e.printStackTrace();
 +				}
@@ -5031,9 +4998,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  }
 +	
 +}
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java	2009-10-21 12:26:01.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java	2009-10-22 15:20:20.000000000 +1100
 @@ -1975,6 +1975,27 @@
  
  	}
@@ -5093,9 +5060,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
  
  	private static final String getHoldingSQL = "select * from holdingejb h where h.holdingid = ?";
  
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java	2009-10-13 15:17:40.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java	2009-10-22 15:20:20.000000000 +1100
 @@ -128,4 +128,16 @@
  	public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
  		return (new TradeDirect(false)).resetTrade(deleteAll);
@@ -5113,9 +5080,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  	return (new TradeDirect(true)).resetDaCapo(size, threads);
 +  }
  }
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java	2009-10-13 15:17:40.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java	2009-10-22 15:20:20.000000000 +1100
 @@ -615,6 +615,19 @@
          return new org.apache.geronimo.samples.daytrader.direct.TradeDirect(false).resetTrade(deleteAll);
      }
@@ -5136,9 +5103,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
      private void publishQuotePriceChange(QuoteDataBean quote, BigDecimal oldPrice, BigDecimal changeFactor, double sharesTraded) {
          if (!TradeConfig.getPublishQuotePriceChange())
              return;
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java	2009-10-22 15:20:20.000000000 +1100
 @@ -266,6 +266,27 @@
  		return convertQuoteDataBean(getTrade().updateQuotePriceVolume(symbol, newPrice, sharesTraded));		
  	}
@@ -5167,9 +5134,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
  	private org.apache.geronimo.samples.daytrader.OrderDataBean convertOrderDataBean(org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean bean) {
  		return new org.apache.geronimo.samples.daytrader.OrderDataBean(
  			bean.getOrderID(),
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java	2009-10-22 15:20:20.000000000 +1100
 @@ -180,9 +180,10 @@
          }
  	}
@@ -5211,9 +5178,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +        }
 +	}
  }
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java	2009-10-22 15:20:20.000000000 +1100
 @@ -531,4 +531,41 @@
          runStatsData = trade.resetTrade(deleteAll);
  		return runStatsData;
@@ -5256,9 +5223,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +    	return trade.resetDaCapo(size, threads);
 +    }
  }
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java	2009-10-22 15:20:20.000000000 +1100
 @@ -272,5 +272,11 @@
   	 *  return statistics for this benchmark run
  	 */
@@ -5271,9 +5238,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +    public boolean resetDaCapo(String size, int threads) throws Exception, RemoteException;
  }   
  
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java dt-c/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java
+diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-22 15:20:20.000000000 +1100
 @@ -36,7 +36,10 @@
      public org.apache.geronimo.samples.daytrader.AccountProfileDataBean getAccountProfileData(java.lang.String userID) throws java.rmi.RemoteException;
      public org.apache.geronimo.samples.daytrader.AccountProfileDataBean updateAccountProfile(org.apache.geronimo.samples.daytrader.AccountProfileDataBean profileData) throws java.rmi.RemoteException;
@@ -5286,9 +5253,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +    public boolean initializeDaCapo(java.lang.String size) throws java.rmi.RemoteException;
 +    public boolean resetDaCapo(java.lang.String size, int threads) throws java.rmi.RemoteException;
  }
-diff -urNw dt-a/modules/ejb/src/main/resources/DaCapoTable.ddl dt-c/modules/ejb/src/main/resources/DaCapoTable.ddl
+diff -urNw dt-a/modules/ejb/src/main/resources/DaCapoTable.ddl dt-e/modules/ejb/src/main/resources/DaCapoTable.ddl
 --- modules/ejb/src/main/resources/DaCapoTable.ddl	1970-01-01 10:00:00.000000000 +1000
-+++ modules/ejb/src/main/resources/DaCapoTable.ddl	2009-10-20 18:09:18.000000000 +1100
++++ modules/ejb/src/main/resources/DaCapoTable.ddl	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,106 @@
 +##    Licensed to the Apache Software Foundation (ASF) under one or more
 +##    contributor license agreements.  See the NOTICE file distributed with
@@ -5396,9 +5363,9 @@ diff -urNw dt-a/modules/ejb/src/main/resources/DaCapoTable.ddl dt-c/modules/ejb/
 +CREATE INDEX ORDER_HOLDINGID ON ORDEREJB(HOLDING_HOLDINGID);
 +CREATE INDEX CLOSED_ORDERS ON ORDEREJB(ACCOUNT_ACCOUNTID,ORDERSTATUS);
 +
-diff -urNw dt-a/modules/ejb/src/main/resources/META-INF/persistence.xml dt-c/modules/ejb/src/main/resources/META-INF/persistence.xml
+diff -urNw dt-a/modules/ejb/src/main/resources/META-INF/persistence.xml dt-e/modules/ejb/src/main/resources/META-INF/persistence.xml
 --- modules/ejb/src/main/resources/META-INF/persistence.xml	2009-10-13 15:17:42.000000000 +1100
-+++ modules/ejb/src/main/resources/META-INF/persistence.xml	2009-10-20 11:22:00.000000000 +1100
++++ modules/ejb/src/main/resources/META-INF/persistence.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -30,7 +30,7 @@
          <exclude-unlisted-classes>true</exclude-unlisted-classes>
          
@@ -5408,9 +5375,9 @@ diff -urNw dt-a/modules/ejb/src/main/resources/META-INF/persistence.xml dt-c/mod
              <property name="openjpa.BrokerImpl" value="non-finalizing" />
              <!-- To enable OpenJPA to generate foreign key constraints, comment out this line -->
              <!-- <property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict"/> -->
-diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java dt-c/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java
+diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java dt-e/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java
 --- modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-22 15:20:20.000000000 +1100
 @@ -45,7 +45,10 @@
      public org.apache.geronimo.samples.daytrader.AccountProfileDataBean getAccountProfileData(java.lang.String userID) throws java.rmi.RemoteException;
      public org.apache.geronimo.samples.daytrader.AccountProfileDataBean updateAccountProfile(org.apache.geronimo.samples.daytrader.AccountProfileDataBean profileData) throws java.rmi.RemoteException;
@@ -5423,9 +5390,9 @@ diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/day
 +    public boolean initializeDaCapo(java.lang.String size) throws java.rmi.RemoteException;
 +    public boolean resetDaCapo(java.lang.String size, int threads) throws java.rmi.RemoteException;
  }
-diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java dt-c/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java
+diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java dt-e/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java
 --- modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java	2009-10-22 15:20:20.000000000 +1100
 @@ -166,10 +166,10 @@
    return __tradeWSServices.login(userID, password);
  }
@@ -5461,9 +5428,9 @@ diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/day
 +  return __tradeWSServices.resetDaCapo(size, threads);
 +}
  }
-diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml dt-c/modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml
+diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml dt-e/modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml
 --- modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -737,8 +737,9 @@
                  </wsdl-message-mapping>
              </method-param-parts-mapping>
@@ -5565,9 +5532,9 @@ diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_m
 +        </service-endpoint-method-mapping>
      </service-endpoint-interface-mapping>
  </java-wsdl-mapping>
-diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl dt-c/modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl
+diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl dt-e/modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl
 --- modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-20 11:21:47.000000000 +1100
++++ modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-22 15:20:20.000000000 +1100
 @@ -378,7 +378,10 @@
     </element>
     <element name="logoutResponse">
@@ -5773,9 +5740,9 @@ diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.ws
     </wsdl:binding>
  
     <wsdl:service name="Trade">
-diff -urNw dt-a/modules/web/pom.xml dt-c/modules/web/pom.xml
+diff -urNw dt-a/modules/web/pom.xml dt-e/modules/web/pom.xml
 --- modules/web/pom.xml	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/pom.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/web/pom.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -122,7 +122,7 @@
                      </filters>
                      <archive>
@@ -5785,9 +5752,9 @@ diff -urNw dt-a/modules/web/pom.xml dt-c/modules/web/pom.xml
                          </manifestEntries>
                      </archive>
                      <resources>
-diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml dt-c/modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml
+diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml dt-e/modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml
 --- modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -737,8 +737,9 @@
                  </wsdl-message-mapping>
              </method-param-parts-mapping>
@@ -5890,9 +5857,9 @@ diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.
              <java-method-name>createQuote</java-method-name>
              <wsdl-operation>createQuote</wsdl-operation>
              <wrapped-element/>
-diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml dt-c/modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml
+diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml dt-e/modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml
 --- modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -737,8 +737,9 @@
                  </wsdl-message-mapping>
              </method-param-parts-mapping>
@@ -5995,9 +5962,9 @@ diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml dt
              <java-method-name>createQuote</java-method-name>
              <wsdl-operation>createQuote</wsdl-operation>
              <wrapped-element/>
-diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl dt-c/modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl
+diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl dt-e/modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl
 --- modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-20 11:21:47.000000000 +1100
++++ modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-22 15:20:20.000000000 +1100
 @@ -390,7 +390,10 @@
     </element>
     <element name="logoutResponse">
@@ -6205,9 +6172,9 @@ diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl dt-c
     </wsdl:binding>
  
     <wsdl:service name="Trade">
-diff -urNw dt-a/modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java dt-c/modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java
+diff -urNw dt-a/modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java dt-e/modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java
 --- modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java	2009-10-13 15:17:45.000000000 +1100
-+++ modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java	2009-10-20 11:21:47.000000000 +1100
++++ modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java	2009-10-22 15:20:20.000000000 +1100
 @@ -36,7 +36,10 @@
      public org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean getAccountProfileData(java.lang.String userID) throws java.rmi.RemoteException;
      public org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean updateAccountProfile(org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean profileData) throws java.rmi.RemoteException;
@@ -6220,9 +6187,9 @@ diff -urNw dt-a/modules/wsappclient/src/main/java/org/apache/geronimo/samples/da
 +    public boolean initializeDaCapo(java.lang.String size) throws java.rmi.RemoteException;
 +    public boolean resetDaCapo(java.lang.String size, int threads) throws java.rmi.RemoteException;
  }
-diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml dt-c/modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml
+diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml dt-e/modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml
 --- modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml	2009-10-13 15:17:45.000000000 +1100
-+++ modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml	2009-10-20 11:21:47.000000000 +1100
++++ modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -737,8 +737,9 @@
                  </wsdl-message-mapping>
              </method-param-parts-mapping>
@@ -6324,9 +6291,9 @@ diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/TradeServices_ma
 +        </service-endpoint-method-mapping>
      </service-endpoint-interface-mapping>
  </java-wsdl-mapping>
-diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl dt-c/modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl
+diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl dt-e/modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl
 --- modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl	2009-10-13 15:17:45.000000000 +1100
-+++ modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl	2009-10-20 11:21:47.000000000 +1100
++++ modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl	2009-10-22 15:20:20.000000000 +1100
 @@ -472,7 +472,10 @@
  			</element>
  			<element name="logoutResponse">
@@ -6548,9 +6515,9 @@ diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServic
  	</wsdl:binding>
  
  	<wsdl:service name="Trade">
-diff -urNw dt-a/plans/dacapo/geronimo-plugin.xml dt-c/plans/dacapo/geronimo-plugin.xml
+diff -urNw dt-a/plans/dacapo/geronimo-plugin.xml dt-e/plans/dacapo/geronimo-plugin.xml
 --- plans/dacapo/geronimo-plugin.xml	1970-01-01 10:00:00.000000000 +1000
-+++ plans/dacapo/geronimo-plugin.xml	2009-10-20 11:21:47.000000000 +1100
++++ plans/dacapo/geronimo-plugin.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -0,0 +1,53 @@
 +<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 +<!--
@@ -6605,9 +6572,9 @@ diff -urNw dt-a/plans/dacapo/geronimo-plugin.xml dt-c/plans/dacapo/geronimo-plug
 +        <config-xml-content load="false"/>
 +    </plugin-artifact>
 +</geronimo-plugin>
-diff -urNw dt-a/plans/dayTrader-derby-plan.xml dt-c/plans/dayTrader-derby-plan.xml
+diff -urNw dt-a/plans/dayTrader-derby-plan.xml dt-e/plans/dayTrader-derby-plan.xml
 --- plans/dayTrader-derby-plan.xml	2009-10-13 15:17:48.000000000 +1100
-+++ plans/dayTrader-derby-plan.xml	2009-10-20 11:21:47.000000000 +1100
++++ plans/dayTrader-derby-plan.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -212,6 +212,28 @@
          </application-client>
      </module>
@@ -6637,54 +6604,9 @@ diff -urNw dt-a/plans/dayTrader-derby-plan.xml dt-c/plans/dayTrader-derby-plan.x
      <ext-module>
          <connector>TradeDataSource</connector>
          <external-path xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.2">
-diff -urNw dt-a/plans/dayTrader-h2-plan.xml dt-c/plans/dayTrader-h2-plan.xml
---- plans/dayTrader-h2-plan.xml	1970-01-01 10:00:00.000000000 +1000
-+++ plans/dayTrader-h2-plan.xml	2009-10-20 14:41:34.000000000 +1100
-@@ -0,0 +1,41 @@
-+<?xml version="1.0" encoding="UTF-8"?>
-+<connector xmlns="http://geronimo.apache.org/xml/ns/j2ee/connector-1.2">
-+    <dep:environment xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.2">
-+        <dep:moduleId>
-+            <dep:groupId>org.apache.geronimo.daytrader</dep:groupId>
-+            <dep:artifactId>daytrader-h2-datasource</dep:artifactId>
-+            <dep:version>2.2-SNAPSHOT</dep:version>
-+            <dep:type>rar</dep:type>
-+        </dep:moduleId>
-+        <dep:dependencies>
-+            <dep:dependency>
-+                <dep:groupId>org.h2</dep:groupId>
-+                <dep:artifactId>h2</dep:artifactId>
-+                <dep:version>1.2.121</dep:version>
-+                <dep:type>jar</dep:type>
-+            </dep:dependency>
-+        </dep:dependencies>
-+    </dep:environment>
-+    <resourceadapter>
-+        <outbound-resourceadapter>
-+            <connection-definition>
-+                <connectionfactory-interface>javax.sql.DataSource</connectionfactory-interface>
-+                <connectiondefinition-instance>
-+                    <name>jdbc/TradeSource</name>
-+                    <config-property-setting name="Password">password</config-property-setting>
-+                    <config-property-setting name="Driver">org.h2.Driver</config-property-setting>
-+                    <config-property-setting name="UserName">user</config-property-setting>
-+                    <config-property-setting name="ConnectionURL">jdbc:h2:mem:trade</config-property-setting>
-+                    <connectionmanager>
-+                        <local-transaction/>
-+                        <single-pool>
-+                            <max-size>16</max-size>
-+                            <min-size>0</min-size>
-+                            <match-one/>
-+                        </single-pool>
-+                    </connectionmanager>
-+                </connectiondefinition-instance>
-+            </connection-definition>
-+        </outbound-resourceadapter>
-+    </resourceadapter>
-+</connector>
-diff -urNw dt-a/plans/streamerclient/geronimo-plugin.xml dt-c/plans/streamerclient/geronimo-plugin.xml
+diff -urNw dt-a/plans/streamerclient/geronimo-plugin.xml dt-e/plans/streamerclient/geronimo-plugin.xml
 --- plans/streamerclient/geronimo-plugin.xml	2009-10-13 15:17:48.000000000 +1100
-+++ plans/streamerclient/geronimo-plugin.xml	2009-10-20 11:21:47.000000000 +1100
++++ plans/streamerclient/geronimo-plugin.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -32,7 +32,7 @@
              <version>2.2-SNAPSHOT</version>
              <type>car</type>
@@ -6694,9 +6616,9 @@ diff -urNw dt-a/plans/streamerclient/geronimo-plugin.xml dt-c/plans/streamerclie
          <jvm-version>1.5</jvm-version>
          <jvm-version>1.6</jvm-version>
          <dependency start="false">
-diff -urNw dt-a/plans/wsclient/geronimo-plugin.xml dt-c/plans/wsclient/geronimo-plugin.xml
+diff -urNw dt-a/plans/wsclient/geronimo-plugin.xml dt-e/plans/wsclient/geronimo-plugin.xml
 --- plans/wsclient/geronimo-plugin.xml	2009-10-13 15:17:48.000000000 +1100
-+++ plans/wsclient/geronimo-plugin.xml	2009-10-20 11:21:47.000000000 +1100
++++ plans/wsclient/geronimo-plugin.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -32,7 +32,7 @@
              <version>2.2-SNAPSHOT</version>
              <type>car</type>
@@ -6706,9 +6628,9 @@ diff -urNw dt-a/plans/wsclient/geronimo-plugin.xml dt-c/plans/wsclient/geronimo-
          <jvm-version>1.5</jvm-version>
          <jvm-version>1.6</jvm-version>
          <dependency start="true">
-diff -urNw dt-a/pom.xml dt-c/pom.xml
+diff -urNw dt-a/pom.xml dt-e/pom.xml
 --- pom.xml	2009-10-13 15:17:48.000000000 +1100
-+++ pom.xml	2009-10-20 16:35:39.000000000 +1100
++++ pom.xml	2009-10-22 15:20:20.000000000 +1100
 @@ -34,7 +34,7 @@
  
      <properties>
@@ -6718,7 +6640,7 @@ diff -urNw dt-a/pom.xml dt-c/pom.xml
  
          <!-- set siteId to artifactId for any "top level" project rooting a website -->
          <siteId>daytrader</siteId>
-@@ -146,12 +146,14 @@
+@@ -146,18 +146,21 @@
          <module>modules/web</module>
          <module>modules/streamer</module>
          <module>modules/wsappclient</module>
@@ -6730,7 +6652,686 @@ diff -urNw dt-a/pom.xml dt-c/pom.xml
          <!-- c-m-p built plugins -->
 -        <module>daytrader-derby-datasource</module>
 +        <!--<module>daytrader-derby-datasource</module>-->
++        <module>tranql-connector-h2</module>
 +        <module>daytrader-h2-datasource</module>
          <!-- see profiles -->
          <!--<module>daytrader-db2-datasource</module>-->
          <!--<module>daytrader-oracle-datasource</module>-->
+         <module>daytrader-jms</module>
+         <module>daytrader-jetty</module>
+-        <module>daytrader-tomcat</module>
++        <!--<module>daytrader-tomcat</module>-->
+     </modules>
+ 
+     <dependencyManagement>
+diff -urNw dt-a/tranql-connector-h2/pom.xml dt-e/tranql-connector-h2/pom.xml
+--- tranql-connector-h2/pom.xml	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/pom.xml	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,80 @@
++<!--
++  ~ Copyright (c) 2004 - 2007, Tranql project contributors
++  ~
++  ~ Licensed under the Apache License, Version 2.0 (the "License");
++  ~ you may not use this file except in compliance with the License.
++  ~ You may obtain a copy of the License at
++  ~
++  ~     http://www.apache.org/licenses/LICENSE-2.0
++  ~
++  ~ Unless required by applicable law or agreed to in writing, software
++  ~ distributed under the License is distributed on an "AS IS" BASIS,
++  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  ~ See the License for the specific language governing permissions and
++  ~ limitations under the License.
++  ~
++  -->
++
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
++    
++    <modelVersion>4.0.0</modelVersion>
++
++    <parent>
++        <groupId>org.tranql</groupId>
++        <artifactId>tranql-parent</artifactId>
++        <version>1.2</version>
++    </parent>
++    
++    <artifactId>tranql-connector-h2</artifactId>
++    <name>TranQL Vendors :: H2</name>
++    <packaging>pom</packaging>
++
++    <version>1.4</version>
++    
++    <properties>
++        <h2.version>1.2.121</h2.version>
++        <connectorSpec.version>1.1</connectorSpec.version>
++        <jtaSpec.version>1.0</jtaSpec.version>
++        <tranqlConnector.version>1.4</tranqlConnector.version>
++    </properties>
++    
++    <dependencyManagement>
++        <dependencies>
++            <dependency>
++                <groupId>com.h2database</groupId>
++                <artifactId>h2</artifactId>
++                <version>${h2.version}</version>
++            </dependency>
++            
++            <dependency>
++                <groupId>org.apache.geronimo.specs</groupId>
++                <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
++                <version>${connectorSpec.version}</version>
++                <scope>provided</scope>
++            </dependency>
++
++            <dependency>
++                <groupId>org.apache.geronimo.specs</groupId>
++                <artifactId>geronimo-jta_1.1_spec</artifactId>
++                <version>${jtaSpec.version}</version>
++                <scope>provided</scope>
++            </dependency>
++
++        </dependencies>
++    </dependencyManagement>
++    
++    <dependencies>
++        <dependency>
++            <groupId>${pom.groupId}</groupId>
++            <artifactId>tranql-connector</artifactId>
++            <version>${tranqlConnector.version}</version>
++        </dependency>
++    </dependencies>
++    
++    <modules>
++        <module>tranql-connector-h2-common</module>
++        <module>tranql-connector-h2-local</module>
++        <module>tranql-connector-h2-xa</module>
++    </modules>
++    
++</project>
+diff -urNw dt-a/tranql-connector-h2/tranql-connector-h2-common/pom.xml dt-e/tranql-connector-h2/tranql-connector-h2-common/pom.xml
+--- tranql-connector-h2/tranql-connector-h2-common/pom.xml	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/tranql-connector-h2-common/pom.xml	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,76 @@
++<!--
++  ~ Copyright (c) 2004 - 2007, Tranql project contributors
++  ~
++  ~ Licensed under the Apache License, Version 2.0 (the "License");
++  ~ you may not use this file except in compliance with the License.
++  ~ You may obtain a copy of the License at
++  ~
++  ~     http://www.apache.org/licenses/LICENSE-2.0
++  ~
++  ~ Unless required by applicable law or agreed to in writing, software
++  ~ distributed under the License is distributed on an "AS IS" BASIS,
++  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  ~ See the License for the specific language governing permissions and
++  ~ limitations under the License.
++  ~
++  -->
++
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
++    
++    <modelVersion>4.0.0</modelVersion>
++    
++    <parent>
++        <groupId>org.tranql</groupId>
++        <artifactId>tranql-connector-h2</artifactId>
++        <version>1.4</version>
++        <relativePath>../pom.xml</relativePath>
++    </parent>
++    
++    <artifactId>tranql-connector-h2-common</artifactId>
++    <name>TranQL Vendors, H2 :: Common</name>
++    <packaging>jar</packaging>
++    
++    <dependencies>
++        <dependency>
++            <groupId>com.h2database</groupId>
++            <artifactId>h2</artifactId>
++            <scope>provided</scope>
++        </dependency>
++        
++        <dependency>
++            <groupId>org.apache.geronimo.specs</groupId>
++            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
++            <scope>provided</scope>
++        </dependency>
++
++        <dependency>
++            <groupId>org.apache.geronimo.specs</groupId>
++            <artifactId>geronimo-jta_1.1_spec</artifactId>
++            <scope>provided</scope>
++        </dependency>
++    
++        <dependency>
++            <groupId>junit</groupId>
++            <artifactId>junit</artifactId>
++            <version>3.8.1</version>
++            <scope>test</scope>
++        </dependency>
++    </dependencies>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-surefire-plugin</artifactId>
++                <version>2.1.3</version>
++                <configuration>
++                    <excludes>
++                        <!-- This looks like a test, but has not test methods -->
++                        <exclude>**/CMRTestCase.java</exclude>
++                    </excludes>
++                </configuration>
++            </plugin>
++        </plugins>
++    </build>
++
++</project>
+diff -urNw dt-a/tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/LocalMCF.java dt-e/tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/LocalMCF.java
+--- tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/LocalMCF.java	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/LocalMCF.java	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,97 @@
++/*
++ * Copyright (c) 2004 - 2007, Tranql project contributors
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ *
++ */
++
++package org.tranql.connector.h2;
++
++import org.h2.jdbcx.JdbcDataSource;
++import org.tranql.connector.NoExceptionsAreFatalSorter;
++import org.tranql.connector.jdbc.AbstractLocalDataSourceMCF;
++
++/**
++ * ManagedConnectionFactory that wraps a H2 DataSource for use in-VM.
++ *
++ * @version $Revision: 508 $ $Date: 2007-09-21 12:02:45 +1000 (Fri, 21 Sep 2007) $
++ */
++public class LocalMCF extends AbstractLocalDataSourceMCF {
++    private final JdbcDataSource ds;
++
++    /**
++     * Default constructor for a H2 Local DataSource.
++     */
++    public LocalMCF() {
++        super(new JdbcDataSource(), new NoExceptionsAreFatalSorter(), false);
++        ds = (JdbcDataSource) super.dataSource;
++    }
++
++    /**
++     * Return the user name used to establish the connection.
++     *
++     * @return the user name used to establish the connection
++     */
++    public String getUserName() {
++        return ds.getUser();
++    }
++
++    /**
++     * Set the user name used establish the connection.
++     * This value is used if no connection information is supplied by the application
++     * when attempting to create a connection.
++     *
++     * @param user the user name used to establish the connection; may be null
++     */
++    public void setUserName(String user) {
++        ds.setUser(user);
++    }
++
++    /**
++     * Return the password credential used to establish the connection.
++     *
++     * @return the password credential used to establish the connection
++     */
++    public String getPassword() {
++        return ds.getPassword();
++    }
++
++    /**
++     * Set the user password credential establish the connection.
++     * This value is used if no connection information is supplied by the application
++     * when attempting to create a connection.
++     *
++     * @param password the password credential used to establish the connection; may be null
++     */
++    public void setPassword(String password) {
++        ds.setPassword(password);
++    }
++
++    /**
++     * Return the current url for the data source.
++     *
++     * @return the url. 
++     */
++    public String getConnectionURL() {
++        return ds.getURL();
++    }
++
++    /**
++     * Set the url for the data source.
++     *
++     * @param url The url 
++     */
++    public void setConnectionURL(String url) {
++        ds.setURL(url);
++    }
++}
+diff -urNw dt-a/tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/XAMCF.java dt-e/tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/XAMCF.java
+--- tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/XAMCF.java	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/tranql-connector-h2-common/src/main/java/org/tranql/connector/h2/XAMCF.java	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,118 @@
++/*
++ * Copyright (c) 2004 - 2007, Tranql project contributors
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ *
++ */
++
++package org.tranql.connector.h2;
++
++import java.sql.SQLException;
++import javax.resource.ResourceException;
++import javax.resource.spi.ConnectionRequestInfo;
++import javax.resource.spi.ManagedConnection;
++import javax.resource.spi.ResourceAdapterInternalException;
++import javax.security.auth.Subject;
++import javax.sql.XAConnection;
++
++import org.h2.jdbcx.JdbcDataSource;
++import org.tranql.connector.CredentialExtractor;
++import org.tranql.connector.NoExceptionsAreFatalSorter;
++import org.tranql.connector.jdbc.AbstractXADataSourceMCF;
++import org.tranql.connector.jdbc.ManagedXAConnection;
++
++/**
++ * ManagedConnectionFactory that wraps a H2 XADataSource for use in-VM.
++ *
++ * @version $Revision: 508 $ $Date: 2007-09-21 12:02:45 +1000 (Fri, 21 Sep 2007) $
++ */
++public class XAMCF extends AbstractXADataSourceMCF {
++    private final JdbcDataSource ds;
++
++    /**
++     * Default constructor for a H2 XA DataSource.
++     */
++    public XAMCF() {
++        super(new JdbcDataSource(), new NoExceptionsAreFatalSorter());
++        ds = (JdbcDataSource) xaDataSource;
++    }
++
++    public ManagedConnection createManagedConnection(Subject subject, ConnectionRequestInfo connectionRequestInfo) throws ResourceException {
++        CredentialExtractor credentialExtractor = new CredentialExtractor(subject, connectionRequestInfo, this);
++
++        XAConnection sqlConnection = getPhysicalConnection(subject, credentialExtractor);
++        try {
++            return new ManagedXAConnection(this, sqlConnection, credentialExtractor, exceptionSorter);
++        } catch (SQLException e) {
++            throw new ResourceAdapterInternalException("Could not set up ManagedXAConnection", e);
++        }
++    }
++
++    /**
++     * Return the user name used to establish the connection.
++     *
++     * @return the user name used to establish the connection
++     */
++    public String getUserName() {
++        return ds.getUser();
++    }
++
++    /**
++     * Set the user name used establish the connection.
++     * This value is used if no connection information is supplied by the application
++     * when attempting to create a connection.
++     *
++     * @param user the user name used to establish the connection; may be null
++     */
++    public void setUserName(String user) {
++        ds.setUser(user);
++    }
++
++    /**
++     * Return the password credential used to establish the connection.
++     *
++     * @return the password credential used to establish the connection
++     */
++    public String getPassword() {
++        return ds.getPassword();
++    }
++
++    /**
++     * Set the user password credential establish the connection.
++     * This value is used if no connection information is supplied by the application
++     * when attempting to create a connection.
++     *
++     * @param password the password credential used to establish the connection; may be null
++     */
++    public void setPassword(String password) {
++        ds.setPassword(password);
++    }
++
++    /**
++     * Return the current url for the data source.
++     *
++     * @return the url. 
++     */
++    public String getConnectionURL() {
++        return ds.getURL();
++    }
++
++    /**
++     * Set the url for the data source.
++     *
++     * @param url The url 
++     */
++    public void setConnectionURL(String url) {
++        ds.setURL(url);
++    }
++}
+diff -urNw dt-a/tranql-connector-h2/tranql-connector-h2-local/pom.xml dt-e/tranql-connector-h2/tranql-connector-h2-local/pom.xml
+--- tranql-connector-h2/tranql-connector-h2-local/pom.xml	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/tranql-connector-h2-local/pom.xml	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,41 @@
++<!--
++  ~ Copyright (c) 2004 - 2007, Tranql project contributors
++  ~
++  ~ Licensed under the Apache License, Version 2.0 (the "License");
++  ~ you may not use this file except in compliance with the License.
++  ~ You may obtain a copy of the License at
++  ~
++  ~     http://www.apache.org/licenses/LICENSE-2.0
++  ~
++  ~ Unless required by applicable law or agreed to in writing, software
++  ~ distributed under the License is distributed on an "AS IS" BASIS,
++  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  ~ See the License for the specific language governing permissions and
++  ~ limitations under the License.
++  ~
++  -->
++
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
++    
++    <modelVersion>4.0.0</modelVersion>
++    
++    <parent>
++        <groupId>org.tranql</groupId>
++        <artifactId>tranql-connector-h2</artifactId>
++        <version>1.4</version>
++        <relativePath>../pom.xml</relativePath>
++    </parent>
++    
++    <artifactId>tranql-connector-h2-local</artifactId>
++    <name>TranQL Vendors, H2 :: Local RA</name>
++    <packaging>rar</packaging>
++    
++    <dependencies>
++        <dependency>
++            <groupId>${pom.groupId}</groupId>
++            <artifactId>tranql-connector-h2-common</artifactId>
++            <version>${pom.version}</version>
++        </dependency>
++    </dependencies>
++    
++</project>
+diff -urNw dt-a/tranql-connector-h2/tranql-connector-h2-local/src/main/rar/META-INF/ra.xml dt-e/tranql-connector-h2/tranql-connector-h2-local/src/main/rar/META-INF/ra.xml
+--- tranql-connector-h2/tranql-connector-h2-local/src/main/rar/META-INF/ra.xml	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/tranql-connector-h2-local/src/main/rar/META-INF/ra.xml	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,97 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<!--
++  ~ Copyright (c) 2004 - 2007, Tranql project contributors
++  ~
++  ~ Licensed under the Apache License, Version 2.0 (the "License");
++  ~ you may not use this file except in compliance with the License.
++  ~ You may obtain a copy of the License at
++  ~
++  ~     http://www.apache.org/licenses/LICENSE-2.0
++  ~
++  ~ Unless required by applicable law or agreed to in writing, software
++  ~ distributed under the License is distributed on an "AS IS" BASIS,
++  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  ~ See the License for the specific language governing permissions and
++  ~ limitations under the License.
++  ~
++  -->
++
++<connector xmlns="http://java.sun.com/xml/ns/j2ee"
++    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
++    version="1.5">
++
++    <description>
++        A resource adaptor that provides access to a H2 database with local transaction support.
++    </description>
++    <display-name>TranQL XA Resource Adapter for H2</display-name>
++
++    <vendor-name>tranql.codehaus.org</vendor-name>
++    <eis-type>JDBC</eis-type>
++    <resourceadapter-version>1.0</resourceadapter-version>
++    <license>
++        <description>
++            Licensed under the Apache License, Version 2.0 (the "License");
++            you may not use this file except in compliance with the License.
++            You may obtain a copy of the License at
++
++               http://www.apache.org/licenses/LICENSE-2.0
++
++            Unless required by applicable law or agreed to in writing, software
++            distributed under the License is distributed on an "AS IS" BASIS,
++            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++            See the License for the specific language governing permissions and
++            limitations under the License.
++        </description>
++        <license-required>true</license-required>
++    </license>
++    <resourceadapter>
++        <outbound-resourceadapter>
++            <connection-definition>
++                <managedconnectionfactory-class>org.tranql.connector.h2.LocalMCF</managedconnectionfactory-class>
++                <config-property>
++                    <description>
++                        Username used to establish the physical connection.
++                        This also establishes the default schema; if omitted the engine defaults to 'APP'.
++                    </description>
++                    <config-property-name>UserName</config-property-name>
++                    <config-property-type>java.lang.String</config-property-type>
++                </config-property>
++                <config-property>
++                    <description>Password credential used to establish the physical connection.</description>
++                    <config-property-name>Password</config-property-name>
++                    <config-property-type>java.lang.String</config-property-type>
++                </config-property>
++                <config-property>
++                    <description>
++                        This config-property is currently ignored by H2.
++                    </description>
++                    <config-property-name>LoginTimeout</config-property-name>
++                    <config-property-type>java.lang.Integer</config-property-type>
++                </config-property>
++                <config-property>
++                    <description>
++                        If set to the string "shutdown", this will cause the database to shutdown when a java.sql.Connection object
++                        is obtained from the data source.
++                    </description>
++                    <config-property-name>ShutdownDatabase</config-property-name>
++                    <config-property-type>java.lang.String</config-property-type>
++                </config-property>
++
++                <connectionfactory-interface>javax.sql.DataSource</connectionfactory-interface>
++                <connectionfactory-impl-class>org.tranql.connector.jdbc.DataSource</connectionfactory-impl-class>
++                <connection-interface>java.sql.Connection</connection-interface>
++                <connection-impl-class>org.tranql.connector.jdbc.ConnectionHandle</connection-impl-class>
++
++            </connection-definition>
++            <transaction-support>LocalTransaction</transaction-support>
++            <authentication-mechanism>
++                <description>Uses JDBC user/password authentication based on properties supplied to connect</description>
++                <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
++                <credential-interface>javax.resource.spi.security.PasswordCredential</credential-interface>
++            </authentication-mechanism>
++            <reauthentication-support>false</reauthentication-support>
++        </outbound-resourceadapter>
++    </resourceadapter>
++</connector>
+diff -urNw dt-a/tranql-connector-h2/tranql-connector-h2-xa/pom.xml dt-e/tranql-connector-h2/tranql-connector-h2-xa/pom.xml
+--- tranql-connector-h2/tranql-connector-h2-xa/pom.xml	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/tranql-connector-h2-xa/pom.xml	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,41 @@
++<!--
++  ~ Copyright (c) 2004 - 2007, Tranql project contributors
++  ~
++  ~ Licensed under the Apache License, Version 2.0 (the "License");
++  ~ you may not use this file except in compliance with the License.
++  ~ You may obtain a copy of the License at
++  ~
++  ~     http://www.apache.org/licenses/LICENSE-2.0
++  ~
++  ~ Unless required by applicable law or agreed to in writing, software
++  ~ distributed under the License is distributed on an "AS IS" BASIS,
++  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  ~ See the License for the specific language governing permissions and
++  ~ limitations under the License.
++  ~
++  -->
++
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
++    
++    <modelVersion>4.0.0</modelVersion>
++    
++    <parent>
++        <groupId>org.tranql</groupId>
++        <artifactId>tranql-connector-h2</artifactId>
++        <version>1.4</version>
++        <relativePath>../pom.xml</relativePath>
++    </parent>
++    
++    <artifactId>tranql-connector-h2-xa</artifactId>
++    <name>TranQL Vendors, H2 :: XA RA</name>
++    <packaging>rar</packaging>
++    
++    <dependencies>
++        <dependency>
++            <groupId>${pom.groupId}</groupId>
++            <artifactId>tranql-connector-h2-common</artifactId>
++            <version>${pom.version}</version>
++        </dependency>
++    </dependencies>
++    
++</project>
+diff -urNw dt-a/tranql-connector-h2/tranql-connector-h2-xa/src/main/rar/META-INF/ra.xml dt-e/tranql-connector-h2/tranql-connector-h2-xa/src/main/rar/META-INF/ra.xml
+--- tranql-connector-h2/tranql-connector-h2-xa/src/main/rar/META-INF/ra.xml	1970-01-01 10:00:00.000000000 +1000
++++ tranql-connector-h2/tranql-connector-h2-xa/src/main/rar/META-INF/ra.xml	2009-10-22 15:20:20.000000000 +1100
+@@ -0,0 +1,89 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<!--
++  ~ Copyright (c) 2004 - 2007, Tranql project contributors
++  ~
++  ~ Licensed under the Apache License, Version 2.0 (the "License");
++  ~ you may not use this file except in compliance with the License.
++  ~ You may obtain a copy of the License at
++  ~
++  ~     http://www.apache.org/licenses/LICENSE-2.0
++  ~
++  ~ Unless required by applicable law or agreed to in writing, software
++  ~ distributed under the License is distributed on an "AS IS" BASIS,
++  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  ~ See the License for the specific language governing permissions and
++  ~ limitations under the License.
++  ~
++  -->
++
++<connector xmlns="http://java.sun.com/xml/ns/j2ee"
++    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
++    version="1.5">
++
++    <description>
++        A resource adaptor that provides access to a H2 database with XA support.
++    </description>
++    <display-name>TranQL XA Resource Adapter for H2</display-name>
++
++    <vendor-name>tranql.codehaus.org</vendor-name>
++    <eis-type>JDBC</eis-type>
++    <resourceadapter-version>1.0</resourceadapter-version>
++    <license>
++        <description>
++            Licensed under the Apache License, Version 2.0 (the "License");
++            you may not use this file except in compliance with the License.
++            You may obtain a copy of the License at
++
++               http://www.apache.org/licenses/LICENSE-2.0
++
++            Unless required by applicable law or agreed to in writing, software
++            distributed under the License is distributed on an "AS IS" BASIS,
++            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++            See the License for the specific language governing permissions and
++            limitations under the License.
++        </description>
++        <license-required>true</license-required>
++    </license>
++    <resourceadapter>
++        <outbound-resourceadapter>
++            <connection-definition>
++                <managedconnectionfactory-class>org.tranql.connector.h2.XAMCF</managedconnectionfactory-class>
++                <config-property>
++                    <description>
++                        Username used to establish the physical connection.
++                        This also establishes the default schema; if omitted the engine defaults to 'APP'.
++                    </description>
++                    <config-property-name>UserName</config-property-name>
++                    <config-property-type>java.lang.String</config-property-type>
++                </config-property>
++                <config-property>
++                    <description>Password credential used to establish the physical connection.</description>
++                    <config-property-name>Password</config-property-name>
++                    <config-property-type>java.lang.String</config-property-type>
++                </config-property>
++                <config-property>
++                    <description>
++                        This config-property is currently ignored by H2.
++                    </description>
++                    <config-property-name>LoginTimeout</config-property-name>
++                    <config-property-type>java.lang.Integer</config-property-type>
++                </config-property>
++
++                <connectionfactory-interface>javax.sql.DataSource</connectionfactory-interface>
++                <connectionfactory-impl-class>org.tranql.connector.jdbc.DataSource</connectionfactory-impl-class>
++                <connection-interface>java.sql.Connection</connection-interface>
++                <connection-impl-class>org.tranql.connector.jdbc.ConnectionHandle</connection-impl-class>
++
++            </connection-definition>
++            <transaction-support>XATransaction</transaction-support>
++            <authentication-mechanism>
++                <description>Uses JDBC user/password authentication based on properties supplied to connect</description>
++                <authentication-mechanism-type>BasicPassword</authentication-mechanism-type>
++                <credential-interface>javax.resource.spi.security.PasswordCredential</credential-interface>
++            </authentication-mechanism>
++            <reauthentication-support>false</reauthentication-support>
++        </outbound-resourceadapter>
++    </resourceadapter>
++</connector>

@@ -205,7 +205,7 @@
         </exec>
 
         <mkdir dir="${ger-home}/repository/org/h2/h2/${h2-version}"/>
-        <copy file="${h2-jar}" todir="${ger-home}/repository/org/h2/h2/${h2-version}"/>
+        <copy file="${h2-jar}" todir="${ger-home}/repository/com/h2database/h2/${h2-version}"/>
 
         <!-- build required plugins -->
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes"/>
