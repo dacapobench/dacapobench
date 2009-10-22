@@ -19,87 +19,72 @@ import javax.sql.DataSource;
  */
 public class TPCCDataSource implements DataSource {
 
-	private final static String USERNAME = "user";
-	private final static String PASSWORD = "password";
-	private final static String USER = "derby";
-	private final static String PASS = "derby";
+  private final static String USERNAME = "user";
+  private final static String PASSWORD = "password";
+  private final static String USER = "derby";
+  private final static String PASS = "derby";
 
-	private Driver      driver;
-	private String      dbname;
-	private Properties  properties;
-	private PrintWriter logWriter;
-	private int         loginTimeout = 100;
-	
-	public TPCCDataSource(Driver driver, String dbname, Properties properties) {
-		this.driver     = driver;
-		this.dbname     = dbname;
-		this.properties = properties;
-		this.logWriter  = new PrintWriter(new NullWriter());
-	}
+  private Driver      driver;
+  private String      dbname;
+  private Properties  properties;
+  private PrintWriter logWriter;
+  private int         loginTimeout = 100;
+  
+  public TPCCDataSource(Driver driver, String dbname, Properties properties) {
+    this.driver     = driver;
+    this.dbname     = dbname;
+    this.properties = properties;
+    this.logWriter  = new PrintWriter(new NullWriter());
+  }
 
-	@Override
-	public Connection getConnection() throws SQLException {
-		return driver.connect(dbname, properties);
-	}
+  public Connection getConnection() throws SQLException {
+    return driver.connect(dbname, properties);
+  }
 
-	@Override
-	public Connection getConnection(String username, String password)
-			throws SQLException {
-		Properties props = (Properties) properties.clone();
+  public Connection getConnection(String username, String password)
+      throws SQLException {
+    Properties props = (Properties) properties.clone();
 
-		props.setProperty(USERNAME, USER);
-		props.setProperty(PASSWORD, PASS);
+    props.setProperty(USERNAME, USER);
+    props.setProperty(PASSWORD, PASS);
 
-		return driver.connect(dbname, properties);
-	}
+    return driver.connect(dbname, properties);
+  }
 
-	@Override
-	public PrintWriter getLogWriter() throws SQLException {
-		return logWriter;
-	}
+  public PrintWriter getLogWriter() throws SQLException {
+    return logWriter;
+  }
 
-	@Override
-	public int getLoginTimeout() throws SQLException {
-		return 100;
-	}
+  public int getLoginTimeout() throws SQLException {
+    return 100;
+  }
 
-	@Override
-	public void setLogWriter(PrintWriter logWriter) throws SQLException {
-		this.logWriter    = logWriter;
-	}
+  public void setLogWriter(PrintWriter logWriter) throws SQLException {
+    this.logWriter    = logWriter;
+  }
 
-	@Override
-	public void setLoginTimeout(int loginTimeout) throws SQLException {
-		this.loginTimeout = loginTimeout;
-	}
+  public void setLoginTimeout(int loginTimeout) throws SQLException {
+    this.loginTimeout = loginTimeout;
+  }
 
-	@Override
-	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
+  public boolean isWrapperFor(Class<?> arg0) throws SQLException {
+    return false;
+  }
 
-	@Override
-	public <T> T unwrap(Class<T> arg0) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  public <T> T unwrap(Class<T> arg0) throws SQLException {
+    return null;
+  }
 
-	private class NullWriter extends Writer {
+  private class NullWriter extends Writer {
 
-		@Override
-		public void close() throws IOException {
-		}
+    public void close() throws IOException {
+    }
 
-		@Override
-		public void flush() throws IOException {
-		}
+    public void flush() throws IOException {
+    }
 
-		@Override
-		public void write(char[] arg0, int arg1, int arg2) throws IOException {
-		}
-		
-	};
+    public void write(char[] arg0, int arg1, int arg2) throws IOException {
+    }
+    
+  };
 }
-
-
