@@ -1,6 +1,6 @@
-dacapo-9.10-beta0 
+dacapo-9.10-beta1
 
-RELEASE NOTES  2009-09-10
+RELEASE NOTES  2009-10-23
 
 ************************************************************************
 * IMPORTANT: This beta release is NOT SUITABLE AS A RESEARCH TOOL.     *
@@ -16,7 +16,7 @@ RELEASE NOTES  2009-09-10
 ************************************************************************
 
 
-This is the first beta release of the anticipated 9.10 release of the
+This is the second beta release of the anticipated 2009 release of the
 DaCapo benchmark suite.  These notes are structured as follows:
 
     1. Purpose
@@ -140,10 +140,11 @@ correctness nightly. Results are available here:
        batik: Batik is an SVG toolkit produced by the Apache foundation.
               The benchmark renders a number of svg files.
 
-       derby: Derby is an in-memory database benchmark, using the
-              Derby database produced by the Apache foundation, and
-              executing the pseudojdbc workload previously used by
-              hsqldb.  Derby replaces hsqldb.
+          h2: h2 is an in-memory database benchmark, using the
+              h2 database produced h2dataabase.com, and executing an
+              implementation of the TPC-C workload produced by the
+              Apache foundation for its derby project. h2 replaces
+              derby, which in turn replaced hsqldb.
 
      sunflow: Sunflow is a rendering system for photo-realistic images
               based on raytracing engine.
@@ -183,17 +184,22 @@ protocol.
               with chart (both are render vector graphics), but is
               part of a larger heavyly used framework from Apache.
 
-      hsqldb: Hsqldb has been replaced by derby, which runs the same
-              workload but uses a much more widely used database
-              engine.
+       derby: Derby has been replaced by h2, which runs a much
+              richer workload and uses a more widely used and higher
+              performing database engine (derby was not in any
+              previous release, but had been slated for inclusion in
+              this release).
+
+      hsqldb: Hsqldb has been replaced by h2, which runs a much
+              richer workload and uses a more widely used and higher
+              performing database engine.
 
 
 4.3. Updates
 
 
 All other benchmarks have been updated to reflect the latest release
-of the underlying application (with the exception of eclipse, where
-the update to 3.5 is underway).
+of the underlying application.
 
 
 4.4. Other Notable Changes
@@ -227,29 +233,7 @@ do this because as long as there exist a significant number of single
 threaded applications in popular use, the single-threaded performance
 of a JVM is important. 
 
-
-5.2 Trade
-
-The trade benchmarks currently do not reliably run beyond one or two
-iterations (and consequently don't appear in our peformance regression
-results since those regressions perform 10 iterations). The benchmarks
-are known to suffer from memory leaks and database deadlocks.
-
-
-5.3 Eclipse
-
-We are in the process of updating eclipse, but have not yet completed
-this, so at present eclipse runs the same version as it did in the
-2006 release.
-
-
-5.4 Derby
-
-We intend to move to using a TCPC workload rather than PseudoJDBC for
-derby.  We also wish to remove derby's build-time dependency on a 1.4 JVM.
-
-
-5.5 Tomcat
+5.2 Tomcat
 
 We intend to make the tomcat workload more interesting. Performacne
 results show that tomcat currently has a remarkably flat warm-up curve

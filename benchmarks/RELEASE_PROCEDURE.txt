@@ -1,0 +1,42 @@
+RELEASE PROCEDURES
+
+0. Update and commit the release notes.
+
+1. Determine a version number and optionally a nickname
+	export DACAPO_VERSION=9.10-beta1
+	
+2. Make fresh svn checkout.
+
+3. Produced a source build and rename it:
+	ant source
+	mv dacapo-src.zip dacapo-$DACAPO_VERSION-src.zip
+
+4. Create a new directory and zip the new source
+	mkdir src
+	cd src
+	unzip ../dacapo-$DACAPO_VERSION-src.zip
+
+5. Build the new source (using a proxy if necessary)
+	export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun
+	export ANT_OPTS="-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128"
+	ant -Dbuild.version=$DACAPO_VERSION
+
+6. Rename the jar
+	mv dacapo-<xxx>.jar dacapo-$DACAPO_VERSION.jar
+
+7. Test the resulting jar
+
+8. Upload files
+	- Log into the sourceforge site as a developer
+	- Go to Develop tab
+	- Go to Project Admin -> File Manager tab
+	- Create a new folder with release name (right click on root folder)
+	- Select new folder for uploads
+	- Upload the files
+or
+	scp <filename> <sf-username>,dacapobench@frs.sourceforge.net:/home/frs/project/d/da/dacapobench/<release dir>
+	- set file properties via the file manager to identify release notes (left-click file names to set properties)
+
+9. Ensure default download is correct (use left click on file to make it default for a given platform / platforms)
+	- https://sourceforge.net/projects/dacapobench/ (see default download here)
+	- https://sourceforge.net/projects/dacapobench/files/
