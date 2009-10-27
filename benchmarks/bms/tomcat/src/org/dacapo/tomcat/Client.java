@@ -28,7 +28,7 @@ public class Client implements Runnable {
    */
   private final List<Page> pages = Arrays.asList(
       new HttpGet(session,"/examples/jsp/jsp2/el/basic-arithmetic.jsp","396eaab04e83090b4d4b259eeca17a5990b7fd73"),
-      new HttpGet(session,"/examples/jsp/jsp2/el/basic-comparisons.jsp","99844226d16c12f5f41e2e8db425bee2c688eeb0"),
+      new HttpGet(session,"/examples/jsp/jsp2/el/basic-comparisons.jsp","2b8b76a06d5b9d3be2ed4c80efcab2adaaad880c"),
       new HttpGet(session,"/examples/jsp/jsp2/el/implicit-objects.jsp?foo=bar","e799ace810ab35a0b56627ddd276e4ad35dbaff4"),
       new HttpGet(session,"/examples/jsp/jsp2/el/functions.jsp?foo=JSP+2.0","c30b0bc98277ad4c2ce48388b3017873f9ca6c9b"),
       new HttpGet(session,"/examples/jsp/jsp2/simpletag/hello.jsp","b741884a658f677c7223296c6138089043030024"),
@@ -47,7 +47,7 @@ public class Client implements Runnable {
       // Shuffle is by definition dynamic
       new HttpGet(session,"/examples/jsp/jsp2/jspattribute/shuffle.jsp",200),
       new HttpGet(session,"/examples/jsp/jsp2/misc/dynamicattrs.jsp","30d42a712e2d336fb6ea84e550d592a38879dde2"),
-      new HttpGet(session,"/examples/jsp/jsp2/misc/config.jsp","2c05579ee7982bc35add4843438b5ded8d912a9b"),
+      new HttpGet(session,"/examples/jsp/jsp2/misc/config.jsp","549154d36f75580e2ab018d6b67113a39cd67788"),
 
       // Number guessing game
       new NumGuess(session),
