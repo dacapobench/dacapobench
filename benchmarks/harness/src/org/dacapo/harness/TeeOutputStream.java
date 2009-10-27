@@ -88,8 +88,14 @@ public class TeeOutputStream extends FilterOutputStream {
    * @see java.io.FilterOutputStream#write(int)
    */
   public void write(int b) throws IOException {
-    if (toScreen) super.write(b);
-    if (log != null) log.write(b);
+    if (toScreen) {
+      super.write(b);
+      super.flush();
+    }
+    if (log != null) {
+      log.write(b);
+      log.flush();
+    }
   }
 
   /* (non-Javadoc)
