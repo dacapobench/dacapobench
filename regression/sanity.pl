@@ -110,7 +110,7 @@ sub produce_sanity_vm_html() {
 
   foreach $result (@results) {
     $_ = $result;
-    if (/[~_]*_0_head_([a-zA-Z]*)_([a-zA-Z]*)\.plog/) {
+    if (/[~_]*_0_head_([a-zA-Z][a-zA-Z0-9]*)_([a-zA-Z]*)\.plog/) {
       ($bm,$size)=($1,$2);
       $bm_results{$bm}{$size} = find_status($id,$vm,$result);
       $bm_logfile{$bm}{$size} = $result;
