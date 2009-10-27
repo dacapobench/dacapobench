@@ -23,7 +23,7 @@ public class Batik extends Benchmark {
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
-    String[] args = preprocessArgs(size);
+    String[] args = config.preprocessArgs(size,scratch);
     Vector<String> newArgs = new Vector<String>(args.length+2);
     for (int i=0; i < args.length; i++) {
       if (args[i].charAt(0) == '-') {

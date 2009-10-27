@@ -24,7 +24,7 @@ public class Lusearch extends org.dacapo.harness.Benchmark {
   
   @Override
   public void iterate(String size) throws Exception {
-    method.invoke(benchmark, (Object)preprocessArgs(size));
+    method.invoke(benchmark, (Object)(config.preprocessArgs(size,scratch)));
   }
   
   /**

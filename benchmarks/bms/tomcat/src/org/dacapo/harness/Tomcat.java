@@ -83,7 +83,7 @@ public class Tomcat extends Benchmark {
     System.out.println("Loading web application");
     method.invoke(controller, "startIteration");
     
-    final int threadCount = getThreadCount(config,size);
+    final int threadCount = config.getThreadCount(size);
     String[] args = config.getArgs(size);
     final int iterations = Integer.parseInt(args[0]);
     

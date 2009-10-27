@@ -39,7 +39,7 @@ public class Xalan extends Benchmark {
 
     useBenchmarkClassLoader();
     try {
-      createWorkersMethod.invoke(benchmark,new Object[] {getThreadCount(config,size)});
+      createWorkersMethod.invoke(benchmark,new Object[] {config.getThreadCount(size)});
     } finally {
       revertClassLoader();
     }

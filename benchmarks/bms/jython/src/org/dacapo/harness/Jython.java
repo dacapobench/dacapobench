@@ -34,7 +34,7 @@ public class Jython extends Benchmark {
    * script sees.  Hence the Py.setArgv call, followed by the jython.main call.
    */
   public void iterate(String size) throws Exception {
-    String[] args = preprocessArgs(size);
+    String[] args = config.preprocessArgs(size,scratch);
     pySetArgsMethod.invoke(null, (Object) args);
     method.invoke(null, (Object) args);
   }

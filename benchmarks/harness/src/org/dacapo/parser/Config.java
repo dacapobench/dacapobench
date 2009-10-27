@@ -603,6 +603,43 @@ public class Config {
    *                       Utility methods
    *
    */
+  /**
+   * Determine the multi-threading level of this benchmark size.
+   * TODO allow the user to override on the command-line
+   */
+  public int getThreadCount(String size) {
+    switch(getThreadModel()) {
+    case SINGLE: return 1;
+    case FIXED: return getThreadFactor(size);
+    case PER_CPU: {
+      int factor = getThreadFactor(size);
+      int cpuCount = Runtime.getRuntime().availableProcessors();
+      return factor * cpuCount;
+    }
+    default:
+      throw new RuntimeException("Unknown thread model");
+    }
+  }
+
+  /**
+   * Retrieve the benchmark arguments for the given size, applying preprocessing
+   * as appropriate.  The preprocessing that is currently done is:
+   * <ul>
+   * <li> ${SCRATCH} - replaced with the absolute path name of the scratch directory
+   * <li> ${THREADS} - replaced with the specified thread count for the benchmark size
+   * </ul>
+   */
+  public String[] preprocessArgs(String size, File scratch) {
+    String[] raw = getArgs(size);
+    String[] cooked = new String[raw.length];
+    for (int i=0; i < raw.length; i++) {
+      String tmp = raw[i];
+      tmp = tmp.replace("${SCRATCH}", scratch.getAbsolutePath());
+      tmp = tmp.replace("${THREADS}", Integer.toString(getThreadCount(size)));
+      cooked[i] = tmp;
+    }
+    return cooked;
+  }
 
   /**
    * Extract the named size from the available sizes in this benchmark, handling pesky

@@ -51,7 +51,7 @@ public class Luindex extends Benchmark {
   public void iterate(String size) throws Exception {
     if (isVerbose())
       System.out.println("luindex benchmark starting");
-    String[] args = preprocessArgs(size);
+    String[] args = config.preprocessArgs(size,scratch);
     
     final File INDEX_DIR = new File(scratch,"index");
     

@@ -30,12 +30,12 @@ public class Tradesoap extends Benchmark {
   
   @Override
   protected void prepare(String size) throws Exception {
-    String[] args = preprocessArgs(size);
+    String[] args = config.preprocessArgs(size,scratch);
     String dtSize = "medium";
     if (args.length == 1)
       dtSize = args[0];
     
-    initializeMethod.invoke(null, scratch, getThreadCount(config,size), dtSize, false);
+    initializeMethod.invoke(null, scratch, config.getThreadCount(size), dtSize, false);
   }
   
   public void cleanup() {
