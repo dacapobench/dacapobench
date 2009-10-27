@@ -152,7 +152,7 @@ public class Callback {
   protected void start(String benchmark, boolean warmup) {
     timer = System.currentTimeMillis();
     System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
-    System.err.println((warmup ? "warmup " : "") + "=====");
+    System.err.println((warmup ? ("warmup " + iterations + " ") : "") + "=====");
     System.err.flush();
   }
   
@@ -179,7 +179,7 @@ public class Callback {
   protected void complete(String benchmark, boolean valid, boolean warmup) {
     System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);
     if (valid) {
-      System.err.print(warmup ? " completed warmup " : " PASSED ");
+      System.err.print(warmup ? (" completed warmup " + iterations + " ") : " PASSED ");
       System.err.print("in " + elapsed + " msec ");   
     } else {
       System.err.print(" FAILED " + (warmup ? "warmup " : ""));
