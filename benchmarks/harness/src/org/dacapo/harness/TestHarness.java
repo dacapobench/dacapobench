@@ -161,6 +161,8 @@ public class TestHarness {
    * @throws Exception
    */
   private static void runBenchmark(File scratch, String bm, TestHarness harness) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, Exception {
+    harness.config.reportConfig(System.out,commandLineArgs.getSize(),scratch);
+
     Constructor<?> cons = harness.findClass().getConstructor(new Class[] {Config.class,File.class});
     
     Benchmark b = (Benchmark) cons.newInstance(new Object[] {harness.config,scratch});

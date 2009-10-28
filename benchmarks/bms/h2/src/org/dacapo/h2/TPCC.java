@@ -70,6 +70,7 @@ public class TPCC
   private OERandom[]          rands;
 
   private Config              config;
+  private File                scratch;
   private String              size;
   private Driver              driver;
   private Properties          properties;
@@ -93,7 +94,8 @@ public class TPCC
 
   public TPCC(Config config, File scratch) throws Exception
   {
-    this.config = config;
+    this.config  = config;
+    this.scratch = scratch;
 
     // seem to need to set this early and in the system properties
     Class.forName(DRIVER_NAME);
@@ -403,7 +405,7 @@ public class TPCC
   // helper function for interpreting the configuration data
   private void configure()
   {
-    String[] args = preprocessArgs(size);
+    String[] args = config.preprocessArgs(size,scratch);
 
     int totalTx = this.numberOfTerminals * this.transactionsPerTerminal;
     for (int i = 0; i < args.length; i++)
@@ -428,53 +430,7 @@ public class TPCC
     // calculate the transactions per terminals now that we know the 
     // total number to be executed and the number of terminals
     this.transactionsPerTerminal = totalTx / this.numberOfTerminals;
-
-    System.out.println("number of terminals  = " + this.numberOfTerminals);
-    System.out.println("total transactions   = "
-        + (this.transactionsPerTerminal * this.numberOfTerminals));
-    System.out.println("scale                = " + this.scale);
-    System.out.println("number of warehouses = " + this.numberOfWarehouses);
-    System.out.println("create suffix        = " + this.createSuffix);
   }
 
-  /*************************************************************************************
-   * These methods are taken from Benchmark, but should really live on the Config
-   */
-
-  // Determine the multi-threading level of this benchmark size.
-  // TODO refactor Config
-  private int getThreadCount(String size)
-  {
-    switch (config.getThreadModel())
-    {
-    case SINGLE:
-      return 1;
-    case FIXED:
-      return config.getThreadFactor(size);
-    case PER_CPU: {
-      int factor = config.getThreadFactor(size);
-      int cpuCount = Runtime.getRuntime().availableProcessors();
-      return factor * cpuCount;
-    }
-    default:
-      throw new RuntimeException("Unknown thread model");
-    }
-  }
-
-  // Retrieve the benchmark arguments for the given size, applying preprocessing
-  // as appropriate. The preprocessing that is currently done is:
-  //    ${THREADS} - replaced with the specified thread count for the benchmark size
-  private String[] preprocessArgs(String size)
-  {
-    String[] raw = config.getArgs(size);
-    String[] cooked = new String[raw.length];
-    for (int i = 0; i < raw.length; i++)
-    {
-      String tmp = raw[i];
-      tmp = tmp.replace("${THREADS}", Integer.toString(getThreadCount(size)));
-      cooked[i] = tmp;
-    }
-    return cooked;
-  }
 
 }
