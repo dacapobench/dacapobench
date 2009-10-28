@@ -63,7 +63,7 @@ public abstract class Page {
     StringBuilder reply1 = new StringBuilder(4096);
     for (String line = input.readLine(); line !=null; line = input.readLine()) {
       reply1.append(line);
-      reply1.append(String.format("%n"));
+      reply1.append('\n');
     }
     input.close();
     StringBuilder reply = reply1;
@@ -112,14 +112,15 @@ public abstract class Page {
   protected boolean fetch(HttpMethod method, File logFile, boolean keep) throws IOException, HttpException {
     final int iGetResultCode = session.httpClient.executeMethod(method);
     final String strGetResponseBody = readStream(method.getResponseBodyAsStream());
+    final String strGetResponseBodyLocalized = strGetResponseBody.replace("\n",System.getProperty("line.separator"));
     if (keep) {
-      writeLog(logFile, strGetResponseBody);
+      writeLog(logFile, strGetResponseBodyLocalized);
     }
     
     if (iGetResultCode != expectedStatus) {
       System.err.printf("URL %s returned status %d (expected %d)%n",
           address,iGetResultCode,expectedStatus);
-      if (!keep) writeLog(logFile, strGetResponseBody);
+      if (!keep) writeLog(logFile, strGetResponseBodyLocalized);
       return false;
     }
 
@@ -130,7 +131,7 @@ public abstract class Page {
     String digestString = stringDigest(strGetResponseBody);
     boolean digestMatch = digestString.equals(expectedDigest);
     if (!digestMatch) {
-      if (!keep) writeLog(logFile, strGetResponseBody);
+      if (!keep) writeLog(logFile, strGetResponseBodyLocalized);
       System.err.printf("URL %s%n" +
           "   expected %s%n" +
           "   found    %s%n" +
