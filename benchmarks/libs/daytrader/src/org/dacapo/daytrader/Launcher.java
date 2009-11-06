@@ -102,7 +102,7 @@ public class Launcher {
   private static ClassLoader createGeronimoClassLoader(ClassLoader parent, boolean server) {
     File geronimo = new File(scratch, GDIRECTORY).getAbsoluteFile();
     ClassLoader binCL = new URLClassLoader(getGeronimoBinaryJars(geronimo, server), parent);
-    ClassLoader libCL = new InvertedURLClassLoader(getGeronimoLibraryJars(geronimo, server), binCL);
+    ClassLoader libCL = new URLClassLoader(getGeronimoLibraryJars(geronimo, server), binCL);
     return libCL;
   }
 
