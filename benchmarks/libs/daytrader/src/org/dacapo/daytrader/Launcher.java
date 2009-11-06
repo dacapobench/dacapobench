@@ -36,6 +36,9 @@ public class Launcher {
   private static Method clientMethod = null;
   private static File scratch = null;
   
+  private static final String TRADEBEANS_LOG_FILE_NAME = "tradebeans.log";
+  private static final String TRADESOAP_LOG_FILE_NAME  = "tradesoap.log";
+  
   public static void initialize(File scratchdir, int threads, String dtSize, boolean beans) {
     numThreads = threads;
     size = dtSize;
@@ -44,13 +47,22 @@ public class Launcher {
     setGeronimoProperties();
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
     
+    // It is unclear whether this is required
+    File log = new File(scratch,beans?TRADEBEANS_LOG_FILE_NAME:TRADESOAP_LOG_FILE_NAME).getAbsoluteFile();
+    // create the containing directory if necessary
+    log.getParentFile().mkdirs();
+    // create the log file (empty) if necessary
+    try { log.createNewFile(); } catch (Exception e) { }
+  
+    System.setProperty("java.util.logging.config.file", log.toString());
+    
     try {
       // Create a server environment
       serverCLoader = createGeronimoClassLoader(originalCLoader, true);
       Thread.currentThread().setContextClassLoader(serverCLoader);
       Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
       Method method = clazz.getMethod("initialize", new Class[] {});
-      method.invoke(null, new Object[] {});
+      method.invoke(null, new Object[] { });
 
       // Create a client environment
       clientCLoader = createGeronimoClassLoader(originalCLoader, false);

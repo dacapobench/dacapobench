@@ -12,7 +12,7 @@ import org.apache.geronimo.kernel.util.Main;
 public class DaCapoServerRunner {
   private static Kernel kernel = null;
   private static Thread serverThread = null;
-  
+
   public static void initialize() {
     try {
       GeronimoLogging.initialize(GeronimoLogging.ERROR);
@@ -20,6 +20,7 @@ public class DaCapoServerRunner {
       kernel = KernelFactory.newInstance().createKernel("DaCapoServer");
       kernel.boot();
       InputStream in = classLoader.getResourceAsStream("META-INF/config.ser");
+      
       ConfigurationUtil.loadBootstrapConfiguration(kernel, in, classLoader, true);
       final DaemonCLParser parser = new DaemonCLParser(System.out);
       final Main main = (Main) kernel.getGBean(Main.class);

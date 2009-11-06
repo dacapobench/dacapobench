@@ -22,19 +22,6 @@ public class Tradebeans extends Benchmark {
   public Tradebeans(Config config, File scratch) throws Exception {
     super(config,scratch,false);
 
-    // frankly this seems like a hack to get around a wierdness with J9
-    // it appears that J9 might do something odd with the class initialization
-    // order which causes the log file not to be found.  So we force the creation
-    // here.
-    File log = new File(scratch,TRADEBEANS_LOG_FILE_NAME).getAbsoluteFile();
-    
-    // create the containing directory if necessary
-    log.getParentFile().mkdirs();
-    // create the log file (empty) if necessary
-    log.createNewFile();
-    
-    System.setProperty("java.util.logging.config.file", log.toString());
-    
     // Find the launcher
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
     this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, Integer.TYPE, String.class, Boolean.TYPE } );

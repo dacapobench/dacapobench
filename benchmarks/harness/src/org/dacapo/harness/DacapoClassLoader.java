@@ -117,13 +117,13 @@ public class DacapoClassLoader extends URLClassLoader {
 
         // Next, try to resolve it from the dacapo JAR files
         c = super.findClass(name);
-        if (resolve) {
-          resolveClass(c);
-        }
       } catch (ClassNotFoundException e) {
         // And if all else fails delegate to the parent.
         c = super.loadClass(name,resolve);
       }
+    }
+    if (resolve) {
+      resolveClass(c);
     }
     return c;
   }
