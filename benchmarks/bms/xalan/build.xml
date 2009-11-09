@@ -36,7 +36,7 @@
         <jar destfile="${bm-jars}/xalan-benchmark.jar" basedir="${bm-build-dir}/benchmark"/>
     </target>
     
-    <target name="jar" depends="deps">
+    <target name="jar">
         <copy file="${xalan-top}/build/xalan.jar" todir="${bm-jars}"/>
         <copy file="${xalan-top}/build/serializer.jar" todir="${bm-jars}"/>
     </target>
@@ -51,10 +51,5 @@
         </unzip>
         <zip basedir="${bm-data}" includes="xalan/**" destfile="${bm-dat}/xalan.zip"/>
         <delete dir="${bm-data}"/>
-    </target>
-    
-    <target name="deps" if="externalize.deps">
-        <copy file="${xalan-top}/bin/${xerces-api-jar-name}" todir="${build.deps}"/>
-        <copy file="${xalan-top}/bin/${xerces-impl-jar-name}" todir="${build.deps}"/>
     </target>
 </project>
