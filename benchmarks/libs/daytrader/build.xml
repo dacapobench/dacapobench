@@ -7,8 +7,9 @@
     
     <property name="lib-name" value="daytrader"/>
 
+    <property name="maven-repo-url" value="http://repo1.maven.org/maven2"/>
     <property name="apache-svn-url" value="http://svn.apache.org/repos/asf"/>
-    <property name="java-dev-url" value="https://maven-repository.dev.java.net/repository"/>
+    <property name="java-dev-url" value="http://download.java.net/maven"/>
 
     <property name="lib-svn-url" value="${apache-svn-url}/geronimo/daytrader/trunk"/>
     <property name="lib-svn-revision" value="767347"/>
@@ -49,8 +50,13 @@
     
     <property name="jstl-version" value="1.2"/>
     <property name="jstl-name" value="jstl"/>
-    <property name="jstl-url" value="${java-dev-url}/${jstl-name}/jars"/>
-    <property name="jstl-jar" value="${jstl-name}-${jstl-version}.jar"/>
+    <property name="jstl-url" value="${java-dev-url}/glassfish/org/glassfish/web/${jstl-name}-impl/${jstl-version}"/>
+    <property name="jstl-jar" value="${jstl-name}-impl-${jstl-version}.jar"/>
+
+    <property name="oro-version" value="2.0.8"/>
+    <property name="oro-name" value="oro"/>
+    <property name="oro-url" value="${maven-repo-url}/${oro-name}/${oro-name}/${oro-version}"/>
+    <property name="oro-jar" value="${oro-name}-${oro-version}.jar"/>
 
     <import file="../common.xml"/>
 
@@ -94,6 +100,11 @@
             <param name="target-dir" value="${lib-downloads}"/>
             <param name="target-url" value="${jstl-url}"/>
             <param name="target-file" value="${jstl-jar}"/>
+        </antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${lib-downloads}"/>
+            <param name="target-url" value="${oro-url}"/>
+            <param name="target-file" value="${oro-jar}"/>
         </antcall>
         <antcall target="check-source">
             <param name="target-dir" value="${lib-downloads}"/>
@@ -145,7 +156,8 @@
    
     <target name="data" depends="build.init">
         <!-- install jstl -->
-        <property name="jstl-jar-loc" location="${lib-downloads}/${jstl-jar}"/>
+        <property name="jstl-jar-loc" location="${lib-downloads}/jstl-${jstl-version}.jar"/>
+        <copy file="${lib-downloads}/${jstl-jar}" tofile="${jstl-jar-loc}"/>
         <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
             <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
             <arg value="install:install-file"/>
@@ -154,6 +166,18 @@
             <arg value="-Dversion=${jstl-version}"/>
             <arg value="-Dpackaging=jar"/>
             <arg value="-Dfile=${jstl-jar-loc}"/>
+        </exec>
+
+        <!-- install oro -->
+        <property name="oro-jar-loc" location="${lib-downloads}/${oro-jar}"/>
+        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=oro"/>
+            <arg value="-DartifactId=oro"/>
+            <arg value="-Dversion=${oro-version}"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${oro-jar-loc}"/>
         </exec>
 
         <!-- install activemq -->
