@@ -21,7 +21,12 @@ public class Tomcat extends Benchmark {
   private final Constructor<Runnable> clientConstructor;
   private final Object controller;
 
-  @SuppressWarnings("unchecked")
+  /**
+   * Benchmark constructor - invoked reflectively by the harness.
+   * @param config Benchmark configuration object
+   * @param scratch Scratch directory
+   * @throws Exception When something goes wrong
+   */
   public Tomcat(Config config, File scratch) throws Exception {
     super(config,scratch);
     this.clazz = Class.forName("org.dacapo.tomcat.Control", true, loader);
@@ -32,6 +37,7 @@ public class Tomcat extends Benchmark {
     this.controller = controlConstructor.newInstance(scratch,loader,PORT);
 
     /* Create a constructor for the tomcat client */
+    @SuppressWarnings("unchecked")
     Class<Runnable> clientClass = (Class<Runnable>)Class.forName("org.dacapo.tomcat.Client", true, loader);
     this.clientConstructor = clientClass.getConstructor(
         File.class, int.class, int.class, boolean.class, int.class);
@@ -125,6 +131,9 @@ public class Tomcat extends Benchmark {
   }
 
 
+  /**
+   * @see org.dacapo.harness.Benchmark#cleanup()
+   */
   @Override
   public void cleanup() {
     try {
