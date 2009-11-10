@@ -17,7 +17,7 @@
         
     <target name="unpack" depends="untar,patch"/>
     
-    <target name="bm-build" depends="build-properties,jpetstore,h2,commons-httpclient">
+    <target name="bm-build" depends="build-properties,commons-httpclient">
         <ant antfile="build.xml" inheritall="false" dir="${bm-build-top}">
             <property name="base.path" value="${bm-downloads}"/>
             <target name="download"/>
@@ -27,12 +27,7 @@
             <property name="base.path" value="${bm-downloads}"/>
             <target name="dist-static"/>
         </ant>
-
-        <copy todir="${bm-build-top}/output/dist/webapps">
-            <fileset dir="${lib-base}/jpetstore/dist/dat" includes="jpetstore/**"/>
-        </copy>
-
-        <javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" 
+         <javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" 
                   source="1.5" target="1.5"
                     includes="org/dacapo/tomcat/*"
                     debug="true" debuglevel="lines,vars,source">
@@ -41,12 +36,12 @@
                  <pathelement path="${commons-httpclient-jar}"/>
                  <fileset dir="${bm-build-top}/output/dist/lib">
                     <include name="**/*.jar"/>
-                 </fileset>
+                  </fileset>
                  <fileset dir="${bm-build-top}/output/dist/bin">
                     <include name="**/*.jar"/>
-                 </fileset>
+                  </fileset>
              </classpath>
-        </javac>
+       </javac>
     </target>
                 
     <target name="bm-data" depends="bm-build,build-properties">
@@ -61,19 +56,15 @@
             <fileset file="${bm-files}/catalina.properties"/>
         </zip>
     </target>
+
     <target name="jar" depends="bm-data,build-properties">
         <copy todir="${bm-jars}">
             <fileset dir="${bm-build-top}/output/dist/bin" includes="*.jar"/>
             <fileset file="${commons-httpclient-jar}"/>
             <fileset file="${commons-logging-jar}"/>
             <fileset file="${commons-codec-jar}"/>
-            <fileset file="${jpetstore-common}"/>
-            <fileset file="${jpetstore-dao}"/>
-            <fileset file="${jpetstore-sqlmap}"/>
-            <fileset file="${jpetstore-jakarta-oro}"/>
-            <fileset file="${jpetstore-struts}"/>
         </copy>
-        <copy file="${h2-jar}" tofile="${bm-jars}/h2.jar"/>
+
         <jar destfile="${bm-jars}/dacapo-tomcat.jar">
             <fileset dir="${bm-output-dir}" includes="**/*.class"/>
         </jar>

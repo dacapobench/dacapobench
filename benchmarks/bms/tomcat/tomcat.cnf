@@ -3,8 +3,7 @@ benchmark tomcat
   thread-model per_cpu
   jar "dacapo-tomcat.jar"
   libs "bootstrap.jar","tomcat-juli.jar","commons-daemon.jar","commons-httpclient.jar",
-  "commons-logging.jar","commons-codec.jar","h2.jar","ibatis-dao-2.jar","jakarta-oro.jar",
-  "ibatis-common-2.jar","ibatis-sqlmap-2.jar","struts.jar";
+  "commons-logging.jar","commons-codec.jar";
 
 
 size small args "16" threads 1       // per CPU
