@@ -24,7 +24,7 @@
         </exec>
     </target>
         
-    <target name="jar" depends="libs, deps">
+    <target name="jar" depends="libs">
         <copy file="${bm-build-top}/lib/pmd-${bm-version}.jar" todir="${bm-jars}"/>
     </target>
     
@@ -50,18 +50,8 @@
         <delete dir="${bm-build-top}/data"/>
     </target>
 
-    <target name="libs" unless="externalize.deps">
+    <target name="libs">
         <copy file="${bm-build-top}/lib/jaxen-${jaxen-version}.jar" todir="${bm-jars}"/>
         <copy file="${bm-build-top}/lib/asm-${asm-version}.jar" todir="${bm-jars}"/>
-    </target>
-    
-    <target name="deps" if="externalize.deps" description="--> add the chart libraries to the build">
-        <copy file="${bm-build-top}/lib/xmlParserAPIs-2.6.2.jar" todir="${build.deps}"/>
-        <copy file="${bm-build-top}/lib/jakarta-oro-2.0.8.jar" todir="${build.deps}"/>
-        <copy file="${bm-build-top}/lib/jaxen-1.1-beta-7.jar" todir="${build.deps}"/>
-        <copy file="${bm-build-top}/lib/xercesImpl-2.6.2.jar" todir="${build.deps}"/>
-        <copy file="${build.src}/junit/junit${junit.version}/junit.jar" todir="${build.deps}"/>
-        <copy file="${build.src}/ant/ant.jar" todir="${build.deps}"/>
-        <copy file="${build.src}/ant/ant-launcher.jar" todir="${build.deps}"/>
     </target>
 </project>
