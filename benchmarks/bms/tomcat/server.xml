@@ -26,8 +26,8 @@
   <!--Initialize Jasper prior to webapps are loaded. Documentation at /docs/jasper-howto.html -->
   <Listener className="org.apache.catalina.core.JasperListener" />
   <!-- JMX Support for the Tomcat server. Documentation at /docs/non-existent.html -->
-  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
-  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <!-- <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" /> -->
+  <!-- <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" /> -->
 
   <!-- Global JNDI resources
        Documentation at /docs/jndi-resources-howto.html
@@ -129,9 +129,7 @@
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
-        <!--
         <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
-        -->
 
         <!-- Access log processes all example.
              Documentation at: /docs/config/valve.html -->
