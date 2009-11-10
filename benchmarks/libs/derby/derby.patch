@@ -1,0 +1,12 @@
+diff -urNw derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java derby-e/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java
+--- derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-03-24 01:49:58.000000000 +1100
++++ derby-e/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-11-10 10:04:47.000000000 +1100
+@@ -48,7 +48,7 @@
+ 
+     public static final int CUSTOMER_COUNT_W = 3000 * DISTRICT_COUNT_W;
+ 
+-    public static final int ITEM_COUNT = 100000;
++    public static final int ITEM_COUNT = 10000;
+ 
+     public static final int NEWORDERS_COUNT_W = (CUSTOMER_COUNT_W * 9) / 30;
+ 

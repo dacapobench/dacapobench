@@ -4,14 +4,16 @@
     
     <property name="lib-name" value="derby"/>
     <property name="lib-version" value="10.5.3.0"/>
-    <property name="lib-url" value="${apache.dl.url}/db/derby/db-derby-${lib-version}"/> 
+    <property name="lib-url" value="${apache.dl.url}/db/derby/db-derby-${lib-version}"/>
     <property name="lib-src" value="db-derby-${lib-version}-src.tar.gz"/>
 
     <import file="../common.xml"/>
     
     <property name="lib-build-top" value="${lib-build-dir}/db-derby-${lib-version}-src"/>
 
-    <target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar">
+        <patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" strip="1" ignorewhitespace="yes"/>
+    </target>
 
     <target name="build">
         <copy tofile="${lib-build-top}/tools/java/junit.jar">

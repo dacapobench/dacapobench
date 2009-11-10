@@ -4,28 +4,28 @@ benchmark h2
   libs "derbyTesting.jar","junit-3.8.1.jar","h2-1.2.121.jar","tpcc.jar";
 
 size small args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions", "3200",
+		"-totalTransactions", "1600",
 		"-scale","1",
 		"-numberOfWarehouses", "1",
 		"-createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xc288238cd21fe6190545de5c9cd896b0e5b66a9d;
+  output stdout digest 0xa8b89e89d2d53191c8585c15d27122d0f1d37cc4;
   
 size default args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions","19200",
+		"-totalTransactions","4800",
 		"-scale","2",
 		"-numberOfWarehouses", "2",
 		"-createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0x001d60966b6bcf117da87d75c34d11771c8ee375;
+  output stdout digest 0xa16fa8b4f61d752e2e3d8509382017f7df69eeb6;
 
 size large args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions","76800",
+		"-totalTransactions","38400",
 		"-scale","8",
 		"-numberOfWarehouses", "8",
 		"-createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xc16b7f82719cfe7a04eb27ef1096ff5352ec9b10;
+  output stdout digest 0x29683957184770f7b9909aba4169865bbec64ca6;
 
 
 description
@@ -36,5 +36,5 @@ description
   license	"Apache License, Version 2.0 covering TPC-C like workload, and Eclipse Public License Version 1.0 covering H2",
   url		"http://db.apache.org/derby/ and http://www.h2database.com",
   version	"10.5.3.0 and 1.2.121",
-  repeats	"12800 Transactions evenly divided amoung the hardware threads.",
+  repeats	"<totalTransactions> evenly divided amoung the hardware threads.",
   threads   "One client thread per hardware thread.";

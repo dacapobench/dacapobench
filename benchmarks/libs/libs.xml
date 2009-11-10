@@ -6,6 +6,17 @@
 		<ant antfile="${lib-base}/daytrader/build.xml"/>
 	</target>
 	
+	<!-- jpetstore -->
+        <property name="jpetstore-common" value="${lib-base}/jpetstore/dist/jar/ibatis-common-2.jar"/>
+        <property name="jpetstore-dao" value="${lib-base}/jpetstore/dist/jar/ibatis-dao-2.jar"/>
+        <property name="jpetstore-sqlmap" value="${lib-base}/jpetstore/dist/jar/ibatis-sqlmap-2.jar"/>
+        <property name="jpetstore-jakarta-oro" value="${lib-base}/jpetstore/dist/jar/jakarta-oro.jar"/>
+        <property name="jpetstore-struts" value="${lib-base}/jpetstore/dist/jar/struts.jar"/>
+        <property name="jpetstore-zip" value="${lib-base}/jpetstore/dist/jar/jpetstore.zip"/>
+	<target name="jpetstore">
+		<ant antfile="${lib-base}/jpetstore/build.xml"/>
+	</target>
+	
 	<!-- jakarta commons HTTP client -->
 	<property name="commons-httpclient-jar" value="${lib-base}/commons-httpclient/dist/jar/commons-httpclient.jar"/>
 	<target name="commons-httpclient" depends="commons-logging,commons-codec">
