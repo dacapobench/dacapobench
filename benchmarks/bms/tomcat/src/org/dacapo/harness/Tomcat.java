@@ -16,6 +16,7 @@ import org.dacapo.parser.Config;
  */
 public class Tomcat extends Benchmark {
 
+  private static final int PORT = 7080;//Integer.valueOf(System.getProperty("dacapo.tomcat.port", "7080"));
   private final Class<?> clazz;
   private final Constructor<Runnable> clientConstructor;
   private final Object controller;
@@ -25,15 +26,15 @@ public class Tomcat extends Benchmark {
     super(config,scratch);
     this.clazz = Class.forName("org.dacapo.tomcat.Control", true, loader);
     this.method = clazz.getMethod("exec",String.class);
-    
+
     /* Create a constructor for the tomcat controller */
     Constructor<?> controlConstructor = clazz.getConstructor(File.class,ClassLoader.class,int.class);
-    this.controller = controlConstructor.newInstance(scratch,loader,7080);
-    
+    this.controller = controlConstructor.newInstance(scratch,loader,PORT);
+
     /* Create a constructor for the tomcat client */
     Class<Runnable> clientClass = (Class<Runnable>)Class.forName("org.dacapo.tomcat.Client", true, loader);
     this.clientConstructor = clientClass.getConstructor(
-        File.class, int.class, int.class, boolean.class);
+        File.class, int.class, int.class, boolean.class, int.class);
   }
 
   /**
@@ -42,7 +43,7 @@ public class Tomcat extends Benchmark {
   @Override
   public void prepare(String size) throws Exception {
     super.prepare(size);
-    
+
     try {
       useBenchmarkClassLoader();
       try {
@@ -51,13 +52,13 @@ public class Tomcat extends Benchmark {
         System.setProperty("catalina.home", scratch.getAbsolutePath());
         System.setProperty("catalina.config", new File(fileInScratch("catalina.properties")).toURL().toExternalForm());
         method.invoke(controller,"prepare");
-        
+
         System.out.println("Server thread created");
-        
+
         // Run one iteration to get static startup costs out of the way
         System.out.println("Pre-benchmark warmup");
         method.invoke(controller, "startIteration");
-        clientConstructor.newInstance(scratch,0,1,isVerbose()).run();
+        clientConstructor.newInstance(scratch,0,1,isVerbose(),PORT).run();
         method.invoke(controller, "stopIteration");
         System.out.println("Pre-benchmark warmup complete");
         postIterationCleanup(size);
@@ -66,12 +67,13 @@ public class Tomcat extends Benchmark {
       }
     } catch (Exception e) {
       e.printStackTrace();
-    } 
+    }
   }
 
   /**
    * After each iteration, delete the output files
    */
+  @Override
   public void postIteration(String size) throws Exception {
     super.postIteration(size);
   }
@@ -79,21 +81,22 @@ public class Tomcat extends Benchmark {
   /**
    * An iteration of the benchmark - runs in the benchmark classloader
    */
+  @Override
   public void iterate(String size) throws Exception {
     System.out.println("Loading web application");
     method.invoke(controller, "startIteration");
-    
+
     final int threadCount = config.getThreadCount(size);
     String[] args = config.getArgs(size);
     final int iterations = Integer.parseInt(args[0]);
-    
+
     /*
      * In case the # iterations doesn't evenly divide among the processors,
      * we ensure that some threads do one more iteration than others
      */
     final int iterationsPerClient = iterations / threadCount;
     final int oddIterations = iterations - (iterationsPerClient * threadCount);
-    
+
     final Thread[] threads = new Thread[threadCount];
     System.out.println("Creating client threads");
     for (int i=0; i < threadCount; i++) {
@@ -101,7 +104,8 @@ public class Tomcat extends Benchmark {
           scratch,
           i,
           iterationsPerClient + (i < oddIterations ? 1 : 0),
-          isVerbose());
+          isVerbose(),
+          PORT);
       threads[i] = new Thread(client);
       threads[i].start();
     }
@@ -112,7 +116,7 @@ public class Tomcat extends Benchmark {
     System.out.println("Client threads complete ... unloading web application");
     method.invoke(controller, "stopIteration");
   }
-  
+
   @Override
   protected void postIterationCleanup(String size) {
     super.postIterationCleanup(size);
@@ -133,7 +137,7 @@ public class Tomcat extends Benchmark {
   }
 
 
-  
+
   @SuppressWarnings("unused")
   private void dumpThreads() {
     ThreadGroup tg = Thread.currentThread().getThreadGroup();
@@ -159,7 +163,7 @@ public class Tomcat extends Benchmark {
     System.out.flush();
     System.out.printf("==================== Thread Dump End ====================%n");
   }
-  
+
   /**
    * Stub which exists <b>only</b> to facilitate whole program
    * static analysis on a per-benchmark basis.  See also the "split-deps"

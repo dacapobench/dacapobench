@@ -8,26 +8,27 @@ import java.io.Writer;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
- * Drive the number guessing game - server thinks of a number and 
+ * Drive the number guessing game - server thinks of a number and
  * the client tries to guess it.
- * @author rgarner
- *
  */
 public class NumGuess extends HttpGet {
 
-  NumGuess(Session session) {
-    super(session,"/examples/jsp/num/numguess.jsp");
+  NumGuess() {
+    super("/examples/jsp/num/numguess.jsp");
   }
-  
+
+  /**
+   * @see org.dacapo.tomcat.HttpGet#fetch(org.dacapo.tomcat.Session, java.io.File, boolean)
+   */
   @Override
-  public boolean fetch(File logFile, boolean keep) throws IOException {
+  public boolean fetch(Session session, File logFile, boolean keep) throws IOException {
     Writer output = new FileWriter(logFile);
     try {
       int guess = 64;
       int stride = 32;
       for (int i=0; i < 10; i++) {
         /* First query uses no parameters - subsequent ones pass the initial guess */
-        GetMethod get = new GetMethod(formatUrl(address+(i==0 ? "" : "?guess="+guess)));
+        GetMethod get = new GetMethod(formatUrl(session,address+(i==0 ? "" : "?guess="+guess)));
         final int iGetResultCode = session.httpClient.executeMethod(get);
         final String responseBody = readStream(get.getResponseBodyAsStream());
         if (keep)
@@ -38,7 +39,7 @@ public class NumGuess extends HttpGet {
           if (!keep) output.write(responseBody);
           return false;
         }
-        
+
         /*
          * Analyse the response and decide what to do next
          */

@@ -14,29 +14,40 @@ public class Session {
    * The underlying HttpClient object
    */
   protected final HttpClient httpClient = new HttpClient();
+  protected final int port;
 
-  public static Session create() {
-    Session result = new Session();
-    result.init();
-    return result;
+  /**
+   * @param port TCP port
+   * @return A correctly initialized Session
+   */
+  public static Session create(int port) {
+    return new Session(port).init();
   }
-  
-  protected Session() {
+
+  protected Session(int port) {
+    this.port = port;
   }
 
   /**
-   * Allow post-constructor initialization.  This method allows us to do
+   * Allow post-constructor initialization.  The method signature allows us to do
    * Session session = new Session().init();
-   * @return
+   *
+   * Separating initialization from construction allows subclasses to perform
+   * initialization that depends on constructor arguments.
+   *
+   * @return The instance, initialized
    */
-  protected void init() {
+  protected <T extends Session> T init() {
     setConnectionManagerParams(httpClient.getHttpConnectionManager().getParams());
     setClientParams(httpClient.getParams());
     setClientState(httpClient.getState());
+    @SuppressWarnings("unchecked")
+    T result = (T)this;
+    return result;
   }
-  
+
   /**
-   * Set connenction manager parameters.  Subclasses 
+   * Set connection manager parameters.
    * @param params
    */
   protected void setConnectionManagerParams(HttpConnectionManagerParams params) {
@@ -49,5 +60,10 @@ public class Session {
   protected void setClientState(HttpState state) {
   }
 
-
+  /**
+   * @return The TCP port for this session
+   */
+  public int getPort() {
+    return port;
+  }
 }

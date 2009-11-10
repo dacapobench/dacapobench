@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.security.MessageDigest;
 
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.dacapo.harness.Digest;
 
@@ -34,22 +33,15 @@ public abstract class Page {
   protected final int expectedStatus;
 
   /**
-   * Per-session data
-   */
-  protected final Session session;
-
-  /**
    * An HTTP page, the expected Http status and the md5 digest of the expected result
-   * @param session
-   * @param address
-   * @param status
-   * @param digest
+   * @param address The URL (host-relative)
+   * @param status Expected status code
+   * @param digest Expected page digest (null for none)
    */
-  public Page(Session session, String address, int status, String digest) {
+  public Page(String address, int status, String digest) {
     this.address = address;
     this.expectedStatus = status;
     this.expectedDigest = digest;
-    this.session = session;
   }
 
   /**
@@ -75,7 +67,7 @@ public abstract class Page {
   /**
    * Calculate the md5 digest of a given string, and return a string
    * representation thereof
-   * 
+   *
    * @param str
    * @return
    */
@@ -83,7 +75,7 @@ public abstract class Page {
     final MessageDigest md = Digest.create();
     byte[] buf = str.getBytes();
     for (int i=0; i < str.length(); i++) {
-      md.update(buf[i]);   
+      md.update(buf[i]);
     }
     return Digest.toString(md.digest());  // Must only ever call digest() once!
   }
@@ -94,29 +86,35 @@ public abstract class Page {
    * @return
    * @throws IOException
    */
-  protected abstract boolean fetch(File logFile, boolean keep) throws IOException;
+  protected abstract boolean fetch(Session session, File logFile, boolean keep) throws IOException;
 
-  public final boolean fetch(File logFile) throws IOException {
-    return fetch(logFile,false);
+  /**
+   * Fetch a page from an Http connection, without keeping the log file.
+   * @param session The HTTP session
+   * @param logFile Destination for the log file
+   * @return Whether the fetch failed or succeeded
+   * @throws IOException A network or disk I/O error
+   */
+  public final boolean fetch(Session session, File logFile) throws IOException {
+    return fetch(session, logFile,false);
   }
-  
+
   /**
    * Fetch a page from an Http connection.
    * @param method The method to invoke
    * @param logFile Where to write the log (if written)
    * @param keep Write the log on success (always writes on failure)
    * @return Whether the fetch failed or succeeded
-   * @throws IOException
-   * @throws HttpException
+   * @throws IOException A network or disk I/O error
    */
-  protected boolean fetch(HttpMethod method, File logFile, boolean keep) throws IOException, HttpException {
+  protected final boolean fetch(Session session, HttpMethod method, File logFile, boolean keep) throws IOException {
     final int iGetResultCode = session.httpClient.executeMethod(method);
     final String strGetResponseBody = readStream(method.getResponseBodyAsStream());
     final String strGetResponseBodyLocalized = strGetResponseBody.replace("\n",System.getProperty("line.separator"));
     if (keep) {
       writeLog(logFile, strGetResponseBodyLocalized);
     }
-    
+
     if (iGetResultCode != expectedStatus) {
       System.err.printf("URL %s returned status %d (expected %d)%n",
           address,iGetResultCode,expectedStatus);
@@ -127,7 +125,7 @@ public abstract class Page {
     if (expectedDigest == null) {
       return true;
     }
-    
+
     String digestString = stringDigest(strGetResponseBody);
     boolean digestMatch = digestString.equals(expectedDigest);
     if (!digestMatch) {
@@ -143,7 +141,7 @@ public abstract class Page {
 
   /**
    * Return the address
-   * @return
+   * @return The page-relative address
    */
   public String getAddress() {
     return address;
@@ -161,12 +159,12 @@ public abstract class Page {
     output.close();
   }
 
-  protected String formatUrl() {
-    return formatUrl(address);
+  protected String formatUrl(Session session) {
+    return formatUrl(session,address);
   }
 
-  protected String formatUrl(String addr) {
-    String formattedUrl = String.format("http://localhost:%d%s", Control.port, addr);
+  static String formatUrl(Session session, String addr) {
+    String formattedUrl = String.format("http://localhost:%d%s", session.getPort(), addr);
     return formattedUrl;
   }
 

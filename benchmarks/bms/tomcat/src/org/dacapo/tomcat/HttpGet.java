@@ -10,22 +10,49 @@ import org.apache.commons.httpclient.methods.GetMethod;
  */
 public class HttpGet extends Page {
 
-  public HttpGet(Session session,String address) {
-    this(session,address,200,null);
-  }
-  public HttpGet(Session session,String address, String digest) {
-    this(session,address,200,digest);
-  }
-  public HttpGet(Session session,String address, int status) {
-    this(session,address,status,null);
-  }
-  public HttpGet(Session session,String address, int status, String digest) {
-    super(session,address,status,digest);
+  /**
+   * An HTTP Get request for the URL {@code address}.  Expects an HTTP return code of 200
+   * and does not perform digest validation.
+   * @param address The URL (server-relative)
+   */
+  public HttpGet(String address) {
+    this(address,200,null);
   }
 
+  /**
+   * An HTTP Get request for the URL {@code address}.  Expects an HTTP return code of 200
+   * and performs digest validation.
+   * @param address The URL (server-relative)
+   * @param digest The expected digest
+   */
+  public HttpGet(String address, String digest) {
+    this(address,200,digest);
+  }
+
+  /**
+   * An HTTP Get request for the URL {@code address}.  Does not perform digest validation.
+   * @param address The URL (server-relative)
+   * @param status The expected HTTP status
+   */
+  public HttpGet(String address, int status) {
+    this(address,status,null);
+  }
+
+  /**
+   * An HTTP Get request for the URL {@code address}.
+   * @param address The URL (server-relative)
+   * @param status The expected HTTP status
+   * @param digest The expected digest
+   */
+  public HttpGet(String address, int status, String digest) {
+    super(address,status,digest);
+  }
+
+  /**
+   * @see org.dacapo.tomcat.Page#fetch(org.dacapo.tomcat.Session, java.io.File, boolean)
+   */
   @Override
-  public boolean fetch(File logFile, boolean keep) throws IOException {
-    GetMethod get = new GetMethod(formatUrl());
-    return fetch(get, logFile, keep);
+  public boolean fetch(Session session, File logFile, boolean keep) throws IOException {
+    return fetch(session,new GetMethod(formatUrl(session)), logFile, keep);
   }
 }
