@@ -62,14 +62,7 @@ public class TestHarness {
   }
   
   public static boolean exists(String fn) {
-    boolean result = getURL(fn) != null;
-    if (!result && commandLineArgs.allowOpenFromFileSystem()) {
-      if (commandLineArgs.isVerbose())
-        System.out.println("TestHarness.exists: going to file system for "+fn);
-      File file = new File(fn);
-      result =  file.exists();
-    }
-    return result;
+    return getURL(fn) != null;
   }
   
   
@@ -106,8 +99,9 @@ public class TestHarness {
       rmdir(scratch);
       scratch.mkdir();
       
-      Benchmark.setSilent(commandLineArgs.isSilent());
-      
+      // this is not right
+      Benchmark.setCommandLineOptions(commandLineArgs);
+
       // now get the benchmark names and run them
       for (String bm : commandLineArgs.benchmarks()) {
         // check if it is a benchmark name

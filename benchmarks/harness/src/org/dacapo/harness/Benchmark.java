@@ -149,7 +149,8 @@ public abstract class Benchmark {
   }
 
   public Benchmark(Config config, File scratch, boolean silent) throws Exception {
-    setSilent(silent);
+    // TODO this is very ugly
+    Benchmark.silent = silent; 
     this.scratch = scratch;
     this.config = config;
     initialize();
@@ -662,15 +663,24 @@ public abstract class Benchmark {
     return file.length();
   }
 
-  public static void setVerbose(boolean verbose) {
-    Benchmark.verbose = verbose;
+  public static void setCommandLineOptions(CommandLineArgs line) {
+    silent = line.isSilent();
+    preserve = line.getPreserve();
+    validate = line.getValidate();
+    validateOutput = line.getValidateOutput();
+    if (line.getValidationReport()!=null)
+      Benchmark.enableValidationReport(line.getValidationReport());
   }
+  
+//  public static void setVerbose(boolean verbose) {
+//    Benchmark.verbose = verbose;
+//  }
 
   public static boolean isVerbose() {
     return verbose;
   }
 
-  public static void enableValidationReport(String filename) {
+  private static void enableValidationReport(String filename) {
     try {
       validationReport = true;
       // Append to an output file
@@ -681,17 +691,17 @@ public abstract class Benchmark {
     }
   }
 
-  public static void setValidateOutput(boolean digestOutput) {
-    Benchmark.validateOutput = digestOutput;
-  }
+//  public static void setValidateOutput(boolean digestOutput) {
+//    Benchmark.validateOutput = digestOutput;
+//  }
 
   public static boolean isDigestOutput() {
     return validateOutput;
   }
 
-  public static void setPreserve(boolean preserve) {
-    Benchmark.preserve = preserve;
-  }
+//  public static void setPreserve(boolean preserve) {
+//    Benchmark.preserve = preserve;
+//  }
 
   public static boolean isPreserve() {
     return preserve;
@@ -707,16 +717,16 @@ public abstract class Benchmark {
   /**
    * @param validate the validate to set
    */
-  public static void setValidate(boolean flag) {
-    validate = flag;
-    setValidateOutput(false);
-  }
+//  public static void setValidate(boolean flag) {
+//    validate = flag;
+//    setValidateOutput(false);
+//  }
 
   public static boolean isSilent() {
     return silent;
   }
 
-  public static void setSilent(boolean silent) {
-    Benchmark.silent = silent;
-  }
+//  public static void setSilent(boolean silent) {
+//    Benchmark.silent = silent;
+//  }
 }
