@@ -47,17 +47,17 @@ public class Callback {
    */
   public Callback(CommandLineArgs args) {
     this.args = args;
-    if (args.methodology() == Methodology.CONVERGE) {
+    if (args.getMethodology() == Methodology.CONVERGE) {
       times = new long[args.getWindow()];
     }
-    verbose |= args.isDebug();
+    verbose |= args.getDebug();
   }
   
   public void init(Config config) {
     if (verbose) System.out.println("Initializing callback");
     iterations = 0;
     
-    switch (args.methodology()) {
+    switch (args.getMethodology()) {
     case ITERATE:
       if (args.getIterations() == 1)
         mode = Mode.TIMING;
@@ -94,7 +94,7 @@ public class Callback {
     
     iterations++;
     if (verbose) System.out.println("iterations = "+iterations);
-    switch (args.methodology()) {
+    switch (args.getMethodology()) {
     case ITERATE:
       if (iterations == args.getIterations() - 1)
         mode = Mode.TIMING;
@@ -116,7 +116,7 @@ public class Callback {
         return true;
       
       /* Optionally report on progress towards convergence */
-      if (iterations >= args.getWindow() && args.isVerbose()) {
+      if (iterations >= args.getWindow() && args.getVerbose()) {
         System.err.printf("Variation %4.2f%% achieved after %d iterations, target = %4.2f%%\n",
                 TestHarness.coeff_of_var(times)*100,iterations,args.getTargetVar()*100);
       }

@@ -36,7 +36,7 @@ public class Batik extends Benchmark {
         newArgs.add((new File(scratch,args[i])).getPath());
     }
     String[] newArgStrings = (String[])newArgs.toArray(new String[0]);
-    if (isVerbose()) {
+    if (getVerbose()) {
       for (int i=0; i < newArgStrings.length; i++) 
         System.out.print(newArgStrings[i]+" ");
       System.out.println();

@@ -38,12 +38,14 @@ import org.dacapo.parser.Config;
  */
 public class CommandLineArgs {
   
-  private final static int   EXIT_OK                    = 0;
-  private final static int   EXIT_MISSING_CALLBACK      = 2;
-  private final static int   EXIT_BAD_CALLBACK          = 3;
-  private final static int   EXIT_BAD_COMMANDLINE       = 4;
-  private final static int   EXIT_UNKNOWN_BENCHMARK     = 9;
-  private final static int   EXIT_MISSING_BENCHMARKS    = 10;
+  public enum Methodology { ITERATE, CONVERGE; }
+
+  private final static int    EXIT_OK                   = 0;
+  private final static int    EXIT_MISSING_CALLBACK     = 2;
+  private final static int    EXIT_BAD_CALLBACK         = 3;
+  private final static int    EXIT_BAD_COMMANDLINE      = 4;
+  private final static int    EXIT_UNKNOWN_BENCHMARK    = 9;
+  private final static int    EXIT_MISSING_BENCHMARKS   = 10;
   
   private static final String RELEASE_NOTES             = "RELEASE_NOTES.txt";
   private static final String DEFAULT_SIZE              = "default";
@@ -112,12 +114,8 @@ public class CommandLineArgs {
     }
   }
 
-  public enum Methodology { ITERATE, CONVERGE; }
-
-  private CommandLine line;
-  
-  private Callback callback = null;
-
+  private CommandLine  line;
+  private Callback     callback   = null;
   private List<String> benchmarks = new ArrayList<String>();
 
   CommandLineArgs(String[] args) throws Exception {
@@ -255,64 +253,65 @@ public class CommandLineArgs {
     return benchmarks;
   }
   
-  /*
-   * Getter methods
-   */
+  public Iterable<String> benchmarks() {
+    return benchmarks;
+  }
   
-  public boolean isVerbose() {
+  // Getter methods
+  public boolean getVerbose() {
     return line.hasOption(OPT_VERBOSE);
   }
-  public Methodology methodology() {
+  
+  public Methodology getMethodology() {
     return line.hasOption(OPT_CONVERGE)?Methodology.CONVERGE:Methodology.ITERATE;
   }
-  public boolean convergeMethodology() {
-    return methodology() == Methodology.CONVERGE;
-  }
-  public boolean iterateMethodology() {
-    return methodology() == Methodology.ITERATE;
-  }
+  
   public double getTargetVar() {
-    return Double.parseDouble(line.getOptionValue(OPT_VARIANCE,DEFAULT_VARIANCE))/100.0; // targetVar;
+    return Double.parseDouble(line.getOptionValue(OPT_VARIANCE,DEFAULT_VARIANCE))/100.0;
   }
+  
   public int getWindow() {
-    return Integer.parseInt(line.getOptionValue(OPT_WINDOW,DEFAULT_WINDOW_SIZE)); // window;
+    return Integer.parseInt(line.getOptionValue(OPT_WINDOW,DEFAULT_WINDOW_SIZE));
   }
+  
   public int getMaxIterations() {
-    return Integer.parseInt(line.getOptionValue(OPT_MAX_ITERATIONS,DEFAULT_MAX_ITERATIONS)); // maxIterations;
+    return Integer.parseInt(line.getOptionValue(OPT_MAX_ITERATIONS,DEFAULT_MAX_ITERATIONS));
   }
-  public boolean isIgnoreValidation() {
-    return line.hasOption(OPT_IGNORE_VALIDATION); // ignoreValidation;
+  
+  public boolean getIgnoreValidation() {
+    return line.hasOption(OPT_IGNORE_VALIDATION);
   }
+  
   public int getIterations() {
-    return Integer.parseInt(line.getOptionValue(OPT_ITERATIONS,DEFAULT_ITERATIONS)); // iterations;
+    return Integer.parseInt(line.getOptionValue(OPT_ITERATIONS,DEFAULT_ITERATIONS));
   }
   public String getSize() {
     return line.getOptionValue(OPT_SIZE, DEFAULT_SIZE);
   }
+  
   public String getScratchDir() {
     return line.getOptionValue(OPT_SCRATCH_DIRECTORY, DEFAULT_SCRATCH_DIRECTORY);
   }
+  
   public Callback getCallback() {
     return callback;
   }
   public String getCnfOverride() {
     return line.getOptionValue(OPT_CONFIG,null);
   }
-  public boolean isInfo() {
-    return line.hasOption(OPT_INFORMATION); // info;
-  }
-  public Iterable<String> benchmarks() {
-    return benchmarks;
-  }
-
-  public boolean isSilent() {
-    return !isVerbose();
-  }
-
-  public boolean isDebug() {
-    return line.hasOption(OPT_DEBUG);
+  
+  public boolean getInformation() {
+    return line.hasOption(OPT_INFORMATION);
   }
   
+  public boolean getSilent() {
+    return !getVerbose();
+  }
+  
+  public boolean getDebug() {
+    return line.hasOption(OPT_DEBUG);
+  }
+
   public boolean getPreserve() {
     return line.hasOption(OPT_PRESERVE);
   }
@@ -329,6 +328,7 @@ public class CommandLineArgs {
     return line.getOptionValue(OPT_VALIDATION_REPORT,null);
   }
 
+  // *****************************************************************
   private void defineCallback() throws SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
     // define the callback class (or set the default if none specified
     if (line.hasOption(OPT_CALLBACK)) {

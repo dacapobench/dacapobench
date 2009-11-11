@@ -49,12 +49,12 @@ public abstract class Benchmark {
   /**
    * Perform validation
    */
-  protected static boolean validate = true;
+  private static boolean validate = true;
 
   /**
    * Don't clean up output files
    */
-  protected static boolean preserve = false;
+  private static boolean preserve = false;
 
   /**
    * Output file for writing digests
@@ -64,7 +64,7 @@ public abstract class Benchmark {
   /**
    *
    */
-  protected static boolean validationReport = false;
+  private static boolean validationReport = false;
 
   /**
    * Saved System.out while redirected to the digest stream
@@ -664,7 +664,7 @@ public abstract class Benchmark {
   }
 
   public static void setCommandLineOptions(CommandLineArgs line) {
-    silent = line.isSilent();
+    silent = line.getSilent();
     preserve = line.getPreserve();
     validate = line.getValidate();
     validateOutput = line.getValidateOutput();
@@ -672,14 +672,6 @@ public abstract class Benchmark {
       Benchmark.enableValidationReport(line.getValidationReport());
   }
   
-//  public static void setVerbose(boolean verbose) {
-//    Benchmark.verbose = verbose;
-//  }
-
-  public static boolean isVerbose() {
-    return verbose;
-  }
-
   private static void enableValidationReport(String filename) {
     try {
       validationReport = true;
@@ -691,42 +683,28 @@ public abstract class Benchmark {
     }
   }
 
-//  public static void setValidateOutput(boolean digestOutput) {
-//    Benchmark.validateOutput = digestOutput;
-//  }
+  // getter methods
+  public static boolean getVerbose() {
+    return verbose;
+  }
 
-  public static boolean isDigestOutput() {
+  public static boolean getValidateOutput() {
     return validateOutput;
   }
 
-//  public static void setPreserve(boolean preserve) {
-//    Benchmark.preserve = preserve;
-//  }
-
-  public static boolean isPreserve() {
+  public static boolean getValidate() {
+    return validate;
+  }
+  
+  public static boolean getPreserve() {
     return preserve;
   }
 
-  /**
-   * @return the iteration
-   */
   protected int getIteration() {
     return iteration;
   }
 
-  /**
-   * @param validate the validate to set
-   */
-//  public static void setValidate(boolean flag) {
-//    validate = flag;
-//    setValidateOutput(false);
-//  }
-
-  public static boolean isSilent() {
+  public static boolean getSilent() {
     return silent;
   }
-
-//  public static void setSilent(boolean silent) {
-//    Benchmark.silent = silent;
-//  }
 }

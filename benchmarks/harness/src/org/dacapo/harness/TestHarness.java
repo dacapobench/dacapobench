@@ -52,7 +52,7 @@ public class TestHarness {
 
   private static URL getURL(String fn) {
     ClassLoader cl = TestHarness.class.getClassLoader();
-    if (commandLineArgs.isVerbose())
+    if (commandLineArgs.getVerbose())
       System.out.println("TestHarness.getURL: returns "+cl.getResource(fn));
     return cl.getResource(fn);    
   }
@@ -126,10 +126,10 @@ public class TestHarness {
         
         TestHarness harness = new TestHarness(ins);
         
-        if (commandLineArgs.isInfo()) {
+        if (commandLineArgs.getInformation()) {
           harness.bmInfo();
         } else {
-          if (commandLineArgs.isVerbose())
+          if (commandLineArgs.getVerbose())
             harness.dump();
           
           runBenchmark(scratch, bm, harness);
@@ -172,7 +172,7 @@ public class TestHarness {
     
     if (!valid) {
       System.err.println("Validation FAILED for "+bm+" "+commandLineArgs.getSize());
-      if (!commandLineArgs.isIgnoreValidation())
+      if (!commandLineArgs.getIgnoreValidation())
         System.exit(-2);
     }
   }

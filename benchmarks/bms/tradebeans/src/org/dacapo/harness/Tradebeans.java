@@ -45,14 +45,14 @@ public class Tradebeans extends Benchmark {
   
   public void cleanup() {
     System.out.println("Shutting down Geronimo...");
-    if (!isPreserve()) {
+    if (!getPreserve()) {
       deleteTree(new File(scratch,"tradebeans"));
       deleteTree(new File(scratch,"geronimo-jetty6-minimal-2.1.4"));
     }
   }
   
   public void iterate(String size) throws Exception {
-    if (isVerbose())
+    if (getVerbose())
       System.out.println("tradebeans benchmark starting");
     method.invoke(null);
   }

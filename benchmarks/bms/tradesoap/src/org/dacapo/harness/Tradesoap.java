@@ -40,14 +40,14 @@ public class Tradesoap extends Benchmark {
   
   public void cleanup() {
     System.out.println("Shutting down Geronimo...");
-    if (!isPreserve()) {
+    if (!getPreserve()) {
       deleteTree(new File(scratch,"tradesoap"));
       deleteTree(new File(scratch,"geronimo-jetty6-minimal-2.1.4"));
     }
   }
   
   public void iterate(String size) throws Exception {
-    if (isVerbose())
+    if (getVerbose())
       System.out.println("tradesoap benchmark starting");
     method.invoke(null);
   }

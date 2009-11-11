@@ -81,7 +81,7 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
    * @param size The "size" of the iteration (small, default, large)
    */
   public boolean validate(String size) {
-    if (!validate)
+    if (!getValidate())
       return true;
     try {
       useBenchmarkClassLoader();

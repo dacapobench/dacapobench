@@ -37,7 +37,7 @@ public class DacapoClassLoader extends URLClassLoader {
     DacapoClassLoader rtn = null;
     try {
       URL[] urls = getJars(config, scratch);
-      if (Benchmark.isVerbose()) {
+      if (Benchmark.getVerbose()) {
         System.out.println("Benchmark classpath:");
         for (URL url : urls) {
           System.out.println("  "+url.toString());

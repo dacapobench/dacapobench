@@ -34,13 +34,13 @@ public class Luindex extends Benchmark {
   }
   
   public void cleanup() {
-    if (!isPreserve()) {
+    if (!getPreserve()) {
       deleteTree(new File(scratch,"luindex"));
     }
   }
   
   public void preIteration(String size) {
-    if (isPreserve() && getIteration() > 1) {
+    if (getPreserve() && getIteration() > 1) {
       deleteTree(new File(scratch,"index"));
     }
   }
@@ -49,7 +49,7 @@ public class Luindex extends Benchmark {
    * Index all text files under a directory. 
    */
   public void iterate(String size) throws Exception {
-    if (isVerbose())
+    if (getVerbose())
       System.out.println("luindex benchmark starting");
     String[] args = config.preprocessArgs(size,scratch);
     
@@ -64,7 +64,7 @@ public class Luindex extends Benchmark {
   }
 
   public void postIteration(String size) {
-    if (!isPreserve()) {
+    if (!getPreserve()) {
       deleteTree(new File(scratch,"index"));
     }
   }
