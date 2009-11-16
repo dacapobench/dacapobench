@@ -1,0 +1,33 @@
+<project name="DacapoAgent" default="all" basedir="..">
+  <description>DaCapo Agent</description>
+
+  <property file="dacapo.properties"/>
+
+  <condition property="linux">
+    <equals arg1="${os.name}" arg2="linux" casesensitive="no" trim="yes"/>
+  </condition>
+
+  <property name="make" value="make"/>
+
+  <target name="init">
+    <mkdir dir="agent/lib"/>
+  </target>
+
+  <target name="all" depends="init,build-agent-linux"/> 
+
+  <target name="build-agent-linux" if="linux">
+    <exec executable="${make}" dir="agent">
+      <arg value="JAVA_HOME=${java.home}/.."/>
+    </exec>
+  </target>
+
+  <target name="clean">
+    <exec executable="${make}" dir="agent">
+      <arg value="JAVA_HOME=${jdk.home}"/>
+      <arg value="clean"/>
+    </exec>
+    <delete dir="agent/lib"/>
+  </target>
+
+</project>
+
