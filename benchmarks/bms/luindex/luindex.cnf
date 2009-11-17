@@ -2,7 +2,7 @@ benchmark luindex
   class org.dacapo.harness.Luindex
   thread-model single
   jar "luindex.jar"
-  libs "lucene-core-2.4.jar", "lucene-demos-2.4.jar";
+  libs "lucene-core-2.9.1-dev.jar", "lucene-demos-2.9.1-dev.jar";
 
 size small args "luindex/william/poetry" 
   output stdout  digest 0xebb11b9e1c56c6ef5620b890cca24ec773301388,
