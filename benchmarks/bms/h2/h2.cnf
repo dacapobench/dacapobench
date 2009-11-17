@@ -3,29 +3,29 @@ benchmark h2
   thread-model per_cpu
   libs "derbyTesting.jar","junit-3.8.1.jar","h2-1.2.121.jar","tpcc.jar";
 
-size small args "-numberOfTerminals","${THREADS}",
-		"--totalTransactions", "1600",
+size small args "--numberOfTerminals","${THREADS}",
+		"--totalTransactions", "400",
 		"--scale","2",
 		"--numberOfWarehouses", "8",
 		"--createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xa8b89e89d2d53191c8585c15d27122d0f1d37cc4;
+  output stdout digest 0xf0e1ca16e77dd71ec18f2a537948c27c5317304a;
   
-size default args "-numberOfTerminals","${THREADS}",
-		"--totalTransactions","4800",
+size default args "--numberOfTerminals","${THREADS}",
+		"--totalTransactions","800",
 		"--scale","2",
 		"--numberOfWarehouses", "8",
 		"--createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xa16fa8b4f61d752e2e3d8509382017f7df69eeb6;
+  output stdout digest 0x06d107b5cdef28e5ee93ae4f0ed941087880d200;
 
-size large args "-numberOfTerminals","${THREADS}",
-		"--totalTransactions","38400",
+size large args "--numberOfTerminals","${THREADS}",
+		"--totalTransactions","8000",
 		"--scale","2",
 		"--numberOfWarehouses", "8",
 		"--createSuffix", ";MVCC=true"
   threads 1
-  output stdout digest 0x29683957184770f7b9909aba4169865bbec64ca6;
+  output stdout digest 0xb777a5f82dc2a57856c13d65f2a4a6161deed0c8;
 
 
 description
