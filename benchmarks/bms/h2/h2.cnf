@@ -4,26 +4,26 @@ benchmark h2
   libs "derbyTesting.jar","junit-3.8.1.jar","h2-1.2.121.jar","tpcc.jar";
 
 size small args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions", "1600",
-		"-scale","1",
-		"-numberOfWarehouses", "1",
-		"-createSuffix", ";MVCC=true"
+		"--totalTransactions", "1600",
+		"--scale","2",
+		"--numberOfWarehouses", "8",
+		"--createSuffix", ";MVCC=true"
   threads 1
   output stdout digest 0xa8b89e89d2d53191c8585c15d27122d0f1d37cc4;
   
 size default args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions","4800",
-		"-scale","2",
-		"-numberOfWarehouses", "2",
-		"-createSuffix", ";MVCC=true"
+		"--totalTransactions","4800",
+		"--scale","2",
+		"--numberOfWarehouses", "8",
+		"--createSuffix", ";MVCC=true"
   threads 1
   output stdout digest 0xa16fa8b4f61d752e2e3d8509382017f7df69eeb6;
 
 size large args "-numberOfTerminals","${THREADS}",
-		"-totalTransactions","38400",
-		"-scale","8",
-		"-numberOfWarehouses", "8",
-		"-createSuffix", ";MVCC=true"
+		"--totalTransactions","38400",
+		"--scale","2",
+		"--numberOfWarehouses", "8",
+		"--createSuffix", ";MVCC=true"
   threads 1
   output stdout digest 0x29683957184770f7b9909aba4169865bbec64ca6;
 
