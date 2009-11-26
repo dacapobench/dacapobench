@@ -185,41 +185,42 @@ public class TPCC {
   private long checkSum = 0;
   
   private void preIterationMemoryDB() throws Exception {
-    System.err.println("PreIteration");
     if (firstIteration) {
+      System.out.println("PreIteration");
+
       // create the database
-      System.err.println("Creating Schema");
+      System.out.println("Creating Schema");
       createSchema();
       
-      System.err.println("Generating Data");
+      System.out.println("Generating Data");
       // generate the data
       loadData();
       
-      System.err.println("Generate Indexes");
+      System.out.println("Generate Indexes");
       // generate indexes
       createIndexes();
       
-      System.err.println("Generate Foreign Key constraints");
+      System.out.println("Generate Foreign Key constraints");
       // generate foreign keys
       createConstraints();
 
       getConnection().commit();
       
-      System.err.println("Calculate checksum of initial data");
+      System.out.println("Calculate checksum of initial data");
       checkSum = calculateSumDB();
       
       // subsequently we only restore
       firstIteration = false;
     } else if (!cleanupInIteration){
-      System.err.println("Remove created data from this iteration");
+      System.out.println("Remove created data from this iteration");
       resetToInitialData();
       
-      System.err.println("Calculate checksum of data");
+      System.out.println("Calculate checksum of data");
       long value = calculateSumDB();
       if (value == checkSum)
-        System.err.println("Checksum is correct");
+        System.out.println("Checksum is correct");
       else
-        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+        System.out.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
     }
     
     // keep connection open so that database stays in memory
@@ -257,7 +258,7 @@ public class TPCC {
     long elapsedTimeMillis = System.currentTimeMillis() - start;
     
     if (reportPreIterationTimes) {
-      System.err.println("Elapse     time=" + elapsedTimeMillis);
+      System.out.println("Elapse     time=" + elapsedTimeMillis);
     }
   }
 
@@ -270,22 +271,30 @@ public class TPCC {
 
     System.out.println();
     
-    report(System.err);
-
     if (inMemoryDB && cleanupInIteration) {
-      System.err.println("Remove created data from this iteration");
+      long start = System.currentTimeMillis();
+      
+      System.out.println("Remove created data from this iteration");
       resetToInitialData();
       
-      System.err.println("Calculate checksum of data");
+      System.out.println("Calculate checksum of data");
       long value = calculateSumDB();
       if (value == checkSum)
-        System.err.println("Checksum is correct");
+        System.out.println("Checksum is correct");
       else
-        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+        System.out.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+      
+      resetToInitialDataTime = System.currentTimeMillis() - start;
     }
   }
+  
+  private long resetToInitialDataTime = 0;
 
   public void postIteration(String size) throws Exception {
+    if (inMemoryDB && cleanupInIteration) {
+      System.out.println("Time to reset data to initial state: " + resetToInitialDataTime + " ms");
+    }
+    
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 

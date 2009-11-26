@@ -6,38 +6,38 @@ benchmark h2
 size small args "--number-of-terminals","${THREADS}",
 		"--total-transactions", "400",
 		"--scale","2",
-		"--report-pre-iteration-times",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xf0e1ca16e77dd71ec18f2a537948c27c5317304a;
+  output stdout digest 0x552cb1f9416b9cbac0250b04a5a782c5c4ced19a,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
 size default args "--number-of-terminals","${THREADS}",
 		"--total-transactions","4000",
 		"--scale","8",
-		"--report-pre-iteration-times",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xfb00b8c876f34e7af78e4658d04b85a319f9a86e;
+  output stdout digest 0x4b2d2f44084b84aed7a63a46fa5a8fa80b417ea4,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "--number-of-terminals","${THREADS}",
 		"--total-transactions","64000",
 		"--scale","8",
-		"--report-pre-iteration-times",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0x599297409a9d85a1ce89d6566cad134b7e2046a3;
+  output stdout digest 0x08640abd748f3068aa1a28ef38649440ed3fbd82,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "--number-of-terminals","${THREADS}",
 		"--total-transactions","256000",
 		"--scale","32",
-		"--report-pre-iteration-times",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xe632ca79b79897c123106fb9c9e96d3c6f188df4;
+  output stdout digest 0xfbdd9ccf76bd6a708390b2697588452e0c57cc0b,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
 description
@@ -48,5 +48,5 @@ description
   license	"Apache License, Version 2.0 covering TPC-C like workload, and Eclipse Public License Version 1.0 covering H2",
   url		"http://db.apache.org/derby/ and http://www.h2database.com",
   version	"10.5.3.0 and 1.2.121",
-  repeats	"<totalTransactions> evenly divided amoung the hardware threads.",
+  repeats	"<totalTransactions> evenly divided among the hardware threads.",
   threads   "One client thread per hardware thread.";
