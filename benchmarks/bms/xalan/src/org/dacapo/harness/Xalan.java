@@ -19,7 +19,7 @@ public class Xalan extends Benchmark {
   Method createWorkersMethod;
   
   public Xalan(Config config, File scratch) throws Exception {
-    super(config, scratch);
+    super(config, scratch,false);
     Class<?> clazz = Class.forName("org.dacapo.xalan.XSLTBench", true, loader);
     this.method = clazz.getMethod("doWork",int.class);
     createWorkersMethod = clazz.getMethod("createWorkers", int.class);
