@@ -13,7 +13,7 @@ public class Batik extends Benchmark {
   private final Constructor<?> constructor;
 
   public Batik(Config config, File scratch) throws Exception {
-    super(config, scratch);
+    super(config, scratch,false);
     Class<?> clazz = Class.forName("org.apache.batik.apps.rasterizer.Main", true, loader);
     this.method = clazz.getMethod("execute");
     this.constructor = clazz.getConstructor(String[].class);
