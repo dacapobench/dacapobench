@@ -37,7 +37,7 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
   private final Method endMethod;
   
   public Sunflow(Config config, File scratch) throws Exception {
-    super(config, scratch);
+    super(config, scratch,false);
     Class<?> clazz = Class.forName("org.sunflow.Benchmark", true, loader);
     this.method = clazz.getMethod("kernelMain");
     this.beginMethod = clazz.getMethod("kernelBegin");
