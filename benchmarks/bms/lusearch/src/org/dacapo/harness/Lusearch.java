@@ -10,7 +10,7 @@ public class Lusearch extends org.dacapo.harness.Benchmark {
   private final Object benchmark;
   
   public Lusearch(Config config, File scratch) throws Exception {
-    super(config, scratch);
+    super(config, scratch,false);
     Class<?> clazz = Class.forName("org.dacapo.lusearch.Search", true, loader);
     this.method = clazz.getMethod("main", String[].class);
     Constructor<?> cons = clazz.getConstructor();
