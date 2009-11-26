@@ -1,6 +1,7 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 
 import org.dacapo.harness.Benchmark;
@@ -26,7 +27,7 @@ public class H2 extends Benchmark {
   private Method postIterationTPCC;
   
   public H2(Config config, File scratch) throws Exception {
-    super(config, scratch);
+    super(config, scratch, false);
   }
   
   @Override
