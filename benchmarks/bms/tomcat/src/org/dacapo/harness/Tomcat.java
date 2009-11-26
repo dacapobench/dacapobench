@@ -28,7 +28,7 @@ public class Tomcat extends Benchmark {
    * @throws Exception When something goes wrong
    */
   public Tomcat(Config config, File scratch) throws Exception {
-    super(config,scratch);
+    super(config,scratch,false);
     this.clazz = Class.forName("org.dacapo.tomcat.Control", true, loader);
     this.method = clazz.getMethod("exec",String.class);
 
