@@ -12,6 +12,7 @@ import java.security.AccessController;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -23,6 +24,7 @@ import org.apache.derbyTesting.system.oe.client.Load;
 import org.apache.derbyTesting.system.oe.client.MultiThreadSubmitter;
 import org.apache.derbyTesting.system.oe.client.Operations;
 import org.apache.derbyTesting.system.oe.client.Submitter;
+import org.apache.derbyTesting.system.oe.direct.Standard;
 import org.apache.derbyTesting.system.oe.load.ThreadInsert;
 import org.apache.derbyTesting.system.oe.util.OERandom;
 
@@ -58,8 +60,6 @@ public class TPCC {
   private final static short DEF_SCALE = 1;
   // number of transactions each terminal (client) runs
   private final static int DEF_TRANSACTIONS_PER_TERMINAL = 100;
-  // number of warehoueses (see TPC-C documentation)
-  private final static short DEF_NUM_OF_WAREHOUSES = 1;
 
   // Basic configurable items
   // number of threads to perform loading of the database
@@ -70,9 +70,9 @@ public class TPCC {
   private short scale = DEF_SCALE;
   private int numberOfTerminals = DEF_NUM_OF_TERMINALS;
   private int transactionsPerTerminal = DEF_TRANSACTIONS_PER_TERMINAL;
-  private short numberOfWarehouses = DEF_NUM_OF_WAREHOUSES;
   private boolean generate = false; // by default we use the pre-generated database
-  private boolean inMemoryDB = false; // by default use a disk basked database
+  private boolean inMemoryDB = true; // by default use the in memory db
+  private boolean cleanupInIteration = false; // by default perform clean up in preiteration phase
   private boolean reportPreIterationTimes = false;
 
   // OLTP runners
@@ -182,18 +182,45 @@ public class TPCC {
     }
   }
 
+  private long checkSum = 0;
+  
   private void preIterationMemoryDB() throws Exception {
-    // create the database
-    createSchema();
+    System.err.println("PreIteration");
+    if (firstIteration) {
+      // create the database
+      System.err.println("Creating Schema");
+      createSchema();
+      
+      System.err.println("Generating Data");
+      // generate the data
+      loadData();
+      
+      System.err.println("Generate Indexes");
+      // generate indexes
+      createIndexes();
+      
+      System.err.println("Generate Foreign Key constraints");
+      // generate foreign keys
+      createConstraints();
 
-    // generate the data
-    loadData();
-
-    // generate indexes
-    createIndexes();
-
-    // generate foreign keys
-    createConstraints();
+      getConnection().commit();
+      
+      System.err.println("Calculate checksum of initial data");
+      checkSum = calculateSumDB();
+      
+      // subsequently we only restore
+      firstIteration = false;
+    } else if (!cleanupInIteration){
+      System.err.println("Remove created data from this iteration");
+      resetToInitialData();
+      
+      System.err.println("Calculate checksum of data");
+      long value = calculateSumDB();
+      if (value == checkSum)
+        System.err.println("Checksum is correct");
+      else
+        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+    }
     
     // keep connection open so that database stays in memory
   }
@@ -219,21 +246,17 @@ public class TPCC {
     for (int i = 0; i < submitters.length; i++) {
       connections[i] = makeConnection(false);
 
-      Operations ops = new Operation(connections[i]);
+      Operations ops = new Standard(connections[i]);
 
-      submitters[i] = new TPCCSubmitter(null, ops, rands[i], numberOfWarehouses);
+      submitters[i] = new TPCCSubmitter(null, ops, rands[i], scale);
     }
-
-    long preGCTimeMillis = System.currentTimeMillis() - start;
 
     // clean up any hang-over from previous iterations
     System.gc();
 
-    // Get elapsed time in milliseconds
     long elapsedTimeMillis = System.currentTimeMillis() - start;
-
+    
     if (reportPreIterationTimes) {
-      System.err.println("GC         time=" + (elapsedTimeMillis - preGCTimeMillis));
       System.err.println("Elapse     time=" + elapsedTimeMillis);
     }
   }
@@ -246,8 +269,20 @@ public class TPCC {
         .multiRun(submitters, displays, transactionsPerTerminal);
 
     System.out.println();
-
+    
     report(System.err);
+
+    if (inMemoryDB && cleanupInIteration) {
+      System.err.println("Remove created data from this iteration");
+      resetToInitialData();
+      
+      System.err.println("Calculate checksum of data");
+      long value = calculateSumDB();
+      if (value == checkSum)
+        System.err.println("Checksum is correct");
+      else
+        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+    }
   }
 
   public void postIteration(String size) throws Exception {
@@ -260,12 +295,12 @@ public class TPCC {
       connections[i] = null;
     }
     
-    if (!preserve || inMemoryDB)
+    if (!preserve && !inMemoryDB)
       deleteDatabase();
   }
 
   public void cleanup() throws Exception {
-    if (!preserve || inMemoryDB)
+    if (!preserve && !inMemoryDB)
       deleteDatabase();
   }
 
@@ -321,6 +356,106 @@ public class TPCC {
     return;
   }
 
+  private void reportQuantities() throws Exception {
+    reportQuantity("ITEM");
+    reportQuantity("DISTRICT");
+    reportQuantity("CUSTOMER");
+    reportQuantity("ORDERS");
+    reportQuantity("ORDERLINE");
+    reportQuantity("NEWORDERS");
+    reportQuantity("WAREHOUSE");
+    reportQuantity("STOCK");
+    reportQuantity("HISTORY");
+    reportQuantity("DELIVERY_REQUEST");
+    reportQuantity("DELIVERY_ORDERS");
+  }
+  
+  private void reportQuantity(String table) throws Exception {
+    PreparedStatement ps;
+    ResultSet rs;
+    
+    ps = prepareStatement("SELECT COUNT(*) FROM "+table);
+    ps.execute();
+    rs = ps.getResultSet();
+    rs.first();
+    System.err.println(table+" #"+rs.getLong(1));
+  }
+  
+  private long calculateSumDB() throws Exception {
+    long result = 0;
+    
+    result += calculateSumDB("CUSTOMER", 22);
+    result += calculateSumDB("DISTRICT", 11);
+    result += calculateSumDB("WAREHOUSE", 9);
+    result += calculateSumDB("STOCK", 18);
+    result += calculateSumDB("ORDERS", 10);
+    result += calculateSumDB("ORDERLINE", 12);
+    result += calculateSumDB("NEWORDERS", 5);
+    result += calculateSumDB("HISTORY", 9);
+    result += calculateSumDB("ITEM", 5);
+    result += calculateSumDB("DELIVERY_ORDERS", 6);
+    result += calculateSumDB("DELIVERY_REQUEST", 3);
+    
+    return result;
+  }
+  
+  private long calculateSumDB(String table, int columns) throws Exception {
+    long result = 0;
+    PreparedStatement ps  = prepareStatement("SELECT * FROM "+table);
+    
+    ps.execute();
+    ResultSet rs = ps.getResultSet();
+    
+    while (rs.next()) {
+      for(int c=1; c<=columns; c++) {
+        String v = rs.getString(c);
+        for(int i=0; v!=null && i<v.length(); i++)
+          result += v.charAt(i);
+      }
+    }
+    
+    return result; 
+  }
+  
+  private void resetToInitialData() throws Exception {
+    // there are no initial delivery requests or orders so remove all
+    // residual entries
+    prepareStatement("DELETE FROM DELIVERY_REQUEST").execute();
+    prepareStatement("DELETE FROM DELIVERY_ORDERS").execute();
+    
+    // remove all entries that are not marked as part of the initial\\
+    // set of entries
+    prepareStatement("DELETE FROM HISTORY WHERE H_INITIAL = FALSE").execute(); 
+    prepareStatement("DELETE FROM NEWORDERS WHERE NO_INITIAL = FALSE").execute(); 
+    prepareStatement("DELETE FROM ORDERLINE WHERE OL_INITIAL = FALSE").execute(); 
+    prepareStatement("DELETE FROM ORDERS WHERE O_INITIAL = FALSE").execute(); 
+
+    // commit deletes
+    getConnection().commit();
+    
+    // although below seems a little inefficient we put the conditions in for the 
+    // following reason: it keeps the commit set size low and therefore there is
+    //   less heap pressure
+    // we also perform regular commits for the same reason
+    prepareStatement("UPDATE CUSTOMER SET C_DATA = C_DATA_INITIAL, C_BALANCE = -10.0, C_YTD_PAYMENT = 10.0, C_PAYMENT_CNT = 1, C_DELIVERY_CNT = 0 WHERE C_DATA <> C_DATA_INITIAL OR C_BALANCE <> -10.0 OR C_YTD_PAYMENT <> 10.0 OR C_PAYMENT_CNT <> 1 OR C_DELIVERY_CNT <> 0").execute();
+    getConnection().commit();
+    
+    prepareStatement("UPDATE DISTRICT SET D_YTD = 30000.0, D_NEXT_O_ID = 3001 WHERE D_YTD <> 30000.0 OR D_NEXT_O_ID <> 3001").execute();
+    getConnection().commit();
+
+    prepareStatement("UPDATE WAREHOUSE SET W_YTD = 300000.0 WHERE W_YTD <> 300000.0").execute();
+    getConnection().commit();
+
+    prepareStatement("UPDATE STOCK SET S_QUANTITY = S_QUANTITY_INITIAL, S_ORDER_CNT = 0, S_YTD = 0, S_REMOTE_CNT = 0 WHERE S_QUANTITY <> S_QUANTITY_INITIAL OR S_ORDER_CNT <> 0 OR S_YTD <> 0 OR S_REMOTE_CNT <> 0").execute();
+    getConnection().commit();
+
+    prepareStatement("UPDATE ORDERS SET O_CARRIER_ID = O_CARRIER_ID_INITIAL WHERE O_CARRIER_ID <> O_CARRIER_ID_INITIAL").execute();
+    getConnection().commit();
+
+    prepareStatement("UPDATE ORDERLINE SET OL_DELIVERY_D = OL_DELIVERY_D_INITIAL WHERE OL_DELIVERY_D <> OL_DELIVERY_D_INITIAL").execute();
+    getConnection().commit();
+  }
+  
   // helper function for getting and setting a connection for initial
   // setup of the database
   private Connection getConnection() throws SQLException {
@@ -424,6 +559,14 @@ public class TPCC {
                                                                // prop);
   }
 
+  private PreparedStatement prepareStatement(String sql) throws SQLException {
+    // Prepare all statements as forward-only, read-only, close at commit.
+    return getConnection().prepareStatement(sql,
+            ResultSet.TYPE_FORWARD_ONLY,
+            ResultSet.CONCUR_READ_ONLY,
+            ResultSet.CLOSE_CURSORS_AT_COMMIT);
+  }
+
   // database name helper functions
   private String getDatabaseName() {
     return database;
@@ -469,15 +612,12 @@ public class TPCC {
       if ("--numberOfTerminals".equalsIgnoreCase(args[i]))
       {
         this.numberOfTerminals = Integer.parseInt(args[++i]);
-      } else if ("--totalTransactions".equalsIgnoreCase(args[i]))
+      } else if ("--total-transactions".equalsIgnoreCase(args[i]))
       {
         totalTx = Integer.parseInt(args[++i]);
       } else if ("--scale".equalsIgnoreCase(args[i]))
       {
         this.scale = Short.parseShort(args[++i]);
-      } else if ("--numberOfWarehouses".equalsIgnoreCase(args[i]))
-      {
-        this.numberOfWarehouses = Short.parseShort(args[++i]);
       } else if ("--generate".equalsIgnoreCase(args[i]))
       {
         this.generate = true;
@@ -487,10 +627,13 @@ public class TPCC {
       } else if ("--disk".equalsIgnoreCase(args[i]))
       {
         this.inMemoryDB = false;
-      } else if ("--reportPreIterationTimes".equalsIgnoreCase(args[i]))
+      } else if ("--report-pre-iteration-times".equalsIgnoreCase(args[i]))
       {
         this.reportPreIterationTimes = true;
-      } else if ("--createSuffix".equalsIgnoreCase(args[i]))
+      } else if ("--cleanup-in-iteration".equalsIgnoreCase(args[i]))
+      {
+        this.cleanupInIteration = true;
+      } else if ("--create-suffix".equalsIgnoreCase(args[i]))
       {
     	this.createSuffix = args[++i];
       }

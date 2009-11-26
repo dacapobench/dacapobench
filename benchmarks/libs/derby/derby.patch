@@ -1,12 +1,361 @@
-diff -urNw derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java derby-e/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java
---- derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-03-24 01:49:58.000000000 +1100
-+++ derby-e/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-11-10 10:04:47.000000000 +1100
-@@ -48,7 +48,7 @@
+diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java
+--- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-03-24 01:49:58.000000000 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-11-26 11:10:39.869294935 +1100
+@@ -44,11 +44,11 @@
+      * 
+      * see section 1.2.1 of TPC-C specification
+      */
+-    public static final short DISTRICT_COUNT_W = 10;
++    public static final short DISTRICT_COUNT_W = 4;
  
-     public static final int CUSTOMER_COUNT_W = 3000 * DISTRICT_COUNT_W;
+-    public static final int CUSTOMER_COUNT_W = 3000 * DISTRICT_COUNT_W;
++    public static final int CUSTOMER_COUNT_W = 1000 * DISTRICT_COUNT_W;
  
 -    public static final int ITEM_COUNT = 100000;
 +    public static final int ITEM_COUNT = 10000;
  
      public static final int NEWORDERS_COUNT_W = (CUSTOMER_COUNT_W * 9) / 30;
  
+diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java
+--- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2009-03-24 01:49:57.000000000 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2009-11-26 08:57:53.069287693 +1100
+@@ -24,6 +24,7 @@
+ import java.sql.PreparedStatement;
+ import java.sql.ResultSet;
+ import java.sql.SQLException;
++import java.sql.Timestamp;
+ import java.sql.Types;
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -35,6 +36,7 @@
+ import org.apache.derbyTesting.system.oe.model.Order;
+ import org.apache.derbyTesting.system.oe.model.OrderLine;
+ import org.apache.derbyTesting.system.oe.model.Warehouse;
++import org.apache.derbyTesting.system.oe.routines.Data;
+ 
+ /**
+  * Implement the transactions following the TPC-C specification
+@@ -403,7 +405,7 @@
+     }
+     
+     private void paymentById(Display display, Object displayData, short w, short d,
+-            short cw, short cd, int c, final String amount) throws Exception {
++          short cw, short cd, int c, final String s_amount) throws Exception {
+ 
+         PreparedStatement pyCustomerPayment = prepareStatement(
+                 "UPDATE CUSTOMER SET C_BALANCE = C_BALANCE - ?, " +
+@@ -414,13 +416,18 @@
+         PreparedStatement pyCustomerInfoId = prepareStatement(
+                 "SELECT C_FIRST, C_MIDDLE, C_LAST, C_BALANCE, " +
+                 "C_STREET_1, C_STREET_2, C_CITY, C_STATE, C_ZIP, " +
+-                "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM, C_DISCOUNT " +
++              "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM, C_DISCOUNT, C_DATA " +
+                 "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
+         
++      // This is removed as the call out to java from the SQL engine did not work
++      // from H2, this value can be calculated externally and set so this callback
++      // is somewhat redundant.
+         PreparedStatement pyCustomerUpdateBadCredit = prepareStatement(
+-                "UPDATE CUSTOMER SET C_DATA = " +
+-                " BAD_CREDIT_DATA(C_DATA, ?, ?, C_W_ID, C_W_ID, C_ID, ?) " +
++    		  // "UPDATE CUSTOMER SET C_DATA = " +
++              // " BAD_CREDIT_DATA(C_DATA, ?, ?, C_W_ID, C_W_ID, C_ID, ?) " +
++    		  "UPDATE CUSTOMER SET C_DATA = ? " +
+                 "WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
++      
+         PreparedStatement pyCustomerGetData = prepareStatement(
+                 "SELECT SUBSTR(C_DATA, 1, 200) AS C_DATA_200 " +
+                 "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
+@@ -437,17 +444,19 @@
+             
+         PreparedStatement pyHistory = prepareStatement(
+                 "INSERT INTO HISTORY(H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, " +
+-                "H_DATE, H_AMOUNT, H_DATA) " +
+-                "VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, ?, ?)");
++              "H_AMOUNT, H_DATA, H_DATE, H_INITIAL) " +
++              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSe)");
+         
+         Customer customer = new Customer();
+         customer.setWarehouse(cw);
+         customer.setDistrict(cd);
+         customer.setId(c);
+         
++      double d_amount = Double.parseDouble(s_amount);
++      
+         // Update the customer assuming that they have good credit
+-        pyCustomerPayment.setString(1, amount);
+-        pyCustomerPayment.setString(2, amount);
++      pyCustomerPayment.setDouble(1, d_amount);
++      pyCustomerPayment.setDouble(2, d_amount);
+         pyCustomerPayment.setShort(3, cw);
+         pyCustomerPayment.setShort(4, cd);
+         pyCustomerPayment.setInt(5, c);
+@@ -472,17 +481,18 @@
+         customer.setCredit(rs.getString("C_CREDIT"));
+         customer.setCredit_lim(rs.getString("C_CREDIT_LIM"));
+         customer.setDiscount(rs.getString("C_DISCOUNT"));
++      customer.setData(rs.getString("C_DATA"));
+         reset(pyCustomerInfoId);
+         
+         // additional work for bad credit customers.
+         if ("BC".equals(customer.getCredit()))
+         {
+-            pyCustomerUpdateBadCredit.setShort(1, w);
+-            pyCustomerUpdateBadCredit.setShort(2, d);
+-            pyCustomerUpdateBadCredit.setString(3, amount);
+-            pyCustomerUpdateBadCredit.setShort(4, cw);
+-            pyCustomerUpdateBadCredit.setShort(5, cd);
+-            pyCustomerUpdateBadCredit.setInt(6, c);         
++    	  // The following line is added (and indexes changed) as the field can be 
++    	  // calculated externally and the callback mechanism is not usable under H2.
++          pyCustomerUpdateBadCredit.setString(1, Data.dataForBadCredit(customer.getData(), w, d, cw, cd, c, new BigDecimal(s_amount)));
++          pyCustomerUpdateBadCredit.setShort(2, cw);
++          pyCustomerUpdateBadCredit.setShort(3, cd);
++          pyCustomerUpdateBadCredit.setInt(4, c);
+             pyCustomerUpdateBadCredit.executeUpdate();
+             reset(pyCustomerUpdateBadCredit);
+             
+@@ -503,7 +513,7 @@
+         district.setId(d);
+ 
+         // Update DISTRICT
+-        pyDistrictUpdate.setString(1, amount);
++      pyDistrictUpdate.setDouble(1, d_amount);
+         pyDistrictUpdate.setShort(2, w);
+         pyDistrictUpdate.setShort(3, d);
+         pyDistrictUpdate.executeUpdate();
+@@ -522,7 +532,7 @@
+         warehouse.setId(w);
+         
+         // Update WAREHOUSE
+-        pyWarehouseUpdate.setString(1, amount);
++      pyWarehouseUpdate.setDouble(1, d_amount);
+         pyWarehouseUpdate.setShort(2, w);
+         pyWarehouseUpdate.executeUpdate();
+         reset(pyWarehouseUpdate);
+@@ -535,18 +545,21 @@
+         warehouse.setAddress(getAddress(rs, "W_STREET_1"));
+         reset(pyWarehouseInfo);
+          
++      Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
++      
+         // Insert HISTORY row
+         pyHistory.setInt(1, c);
+         pyHistory.setShort(2, cd);
+         pyHistory.setShort(3, cw);
+         pyHistory.setShort(4, d);
+         pyHistory.setShort(5, w);
+-        pyHistory.setString(6, amount);
++      pyHistory.setDouble(6, d_amount);
+         StringBuffer hData = new StringBuffer(24);
+         hData.append(warehouse.getName());
+         hData.append("    ");
+         hData.append(district.getName());
+         pyHistory.setString(7, hData.toString());
++      pyHistory.setTimestamp(8, currentTimeStamp);
+         pyHistory.executeUpdate();
+         reset(pyHistory);
+         
+@@ -633,7 +646,7 @@
+             }
+             
+             PreparedStatement psOrder = prepareStatement(
+-                "INSERT INTO ORDERS VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, NULL, ?, ?)");
++                "INSERT INTO ORDERS VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, NULL, ?, ?, NULL, FALSE)");
+             psOrder.setInt(1, orderNumber);
+             psOrder.setShort(2, d);
+             psOrder.setShort(3, w);
+@@ -644,7 +657,7 @@
+             reset(psOrder);
+ 
+             PreparedStatement psNewOrder = prepareStatement(
+-                "INSERT INTO NEWORDERS VALUES(?, ?, ?)"); 
++                "INSERT INTO NEWORDERS VALUES(?, ?, ?, FALSE, TRUE)"); 
+             psNewOrder.setInt(1, orderNumber);
+             psNewOrder.setShort(2, d);
+             psNewOrder.setShort(3, w);
+@@ -657,8 +670,8 @@
+             PreparedStatement psOrderLine = prepareStatement(
+                 "INSERT INTO ORDERLINE(OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER, " +
+                 "OL_I_ID, OL_SUPPLY_W_ID, OL_QUANTITY, OL_AMOUNT, OL_DIST_INFO, " +
+-                "OL_DELIVERY_D) VALUES (?, ?, ?, ?, ?, ?, ?, " +
+-                "CAST (? AS DECIMAL(5,2)) * CAST (? AS SMALLINT), ?, NULL)");
++                "OL_DELIVERY_D, OL_DELIVERY_D_INITIAL, OL_INITIAL) VALUES (?, ?, ?, ?, ?, ?, ?, " +
++                "CAST (? AS DECIMAL(5,2)) * CAST (? AS SMALLINT), ?, NULL, NULL, FALSE)");
+             
+             // These are constant across the order items
+             psOrderLine.setShort(1, w);
+@@ -792,10 +805,13 @@
+             
+             PreparedStatement dlFindOrderToDeliver = prepareStatement(
+                 "SELECT MIN(NO_O_ID) AS ORDER_TO_DELIVER FROM NEWORDERS " +
+-                "WHERE NO_W_ID = ? AND NO_D_ID = ?");
++                "WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_LIVE");
++            
++//            PreparedStatement dlDeleteNewOrder = prepareStatement(
++//                "DELETE FROM NEWORDERS WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_O_ID = ?");
+             
+             PreparedStatement dlDeleteNewOrder = prepareStatement(
+-                "DELETE FROM NEWORDERS WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_O_ID = ?");
++            "UPDATE NEWORDERS SET NO_LIVE = FALSE WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_O_ID = ?");
+             
+             PreparedStatement dlSetOrderCarrier = prepareStatement(
+                 "UPDATE ORDERS SET O_CARRIER_ID = ? " +
+diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java
+--- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2009-03-24 01:49:46.000000000 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2009-11-26 08:57:53.069287693 +1100
+@@ -228,14 +228,16 @@
+                 + "(S_I_ID, S_W_ID, S_QUANTITY,S_DIST_01, S_DIST_02,"
+                 + " S_DIST_03,S_DIST_04,S_DIST_05,"
+                 + "S_DIST_06,S_DIST_07,S_DIST_08,S_DIST_09,S_DIST_10,"
+-                + "S_ORDER_CNT, S_REMOTE_CNT, S_YTD, S_DATA ) VALUES "
+-                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, ?)");
++                + "S_ORDER_CNT, S_REMOTE_CNT, S_YTD, S_DATA, S_QUANTITY_INITIAL ) VALUES "
++                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, ?, ?)");
+ 
+         ps.setShort(2, w);
+ 
+         for (int i = itemStart; i <= itemEnd; i++) {
+             ps.setInt(1, i);
+-            ps.setInt(3, random.randomInt(10, 100));
++        	int quantity = random.randomInt(10, 100); 
++            ps.setInt(3, quantity);
++            ps.setInt(15, quantity); // s_quantity_initial
+             ps.setString(4, random.randomAString24());
+             ps.setString(5, random.randomAString24());
+             ps.setString(6, random.randomAString24());
+@@ -305,13 +307,13 @@
+                 + " C_STREET_1, C_STREET_2,  C_CITY, C_STATE, C_ZIP, "
+                 + "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM,"
+                 + " C_DISCOUNT, C_BALANCE, C_YTD_PAYMENT, "
+-                + "C_PAYMENT_CNT, C_DELIVERY_CNT, C_DATA)  "
++                + "C_PAYMENT_CNT, C_DELIVERY_CNT, C_DATA, C_DATA_INITIAL)  "
+                 + "VALUES (?, ?, ?, ?, 'OE', ?, ?, ?, ?, ?, ?, ?, "
+                 + " CURRENT TIMESTAMP ,?, 50000.00, ?, -10.0, 10.0,"
+-                + " 1, 0, ?)");
++                + " 1, 0, ?, ?)");
+ 
+         PreparedStatement psH = conn
+-                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA) VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, 10.00, ?)");
++                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA, H_INITIAL) VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, 10.00, ?, TRUE)");
+ 
+         psC.setShort(2, d); // c_d_id
+         psC.setShort(3, w); // c_w_id
+@@ -339,6 +341,7 @@
+             if (str.length() > 255)
+                 str = str.substring(255);
+             psC.setString(14, str); // c_data
++            psC.setString(15, str); // c_data_initial
+ 
+             psC.executeUpdate();
+ 
+@@ -369,13 +372,13 @@
+     public void orderTable(short w, short d) throws SQLException {
+ 
+         PreparedStatement psO = conn
+-                .prepareStatement("INSERT INTO ORDERS (O_ID, O_D_ID, O_W_ID, O_C_ID, O_ENTRY_D, O_CARRIER_ID, O_OL_CNT, O_ALL_LOCAL) VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
++                .prepareStatement("INSERT INTO ORDERS (O_ID, O_D_ID, O_W_ID, O_C_ID, O_ENTRY_D, O_CARRIER_ID, O_OL_CNT, O_ALL_LOCAL, O_CARRIER_ID_INITIAL, O_INITIAL) VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, TRUE)");
+ 
+         PreparedStatement psOL = conn
+-                .prepareStatement("INSERT INTO ORDERLINE (OL_O_ID, OL_D_ID, OL_W_ID, OL_NUMBER, OL_I_ID, OL_SUPPLY_W_ID, OL_DELIVERY_D, OL_QUANTITY, OL_AMOUNT, OL_DIST_INFO)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
++                .prepareStatement("INSERT INTO ORDERLINE (OL_O_ID, OL_D_ID, OL_W_ID, OL_NUMBER, OL_I_ID, OL_SUPPLY_W_ID, OL_DELIVERY_D, OL_QUANTITY, OL_AMOUNT, OL_DIST_INFO, OL_DELIVERY_D_INITIAL, OL_INITIAL)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE)");
+ 
+         PreparedStatement psNO = conn
+-                .prepareStatement("INSERT INTO NEWORDERS (NO_O_ID, NO_D_ID, NO_W_ID) VALUES (?, ?, ?)");
++                .prepareStatement("INSERT INTO NEWORDERS (NO_O_ID, NO_D_ID, NO_W_ID, NO_INITIAL, NO_LIVE) VALUES (?, ?, ?, TRUE, TRUE)");
+ 
+         psO.setShort(2, d);
+         psO.setShort(3, w);
+@@ -394,10 +397,14 @@
+ 
+             psO.setTimestamp(5, o_entry_d);
+ 
+-            if (o_id <= Load.NEWORDERS_BREAKPOINT)
+-                psO.setShort(6, (short) random.randomInt(1, 10));
+-            else
++            if (o_id <= Load.NEWORDERS_BREAKPOINT) {
++            	short o_carrier_id = (short)random.randomInt(1, 10);
++                psO.setShort(6, o_carrier_id);
++                psO.setShort(8, o_carrier_id);
++            } else {
+                 psO.setNull(6, Types.SMALLINT);
++                psO.setNull(8, Types.SMALLINT);
++            }
+ 
+             int o_ol_cnt = random.randomInt(5, 15);
+             psO.setInt(7, o_ol_cnt);
+@@ -418,9 +425,11 @@
+                 psOL.setShort(6, w);
+                 if (o_id <= Load.NEWORDERS_BREAKPOINT) {
+                     psOL.setTimestamp(7, o_entry_d);
++                    psOL.setTimestamp(11, o_entry_d);
+                     psOL.setString(9, "0.00");
+                 } else {
+                     psOL.setNull(7, Types.TIMESTAMP);
++                    psOL.setNull(11, Types.TIMESTAMP);
+                     psOL.setString(9, random.randomDecimalString(1, 999999, 2));
+                 }
+                 psOL.setInt(8, 5);
+diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql
+--- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2009-03-24 01:49:50.000000000 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2009-11-26 08:57:53.069287693 +1100
+@@ -71,7 +71,8 @@
+  C_YTD_PAYMENT  DECIMAL(12,2) NOT NULL,
+  C_PAYMENT_CNT  INTEGER       NOT NULL,
+  C_DELIVERY_CNT INTEGER       NOT NULL,
+- C_DATA         VARCHAR(500)  NOT NULL
++ C_DATA         VARCHAR(500)  NOT NULL,
++ C_DATA_INITIAL VARCHAR(500)  NOT NULL
+ );
+ 
+ CREATE TABLE HISTORY (
+@@ -82,13 +83,16 @@
+  H_W_ID   SMALLINT     NOT NULL ,
+  H_DATE   TIMESTAMP    NOT NULL,
+  H_AMOUNT DECIMAL(6,2) NOT NULL,
+- H_DATA   VARCHAR(24)  NOT NULL
++ H_DATA   VARCHAR(24)  NOT NULL,
++ H_INITIAL BOOLEAN
+ );
+ 
+ CREATE TABLE NEWORDERS (
+  NO_O_ID  INTEGER  NOT NULL,
+  NO_D_ID  SMALLINT NOT NULL,
+- NO_W_ID  SMALLINT NOT NULL
++ NO_W_ID  SMALLINT NOT NULL,
++ NO_INITIAL BOOLEAN,
++ NO_LIVE  BOOLEAN
+ );
+ 
+ CREATE TABLE ORDERS (
+@@ -100,7 +104,9 @@
+  O_ENTRY_D    TIMESTAMP NOT NULL,
+  O_CARRIER_ID SMALLINT,
+  O_OL_CNT     SMALLINT NOT NULL,
+- O_ALL_LOCAL  SMALLINT NOT NULL
++ O_ALL_LOCAL  SMALLINT NOT NULL,
++ O_CARRIER_ID_INITIAL SMALLINT,
++ O_INITIAL    BOOLEAN
+ );
+ 
+ CREATE TABLE ORDERLINE (
+@@ -114,7 +120,9 @@
+  OL_DELIVERY_D  TIMESTAMP,
+  OL_QUANTITY    SMALLINT     NOT NULL,
+  OL_AMOUNT      DECIMAL(6,2) NOT NULL,
+- OL_DIST_INFO   CHAR(24)     NOT NULL
++ OL_DIST_INFO   CHAR(24)     NOT NULL,
++ OL_DELIVERY_D_INITIAL  TIMESTAMP,
++ OL_INITIAL     BOOLEAN
+ );
+ 
+ CREATE TABLE ITEM (
+@@ -145,5 +153,6 @@
+  S_YTD        DECIMAL(8)  NOT NULL,
+  S_ORDER_CNT  INTEGER     NOT NULL,
+  S_REMOTE_CNT INTEGER     NOT NULL,
+- S_DATA       VARCHAR(50) NOT NULL
++ S_DATA       VARCHAR(50) NOT NULL,
++ S_QUANTITY_INITIAL   INTEGER     NOT NULL
+ );
+\ No newline at end of file
