@@ -47,6 +47,11 @@ public abstract class Benchmark {
   private static boolean validateOutput = true;
 
   /**
+   * Perform System.gc() just prior to each iteration
+   */
+  private static boolean preIterationGC = false;
+  
+  /**
    * Perform validation
    */
   private static boolean validate = true;
@@ -131,6 +136,11 @@ public abstract class Benchmark {
     if (iteration == 1)
       prepare(size);
     preIteration(size);
+    
+    if (preIterationGC) {
+      System.gc();
+    }
+    
     callback.start(config.name);
 
     startIteration();
@@ -668,6 +678,7 @@ public abstract class Benchmark {
     preserve = line.getPreserve();
     validate = line.getValidate();
     validateOutput = line.getValidateOutput();
+    preIterationGC = line.getPreIterationGC();
     if (line.getValidationReport()!=null)
       Benchmark.enableValidationReport(line.getValidationReport());
   }

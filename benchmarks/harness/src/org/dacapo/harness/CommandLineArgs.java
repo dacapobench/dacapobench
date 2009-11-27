@@ -75,6 +75,7 @@ public class CommandLineArgs {
   private static final String OPT_VALIDATION_REPORT     = "validation-report";
   private static final String OPT_CONFIG                = "config";
   private static final String OPT_VERBOSE               = "verbose";
+  private static final String OPT_PRE_ITERATION_GC      = "pre-iteration-gc";
   
   private static final Option[] OPTIONS = {
     makeOption("c",  OPT_CALLBACK,          "Use class <callback> to bracket benchmark runs",        "callback"),
@@ -96,6 +97,7 @@ public class CommandLineArgs {
     makeOption(null, OPT_PRESERVE,          "Preserve output files (debug)",                         null),
     makeOption(null, OPT_VALIDATION_REPORT, "Report digests, line counts etc",                       "report_file"),
     makeOption(null, OPT_CONFIG,            null,                                                    "config_file"),
+    makeOption(null, OPT_PRE_ITERATION_GC,  "Perform System.gc() before the start of each iteration",null),
     makeOption("v",  OPT_VERBOSE,           "Verbose output",                                        null)
   };
   
@@ -326,6 +328,10 @@ public class CommandLineArgs {
 
   public String getValidationReport() {
     return line.getOptionValue(OPT_VALIDATION_REPORT,null);
+  }
+  
+  public boolean getPreIterationGC() {
+    return line.hasOption(OPT_PRE_ITERATION_GC);
   }
 
   // *****************************************************************
