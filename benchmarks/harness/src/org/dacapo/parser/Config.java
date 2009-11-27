@@ -598,16 +598,15 @@ public class Config {
     describe(str,true);
   }
 
-  public void reportConfig(PrintStream str, String size, File scratch) {
-    str.println("Benchmark:         " + name);
-    str.println("Benchmark Size:    " + size);
-    str.println("Threading model:   " + (threadModel==null?"unspecified":threadModel.describe()));
-    str.println("Threads Count:     " + getThreadCount(size));
-    str.println("Scratch Directory: " + scratch.getAbsolutePath());
-    str.println("Arguments:");
-    String[] pArgs = preprocessArgs(size, scratch);
-    for(int i=0; i<pArgs.length; i++) {
-      str.println("    \"" + pArgs[i] + "\"");
+  public void printThreadModel(PrintStream str, String size, boolean verbose) {
+	  if (getThreadModel()==ThreadModel.PER_CPU) {
+      str.println("Using scaled threading model. "+Runtime.getRuntime().availableProcessors()+" processors detected, "+getThreadCount(size)+" threads used to drive the workload.");
+	  } else if (verbose) {
+	    if (getThreadModel()==ThreadModel.FIXED) {
+	      str.println("Using a fixed threading model. "+getThreadCount(size)+" threads used to drive the workload.");
+	    } else if (getThreadModel()==ThreadModel.SINGLE) {
+	      str.println("Using a single thread to drive the workload.");
+	    }
     }
   }
 

@@ -129,8 +129,7 @@ public class TestHarness {
         if (commandLineArgs.getInformation()) {
           harness.bmInfo();
         } else {
-          if (commandLineArgs.getVerbose())
-            harness.dump();
+          harness.dump(commandLineArgs.getVerbose());
           
           runBenchmark(scratch, bm, harness);
         }
@@ -155,7 +154,7 @@ public class TestHarness {
    * @throws Exception
    */
   private static void runBenchmark(File scratch, String bm, TestHarness harness) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, Exception {
-    harness.config.reportConfig(System.out,commandLineArgs.getSize(),scratch);
+    harness.config.printThreadModel(System.out,commandLineArgs.getSize(),commandLineArgs.getVerbose());
 
     Constructor<?> cons = harness.findClass().getConstructor(new Class[] {Config.class,File.class});
     
@@ -212,12 +211,13 @@ public class TestHarness {
     config.describe(System.err);
   }
   
-  private void dump() {
-    System.err.println("Class name: "+config.className);
-    System.err.println("Threading model: "+config.getThreadModel().describe());
-    
-    System.err.println("Configurations:");
-    config.describe(System.err);
+  private void dump(boolean verbose) {
+    if (verbose) {
+      System.err.println("Class name: "+config.className);
+      
+      System.err.println("Configurations:");
+      config.describe(System.err);
+    }
   }
   
   private TestHarness(InputStream stream) {
