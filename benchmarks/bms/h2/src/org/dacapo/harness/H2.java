@@ -37,14 +37,14 @@ public class H2 extends Benchmark {
     useBenchmarkClassLoader();
     try {
       Class<?> tpccClazz  = Class.forName("org.dacapo.h2.TPCC",true,loader);
-      this.makeTPCC = tpccClazz.getMethod("make", Config.class, File.class, Boolean.class);
+      this.makeTPCC = tpccClazz.getMethod("make", Config.class, File.class, Boolean.class, Boolean.class);
       this.prepareTPCC = tpccClazz.getMethod("prepare", String.class);
       this.preIterationTPCC = tpccClazz.getMethod("preIteration", String.class);
       this.iterationTPCC = tpccClazz.getMethod("iteration", String.class);
       this.postIterationTPCC = tpccClazz.getMethod("postIteration", String.class);
 
       // construct the benchmark
-      this.tpcc = this.makeTPCC.invoke(null, config, scratch, getPreserve());
+      this.tpcc = this.makeTPCC.invoke(null, config, scratch, getVerbose(), getPreserve());
     } finally {
       revertClassLoader();
     }

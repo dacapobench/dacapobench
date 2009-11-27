@@ -83,6 +83,7 @@ public class TPCC {
 
   private Config config;
   private File scratch;
+  private boolean verbose;
   private boolean preserve;
   private String size;
   private Driver driver;
@@ -90,6 +91,9 @@ public class TPCC {
   private Connection conn;
 
   private boolean firstIteration;
+
+  private long preIterationTime = 0;
+  private long resetToInitialDataTime = 0;
 
   // Location of the database, this specifies the directory (folder) on a file
   // system where the database is stored. This application must have be able to
@@ -102,13 +106,14 @@ public class TPCC {
   private final static long SEED = 897523978813691l;
   private final static int SEED_STEP = 100000;
 
-  public static TPCC make(Config config, File scratch, Boolean preserve) throws Exception {
-    return new TPCC(config, scratch, preserve.booleanValue());
+  public static TPCC make(Config config, File scratch, Boolean verbose, Boolean preserve) throws Exception {
+    return new TPCC(config, scratch, verbose, preserve);
   }
 
-  public TPCC(Config config, File scratch, boolean preserve) throws Exception {
+  public TPCC(Config config, File scratch, boolean verbose, boolean preserve) throws Exception {
     this.config = config;
     this.scratch = scratch;
+    this.verbose = verbose;
     this.preserve = preserve;
   }
 
@@ -173,9 +178,6 @@ public class TPCC {
 
       org.h2.tools.Backup.execute(new File(scratch, BACKUP_NAME)
           .getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
-      
-      // subsequently we only restore
-      firstIteration = false;
     } else {
       org.h2.tools.Restore.execute(new File(scratch, BACKUP_NAME)
           .getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
@@ -186,41 +188,32 @@ public class TPCC {
   
   private void preIterationMemoryDB() throws Exception {
     if (firstIteration) {
-      System.out.println("PreIteration");
-
       // create the database
-      System.out.println("Creating Schema");
+      if (verbose) System.out.println("Creating Schema");
       createSchema();
       
-      System.out.println("Generating Data");
+      if (verbose) System.out.println("Generating Data");
       // generate the data
       loadData();
       
-      System.out.println("Generate Indexes");
+      if (verbose) System.out.println("Generate Indexes");
       // generate indexes
       createIndexes();
       
-      System.out.println("Generate Foreign Key constraints");
+      if (verbose) System.out.println("Generate Foreign Key constraints");
       // generate foreign keys
       createConstraints();
 
       getConnection().commit();
       
-      System.out.println("Calculate checksum of initial data");
+      if (verbose) System.out.println("Calculate checksum of initial data");
       checkSum = calculateSumDB();
-      
-      // subsequently we only restore
-      firstIteration = false;
     } else if (!cleanupInIteration){
-      System.out.println("Remove created data from this iteration");
       resetToInitialData();
       
-      System.out.println("Calculate checksum of data");
       long value = calculateSumDB();
-      if (value == checkSum)
-        System.out.println("Checksum is correct");
-      else
-        System.out.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+      if (value != checkSum)
+        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
     }
     
     // keep connection open so that database stays in memory
@@ -238,8 +231,10 @@ public class TPCC {
       preIterationDiskDB();
 
     // make sure we have the same seeds each run
+    OERandom generator = new OERandom(0, SEED);
     for (int i = 0; i < rands.length; i++) {
-      rands[i] = new OERandom(SEED_STEP * i, SEED + SEED_STEP * i);
+      // rands[i] = new OERandom(SEED_STEP * i, SEED + SEED_STEP * i);
+      rands[i] = generator;
     }
 
     // create a Submitter for each thread, and then pass to
@@ -252,14 +247,7 @@ public class TPCC {
       submitters[i] = new TPCCSubmitter(null, ops, rands[i], scale);
     }
 
-    // clean up any hang-over from previous iterations
-    System.gc();
-
-    long elapsedTimeMillis = System.currentTimeMillis() - start;
-    
-    if (reportPreIterationTimes) {
-      System.out.println("Elapse     time=" + elapsedTimeMillis);
-    }
+    preIterationTime = System.currentTimeMillis() - start;
   }
 
   public void iteration(String size) throws Exception {
@@ -271,29 +259,30 @@ public class TPCC {
 
     System.out.println();
     
+    report(System.out);
+    
     if (inMemoryDB && cleanupInIteration) {
       long start = System.currentTimeMillis();
       
-      System.out.println("Remove created data from this iteration");
       resetToInitialData();
       
-      System.out.println("Calculate checksum of data");
       long value = calculateSumDB();
-      if (value == checkSum)
-        System.out.println("Checksum is correct");
-      else
-        System.out.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+      if (value != checkSum)
+        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
       
       resetToInitialDataTime = System.currentTimeMillis() - start;
     }
   }
   
-  private long resetToInitialDataTime = 0;
-
   public void postIteration(String size) throws Exception {
-    if (inMemoryDB && cleanupInIteration) {
-      System.out.println("Time to reset data to initial state: " + resetToInitialDataTime + " ms");
+    if (firstIteration || !inMemoryDB) {
+      System.out.println("Time to perform pre-iteration phase: " + preIterationTime + "ms");
     }
+    if (inMemoryDB && cleanupInIteration) {
+      System.out.println("Time to reset data to initial state: " + resetToInitialDataTime + "ms");
+    }
+    
+    firstIteration = false;
     
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
@@ -315,11 +304,21 @@ public class TPCC {
 
   // ----------------------------------------------------------------------------------
   private void report(PrintStream os) {
-    os.println("BEGIN: transaction count report");
+    int    total = 0;
+    int[]  transactions = new int[Submitter.NEW_ORDER_ROLLBACK+1];
+    
     for (int i = 0; i < submitters.length; i++) {
-      submitters[i].printReport(os);
+      int[] subTx = submitters[i].getTransactionCount();
+      
+      for (int j = 0; j < subTx.length; j++) {
+        transactions[j] += subTx[j];
+        total += subTx[j];
+      }
     }
-    os.println("END: transaction count report");
+    
+    System.out.println("Total transactions successfully completed: "  + total);
+    // for (int i = 0;i < transactions.length; i++)
+    // System.out.println("Tx Type "+i+" #"+transactions[i]);
   }
 
   private void createSchema() throws Exception {
@@ -427,6 +426,8 @@ public class TPCC {
   }
   
   private void resetToInitialData() throws Exception {
+    System.out.println("Resetting database to initial state");
+	  
     // there are no initial delivery requests or orders so remove all
     // residual entries
     prepareStatement("DELETE FROM DELIVERY_REQUEST").execute();
