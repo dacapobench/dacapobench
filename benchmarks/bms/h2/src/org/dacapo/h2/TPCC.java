@@ -276,10 +276,10 @@ public class TPCC {
   
   public void postIteration(String size) throws Exception {
     if (firstIteration || !inMemoryDB) {
-      System.out.println("Time to perform pre-iteration phase: " + preIterationTime + "ms");
+      System.out.println("Time to perform pre-iteration phase: " + preIterationTime + " msec");
     }
     if (inMemoryDB && cleanupInIteration) {
-      System.out.println("Time to reset data to initial state: " + resetToInitialDataTime + "ms");
+      System.out.println("Time to reset data to initial state: " + resetToInitialDataTime + " msec");
     }
     
     firstIteration = false;
