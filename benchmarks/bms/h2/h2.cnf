@@ -3,7 +3,7 @@ benchmark h2
   thread-model per_cpu
   libs "derbyTesting.jar","junit-3.8.1.jar","h2-1.2.121.jar","tpcc.jar";
 
-size small args "--number-of-terminals","${THREADS}",
+size small args 
 		"--total-transactions", "400",
 		"--scale","2",
 		"--cleanup-in-iteration",
@@ -12,7 +12,7 @@ size small args "--number-of-terminals","${THREADS}",
   output stdout digest 0xc38f8b24de5344c22b824ab5c67e66d10f6b409c,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
-size default args "--number-of-terminals","${THREADS}",
+size default args 
 		"--total-transactions","4000",
 		"--scale","8",
 		"--cleanup-in-iteration",
@@ -21,7 +21,7 @@ size default args "--number-of-terminals","${THREADS}",
   output stdout digest 0xde398c425953dea23da15568ef5722b08eacc2de,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "--number-of-terminals","${THREADS}",
+size large args 
 		"--total-transactions","64000",
 		"--scale","8",
 		"--cleanup-in-iteration",
@@ -30,7 +30,7 @@ size large args "--number-of-terminals","${THREADS}",
   output stdout digest 0xfa64fb095a5ab237cdc9201aa9e7d95d8b1ee099,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size huge args "--number-of-terminals","${THREADS}",
+size huge args 
 		"--total-transactions","256000",
 		"--scale","32",
 		"--cleanup-in-iteration",

@@ -623,6 +623,8 @@ public class TPCC {
   {
     String[] args = config.preprocessArgs(size,scratch);
 
+    this.numberOfTerminals = config.getThreadCount(size); 
+    
     int totalTx = this.numberOfTerminals * this.transactionsPerTerminal;
     for (int i = 0; i < args.length; i++)
     {
