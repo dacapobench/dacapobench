@@ -9,7 +9,7 @@ size small args "--number-of-terminals","${THREADS}",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0x1efbe9477c4cc7edaa6dd29f3bbde56859b571d1,
+  output stdout digest 0xc38f8b24de5344c22b824ab5c67e66d10f6b409c,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
 size default args "--number-of-terminals","${THREADS}",
@@ -18,7 +18,7 @@ size default args "--number-of-terminals","${THREADS}",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0x846926bfade1511e8dfe0e85d06c5750ff282d47,
+  output stdout digest 0xde398c425953dea23da15568ef5722b08eacc2de,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "--number-of-terminals","${THREADS}",
@@ -27,7 +27,7 @@ size large args "--number-of-terminals","${THREADS}",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xa8c75bb61cd74f9384c11abc06e991156258267f,
+  output stdout digest 0xfa64fb095a5ab237cdc9201aa9e7d95d8b1ee099,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "--number-of-terminals","${THREADS}",
@@ -36,7 +36,7 @@ size huge args "--number-of-terminals","${THREADS}",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   threads 1
-  output stdout digest 0xf14e8809f919427be768ea33d1aa562954de07a0,
+  output stdout digest 0x7ecf7b10e5ab58709979f9793c5dc7936966f360,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 

@@ -1,6 +1,6 @@
 diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java
 --- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-03-24 01:49:58.000000000 +1100
-+++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-11-26 11:10:39.869294935 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-12-02 15:56:26.040402810 +1100
 @@ -44,11 +44,11 @@
       * 
       * see section 1.2.1 of TPC-C specification
@@ -18,7 +18,7 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
  
 diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java
 --- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2009-03-24 01:49:57.000000000 +1100
-+++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2009-11-26 08:57:53.069287693 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2009-12-02 15:56:26.040402810 +1100
 @@ -24,6 +24,7 @@
  import java.sql.PreparedStatement;
  import java.sql.ResultSet;
@@ -203,7 +203,7 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
                  "UPDATE ORDERS SET O_CARRIER_ID = ? " +
 diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java
 --- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2009-03-24 01:49:46.000000000 +1100
-+++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2009-11-26 08:57:53.069287693 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2009-12-02 15:56:26.040402810 +1100
 @@ -228,14 +228,16 @@
                  + "(S_I_ID, S_W_ID, S_QUANTITY,S_DIST_01, S_DIST_02,"
                  + " S_DIST_03,S_DIST_04,S_DIST_05,"
@@ -298,7 +298,7 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
                  psOL.setInt(8, 5);
 diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql
 --- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2009-03-24 01:49:50.000000000 +1100
-+++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2009-11-26 08:57:53.069287693 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2009-12-02 15:56:26.040402810 +1100
 @@ -71,7 +71,8 @@
   C_YTD_PAYMENT  DECIMAL(12,2) NOT NULL,
   C_PAYMENT_CNT  INTEGER       NOT NULL,
@@ -359,3 +359,17 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
 + S_QUANTITY_INITIAL   INTEGER     NOT NULL
  );
 \ No newline at end of file
+diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java
+--- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java	2009-03-24 01:49:58.000000000 +1100
++++ derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java	2009-12-02 15:59:13.086957464 +1100
+@@ -70,6 +70,10 @@
+         this(last, System.currentTimeMillis());
+     }
+ 
++    public void setSeed(long seed) {
++        rand.setSeed(seed);
++    }
++    
+     private static int[] RESCALE = { 0, 10, 100, 1000, 10000, 100000, 1000000 };
+ 
+     private StringBuffer decimalString = new StringBuffer(12);

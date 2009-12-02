@@ -23,19 +23,33 @@ public class TPCCSubmitter extends Submitter {
 	// before giving up as a failed run.
 	private final static int MAXIMUM_FAILURE_PERCENTAGE = 10;
 
+	private static long  globalSeed = 0;
+ 
+	private OERandom rand;
+	
+	static void setSeed(long seed) {
+		globalSeed = seed;
+	}
+	
+	private synchronized static long getNextSeed() {
+		long result = globalSeed;
+		globalSeed += TPCC.SEED_STEP;
+		return result;
+	}
+	
 	public TPCCSubmitter(Display display, Operations ops, OERandom rand,
 			short maxW) {
 		super(display, ops, rand, maxW);
+		this.rand = rand;
 	}
 
 	@Override
 	public long runTransactions(final Object displayData, final int count)
 		throws Exception
 	{
-		int  failures = 0;
-		int  failure_limit = (count * MAXIMUM_FAILURE_PERCENTAGE)/100;
-        for (int i = 0; i < count && failures <= failure_limit;)
+        for (int i = 0; i < count;)
         {
+        	rand.setSeed(getNextSeed());
         	// failed transactions will be ignored an another transaction tried.
         	try
         	{
@@ -43,7 +57,6 @@ public class TPCCSubmitter extends Submitter {
                 i++;
                 if ((i%50)==0) System.out.print(".");
         	} catch (Exception e) {
-        		failure_limit++;
         	}
         }
         

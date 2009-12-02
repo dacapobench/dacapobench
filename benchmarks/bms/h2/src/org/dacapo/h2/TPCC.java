@@ -103,8 +103,8 @@ public class TPCC {
   private String createSuffix = CREATE_SUFFIX;
 
   // A random seed for initializing the database and the OLTP terminals.
-  private final static long SEED = 897523978813691l;
-  private final static int SEED_STEP = 100000;
+  final static long SEED = 897523978813691l;
+  final static int SEED_STEP = 100000;
 
   public static TPCC make(Config config, File scratch, Boolean verbose, Boolean preserve) throws Exception {
     return new TPCC(config, scratch, verbose, preserve);
@@ -225,6 +225,8 @@ public class TPCC {
 
     long start = System.currentTimeMillis();
 
+    TPCCSubmitter.setSeed(SEED);
+    
     if (inMemoryDB)
       preIterationMemoryDB();
     else
@@ -233,8 +235,8 @@ public class TPCC {
     // make sure we have the same seeds each run
     OERandom generator = new OERandom(0, SEED);
     for (int i = 0; i < rands.length; i++) {
-      // rands[i] = new OERandom(SEED_STEP * i, SEED + SEED_STEP * i);
-      rands[i] = generator;
+      rands[i] = new OERandom(SEED_STEP * i, SEED + SEED_STEP * i);
+      // rands[i] = generator;
     }
 
     // create a Submitter for each thread, and then pass to
@@ -316,9 +318,14 @@ public class TPCC {
       }
     }
     
-    System.out.println("Total transactions successfully completed: "  + total);
-    // for (int i = 0;i < transactions.length; i++)
-    // System.out.println("Tx Type "+i+" #"+transactions[i]);
+    System.out.println("Total Transactions:"  + total);
+    System.out.println("New Order         :"  + transactions[TPCCSubmitter.NEW_ORDER]);
+    System.out.println("Order By Id       :"  + transactions[TPCCSubmitter.ORDER_STATUS_BY_ID]);
+    System.out.println("Order By Name     :"  + transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME]);
+    System.out.println("Payment By Id     :"  + transactions[TPCCSubmitter.PAYMENT_BY_ID]);
+    System.out.println("Payment By Name   :"  + transactions[TPCCSubmitter.PAYMENT_BY_NAME]);
+    System.out.println("Stock Level       :"  + transactions[TPCCSubmitter.STOCK_LEVEL]);
+    System.out.println("Delivery Schedule :"  + transactions[TPCCSubmitter.DELIVERY_SCHEDULE]);
   }
 
   private void createSchema() throws Exception {
