@@ -13,51 +13,49 @@ public class Batik extends Benchmark {
   private final Constructor<?> constructor;
 
   public Batik(Config config, File scratch) throws Exception {
-    super(config, scratch,false);
-    Class<?> clazz = Class.forName("org.apache.batik.apps.rasterizer.Main", true, loader);
+    super(config, scratch, false);
+    Class<?> clazz = Class.forName("org.apache.batik.apps.rasterizer.Main",
+        true, loader);
     this.method = clazz.getMethod("execute");
     this.constructor = clazz.getConstructor(String[].class);
   }
 
-  
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
-    String[] args = config.preprocessArgs(size,scratch);
-    Vector<String> newArgs = new Vector<String>(args.length+2);
-    for (int i=0; i < args.length; i++) {
+    String[] args = config.preprocessArgs(size, scratch);
+    Vector<String> newArgs = new Vector<String>(args.length + 2);
+    for (int i = 0; i < args.length; i++) {
       if (args[i].charAt(0) == '-') {
         if (args[i].equals("-m") || args[i].equals("-d")) {
           newArgs.add(args[i]);
           newArgs.add(args[++i]);
-        } else 
+        } else
           newArgs.add(args[i]);
       } else
-        newArgs.add((new File(scratch,args[i])).getPath());
+        newArgs.add((new File(scratch, args[i])).getPath());
     }
-    String[] newArgStrings = (String[])newArgs.toArray(new String[0]);
+    String[] newArgStrings = (String[]) newArgs.toArray(new String[0]);
     if (getVerbose()) {
-      for (int i=0; i < newArgStrings.length; i++) 
-        System.out.print(newArgStrings[i]+" ");
+      for (int i = 0; i < newArgStrings.length; i++)
+        System.out.print(newArgStrings[i] + " ");
       System.out.println();
     }
     this.args = newArgStrings;
   }
 
-
   /**
    * Args is a list of file names relative to the scratch directory
    */
   public void iterate(String size) throws Exception {
-    Object object = constructor.newInstance((Object)args);
+    Object object = constructor.newInstance((Object) args);
     method.invoke(object);
   }
-  
+
   /**
-   * Stub which exists <b>only</b> to facilitate whole program
-   * static analysis on a per-benchmark basis.  See also the "split-deps"
-   * ant build target, which is also provided to enable whole program
-   * static analysis.
+   * Stub which exists <b>only</b> to facilitate whole program static analysis
+   * on a per-benchmark basis. See also the "split-deps" ant build target, which
+   * is also provided to enable whole program static analysis.
    * 
    * @author Eric Bodden
    */
