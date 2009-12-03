@@ -1,27 +1,27 @@
 <project name="commons-codec" default="all" basedir="../..">
     <description>Jakarta Commons Logging, required by httpclient (and therefore tomcat)</description>
-	<property file="ant/dacapo.properties"/>
-	
-	<property name="lib-name" value="commons-codec"/>
+    <property file="ant/dacapo.properties"/>
+    
+    <property name="lib-name" value="commons-codec"/>
     <property name="lib-version" value="1.4"/>
     <property name="lib-url" value="${apache.dl.url}/commons/codec/source/"/>
-	<property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
-	
-	<import file="../common.xml"/>
+    <property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
+    
+    <import file="../common.xml"/>
 
-	<property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}-src"/>
-	
-	<target name="unpack" depends="untar"/>
-	
-	<target name="build">
-		<!-- oddness in codec build.xml -->
-		<touch file="${lib-build-dir}/LICENSE"/>
-		<ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
-			<target name="jar"/>
-		</ant>
-	</target>
+    <property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}-src"/>
+    
+    <target name="unpack" depends="untar"/>
+    
+    <target name="build">
+        <!-- oddness in codec build.xml -->
+        <touch file="${lib-build-dir}/LICENSE"/>
+        <ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
+            <target name="jar"/>
+        </ant>
+    </target>
 
-	<target name="jar">
-		<copy file="${lib-build-top}/dist/${lib-name}-${lib-version}.jar" tofile="${commons-codec-jar}"/>
-	</target>
+    <target name="jar">
+        <copy file="${lib-build-top}/dist/${lib-name}-${lib-version}.jar" tofile="${commons-codec-jar}"/>
+    </target>
 </project>
