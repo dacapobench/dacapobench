@@ -79,38 +79,27 @@ public class CommandLineArgs {
   private static final String OPT_PRE_ITERATION_GC = "pre-iteration-gc";
 
   private static final Option[] OPTIONS = {
-      makeOption("c", OPT_CALLBACK,
-          "Use class <callback> to bracket benchmark runs", "callback"),
-      makeOption("h", OPT_HELP, "Print this help", null),
-      makeOption("r", OPT_RELEASE_NOTES, "Print the release notes", null),
-      makeOption("l", OPT_LIST_BENCHMARKS, "List available benchmarks", null),
-      makeOption("i", OPT_INFORMATION, "Display benchmark information", null),
-      makeOption("s", OPT_SIZE, "Size of input data", "SIZE"),
-      makeOption(null, OPT_SCRATCH_DIRECTORY,
-          "Specify an alternate scratch directory <dir>", "dir"),
-      makeOption("C", OPT_CONVERGE,
-          "Allow benchmark times to converge before timing", null),
-      makeOption(null, OPT_MAX_ITERATIONS,
-          "Run a max of <max_iterations> iterations (default 20)",
-          "max_iterations"),
-      makeOption(null, OPT_VARIANCE,
-          "Target coefficient of variation <pct> (default 3.0)", "pct"),
-      makeOption(null, OPT_WINDOW,
-          "Measure variance over <window> runs (default 3)", "window"),
-      makeOption("n", OPT_ITERATIONS, "Run the benchmark <iter> times", "iter"),
-      makeOption("d", OPT_DEBUG, "Verbose debugging information", null),
-      makeOption(null, OPT_IGNORE_VALIDATION,
-          "Don't halt on validation failure", null),
-      makeOption(null, OPT_NO_DIGEST_OUTPUT,
-          "Turn off SHA1 digest of stdout/stderr", null),
-      makeOption(null, OPT_NO_VALIDATION, "Don't validate at all", null),
-      makeOption(null, OPT_PRESERVE, "Preserve output files (debug)", null),
-      makeOption(null, OPT_VALIDATION_REPORT,
-          "Report digests, line counts etc", "report_file"),
-      makeOption(null, OPT_CONFIG, null, "config_file"),
-      makeOption(null, OPT_PRE_ITERATION_GC,
-          "Perform System.gc() before the start of each iteration", null),
-      makeOption("v", OPT_VERBOSE, "Verbose output", null) };
+      makeOption("c",  OPT_CALLBACK,          "Use class <callback> to bracket benchmark runs", "callback"),
+      makeOption("h",  OPT_HELP,              "Print this help", null),
+      makeOption("r",  OPT_RELEASE_NOTES,     "Print the release notes", null),
+      makeOption("l",  OPT_LIST_BENCHMARKS,   "List available benchmarks", null),
+      makeOption("i",  OPT_INFORMATION,       "Display benchmark information", null),
+      makeOption("s",  OPT_SIZE,              "Size of input data", "SIZE"),
+      makeOption(null, OPT_SCRATCH_DIRECTORY, "Specify an alternate scratch directory <dir>", "dir"),
+      makeOption("C",  OPT_CONVERGE,          "Allow benchmark times to converge before timing", null),
+      makeOption(null, OPT_MAX_ITERATIONS,    "Run a max of <max_iterations> iterations (default 20)", "max_iterations"),
+      makeOption(null, OPT_VARIANCE,          "Target coefficient of variation <pct> (default 3.0)", "pct"),
+      makeOption(null, OPT_WINDOW,            "Measure variance over <window> runs (default 3)", "window"),
+      makeOption("n",  OPT_ITERATIONS,        "Run the benchmark <iter> times", "iter"),
+      makeOption("d",  OPT_DEBUG,             "Verbose debugging information", null),
+      makeOption(null, OPT_IGNORE_VALIDATION, "Don't halt on validation failure", null),
+      makeOption(null, OPT_NO_DIGEST_OUTPUT,  "Turn off SHA1 digest of stdout/stderr", null),
+      makeOption(null, OPT_NO_VALIDATION,     "Don't validate at all", null),
+      makeOption(null, OPT_PRESERVE,          "Preserve output files (debug)", null),
+      makeOption(null, OPT_VALIDATION_REPORT, "Report digests, line counts etc", "report_file"),
+      makeOption(null, OPT_CONFIG, null,      "config_file"),
+      makeOption(null, OPT_PRE_ITERATION_GC,  "Perform System.gc() before the start of each iteration", null),
+      makeOption("v",  OPT_VERBOSE,           "Verbose output", null) };
 
   private static CommandLineParser parser = new PosixParser();
   private static Options options = new Options();
@@ -395,18 +384,18 @@ public class CommandLineArgs {
   }
 
   /*
-   * Define a commandline option.
+   * Define a command-line option.
    * 
    * @param shortName An optional short form name for the command line option.
    * 
-   * @param longname A commandline option must have a long form name.
+   * @param longname A command-line option must have a long form name.
    * 
-   * @param description All commandline options that are visible options must
-   * have a description, commandline options that are for internal development
+   * @param description All command-line options that are visible options must
+   * have a description, command-line options that are for internal development
    * usage must not have a description and must instead be documented in the
    * code.
    * 
-   * @param argName A commandline option that requires has an argument must
+   * @param argName A command-line option that requires has an argument must
    * specify an argument name.
    */
   private static Option makeOption(String shortName, String longName,

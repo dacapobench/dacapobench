@@ -6,14 +6,17 @@ import java.io.*;
  * Slice a set of files into a larger set (used to produce the input set that is
  * used in the lusearch benchmark).
  * 
- * Slice(1) will produce the original file. Slice(2) will produce Slice(1) and
- * two halves of the original file. Slice(3) will produce a) 3 files 1/3 of the
- * size of the input file b) 2 files, 2/3 of the size of the input file c) 1
- * file 3/3 of the size. and so on.
+ * Slice(1) will produce the original file. 
+ * Slice(2) will produce Slice(1) and two halves of the original file. 
+ * Slice(3) will produce 
+ *  a) 3 files 1/3 of the size of the input file 
+ *  b) 2 files, 2/3 of the size of the input file 
+ *  c) 1 file 3/3 of the size. 
+ * and so on.
  * 
  * @author Robin Garner
- * @date $Date: 2009-12-03 11:33:16 +1100 (Thu, 03 Dec 2009) $
- * @id $Id: Slice.java 634 2009-12-03 00:33:16Z jzigman $
+ * @date $Date: 2009-12-04 09:28:21 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 652 2009-12-03 22:28:21Z jzigman $
  * 
  */
 public class Slice {

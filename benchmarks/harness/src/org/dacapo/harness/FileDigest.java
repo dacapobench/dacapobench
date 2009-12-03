@@ -13,16 +13,18 @@ import java.security.MessageDigest;
  * Perform a digest operation on a file. Also provides a 'main' method for
  * maintainers to use outside the harness.
  * 
- * Has facilities to canonicalise text files, using the following operations: -
- * Files are read using Java character-oriented I/O. This removes
- * platform-dependent CR/LF sequences - The absolute and relative paths of the
- * benchmark scratch directory are replaced with "$SCRATCH" - All occurrences of
- * "\" are replaced with "/" to bring windows filenames into line with Unix
- * ones. (A bit heavy handed, better alternatives are invited :)
+ * Has facilities to canonicalise text files, using the following operations:
+ * - Files are read using Java character-oriented I/O. This removes
+ *   platform-dependent CR/LF sequences 
+ * - The absolute and relative paths of the benchmark scratch directory are 
+ *   replaced with "$SCRATCH"
+ * - All occurrences of "\" are replaced with "/" to bring windows filenames
+ *   into line with Unix ones. (A bit heavy handed, better alternatives are
+ *   invited :)
  * 
  * @author Robin Garner
- * @date $Date: 2009-12-03 11:33:16 +1100 (Thu, 03 Dec 2009) $
- * @id $Id: FileDigest.java 634 2009-12-03 00:33:16Z jzigman $
+ * @date $Date: 2009-12-04 09:28:21 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: FileDigest.java 652 2009-12-03 22:28:21Z jzigman $
  * 
  */
 public class FileDigest {
