@@ -43,10 +43,9 @@ import org.apache.derbyTesting.system.oe.model.Warehouse;
  * Construct a wrapper sub-classs of the
  * org.apache.derbyTesting.system.oe.direct.Standard operations class, which can
  * be found in:
- * db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system
- * /oe/direct/Standard.java in the
- * http://apache.wildit.net.au/db/derby/db-derby-
- * 10.5.3.0/db-derby-10.5.3.0-src.tar.gz
+ *   db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java 
+ * in the
+ *   http://apache.wildit.net.au/db/derby/db-derby-10.5.3.0/db-derby-10.5.3.0-src.tar.gz
  * 
  * This class is created as the parent class uses a Java call-back for updating
  * C_DATA for a client which Derby understands but H2 does not. Thus, we

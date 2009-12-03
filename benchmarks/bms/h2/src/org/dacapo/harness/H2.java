@@ -8,14 +8,7 @@ import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
 /**
- * Dacapo benchmark harness for TPC-C like workload running on H2.
- * 
- * Apache authored the original TPC-C like workload. H2 Group, H2 authored the
- * database H2.
- * 
- * @author Apache
- * @author H2
- * 
+ * Dacapo benchmark harness for Apache Derby TPC-C like workload running on H2.
  */
 public class H2 extends Benchmark {
 
