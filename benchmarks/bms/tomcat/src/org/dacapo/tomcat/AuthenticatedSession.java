@@ -8,17 +8,22 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 
 /**
  * An authenticated Tomcat session
- *
+ * 
  */
 public class AuthenticatedSession extends Session {
 
   private final String username;
   private final String password;
+
   /**
    * Factory method - forces correct initialization
-   * @param username Username
-   * @param password Password
-   * @param port TCP port
+   * 
+   * @param username
+   *          Username
+   * @param password
+   *          Password
+   * @param port
+   *          TCP port
    * @return The created session
    */
   public static Session create(String username, String password, int port) {
@@ -34,8 +39,10 @@ public class AuthenticatedSession extends Session {
   @Override
   protected void setClientState(HttpState state) {
     super.setClientState(state);
-    Credentials defaultcreds = new UsernamePasswordCredentials(username, password);
-    state.setCredentials(new AuthScope("localhost", port, AuthScope.ANY_REALM), defaultcreds);
+    Credentials defaultcreds = new UsernamePasswordCredentials(username,
+        password);
+    state.setCredentials(new AuthScope("localhost", port, AuthScope.ANY_REALM),
+        defaultcreds);
   }
 
   @Override
@@ -43,6 +50,5 @@ public class AuthenticatedSession extends Session {
     super.setClientParams(params);
     params.setAuthenticationPreemptive(true);
   }
-
 
 }

@@ -11,48 +11,63 @@ import org.apache.commons.httpclient.methods.GetMethod;
 public class HttpGet extends Page {
 
   /**
-   * An HTTP Get request for the URL {@code address}.  Expects an HTTP return code of 200
-   * and does not perform digest validation.
-   * @param address The URL (server-relative)
+   * An HTTP Get request for the URL {@code address}. Expects an HTTP return
+   * code of 200 and does not perform digest validation.
+   * 
+   * @param address
+   *          The URL (server-relative)
    */
   public HttpGet(String address) {
-    this(address,200,null);
+    this(address, 200, null);
   }
 
   /**
-   * An HTTP Get request for the URL {@code address}.  Expects an HTTP return code of 200
-   * and performs digest validation.
-   * @param address The URL (server-relative)
-   * @param digest The expected digest
+   * An HTTP Get request for the URL {@code address}. Expects an HTTP return
+   * code of 200 and performs digest validation.
+   * 
+   * @param address
+   *          The URL (server-relative)
+   * @param digest
+   *          The expected digest
    */
   public HttpGet(String address, String digest) {
-    this(address,200,digest);
+    this(address, 200, digest);
   }
 
   /**
-   * An HTTP Get request for the URL {@code address}.  Does not perform digest validation.
-   * @param address The URL (server-relative)
-   * @param status The expected HTTP status
+   * An HTTP Get request for the URL {@code address}. Does not perform digest
+   * validation.
+   * 
+   * @param address
+   *          The URL (server-relative)
+   * @param status
+   *          The expected HTTP status
    */
   public HttpGet(String address, int status) {
-    this(address,status,null);
+    this(address, status, null);
   }
 
   /**
    * An HTTP Get request for the URL {@code address}.
-   * @param address The URL (server-relative)
-   * @param status The expected HTTP status
-   * @param digest The expected digest
+   * 
+   * @param address
+   *          The URL (server-relative)
+   * @param status
+   *          The expected HTTP status
+   * @param digest
+   *          The expected digest
    */
   public HttpGet(String address, int status, String digest) {
-    super(address,status,digest);
+    super(address, status, digest);
   }
 
   /**
-   * @see org.dacapo.tomcat.Page#fetch(org.dacapo.tomcat.Session, java.io.File, boolean)
+   * @see org.dacapo.tomcat.Page#fetch(org.dacapo.tomcat.Session, java.io.File,
+   *      boolean)
    */
   @Override
-  public boolean fetch(Session session, File logFile, boolean keep) throws IOException {
-    return fetch(session,new GetMethod(formatUrl(session)), logFile, keep);
+  public boolean fetch(Session session, File logFile, boolean keep)
+      throws IOException {
+    return fetch(session, new GetMethod(formatUrl(session)), logFile, keep);
   }
 }
