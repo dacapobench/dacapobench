@@ -1,49 +1,49 @@
 <project name="pybench" default="pybench" basedir="..">
-    <description>pybench benchmark, used by jython</description>
-        
-    <property name="py-version" value="2.5.4"/>
-    <property name="py-url" value="http://www.python.org/ftp/python/${py-version}"/>
-    <property name="py-src" value="Python-${py-version}.tgz"/>
-        
-    <target name="py-source">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${py-url}"/>
-            <param name="target-file" value="${py-src}"/>
-        </antcall>
-    </target>
+	<description>pybench benchmark, used by jython</description>
 
-    <target name="pybench" depends="py-untar, py-patch, py-build"/>
-        
-    <target name="py-untar-src">
-        <untar src="${bm-downloads}/${py-src}" dest="${bm-build-dir}" compression="gzip">
-            <patternset>
-                <include name="Python-${py-version}/Tools/pybench/**"/>
-                <include name="Python-${py-version}/Lib/**"/>
-            </patternset>
-        </untar>
-    </target>
+	<property name="py-version" value="2.5.4"/>
+	<property name="py-url" value="http://www.python.org/ftp/python/${py-version}"/>
+	<property name="py-src" value="Python-${py-version}.tgz"/>
 
-    <target name="py-untar-jython" depends="py-untar-src">
-        <mkdir dir="${bm-build-dir}/CPythonLib"/>
-        <move todir="${bm-build-dir}/CPythonLib">
-            <fileset dir="${bm-build-dir}/Python-${py-version}/Lib" includes="**" />
-        </move>
-    </target>
+	<target name="py-source">
+		<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${py-url}"/>
+			<param name="target-file" value="${py-src}"/>
+		</antcall>
+	</target>
 
-    <target name="py-untar" depends="py-untar-src">
-        <move file="${bm-build-dir}/Python-${py-version}/Tools/pybench" todir="${bm-build-dir}/jython"/>
-    </target>
+	<target name="pybench" depends="py-untar, py-patch, py-build"/>
 
-    <target name="py-patch">
-        <patch patchfile="${bm-files}/pybench.patch" 
+	<target name="py-untar-src">
+		<untar src="${bm-downloads}/${py-src}" dest="${bm-build-dir}" compression="gzip">
+			<patternset>
+				<include name="Python-${py-version}/Tools/pybench/**"/>
+				<include name="Python-${py-version}/Lib/**"/>
+			</patternset>
+		</untar>
+	</target>
+
+	<target name="py-untar-jython" depends="py-untar-src">
+		<mkdir dir="${bm-build-dir}/CPythonLib"/>
+		<move todir="${bm-build-dir}/CPythonLib">
+			<fileset dir="${bm-build-dir}/Python-${py-version}/Lib" includes="**" />
+		</move>
+	</target>
+
+	<target name="py-untar" depends="py-untar-src">
+		<move file="${bm-build-dir}/Python-${py-version}/Tools/pybench" todir="${bm-build-dir}/jython"/>
+	</target>
+
+	<target name="py-patch">
+		<patch patchfile="${bm-files}/pybench.patch" 
                dir="${bm-build-dir}/jython"
                strip="0" ignorewhitespace="yes"/>
-    </target>
-                
-    <target name="py-build">
-        <copy todir="${bm-build-dir}/jython/Lib">
-            <fileset dir="${bm-build-dir}/Lib"/>
-        </copy>
-    </target>
+	</target>
+
+	<target name="py-build">
+		<copy todir="${bm-build-dir}/jython/Lib">
+			<fileset dir="${bm-build-dir}/Lib"/>
+		</copy>
+	</target>
 </project>
