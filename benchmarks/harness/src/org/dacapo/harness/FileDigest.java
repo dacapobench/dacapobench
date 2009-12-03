@@ -10,47 +10,49 @@ import java.io.IOException;
 import java.security.MessageDigest;
 
 /**
- * Perform a digest operation on a file.  Also provides a 'main' method for maintainers
- * to use outside the harness.
+ * Perform a digest operation on a file. Also provides a 'main' method for
+ * maintainers to use outside the harness.
  * 
- * Has facilities to canonicalise text files, using the following operations:
- * - Files are read using Java character-oriented I/O.  This removes
- *   platform-dependent CR/LF sequences
- * - The absolute and relative paths of the benchmark scratch directory are replaced
- *   with "$SCRATCH"
- * - All  occurrences of "\" are replaced with "/" to bring windows filenames into line
- *   with Unix ones.  (A bit heavy handed, better alternatives are invited :)
+ * Has facilities to canonicalise text files, using the following operations: -
+ * Files are read using Java character-oriented I/O. This removes
+ * platform-dependent CR/LF sequences - The absolute and relative paths of the
+ * benchmark scratch directory are replaced with "$SCRATCH" - All occurrences of
+ * "\" are replaced with "/" to bring windows filenames into line with Unix
+ * ones. (A bit heavy handed, better alternatives are invited :)
  * 
  * @author Robin Garner
- * @date $Date: 2008-07-26 11:23:30 +1000 (Sat, 26 Jul 2008) $
- * @id $Id: FileDigest.java 379 2008-07-26 01:23:30Z steveb-oss $
- *
+ * @date $Date: 2009-12-03 11:33:16 +1100 (Thu, 03 Dec 2009) $
+ * @id $Id: FileDigest.java 634 2009-12-03 00:33:16Z jzigman $
+ * 
  */
 public class FileDigest {
-  
+
   private static final int BUFLEN = 8192;
-  
+
   /**
    * Return a file checksum
    * 
-   * @param file Name of file
+   * @param file
+   *          Name of file
    * @return The checksum
    * @throws IOException
    */
-  public static byte[] get(String file, boolean isText, 
-      boolean filterScratch, File scratch) throws IOException { 
+  public static byte[] get(String file, boolean isText, boolean filterScratch,
+      File scratch) throws IOException {
     if (isText) {
-      return getText(new File(file),filterScratch,scratch); 
+      return getText(new File(file), filterScratch, scratch);
     } else {
       if (filterScratch) {
-        System.err.println("ERROR: Cannot filter scratch paths in a binary file");
+        System.err
+            .println("ERROR: Cannot filter scratch paths in a binary file");
         // The return value should fail validation.
-        return Digest.create().digest("ERROR: Cannot filter scratch paths in a binary file".getBytes());
-      } else 
+        return Digest.create().digest(
+            "ERROR: Cannot filter scratch paths in a binary file".getBytes());
+      } else
         return getBinary(new File(file));
     }
   }
-  
+
   /**
    * Replace all occurrences of a fixed string
    * 
@@ -59,25 +61,28 @@ public class FileDigest {
    * @param replacement
    * @return
    */
-  private static String replaceAllFixed(String line, String substr, String replacement) {
+  private static String replaceAllFixed(String line, String substr,
+      String replacement) {
     int start = 0;
     int match;
-    while ((match=line.indexOf(substr,start)) != -1) {
-      line = line.substring(0, match) 
-      + replacement + line.substring(match+substr.length(),line.length());
+    while ((match = line.indexOf(substr, start)) != -1) {
+      line = line.substring(0, match) + replacement
+          + line.substring(match + substr.length(), line.length());
       start = match + replacement.length();
     }
     return line;
   }
-  
+
   /**
    * Return a file checksum for a text file
    * 
-   * @param file Name of file
+   * @param file
+   *          Name of file
    * @return The checksum
    * @throws IOException
    */
-  public static byte[] getText(File file, boolean filter, File scratch) throws IOException {
+  public static byte[] getText(File file, boolean filter, File scratch)
+      throws IOException {
     final MessageDigest digest = Digest.create();
     BufferedReader in = new BufferedReader(new FileReader(file));
     String line;
@@ -85,13 +90,13 @@ public class FileDigest {
     while ((line = in.readLine()) != null) {
       if (filter) {
         if (line.startsWith("#NOVALIDATE#"))
-          line = "#NOVALIDATE#"+(unvalidated++);
-        line = replaceAllFixed(line,scratch.getAbsolutePath(), "$SCRATCH");
-        line = replaceAllFixed(line,scratch.getPath(), "$SCRATCH");
-        line = replaceAllFixed(line,"\\","/");
+          line = "#NOVALIDATE#" + (unvalidated++);
+        line = replaceAllFixed(line, scratch.getAbsolutePath(), "$SCRATCH");
+        line = replaceAllFixed(line, scratch.getPath(), "$SCRATCH");
+        line = replaceAllFixed(line, "\\", "/");
       }
       byte[] buf = line.getBytes();
-      for (int i=0; i < buf.length; i++)
+      for (int i = 0; i < buf.length; i++)
         digest.update(buf[i]);
     }
     in.close();
@@ -101,7 +106,8 @@ public class FileDigest {
   /**
    * Return a file checksum for a binary file
    * 
-   * @param file Name of file
+   * @param file
+   *          Name of file
    * @return The checksum
    * @throws IOException
    */
@@ -110,8 +116,8 @@ public class FileDigest {
     BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
     byte[] buf = new byte[BUFLEN];
     int len;
-    while ((len=in.read(buf)) > 0) {
-      for (int i=0; i < len; i++)
+    while ((len = in.read(buf)) > 0) {
+      for (int i = 0; i < len; i++)
         digest.update(buf[i]);
     }
     in.close();
@@ -128,7 +134,7 @@ public class FileDigest {
       boolean filterScratch = false;
       String scratchDir = "";
       boolean text = false;
-      int i=0;
+      int i = 0;
       for (; i < args.length && args[i].charAt(0) == '-'; i++) {
         if (args[i].equals("-f")) {
           filterScratch = true;
@@ -136,7 +142,7 @@ public class FileDigest {
         } else if (args[i].equals("-t")) {
           text = true;
         } else {
-          System.err.println("invalid flag "+args[i]);
+          System.err.println("invalid flag " + args[i]);
           System.err.println("Usage: FileDigest [-t [-f scratchDir]] file...");
           System.exit(1);
         }
@@ -146,7 +152,10 @@ public class FileDigest {
         System.exit(2);
       }
       for (; i < args.length; i++)
-        System.out.println(args[i]+" "+Digest.toString(get(args[i],text,filterScratch,new File(scratchDir))));
+        System.out.println(args[i]
+            + " "
+            + Digest.toString(get(args[i], text, filterScratch, new File(
+                scratchDir))));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {

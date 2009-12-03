@@ -10,12 +10,12 @@ import java.security.NoSuchAlgorithmException;
  * Encapsulate the digests used for validation of files.
  * 
  * @author Robin Garner
- * @date $Date: 2008-07-26 11:23:30 +1000 (Sat, 26 Jul 2008) $
- * @id $Id: Digest.java 379 2008-07-26 01:23:30Z steveb-oss $
- *
+ * @date $Date: 2009-12-03 11:33:16 +1100 (Thu, 03 Dec 2009) $
+ * @id $Id: Digest.java 634 2009-12-03 00:33:16Z jzigman $
+ * 
  */
 public class Digest {
-  
+
   /**
    * Return an instance of our chosen message digest
    * 
@@ -30,7 +30,7 @@ public class Digest {
       return null;
     }
   }
-  
+
   /**
    * String representation of a message digest.
    * 
@@ -38,9 +38,9 @@ public class Digest {
    * @return
    */
   public static String toString(byte[] digest) {
-    StringBuffer result = new StringBuffer(digest.length*2);
-    for (int i=0; i < digest.length; i++) {
-      String s = Integer.toHexString(((int)digest[i])&0xFF);
+    StringBuffer result = new StringBuffer(digest.length * 2);
+    for (int i = 0; i < digest.length; i++) {
+      String s = Integer.toHexString(((int) digest[i]) & 0xFF);
       if (s.length() == 1)
         result.append("0");
       result.append(s);

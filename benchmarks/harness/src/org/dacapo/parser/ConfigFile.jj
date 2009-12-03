@@ -11,7 +11,7 @@
  *  JavaCC example files)
  */
 options {
-	STATIC = false;
+  STATIC = false;
 }
 PARSER_BEGIN(ConfigFile)
 package org.dacapo.parser;
@@ -175,17 +175,17 @@ Config config() :
 void configOption(Config config) :
 { String className; Config.ThreadModel threadModel; String jar;}
 {
-	  <CLASS> className=identifier() { config.setClass(className); }
-	| <THREAD_MODEL> threadModel=threadModel() { config.setThreadModel(threadModel); }
-	| <JAR> jar=string() { config.setJar(jar); }
-	| <LIBS> libraries(config)
+    <CLASS> className=identifier() { config.setClass(className); }
+  | <THREAD_MODEL> threadModel=threadModel() { config.setThreadModel(threadModel); }
+  | <JAR> jar=string() { config.setJar(jar); }
+  | <LIBS> libraries(config)
 }
 
 void libraries(Config config) :
 { ArrayList libs = new ArrayList(); String lib; }
 {
-	lib=string() { libs.add(lib); } (<COMMA> lib=string() { libs.add(lib); })*
-	{ config.setLibs((String[]) libs.toArray(new String[0])); }
+  lib=string() { libs.add(lib); } (<COMMA> lib=string() { libs.add(lib); })*
+  { config.setLibs((String[]) libs.toArray(new String[0])); }
 }
 
 void sizeSpec(Config config) :
@@ -196,13 +196,13 @@ void sizeSpec(Config config) :
 
 void sizeClause(Config config, String size) :
 {   Vector args = new Vector(); 
-	String arg;
-	String description;
-	int threads;
+  String arg;
+  String description;
+  int threads;
 }
 {
-	   <ARGS> [arg=string() { args.add(arg); } 
-	          (<COMMA> arg=string() { args.add(arg); })*]
+     <ARGS> [arg=string() { args.add(arg); } 
+            (<COMMA> arg=string() { args.add(arg); })*]
        { config.addSize(size,args); }
     |  <DESCRIPTION> description=string() { config.setSizeDescription(size,description); }
     |  <THREADS> threads=integer() { config.setThreadFactor(size,threads); }
@@ -212,39 +212,39 @@ void sizeClause(Config config, String size) :
 void outputFile(Config config, String size) :
 { String file; }
 {
-	(file=string() 
-	| <STDOUT> { file = "stdout.log"; }
-	| <STDERR> { file = "stderr.log"; }
-	)
-	{ config.addOutputFile(size,file); }
-	(outputClause(config,size,file))*
+  (file=string() 
+  | <STDOUT> { file = "stdout.log"; }
+  | <STDERR> { file = "stderr.log"; }
+  )
+  { config.addOutputFile(size,file); }
+  (outputClause(config,size,file))*
 }
 
 void outputClause(Config config, String size, String file) :
 { String digest; int n; long l; }
 {
-	  <DIGEST> [<LPAREN> digestOption(config,size,file) 
-	         (<COMMA> digestOption(config,size,file))* <RPAREN>]
-	  digest=hex() { config.setDigest(size,file,digest); }
-	| <EXISTS>              { config.setExists(size,file); }
-	| <KEEP>                { config.setKeep(size,file); }
-	| <LINES> n=integer()   { config.setLines(size,file,n); }
-	| <BYTES> l=longInt()   { config.setBytes(size,file,l); }
+    <DIGEST> [<LPAREN> digestOption(config,size,file) 
+           (<COMMA> digestOption(config,size,file))* <RPAREN>]
+    digest=hex() { config.setDigest(size,file,digest); }
+  | <EXISTS>              { config.setExists(size,file); }
+  | <KEEP>                { config.setKeep(size,file); }
+  | <LINES> n=integer()   { config.setLines(size,file,n); }
+  | <BYTES> l=longInt()   { config.setBytes(size,file,l); }
 }
 
 void digestOption(Config config, String size, String file) : { }
 {
-	  <TEXT>    	{ config.setTextFile(size,file,true); }
-	| <BINARY>   	{ config.setTextFile(size,file,false); }
-	| <FILTER>   	{ config.setFilterScratch(size,file,true); }
-	| <RAW>   		{ config.setFilterScratch(size,file,false); }
+    <TEXT>      { config.setTextFile(size,file,true); }
+  | <BINARY>     { config.setTextFile(size,file,false); }
+  | <FILTER>     { config.setFilterScratch(size,file,true); }
+  | <RAW>       { config.setFilterScratch(size,file,false); }
 }
 
 Config.ThreadModel threadModel() : { }
 {
-	  <SINGLE> { return Config.ThreadModel.SINGLE; }
-	| <FIXED>  { return Config.ThreadModel.FIXED; }
-	| <PER_CPU> { return Config.ThreadModel.PER_CPU; }
+    <SINGLE> { return Config.ThreadModel.SINGLE; }
+  | <FIXED>  { return Config.ThreadModel.FIXED; }
+  | <PER_CPU> { return Config.ThreadModel.PER_CPU; }
 }
 
 void description(Config config) : { }
@@ -268,25 +268,25 @@ String descId() : { }
 
 String identifier() : { }
 {
-	<IDENT> { return token.image; }
+  <IDENT> { return token.image; }
 }
 
 String string() : { }
 {
-	<STRING_LITERAL> { return unQuote(token); }
+  <STRING_LITERAL> { return unQuote(token); }
 }
 
 int integer() : { }
 {
-	<INT_LITERAL> { return Integer.parseInt(token.image); }
+  <INT_LITERAL> { return Integer.parseInt(token.image); }
 }
 
 long longInt() : { }
 {
-	<INT_LITERAL> { return Long.parseLong(token.image); }
+  <INT_LITERAL> { return Long.parseLong(token.image); }
 }
 
 String hex() : { }
 {
-	<HEX_STRING> { return unHex(token); }
+  <HEX_STRING> { return unHex(token); }
 }

@@ -17,7 +17,7 @@ import java.io.OutputStream;
  * @author Robin Garner
  * @date $Date:$
  * @id $Id:$
- *
+ * 
  */
 public class TeeOutputStream extends FilterOutputStream {
 
@@ -25,24 +25,23 @@ public class TeeOutputStream extends FilterOutputStream {
   private int version = 0;
   private final File logFile;
   private boolean toScreen = false;
-  
+
   /**
-   * Constructor.  Output is sent to both the output stream
-   * and the log file.
+   * Constructor. Output is sent to both the output stream and the log file.
    */
   public TeeOutputStream(OutputStream stream, File logFile) {
     super(stream);
     this.logFile = logFile;
     newLog();
   }
-  
+
   /**
    * Let output through to the screen
    */
   public void enableOutput(boolean enable) {
     toScreen = enable;
   }
-  
+
   /**
    * Open the logfile.
    * 
@@ -55,11 +54,11 @@ public class TeeOutputStream extends FilterOutputStream {
       e.printStackTrace();
     }
   }
-  
+
   public void openLog() {
     newLog();
   }
-  
+
   public void closeLog() {
     try {
       flush();
@@ -69,22 +68,32 @@ public class TeeOutputStream extends FilterOutputStream {
       e.printStackTrace();
     }
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.io.FilterOutputStream#close()
    */
   public void close() throws IOException {
     super.close();
-    if (log != null) log.close();
+    if (log != null)
+      log.close();
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.io.FilterOutputStream#flush()
    */
   public void flush() throws IOException {
     super.flush();
-    if (log != null) log.flush();
+    if (log != null)
+      log.flush();
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.io.FilterOutputStream#write(int)
    */
   public void write(int b) throws IOException {
@@ -98,22 +107,28 @@ public class TeeOutputStream extends FilterOutputStream {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#finalize()
    */
   protected void finalize() throws Throwable {
-    try { 
+    try {
       flush();
       close();
       super.finalize();
-    } catch (Exception e) {}
+    } catch (Exception e) {
+    }
   }
 
   public void version() {
     version++;
-    File archive = new File(logFile.getAbsolutePath()+"."+version);
-    if (log != null) 
-      try { log.close(); } catch (IOException e) {}
+    File archive = new File(logFile.getAbsolutePath() + "." + version);
+    if (log != null)
+      try {
+        log.close();
+      } catch (IOException e) {
+      }
     logFile.renameTo(archive);
   }
 }

@@ -21,104 +21,135 @@ import java.util.Vector;
 /**
  * Container class for all options specified in a benchmark's configuration
  * file.
- *
+ * 
  * @author Robin Garner
  */
 public class Config {
 
   public enum ThreadModel {
-    SINGLE("single threaded"),
-    FIXED("fixed #threads"),
-    PER_CPU("scaled to available CPUs");
+    SINGLE("single threaded"), FIXED("fixed #threads"), PER_CPU(
+        "scaled to available CPUs");
 
     private String description;
-    private ThreadModel(String description) { this.description = description; }
-    public String describe() { return description; }
+
+    private ThreadModel(String description) {
+      this.description = description;
+    }
+
+    public String describe() {
+      return description;
+    }
   };
 
   /**
-   * Inner class that keeps details of one of the output files
-   * specified by a benchmark.
+   * Inner class that keeps details of one of the output files specified by a
+   * benchmark.
    */
   class OutputFile {
-    String name;                   // Output file name
-    String digest = null;          // SHA1-digest - check if non-null
-    boolean keep = false;          // keep this file
-    boolean existence = false;     // Check file exists
-    int lines = -1;                // Check for #lines
-    long bytes = -1;               // Check for #bytes
+    String name; // Output file name
+    String digest = null; // SHA1-digest - check if non-null
+    boolean keep = false; // keep this file
+    boolean existence = false; // Check file exists
+    int lines = -1; // Check for #lines
+    long bytes = -1; // Check for #bytes
 
     /* Options that apply to digest processing */
-    boolean text = false;          // Read as a text file - canonical CR/LF processing
-    boolean filter = false;        // Filter scratch directory name
+    boolean text = false; // Read as a text file - canonical CR/LF processing
+    boolean filter = false; // Filter scratch directory name
 
     OutputFile(String name) {
       this.name = name;
     }
-    boolean hasDigest() { return digest != null; }
-    boolean hasLines() { return lines != -1; }
-    boolean hasBytes() { return bytes != -1; }
+
+    boolean hasDigest() {
+      return digest != null;
+    }
+
+    boolean hasLines() {
+      return lines != -1;
+    }
+
+    boolean hasBytes() {
+      return bytes != -1;
+    }
   }
 
   /**
-   * Inner class to encapsulate specifications for a given sized run of
-   * a benchmark.
-   *
+   * Inner class to encapsulate specifications for a given sized run of a
+   * benchmark.
+   * 
    * @author Robin Garner
-   *
+   * 
    */
   class Size {
     final String name;
     final String[] args;
 
     /**
-     * Number of threads.  Interpretation depends on the threading model of the benchmark
+     * Number of threads. Interpretation depends on the threading model of the
+     * benchmark
      * <ul>
      * <li> <code>SINGLE</code> One thread
      * <li> <code>FIXED</code> the exact number of threads used.
-     * <li> <code>PER_CPU</code> A multiplier on the number of CPUs detected or specified
+     * <li> <code>PER_CPU</code> A multiplier on the number of CPUs detected or
+     * specified
      * </ul>
      */
     private int nThreads = 1;
     private String description;
-    
-    HashMap<String,OutputFile> outputFiles = new LinkedHashMap<String,OutputFile>(20);
+
+    HashMap<String, OutputFile> outputFiles = new LinkedHashMap<String, OutputFile>(
+        20);
 
     Size(String name, Vector<String> args) {
-      this.args = (String[])args.toArray(new String[0]);
+      this.args = (String[]) args.toArray(new String[0]);
       this.name = name;
     }
+
     void addOutputFile(String file) {
-      outputFiles.put(file,new OutputFile(file));
-    }
-    OutputFile getOutputFile(String file) {
-      return (OutputFile)outputFiles.get(file);
+      outputFiles.put(file, new OutputFile(file));
     }
 
-    void setThreadCount(int nThreads) { this.nThreads = nThreads; }
-    int getThreadCount() { return nThreads; }
-    
-    void setDesc(String description) { this.description = description; }
-    String getDesc() { return description; }
+    OutputFile getOutputFile(String file) {
+      return (OutputFile) outputFiles.get(file);
+    }
+
+    void setThreadCount(int nThreads) {
+      this.nThreads = nThreads;
+    }
+
+    int getThreadCount() {
+      return nThreads;
+    }
+
+    void setDesc(String description) {
+      this.description = description;
+    }
+
+    String getDesc() {
+      return description;
+    }
   }
 
   /*********************************************************************************
-   *
-   *               Class methods.  Factory methods that invoke the
-   *               parser on various input sources
+   * 
+   * Class methods. Factory methods that invoke the parser on various input
+   * sources
    */
 
   /**
    * Parse a config file
-   *
+   * 
    * @param file
    * @return
    */
-  public static Config parse(String file) { return parse(new File(file)); }
+  public static Config parse(String file) {
+    return parse(new File(file));
+  }
 
   /**
    * Parse a config file
-   *
+   * 
    * @param file
    * @return
    */
@@ -133,7 +164,7 @@ public class Config {
 
   /**
    * Parse a config file
-   *
+   * 
    * @param url
    * @return
    */
@@ -158,23 +189,22 @@ public class Config {
     return null;
   }
 
-
   /**
-   * Main - for testing purposes.  Parse a config file and print its contents.
-   *
-   * @param args Input file(s)
+   * Main - for testing purposes. Parse a config file and print its contents.
+   * 
+   * @param args
+   *          Input file(s)
    */
   public static void main(String[] args) {
     // TODO Auto-generated method stub
-    for (int i=0; i < args.length; i++) {
+    for (int i = 0; i < args.length; i++) {
       parse(args[i]).print(System.out);
     }
   }
 
-
   /********************************************************************************
-   *
-   *                 Instance fields
+   * 
+   * Instance fields
    */
 
   /**
@@ -192,8 +222,8 @@ public class Config {
    */
   private ThreadModel threadModel = null;
 
-  HashMap<String,Size> sizes = new HashMap<String,Size>(3);
-  HashMap<String,String> desc = new HashMap<String,String>(6);
+  HashMap<String, Size> sizes = new HashMap<String, Size>(3);
+  HashMap<String, String> desc = new HashMap<String, String>(6);
 
   /**
    * The name of the jar containing this bm
@@ -206,9 +236,9 @@ public class Config {
   public String[] libs;
 
   /**
-   * Constructor.  These are always constructed by the parser, and
-   * at time of construction all we know is the benchmark name.
-   *
+   * Constructor. These are always constructed by the parser, and at time of
+   * construction all we know is the benchmark name.
+   * 
    * @param name
    */
   Config(String name) {
@@ -216,95 +246,101 @@ public class Config {
   }
 
   /**************************************************************************************
-   *
-   *            Per-benchmark setter methods.  Invoked as the
-   *            parser finds out more about the benchmark.
-   *
+   * 
+   * Per-benchmark setter methods. Invoked as the parser finds out more about
+   * the benchmark.
+   * 
    */
 
   /**
    * Set the jar from which this benchmark executes
-   *
-   * @param jarName The name of the jar
+   * 
+   * @param jarName
+   *          The name of the jar
    * @throws ParseException
    */
   void setJar(String jarName) throws ParseException {
     if (this.jar != null) {
-      throw new ParseException("Configuration file error - cannot set jar name twice");
+      throw new ParseException(
+          "Configuration file error - cannot set jar name twice");
     }
     this.jar = jarName;
   }
 
   /**
    * Set the list of libraries on which this benchmark depends
-   *
-   * @param libs An array of strings (jar names)
+   * 
+   * @param libs
+   *          An array of strings (jar names)
    * @throws ParseException
    */
   void setLibs(String[] libs) throws ParseException {
     if (this.libs != null) {
-      throw new ParseException("Configuration file error - cannot set libs twice");
+      throw new ParseException(
+          "Configuration file error - cannot set libs twice");
     }
     this.libs = libs;
   }
 
   /**
-   * Set the class name - easier to check for duplicate attempts here than in the grammar.
-   *
+   * Set the class name - easier to check for duplicate attempts here than in
+   * the grammar.
+   * 
    * @param className
    * @throws ParseException
    */
   void setClass(String className) throws ParseException {
     if (this.className != null) {
-      throw new ParseException("Configuration file error - cannot set class name twice");
+      throw new ParseException(
+          "Configuration file error - cannot set class name twice");
     }
     this.className = className;
   }
 
   /**
    * Set the threading model for this benchmark
-   *
+   * 
    * @param model
    * @throws ParseException
    */
   void setThreadModel(ThreadModel model) throws ParseException {
     if (this.threadModel != null) {
-      throw new ParseException("Configuration file error - cannot set thread model twice");
+      throw new ParseException(
+          "Configuration file error - cannot set thread model twice");
     }
     this.threadModel = model;
   }
 
   /**
    * Add a benchmark run size
-   *
+   * 
    * @param name
    * @param args
    */
   void addSize(String name, Vector<String> args) {
-    sizes.put(name,new Size(name,args));
+    sizes.put(name, new Size(name, args));
   }
 
   /**
    * Add a description element for the benchmark
-   *
+   * 
    * @param element
    * @param description
    */
   void addDesc(String element, String description) {
-    desc.put(element,description);
+    desc.put(element, description);
   }
 
   /*************************************************************************************
-   *
-   *   Per-config getter methods
-   *
+   * 
+   * Per-config getter methods
+   * 
    */
 
-
   /***************************************************************************************
-   *
-   *          Per-size setter methods
-   *
+   * 
+   * Per-size setter methods
+   * 
    */
 
   /**
@@ -312,15 +348,17 @@ public class Config {
    */
   void setThreadFactor(String size, int nThreads) throws ParseException {
     if (threadModel == ThreadModel.SINGLE && nThreads != 1)
-      throw new ParseException("Single threaded benchmarks must have exactly 1 thread");
+      throw new ParseException(
+          "Single threaded benchmarks must have exactly 1 thread");
     getSize(size).setThreadCount(nThreads);
   }
 
   /**
    * 
    */
-  void setSizeDescription(String size, String description) throws ParseException {
-	  getSize(size).setDesc(description);
+  void setSizeDescription(String size, String description)
+      throws ParseException {
+    getSize(size).setDesc(description);
   }
 
   /*************************************************************************************
@@ -335,8 +373,8 @@ public class Config {
 
     /* Set defaults for certain files */
     if (file.equals("stdout.log") || file.equals("stderr.log")) {
-      setTextFile(size,file,true);
-      setFilterScratch(size,file,true);
+      setTextFile(size, file, true);
+      setFilterScratch(size, file, true);
     }
   }
 
@@ -367,10 +405,13 @@ public class Config {
 
   /**
    * Is this a text file (affects how it is read)
-   *
-   * @param size benchmark size
-   * @param file output file
-   * @param isText Is this a text file ?
+   * 
+   * @param size
+   *          benchmark size
+   * @param file
+   *          output file
+   * @param isText
+   *          Is this a text file ?
    */
   public void setTextFile(String size, String file, boolean isText) {
     Size s = getSize(size);
@@ -378,9 +419,9 @@ public class Config {
   }
 
   /**
-   * Do we filter this file replacing occurrences of the scratch directory
-   * name before applying the digest function to it ?
-   *
+   * Do we filter this file replacing occurrences of the scratch directory name
+   * before applying the digest function to it ?
+   * 
    * @param size
    * @param file
    * @param doFilter
@@ -391,21 +432,21 @@ public class Config {
   }
 
   /***********************************************************************************
-   *
-   *                        Getter methods
+   * 
+   * Getter methods
    */
 
   /**
-   * Benchmark arguments for a given run size.  The return value
-   * is a clone so callers are free to modify it.
+   * Benchmark arguments for a given run size. The return value is a clone so
+   * callers are free to modify it.
    */
   public String[] getArgs(String size) {
-    return (String[])getSize(size).args.clone();
+    return (String[]) getSize(size).args.clone();
   }
 
   /**
    * Get the collection of sizes this benchmark accepts
-   *
+   * 
    * @return A collection of strings
    */
   public Collection<String> getSizes() {
@@ -413,8 +454,8 @@ public class Config {
   }
 
   /**
-   * Get the thread model for this benchmark.  Apply the default here,
-   * because we use 'null' to prevent double-setting in the config file.
+   * Get the thread model for this benchmark. Apply the default here, because we
+   * use 'null' to prevent double-setting in the config file.
    */
   public ThreadModel getThreadModel() {
     if (threadModel == null) {
@@ -426,7 +467,7 @@ public class Config {
 
   /**
    * Get the threading factor for this size of this benchmark.
-   *
+   * 
    * @param size
    * @return
    */
@@ -436,7 +477,7 @@ public class Config {
 
   /**
    * Get the set of output files for a benchmark size
-   *
+   * 
    * @param size
    * @return Set\<String\> of file names
    */
@@ -446,8 +487,11 @@ public class Config {
 
   /**
    * Get the expected digest for a given size/file pair
-   * @param size benchmark size
-   * @param file output file
+   * 
+   * @param size
+   *          benchmark size
+   * @param file
+   *          output file
    */
   public String getDigest(String size, String file) {
     return getSize(size).getOutputFile(file).digest;
@@ -455,8 +499,11 @@ public class Config {
 
   /**
    * Does the given size/file pair have an expected file digest ?
-   * @param size benchmark size
-   * @param file output file
+   * 
+   * @param size
+   *          benchmark size
+   * @param file
+   *          output file
    */
   public boolean hasDigest(String size, String file) {
     return getSize(size).getOutputFile(file).hasDigest();
@@ -464,9 +511,11 @@ public class Config {
 
   /**
    * Is this a text file (affects how it is read)
-   *
-   * @param size benchmark size
-   * @param file output file
+   * 
+   * @param size
+   *          benchmark size
+   * @param file
+   *          output file
    * @return Is this a text file ?
    */
   public boolean isTextFile(String size, String file) {
@@ -476,6 +525,7 @@ public class Config {
 
   /**
    * Should we filter scratch directories for this output file ?
+   * 
    * @param size
    * @param file
    * @return
@@ -486,7 +536,7 @@ public class Config {
 
   /**
    * Does this output file have a byte length validation ?
-   *
+   * 
    * @param size
    * @param file
    * @return
@@ -497,7 +547,7 @@ public class Config {
 
   /**
    * What is the byte-length requirement for this file ?
-   *
+   * 
    * @param size
    * @param file
    * @return
@@ -523,6 +573,7 @@ public class Config {
 
   /**
    * Should we check for the existence of this file ?
+   * 
    * @param size
    * @param file
    * @return
@@ -541,40 +592,46 @@ public class Config {
   /*
    * Manage the description fields
    */
-  public void describe(PrintStream str, String size) { describe(str,size,false); }
+  public void describe(PrintStream str, String size) {
+    describe(str, size, false);
+  }
 
-  private void describe(PrintStream str, String size, boolean decorated,String desc,String trail) {
-    if (decorated) str.print("  ");
-    str.println(pad(desc,10)+this.desc.get(desc)+(decorated?trail:""));
+  private void describe(PrintStream str, String size, boolean decorated,
+      String desc, String trail) {
+    if (decorated)
+      str.print("  ");
+    str.println(pad(desc, 10) + this.desc.get(desc) + (decorated ? trail : ""));
   }
 
   public void describe(PrintStream str, String size, boolean decorated) {
-    if (decorated) str.println("description");
-    describe(str,size,decorated,"short",",");
-    describe(str,size,decorated,"long",",");
-    describe(str,size,decorated,"author",",");
-    describe(str,size,decorated,"license",",");
-    describe(str,size,decorated,"copyright",",");
-    describe(str,size,decorated,"url",",");
-    
-    String sizeDesc = (size!=null&&getSize(size)!=null)?getSize(size).getDesc():null;
-    
-    if (sizeDesc==null)
-    	describe(str,size,decorated,"version",";");
+    if (decorated)
+      str.println("description");
+    describe(str, size, decorated, "short", ",");
+    describe(str, size, decorated, "long", ",");
+    describe(str, size, decorated, "author", ",");
+    describe(str, size, decorated, "license", ",");
+    describe(str, size, decorated, "copyright", ",");
+    describe(str, size, decorated, "url", ",");
+
+    String sizeDesc = (size != null && getSize(size) != null) ? getSize(size)
+        .getDesc() : null;
+
+    if (sizeDesc == null)
+      describe(str, size, decorated, "version", ";");
     else {
-    	describe(str,size,decorated,"version",",");
-    	str.println(pad("size",10)+sizeDesc+(decorated?";":""));
+      describe(str, size, decorated, "version", ",");
+      str.println(pad("size", 10) + sizeDesc + (decorated ? ";" : ""));
     }
   }
 
   public String getDesc(String item) {
-    return (String)desc.get(item);
+    return (String) desc.get(item);
   }
 
   public void print(PrintStream str) {
-    str.print("benchmark "+name);
+    str.print("benchmark " + name);
     if (className != null)
-      str.print(" class "+className);
+      str.print(" class " + className);
     str.println(";");
 
     str.print("  Threading model: ");
@@ -586,8 +643,8 @@ public class Config {
 
     for (String size : getSizes()) {
       String[] args = getArgs(size);
-      str.print("size "+size+" args \"");
-      for (int j=0; j < args.length; j++) {
+      str.print("size " + size + " args \"");
+      for (int j = 0; j < args.length; j++) {
         if (j != 0)
           str.print(" ");
         str.print(args[j]);
@@ -600,47 +657,55 @@ public class Config {
         str.println(getThreadFactor(size));
       }
       str.print("  outputs");
-      for (Iterator<String> v = getOutputs(size).iterator(); v.hasNext(); ) {
+      for (Iterator<String> v = getOutputs(size).iterator(); v.hasNext();) {
         str.println();
-        String file = (String)v.next();
+        String file = (String) v.next();
         OutputFile f = getSize(size).getOutputFile(file);
-        str.print("    \""+file+"\"");
-        if (f.hasDigest()) str.print(" digest 0x"+f.digest);
-        if (f.keep) str.print(" keep");
+        str.print("    \"" + file + "\"");
+        if (f.hasDigest())
+          str.print(" digest 0x" + f.digest);
+        if (f.keep)
+          str.print(" keep");
         if (v.hasNext())
           str.print(",");
       }
       str.println(";");
     }
 
-    describe(str,null,true);
+    describe(str, null, true);
   }
 
   public void printThreadModel(PrintStream str, String size, boolean verbose) {
-	  if (getThreadModel()==ThreadModel.PER_CPU) {
-      str.println("Using scaled threading model. "+Runtime.getRuntime().availableProcessors()+" processors detected, "+getThreadCount(size)+" threads used to drive the workload.");
-	  } else if (verbose) {
-	    if (getThreadModel()==ThreadModel.FIXED) {
-	      str.println("Using a fixed threading model. "+getThreadCount(size)+" threads used to drive the workload.");
-	    } else if (getThreadModel()==ThreadModel.SINGLE) {
-	      str.println("Using a single thread to drive the workload.");
-	    }
+    if (getThreadModel() == ThreadModel.PER_CPU) {
+      str.println("Using scaled threading model. "
+          + Runtime.getRuntime().availableProcessors()
+          + " processors detected, " + getThreadCount(size)
+          + " threads used to drive the workload.");
+    } else if (verbose) {
+      if (getThreadModel() == ThreadModel.FIXED) {
+        str.println("Using a fixed threading model. " + getThreadCount(size)
+            + " threads used to drive the workload.");
+      } else if (getThreadModel() == ThreadModel.SINGLE) {
+        str.println("Using a single thread to drive the workload.");
+      }
     }
   }
 
   /*************************************************************************************
-   *
-   *                       Utility methods
-   *
+   * 
+   * Utility methods
+   * 
    */
   /**
-   * Determine the multi-threading level of this benchmark size.
-   * TODO allow the user to override on the command-line
+   * Determine the multi-threading level of this benchmark size. TODO allow the
+   * user to override on the command-line
    */
   public int getThreadCount(String size) {
-    switch(getThreadModel()) {
-    case SINGLE: return 1;
-    case FIXED: return getThreadFactor(size);
+    switch (getThreadModel()) {
+    case SINGLE:
+      return 1;
+    case FIXED:
+      return getThreadFactor(size);
     case PER_CPU: {
       int factor = getThreadFactor(size);
       int cpuCount = Runtime.getRuntime().availableProcessors();
@@ -653,16 +718,18 @@ public class Config {
 
   /**
    * Retrieve the benchmark arguments for the given size, applying preprocessing
-   * as appropriate.  The preprocessing that is currently done is:
+   * as appropriate. The preprocessing that is currently done is:
    * <ul>
-   * <li> ${SCRATCH} - replaced with the absolute path name of the scratch directory
-   * <li> ${THREADS} - replaced with the specified thread count for the benchmark size
+   * <li>${SCRATCH} - replaced with the absolute path name of the scratch
+   * directory
+   * <li>${THREADS} - replaced with the specified thread count for the benchmark
+   * size
    * </ul>
    */
   public String[] preprocessArgs(String size, File scratch) {
     String[] raw = getArgs(size);
     String[] cooked = new String[raw.length];
-    for (int i=0; i < raw.length; i++) {
+    for (int i = 0; i < raw.length; i++) {
       String tmp = raw[i];
       tmp = tmp.replace("${SCRATCH}", scratch.getAbsolutePath());
       tmp = tmp.replace("${THREADS}", Integer.toString(getThreadCount(size)));
@@ -672,16 +739,17 @@ public class Config {
   }
 
   /**
-   * Extract the named size from the available sizes in this benchmark, handling pesky
-   * epistemological issues.
-   *
+   * Extract the named size from the available sizes in this benchmark, handling
+   * pesky epistemological issues.
+   * 
    * @param size
    * @return
    */
   private Size getSize(String size) {
-    Size s = (Size)sizes.get(size);
+    Size s = (Size) sizes.get(size);
     if (s == null) {
-      System.err.println("No such size: \""+size+"\" in this configuration");
+      System.err
+          .println("No such size: \"" + size + "\" in this configuration");
     }
     return s;
   }
