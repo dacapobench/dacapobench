@@ -70,10 +70,10 @@ public class TPCC {
   private int numberOfTerminals = DEF_NUM_OF_TERMINALS;
   private int transactionsPerTerminal = DEF_TRANSACTIONS_PER_TERMINAL;
   private boolean generate = false; // by default we use the pre-generated
-                                    // database
+  // database
   private boolean inMemoryDB = true; // by default use the in memory db
   private boolean cleanupInIteration = false; // by default perform clean up in
-                                              // preiteration phase
+  // preiteration phase
   private boolean reportPreIterationTimes = false;
 
   // OLTP runners
