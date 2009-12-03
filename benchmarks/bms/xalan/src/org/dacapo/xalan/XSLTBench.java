@@ -19,24 +19,24 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 public class XSLTBench {
-  
+
   final boolean verbose = false;
 
   // What version of XALAN should we have
   private final String XALAN_VERSION = "Xalan Java 2.7.1";
   private final File scratch;
-  
+
   int workers;
 
   /*
-   * A simple queue of filenames that the worker threads pull jobs
-   * from. 
+   * A simple queue of filenames that the worker threads pull jobs from.
    */
   class WorkQueue {
     LinkedList<String> _queue = new LinkedList<String>();
 
     public synchronized void push(String filename) {
-      if (verbose) System.out.println("workQueue.push");
+      if (verbose)
+        System.out.println("workQueue.push");
       _queue.add(filename);
       notify();
     }
@@ -47,17 +47,17 @@ public class XSLTBench {
           wait();
         } catch (InterruptedException e) {
         }
-        if (verbose) System.out.println("workQueue.pop");
+        if (verbose)
+          System.out.println("workQueue.pop");
       }
       return _queue.removeFirst();
     }
   }
 
   /*
-   * Worker thread. Provided with a queue that input files
-   * can be selected from and a template object that can
-   * be used to perform a transform from. Results of the
-   * transfrom are saved in the scratch directory as normal.
+   * Worker thread. Provided with a queue that input files can be selected from
+   * and a template object that can be used to perform a transform from. Results
+   * of the transfrom are saved in the scratch directory as normal.
    */
   class XalanWorker extends Thread implements ErrorListener {
 
@@ -74,9 +74,10 @@ public class XSLTBench {
 
     public void run() {
       try {
-        if (verbose) System.out.println("Worker thread starting");
-        FileOutputStream outputStream = new FileOutputStream(
-            new File(scratch,"xalan.out." + _id));
+        if (verbose)
+          System.out.println("Worker thread starting");
+        FileOutputStream outputStream = new FileOutputStream(new File(scratch,
+            "xalan.out." + _id));
         Result outFile = new StreamResult(outputStream);
         while (true) {
           String fileName = _queue.pop();
@@ -85,32 +86,36 @@ public class XSLTBench {
             break;
           Transformer transformer = _template.newTransformer();
           transformer.setErrorListener(this);
-          FileInputStream inputStream = new FileInputStream(
-              new File(scratch,fileName));
+          FileInputStream inputStream = new FileInputStream(new File(scratch,
+              fileName));
           Source inFile = new StreamSource(inputStream);
           transformer.transform(inFile, outFile);
           inputStream.close();
         }
       } catch (TransformerConfigurationException e) {
-        e.printStackTrace();                            
+        e.printStackTrace();
       } catch (TransformerException e) {
         e.printStackTrace();
       } catch (IOException e) {
         e.printStackTrace();
       }
-      if (verbose) System.out.println("Worker thread exiting");
+      if (verbose)
+        System.out.println("Worker thread exiting");
     }
 
     // Provide an ErrorListener so that stderr warnings can be surpressed
-    public void error(TransformerException exception) throws TransformerException {
+    public void error(TransformerException exception)
+        throws TransformerException {
       throw exception;
     }
 
-    public void fatalError(TransformerException exception) throws TransformerException {
+    public void fatalError(TransformerException exception)
+        throws TransformerException {
       throw exception;
     }
 
-    public void warning(TransformerException exception) throws TransformerException {
+    public void warning(TransformerException exception)
+        throws TransformerException {
       // Ignore warnings, the test transforms create some
     }
   }
@@ -123,7 +128,7 @@ public class XSLTBench {
   WorkQueue _workQueue = null;
 
   // An array for the workers
-  XalanWorker[] _workers = null; 
+  XalanWorker[] _workers = null;
 
   public XSLTBench(File scratch) throws Exception {
     // Check Xalan version, this is easy to get wrong because its
@@ -133,9 +138,11 @@ public class XSLTBench {
     if (!org.apache.xalan.Version.getVersion().equals(XALAN_VERSION)) {
       System.err.println("***  Incorrect version of Xalan in use!");
       System.err.println("***     Should be '" + XALAN_VERSION + "',");
-      System.err.println("***     actually is '" + org.apache.xalan.Version.getVersion() + "').");
+      System.err.println("***     actually is '"
+          + org.apache.xalan.Version.getVersion() + "').");
       System.err.println("***  To fix this, extract the included xalan.jar:");
-      System.err.println("***     unzip "+props.get("java.class.path")+" xalan.jar");
+      System.err.println("***     unzip " + props.get("java.class.path")
+          + " xalan.jar");
       System.err.println("***  and override your jvm's boot classpath:");
       System.err.println("***     java -Xbootclasspath/p:xalan.jar [...] ");
       throw new Exception("Please fix your bootclasspath and try again.");
@@ -154,10 +161,9 @@ public class XSLTBench {
 
     // Create the work queue for jobs
     _workQueue = new WorkQueue();
-    
+
   }
-  
-  
+
   /**
    * This method is called before the start of a benchmark iteration
    * 
@@ -166,17 +172,17 @@ public class XSLTBench {
   public void createWorkers(int workers) {
     this.workers = workers;
     // Setup the workers ready to roll
-    if (_workers==null)
-      _workers=new XalanWorker [workers];
-    for (int i=0; i<workers; i++) {
-      _workers[i]=new XalanWorker(_workQueue,i);
+    if (_workers == null)
+      _workers = new XalanWorker[workers];
+    for (int i = 0; i < workers; i++) {
+      _workers[i] = new XalanWorker(_workQueue, i);
       _workers[i].start();
     }
   }
 
-
   /**
    * This method is the heart of a benchmark iteration
+   * 
    * @param nRuns
    * @throws InterruptedException
    */
@@ -207,7 +213,8 @@ public class XSLTBench {
       _workQueue.push(""); // "" is a thread die signal
     }
     for (int i = 0; i < workers; i++) {
-      if (verbose) System.out.println("Waiting for thread "+i);
+      if (verbose)
+        System.out.println("Waiting for thread " + i);
       _workers[i].join();
     }
   }
