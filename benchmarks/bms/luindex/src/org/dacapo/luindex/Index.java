@@ -29,29 +29,33 @@ import org.dacapo.harness.DacapoException;
 import org.dacapo.parser.Config;
 
 /**
- * This is a modified version of org.apache.lucene.demo.IndexFiles,
- * as distributed with Lucene.
+ * This is a modified version of org.apache.lucene.demo.IndexFiles, as
+ * distributed with Lucene.
  * 
  * @author Apache
  * @author Robin Garner
- *
+ * 
  */
 public class Index {
-  
+
   private final File scratch;
-  
+
   public Index(File scratch) {
     this.scratch = scratch;
   }
-  /** 
-   * Index all text files under a directory. 
+
+  /**
+   * Index all text files under a directory.
    */
-  public void main(final File INDEX_DIR, final String[] args) throws DacapoException, IOException {
-    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
-    for ( int arg = 0; arg < args.length; arg++) {
-      final File docDir = new File(scratch,args[arg]);
+  public void main(final File INDEX_DIR, final String[] args)
+      throws DacapoException, IOException {
+    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(),
+        true, IndexWriter.MaxFieldLength.LIMITED);
+    for (int arg = 0; arg < args.length; arg++) {
+      final File docDir = new File(scratch, args[arg]);
       if (!docDir.exists() || !docDir.canRead()) {
-        System.out.println("Document directory '" +docDir.getAbsolutePath()+ "' does not exist or is not readable, please check the path");
+        System.out.println("Document directory '" + docDir.getAbsolutePath()
+            + "' does not exist or is not readable, please check the path");
         throw new DacapoException("Cannot read from document directory");
       }
 
@@ -69,12 +73,11 @@ public class Index {
    * @param file
    * @throws IOException
    */
-  void indexDocs(IndexWriter writer, File file)
-    throws IOException {
+  void indexDocs(IndexWriter writer, File file) throws IOException {
 
     /* Strip the absolute part of the path name from file name output */
-    int scratchP = scratch.getPath().length()+1;
-    
+    int scratchP = scratch.getPath().length() + 1;
+
     /* do not try to index files that cannot be read */
     if (file.canRead()) {
       if (file.isDirectory()) {
@@ -91,7 +94,8 @@ public class Index {
         try {
           writer.addDocument(FileDocument.Document(file));
         }
-        // at least on windows, some temporary files raise this exception with an "access denied" message
+        // at least on windows, some temporary files raise this exception with
+        // an "access denied" message
         // checking if the file can be read doesn't help
         catch (FileNotFoundException fnfe) {
           ;
