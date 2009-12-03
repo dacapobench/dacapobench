@@ -6,35 +6,34 @@ import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
 public class Avrora extends Benchmark {
-  
+
   String[] args;
 
   public Avrora(Config config, File scratch) throws Exception {
     super(config, scratch);
     Class<?> clazz = Class.forName("avrora.Main", true, loader);
-    this.method = clazz.getMethod("main",String[].class);
+    this.method = clazz.getMethod("main", String[].class);
   }
 
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
-    args = config.preprocessArgs(size,scratch);
+    args = config.preprocessArgs(size, scratch);
     /* Retarget input/output files into scratch directory */
-    for (int i=0; i < args.length; i++) {
+    for (int i = 0; i < args.length; i++) {
       if (args[i].charAt(0) != '-')
         args[i] = fileInScratch(args[i]);
     }
   }
-  
+
   public void iterate(String size) throws Exception {
-    method.invoke(null,(Object)args);
+    method.invoke(null, (Object) args);
   }
 
   /**
-   * Stub which exists <b>only</b> to facilitate whole program
-   * static analysis on a per-benchmark basis.  See also the "split-deps"
-   * ant build target, which is also provided to enable whole program
-   * static analysis.
+   * Stub which exists <b>only</b> to facilitate whole program static analysis
+   * on a per-benchmark basis. See also the "split-deps" ant build target, which
+   * is also provided to enable whole program static analysis.
    * 
    * @author Eric Bodden
    */

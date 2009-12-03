@@ -1,9 +1,9 @@
 <project name="avrora" default="all" basedir="../..">
-    <description>DaCapo avrora benchmark</description>
+	<description>DaCapo avrora benchmark</description>
 	<property file="dacapo.properties"/>
-	
+
 	<property name="bm-name" value="avrora"/>
-	
+
 	<property name="bm-cvs-root" value=":pserver:anonymous@avrora.cvs.sourceforge.net:/cvsroot/avrora"/>
 	<property name="bm-cvs-date" value="20091117"/>
 	<property name="bm-cvs-package" value="${bm-name}"/>
@@ -11,9 +11,9 @@
 	<property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz"/>
 
 	<import file="../common.xml"/>
-	
+
 	<target name="unpack" depends="untar"/>
-	
+
 	<target name="bm-build">
 		<property name="bm-tmp-dir" location="${bm-build-dir}/build"/>
 		<mkdir dir="${bm-tmp-dir}"/>
@@ -26,7 +26,7 @@
 			</fileset>
 		</copy>
 	</target>
-		
+
 	<target name="data">
 		<zip destfile="${bm-dat}/${bm-name}.zip">
 			<fileset dir="${bm-build-dir}/${bm-name}">
@@ -34,13 +34,13 @@
 			</fileset>
 		</zip>
 	</target>
-			
+
 	<target name="jar">
-	    <jar destfile="${bm-jars}/${bm-name}-${bm-version}.jar">
-		    <fileset dir="${bm-build-dir}/build">
-	    		<include name="**/*"/>
-	        </fileset>
-	        </jar>
-		</target>
-	
+		<jar destfile="${bm-jars}/${bm-name}-${bm-version}.jar">
+			<fileset dir="${bm-build-dir}/build">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+
 </project>
