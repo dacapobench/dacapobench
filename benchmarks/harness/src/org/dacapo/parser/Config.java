@@ -80,7 +80,8 @@ public class Config {
      * </ul>
      */
     private int nThreads = 1;
-
+    private String description;
+    
     HashMap<String,OutputFile> outputFiles = new LinkedHashMap<String,OutputFile>(20);
 
     Size(String name, Vector<String> args) {
@@ -96,6 +97,9 @@ public class Config {
 
     void setThreadCount(int nThreads) { this.nThreads = nThreads; }
     int getThreadCount() { return nThreads; }
+    
+    void setDesc(String description) { this.description = description; }
+    String getDesc() { return description; }
   }
 
   /*********************************************************************************
@@ -312,6 +316,12 @@ public class Config {
     getSize(size).setThreadCount(nThreads);
   }
 
+  /**
+   * 
+   */
+  void setSizeDescription(String size, String description) throws ParseException {
+	  getSize(size).setDesc(description);
+  }
 
   /*************************************************************************************
    * Output files
@@ -531,22 +541,30 @@ public class Config {
   /*
    * Manage the description fields
    */
-  public void describe(PrintStream str) { describe(str,false); }
+  public void describe(PrintStream str, String size) { describe(str,size,false); }
 
-  private void describe(PrintStream str, boolean decorated,String desc,String trail) {
+  private void describe(PrintStream str, String size, boolean decorated,String desc,String trail) {
     if (decorated) str.print("  ");
     str.println(pad(desc,10)+this.desc.get(desc)+(decorated?trail:""));
   }
 
-  public void describe(PrintStream str, boolean decorated) {
+  public void describe(PrintStream str, String size, boolean decorated) {
     if (decorated) str.println("description");
-    describe(str,decorated,"short",",");
-    describe(str,decorated,"long",",");
-    describe(str,decorated,"author",",");
-    describe(str,decorated,"license",",");
-    describe(str,decorated,"copyright",",");
-    describe(str,decorated,"url",",");
-    describe(str,decorated,"version",";");
+    describe(str,size,decorated,"short",",");
+    describe(str,size,decorated,"long",",");
+    describe(str,size,decorated,"author",",");
+    describe(str,size,decorated,"license",",");
+    describe(str,size,decorated,"copyright",",");
+    describe(str,size,decorated,"url",",");
+    
+    String sizeDesc = (size!=null&&getSize(size)!=null)?getSize(size).getDesc():null;
+    
+    if (sizeDesc==null)
+    	describe(str,size,decorated,"version",";");
+    else {
+    	describe(str,size,decorated,"version",",");
+    	str.println(pad("size",10)+sizeDesc+(decorated?";":""));
+    }
   }
 
   public String getDesc(String item) {
@@ -595,7 +613,7 @@ public class Config {
       str.println(";");
     }
 
-    describe(str,true);
+    describe(str,null,true);
   }
 
   public void printThreadModel(PrintStream str, String size, boolean verbose) {

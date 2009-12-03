@@ -127,7 +127,7 @@ public class TestHarness {
         TestHarness harness = new TestHarness(ins);
         
         if (commandLineArgs.getInformation()) {
-          harness.bmInfo();
+          harness.bmInfo(commandLineArgs.getSize());
         } else {
           harness.dump(commandLineArgs.getVerbose());
           
@@ -207,8 +207,8 @@ public class TestHarness {
     return 2*i;
   }
   
-  private void bmInfo() {
-    config.describe(System.err);
+  private void bmInfo(String size) {
+    config.describe(System.err, size);
   }
   
   private void dump(boolean verbose) {
@@ -216,7 +216,7 @@ public class TestHarness {
       System.err.println("Class name: "+config.className);
       
       System.err.println("Configurations:");
-      config.describe(System.err);
+      config.describe(System.err,commandLineArgs.getSize());
     }
   }
   
