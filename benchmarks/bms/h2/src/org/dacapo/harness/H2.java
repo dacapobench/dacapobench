@@ -10,12 +10,12 @@ import org.dacapo.parser.Config;
 /**
  * Dacapo benchmark harness for TPC-C like workload running on H2.
  * 
- * Apache authored the original TPC-C like workload.
- * H2 Group, H2 authored the database H2.
+ * Apache authored the original TPC-C like workload. H2 Group, H2 authored the
+ * database H2.
  * 
  * @author Apache
  * @author H2
- *
+ * 
  */
 public class H2 extends Benchmark {
 
@@ -25,34 +25,36 @@ public class H2 extends Benchmark {
   private Method preIterationTPCC;
   private Method iterationTPCC;
   private Method postIterationTPCC;
-  
+
   public H2(Config config, File scratch) throws Exception {
     super(config, scratch, false);
   }
-  
+
   @Override
   protected void prepare() throws Exception {
     super.prepare();
-    
+
     useBenchmarkClassLoader();
     try {
-      Class<?> tpccClazz  = Class.forName("org.dacapo.h2.TPCC",true,loader);
-      this.makeTPCC = tpccClazz.getMethod("make", Config.class, File.class, Boolean.class, Boolean.class);
+      Class<?> tpccClazz = Class.forName("org.dacapo.h2.TPCC", true, loader);
+      this.makeTPCC = tpccClazz.getMethod("make", Config.class, File.class,
+          Boolean.class, Boolean.class);
       this.prepareTPCC = tpccClazz.getMethod("prepare", String.class);
       this.preIterationTPCC = tpccClazz.getMethod("preIteration", String.class);
       this.iterationTPCC = tpccClazz.getMethod("iteration", String.class);
-      this.postIterationTPCC = tpccClazz.getMethod("postIteration", String.class);
+      this.postIterationTPCC = tpccClazz.getMethod("postIteration",
+          String.class);
 
       // construct the benchmark
-      this.tpcc = this.makeTPCC.invoke(null, config, scratch, getVerbose(), getPreserve());
+      this.tpcc = this.makeTPCC.invoke(null, config, scratch, getVerbose(),
+          getPreserve());
     } finally {
       revertClassLoader();
     }
   }
 
-  
   /**
-   * The benchmark run 
+   * The benchmark run
    */
   @Override
   public void prepare(String size) throws Exception {
@@ -73,7 +75,7 @@ public class H2 extends Benchmark {
       revertClassLoader();
     }
   }
-  
+
   @Override
   public void iterate(String size) throws Exception {
     useBenchmarkClassLoader();
@@ -83,7 +85,7 @@ public class H2 extends Benchmark {
       revertClassLoader();
     }
   }
-  
+
   @Override
   public void postIteration(String size) throws Exception {
     useBenchmarkClassLoader();
@@ -94,24 +96,23 @@ public class H2 extends Benchmark {
       super.postIteration(size);
     }
   }
-  
+
   @Override
   public void cleanup() {
-	this.tpcc = null;
-	this.makeTPCC = null;
-	this.prepareTPCC = null;
-	this.preIterationTPCC = null;
-	this.iterationTPCC = null;
-	this.postIterationTPCC = null;
-	
-	super.cleanup();
+    this.tpcc = null;
+    this.makeTPCC = null;
+    this.prepareTPCC = null;
+    this.preIterationTPCC = null;
+    this.iterationTPCC = null;
+    this.postIterationTPCC = null;
+
+    super.cleanup();
   }
-  
+
   /**
-   * Stub which exists <b>only</b> to facilitate whole program
-   * static analysis on a per-benchmark basis.  See also the "split-deps"
-   * ant build target, which is also provided to enable whole program
-   * static analysis.
+   * Stub which exists <b>only</b> to facilitate whole program static analysis
+   * on a per-benchmark basis. See also the "split-deps" ant build target, which
+   * is also provided to enable whole program static analysis.
    * 
    * @author Eric Bodden
    */

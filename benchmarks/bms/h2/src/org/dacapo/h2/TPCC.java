@@ -40,7 +40,7 @@ public class TPCC {
   // h2 driver settings
   private final static String DRIVER_NAME = "org.h2.Driver";
   private final static String URL_BASE = "jdbc:h2:";
-  private final static String DATABASE_NAME_DISK   = "testdb";
+  private final static String DATABASE_NAME_DISK = "testdb";
   private final static String DATABASE_NAME_MEMORY = "mem:testdb";
   private final static String CREATE_SUFFIX = "";
 
@@ -50,7 +50,6 @@ public class TPCC {
   private final static String PASS = "derby";
   private final static String BACKUP_NAME = "db.zip";
   private final static String DATABASE_DIRECTORY = "db";
-
 
   // default configuration for external testing of derby
   // database scale (see TPC-C documentation) number of terminals (clients) that
@@ -70,9 +69,11 @@ public class TPCC {
   private short scale = DEF_SCALE;
   private int numberOfTerminals = DEF_NUM_OF_TERMINALS;
   private int transactionsPerTerminal = DEF_TRANSACTIONS_PER_TERMINAL;
-  private boolean generate = false; // by default we use the pre-generated database
+  private boolean generate = false; // by default we use the pre-generated
+                                    // database
   private boolean inMemoryDB = true; // by default use the in memory db
-  private boolean cleanupInIteration = false; // by default perform clean up in preiteration phase
+  private boolean cleanupInIteration = false; // by default perform clean up in
+                                              // preiteration phase
   private boolean reportPreIterationTimes = false;
 
   // OLTP runners
@@ -106,11 +107,13 @@ public class TPCC {
   final static long SEED = 897523978813691l;
   final static int SEED_STEP = 100000;
 
-  public static TPCC make(Config config, File scratch, Boolean verbose, Boolean preserve) throws Exception {
+  public static TPCC make(Config config, File scratch, Boolean verbose,
+      Boolean preserve) throws Exception {
     return new TPCC(config, scratch, verbose, preserve);
   }
 
-  public TPCC(Config config, File scratch, boolean verbose, boolean preserve) throws Exception {
+  public TPCC(Config config, File scratch, boolean verbose, boolean preserve)
+      throws Exception {
     this.config = config;
     this.scratch = scratch;
     this.verbose = verbose;
@@ -127,7 +130,8 @@ public class TPCC {
     if (inMemoryDB)
       database = DATABASE_NAME_MEMORY;
     else
-      database = new File(new File(scratch, "db"), DATABASE_NAME_DISK).toURI().toString();
+      database = new File(new File(scratch, "db"), DATABASE_NAME_DISK).toURI()
+          .toString();
 
     // seem to need to set this early and in the system properties
     Class.forName(DRIVER_NAME);
@@ -176,46 +180,54 @@ public class TPCC {
 
       // backup the database
 
-      org.h2.tools.Backup.execute(new File(scratch, BACKUP_NAME)
-          .getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
+      org.h2.tools.Backup
+          .execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir
+              .getAbsolutePath(), DATABASE_NAME_DISK, true);
     } else {
-      org.h2.tools.Restore.execute(new File(scratch, BACKUP_NAME)
-          .getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
+      org.h2.tools.Restore
+          .execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir
+              .getAbsolutePath(), DATABASE_NAME_DISK, true);
     }
   }
 
   private long checkSum = 0;
-  
+
   private void preIterationMemoryDB() throws Exception {
     if (firstIteration) {
       // create the database
-      if (verbose) System.out.println("Creating Schema");
+      if (verbose)
+        System.out.println("Creating Schema");
       createSchema();
-      
-      if (verbose) System.out.println("Generating Data");
+
+      if (verbose)
+        System.out.println("Generating Data");
       // generate the data
       loadData();
-      
-      if (verbose) System.out.println("Generate Indexes");
+
+      if (verbose)
+        System.out.println("Generate Indexes");
       // generate indexes
       createIndexes();
-      
-      if (verbose) System.out.println("Generate Foreign Key constraints");
+
+      if (verbose)
+        System.out.println("Generate Foreign Key constraints");
       // generate foreign keys
       createConstraints();
 
       getConnection().commit();
-      
-      if (verbose) System.out.println("Calculate checksum of initial data");
+
+      if (verbose)
+        System.out.println("Calculate checksum of initial data");
       checkSum = calculateSumDB();
-    } else if (!cleanupInIteration){
+    } else if (!cleanupInIteration) {
       resetToInitialData();
-      
+
       long value = calculateSumDB();
       if (value != checkSum)
-        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
+        System.err.println("Checksum Failed for Database, expected " + checkSum
+            + " got " + value);
     }
-    
+
     // keep connection open so that database stays in memory
   }
 
@@ -226,7 +238,7 @@ public class TPCC {
     long start = System.currentTimeMillis();
 
     TPCCSubmitter.setSeed(SEED);
-    
+
     if (inMemoryDB)
       preIterationMemoryDB();
     else
@@ -260,32 +272,35 @@ public class TPCC {
         .multiRun(submitters, displays, transactionsPerTerminal);
 
     System.out.println();
-    
+
     report(System.out);
-    
+
     if (inMemoryDB && cleanupInIteration) {
       long start = System.currentTimeMillis();
-      
+
       resetToInitialData();
-      
+
       long value = calculateSumDB();
       if (value != checkSum)
-        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
-      
+        System.err.println("Checksum Failed for Database, expected " + checkSum
+            + " got " + value);
+
       resetToInitialDataTime = System.currentTimeMillis() - start;
     }
   }
-  
+
   public void postIteration(String size) throws Exception {
     if (firstIteration || !inMemoryDB) {
-      System.out.println("Time to perform pre-iteration phase: " + preIterationTime + " msec");
+      System.out.println("Time to perform pre-iteration phase: "
+          + preIterationTime + " msec");
     }
     if (inMemoryDB && cleanupInIteration) {
-      System.out.println("Time to reset data to initial state: " + resetToInitialDataTime + " msec");
+      System.out.println("Time to reset data to initial state: "
+          + resetToInitialDataTime + " msec");
     }
-    
+
     firstIteration = false;
-    
+
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
@@ -294,7 +309,7 @@ public class TPCC {
       connections[i].close();
       connections[i] = null;
     }
-    
+
     if (!preserve && !inMemoryDB)
       deleteDatabase();
   }
@@ -306,26 +321,33 @@ public class TPCC {
 
   // ----------------------------------------------------------------------------------
   private void report(PrintStream os) {
-    int    total = 0;
-    int[]  transactions = new int[Submitter.NEW_ORDER_ROLLBACK+1];
-    
+    int total = 0;
+    int[] transactions = new int[Submitter.NEW_ORDER_ROLLBACK + 1];
+
     for (int i = 0; i < submitters.length; i++) {
       int[] subTx = submitters[i].getTransactionCount();
-      
+
       for (int j = 0; j < subTx.length; j++) {
         transactions[j] += subTx[j];
         total += subTx[j];
       }
     }
-    
-    System.out.println("Total Transactions:"  + total);
-    System.out.println("New Order         :"  + transactions[TPCCSubmitter.NEW_ORDER]);
-    System.out.println("Order By Id       :"  + transactions[TPCCSubmitter.ORDER_STATUS_BY_ID]);
-    System.out.println("Order By Name     :"  + transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME]);
-    System.out.println("Payment By Id     :"  + transactions[TPCCSubmitter.PAYMENT_BY_ID]);
-    System.out.println("Payment By Name   :"  + transactions[TPCCSubmitter.PAYMENT_BY_NAME]);
-    System.out.println("Stock Level       :"  + transactions[TPCCSubmitter.STOCK_LEVEL]);
-    System.out.println("Delivery Schedule :"  + transactions[TPCCSubmitter.DELIVERY_SCHEDULE]);
+
+    System.out.println("Total Transactions:" + total);
+    System.out.println("New Order         :"
+        + transactions[TPCCSubmitter.NEW_ORDER]);
+    System.out.println("Order By Id       :"
+        + transactions[TPCCSubmitter.ORDER_STATUS_BY_ID]);
+    System.out.println("Order By Name     :"
+        + transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME]);
+    System.out.println("Payment By Id     :"
+        + transactions[TPCCSubmitter.PAYMENT_BY_ID]);
+    System.out.println("Payment By Name   :"
+        + transactions[TPCCSubmitter.PAYMENT_BY_NAME]);
+    System.out.println("Stock Level       :"
+        + transactions[TPCCSubmitter.STOCK_LEVEL]);
+    System.out.println("Delivery Schedule :"
+        + transactions[TPCCSubmitter.DELIVERY_SCHEDULE]);
   }
 
   private void createSchema() throws Exception {
@@ -384,21 +406,21 @@ public class TPCC {
     reportQuantity("DELIVERY_REQUEST");
     reportQuantity("DELIVERY_ORDERS");
   }
-  
+
   private void reportQuantity(String table) throws Exception {
     PreparedStatement ps;
     ResultSet rs;
-    
-    ps = prepareStatement("SELECT COUNT(*) FROM "+table);
+
+    ps = prepareStatement("SELECT COUNT(*) FROM " + table);
     ps.execute();
     rs = ps.getResultSet();
     rs.first();
-    System.err.println(table+" #"+rs.getLong(1));
+    System.err.println(table + " #" + rs.getLong(1));
   }
-  
+
   private long calculateSumDB() throws Exception {
     long result = 0;
-    
+
     result += calculateSumDB("CUSTOMER", 22);
     result += calculateSumDB("DISTRICT", 11);
     result += calculateSumDB("WAREHOUSE", 9);
@@ -410,69 +432,84 @@ public class TPCC {
     result += calculateSumDB("ITEM", 5);
     result += calculateSumDB("DELIVERY_ORDERS", 6);
     result += calculateSumDB("DELIVERY_REQUEST", 3);
-    
+
     return result;
   }
-  
+
   private long calculateSumDB(String table, int columns) throws Exception {
     long result = 0;
-    PreparedStatement ps  = prepareStatement("SELECT * FROM "+table);
-    
+    PreparedStatement ps = prepareStatement("SELECT * FROM " + table);
+
     ps.execute();
     ResultSet rs = ps.getResultSet();
-    
+
     while (rs.next()) {
-      for(int c=1; c<=columns; c++) {
+      for (int c = 1; c <= columns; c++) {
         String v = rs.getString(c);
-        for(int i=0; v!=null && i<v.length(); i++)
+        for (int i = 0; v != null && i < v.length(); i++)
           result += v.charAt(i);
       }
     }
-    
-    return result; 
+
+    return result;
   }
-  
+
   private void resetToInitialData() throws Exception {
     System.out.println("Resetting database to initial state");
-	  
+
     // there are no initial delivery requests or orders so remove all
     // residual entries
     prepareStatement("DELETE FROM DELIVERY_REQUEST").execute();
     prepareStatement("DELETE FROM DELIVERY_ORDERS").execute();
-    
+
     // remove all entries that are not marked as part of the initial\\
     // set of entries
-    prepareStatement("DELETE FROM HISTORY WHERE H_INITIAL = FALSE").execute(); 
-    prepareStatement("DELETE FROM NEWORDERS WHERE NO_INITIAL = FALSE").execute(); 
-    prepareStatement("DELETE FROM ORDERLINE WHERE OL_INITIAL = FALSE").execute(); 
-    prepareStatement("DELETE FROM ORDERS WHERE O_INITIAL = FALSE").execute(); 
+    prepareStatement("DELETE FROM HISTORY WHERE H_INITIAL = FALSE").execute();
+    prepareStatement("DELETE FROM NEWORDERS WHERE NO_INITIAL = FALSE")
+        .execute();
+    prepareStatement("DELETE FROM ORDERLINE WHERE OL_INITIAL = FALSE")
+        .execute();
+    prepareStatement("DELETE FROM ORDERS WHERE O_INITIAL = FALSE").execute();
 
     // commit deletes
     getConnection().commit();
-    
-    // although below seems a little inefficient we put the conditions in for the 
+
+    // although below seems a little inefficient we put the conditions in for
+    // the
     // following reason: it keeps the commit set size low and therefore there is
-    //   less heap pressure
+    // less heap pressure
     // we also perform regular commits for the same reason
-    prepareStatement("UPDATE CUSTOMER SET C_DATA = C_DATA_INITIAL, C_BALANCE = -10.0, C_YTD_PAYMENT = 10.0, C_PAYMENT_CNT = 1, C_DELIVERY_CNT = 0 WHERE C_DATA <> C_DATA_INITIAL OR C_BALANCE <> -10.0 OR C_YTD_PAYMENT <> 10.0 OR C_PAYMENT_CNT <> 1 OR C_DELIVERY_CNT <> 0").execute();
-    getConnection().commit();
-    
-    prepareStatement("UPDATE DISTRICT SET D_YTD = 30000.0, D_NEXT_O_ID = 3001 WHERE D_YTD <> 30000.0 OR D_NEXT_O_ID <> 3001").execute();
-    getConnection().commit();
-
-    prepareStatement("UPDATE WAREHOUSE SET W_YTD = 300000.0 WHERE W_YTD <> 300000.0").execute();
+    prepareStatement(
+        "UPDATE CUSTOMER SET C_DATA = C_DATA_INITIAL, C_BALANCE = -10.0, C_YTD_PAYMENT = 10.0, C_PAYMENT_CNT = 1, C_DELIVERY_CNT = 0 WHERE C_DATA <> C_DATA_INITIAL OR C_BALANCE <> -10.0 OR C_YTD_PAYMENT <> 10.0 OR C_PAYMENT_CNT <> 1 OR C_DELIVERY_CNT <> 0")
+        .execute();
     getConnection().commit();
 
-    prepareStatement("UPDATE STOCK SET S_QUANTITY = S_QUANTITY_INITIAL, S_ORDER_CNT = 0, S_YTD = 0, S_REMOTE_CNT = 0 WHERE S_QUANTITY <> S_QUANTITY_INITIAL OR S_ORDER_CNT <> 0 OR S_YTD <> 0 OR S_REMOTE_CNT <> 0").execute();
+    prepareStatement(
+        "UPDATE DISTRICT SET D_YTD = 30000.0, D_NEXT_O_ID = 3001 WHERE D_YTD <> 30000.0 OR D_NEXT_O_ID <> 3001")
+        .execute();
     getConnection().commit();
 
-    prepareStatement("UPDATE ORDERS SET O_CARRIER_ID = O_CARRIER_ID_INITIAL WHERE O_CARRIER_ID <> O_CARRIER_ID_INITIAL").execute();
+    prepareStatement(
+        "UPDATE WAREHOUSE SET W_YTD = 300000.0 WHERE W_YTD <> 300000.0")
+        .execute();
     getConnection().commit();
 
-    prepareStatement("UPDATE ORDERLINE SET OL_DELIVERY_D = OL_DELIVERY_D_INITIAL WHERE OL_DELIVERY_D <> OL_DELIVERY_D_INITIAL").execute();
+    prepareStatement(
+        "UPDATE STOCK SET S_QUANTITY = S_QUANTITY_INITIAL, S_ORDER_CNT = 0, S_YTD = 0, S_REMOTE_CNT = 0 WHERE S_QUANTITY <> S_QUANTITY_INITIAL OR S_ORDER_CNT <> 0 OR S_YTD <> 0 OR S_REMOTE_CNT <> 0")
+        .execute();
+    getConnection().commit();
+
+    prepareStatement(
+        "UPDATE ORDERS SET O_CARRIER_ID = O_CARRIER_ID_INITIAL WHERE O_CARRIER_ID <> O_CARRIER_ID_INITIAL")
+        .execute();
+    getConnection().commit();
+
+    prepareStatement(
+        "UPDATE ORDERLINE SET OL_DELIVERY_D = OL_DELIVERY_D_INITIAL WHERE OL_DELIVERY_D <> OL_DELIVERY_D_INITIAL")
+        .execute();
     getConnection().commit();
   }
-  
+
   // helper function for getting and setting a connection for initial
   // setup of the database
   private Connection getConnection() throws SQLException {
@@ -570,18 +607,16 @@ public class TPCC {
     // return driver.connect(URL_BASE + getDatabaseName() +
     // (create?createSuffix:""), prop);
     return driver.connect(getDatabaseURLString(create), prop); // URL_BASE +
-                                                               // getDatabaseName()
-                                                               // +
-                                                               // (create?createSuffix:""),
-                                                               // prop);
+    // getDatabaseName()
+    // +
+    // (create?createSuffix:""),
+    // prop);
   }
 
   private PreparedStatement prepareStatement(String sql) throws SQLException {
     // Prepare all statements as forward-only, read-only, close at commit.
-    return getConnection().prepareStatement(sql,
-            ResultSet.TYPE_FORWARD_ONLY,
-            ResultSet.CONCUR_READ_ONLY,
-            ResultSet.CLOSE_CURSORS_AT_COMMIT);
+    return getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY,
+        ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
   }
 
   // database name helper functions
@@ -596,8 +631,7 @@ public class TPCC {
 
   // helper function for recursively deleting the database directory
   private boolean deleteDatabase() throws SQLException, URISyntaxException {
-    if (inMemoryDB)
-    {
+    if (inMemoryDB) {
       closeConnection();
       return true;
     } else
@@ -619,45 +653,34 @@ public class TPCC {
   }
 
   // helper function for interpreting the configuration data
-  private void configure()
-  {
-    String[] args = config.preprocessArgs(size,scratch);
+  private void configure() {
+    String[] args = config.preprocessArgs(size, scratch);
 
-    this.numberOfTerminals = config.getThreadCount(size); 
-    
+    this.numberOfTerminals = config.getThreadCount(size);
+
     int totalTx = this.numberOfTerminals * this.transactionsPerTerminal;
-    for (int i = 0; i < args.length; i++)
-    {
-      if ("--numberOfTerminals".equalsIgnoreCase(args[i]))
-      {
+    for (int i = 0; i < args.length; i++) {
+      if ("--numberOfTerminals".equalsIgnoreCase(args[i])) {
         this.numberOfTerminals = Integer.parseInt(args[++i]);
-      } else if ("--total-transactions".equalsIgnoreCase(args[i]))
-      {
+      } else if ("--total-transactions".equalsIgnoreCase(args[i])) {
         totalTx = Integer.parseInt(args[++i]);
-      } else if ("--scale".equalsIgnoreCase(args[i]))
-      {
+      } else if ("--scale".equalsIgnoreCase(args[i])) {
         this.scale = Short.parseShort(args[++i]);
-      } else if ("--generate".equalsIgnoreCase(args[i]))
-      {
+      } else if ("--generate".equalsIgnoreCase(args[i])) {
         this.generate = true;
-      } else if ("--memory".equalsIgnoreCase(args[i]))
-      {
+      } else if ("--memory".equalsIgnoreCase(args[i])) {
         this.inMemoryDB = true;
-      } else if ("--disk".equalsIgnoreCase(args[i]))
-      {
+      } else if ("--disk".equalsIgnoreCase(args[i])) {
         this.inMemoryDB = false;
-      } else if ("--report-pre-iteration-times".equalsIgnoreCase(args[i]))
-      {
+      } else if ("--report-pre-iteration-times".equalsIgnoreCase(args[i])) {
         this.reportPreIterationTimes = true;
-      } else if ("--cleanup-in-iteration".equalsIgnoreCase(args[i]))
-      {
+      } else if ("--cleanup-in-iteration".equalsIgnoreCase(args[i])) {
         this.cleanupInIteration = true;
-      } else if ("--create-suffix".equalsIgnoreCase(args[i]))
-      {
-    	this.createSuffix = args[++i];
+      } else if ("--create-suffix".equalsIgnoreCase(args[i])) {
+        this.createSuffix = args[++i];
       }
     }
-    // calculate the transactions per terminals now that we know the 
+    // calculate the transactions per terminals now that we know the
     // total number to be executed and the number of terminals
     this.transactionsPerTerminal = totalTx / this.numberOfTerminals;
   }

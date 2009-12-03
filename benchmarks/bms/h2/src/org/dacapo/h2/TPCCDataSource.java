@@ -14,8 +14,8 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 /**
- * Simple DataSource for providing a wrapped connection for the
- * Derby TPC-C to populate the database.
+ * Simple DataSource for providing a wrapped connection for the Derby TPC-C to
+ * populate the database.
  */
 public class TPCCDataSource implements DataSource {
 
@@ -24,17 +24,17 @@ public class TPCCDataSource implements DataSource {
   private final static String USER = "derby";
   private final static String PASS = "derby";
 
-  private Driver      driver;
-  private String      dbname;
-  private Properties  properties;
+  private Driver driver;
+  private String dbname;
+  private Properties properties;
   private PrintWriter logWriter;
-  private int         loginTimeout = 100;
-  
+  private int loginTimeout = 100;
+
   public TPCCDataSource(Driver driver, String dbname, Properties properties) {
-    this.driver     = driver;
-    this.dbname     = dbname;
+    this.driver = driver;
+    this.dbname = dbname;
     this.properties = properties;
-    this.logWriter  = new PrintWriter(new NullWriter());
+    this.logWriter = new PrintWriter(new NullWriter());
   }
 
   public Connection getConnection() throws SQLException {
@@ -60,7 +60,7 @@ public class TPCCDataSource implements DataSource {
   }
 
   public void setLogWriter(PrintWriter logWriter) throws SQLException {
-    this.logWriter    = logWriter;
+    this.logWriter = logWriter;
   }
 
   public void setLoginTimeout(int loginTimeout) throws SQLException {
@@ -85,6 +85,6 @@ public class TPCCDataSource implements DataSource {
 
     public void write(char[] arg0, int arg1, int arg2) throws IOException {
     }
-    
+
   };
 }
