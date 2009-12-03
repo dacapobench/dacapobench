@@ -28,31 +28,31 @@
     </target>
 
     <target name="jar">
-    	<copy tofile="${derby-jar}" flatten="true">
-    	    <fileset dir="${lib-build-top}">
-		<include name="jars/*/derby.jar"/>
+        <copy tofile="${derby-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+        <include name="jars/*/derby.jar"/>
             </fileset>
-	</copy>
-    	<copy tofile="${derbyclient-jar}" flatten="true">
-    	    <fileset dir="${lib-build-top}">
-		<include name="jars/*/derbyclient.jar"/>
+        </copy>
+            <copy tofile="${derbyclient-jar}" flatten="true">
+                <fileset dir="${lib-build-top}">
+                    <include name="jars/*/derbyclient.jar"/>
+                </fileset>
+        </copy>
+        <copy tofile="${derbynet-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derbynet.jar"/>
             </fileset>
-	</copy>
-    	<copy tofile="${derbynet-jar}" flatten="true">
-    	    <fileset dir="${lib-build-top}">
-		<include name="jars/*/derbynet.jar"/>
+        </copy>
+        <copy tofile="${derbytools-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derbytools.jar"/>
             </fileset>
-	</copy>
-    	<copy tofile="${derbytools-jar}" flatten="true">
-    	    <fileset dir="${lib-build-top}">
-		<include name="jars/*/derbytools.jar"/>
+        </copy>
+        <copy tofile="${derbytesting-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derbyTesting.jar"/>
             </fileset>
-	</copy>
-    	<copy tofile="${derbytesting-jar}" flatten="true">
-    	    <fileset dir="${lib-build-top}">
-		<include name="jars/*/derbyTesting.jar"/>
-            </fileset>
-	</copy>
+        </copy>
     </target>
 
 </project>

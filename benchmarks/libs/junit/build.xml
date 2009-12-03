@@ -1,32 +1,32 @@
 <project name="junit" default="all" basedir="../..">
     <description>junit library, required by pmd, hsqldb and derby</description>
-	<property file="ant/dacapo.properties"/>
-	
-	<property name="lib-name" value="junit"/>
+    <property file="ant/dacapo.properties"/>
+    
+    <property name="lib-name" value="junit"/>
     <property name="lib-version" value="4.7"/>
     <property name="lib-url" value="${sourceforge.dl.url}/junit"/>
-	<property name="lib-src" value="junit${lib-version}.zip"/>
-	
-	<import file="../common.xml"/>
-	
-	<target name="unpack" depends="unzip"/>
-	
-	<target name="unzip">
-		<mkdir dir="${lib-build-dir}/"/>
-		<unzip src="${lib-downloads}/${lib-src}" dest="${lib-build-dir}/">
-        	<patternset>
-            	<include name="junit${lib-version}/junit-${lib-version}.jar"/>
-        	</patternset>
-   		</unzip>
-	</target>
+    <property name="lib-src" value="junit${lib-version}.zip"/>
+    
+    <import file="../common.xml"/>
+    
+    <target name="unpack" depends="unzip"/>
+    
+    <target name="unzip">
+        <mkdir dir="${lib-build-dir}/"/>
+        <unzip src="${lib-downloads}/${lib-src}" dest="${lib-build-dir}/">
+            <patternset>
+                <include name="junit${lib-version}/junit-${lib-version}.jar"/>
+            </patternset>
+           </unzip>
+    </target>
 
-	<target name="jar" depends="junit-jar-check" unless="junit-build-done">
-    	<copy file="${lib-build-dir}/junit${lib-version}/junit-${lib-version}.jar" tofile="${junit-jar}"/>
-	</target>
+    <target name="jar" depends="junit-jar-check" unless="junit-build-done">
+        <copy file="${lib-build-dir}/junit${lib-version}/junit-${lib-version}.jar" tofile="${junit-jar}"/>
+    </target>
 
-	<target name="junit-jar-check">
-		<condition property="junit-build-done">
-			<available file="${junit-jar}"/>
-		</condition>
-	</target>
+    <target name="junit-jar-check">
+        <condition property="junit-build-done">
+            <available file="${junit-jar}"/>
+        </condition>
+    </target>
 </project>

@@ -1,27 +1,27 @@
 <project name="commons-httpclient" default="all" basedir="../..">
     <description>Jakarta Commons HttpClient, required by tomcat</description>
-	<property file="ant/dacapo.properties"/>
+    <property file="ant/dacapo.properties"/>
 
-	<property name="lib-name" value="commons-httpclient"/>
+    <property name="lib-name" value="commons-httpclient"/>
     <property name="lib-version" value="3.1"/>
     <property name="lib-url" value="${apache.dl.url}/httpcomponents/${lib-name}/source/"/>
-	<property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
-	
-	<import file="../common.xml"/>
+    <property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
+    
+    <import file="../common.xml"/>
 
-	<property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}"/>
-	
-	<target name="unpack" depends="untar"/>
-	
-	<target name="build">
-		<ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
-			<property name="commons-logging.jar" location="${commons-logging-jar}"/>
-			<property name="commons-codec.jar" location="${commons-codec-jar}"/>
-			<target name="dist"/>
-		</ant>
-	</target>
+    <property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}"/>
+    
+    <target name="unpack" depends="untar"/>
+    
+    <target name="build">
+        <ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
+            <property name="commons-logging.jar" location="${commons-logging-jar}"/>
+            <property name="commons-codec.jar" location="${commons-codec-jar}"/>
+            <target name="dist"/>
+        </ant>
+    </target>
 
-	<target name="jar">
-		<copy file="${lib-build-top}/dist/commons-httpclient.jar" tofile="${commons-httpclient-jar}"/>
-	</target>
+    <target name="jar">
+        <copy file="${lib-build-top}/dist/commons-httpclient.jar" tofile="${commons-httpclient-jar}"/>
+    </target>
 </project>
