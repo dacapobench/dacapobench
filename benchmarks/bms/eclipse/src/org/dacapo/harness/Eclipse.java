@@ -51,8 +51,8 @@ public class Eclipse extends Benchmark {
 
   public void iterate(String size) throws Exception {
     try {
-      // String[] pluginArgs = {"setup", "alltests" }; // get this from the bm
-      // config
+      // String[] pluginArgs = {"setup", "alltests" }; 
+      // get this from the bm config
       String[] pluginArgs = config.getArgs(size);
       run.invoke(null, new Object[] { pluginArgs });
     } catch (Exception e) {

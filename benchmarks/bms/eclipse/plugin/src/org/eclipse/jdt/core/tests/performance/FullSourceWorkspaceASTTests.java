@@ -59,10 +59,8 @@ public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
 
     Map options = javaProject.getOptions(true);
     // turn all errors and warnings into ignore. The customizable set of
-    // compiler
-    // options only contains additional Eclipse options. The standard JDK
-    // compiler
-    // options can't be changed anyway.
+    // compiler options only contains additional Eclipse options. The 
+    // standard JDK compiler options can't be changed anyway.
     for (Iterator iter = options.keySet().iterator(); iter.hasNext();) {
       String key = (String) iter.next();
       String value = (String) options.get(key);
@@ -103,11 +101,7 @@ public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
       }
     }, null);
 
-    parser.createASTs(compilationUnits, new String[0], new ASTRequestor() {/*
-                                                                            * do
-                                                                            * nothing
-                                                                            */
-    }, null);
+    parser.createASTs(compilationUnits, new String[0], new ASTRequestor() { }, null);
   }
 
   /**

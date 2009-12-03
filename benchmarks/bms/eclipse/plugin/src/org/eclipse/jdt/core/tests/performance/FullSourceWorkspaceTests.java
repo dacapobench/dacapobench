@@ -58,14 +58,8 @@ public abstract class FullSourceWorkspaceTests {
   protected static IJavaProject JDT_CORE_PROJECT;
   protected static ICompilationUnit PARSER_WORKING_COPY;
   protected final static String BIG_PROJECT_NAME = "BigProject";
-  protected final static String FULL_SOURCE_ZIP_REL_PATH = "full-source-R3_0"; // path
-                                                                               // to
-                                                                               // source
-                                                                               // relative
-                                                                               // to
-                                                                               // parent
-                                                                               // of
-                                                                               // workspace
+  // path to source relative to parent of workspace
+  protected final static String FULL_SOURCE_ZIP_REL_PATH = "full-source-R3_0"; 
   final static String COMPLIANCE = System.getProperty("compliance");
 
   // Index variables
@@ -170,10 +164,8 @@ public abstract class FullSourceWorkspaceTests {
    */
   Map clearOptions(Map options) {
     // turn all errors and warnings into ignore. The customizable set of
-    // compiler
-    // options only contains additional Eclipse options. The standard JDK
-    // compiler
-    // options can't be changed anyway.
+    // compiler options only contains additional Eclipse options. The standard 
+    // JDK compiler options can't be changed anyway.
     for (Iterator iter = options.keySet().iterator(); iter.hasNext();) {
       String key = (String) iter.next();
       String value = (String) options.get(key);
@@ -241,7 +233,7 @@ public abstract class FullSourceWorkspaceTests {
    * Returns the specified package fragment root in the given project, or
    * <code>null</code> if it does not exist. If relative, the rootPath must be
    * specified as a project relative path. The empty path refers to the package
-   * fragment root that is the project folder iteslf. If absolute, the rootPath
+   * fragment root that is the project folder itself. If absolute, the rootPath
    * refers to either an external jar, or a resource internal to the workspace
    */
   public IPackageFragmentRoot getPackageFragmentRoot(IJavaProject project,
@@ -416,14 +408,21 @@ public abstract class FullSourceWorkspaceTests {
           if (token.equals("eclipse") && tokenizer.hasMoreTokens()) {
             return true;
             /*
-             * token = tokenizer.nextToken(); if (token.equals("core") ||
-             * token.equals("osgi") || token.equals("text")) { return true; }
-             * else if (token.equals("jdt")) { token = tokenizer.nextToken(); if
-             * (token.equals("core")) { return true; } } else if
-             * (token.equals("team")) { token = tokenizer.nextToken(); if
-             * (token.equals("core")) { return true; } } else if
-             * (token.equals("update")) { token = tokenizer.nextToken(); if
-             * (token.equals("configurator")) { return true; } } return false;
+             * token = tokenizer.nextToken(); 
+             * if (token.equals("core") || token.equals("osgi") || token.equals("text")) { return true; }
+             * else if (token.equals("jdt")) { 
+             *   token = tokenizer.nextToken(); 
+             *   if (token.equals("core")) { return true; } 
+             * } 
+             * else if (token.equals("team")) { 
+             *   token = tokenizer.nextToken(); 
+             *   if (token.equals("core")) { return true; } 
+             * } 
+             * else if (token.equals("update")) { 
+             *   token = tokenizer.nextToken(); 
+             *   if (token.equals("configurator")) { return true; } 
+             * } 
+             * return false;
              */
           }
         }
