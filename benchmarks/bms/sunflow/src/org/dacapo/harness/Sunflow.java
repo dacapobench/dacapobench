@@ -28,57 +28,62 @@ import java.lang.reflect.Method;
 
 import org.dacapo.parser.Config;
 
-
 public class Sunflow extends org.dacapo.harness.Benchmark {
-  
+
   private final Constructor<?> constructor;
   private Object sunflow;
   private final Method beginMethod;
   private final Method endMethod;
-  
+
   public Sunflow(Config config, File scratch) throws Exception {
-    super(config, scratch,false);
+    super(config, scratch, false);
     Class<?> clazz = Class.forName("org.sunflow.Benchmark", true, loader);
     this.method = clazz.getMethod("kernelMain");
     this.beginMethod = clazz.getMethod("kernelBegin");
     this.endMethod = clazz.getMethod("kernelEnd");
-    this.constructor = clazz.getConstructor(
-        int.class,boolean.class,boolean.class,boolean.class);
+    this.constructor = clazz.getConstructor(int.class, boolean.class,
+        boolean.class, boolean.class);
   }
 
-  /** Do one-time prep such as unziping data.  In our case, do nothing. */
-  protected void prepare() {}
+  /** Do one-time prep such as unziping data. In our case, do nothing. */
+  protected void prepare() {
+  }
 
   /**
-   * Code to execute prior to each iteration OUTSIDE the timing loop.  In this case we
-   * create a new instance of a Sunflow benchmark, which sets up basic data structures.
+   * Code to execute prior to each iteration OUTSIDE the timing loop. In this
+   * case we create a new instance of a Sunflow benchmark, which sets up basic
+   * data structures.
    * 
-   * @param size The "size" of the iteration (small, default, large)
+   * @param size
+   *          The "size" of the iteration (small, default, large)
    */
   public void preIteration(String size) throws Exception {
-    String[] args = config.preprocessArgs(size,scratch);
+    String[] args = config.preprocessArgs(size, scratch);
     useBenchmarkClassLoader();
     try {
-      sunflow = constructor.newInstance(Integer.parseInt(args[0]), false, false, false);
+      sunflow = constructor.newInstance(Integer.parseInt(args[0]), false,
+          false, false);
       beginMethod.invoke(sunflow);
     } finally {
       revertClassLoader();
     }
   }
-    
+
   /**
    * Perform a single iteration of the benchmark.
    * 
-   * @param size The "size" of the iteration (small, default, large)
+   * @param size
+   *          The "size" of the iteration (small, default, large)
    */
   public void iterate(String size) throws Exception {
     method.invoke(sunflow);
   }
-  
+
   /**
    * Validate the output of the benchmark, OUTSIDE the timing loop.
    * 
-   * @param size The "size" of the iteration (small, default, large)
+   * @param size
+   *          The "size" of the iteration (small, default, large)
    */
   public boolean validate(String size) {
     if (!getValidate())
@@ -99,12 +104,11 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
     }
     return super.validate(size);
   }
-  
+
   /**
-   * Stub which exists <b>only</b> to facilitate whole program
-   * static analysis on a per-benchmark basis.  See also the "split-deps"
-   * ant build target, which is also provided to enable whole program
-   * static analysis.
+   * Stub which exists <b>only</b> to facilitate whole program static analysis
+   * on a per-benchmark basis. See also the "split-deps" ant build target, which
+   * is also provided to enable whole program static analysis.
    * 
    * @author Eric Bodden
    */
