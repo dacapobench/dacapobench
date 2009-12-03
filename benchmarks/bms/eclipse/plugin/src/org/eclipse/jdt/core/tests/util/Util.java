@@ -20,25 +20,30 @@ import java.util.zip.*;
 public class Util {
 
   /**
-   * Search the user hard-drive for a Java class library.
-   * Returns null if none could be found.
-   *
+   * Search the user hard-drive for a Java class library. Returns null if none
+   * could be found.
+   * 
    * Example of use: [org.eclipse.jdt.core.tests.util.Util.getJavaClassLib()]
-  */
+   */
   public static String[] getJavaClassLibs() {
     // check bootclasspath properties for Sun, JRockit and Harmony VMs
     String bootclasspathProperty = System.getProperty("sun.boot.class.path"); //$NON-NLS-1$
-    if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
+    if ((bootclasspathProperty == null)
+        || (bootclasspathProperty.length() == 0)) {
       // IBM J9 VMs
       bootclasspathProperty = System.getProperty("vm.boot.class.path"); //$NON-NLS-1$
-      if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
+      if ((bootclasspathProperty == null)
+          || (bootclasspathProperty.length() == 0)) {
         // Harmony using IBM VME
-        bootclasspathProperty = System.getProperty("org.apache.harmony.boot.class.path"); //$NON-NLS-1$
+        bootclasspathProperty = System
+            .getProperty("org.apache.harmony.boot.class.path"); //$NON-NLS-1$
       }
     }
     String[] jars = null;
-    if ((bootclasspathProperty != null) && (bootclasspathProperty.length() != 0)) {
-      StringTokenizer tokenizer = new StringTokenizer(bootclasspathProperty, File.pathSeparator);
+    if ((bootclasspathProperty != null)
+        && (bootclasspathProperty.length() != 0)) {
+      StringTokenizer tokenizer = new StringTokenizer(bootclasspathProperty,
+          File.pathSeparator);
       final int size = tokenizer.countTokens();
       jars = new String[size];
       int i = 0;
@@ -60,15 +65,11 @@ public class Util {
         return new String[] {};
       }
       if (osName.startsWith("Mac")) {
-        return new String[] {
-            toNativePath(jreDir + "/../Classes/classes.jar")
-        };
+        return new String[] { toNativePath(jreDir + "/../Classes/classes.jar") };
       }
       final String vmName = System.getProperty("java.vm.name");
       if ("J9".equals(vmName)) {
-        return new String[] {
-            toNativePath(jreDir + "/lib/jclMax/classes.zip")
-        };
+        return new String[] { toNativePath(jreDir + "/lib/jclMax/classes.zip") };
       }
       String[] jarsNames = null;
       ArrayList paths = new ArrayList();
@@ -81,14 +82,9 @@ public class Util {
         jarsNames = new File(jreDir + "/lib/boot/").list(jarFilter);
         addJarEntries(jreDir + "/lib/boot/", jarsNames, paths);
       } else {
-        jarsNames = new String[] {
-            "/lib/vm.jar",
-            "/lib/rt.jar",
-            "/lib/core.jar",
-            "/lib/security.jar",
-            "/lib/xml.jar",
-            "/lib/graphics.jar"
-        };
+        jarsNames = new String[] { "/lib/vm.jar", "/lib/rt.jar",
+            "/lib/core.jar", "/lib/security.jar", "/lib/xml.jar",
+            "/lib/graphics.jar" };
         addJarEntries(jreDir, jarsNames, paths);
       }
       jars = new String[paths.size()];
@@ -96,7 +92,9 @@ public class Util {
     }
     return jars;
   }
-  private static void addJarEntries(String jreDir, String[] jarNames, ArrayList paths) {
+
+  private static void addJarEntries(String jreDir, String[] jarNames,
+      ArrayList paths) {
     for (int i = 0, max = jarNames.length; i < max; i++) {
       final String currentName = jreDir + jarNames[i];
       File f = new File(currentName);
@@ -105,31 +103,34 @@ public class Util {
       }
     }
   }
+
   /**
-   * Returns the JRE directory this tests are running on.
-   * Returns null if none could be found.
-   *
+   * Returns the JRE directory this tests are running on. Returns null if none
+   * could be found.
+   * 
    * Example of use: [org.eclipse.jdt.core.tests.util.Util.getJREDirectory()]
    */
   public static String getJREDirectory() {
     return System.getProperty("java.home");
   }
+
   /**
-   * Makes the given path a path using native path separators as returned by File.getPath()
-   * and trimming any extra slash.
+   * Makes the given path a path using native path separators as returned by
+   * File.getPath() and trimming any extra slash.
    */
   public static String toNativePath(String path) {
-    String nativePath = path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
-    return
-    nativePath.endsWith("/") || nativePath.endsWith("\\") ?
-        nativePath.substring(0, nativePath.length() - 1) :
-          nativePath;
+    String nativePath = path.replace('\\', File.separatorChar).replace('/',
+        File.separatorChar);
+    return nativePath.endsWith("/") || nativePath.endsWith("\\") ? nativePath
+        .substring(0, nativePath.length() - 1) : nativePath;
   }
 
   /**
-   * Unzip the contents of the given zip in the given directory (create it if it doesn't exist)
+   * Unzip the contents of the given zip in the given directory (create it if it
+   * doesn't exist)
    */
-  public static void unzip(String zipPath, String destDirPath) throws IOException {
+  public static void unzip(String zipPath, String destDirPath)
+      throws IOException {
 
     InputStream zipIn = new FileInputStream(zipPath);
     byte[] buf = new byte[8192];
@@ -151,9 +152,9 @@ public class Util {
         if (lastSeparator >= 0) {
           fileDir = filePath.substring(0, lastSeparator);
         }
-        //create directory for a file
+        // create directory for a file
         new File(destDir, fileDir).mkdirs();
-        //write file
+        // write file
         File outFile = new File(destDir, filePath);
         fos = new FileOutputStream(outFile);
         int n = 0;

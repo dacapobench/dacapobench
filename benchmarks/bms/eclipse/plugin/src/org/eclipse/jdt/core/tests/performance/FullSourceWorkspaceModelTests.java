@@ -24,46 +24,53 @@ public class FullSourceWorkspaceModelTests extends FullSourceWorkspaceTests {
   public static void runDaCapoTests() {
     try {
       FullSourceWorkspaceModelTests m = new FullSourceWorkspaceModelTests();
-      if (DACAPO_PRINT) System.out.print("Model tests ");
+      if (DACAPO_PRINT)
+        System.out.print("Model tests ");
       m.testFindType();
-      if (DACAPO_PRINT) System.out.println();
+      if (DACAPO_PRINT)
+        System.out.println();
     } catch (Exception e) {
       System.err.println("Caught exception performing search tests: ");
       e.printStackTrace();
     }
   }
-  
+
   /*
-   * Creates a simple Java project with no source folder and only rt.jar on its classpath.
+   * Creates a simple Java project with no source folder and only rt.jar on its
+   * classpath.
    */
   private IJavaProject createJavaProject(String name) throws CoreException {
-    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+    IProject project = ResourcesPlugin.getWorkspace().getRoot()
+        .getProject(name);
     if (project.exists())
       project.delete(true, null);
     project.create(null);
     project.open(null);
     IProjectDescription description = project.getDescription();
-    description.setNatureIds(new String[] {JavaCore.NATURE_ID});
+    description.setNatureIds(new String[] { JavaCore.NATURE_ID });
     project.setDescription(description, null);
     IJavaProject javaProject = JavaCore.create(project);
-    javaProject.setRawClasspath(new IClasspathEntry[] {JavaCore.newVariableEntry(new Path("JRE_LIB"), null, null)}, null);
+    javaProject.setRawClasspath(new IClasspathEntry[] { JavaCore
+        .newVariableEntry(new Path("JRE_LIB"), null, null) }, null);
     return javaProject;
   }
-  
+
   /*
-   * Performance test for the first use of findType(...)
-   * (see bug 161175 JarPackageFragmentRoot slow to initialize)
+   * Performance test for the first use of findType(...) (see bug 161175
+   * JarPackageFragmentRoot slow to initialize)
    */
   public void testFindType() throws CoreException {
 
-    IJavaModel model = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
+    IJavaModel model = JavaCore
+        .create(ResourcesPlugin.getWorkspace().getRoot());
     IJavaProject[] existingProjects = model.getJavaProjects();
 
     try {
       // close existing projects
       for (int i = 0, length = existingProjects.length; i < length; i++) {
         existingProjects[i].getProject().close(null);
-        if (DACAPO_PRINT && i % 4 == 0) System.out.print(".");
+        if (DACAPO_PRINT && i % 4 == 0)
+          System.out.print(".");
       }
 
       // get 20 projects
@@ -71,17 +78,20 @@ public class FullSourceWorkspaceModelTests extends FullSourceWorkspaceTests {
       IJavaProject[] projects = new IJavaProject[max];
       for (int i = 0; i < max; i++) {
         projects[i] = createJavaProject("FindType" + i);
-        if (DACAPO_PRINT && i % 4 == 0) System.out.print(".");
+        if (DACAPO_PRINT && i % 4 == 0)
+          System.out.print(".");
       }
       AbstractJavaModelTests.waitUntilIndexesReady();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       AbstractJavaModelTests.waitForAutoBuild();
 
       try {
         model.close();
         for (int j = 0; j < max; j++) {
           projects[j].findType("java.lang.Object");
-          if (DACAPO_PRINT && j % 4 == 0) System.out.print(".");
+          if (DACAPO_PRINT && j % 4 == 0)
+            System.out.print(".");
         }
       } finally {
         for (int i = 0; i < max; i++) {

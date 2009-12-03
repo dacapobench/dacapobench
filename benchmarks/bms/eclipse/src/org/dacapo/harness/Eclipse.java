@@ -8,10 +8,12 @@ import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
 public class Eclipse extends Benchmark {
-  
+
   static final String WKSP_DIRECTORY_RELATIVE_TO_SCRATCH = "workspace";
   static final String PLUGIN_ID = "org.dacapo.eclipse.Harness";
-  static final String OSGI_BOOTSTRAP_JAR = "eclipse"+File.separator+"plugins"+File.separator+"org.eclipse.osgi_3.5.1.R35x_v20090827.jar";
+  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator
+      + "plugins" + File.separator
+      + "org.eclipse.osgi_3.5.1.R35x_v20090827.jar";
 
   static String oldJavaHome = null;
   static Eclipse eclipse;
@@ -20,16 +22,17 @@ public class Eclipse extends Benchmark {
   private final Method isRunning;
   private final Method run;
   private final Method shutdown;
-  
+
   public Eclipse(Config config, File scratch) throws Exception {
     super(config, scratch, false);
-    Class<?> clazz = Class.forName("org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
+    Class<?> clazz = Class.forName(
+        "org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
     this.method = clazz.getMethod("startup", String[].class, Runnable.class);
     this.isRunning = clazz.getMethod("isRunning");
     this.run = clazz.getMethod("run", Object.class);
     this.shutdown = clazz.getMethod("shutdown");
   }
-  
+
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
     if (!((Boolean) isRunning.invoke(null, (Object[]) null)).booleanValue()) {
@@ -37,35 +40,37 @@ public class Eclipse extends Benchmark {
     }
     setJavaHomeIfRequired();
     try {
-      String[] largePluginArgs = {"large", "unzip"};
-      String[] pluginArgs = {"unzip"};
-      run.invoke(null, new Object[] {size.equals("large") ? largePluginArgs : pluginArgs});
+      String[] largePluginArgs = { "large", "unzip" };
+      String[] pluginArgs = { "unzip" };
+      run.invoke(null, new Object[] { size.equals("large") ? largePluginArgs
+          : pluginArgs });
     } catch (Exception e) {
       e.printStackTrace();
-    } 
+    }
   }
-  
+
   public void iterate(String size) throws Exception {
     try {
- //     String[] pluginArgs = {"setup", "alltests" }; // get this from the bm config
+      // String[] pluginArgs = {"setup", "alltests" }; // get this from the bm
+      // config
       String[] pluginArgs = config.getArgs(size);
-      run.invoke(null, new Object[] {pluginArgs});
+      run.invoke(null, new Object[] { pluginArgs });
     } catch (Exception e) {
       e.printStackTrace();
-    } 
-  } 
-  
+    }
+  }
+
   public void postIteration(String size) throws Exception {
     try {
-      String[] pluginArgs = {"teardown"};
-      run.invoke(null, new Object[] {pluginArgs});
+      String[] pluginArgs = { "teardown" };
+      run.invoke(null, new Object[] { pluginArgs });
     } catch (Exception e) {
       e.printStackTrace();
-    } 
+    }
     super.postIteration(size);
     restoreJavaHomeIfRequired();
   }
-  
+
   public void cleanup() {
     try {
       shutdown.invoke(null, (Object[]) null);
@@ -76,22 +81,24 @@ public class Eclipse extends Benchmark {
 
   private void startup(String size) {
     try {
-      System.setProperty("osgi.os","linux");
-      System.setProperty("osgi.ws","gtk");
-      System.setProperty("osgi.arch","x86");
-      System.setProperty("osgi.install.area",  "file:"+fileInScratch("eclipse/"));
+      System.setProperty("osgi.os", "linux");
+      System.setProperty("osgi.ws", "gtk");
+      System.setProperty("osgi.arch", "x86");
+      System.setProperty("osgi.install.area", "file:"
+          + fileInScratch("eclipse/"));
       System.setProperty("osgi.noShutdown", "true");
-      System.setProperty("osgi.framework","file:"+fileInScratch(OSGI_BOOTSTRAP_JAR));
+      System.setProperty("osgi.framework", "file:"
+          + fileInScratch(OSGI_BOOTSTRAP_JAR));
       setJavaHomeIfRequired();
-      
+
       String[] args = new String[4];
-      args[0] = "-data";        // identify the workspace
+      args[0] = "-data"; // identify the workspace
       args[1] = fileInScratch(WKSP_DIRECTORY_RELATIVE_TO_SCRATCH);
       args[2] = "-application"; // identify the plugin
       args[3] = PLUGIN_ID;
-      method.invoke(null, new Object[] {args, null});
+      method.invoke(null, new Object[] { args, null });
     } catch (Exception e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -102,7 +109,7 @@ public class Eclipse extends Benchmark {
       System.setProperty("java.home", eclipseJavaHome);
     }
   }
-  
+
   private void restoreJavaHomeIfRequired() {
     if (oldJavaHome != null)
       System.setProperty("java.home", oldJavaHome);

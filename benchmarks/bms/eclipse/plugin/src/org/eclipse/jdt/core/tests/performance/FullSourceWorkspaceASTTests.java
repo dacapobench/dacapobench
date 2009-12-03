@@ -31,36 +31,42 @@ import org.eclipse.jdt.core.dom.*;
  *  which can be downloaded from the eclipse web site
  */
 public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
-  
+
   public static void runDaCapoTests() {
     try {
       FullSourceWorkspaceASTTests a = new FullSourceWorkspaceASTTests();
-      if (DACAPO_PRINT) System.out.print("AST tests ");
+      if (DACAPO_PRINT)
+        System.out.print("AST tests ");
       a.testDomAstCreationProjectJLS3();
-      if (DACAPO_PRINT) System.out.println();
-     } catch (Exception e) {
+      if (DACAPO_PRINT)
+        System.out.println();
+    } catch (Exception e) {
       System.err.println("Caught exception performing AST tests: ");
       e.printStackTrace();
     }
   }
-  
+
   /*
    * Create AST nodes for all compilation unit of a given project
    */
   private void runAstCreation(IJavaProject javaProject) throws Exception {
-    if (DEBUG) System.out.println("Creating AST for project" + javaProject.getElementName());
+    if (DEBUG)
+      System.out.println("Creating AST for project"
+          + javaProject.getElementName());
     ASTParser parser = ASTParser.newParser(AST.JLS3);
     parser.setResolveBindings(true);
     parser.setProject(javaProject);
 
-    Map options= javaProject.getOptions(true);
-    // turn all errors and warnings into ignore. The customizable set of compiler
-    // options only contains additional Eclipse options. The standard JDK compiler
+    Map options = javaProject.getOptions(true);
+    // turn all errors and warnings into ignore. The customizable set of
+    // compiler
+    // options only contains additional Eclipse options. The standard JDK
+    // compiler
     // options can't be changed anyway.
-    for (Iterator iter= options.keySet().iterator(); iter.hasNext();) {
-      String key= (String)iter.next();
-      String value= (String)options.get(key);
-      if ("error".equals(value) || "warning".equals(value)) {  //$NON-NLS-1$//$NON-NLS-2$
+    for (Iterator iter = options.keySet().iterator(); iter.hasNext();) {
+      String key = (String) iter.next();
+      String value = (String) options.get(key);
+      if ("error".equals(value) || "warning".equals(value)) { //$NON-NLS-1$//$NON-NLS-2$
         // System.out.println("Ignoring - " + key);
         options.put(key, "ignore"); //$NON-NLS-1$
       } else if ("enabled".equals(value)) {
@@ -76,8 +82,10 @@ public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
     units.toArray(compilationUnits);
 
     if (PRINT) {
-      System.out.println("            - options: "+options);
-      System.out.println("            - "+compilationUnits.length+" units will be parsed in "+javaProject.getElementName()+" project");
+      System.out.println("            - options: " + options);
+      System.out.println("            - " + compilationUnits.length
+          + " units will be parsed in " + javaProject.getElementName()
+          + " project");
     }
 
     // warm up
@@ -87,21 +95,24 @@ public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
         int length = problems.length;
         if (length > 0) {
           StringBuffer buffer = new StringBuffer();
-          for (int i=0; i<length; i++) {
+          for (int i = 0; i < length; i++) {
             buffer.append(problems[i].getMessage());
             buffer.append('\n');
           }
         }
       }
-    },
-    null);
+    }, null);
 
-    parser.createASTs(compilationUnits, new String[0], new ASTRequestor() {/* do nothing*/}, null);
+    parser.createASTs(compilationUnits, new String[0], new ASTRequestor() {/*
+                                                                            * do
+                                                                            * nothing
+                                                                            */
+    }, null);
   }
 
   /**
    * Create AST nodes tree for all compilation units in JUnit project.
-   *
+   * 
    * @throws JavaModelException
    */
   public void testDomAstCreationProjectJLS3() throws Exception {

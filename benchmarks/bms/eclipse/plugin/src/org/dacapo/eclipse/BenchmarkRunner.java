@@ -17,7 +17,8 @@ public class BenchmarkRunner implements IApplication {
   public Object start(IApplicationContext context) throws Exception {
     boolean large = false, unzip = false, setup = false, index = false, build = false, hierarchy = false, ast = false, complete = false, search = false, format = false, model = false, teardown = false;
 
-    String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
+    String[] args = (String[]) context.getArguments().get(
+        IApplicationContext.APPLICATION_ARGS);
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
       if (arg.equals("large")) {
@@ -47,24 +48,46 @@ public class BenchmarkRunner implements IApplication {
       } else if (arg.equals("all")) {
         unzip = setup = index = search = build = hierarchy = ast = complete = format = model = teardown = true;
       } else if (arg.equals("alltests")) {
-        index = search = build = hierarchy = ast = complete = format = model = true;        
+        index = search = build = hierarchy = ast = complete = format = model = true;
       }
     }
-    
-    if (unzip)     { FullSourceWorkspaceTests.unzipWorkSpace(large); }
-    if (setup)     { FullSourceWorkspaceTests.setup(large); }
-    
-    if (index)     { FullSourceWorkspaceSearchTests.runDaCapoTests(); }
-    if (build)     { FullSourceWorkspaceBuildTests.runDaCapoTests();  }
-    if (search)    { FullSourceWorkspaceCompleteSearchTests.runDaCapoTests(); }
-    if (hierarchy) { FullSourceWorkspaceTypeHierarchyTests.runDaCapoTests(); }
-    if (ast)       { FullSourceWorkspaceASTTests.runDaCapoTests();}
-    if (complete)  { FullSourceWorkspaceCompletionTests.runDaCapoTests(); }
-    if (format)    { FullSourceWorkspaceFormatterTests.runDaCapoTests(); }
-    if (model)     { FullSourceWorkspaceModelTests.runDaCapoTests(); }
-    
-    if (teardown)  { FullSourceWorkspaceTests.tearDown(); }
-    
+
+    if (unzip) {
+      FullSourceWorkspaceTests.unzipWorkSpace(large);
+    }
+    if (setup) {
+      FullSourceWorkspaceTests.setup(large);
+    }
+
+    if (index) {
+      FullSourceWorkspaceSearchTests.runDaCapoTests();
+    }
+    if (build) {
+      FullSourceWorkspaceBuildTests.runDaCapoTests();
+    }
+    if (search) {
+      FullSourceWorkspaceCompleteSearchTests.runDaCapoTests();
+    }
+    if (hierarchy) {
+      FullSourceWorkspaceTypeHierarchyTests.runDaCapoTests();
+    }
+    if (ast) {
+      FullSourceWorkspaceASTTests.runDaCapoTests();
+    }
+    if (complete) {
+      FullSourceWorkspaceCompletionTests.runDaCapoTests();
+    }
+    if (format) {
+      FullSourceWorkspaceFormatterTests.runDaCapoTests();
+    }
+    if (model) {
+      FullSourceWorkspaceModelTests.runDaCapoTests();
+    }
+
+    if (teardown) {
+      FullSourceWorkspaceTests.tearDown();
+    }
+
     return EXIT_OK;
   }
 

@@ -26,191 +26,149 @@ import org.eclipse.jdt.core.tests.model.AbstractJavaModelTests;
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
  */
-public class FullSourceWorkspaceCompletionTests extends FullSourceWorkspaceTests {
+public class FullSourceWorkspaceCompletionTests extends
+    FullSourceWorkspaceTests {
 
   public static void runDaCapoTests() {
     try {
       FullSourceWorkspaceCompletionTests c = new FullSourceWorkspaceCompletionTests();
-      if (DACAPO_PRINT) System.out.print("Completion tests ");
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print("Completion tests ");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteEmptyName();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteEmptyNameWithoutMethods();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteEmptyNameWithoutTypes();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteMemberAccess();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteMethodDeclaration();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteName();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteNameWithoutMethods();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteNameWithoutTypes();
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       c.testPerfCompleteTypeReference();
-      if (DACAPO_PRINT) System.out.println();
-     } catch (Exception e) {
+      if (DACAPO_PRINT)
+        System.out.println();
+    } catch (Exception e) {
       System.err.println("Caught exception performing build tests: ");
       e.printStackTrace();
     }
   }
-  
+
   private static final int WARMUP_COUNT = 0;
   private static final int ITERATION_COUNT = 10;
   static int[] PROPOSAL_COUNTS;
   static int TESTS_COUNT = 0;
   static int TESTS_LENGTH;
-  
+
   class TestCompletionRequestor extends CompletionRequestor {
-    public void accept(CompletionProposal proposal) {}
+    public void accept(CompletionProposal proposal) {
+    }
   }
 
-  private void complete(
-      String projectName,
-      String packageName,
-      String unitName,
-      String completeAt,
-      String completeBehind,
-      int warmupCount,
-      int iterationCount) throws CoreException {
-    complete(projectName,
-        packageName,
-        unitName,
-        completeAt,
-        completeBehind,
-        null,
-        warmupCount,
-        iterationCount);
+  private void complete(String projectName, String packageName,
+      String unitName, String completeAt, String completeBehind,
+      int warmupCount, int iterationCount) throws CoreException {
+    complete(projectName, packageName, unitName, completeAt, completeBehind,
+        null, warmupCount, iterationCount);
   }
-  private void complete(
-      String projectName,
-      String packageName,
-      String unitName,
-      String completeAt,
-      String completeBehind,
-      int[] ignoredKinds,
-      int warmupCount,
-      int iterationCount) throws CoreException {
+
+  private void complete(String projectName, String packageName,
+      String unitName, String completeAt, String completeBehind,
+      int[] ignoredKinds, int warmupCount, int iterationCount)
+      throws CoreException {
 
     AbstractJavaModelTests.waitUntilIndexesReady();
 
     TestCompletionRequestor requestor = new TestCompletionRequestor();
-    if(ignoredKinds != null) {
+    if (ignoredKinds != null) {
       for (int i = 0; i < ignoredKinds.length; i++) {
         requestor.setIgnored(ignoredKinds[i], true);
       }
     }
 
-    ICompilationUnit unit =
-      getCompilationUnit(projectName, packageName, unitName);
+    ICompilationUnit unit = getCompilationUnit(projectName, packageName,
+        unitName);
 
     String str = unit.getSource();
     int completionIndex = str.indexOf(completeAt) + completeBehind.length();
 
-    if (DEBUG) System.out.print("Perform code assist inside " + unitName + "...");
+    if (DEBUG)
+      System.out.print("Perform code assist inside " + unitName + "...");
 
-      for (int j = 0; j < iterationCount; j++) {
-        unit.codeComplete(completionIndex, requestor);
+    for (int j = 0; j < iterationCount; j++) {
+      unit.codeComplete(completionIndex, requestor);
     }
-    if (DEBUG) System.out.println("done!");
+    if (DEBUG)
+      System.out.println("done!");
   }
 
   public void testPerfCompleteMethodDeclaration() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "IType {",
-        "IType {",
-        WARMUP_COUNT,
-        ITERATION_COUNT);
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "IType {", "IType {", WARMUP_COUNT, ITERATION_COUNT);
   }
+
   public void testPerfCompleteMemberAccess() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "this.",
-        "this.",
-        null,
-        WARMUP_COUNT,
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "this.", "this.", null, WARMUP_COUNT,
         ITERATION_COUNT);
   }
+
   public void testPerfCompleteTypeReference() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "ArrayList list",
-        "A",
-        WARMUP_COUNT,
-        ITERATION_COUNT);
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "ArrayList list", "A", WARMUP_COUNT, ITERATION_COUNT);
   }
+
   public void testPerfCompleteEmptyName() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "params.add",
-        "",
-        WARMUP_COUNT,
-        ITERATION_COUNT);
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "params.add", "", WARMUP_COUNT, ITERATION_COUNT);
   }
+
   public void testPerfCompleteName() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "params.add",
-        "p",
-        null,
-        WARMUP_COUNT,
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "params.add", "p", null, WARMUP_COUNT,
         ITERATION_COUNT);
   }
+
   public void testPerfCompleteEmptyNameWithoutTypes() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "params.add",
-        "",
-        new int[]{CompletionProposal.TYPE_REF},
-        WARMUP_COUNT,
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "params.add", "",
+        new int[] { CompletionProposal.TYPE_REF }, WARMUP_COUNT,
         ITERATION_COUNT);
   }
+
   public void testPerfCompleteNameWithoutTypes() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "params.add",
-        "p",
-        new int[]{CompletionProposal.TYPE_REF},
-        WARMUP_COUNT,
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "params.add", "p",
+        new int[] { CompletionProposal.TYPE_REF }, WARMUP_COUNT,
         ITERATION_COUNT);
   }
+
   public void testPerfCompleteEmptyNameWithoutMethods() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "params.add",
-        "",
-        new int[]{CompletionProposal.METHOD_REF},
-        WARMUP_COUNT,
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "params.add", "",
+        new int[] { CompletionProposal.METHOD_REF }, WARMUP_COUNT,
         ITERATION_COUNT);
   }
+
   public void testPerfCompleteNameWithoutMethods() throws CoreException {
-    complete(
-        "org.eclipse.jdt.core",
-        "org.eclipse.jdt.internal.core",
-        "SourceType.java",
-        "params.add",
-        "p",
-        new int[]{CompletionProposal.METHOD_REF},
-        WARMUP_COUNT,
+    complete("org.eclipse.jdt.core", "org.eclipse.jdt.internal.core",
+        "SourceType.java", "params.add", "p",
+        new int[] { CompletionProposal.METHOD_REF }, WARMUP_COUNT,
         ITERATION_COUNT);
   }
 }

@@ -50,23 +50,14 @@ public class AbstractJavaModelTests {
     SearchEngine engine = new SearchEngine();
     IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
     try {
-      engine.searchAllTypeNames(
-          null,
-          SearchPattern.R_EXACT_MATCH,
-          "!@$#!@".toCharArray(),
-          SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE,
-          IJavaSearchConstants.CLASS,
-          scope,
+      engine.searchAllTypeNames(null, SearchPattern.R_EXACT_MATCH, "!@$#!@"
+          .toCharArray(), SearchPattern.R_PATTERN_MATCH
+          | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.CLASS, scope,
           new TypeNameRequestor() {
-            public void acceptType(
-                int modifiers,
-                char[] packageName,
-                char[] simpleTypeName,
-                char[][] enclosingTypeNames,
-                String path) {}
-          },
-          IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
-          null);
+            public void acceptType(int modifiers, char[] packageName,
+                char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+            }
+          }, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
     } catch (CoreException e) {
     }
   }

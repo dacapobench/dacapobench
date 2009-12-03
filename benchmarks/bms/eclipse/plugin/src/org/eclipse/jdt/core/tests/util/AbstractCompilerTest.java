@@ -19,11 +19,11 @@ public class AbstractCompilerTest {
   public static final int F_1_6 = 0x08;
   public static final int F_1_7 = 0x10;
 
-  public static final boolean RUN_JAVAC = CompilerOptions.ENABLED.equals(System.getProperty("run.javac"));
+  public static final boolean RUN_JAVAC = CompilerOptions.ENABLED.equals(System
+      .getProperty("run.javac"));
   private static final int UNINITIALIZED = -1;
   private static final int NONE = 0;
   private static int possibleComplianceLevels = UNINITIALIZED;
-
 
   /*
    * Returns the possible compliance levels this VM instance can run.
@@ -43,7 +43,8 @@ public class AbstractCompilerTest {
         } else if (CompilerOptions.VERSION_1_7.equals(compliance)) {
           possibleComplianceLevels = F_1_7;
         } else {
-          System.out.println("Invalid compliance specified (" + compliance + ")");
+          System.out.println("Invalid compliance specified (" + compliance
+              + ")");
           System.out.print("Use one of ");
           System.out.print(CompilerOptions.VERSION_1_3 + ", ");
           System.out.print(CompilerOptions.VERSION_1_4 + ", ");
@@ -58,21 +59,24 @@ public class AbstractCompilerTest {
         if (!RUN_JAVAC) {
           possibleComplianceLevels = F_1_3;
           boolean canRun1_4 = !"1.0".equals(specVersion)
-          && !CompilerOptions.VERSION_1_1.equals(specVersion)
-          && !CompilerOptions.VERSION_1_2.equals(specVersion)
-          && !CompilerOptions.VERSION_1_3.equals(specVersion);
+              && !CompilerOptions.VERSION_1_1.equals(specVersion)
+              && !CompilerOptions.VERSION_1_2.equals(specVersion)
+              && !CompilerOptions.VERSION_1_3.equals(specVersion);
           if (canRun1_4) {
             possibleComplianceLevels |= F_1_4;
           }
-          boolean canRun1_5 = canRun1_4 && !CompilerOptions.VERSION_1_4.equals(specVersion);
+          boolean canRun1_5 = canRun1_4
+              && !CompilerOptions.VERSION_1_4.equals(specVersion);
           if (canRun1_5) {
             possibleComplianceLevels |= F_1_5;
           }
-          boolean canRun1_6 = canRun1_5 && !CompilerOptions.VERSION_1_5.equals(specVersion);
+          boolean canRun1_6 = canRun1_5
+              && !CompilerOptions.VERSION_1_5.equals(specVersion);
           if (canRun1_6) {
             possibleComplianceLevels |= F_1_6;
           }
-          boolean canRun1_7 = canRun1_6 && !CompilerOptions.VERSION_1_6.equals(specVersion);
+          boolean canRun1_7 = canRun1_6
+              && !CompilerOptions.VERSION_1_6.equals(specVersion);
           if (canRun1_7) {
             possibleComplianceLevels |= F_1_7;
           }
@@ -94,7 +98,8 @@ public class AbstractCompilerTest {
       }
     }
     if (possibleComplianceLevels == NONE) {
-      System.out.println("Skipping all compliances (found none compatible with run.javac=enabled).");
+      System.out
+          .println("Skipping all compliances (found none compatible with run.javac=enabled).");
     }
     return possibleComplianceLevels;
   }

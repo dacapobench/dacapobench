@@ -31,42 +31,46 @@ public class FullSourceWorkspaceFormatterTests extends FullSourceWorkspaceTests 
   public static void runDaCapoTests() {
     try {
       FullSourceWorkspaceFormatterTests f = new FullSourceWorkspaceFormatterTests();
-      if (DACAPO_PRINT) System.out.print("Format tests ");
+      if (DACAPO_PRINT)
+        System.out.print("Format tests ");
       f.testFormatDefault();
-      if (DACAPO_PRINT) System.out.println();
+      if (DACAPO_PRINT)
+        System.out.println();
     } catch (Exception e) {
       System.err.println("Caught exception performing search tests: ");
       e.printStackTrace();
     }
   }
-  
+
   /* selection of the largest source files in the default workspace */
   static final String[] FORMAT_FILES = {
-    "org.eclipse.jdt.internal.core.JavaProject",
-    "org.eclipse.jdt.internal.compiler.ClassFile",
-    "org.eclipse.jdt.internal.core.util.PublicScanner",
-    "org.eclipse.jdt.internal.compiler.parser.Scanner",
-    "org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants",
-    "org.eclipse.jdt.internal.codeassist.CompletionEngine",
-    "org.eclipse.jdt.internal.compiler.codegen.ConstantPool",
-    "org.eclipse.jdt.internal.formatter.DefaultCodeFormatterOptions",
-    "org.eclipse.jdt.internal.compiler.problem.ProblemReporter",
-    "org.eclipse.jdt.core.dom.ASTConverter",
-    "org.eclipse.jdt.internal.compiler.codegen.CodeStream",
-    "org.eclipse.jdt.internal.formatter.CodeFormatterVisitor",
-    "org.eclipse.jdt.core.JavaCore",
-    "org.eclipse.jdt.internal.compiler.parser.Parser"
-  };
+      "org.eclipse.jdt.internal.core.JavaProject",
+      "org.eclipse.jdt.internal.compiler.ClassFile",
+      "org.eclipse.jdt.internal.core.util.PublicScanner",
+      "org.eclipse.jdt.internal.compiler.parser.Scanner",
+      "org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants",
+      "org.eclipse.jdt.internal.codeassist.CompletionEngine",
+      "org.eclipse.jdt.internal.compiler.codegen.ConstantPool",
+      "org.eclipse.jdt.internal.formatter.DefaultCodeFormatterOptions",
+      "org.eclipse.jdt.internal.compiler.problem.ProblemReporter",
+      "org.eclipse.jdt.core.dom.ASTConverter",
+      "org.eclipse.jdt.internal.compiler.codegen.CodeStream",
+      "org.eclipse.jdt.internal.formatter.CodeFormatterVisitor",
+      "org.eclipse.jdt.core.JavaCore",
+      "org.eclipse.jdt.internal.compiler.parser.Parser" };
+
   /**
    * Format files using code formatter default options.
    */
   public void testFormatDefault() throws CoreException {
     for (int i = 0; i < FORMAT_FILES.length; i++) {
-      if (DACAPO_PRINT) System.out.print(".");
+      if (DACAPO_PRINT)
+        System.out.print(".");
       IJavaElement element = JDT_CORE_PROJECT.findType(FORMAT_FILES[i]);
       String source = ((ICompilationUnit) element.getParent()).getSource();
-      for (int j=0; j<2; j++)
-        new DefaultCodeFormatter().format(CodeFormatter.K_COMPILATION_UNIT, source, 0, source.length(), 0, null);
+      for (int j = 0; j < 2; j++)
+        new DefaultCodeFormatter().format(CodeFormatter.K_COMPILATION_UNIT,
+            source, 0, source.length(), 0, null);
     }
   }
 }

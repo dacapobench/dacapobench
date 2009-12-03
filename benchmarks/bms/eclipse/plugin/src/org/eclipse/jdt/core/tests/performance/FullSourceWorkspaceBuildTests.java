@@ -42,9 +42,11 @@ public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
   public static void runDaCapoTests() {
     try {
       FullSourceWorkspaceBuildTests b = new FullSourceWorkspaceBuildTests();
-      if (DACAPO_PRINT) System.out.print("Build workspace ");
+      if (DACAPO_PRINT)
+        System.out.print("Build workspace ");
       b.testFullBuildDefault();
-      if (DACAPO_PRINT) System.out.println();
+      if (DACAPO_PRINT)
+        System.out.println();
     } catch (Exception e) {
       System.err.println("Caught exception performing build tests: ");
       e.printStackTrace();
@@ -53,38 +55,43 @@ public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
 
   /**
    * Start a build on given project or workspace using given options.
-   *
-   * @param javaProject Project which must be (full) build or null if all workspace has to be built.
-   * @param options Options used while building
+   * 
+   * @param javaProject
+   *          Project which must be (full) build or null if all workspace has to
+   *          be built.
+   * @param options
+   *          Options used while building
    */
-  void build(final IJavaProject javaProject, Hashtable options, boolean noWarning) throws IOException, CoreException {
-    if (DEBUG) System.out.print("\tstart build...");
+  void build(final IJavaProject javaProject, Hashtable options,
+      boolean noWarning) throws IOException, CoreException {
+    if (DEBUG)
+      System.out.print("\tstart build...");
     JavaCore.setOptions(options);
-    if (PRINT) System.out.println("JavaCore options: "+options);
+    if (PRINT)
+      System.out.println("JavaCore options: " + options);
 
     // Build workspace if no project
     if (javaProject == null) {
       // single measure
       ENV.fullBuild();
     } else {
-      if (PRINT) System.out.println("Project options: "+javaProject.getOptions(false));
+      if (PRINT)
+        System.out.println("Project options: " + javaProject.getOptions(false));
       IWorkspaceRunnable compilation = new IWorkspaceRunnable() {
         public void run(IProgressMonitor monitor) throws CoreException {
           ENV.fullBuild(javaProject.getPath());
         }
       };
       IWorkspace workspace = ResourcesPlugin.getWorkspace();
-      workspace.run(
-          compilation,
-          null/*don't take any lock*/,
-          IWorkspace.AVOID_UPDATE,
-          null/*no progress available here*/);
+      workspace.run(compilation, null/* don't take any lock */,
+          IWorkspace.AVOID_UPDATE, null/* no progress available here */);
     }
-
 
     // Verify markers
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    IMarker[] markers = workspaceRoot.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
+    IMarker[] markers = workspaceRoot.findMarkers(
+        IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true,
+        IResource.DEPTH_INFINITE);
     List resources = new ArrayList();
     List messages = new ArrayList();
     int warnings = 0;
@@ -104,38 +111,43 @@ public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
         break;
       }
     }
-    workspaceRoot.deleteMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
+    workspaceRoot.deleteMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
+        true, IResource.DEPTH_INFINITE);
 
     // Assert result
     int size = messages.size();
     if (size > 0) {
       StringBuffer debugBuffer = new StringBuffer();
-      for (int i=0; i<size; i++) {
+      for (int i = 0; i < size; i++) {
         debugBuffer.append(resources.get(i));
         debugBuffer.append(":\n\t");
         debugBuffer.append(messages.get(i));
         debugBuffer.append('\n');
       }
-      System.out.println("Unexpected ERROR marker(s):\n" + debugBuffer.toString());
+      System.out.println("Unexpected ERROR marker(s):\n"
+          + debugBuffer.toString());
       System.out.println("--------------------");
-      String target = javaProject == null ? "workspace" : javaProject.getElementName();
-   //   assertEquals("Found "+size+" unexpected errors while building "+target, 0, size);
+      String target = javaProject == null ? "workspace" : javaProject
+          .getElementName();
+      // assertEquals("Found "+size+" unexpected errors while building "+target,
+      // 0, size);
     }
-    if (DEBUG) System.out.println("done");
+    if (DEBUG)
+      System.out.println("done");
   }
 
   /**
    * Full build with JavaCore default options.
-   *
-   * WARNING:
-   *                            This test must be and _ever_ stay at first position as it build the entire workspace.
-   *                            It also cannot be removed as it's a Global fingerprint!
-   *                            Move it would have great consequence on all other tests results...
-   *
+   * 
+   * WARNING: This test must be and _ever_ stay at first position as it build
+   * the entire workspace. It also cannot be removed as it's a Global
+   * fingerprint! Move it would have great consequence on all other tests
+   * results...
+   * 
    * @throws CoreException
    * @throws IOException
    */
   public void testFullBuildDefault() throws CoreException, IOException {
-    build(null, warningOptions(0/*default warnings*/), false);
+    build(null, warningOptions(0/* default warnings */), false);
   }
 }

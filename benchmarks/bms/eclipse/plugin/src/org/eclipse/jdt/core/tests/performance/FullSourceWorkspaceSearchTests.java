@@ -29,27 +29,30 @@ import org.eclipse.jdt.internal.core.search.processing.IJob;
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
  */
-public class FullSourceWorkspaceSearchTests extends FullSourceWorkspaceTests implements IJavaSearchConstants {
+public class FullSourceWorkspaceSearchTests extends FullSourceWorkspaceTests
+    implements IJavaSearchConstants {
 
   public static void runDaCapoTests() {
     try {
       FullSourceWorkspaceSearchTests s = new FullSourceWorkspaceSearchTests();
-      if (DACAPO_PRINT) System.out.print("Index workspace ");
+      if (DACAPO_PRINT)
+        System.out.print("Index workspace ");
       s.testIndexing();
-      if (DACAPO_PRINT) System.out.println();
+      if (DACAPO_PRINT)
+        System.out.println();
     } catch (Exception e) {
       System.err.println("Caught exception performing search tests: ");
       e.printStackTrace();
     }
   }
-  
+
   private static final int WAIT_UNTIL_READY_TO_SEARCH = 0;
 
   /**
    * Performance tests for search: Indexing entire workspace
-   *
-   * First wait that already started indexing jobs ends before performing test and measure.
-   * Consider this initial indexing jobs as warm-up for this test.
+   * 
+   * First wait that already started indexing jobs ends before performing test
+   * and measure. Consider this initial indexing jobs as warm-up for this test.
    */
   public void testIndexing() throws CoreException {
 
@@ -62,17 +65,20 @@ public class FullSourceWorkspaceSearchTests extends FullSourceWorkspaceTests imp
 
     // Restart brand new indexing
     INDEX_MANAGER.request(new Measuring(true));
-    for (int j=0, length=ALL_PROJECTS.length; j<length; j++) {
-      if (DACAPO_PRINT) System.out.print(".");
+    for (int j = 0, length = ALL_PROJECTS.length; j < length; j++) {
+      if (DACAPO_PRINT)
+        System.out.print(".");
       INDEX_MANAGER.indexAll(ALL_PROJECTS[j].getProject());
     }
     waitUntilIndexesReady();
   }
-  
+
   protected void waitUntilIndexesReady() {
-    if (DACAPO_PRINT) System.out.print(".");
+    if (DACAPO_PRINT)
+      System.out.print(".");
     AbstractJavaModelTests.waitUntilIndexesReady();
-    if (DACAPO_PRINT) System.out.print(".");
+    if (DACAPO_PRINT)
+      System.out.print(".");
   }
 
   /**
@@ -80,31 +86,42 @@ public class FullSourceWorkspaceSearchTests extends FullSourceWorkspaceTests imp
    */
   class SearchTypeNameRequestor extends TypeNameRequestor {
     int count = 0;
-    public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+
+    public void acceptType(int modifiers, char[] packageName,
+        char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
       this.count++;
-      if (DACAPO_PRINT && (this.count % 500 == 0)) System.out.print(".");
+      if (DACAPO_PRINT && (this.count % 500 == 0))
+        System.out.print(".");
     }
   }
-  
+
   /**
    * Job to measure times in same thread than index manager.
    */
   class Measuring implements IJob {
     boolean start;
+
     Measuring(boolean start) {
       this.start = start;
     }
+
     public boolean belongsTo(String jobFamily) {
       return true;
     }
-    public void cancel() {}
-    public void ensureReadyToRun() {}
+
+    public void cancel() {
+    }
+
+    public void ensureReadyToRun() {
+    }
+
     /**
      * Execute the current job, answer whether it was successful.
      */
     public boolean execute(IProgressMonitor progress) {
       return true;
     }
+
     public String getJobFamily() {
       return "FullSourceWorkspaceSearchTests.Measuring";
     }

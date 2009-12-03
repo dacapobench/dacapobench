@@ -23,14 +23,17 @@ import org.eclipse.jdt.core.ICompilationUnit;
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
  */
-public class FullSourceWorkspaceTypeHierarchyTests extends FullSourceWorkspaceTests {
+public class FullSourceWorkspaceTypeHierarchyTests extends
+    FullSourceWorkspaceTests {
 
   public static void runDaCapoTests() {
     try {
-      if (DACAPO_PRINT) System.out.print("Type hierarchy tests ");
+      if (DACAPO_PRINT)
+        System.out.print("Type hierarchy tests ");
       FullSourceWorkspaceTypeHierarchyTests t = new FullSourceWorkspaceTypeHierarchyTests();
       t.testPerfAllTypes();
-      if (DACAPO_PRINT) System.out.println();
+      if (DACAPO_PRINT)
+        System.out.println();
     } catch (Exception e) {
       System.err.println("Caught exception performing build tests: ");
       e.printStackTrace();
@@ -38,7 +41,8 @@ public class FullSourceWorkspaceTypeHierarchyTests extends FullSourceWorkspaceTe
   }
 
   public void testPerfAllTypes() throws CoreException {
-    ICompilationUnit unit = getCompilationUnit("org.eclipse.jdt.core", "org.eclipse.jdt.internal.compiler.ast", "ASTNode.java");
+    ICompilationUnit unit = getCompilationUnit("org.eclipse.jdt.core",
+        "org.eclipse.jdt.internal.compiler.ast", "ASTNode.java");
     unit.getType("ASTNode").newTypeHierarchy(null).getAllClasses();
   }
 }
