@@ -41,12 +41,14 @@ public class Search {
 
   static final int MAX_DOCS_TO_COLLECT = 20;
   public int completed = 0;
- 
-  /** Use the norms from one field for all fields.  Norms are read into memory,
-   * using a byte of memory per document per searched field.  This can cause
+
+  /**
+   * Use the norms from one field for all fields. Norms are read into memory,
+   * using a byte of memory per document per searched field. This can cause
    * search of large collections with a large number of fields to run out of
-   * memory.  If all of the fields contain only a single token, then the norms
-   * are all identical, then single norm vector may be shared. */
+   * memory. If all of the fields contain only a single token, then the norms
+   * are all identical, then single norm vector may be shared.
+   */
   private static class OneNormsReader extends FilterIndexReader {
     private String field;
 
@@ -60,12 +62,12 @@ public class Search {
     }
   }
 
-  public Search() {}
+  public Search() {
+  }
 
   /** Simple command-line based search demo. */
   public void main(String[] args) throws Exception {
-    String usage =
-      "Usage:\tjava org.dacapo.lusearch.Search [-index dir] [-field f] [-repeat n] [-queries file] [-raw] [-norms field] [-paging hitsPerPage]";
+    String usage = "Usage:\tjava org.dacapo.lusearch.Search [-index dir] [-field f] [-repeat n] [-queries file] [-raw] [-norms field] [-paging hitsPerPage]";
     usage += "\n\tSpecify 'false' for hitsPerPage to use streaming instead of paging search.";
     if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
       System.out.println(usage);
@@ -81,63 +83,66 @@ public class Search {
     int hitsPerPage = 10;
     String outBase = null;
     int threads = 1;
-    
+
     for (int i = 0; i < args.length; i++) {
       if ("-index".equals(args[i])) {
-        index = args[i+1];
+        index = args[i + 1];
         i++;
       } else if ("-field".equals(args[i])) {
-        field = args[i+1];
+        field = args[i + 1];
         i++;
       } else if ("-queries".equals(args[i])) {
-        queryBase = args[i+1];
+        queryBase = args[i + 1];
         i++;
       } else if ("-repeat".equals(args[i])) {
-        repeat = Integer.parseInt(args[i+1]);
+        repeat = Integer.parseInt(args[i + 1]);
         i++;
       } else if ("-raw".equals(args[i])) {
         raw = true;
       } else if ("-norms".equals(args[i])) {
-        normsField = args[i+1];
+        normsField = args[i + 1];
         i++;
       } else if ("-paging".equals(args[i])) {
-        hitsPerPage = Integer.parseInt(args[i+1]);
+        hitsPerPage = Integer.parseInt(args[i + 1]);
         i++;
       } else if ("-output".equals(args[i])) {
-        outBase = args[i+1];
+        outBase = args[i + 1];
         i++;
       } else if ("-threads".equals(args[i])) {
-        threads = Integer.parseInt(args[i+1]);
+        threads = Integer.parseInt(args[i + 1]);
         i++;
       }
     }
     completed = 0;
     for (int j = 0; j < threads; j++) {
-      new QueryThread(this, "Query"+j, j, index, outBase, queryBase, field, normsField, raw, hitsPerPage).start();
+      new QueryThread(this, "Query" + j, j, index, outBase, queryBase, field,
+          normsField, raw, hitsPerPage).start();
     }
     synchronized (this) {
       while (completed != threads) {
         try {
           this.wait();
-        } catch (InterruptedException e) { }
+        } catch (InterruptedException e) {
+        }
       }
     }
   }
-    
+
   public class QueryThread extends Thread {
 
     Search parent;
     String field;
     int hitsPerPage;
     boolean raw;
-    
+
     IndexReader reader;
     Searcher searcher;
     BufferedReader in;
     PrintWriter out;
-    
-    public QueryThread(Search parent, String name, int id, String index, String outBase, String queryBase,
-        String field, String normsField, boolean raw, int hitsPerPage) {
+
+    public QueryThread(Search parent, String name, int id, String index,
+        String outBase, String queryBase, String field, String normsField,
+        boolean raw, int hitsPerPage) {
       super(name);
       this.parent = parent;
       this.field = field;
@@ -148,16 +153,16 @@ public class Search {
         if (normsField != null)
           reader = new OneNormsReader(reader, normsField);
         searcher = new IndexSearcher(reader);
-        
+
         String query = queryBase + (id < 10 ? "0" : "") + id + ".txt";
         in = new BufferedReader(new FileReader(query));
         out = new PrintWriter(new BufferedWriter(new FileWriter(outBase + id)));
-        
+
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
-    
+
     public void run() {
       try {
         runQuery();
@@ -165,11 +170,11 @@ public class Search {
         e.printStackTrace();
       }
     }
-    
+
     private void runQuery() throws java.io.IOException {
       Analyzer analyzer = new StandardAnalyzer();
       QueryParser parser = new QueryParser(field, analyzer);
-      
+
       while (true) {
         String line = in.readLine();
 
@@ -184,33 +189,34 @@ public class Search {
         try {
           query = parser.parse(line);
         } catch (Exception e) {
-          e.printStackTrace(); 
+          e.printStackTrace();
         }
         searcher.search(query, null, 10);
 
         doPagingSearch(query);
       }
-      
+
       reader.close();
       out.flush();
       out.close();
       synchronized (parent) {
         parent.completed++;
         if (parent.completed % 4 == 0) {
-          System.out.println(parent.completed+" query batches completed");
+          System.out.println(parent.completed + " query batches completed");
         }
         parent.notify();
       }
     }
 
     /**
-     * This demonstrates a typical paging search scenario, where the search engine presents 
-     * pages of size n to the user. The user can then go to the next page if interested in
-     * the next hits.
+     * This demonstrates a typical paging search scenario, where the search
+     * engine presents pages of size n to the user. The user can then go to the
+     * next page if interested in the next hits.
      * 
-     * When the query is executed for the first time, then only enough results are collected
-     * to fill 5 result pages. If the user wants to page beyond this limit, then the query
-     * is executed another time and all hits are collected.
+     * When the query is executed for the first time, then only enough results
+     * are collected to fill 5 result pages. If the user wants to page beyond
+     * this limit, then the query is executed another time and all hits are
+     * collected.
      * 
      */
     public void doPagingSearch(Query query) throws IOException {
@@ -222,7 +228,8 @@ public class Search {
 
       int numTotalHits = collector.getTotalHits();
       if (numTotalHits > 0)
-        out.println(numTotalHits + " total matching documents for " + query.toString(field));
+        out.println(numTotalHits + " total matching documents for "
+            + query.toString(field));
 
       int start = 0;
       int end = Math.min(numTotalHits, hitsPerPage);
@@ -231,21 +238,21 @@ public class Search {
         end = Math.min(hits.length, start + hitsPerPage);
 
         for (int i = start; i < end; i++) {
-          if (raw) {                              // output raw format
-            out.println("doc="+hits[i].doc+" score="+hits[i].score);
+          if (raw) { // output raw format
+            out.println("doc=" + hits[i].doc + " score=" + hits[i].score);
             continue;
           }
 
           Document doc = searcher.doc(hits[i].doc);
           String path = doc.get("path");
           if (path != null) {
-            out.println("\t"+(i+1) + ". " + path);
+            out.println("\t" + (i + 1) + ". " + path);
             String title = doc.get("title");
             if (title != null) {
               out.println("   Title: " + doc.get("title"));
             }
           } else {
-            out.println((i+1) + ". " + "No path for this document");
+            out.println((i + 1) + ". " + "No path for this document");
           }
 
         }
