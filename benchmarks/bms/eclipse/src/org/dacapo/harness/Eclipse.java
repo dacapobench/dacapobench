@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0
+ *
+ * @date $Date: 2009-12-04 14:25:53 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Eclipse.java 658 2009-12-04 03:25:53Z jzigman $
+ *******************************************************************************/
 package org.dacapo.harness;
 
 import java.io.File;
