@@ -70,14 +70,6 @@ public class Tomcat extends Benchmark {
         method.invoke(controller, "prepare");
 
         System.out.println("Server thread created");
-
-        // Run one iteration to get static startup costs out of the way
-//        System.out.println("Pre-benchmark warmup");
-//        method.invoke(controller, "startIteration");
-//        clientConstructor.newInstance(scratch, 0, 1, getVerbose(), PORT).run();
-//        method.invoke(controller, "stopIteration");
-//        System.out.println("Pre-benchmark warmup complete");
-//        postIterationCleanup(size);
       } finally {
         revertClassLoader();
       }
