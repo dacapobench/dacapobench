@@ -1,7 +1,11 @@
-/*
- * (C) Copyright Department of Computer Science,
- * Australian National University. 2005
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0
+ *
+ * @date $Date:$
+ * @id $Id:$
+ *******************************************************************************/
 import java.lang.reflect.Method;
 
 public class MMTkHarness {

@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0
+ *
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: FileDigest.java 659 2009-12-04 03:33:59Z jzigman $
+ *******************************************************************************/
 package org.dacapo.harness;
 
 import java.io.BufferedInputStream;
@@ -23,8 +31,8 @@ import java.security.MessageDigest;
  *   invited :)
  * 
  * @author Robin Garner
- * @date $Date: 2009-12-04 09:28:21 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: FileDigest.java 652 2009-12-03 22:28:21Z jzigman $
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: FileDigest.java 659 2009-12-04 03:33:59Z jzigman $
  * 
  */
 public class FileDigest {
