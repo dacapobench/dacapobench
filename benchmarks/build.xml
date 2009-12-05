@@ -135,9 +135,22 @@ BUILDING:
                  <include name="benchmarks/bms/*/data/**"/>
                  <include name="benchmarks/bms/*/downloads/**.MD5"/>
                  <include name="benchmarks/bms/*/src/**"/>
+            
+                 <!-- add eclipse's plugin -->
+                 <include name="benchmarks/bms/eclipse/plugin/META-INF/**"/>
+                 <include name="benchmarks/bms/eclipse/plugin/src/**"/>
+                 <include name="benchmarks/bms/eclipse/plugin/*.xml"/>
+                 <include name="benchmarks/bms/eclipse/plugin/build.properties"/>
+                 <include name="benchmarks/bms/eclipse/plugin/javaCompiler...args"/>
+                 <include name="benchmarks/bms/eclipse/bundles-default.lst"/>
+                 <include name="benchmarks/bms/eclipse/bundles-required.lst"/>
+                 <include name="benchmarks/bms/eclipse/bundles-stub-required.lst"/>
 
                  <!-- add tools -->
                  <include name="tools/**"/>
+
+                 <!-- exclude svn -->
+                 <exclude name="benchmarks/**/.svn"/>
 
                  <!-- exclude defunct benchmarks -->
                  <exclude name="benchmarks/bms/antlr/**"/>
