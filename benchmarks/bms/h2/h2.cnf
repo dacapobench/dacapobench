@@ -49,4 +49,4 @@ description
   url		"http://db.apache.org/derby/ and http://www.h2database.com",
   version	"10.5.3.0 and 1.2.121",
   repeats	"<totalTransactions> evenly divided among the hardware threads.",
-  threads   "One client thread per hardware thread.";
+  threads   "One client thread per hardware thread, the queries processes exhibit some contention between threads.";

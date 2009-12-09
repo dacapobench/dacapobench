@@ -31,4 +31,4 @@ description
   url           "http://lucene.apache.org/",
   version	"2.4.1",
   repeats	"Single iteration indexes two multi-file documents",
-  threads       "Single threaded";
+  threads       "Single threaded, internally creates another thread but the main and helper thread are mutually exclusive,";
