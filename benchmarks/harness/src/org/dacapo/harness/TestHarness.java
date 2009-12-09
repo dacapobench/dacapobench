@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: TestHarness.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date: 2009-12-09 15:48:31 +1100 (Wed, 09 Dec 2009) $
+ * @id $Id: TestHarness.java 666 2009-12-09 04:48:31Z jzigman $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -19,6 +19,8 @@ import java.text.DecimalFormat;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.jar.JarFile;
+import java.util.Locale;
+
 
 import org.dacapo.parser.Config;
 
@@ -96,6 +98,10 @@ public class TestHarness {
   }
 
   public static void main(String[] args) {
+    // force the locale so that we don't have any character set issues
+    // when generating output for the digests.
+    Locale.setDefault(new Locale("en","AU"));
+
     try {
       commandLineArgs = new CommandLineArgs(args);
 
