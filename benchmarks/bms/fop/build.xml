@@ -1,30 +1,30 @@
 <project name="fop" default="all" basedir="../..">
-	<description>Dacapo fop benchmark</description>
-	<property file="dacapo.properties"/>
+    <description>Dacapo fop benchmark</description>
+    <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="fop"/>
-	<property name="bm-version" value="0.95"/>
-	<property name="bm-url" value="${apache.dl.url}/xmlgraphics/fop/source"/>
-	<property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz"/>
+    <property name="bm-name" value="fop"/>
+    <property name="bm-version" value="0.95"/>
+    <property name="bm-url" value="${apache.dl.url}/xmlgraphics/fop/source"/>
+    <property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<property name="bm-harness-classpath" value="${bm-jars}/fop.jar"/>
-	<property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}"/>
+    <property name="bm-harness-classpath" value="${bm-jars}/fop.jar"/>
+    <property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}"/>
 
-	<target name="unpack" depends="untar, patch"/>
+    <target name="unpack" depends="untar, patch"/>
 
-	<target name="bm-build">
-		<ant dir="${bm-build-top}" inheritall="false"/>
-	</target>
+    <target name="bm-build">
+        <ant dir="${bm-build-top}" inheritall="false"/>
+    </target>
 
-	<target name="jar">
-		<copy file="${bm-build-top}/build/fop.jar" todir="${bm-jars}"/>
-		<copy file="${bm-build-top}/lib/avalon-framework-4.2.0.jar" todir="${bm-jars}"/>
-		<copy file="${bm-build-top}/lib/batik-all-1.7.jar" todir="${bm-jars}"/>
-		<copy file="${bm-build-top}/lib/commons-io-1.3.1.jar" todir="${bm-jars}"/>
-		<copy file="${bm-build-top}/lib/commons-logging-1.0.4.jar" todir="${bm-jars}"/>
-		<copy file="${bm-build-top}/lib/serializer-2.7.0.jar" todir="${bm-jars}"/>
-		<copy file="${bm-build-top}/lib/xmlgraphics-commons-1.3.1.jar" todir="${bm-jars}"/>
-	</target>
+    <target name="jar">
+        <copy file="${bm-build-top}/build/fop.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/avalon-framework-4.2.0.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/batik-all-1.7.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/commons-io-1.3.1.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/commons-logging-1.0.4.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/serializer-2.7.0.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/xmlgraphics-commons-1.3.1.jar" todir="${bm-jars}"/>
+    </target>
 </project>
