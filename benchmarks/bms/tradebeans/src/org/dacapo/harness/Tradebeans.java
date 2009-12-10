@@ -23,8 +23,6 @@ import org.dacapo.parser.Config;
 
 public class Tradebeans extends Benchmark {
   
-  public final String TRADEBEANS_LOG_FILE_NAME = "tradebeans.log";
-  
   private Method initializeMethod;
   
   public Tradebeans(Config config, File scratch) throws Exception {
