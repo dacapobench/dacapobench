@@ -55,15 +55,6 @@ public class Launcher {
     setGeronimoProperties();
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
     
-    // It is unclear whether this is required
-    File log = new File(scratch,beans?TRADEBEANS_LOG_FILE_NAME:TRADESOAP_LOG_FILE_NAME).getAbsoluteFile();
-    // create the containing directory if necessary
-    log.getParentFile().mkdirs();
-    // create the log file (empty) if necessary
-    try { log.createNewFile(); } catch (Exception e) { }
-  
-    System.setProperty("java.util.logging.config.file", log.toString());
-    
     try {
       // Create a server environment
       serverCLoader = createGeronimoClassLoader(originalCLoader, true);
