@@ -33,7 +33,6 @@ $listsizeorder = $wordorder - $listorder; # log_2 the length of each query list
 $listsize = 2**$listsizeorder;            # length of each query list
 @allwords = ();                           # input array of words
 @listarray = ();                          # list of lists
-$wordlist = "";
 
 print "creating $lists lists, each with $listsize words, for a total of ".($lists*$listsize)." words\n";
 
