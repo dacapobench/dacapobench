@@ -15,7 +15,7 @@
     <target name="unpack" depends="untar, patch"/>
 
     <target name="bm-build">
-        <ant dir="${bm-build-top}" inheritall="false"/>
+        <ant dir="${bm-build-top}" target="package" inheritall="false" />
     </target>
 
     <target name="jar">
