@@ -1,14 +1,15 @@
 benchmark lusearch
   class org.dacapo.harness.Lusearch
-  thread-model fixed
+  thread-model per_cpu
   jar "lusearch.jar"
   libs "lucene-core-2.4.jar", "lucene-demos-2.4.jar";
 
 size small args "-index","${SCRATCH}/lusearch/index-default",
                 "-queries","${SCRATCH}/lusearch/query", 
                 "-output", "${SCRATCH}/lusearch.out",
+                "-totalqueries", "4",
                 "-threads", "${THREADS}"
-  threads 4
+  threads 1
   output 
     stdout digest 0x7f2910f4b0f73a6bcbf677e77b3d99e48f6932ae,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -20,8 +21,9 @@ size small args "-index","${SCRATCH}/lusearch/index-default",
 size default args "-index","${SCRATCH}/lusearch/index-default",
                   "-queries","${SCRATCH}/lusearch/query", 
                   "-output", "${SCRATCH}/lusearch.out",
-                "-threads", "${THREADS}"
-  threads 32
+                  "-totalqueries", "32",
+                  "-threads", "${THREADS}"
+  threads 1
   output 
     stdout digest 0x37393e3302d4fd917c8ff0fa33b7edeb842ec60d,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
@@ -61,8 +63,9 @@ size default args "-index","${SCRATCH}/lusearch/index-default",
 size large args "-index","${SCRATCH}/lusearch/index-default", 
                 "-queries", "${SCRATCH}/lusearch/query", 
                 "-output", "${SCRATCH}/lusearch.out",
+                "-totalqueries", "64",
                 "-threads", "${THREADS}"
-  threads 64
+  threads 1
   output 
     stdout     digest 0x1542ed9da1c0710a928b344d724c1dc3d57a9f83,
     stderr     digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,

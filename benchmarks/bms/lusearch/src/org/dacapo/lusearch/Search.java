@@ -83,7 +83,8 @@ public class Search {
     int hitsPerPage = 10;
     String outBase = null;
     int threads = 1;
-
+    int totalQueries = 32;
+    
     for (int i = 0; i < args.length; i++) {
       if ("-index".equals(args[i])) {
         index = args[i + 1];
@@ -111,15 +112,18 @@ public class Search {
       } else if ("-threads".equals(args[i])) {
         threads = Integer.parseInt(args[i + 1]);
         i++;
+      } else if ("-totalqueries".equals(args[i])) {
+      	totalQueries = Integer.parseInt(args[i + 1]);
+      	i++;
       }
     }
     completed = 0;
     for (int j = 0; j < threads; j++) {
-      new QueryThread(this, "Query" + j, j, index, outBase, queryBase, field,
+      new QueryThread(this, "Query" + j, j, threads, totalQueries, index, outBase, queryBase, field,
           normsField, raw, hitsPerPage).start();
     }
     synchronized (this) {
-      while (completed != threads) {
+      while (completed != totalQueries) {
         try {
           this.wait();
         } catch (InterruptedException e) {
@@ -128,7 +132,55 @@ public class Search {
     }
   }
 
-  public class QueryThread extends Thread {
+  class QueryThread extends Thread {
+
+    Search  parent;
+    int     id;
+    int     threadCount;
+    int     totalQueries;
+    String  name;
+    String  index;
+    String  outBase;
+    String  queryBase;
+    String  field;
+    String  normsField;
+    boolean raw;
+    int     hitsPerPage;
+    
+    
+    public QueryThread(Search parent, String name, int id, int threadCount,
+        int totalQueries, String index, String outBase, String queryBase,
+        String field, String normsField, boolean raw, int hitsPerPage) {
+      super(name);
+      this.parent = parent;
+      this.id = id;
+      this.threadCount = threadCount;
+      this.totalQueries = totalQueries;
+      this.name = name;
+      this.index = index;
+      this.outBase = outBase;
+      this.queryBase = queryBase;
+      this.field = field;
+      this.normsField = normsField;
+      this.raw = raw;
+      this.hitsPerPage = hitsPerPage;
+    }
+
+    public void run() {
+      try {
+        int count = totalQueries/threadCount + (id<(totalQueries%threadCount)?1:0);
+        for(int i=0, queryId=id; i<count; i++, queryId += threadCount) {
+          // make and run query
+          new QueryProcessor(parent,name,queryId,index,outBase,queryBase,field,normsField,raw,hitsPerPage).run();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+  }
+  
+  public class QueryProcessor {
 
     Search parent;
     String field;
@@ -140,10 +192,9 @@ public class Search {
     BufferedReader in;
     PrintWriter out;
 
-    public QueryThread(Search parent, String name, int id, String index,
+    public QueryProcessor(Search parent, String name, int id, String index,
         String outBase, String queryBase, String field, String normsField,
         boolean raw, int hitsPerPage) {
-      super(name);
       this.parent = parent;
       this.field = field;
       this.raw = raw;
@@ -163,15 +214,7 @@ public class Search {
       }
     }
 
-    public void run() {
-      try {
-        runQuery();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    private void runQuery() throws java.io.IOException {
+    public void run() throws java.io.IOException {
       Analyzer analyzer = new StandardAnalyzer();
       QueryParser parser = new QueryParser(field, analyzer);
 
