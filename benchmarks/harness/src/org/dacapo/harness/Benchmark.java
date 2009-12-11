@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Benchmark.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date: 2009-12-11 17:27:34 +1100 (Fri, 11 Dec 2009) $
+ * @id $Id: Benchmark.java 675 2009-12-11 06:27:34Z jzigman $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -144,9 +144,20 @@ public abstract class Benchmark {
    */
   public final boolean run(Callback callback, String size) throws Exception {
     iteration++;
-    if (iteration == 1)
+    if (iteration == 1) {
       prepare(size);
+
+	  // this rather obscure addition is here in case the preparation stage
+	  // of a benchmark manipulates System.out and System.err
+	  System.setOut(savedOut);
+	  System.setErr(savedErr);
+    }
+
     preIteration(size);
+    // again we may have to correct a benchmarks manipulation of the 
+    // Systemout and Sytem.err during the preIteration phase of the benchmark
+    System.setOut(savedOut);
+    System.setErr(savedErr);
 
     if (preIterationGC) {
       System.gc();
