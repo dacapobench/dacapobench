@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.jar.JarEntry;
 
 import org.apache.commons.cli.CommandLine;
@@ -228,7 +229,7 @@ public class CommandLineArgs {
    * List all the benchmarks supported by this release
    */
   static void printBenchmarks() throws IOException {
-    Iterator<String> iter = extractBenchmarkSet().iterator();
+    Iterator<String> iter = new TreeSet(extractBenchmarkSet()).iterator();
 
     for (; iter.hasNext();) {
       System.out.print(iter.next());
