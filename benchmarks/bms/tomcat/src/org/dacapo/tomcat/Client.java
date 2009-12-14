@@ -153,9 +153,9 @@ public class Client implements Runnable {
    * @see java.lang.Runnable#run()
    */
   public void run() {
+    final Session session = Session.create(port);
     try {
       for (int i = 0; i < pageCount; i++) {
-        final Session session = Session.create(port);
         for (int p = 0; p < pages.size(); p++) {
           Page page = pages.get(p);
           File logFile = new File(logDir, String.format("result.%d.%d.%d.html",
@@ -168,6 +168,7 @@ public class Client implements Runnable {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
+      session.shutdown();
       log.flush();
     }
   }

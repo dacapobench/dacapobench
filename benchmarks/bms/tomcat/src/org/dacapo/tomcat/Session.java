@@ -10,6 +10,7 @@ package org.dacapo.tomcat;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 
@@ -21,7 +22,8 @@ public class Session {
   /**
    * The underlying HttpClient object
    */
-  protected final HttpClient httpClient = new HttpClient();
+  protected final MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+  protected final HttpClient httpClient = new HttpClient(connectionManager);
   protected final int port;
 
   /**
@@ -76,5 +78,12 @@ public class Session {
    */
   public int getPort() {
     return port;
+  }
+  
+  /**
+   * shutdown the session cleanup all resources
+   */
+  public void shutdown() {
+    connectionManager.shutdown();
   }
 }
