@@ -3,19 +3,19 @@ benchmark tradesoap
   thread-model per_cpu
   libs "daytrader.jar";
 
-size small args "small" 
+size small args "tiny" 
   threads 1
-  output stdout  digest 0x7a214488a9a0f009e8266dc03cbc6742fe1e91cf,
+  output stdout  digest 0x767454126c4027a860780980c2b810ebe4f49093,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "small"
   threads 2
-  output stdout  digest 0x7a214488a9a0f009e8266dc03cbc6742fe1e91cf,
+  output stdout  digest 0xe3ac0175557434716977d626bc165e0c34ec7d00,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "medium"
   threads 2
-  output stdout  digest 0x3f0283ca7e91e1b97f2268e746e743b80f4659fc,
+  output stdout  digest 0xf0e06a06201609e0191aeb594032de0cdc9fbd33,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

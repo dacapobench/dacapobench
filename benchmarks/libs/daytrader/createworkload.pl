@@ -54,9 +54,10 @@ my %users = ();
 
 my $output_dir = shift(@ARGV);
 
-my %sessions = ("small" => 32,
-		 "medium" => 256,
-		 "large" => 1024);
+my %sessions = ("tiny" => 32,
+		 "small" => 256,
+		 "medium" => 512,
+		 "large" => 2048);
 my %stockquotes = ();
 
 init($output_dir);
