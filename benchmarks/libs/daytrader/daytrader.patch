@@ -4398,7 +4398,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java
 --- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java	1970-01-01 10:00:00.000000000 +1000
 +++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/dacapo/DaCapoTrader.java	2009-10-22 22:14:20.000000000 +1100
-@@ -0,0 +1,607 @@
+@@ -0,0 +1,609 @@
 +package org.apache.geronimo.samples.daytrader.dacapo;
 +
 +import java.io.BufferedReader;
@@ -4435,6 +4435,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  private static int sessionStride = 1;
 +  private int sessionIndex = -1;
 +  private int sessionBound = -1;
++  private int threadID = -1;
 +  
 +  public DaCapoTrader() {}
 +  
@@ -4444,13 +4445,14 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +      this.threads = threads;
 +      this.size = size;
 +      this.soap = soap;
++      this.threadID = ordinal;
 +      try {
-+        if (VERBOSE) System.err.println("Creating Trade Action");
++        if (VERBOSE) System.err.println("["+threadID+"] Creating Trade Action");
 +        if (soap) 
 +          trade = new TradeWebSoapProxy();
 +        else
 +          trade = new TradeDirect();
-+        if (VERBOSE) System.err.println("Created Trade Action");
++        if (VERBOSE) System.err.println("["+threadID+"] Created Trade Action");
 +      } catch (Exception e) {
 +        e.printStackTrace();
 +      }
@@ -4480,26 +4482,26 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +        System.out.println("Running "+tradeSessions.length+" trade sessions "+(soap ? "from client via soap" : "directly on server"));
 +      }
 +      
-+      if (VERBOSE) System.err.println("reached barrier: "+ordinal);
++      if (VERBOSE) System.err.println("["+threadID+"] reached barrier: "+ordinal);
 +      consumed.notify();
 +    }
 +    synchronized(consumed) {
 +      while(consumed[1] != 0) {
 +        try {
 +          consumed.wait();
-+          if (VERBOSE) System.err.println("Completed: "+consumed[1]);
++          if (VERBOSE) System.err.println("["+threadID+"] Completed: "+consumed[1]);
 +        } catch (InterruptedException e) {
 +          System.err.println("Caught exception while waiting: "+e.toString());
 +          e.printStackTrace();
 +        }
 +      }
 +    }
-+    if (VERBOSE) System.err.println("completed reset(), thread "+ordinal);
++    if (VERBOSE) System.err.println("["+threadID+"] completed reset(), thread "+ordinal);
 +  }
 +  
 +  public void run() {
 +    reset();
-+    if (VERBOSE) System.err.println("starting trading");
++    if (VERBOSE) System.err.println("["+threadID+"] starting trading");
 +    String tradeSession;
 +    
 +    while((tradeSession = getNextTradeSession()) != null) {
@@ -4613,7 +4615,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +      
 +      int numSessions = parseHeader(br.readLine().trim(), size);
 +      
-+      if (VERBOSE) System.err.println("Successfully read header.  Will load "+numSessions+" sessions");
++      if (VERBOSE) System.err.println("["+threadID+"] Successfully read header.  Will load "+numSessions+" sessions");
 +      tradeSessions = new String[numSessions];
 +      
 +      String s;
@@ -4621,7 +4623,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +      while (i < numSessions && (s = br.readLine().trim()) != null) {
 +        if ((s.length() != 0) && (s.charAt(0) != '#')) { // Empty lines or lines starting with "#" are ignored
 +          tradeSessions[i++] = s;
-+          if (VERBOSE) System.err.println("Loaded session: "+s);
++          if (VERBOSE) System.err.println("["+threadID+"] Loaded session: "+s);
 +        }
 +      }
 +      if (i != numSessions) {
@@ -4660,7 +4662,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  
 +  private void runTradeSession(String session) {
 +    String[] entries = session.split("\t");
-+    if (VERBOSE) System.err.println("Session: "+entries.length+" --> "+session);
++    if (VERBOSE) System.err.println("["+threadID+"] Session: "+entries.length+" --> "+session);
 +    String uid = entries[0];
 +    String passwd = entries[1];
 +    doLogin(uid, passwd);
@@ -4700,7 +4702,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  private int doLogin(String uid, String password) {
 +    for (int i = 0; i < MAX_OP_ATTEMPTS[OP_L]; i++) {
 +      try {
-+        if (VERBOSE) System.err.println("Logging in "+uid+"...");
++        if (VERBOSE) System.err.println("["+threadID+"] Logging in "+uid+"...");
 +        AccountDataBean account = trade.login(uid, password);
 +        int rtn = account.hashCode();
 +        localOpCount[OP_L]++;
@@ -4718,7 +4720,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  private int doLogout(String uid) {
 +    for (int i = 0; i < MAX_OP_ATTEMPTS[OP_O]; i++) {
 +      try {
-+        if (VERBOSE) System.err.println("Logging out "+uid+"...");
++        if (VERBOSE) System.err.println("["+threadID+"] Logging out "+uid+"...");
 +        trade.logout(uid);
 +        localOpCount[OP_O]++;
 +        return 1;
@@ -4737,10 +4739,10 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +    for (int i = 0; i < MAX_OP_ATTEMPTS[OP_H]; i++) {
 +      try {
 +        rtn = 0;
-+        if (VERBOSE) System.err.println("Getting home page for "+uid+"...");
++        if (VERBOSE) System.err.println("["+threadID+"] Getting home page for "+uid+"...");
 +        AccountDataBean accountData = trade.getAccountData(uid);
 +        rtn += accountData.hashCode();
-+        if (VERBOSE) System.err.println("Account for "+uid+": "+accountData.toString());
++        if (VERBOSE) System.err.println("["+threadID+"] Account for "+uid+": "+accountData.toString());
 +        Collection holdingDataBeans = trade.getHoldings(uid);
 +        if (holdingDataBeans == null) {
 +          System.err.println("User "+uid+" has no holdings.");
@@ -4774,7 +4776,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +    for (int i = 0; i < MAX_OP_ATTEMPTS[OP_P]; i++) {
 +      try {
 +        rtn = 0;
-+        if (VERBOSE) System.err.println("Getting portfolio for "+uid+"...");
++        if (VERBOSE) System.err.println("["+threadID+"] Getting portfolio for "+uid+"...");
 +        Collection holdingDataBeans = trade.getHoldings(uid);
 +        rtn += holdingDataBeans.hashCode();
 +        if (holdingDataBeans == null) {
@@ -4811,9 +4813,9 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  private int doQuote(String symbol, boolean nested) {
 +    for (int i = 0; i < MAX_OP_ATTEMPTS[nested ? OP_NQ : OP_Q]; i++) {
 +      try {
-+        if (VERBOSE) System.err.println("Quoting "+symbol);
++        if (VERBOSE) System.err.println("["+threadID+"] Quoting "+symbol);
 +        QuoteDataBean quote = trade.getQuote(symbol);
-+        if (VERBOSE) System.err.println("Quote for "+symbol+" is "+quote.toString());
++        if (VERBOSE) System.err.println("["+threadID+"] Quote for "+symbol+" is "+quote.toString());
 +        int rtn = quote.hashCode();
 +        localOpCount[nested ? OP_NQ : OP_Q]++;
 +        return rtn;
@@ -4867,7 +4869,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +      System.err.println("Error parsing sell for "+uid+" (\""+request+"\"): " + e.toString());
 +      e.printStackTrace();
 +    }
-+    if (VERBOSE) System.err.println("Selling "+request+" for "+uid);
++    if (VERBOSE) System.err.println("["+threadID+"] Selling "+request+" for "+uid);
 +
 +    Integer holdingID = getHoldingIDFromHoldings(uid, symbol, qty);
 +    if (holdingID != null) {
@@ -4915,7 +4917,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +  }
 +  
 +  private int doUpdate(String uid, String request) {
-+    if (VERBOSE) System.err.println("Updating "+uid);
++    if (VERBOSE) System.err.println("["+threadID+"] Updating "+uid);
 +    String passwd = null, name = null, address = null, email = null, ccard = null;
 +    String[] details = request.split("\\|");
 +    try {
@@ -4962,7 +4964,7 @@ diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/
 +      System.err.println("Error parsing register for "+uid+"(\""+request+"\")" + e.toString());
 +      e.printStackTrace();
 +    }    
-+    if (VERBOSE) System.err.println("Registering " + newuid);
++    if (VERBOSE) System.err.println("["+threadID+"] Registering " + newuid);
 +
 +    for (int i = 0; i < MAX_OP_ATTEMPTS[OP_O] - 1; i++) {
 +      try {
