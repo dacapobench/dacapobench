@@ -24,16 +24,27 @@ BUILDING:
         On Ubuntu 9.04:
             export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun
             
-    2. Copy default.properties to local.properties and edit local.properties
+    2. Set ant and maven environment variables if necessary.  In particular,
+       for some jvms it is necessary to explicitly request a larger heap size.
+       It is necessary to set the maven options because the trade benchmarks
+       are built by maven (called by ant).  As another example, you may wish
+       for ant to use a proxy when downloading (there is a lot to be
+       downloaded).   Some examples:
+            export ANT_OPTS="-Xms512M -Xmx512M"
+            export MAVEN_OPTS="-Xms512M -Xmx512M"
+       or
+            export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
+
+    3. Copy default.properties to local.properties and edit local.properties
        for your environment.
 
-    3. Run ant:
+    4. Run ant:
                ant         [builds all benchmarks]
                ant dist    [builds all benchmarks, this is the default]
                ant source  [builds a source distribution including benchmarks and tools]
                ant bm      [builds a specific benchmark, bm]
 
-    4. A log of directory is created under this benchmark directory
+    5. A log of directory is created under this benchmark directory
        for benchmark build status and build success or failure files
        to be stored.  The directory log directory is normally of the
        form
