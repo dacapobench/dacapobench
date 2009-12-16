@@ -47,20 +47,20 @@ public class CommandLineArgs {
     ITERATE, CONVERGE;
   }
 
-  private final static int EXIT_OK = 0;
-  private final static int EXIT_MISSING_CALLBACK = 2;
-  private final static int EXIT_BAD_CALLBACK = 3;
-  private final static int EXIT_BAD_COMMANDLINE = 4;
-  private final static int EXIT_UNKNOWN_BENCHMARK = 9;
-  private final static int EXIT_MISSING_BENCHMARKS = 10;
+  public final static int EXIT_OK = 0;
+  public final static int EXIT_MISSING_CALLBACK = 2;
+  public final static int EXIT_BAD_CALLBACK = 3;
+  public final static int EXIT_BAD_COMMANDLINE = 4;
+  public final static int EXIT_UNKNOWN_BENCHMARK = 9;
+  public final static int EXIT_MISSING_BENCHMARKS = 10;
 
-  private static final String RELEASE_NOTES = "RELEASE_NOTES.txt";
-  private static final String DEFAULT_SIZE = "default";
-  private static final String DEFAULT_SCRATCH_DIRECTORY = "./scratch";
-  private static final String DEFAULT_MAX_ITERATIONS = "20";
-  private static final String DEFAULT_WINDOW_SIZE = "3";
-  private static final String DEFAULT_VARIANCE = "3.0";
-  private static final String DEFAULT_ITERATIONS = "1";
+  public static final String RELEASE_NOTES = "RELEASE_NOTES.txt";
+  public static final String DEFAULT_SIZE = "default";
+  public static final String DEFAULT_SCRATCH_DIRECTORY = "./scratch";
+  public static final String DEFAULT_MAX_ITERATIONS = "20";
+  public static final String DEFAULT_WINDOW_SIZE = "3";
+  public static final String DEFAULT_VARIANCE = "3.0";
+  public static final String DEFAULT_ITERATIONS = "1";
 
   private static final String OPT_CALLBACK = "callback";
   private static final String OPT_HELP = "help";
@@ -356,6 +356,13 @@ public class CommandLineArgs {
     return line.hasOption(OPT_PRE_ITERATION_GC);
   }
 
+  public List<String> getArgList() {
+    return line.getArgList();
+  }
+  
+  public String[] getArgs() {
+    return line.getArgs();
+  }
   // *****************************************************************
   private void defineCallback() throws SecurityException,
       NoSuchMethodException, IllegalArgumentException, InstantiationException,

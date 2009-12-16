@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-11 17:27:34 +1100 (Fri, 11 Dec 2009) $
- * @id $Id: Benchmark.java 675 2009-12-11 06:27:34Z jzigman $
+ * @date $Date: 2009-12-17 10:39:41 +1100 (Thu, 17 Dec 2009) $
+ * @id $Id: Benchmark.java 682 2009-12-16 23:39:41Z jzigman $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -197,14 +197,12 @@ public abstract class Benchmark {
    *          Scratch directory
    */
   public Benchmark(Config config, File scratch) throws Exception {
-    this.scratch = scratch;
-    this.config = config;
-    initialize();
+    this(config, scratch, true);
   }
 
-  private void initialize() throws Exception {
+  protected void initialize() throws Exception {
     System.setProperty("java.util.logging.config.file",
-        fileInScratch(config.name + ".log"));
+        fileIn(scratch, config.name + ".log"));
     synchronized (System.out) {
       if (out == null) {
         out = new TeePrintStream(System.out, new File(scratch, "stdout.log"));
@@ -227,7 +225,7 @@ public abstract class Benchmark {
    * 
    * @throws Exception
    */
-  private void prepareJars() throws Exception {
+  private void prepareJars() throws IOException, FileNotFoundException, DacapoException {
     File file = new File(scratch + "/jar");
     if (!file.exists())
       file.mkdir();
@@ -247,7 +245,7 @@ public abstract class Benchmark {
   protected void prepare() throws Exception {
     unpackZipFileResource("dat/" + config.name + ".zip", scratch);
   }
-
+  
   /**
    * One-off preparation performed once we know the benchmark size.
    * 
@@ -582,6 +580,10 @@ public abstract class Benchmark {
    * @return The path name of the file
    */
   public String fileInScratch(String name) {
+    return fileIn(scratch, name);
+  }
+  
+  private static String fileIn(File scratch, String name) {
     return (new File(scratch, name)).getPath();
   }
 

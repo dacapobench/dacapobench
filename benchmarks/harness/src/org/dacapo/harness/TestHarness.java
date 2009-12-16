@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-09 15:48:31 +1100 (Wed, 09 Dec 2009) $
- * @id $Id: TestHarness.java 666 2009-12-09 04:48:31Z jzigman $
+ * @date $Date: 2009-12-17 10:39:41 +1100 (Thu, 17 Dec 2009) $
+ * @id $Id: TestHarness.java 682 2009-12-16 23:39:41Z jzigman $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -106,8 +106,7 @@ public class TestHarness {
       commandLineArgs = new CommandLineArgs(args);
 
       File scratch = new File(commandLineArgs.getScratchDir());
-      rmdir(scratch);
-      scratch.mkdir();
+      makeCleanScratch(scratch);
 
       // this is not right
       Benchmark.setCommandLineOptions(commandLineArgs);
@@ -151,6 +150,11 @@ public class TestHarness {
     }
   }
 
+  public static void makeCleanScratch(File scratch) {
+    rmdir(scratch);
+    scratch.mkdir();
+  }
+  
   /**
    * @param scratch
    * @param bm

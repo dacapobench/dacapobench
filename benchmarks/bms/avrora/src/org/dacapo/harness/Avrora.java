@@ -46,7 +46,12 @@ public class Avrora extends Benchmark {
    * @author Eric Bodden
    */
   public static void main(String args[]) throws Exception {
-    // create dummy harness and invoke with dummy arguments
-    (new Avrora(null, null)).run(null, "");
+    File scratch = new File(CommandLineArgs.DEFAULT_SCRATCH_DIRECTORY).getAbsoluteFile();
+    Config config = Config.parse(Avrora.class.getClassLoader().getResourceAsStream("cnf/avrora.cnf"));
+    
+    TestHarness.makeCleanScratch(scratch);
+    Avrora avrora = new Avrora(config, scratch);
+    
+    avrora.method.invoke(null, (Object) args);
   }
 }
