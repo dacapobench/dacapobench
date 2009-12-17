@@ -57,11 +57,12 @@ my $output_dir = shift(@ARGV);
 my %sessions = ("tiny" => 32,
 		 "small" => 256,
 		 "medium" => 512,
-		 "large" => 2048);
+		 "large" => 2048,
+		 "huge" => 8192);
 my %stockquotes = ();
 
 init($output_dir);
-my $max_users = $user_density*($sessions{"large"});
+my $max_users = $user_density*($sessions{"huge"});
 create_users($max_users);
 create_operations();
 

@@ -5,26 +5,31 @@ benchmark tradesoap
 
 size small args "tiny" 
   threads 1
-  output stdout  digest 0x767454126c4027a860780980c2b810ebe4f49093,
+  output stdout  digest 0xee00a6d68e0360aa105b3e63e912a233233bf3ab,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "small"
   threads 1
-  output stdout  digest 0xe3ac0175557434716977d626bc165e0c34ec7d00,
+  output stdout  digest 0x508957f9be83a77df1e19aedafaf666922e04994,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "medium"
   threads 1
-  output stdout  digest 0xf0e06a06201609e0191aeb594032de0cdc9fbd33,
+  output stdout  digest 0xa1b29355f4b6e4da179c50b8aa5aee8132d68e95,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size huge args "large"
+  threads 1
+  output stdout  digest 0xc0b79b15cabc27952efeac9ddacea29ea396a473,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
-  short		"TradeSOAP Daytrader benchmark",
-  long		"TradeSOAP a SOAP version of the Daytrader benchmark from Apache",
+  short		"Tradesoap Daytrader benchmark",
+  long		"Tradesoap a SOAP version of the Daytrader benchmark from Apache",
   copyright	"Copyright (C) The Apache Software Foundation",
   author        "Apache Geronimo, donated by IBM",
   license       "Apache License, Version 2.0",
   url           "http://geronimo.apache.org/",
   version	"2.1.4",
-  repeats	"Populates a database of th 1098 stocks and 384 users, and then 639 trader actions in 32 trade sesions",
-  threads       "Multi-threaded; Server thread plus 1 or 2 client threads per CPU";
+  repeats	"Populates a database with stocks and users, and then perfoms a number of trader actions trade sesions",
+  threads       "Multi-threaded; Server thread plus 1 client thread per CPU";
