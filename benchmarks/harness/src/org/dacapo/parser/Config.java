@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Config.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date: 2009-12-18 10:11:27 +1100 (Fri, 18 Dec 2009) $
+ * @id $Id: Config.java 691 2009-12-17 23:11:27Z jzigman $
  *******************************************************************************/
 package org.dacapo.parser;
 
@@ -100,6 +100,7 @@ public class Config {
      * specified
      * </ul>
      */
+    private int threadLimit = 1;
     private int nThreads = 1;
     private String description;
 
@@ -119,6 +120,14 @@ public class Config {
       return (OutputFile) outputFiles.get(file);
     }
 
+    void setThreadLimit(int threadLimit) {
+      this.threadLimit = threadLimit;
+    }
+    
+    int getThreadLimit() {
+      return threadLimit;
+    }
+    
     void setThreadCount(int nThreads) {
       this.nThreads = nThreads;
     }
@@ -349,13 +358,27 @@ public class Config {
    */
 
   /**
+   * 
+   */
+  void setThreadLimit(String size, int threadLimit) throws ParseException {
+    if (threadModel == ThreadModel.SINGLE || threadModel == ThreadModel.FIXED)
+      throw new ParseException("Thread limit is not valid for Single and Fixed threading models");
+    if (threadLimit < 0)
+      throw new ParseException("Thread limit cannot be less than 0");
+    getSize(size).setThreadLimit(threadLimit);
+  }
+  
+  /**
    * Set the threading factor for this size.
    */
   void setThreadFactor(String size, int nThreads) throws ParseException {
     if (threadModel == ThreadModel.SINGLE && nThreads != 1)
-      throw new ParseException(
-          "Single threaded benchmarks must have exactly 1 thread");
+      throw new ParseException("Single threaded benchmarks must have exactly 1 thread");
+    if (nThreads < 1)
+      throw new ParseException("Thread factor or number must be 1 or more");
     getSize(size).setThreadCount(nThreads);
+    if (threadModel == ThreadModel.SINGLE || threadModel == ThreadModel.FIXED)
+      getSize(size).setThreadLimit(nThreads);
   }
 
   /**

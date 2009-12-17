@@ -127,6 +127,7 @@ TOKEN :
 | < URL : "url" >
 | < VERSION : "version" >
 | < THREADS : "threads" >
+| < THREAD_LIMIT : "thread-limit" >
 | < THREAD_MODEL : "thread-model" >
 | < REPEATS : "repeats" >
 }
@@ -198,6 +199,7 @@ void sizeClause(Config config, String size) :
 {   Vector args = new Vector(); 
   String arg;
   String description;
+  int thread_limit;
   int threads;
 }
 {
@@ -205,6 +207,7 @@ void sizeClause(Config config, String size) :
             (<COMMA> arg=string() { args.add(arg); })*]
        { config.addSize(size,args); }
     |  <DESCRIPTION> description=string() { config.setSizeDescription(size,description); }
+    |  <THREAD_LIMIT> thread_limit=integer() { config.setThreadLimit(size,thread_limit); }
     |  <THREADS> threads=integer() { config.setThreadFactor(size,threads); }
     |  <OUTPUT> outputFile(config,size) (<COMMA> outputFile(config,size))*
 }
