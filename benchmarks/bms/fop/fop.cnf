@@ -16,10 +16,6 @@ size default args "-q", "fop/test.fo", "-ps", "test.ps"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "-q", "fop/test.fo", "-ps", "test.ps"
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-
 description
   short		"An output-independent print formatter",
   long		"fop takes an XSL-FO file, parses it and formats it, generating a postscript file",
