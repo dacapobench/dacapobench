@@ -33,8 +33,6 @@ public class H2 extends Benchmark {
 
   @Override
   protected void prepare() throws Exception {
-    super.prepare();
-
     useBenchmarkClassLoader();
     try {
       Class<?> tpccClazz = Class.forName("org.dacapo.h2.TPCC", true, loader);
