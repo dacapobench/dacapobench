@@ -16,12 +16,6 @@ size default args "luindex/william","luindex/kjv"
 	 "index/segments.gen" bytes 20,
 	 "index/segments_2"  bytes 62;
 
-size large args "luindex/william","luindex/kjv"
-  output stdout  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/segments.gen" bytes 20,
-	 "index/segments_2"  bytes 62;
-
 description
   short		"A text indexing tool",
   long		"Indexes a set of documents, the works of Shakespeare and the King James Bible",
