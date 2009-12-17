@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-17 12:52:18 +1100 (Thu, 17 Dec 2009) $
- * @id $Id: TestHarness.java 683 2009-12-17 01:52:18Z jzigman $
+ * @date $Date: 2009-12-17 21:55:46 +1100 (Thu, 17 Dec 2009) $
+ * @id $Id: TestHarness.java 688 2009-12-17 10:55:46Z steveb-oss $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -101,6 +101,9 @@ public class TestHarness {
     // force the locale so that we don't have any character set issues
     // when generating output for the digests.
     Locale.setDefault(new Locale("en","AU"));
+
+    /* All benchmarks run headless */
+    System.setProperty("java.awt.headless", "true");
 
     try {
       commandLineArgs = new CommandLineArgs(args);
