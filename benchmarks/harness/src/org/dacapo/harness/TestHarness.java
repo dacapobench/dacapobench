@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-17 10:39:41 +1100 (Thu, 17 Dec 2009) $
- * @id $Id: TestHarness.java 682 2009-12-16 23:39:41Z jzigman $
+ * @date $Date: 2009-12-17 12:52:18 +1100 (Thu, 17 Dec 2009) $
+ * @id $Id: TestHarness.java 683 2009-12-17 01:52:18Z jzigman $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -135,7 +135,9 @@ public class TestHarness {
 
         TestHarness harness = new TestHarness(ins);
 
-        if (commandLineArgs.getInformation()) {
+        if (! harness.isValidSize(commandLineArgs.getSize())) {
+          System.err.println("No configuration size, " + commandLineArgs.getSize() + ", for benchmark " + bm + ".");
+        } else if (commandLineArgs.getInformation()) {
           harness.bmInfo(commandLineArgs.getSize());
         } else {
           harness.dump(commandLineArgs.getVerbose());
@@ -153,6 +155,10 @@ public class TestHarness {
   public static void makeCleanScratch(File scratch) {
     rmdir(scratch);
     scratch.mkdir();
+  }
+
+  private boolean isValidSize(String size) {
+    return size != null && config.getSizes().contains(size);
   }
   
   /**
