@@ -1,6 +1,6 @@
 benchmark eclipse
   class org.dacapo.harness.Eclipse
-  thread-model fixed
+  thread-model single
   jar "eclipse.jar";
 
 size small   args "setup"
@@ -23,6 +23,6 @@ description
   license	"Eclipse Public License",
   url 		"http://www.eclipse.org/",
   version	"3.5.1",
-  threads	"Eclipse uses multiple threads internally (the workload is not explicitly parallel), source code compilation seems to be sequential and little concurrency seems to be demostrated.",
+  threads	"Externally single-threaded.  Internally multi-threaded.",
   repeats	"Single iteration, performs multiple distinct Eclipse tasks";
 

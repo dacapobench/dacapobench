@@ -4,22 +4,26 @@ benchmark tradebeans
   libs "daytrader.jar";
 
 size small args "tiny" 
-  threads 1
+  threads 1      // per available processor
+  thread-limit 32
   output stdout  digest 0x26475b77f0a991c44347090ac3f925cc8dae75df,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "medium"
-  threads 1
+  threads 1      // per available processor
+  thread-limit 512
   output stdout  digest 0xde63c73818309db4caaa12df3b0e04d6a9ea31ee,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "large"
-  threads 1
+  threads 1      // per available processor
+  thread-limit 2048
   output stdout  digest 0x3b55fc693174e5c28000dcf490d8db2e4a8c7095,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "huge"
-  threads 1
+  threads 1      // per available processor
+  thread-limit 8192
   output stdout  digest 0x953e1c4d6853b31cd48f39039295186a59768f0b,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -31,5 +35,5 @@ description
   license	"Apache License, Version 2.0",
   url           "http://geronimo.apache.org/",
   version	"2.1.4",
-  repeats	"Populates a database with stocks and users, and then perfoms a number of trader actions trade sesions",
-  threads       "Multi-threaded; Server thread plus 1 client thread per CPU";
+  threads       "Explicitly multi-threaded client, scaled to available processors.  Internally multi-threaded server.",
+  repeats	"Populates a database with stocks and users, and then perfoms a number of trader actions organized as packets (trade sesions).";

@@ -9,7 +9,7 @@ size small args "-index","${SCRATCH}/lusearch/index-default",
                 "-output", "${SCRATCH}/lusearch.out",
                 "-totalqueries", "8",
                 "-threads", "${THREADS}"
-  threads 1
+  thread-limit 8
   thread-limit 8
   output 
     stdout digest 0xfd64477d925558b71aaed2d12ce5cc54fcb5b771,
@@ -28,7 +28,7 @@ size default args "-index","${SCRATCH}/lusearch/index-default",
                   "-output", "${SCRATCH}/lusearch.out",
                   "-totalqueries", "64",
                   "-threads", "${THREADS}"
-  threads 1
+  thread-limit 64
   thread-limit 64
   output 
     stdout digest 0x1542ed9da1c0710a928b344d724c1dc3d57a9f83,
@@ -103,7 +103,7 @@ size large args "-index","${SCRATCH}/lusearch/index-default",
                 "-output", "${SCRATCH}/lusearch.out",
                 "-totalqueries", "128",
                 "-threads", "${THREADS}"
-  threads 1
+  thread-limit 128
   thread-limit 128
   output 
     stdout     digest 0x6681e84c89f01d7232225ef5466e801a42c4477c,
@@ -246,4 +246,4 @@ description
   url           "http://lucene.apache.org/",
   version	"2.4.1",
   repeats	"Each thread searches a large index for about 3500 distinct words",
-  threads	"Multi-threaded";
+  threads	"Explicitly multi-threaded, scaled to available processors";

@@ -8,7 +8,7 @@ size small args
 		"--scale","2",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
-  threads 1
+  thread-limit 400
   output stdout digest 0xc38f8b24de5344c22b824ab5c67e66d10f6b409c,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
@@ -17,7 +17,7 @@ size default args
 		"--scale","8",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
-  threads 1
+  thread-limit 4000
   output stdout digest 0xde398c425953dea23da15568ef5722b08eacc2de,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -26,7 +26,7 @@ size large args
 		"--scale","8",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
-  threads 1
+  thread-limit 64000
   output stdout digest 0xfa64fb095a5ab237cdc9201aa9e7d95d8b1ee099,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -35,7 +35,7 @@ size huge args
 		"--scale","32",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
-  threads 1
+  thread-limit 256000
   output stdout digest 0x7ecf7b10e5ab58709979f9793c5dc7936966f360,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 

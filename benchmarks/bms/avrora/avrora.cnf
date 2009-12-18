@@ -50,5 +50,5 @@ description
   license	"UCLA",
   url		"http://compilers.cs.ucla.edu/avrora/",
   version	"cvs-20090612",
-  threads	"Multi-threaded simulation which creates threads to process the nodes in the grid, and there is fine grain interaction between thread with low contention.",
+  threads	"Externally single-threaded.  Internally multi-threaded.  Threads represent each simulated entity, so much fine-grained parallelism internally.",
   repeats	"Each execution simulates a range of microcontroller functions.";

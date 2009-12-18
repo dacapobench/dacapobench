@@ -37,10 +37,10 @@ size large args "-d","${SCRATCH}","-scriptSecurityOff","batik/mapWaadt.svg","bat
 
 description
   short	     "A Scalable Vector Graphics (SVG) toolkit",
-  long       "A Scalable Vector Graphics (SVG) toolkit that renders a number of svg files. It usess additional threads to speed the rendering or transcoding process. However it seems to exhibit little in the way of concurrency.",
+  long       "A Scalable Vector Graphics (SVG) toolkit that renders a number of svg files. It usess additional threads to speed the rendering or transcoding process.",
   copyright  "Copyright (C) 2000 The Apache Software Foundation",
   license    "Apache License, Version 2.0",
   url        "http://xml.apache.org/batik/",
   version    "1.7",
-  threads    "Multi-threaded, coarse concurrency by using transcoding/rendering threads";
+  threads    "Externally single-threaded.  Internally multi-threaded.";
 

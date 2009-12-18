@@ -82,5 +82,5 @@ description
   license	"BSD-style",
   url		"http://pmd.sourceforge.net/",
   version	"4.2.5",
-  threads	"Multi-threaded internally starts a number (Runtime.getRuntime().availableProcessors()) of worker, these exhibit some interaction and contention.",
+  threads	"Externally single-threaded.  Internally multi-threaded; creating workers according to number of available processors.",
   repeats	"Single iteration checks numerous sources file against 18 coding rules";

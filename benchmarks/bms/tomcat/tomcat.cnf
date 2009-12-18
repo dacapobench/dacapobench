@@ -6,18 +6,21 @@ benchmark tomcat
   "commons-logging.jar","commons-codec.jar";
 
 
-size small args "16" threads 1       // per CPU
+size small args "16"
+  thread-limit 16
   output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "client.0.log" exists;     // Actually #cpu client logs exist, but ...
 
-size default args "256" threads 2    // per CPU
+size default args "256"
+  thread-limit 256
   output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "client.0.log" exists,
          "client.1.log" exists;     // Actually 2 x #cpu client logs exist, but ...
 
-size large args "2048" threads 4      // per CPU
+size large args "2048"
+  thread-limit 2048
   output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "client.0.log" exists,
@@ -33,5 +36,5 @@ description
   license	"Apache License, Version 2.0",
   url		"http://tomcat.apache.org",
   version	"6.0.20",
-  threads	"Multi-threaded; 1, 2 or 4 client threads per CPU.",
+  threads	"Expliclitly multi-threaded workload, scaled to available processors.",
   repeats	"Each iteration starts the tomcat server, creates the client threads and waits for them to perform their tasks.";

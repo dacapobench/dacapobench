@@ -5,14 +5,17 @@ benchmark sunflow
   libs "janino-2.5.12.jar";
 
 size small args "32"
+  thread-limit 32
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "128"
+  thread-limit 128
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "512"
+  thread-limit 512
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -24,5 +27,5 @@ description
   license	"BSD-style.",
   url		"http://sunflow.sourceforge.net",
   version	"0.07.2",
-  threads	"The benchmark renders 32x32 tiles, and uses Runtime.getRuntime().availableProcessors() to render those tiles in parallel according to the number of available processors.",
+  threads	"Explicitly multi-threaded workload, scaled to available processors.   Image is decomposed into tiles, threads render a tile at a time.",
   repeats	"Single iteration runs a single iteration of the sunflow benchmark";
