@@ -10,21 +10,22 @@ RELEASE PROCEDURES
 
 3. Produced a source build and rename it:
 	ant -Dbuild.version=$DACAPO_VERSION -Dbuild.nickname=$DACAPO_NICKNAME source
-	mv dacapo-src.zip dacapo-$DACAPO_NICKNAME_$DACAPO_VERSION-src.zip
+	mv dacapo-src.zip dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
 
 4. Create a new directory and unzip the new source
 	mkdir src
 	cd src
-	unzip ../dacapo-$DACAPO_VERSION-src.zip
+	unzip ../dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
 
 5. Build the new source (using a proxy if necessary)
 	export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun
 	export ANT_OPTS="-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128"
 	export MAVEN_OPTS="-Xmx512M"
+        cd benchmarks
 	ant -Dbuild.version=$DACAPO_VERSION -Dbuild.nickname=$DACAPO_NICKNAME 
 
 6. Rename the jar
-	mv dacapo-<xxx>.jar dacapo-$DACAPO_VERSION.jar
+	mv dacapo-<xxx>.jar dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME.jar
 
 7. Test the resulting jar
 
