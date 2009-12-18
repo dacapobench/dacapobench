@@ -327,11 +327,11 @@ public class TPCC {
   }
 
   public void postIteration(String size) throws Exception {
-    if (firstIteration || !inMemoryDB) {
+    if (verbose && (firstIteration || !inMemoryDB)) {
       System.out.println("Time to perform pre-iteration phase: "
           + preIterationTime + " msec");
     }
-    if (inMemoryDB && cleanupInIteration) {
+    if (verbose && (inMemoryDB && cleanupInIteration)) {
       System.out.println("Time to reset data to initial state: "
           + resetToInitialDataTime + " msec");
     }
