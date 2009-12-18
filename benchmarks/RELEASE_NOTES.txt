@@ -1,22 +1,17 @@
-dacapo-9.10-beta2
+dacapo-9.12-bach
 
-RELEASE NOTES  2009-12-04
+RELEASE NOTES  2009-12-18
 
 ************************************************************************
-* IMPORTANT: This beta release is NOT SUITABLE AS A RESEARCH TOOL.     *
+* IMPORTANT: This pre-release is NOT SUITABLE AS A RESEARCH TOOL.      *
 *                                                                      *
 * Please wait for the full release before using the suite for research *
-* purposes. The benchmarks in this beta release are:                   *
-*                                                                      *
-*    1) not fully tuned,                                               *
-*    2) not fully evaluated,                                           *
-*    3) known to have various limitations and bugs, and                *
-*    4) subject to change without notice.                              *
+* purposes.
 *                                                                      *
 ************************************************************************
 
 
-This is the second beta release of the anticipated 2009 release of the
+This is the first release candidate for the anticipated 2009 release of the
 DaCapo benchmark suite.  These notes are structured as follows:
 
     1. Purpose
@@ -30,7 +25,7 @@ DaCapo benchmark suite.  These notes are structured as follows:
 1. Purpose
 ----------
 
-This beta release exists specifically (and only) to allow community
+This release candidate exists specifically (and only) to allow community
 feedback and contribution to the upcoming major release, and to allow
 JVM vendors to test against the suite prior to the final release. We
 strongly encourage the community to explore and evaluate these
@@ -48,30 +43,11 @@ mailing list and/or bug tracker. Please check the list of known issues
        http://sourceforge.net/projects/dacapobench/develop
 
 
-We are particularly interested in feedback on the following:
-
-    o The decision to add benchmarks "avrora", "batik", "derby",
-      "sunflow", "tomcat", "tradebeans", and "tradesoap" (see 4.1
-      below).
-
-    o The decision to "retire" benchmarks "antlr", "bloat", "chart",
-      and "hsqldb" (see 4.2 below).
-
-    o The tuning / running time of each of the benchmarks in their
-      default settings.
-
-    o The structure and behavior of the tradebeans, tradesoap and
-      tomcat client/server benchmarks.
-
-    o Any issues associated with building, running and usability of
-      the suite.
-
-
 2. Overview
 -----------
 
 The DaCapo benchmark suite is slated to be updated every few years.
-The 9.10 release will be the first major update of the suite, and is
+The 9.12 release will be the first major update of the suite, and is
 strictly incompatible with previous releases: new benchmarks have been
 added, old benchmarks have been removed, all other benchmarks have
 been substantially updated. It is for this reason that in any
@@ -80,20 +56,18 @@ explicitly stated.
 
 The release sees the retirement of a number of single-threaded
 benchmarks (antlr, bloat and chart), the replacement of hsqldb by
-derby, the addition of six completely new benchmarks, and the upgrade
+h2, the addition of six completely new benchmarks, and the upgrade
 of all other benchmarks to reflect the current release state of the
 applications from which the benchmarks were derived. These changes are
 consistent with the original goals of the DaCapo project, which
 include the desire for the suite to remain relevant and reflect the
 current state of deployed Java applications.
 
-Each of these benchmarks is tested for both performance* and
+Each of these benchmarks is tested for both performance and
 correctness nightly. Results are available here:
 
     o performance:  http://dacapo.anu.edu.au/regression/perf/head.html
     o sanity:  http://dacapo.anu.edu.au/regression/sanity/latest/
-
-      * tradebeans and tradesoap are not yet running performance tests
 
 
 3. Usage
@@ -197,7 +171,6 @@ protocol.
 
 4.3. Updates
 
-
 All other benchmarks have been updated to reflect the latest release
 of the underlying application.
 
@@ -206,6 +179,24 @@ of the underlying application.
 
 The packaging of the DaCapo suite has been completely re-worked and
 the source code is entirely re-organized.
+
+The command-line arguments have be rationalized and now follow 
+posix conventions.
+
+Threading has been rationalized.   Benchmarks are now characterized
+in terms of their external and internal concurrency.  (For example
+a benchmark such as eclipse is single-threaded externally, but
+internally uses a thread pool).   All benchmarks which are externally
+multi-threaded now by default run a number of threads scaled to 
+match the available processors, and the number of externally defined
+threads may also be configured via the "-t" and "-k" command line
+options which specify, respectively the absolute number of external
+threads and a multiplier against the number of available processors.
+Some benchmarks are both internally and externally multithreaded,
+such as tradebeans and tradesoap, where the number of client threads
+may be specified externally, but the number of server threads is
+determined within the server, and cannot be directly controlled by
+the user.
 
 
 5. Known Issues
@@ -220,21 +211,16 @@ in addressing bugs and shortcomings in the suite.
 
 A few notable high priority issues are listed here:
 
+5.1 Tomcat
 
-5.1 Concurrency
-
-We intend to conduct a concurrency audit, analyzing and documenting
-the level of concurrency in each of the workloads. The per-benchmark
-documentation available at the commandline (with the -i switch) should
-report the level of threading for each benchmark. Although most
-benchmarks exhibit significant concurrency, we have made the conscious
-decision to continue to include a few single-threaded benchmarks. We
-do this because as long as there exist a significant number of single
-threaded applications in popular use, the single-threaded performance
-of a JVM is important. 
-
-5.2 Tomcat
-
-We intend to make the tomcat workload more interesting. Performance
+Tomcat remains less interesting than we would have liked. Performance
 results show that tomcat currently has a remarkably flat warm-up curve
 when compared to other benchmarks.
+
+
+5.2 Valdidation
+
+Validation continues to used summarization via a checksum, so we are
+unable to provide a diff between expected and actual output in the
+case of failure.   We hope to update this, and welcome community 
+contributions.
