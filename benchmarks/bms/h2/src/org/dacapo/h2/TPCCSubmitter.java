@@ -26,7 +26,8 @@ public class TPCCSubmitter extends Submitter {
   private static long globalSeed = 0;
 
   private OERandom rand;
-
+  private TPCCReporter reporter;
+  
   static void setSeed(long seed) {
     globalSeed = seed;
   }
@@ -37,10 +38,11 @@ public class TPCCSubmitter extends Submitter {
     return result;
   }
 
-  public TPCCSubmitter(Display display, Operations ops, OERandom rand,
+  public TPCCSubmitter(TPCCReporter reporter, Operations ops, OERandom rand,
       short maxW) {
-    super(display, ops, rand, maxW);
+    super(null, ops, rand, maxW);
     this.rand = rand;
+    this.reporter = reporter;
   }
 
   @Override
@@ -51,14 +53,20 @@ public class TPCCSubmitter extends Submitter {
       // failed transactions will be ignored an another transaction tried.
       try {
         runTransaction(displayData);
+        
+        // must have been successful to get here
         i++;
-        if ((i % 50) == 0)
-          System.out.print(".");
+        
+        reporter.done();
       } catch (Exception e) {
       }
     }
 
     // timing is done else where
     return 0;
+  }
+  
+  private static synchronized void doneTx() {
+    
   }
 }

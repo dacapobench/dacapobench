@@ -75,8 +75,11 @@ public class TPCC {
   // this loaderThreads seems determininstic and should be
   // to the number of CPU cores
   private short scale = DEF_SCALE;
+  private int totalTransactions = DEF_NUM_OF_TERMINALS
+      * DEF_TRANSACTIONS_PER_TERMINAL;
   private int numberOfTerminals = DEF_NUM_OF_TERMINALS;
-  private int transactionsPerTerminal = DEF_TRANSACTIONS_PER_TERMINAL;
+  private int[] transactionsPerTerminal = { DEF_TRANSACTIONS_PER_TERMINAL,
+      DEF_TRANSACTIONS_PER_TERMINAL }; // DEF_TRANSACTIONS_PER_TERMINAL;
   private boolean generate = false; // by default we use the pre-generated
   // database
   private boolean inMemoryDB = true; // by default use the in memory db
@@ -87,7 +90,7 @@ public class TPCC {
   // OLTP runners
   private Connection[] connections;
   private Submitter[] submitters;
-  private Display[] displays;
+  private TPCCReporter reporter = new TPCCReporter();
   private OERandom[] rands;
 
   private Config config;
@@ -153,13 +156,19 @@ public class TPCC {
     // make a seeded random number generator for each submitter
     rands = new OERandom[numberOfTerminals];
 
-    // for the moment we are not interested displaying the results of each
-    // transaction so we leave each entry in the displays array as a null
-    displays = new Display[numberOfTerminals];
-
     // create a set of Submitter each with a Standard operations implementation
     connections = new Connection[numberOfTerminals];
     submitters = new Submitter[numberOfTerminals];
+    transactionsPerTerminal = new int[numberOfTerminals];
+
+    // set up the transactions for each terminal
+    final int iterationsPerClient = totalTransactions / numberOfTerminals;
+    final int oddIterations = totalTransactions
+        - (iterationsPerClient * numberOfTerminals);
+
+    for (int i = 0; i < numberOfTerminals; i++)
+      transactionsPerTerminal[i] = iterationsPerClient
+          + (i < oddIterations ? 1 : 0);
   }
 
   private void preIterationDiskDB() throws Exception {
@@ -243,6 +252,8 @@ public class TPCC {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
+    reporter.reset();
+    
     long start = System.currentTimeMillis();
 
     TPCCSubmitter.setSeed(SEED);
@@ -266,7 +277,7 @@ public class TPCC {
 
       Operations ops = new Standard(connections[i]);
 
-      submitters[i] = new TPCCSubmitter(null, ops, rands[i], scale);
+      submitters[i] = new TPCCSubmitter(reporter, ops, rands[i], scale);
     }
 
     preIterationTime = System.currentTimeMillis() - start;
@@ -276,8 +287,26 @@ public class TPCC {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
-    MultiThreadSubmitter
-        .multiRun(submitters, displays, transactionsPerTerminal);
+    // run all the submitters. this is taken from 
+    //   org.apache.derbyTesting.system.oe.client.MultiThreadSubmitter
+    Thread[] threads = new Thread[submitters.length];
+    for (int i = 0; i < submitters.length; i++) {
+        submitters[i].clearTransactionCount();
+        threads[i] = newThread(i, submitters[i], transactionsPerTerminal[i]);
+    }
+
+    for (int i = 0; i < threads.length; i++)
+        threads[i].start();
+
+    // and then wait for them to finish
+    for (int i = 0; i < threads.length; i++) {
+        try {
+            threads[i].join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    // done running the submitters
 
     System.out.println();
 
@@ -666,12 +695,11 @@ public class TPCC {
 
     this.numberOfTerminals = config.getThreadCount(size);
 
-    int totalTx = this.numberOfTerminals * this.transactionsPerTerminal;
     for (int i = 0; i < args.length; i++) {
       if ("--numberOfTerminals".equalsIgnoreCase(args[i])) {
         this.numberOfTerminals = Integer.parseInt(args[++i]);
       } else if ("--total-transactions".equalsIgnoreCase(args[i])) {
-        totalTx = Integer.parseInt(args[++i]);
+        this.totalTransactions = Integer.parseInt(args[++i]);
       } else if ("--scale".equalsIgnoreCase(args[i])) {
         this.scale = Short.parseShort(args[++i]);
       } else if ("--generate".equalsIgnoreCase(args[i])) {
@@ -688,9 +716,6 @@ public class TPCC {
         this.createSuffix = args[++i];
       }
     }
-    // calculate the transactions per terminals now that we know the
-    // total number to be executed and the number of terminals
-    this.transactionsPerTerminal = totalTx / this.numberOfTerminals;
   }
 
   private File getBackupDir() {
@@ -768,6 +793,21 @@ public class TPCC {
         "INSERT INTO ORDERLINE SELECT * FROM CSVREAD('"
             + getBackupFile("orderline.csv").getAbsolutePath() + "');"),
         "US-ASCII");
+  }
+
+  private static Thread newThread(final int threadId, final Submitter submitter, final int count) {
+    Thread t = new Thread("OE_Thread:" + threadId) {
+
+      public void run() {
+        try {
+          submitter.runTransactions(null, count);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    };
+
+    return t;
   }
 
 }
