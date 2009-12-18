@@ -369,22 +369,14 @@ public class TPCC {
         total += subTx[j];
       }
     }
-
-    System.out.println("Total Transactions:" + total);
-    System.out.println("New Order         :"
-        + transactions[TPCCSubmitter.NEW_ORDER]);
-    System.out.println("Order By Id       :"
-        + transactions[TPCCSubmitter.ORDER_STATUS_BY_ID]);
-    System.out.println("Order By Name     :"
-        + transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME]);
-    System.out.println("Payment By Id     :"
-        + transactions[TPCCSubmitter.PAYMENT_BY_ID]);
-    System.out.println("Payment By Name   :"
-        + transactions[TPCCSubmitter.PAYMENT_BY_NAME]);
-    System.out.println("Stock Level       :"
-        + transactions[TPCCSubmitter.STOCK_LEVEL]);
-    System.out.println("Delivery Schedule :"
-        + transactions[TPCCSubmitter.DELIVERY_SCHEDULE]);
+    System.out.println("Completed "+total+" transactions");
+    System.out.format("\tNew order .............."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.NEW_ORDER], 100*((float) transactions[TPCCSubmitter.NEW_ORDER]/total));
+    System.out.format("\tStatus by ID ..........."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.ORDER_STATUS_BY_ID], 100*((float) transactions[TPCCSubmitter.ORDER_STATUS_BY_ID]/total));
+    System.out.format("\tStatus by name ........."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME], 100*((float) transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME]/total));
+    System.out.format("\tPayment by ID .........."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.PAYMENT_BY_ID], 100*((float) transactions[TPCCSubmitter.PAYMENT_BY_ID]/total));
+    System.out.format("\tPayment by name ........"+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.PAYMENT_BY_NAME], 100*((float) transactions[TPCCSubmitter.PAYMENT_BY_NAME]/total));
+    System.out.format("\tStock level ............"+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.STOCK_LEVEL], 100*((float) transactions[TPCCSubmitter.STOCK_LEVEL]/total));
+    System.out.format("\tDelivery schedule ......"+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.DELIVERY_SCHEDULE], 100*((float) transactions[TPCCSubmitter.DELIVERY_SCHEDULE]/total));
   }
 
   private void createSchema() throws Exception {

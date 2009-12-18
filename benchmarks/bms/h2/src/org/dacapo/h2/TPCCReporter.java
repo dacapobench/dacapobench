@@ -20,7 +20,7 @@ public class TPCCReporter {
   public synchronized void done() {
     count++;
     
-    if ((count % 50) == 0)
+    if ((count % 1000) == 0)
       System.out.print(".");
   }
 }
