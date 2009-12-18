@@ -28,6 +28,7 @@ size default args "-index","${SCRATCH}/lusearch/index-default",
                   "-totalqueries", "64",
                   "-threads", "${THREADS}"
   threads 1
+  thread-limit 14
   output 
     stdout digest 0x1542ed9da1c0710a928b344d724c1dc3d57a9f83,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
