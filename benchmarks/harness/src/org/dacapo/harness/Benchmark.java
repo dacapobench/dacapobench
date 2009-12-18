@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-17 10:39:41 +1100 (Thu, 17 Dec 2009) $
- * @id $Id: Benchmark.java 682 2009-12-16 23:39:41Z jzigman $
+ * @date $Date: 2009-12-18 12:40:12 +1100 (Fri, 18 Dec 2009) $
+ * @id $Id: Benchmark.java 692 2009-12-18 01:40:12Z jzigman $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -770,4 +770,5 @@ public abstract class Benchmark {
   public static boolean getSilent() {
     return silent;
   }
+  
 }

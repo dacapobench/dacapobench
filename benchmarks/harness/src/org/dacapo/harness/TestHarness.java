@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-17 21:55:46 +1100 (Thu, 17 Dec 2009) $
- * @id $Id: TestHarness.java 688 2009-12-17 10:55:46Z steveb-oss $
+ * @date $Date: 2009-12-18 12:40:12 +1100 (Fri, 18 Dec 2009) $
+ * @id $Id: TestHarness.java 692 2009-12-18 01:40:12Z jzigman $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -113,6 +113,9 @@ public class TestHarness {
 
       // this is not right
       Benchmark.setCommandLineOptions(commandLineArgs);
+      try {
+        Config.setThreadCountOverride(Integer.parseInt(commandLineArgs.getThreadCount()));
+      } catch (RuntimeException re) { }
 
       // now get the benchmark names and run them
       for (String bm : commandLineArgs.benchmarks()) {
@@ -138,10 +141,25 @@ public class TestHarness {
 
         TestHarness harness = new TestHarness(ins);
 
-        if (! harness.isValidSize(commandLineArgs.getSize())) {
-          System.err.println("No configuration size, " + commandLineArgs.getSize() + ", for benchmark " + bm + ".");
+        String size = commandLineArgs.getSize();
+
+        int factor = 0;
+        int limit = harness.config.getThreadLimit(size);
+        
+        try {
+          factor = Integer.parseInt(commandLineArgs.getThreadFactor());
+          if (0 < factor && harness.config.getThreadModel() == Config.ThreadModel.PER_CPU)
+            harness.config.setThreadFactor(size,factor);
+        } catch (RuntimeException re) { }
+
+        if (! harness.isValidSize(size)) {
+          System.err.println("No configuration size, " + size + ", for benchmark " + bm + ".");
+        } else if (factor != 0 && harness.config.getThreadModel() != Config.ThreadModel.PER_CPU) {
+          System.err.println("Can only set the thread factor for per_cpu configurable benchmarks");
+        } else if (! harness.isValidThreadCount(size)) {
+          System.err.println("The specified number of threads is outside the range [1," + (limit==0?"unlimited":""+limit) + "] and not 0 (unspecified)");
         } else if (commandLineArgs.getInformation()) {
-          harness.bmInfo(commandLineArgs.getSize());
+          harness.bmInfo(size);
         } else {
           harness.dump(commandLineArgs.getVerbose());
 
@@ -163,6 +181,10 @@ public class TestHarness {
   private boolean isValidSize(String size) {
     return size != null && config.getSizes().contains(size);
   }
+
+  private boolean isValidThreadCount(String size) {
+    return config.getThreadLimit(size) == 0 || config.getThreadCount(size) <= config.getThreadLimit(size);
+  }
   
   /**
    * @param scratch
@@ -178,8 +200,7 @@ public class TestHarness {
   private static void runBenchmark(File scratch, String bm, TestHarness harness)
       throws NoSuchMethodException, InstantiationException,
       IllegalAccessException, InvocationTargetException, Exception {
-    harness.config.printThreadModel(System.out, commandLineArgs.getSize(),
-        commandLineArgs.getVerbose());
+    harness.config.printThreadModel(System.out, commandLineArgs.getSize(), commandLineArgs.getVerbose());
 
     Constructor<?> cons = harness.findClass().getConstructor(
         new Class[] { Config.class, File.class });

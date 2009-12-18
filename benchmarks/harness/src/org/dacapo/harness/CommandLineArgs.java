@@ -61,6 +61,8 @@ public class CommandLineArgs {
   public static final String DEFAULT_WINDOW_SIZE = "3";
   public static final String DEFAULT_VARIANCE = "3.0";
   public static final String DEFAULT_ITERATIONS = "1";
+  public static final String DEFAULT_THREAD_COUNT = "0"; // 0 represents unspecified
+  public static final String DEFAULT_THREAD_FACTOR = "0"; // 0 represents unspecified
 
   private static final String OPT_CALLBACK = "callback";
   private static final String OPT_HELP = "help";
@@ -83,6 +85,8 @@ public class CommandLineArgs {
   private static final String OPT_CONFIG = "config";
   private static final String OPT_VERBOSE = "verbose";
   private static final String OPT_PRE_ITERATION_GC = "pre-iteration-gc";
+  private static final String OPT_THREAD_COUNT = "thread-count";
+  private static final String OPT_THREAD_FACTOR = "thread-factor";
 
   private static final Option[] OPTIONS = {
       makeOption("c",  OPT_CALLBACK,          "Use class <callback> to bracket benchmark runs", "callback"),
@@ -105,6 +109,8 @@ public class CommandLineArgs {
       makeOption(null, OPT_VALIDATION_REPORT, "Report digests, line counts etc", "report_file"),
       makeOption(null, OPT_CONFIG, null,      "config_file"),
       makeOption(null, OPT_PRE_ITERATION_GC,  "Perform System.gc() before the start of each iteration", null),
+      makeOption("t",  OPT_THREAD_COUNT,      "Set the thread count to drive the workload (mutually exclusive -k)", "thread_count"),
+      makeOption("k",  OPT_THREAD_FACTOR,     "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
       makeOption("v",  OPT_VERBOSE,           "Verbose output", null) };
 
   private static CommandLineParser parser = new PosixParser();
@@ -144,6 +150,9 @@ public class CommandLineArgs {
       if (line.hasOption(OPT_HELP)) {
         printUsage();
         reportAndExitOk = true;
+      }
+      if (line.hasOption(OPT_THREAD_FACTOR) && line.hasOption(OPT_THREAD_COUNT)) {
+        throw new ParseException("Cannot specify -t and -k options.");
       }
       if (reportAndExitOk)
         System.exit(EXIT_OK);
@@ -356,6 +365,14 @@ public class CommandLineArgs {
     return line.hasOption(OPT_PRE_ITERATION_GC);
   }
 
+  public String getThreadCount() {
+    return line.getOptionValue(OPT_THREAD_COUNT, DEFAULT_THREAD_COUNT);
+  }
+  
+  public String getThreadFactor() {
+    return line.getOptionValue(OPT_THREAD_FACTOR, DEFAULT_THREAD_FACTOR);
+  }
+  
   public List<String> getArgList() {
     return line.getArgList();
   }
