@@ -45,7 +45,6 @@ mailing list and/or bug tracker. Please check the list of known issues
 
 2. Overview
 -----------
-
 The DaCapo benchmark suite is slated to be updated every few years.
 The 9.12 release will be the first major update of the suite, and is
 strictly incompatible with previous releases: new benchmarks have been
@@ -77,7 +76,7 @@ correctness nightly. Results are available here:
 
   o Download the binary jar and/or source zip from:
       https://sourceforge.net/projects/dacapobench/files/
-  
+
   o Access the source from subversion via
       svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench dacapobench
 
@@ -102,11 +101,10 @@ correctness nightly. Results are available here:
 4. Changes
 ----------
 
-
 4.1. Additions since 2006-10-MR2
 
       avrora: AVRORA is a set of simulation and analysis tools in a
-              framework for AVR microcontrollers. The benchmark
+              framework for AVR micro-controllers. The benchmark
               exhibits a great deal of fine-grained concurrency. The
               benchmark is courtesy of Ben Titzer (Sun Microsystems)
               and was developed at UCLA.
@@ -115,13 +113,13 @@ correctness nightly. Results are available here:
               The benchmark renders a number of svg files.
 
           h2: h2 is an in-memory database benchmark, using the
-              h2 database produced h2dataabase.com, and executing an
+              h2 database produced by h2database.com, and executing an
               implementation of the TPC-C workload produced by the
               Apache foundation for its derby project. h2 replaces
               derby, which in turn replaced hsqldb.
 
-     sunflow: Sunflow is a rendering system for photo-realistic images
-              based on raytracing engine.
+     sunflow: Sunflow is a raytracing rendering system for photo-realistic
+              images.
 
       tomcat: Tomcat uses the Apache Tomcat servelet container to run
               some sample web applications.
@@ -135,28 +133,31 @@ correctness nightly. Results are available here:
               (and the workloads are reduced in size to compensate the
               substantially higher overhead).
 
-Tradebeans and tradesoap were added as a pair specifically to allow
-researchers to analyze overheads associated with the widely used soap
-protocol.
-             
+              Note that tradebeans and tradesoap were intentionally
+              added as a pair to allow researchers to evaluate and
+              analyze the overheads and behavior of communicating through
+              a protocol such as SOAP.  Tradesoap's "large" configuration
+              uses exactly the same workload as tradebeans' "default"
+              configuration, allowing researchers to directly compare
+              the two configurations.
 
 
 4.2. Deletions
- 
+
        antlr: Antlr is single threaded and highly repetitive. The
               most recent version of jython uses antlr; so antlr
               remains represented within the DaCapo suite.
 
        bloat: Bloat is not as widely used as our other workloads
               and the code exhibited some pathologies that were
-              arguably not representive or desirable in a suite that
-              was to be representive of modern Java applications.
+              arguably not representative or desirable in a suite that
+              was to be representative of modern Java applications.
 
        chart: Chart was repetitive and used a framework that appears
               not to be as widely used as most of the other DaCapo
               benchmarks.  The Batik workload has some similarities
               with chart (both are render vector graphics), but is
-              part of a larger heavyly used framework from Apache.
+              part of a larger heavily used framework from Apache.
 
        derby: Derby has been replaced by h2, which runs a much
               richer workload and uses a more widely used and higher
@@ -180,14 +181,14 @@ of the underlying application.
 The packaging of the DaCapo suite has been completely re-worked and
 the source code is entirely re-organized.
 
-The command-line arguments have be rationalized and now follow 
+The command-line arguments have be rationalized and now follow
 posix conventions.
 
 Threading has been rationalized.   Benchmarks are now characterized
 in terms of their external and internal concurrency.  (For example
 a benchmark such as eclipse is single-threaded externally, but
 internally uses a thread pool).   All benchmarks which are externally
-multi-threaded now by default run a number of threads scaled to 
+multi-threaded now by default run a number of threads scaled to
 match the available processors, and the number of externally defined
 threads may also be configured via the "-t" and "-k" command line
 options which specify, respectively the absolute number of external
@@ -211,16 +212,42 @@ in addressing bugs and shortcomings in the suite.
 
 A few notable high priority issues are listed here:
 
-5.1 Tomcat
+5.1 Avrora
+
+Avrora exhibits a memory leak.  We have tracked the leak and identified
+its source within avrora (ie it is not due to the DaCapo framework). We
+have reported the leak.   At the time of this release the leak remains,
+so we have left the leak as-is.   This is consistent with our policy
+of presenting real-world workloads "as-is", with their own real-world
+idiosyncrasies.
+
+
+5.2 Tomcat
 
 Tomcat remains less interesting than we would have liked. Performance
 results show that tomcat currently has a remarkably flat warm-up curve
 when compared to other benchmarks.
 
 
-5.2 Valdidation
+5.3 Validation
 
 Validation continues to used summarization via a checksum, so we are
 unable to provide a diff between expected and actual output in the
-case of failure.   We hope to update this, and welcome community 
+case of failure.   We hope to update this, and welcome community
 contributions.
+
+5.4 Support for whole program static analysis
+
+Despite significant help from the community, we have had to drop
+support for whole program static analysis that was available in the
+last major release.  The main reason for this is that the more
+systematic and extensive use of reflection and the enormous internal
+complexity of workloads such as tradebeans and tradesoap has made it
+very difficult to produce a straightforward mechanism that would
+facilitate such analyses.  While we regret this omission, such an
+addition should have no effect on the workloads themselves.
+Therefore, if the community is able to contribute enhancements or
+extensions to the suite that facilitate such static analysis, we
+should be able to include such a contribution in a maintenance
+release, rather than having to wait for the next major release of the
+DaCapo benchmark suite.
