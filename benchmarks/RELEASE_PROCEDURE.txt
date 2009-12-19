@@ -7,6 +7,7 @@ RELEASE PROCEDURES
 	export DACAPO_NICKNAME=bach
 	
 2. Make fresh svn checkout.
+	svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapobench
 
 3. Produced a source build and rename it:
 	ant -Dbuild.version=$DACAPO_VERSION -Dbuild.nickname=$DACAPO_NICKNAME source
