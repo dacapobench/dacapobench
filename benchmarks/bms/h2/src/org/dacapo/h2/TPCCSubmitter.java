@@ -48,24 +48,63 @@ public class TPCCSubmitter extends Submitter {
   @Override
   public long runTransactions(final Object displayData, final int count)
       throws Exception {
-    for (int i = 0; i < count;) {
+    for (int i = 0; i < count; i++) {
       rand.setSeed(getNextSeed());
-      // failed transactions will be ignored an another transaction tried.
-      try {
-        runTransaction(displayData);
-        
-        // must have been successful to get here
-        i++;
-        
-        reporter.done();
-      } catch (Exception e) {
+
+      int txType = getTransactionType();
+      boolean success = false;
+      while (!success) {
+        try {
+          success = runTransaction(txType, displayData);
+        } catch (Exception e) {}
       }
+      transactionCount[txType]++;
+      reporter.done();
     }
 
-    // timing is done else where
+    // timing is done elsewhere
     return 0;
   }
   
+  private int getTransactionType() {
+    int value = rand.randomInt(1, 1000);
+    for (int type = 0; type < TX_CUM_PROB.length; type++) {
+	if (value <= TX_CUM_PROB[type])
+          return type;
+    }
+    return -1; // unreachable
+  }
+
+  private boolean runTransaction(final int txType, final Object displayData) throws Exception {
+    switch (txType) {
+    case Submitter.STOCK_LEVEL:
+      runStockLevel(displayData);
+      break;
+    case Submitter.ORDER_STATUS_BY_NAME:
+      runOrderStatus(displayData, true);
+      break;
+    case Submitter.ORDER_STATUS_BY_ID:
+      runOrderStatus(displayData, false);
+      break;
+    case Submitter.PAYMENT_BY_NAME:
+      runPayment(displayData, true);
+      break;
+    case Submitter.PAYMENT_BY_ID:
+      runPayment(displayData, false);
+      break;
+    case Submitter.DELIVERY_SCHEDULE:
+      runScheduleDelivery(displayData);
+      break;
+    case Submitter.NEW_ORDER:
+      runNewOrder(displayData, false);
+      break;
+    case Submitter.NEW_ORDER_ROLLBACK:
+      runNewOrder(displayData, true);
+      break;
+    }
+    return true;
+  }
+
   private static synchronized void doneTx() {
     
   }

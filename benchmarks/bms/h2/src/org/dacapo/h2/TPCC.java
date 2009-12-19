@@ -370,13 +370,10 @@ public class TPCC {
       }
     }
     System.out.println("Completed "+total+" transactions");
-    System.out.format("\tNew order .............."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.NEW_ORDER], 100*((float) transactions[TPCCSubmitter.NEW_ORDER]/total));
-    System.out.format("\tStatus by ID ..........."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.ORDER_STATUS_BY_ID], 100*((float) transactions[TPCCSubmitter.ORDER_STATUS_BY_ID]/total));
-    System.out.format("\tStatus by name ........."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME], 100*((float) transactions[TPCCSubmitter.ORDER_STATUS_BY_NAME]/total));
-    System.out.format("\tPayment by ID .........."+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.PAYMENT_BY_ID], 100*((float) transactions[TPCCSubmitter.PAYMENT_BY_ID]/total));
-    System.out.format("\tPayment by name ........"+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.PAYMENT_BY_NAME], 100*((float) transactions[TPCCSubmitter.PAYMENT_BY_NAME]/total));
-    System.out.format("\tStock level ............"+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.STOCK_LEVEL], 100*((float) transactions[TPCCSubmitter.STOCK_LEVEL]/total));
-    System.out.format("\tDelivery schedule ......"+"%6d (%4.1f%%)%n", transactions[TPCCSubmitter.DELIVERY_SCHEDULE], 100*((float) transactions[TPCCSubmitter.DELIVERY_SCHEDULE]/total));
+    String dots = "........................";
+    for (int i = 0; i < submitters.length; i++) {
+        System.out.format("\t"+TPCCSubmitter.TX_NAME[i]+" "+dots.substring(TPCCSubmitter.TX_NAME[i].length())+"%6d (%4.1f%%)%n", transactions[i], 100*((float) transactions[i]/total));
+    }
   }
 
   private void createSchema() throws Exception {

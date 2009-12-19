@@ -9,25 +9,25 @@ size small args
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   thread-limit 400
-  output stdout digest 0xea28555bf11f6c7ab9d6d13d3d98ab32ef9a510a,
+  output stdout digest 0x9e2c93be488a4dab37923989b7df8cd029f8bb09,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
-size default args 
-		"--total-transactions","8000",
+size default args
+		"--total-transactions","4000",
 		"--scale","8",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
-  thread-limit 8000
-  output stdout digest 0xdcf98911ffe51b9967e8f3868a44ffc16e3f904a,
+  thread-limit 4000
+  output stdout digest 0x479c676628ca31f3364af094d392f86183bbf8cd,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args 
-		"--total-transactions","64000",
+		"--total-transactions","32000",
 		"--scale","8",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   thread-limit 64000
-  output stdout digest 0x07ba29b3e4a03fc88d7a5a3060bf8a9a51b20c34,
+  output stdout digest 0xe095f0c0da08af9e7419a7c1e30db59a0e11cb15,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args 
@@ -36,7 +36,7 @@ size huge args
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   thread-limit 256000
-  output stdout digest 0x7b1e6d05c0eb01230c20849bf04d126e8dddc529,
+  output stdout digest 0xe4154dca4e8f2d9d34f659524220c50b0b498310,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 

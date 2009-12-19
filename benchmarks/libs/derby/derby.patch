@@ -373,3 +373,39 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
      private static int[] RESCALE = { 0, 10, 100, 1000, 10000, 100000, 1000000 };
  
      private StringBuffer decimalString = new StringBuffer(12);
+--- derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java-orig	2009-12-19 13:18:42.000000000 +1100
++++ derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java	2009-12-19 13:55:33.000000000 +1100
+@@ -85,6 +85,24 @@
+     public static final int NEW_ORDER_ROLLBACK = 7;
+     
+     /**
++     * Cumulative probability distribution (out of 1000) derived from mixType
++     * (4%, 2.4%, 1.6%, 25.8%, 17.2%, 4%, 44.5% .5%)
++     */
++    public static final int[] TX_CUM_PROB = { 40, 64, 80, 338, 510, 550, 995, 1000 };
++
++    /**
++     * Names for each transaction type
++     */
++    public static final String[] TX_NAME = { "Stock level",
++					     "Order status by name",
++					     "Order status by ID",
++					     "Payment by name",
++					     "Payment by ID",
++					     "Delivery schedule",
++					     "New order",
++					     "New order rollback" };
++
++    /**
+      * Display to write the output to.
+      */
+     private final Display display;
+@@ -125,7 +143,7 @@
+     /**
+      * Record of how many transactions are implemented.
+      */
+-    private final int[] transactionCount;
++    public final int[] transactionCount;
+     
+     /**
+      * Generate a new random number generator
