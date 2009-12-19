@@ -6,25 +6,25 @@ benchmark tradesoap
 size small args "tiny" 
   threads 1      // per available processor
   thread-limit 32
-  output stdout  digest 0xee00a6d68e0360aa105b3e63e912a233233bf3ab,
+  output stdout  digest 0x2a84dd127d63448986bea07be0214d7ee51f7dc5,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "small"
   threads 1      // per available processor
-  thread-limit 256
-  output stdout  digest 0x508957f9be83a77df1e19aedafaf666922e04994,
+  thread-limit 128
+  output stdout  digest 0x9e532fc3da9de06c04d182c3534ff559c023716f,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "medium"
   threads 1      // per available processor
   thread-limit 512
-  output stdout  digest 0xa1b29355f4b6e4da179c50b8aa5aee8132d68e95,
+  output stdout  digest 0x617bb19d906415c191371d9df518940ccbb45a06,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "large"
   thread-limit 2048
   threads 1      // per available processor
-  output stdout  digest 0xc0b79b15cabc27952efeac9ddacea29ea396a473,
+  output stdout  digest 0x119b2f96f0ba8f8c1de12ef77bf7951730f6c2a9,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

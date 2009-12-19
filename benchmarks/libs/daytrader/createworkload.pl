@@ -55,7 +55,7 @@ my %users = ();
 my $output_dir = shift(@ARGV);
 
 my %sessions = ("tiny" => 32,
-		 "small" => 256,
+		 "small" => 128,
 		 "medium" => 512,
 		 "large" => 2048,
 		 "huge" => 8192);
