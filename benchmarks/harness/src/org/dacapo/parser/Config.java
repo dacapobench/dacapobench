@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-18 12:40:12 +1100 (Fri, 18 Dec 2009) $
- * @id $Id: Config.java 692 2009-12-18 01:40:12Z jzigman $
+ * @date $Date: 2009-12-19 20:01:21 +1100 (Sat, 19 Dec 2009) $
+ * @id $Id: Config.java 710 2009-12-19 09:01:21Z steveb-oss $
  *******************************************************************************/
 package org.dacapo.parser;
 
@@ -803,6 +803,7 @@ public class Config {
     if (s == null) {
       System.err
           .println("No such size: \"" + size + "\" in this configuration");
+      System.exit(-1);
     }
     return s;
   }
