@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Callback.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date: 2009-12-19 11:41:21 +1100 (Sat, 19 Dec 2009) $
+ * @id $Id: Callback.java 707 2009-12-19 00:41:21Z steveb-oss $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -171,8 +171,7 @@ public class Callback {
     timer = System.currentTimeMillis();
     System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " "
         + benchmark + " starting ");
-    System.err
-        .println((warmup ? ("warmup " + iterations + " ") : "") + "=====");
+    System.err.println((warmup ? ("warmup " + (iterations + 1) +  " ") : "") + "=====");
     System.err.flush();
   }
 
@@ -204,7 +203,7 @@ public class Callback {
     System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " "
         + benchmark);
     if (valid) {
-      System.err.print(warmup ? (" completed warmup " + iterations + " ")
+      System.err.print(warmup ? (" completed warmup " + (iterations + 1) + " ")
           : " PASSED ");
       System.err.print("in " + elapsed + " msec ");
     } else {
