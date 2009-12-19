@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-19 20:07:50 +1100 (Sat, 19 Dec 2009) $
- * @id $Id: Config.java 712 2009-12-19 09:07:50Z steveb-oss $
+ * @date $Date: 2009-12-19 22:53:42 +1100 (Sat, 19 Dec 2009) $
+ * @id $Id: Config.java 713 2009-12-19 11:53:42Z steveb-oss $
  *******************************************************************************/
 package org.dacapo.parser;
 
@@ -802,7 +802,7 @@ public class Config {
     Size s = (Size) sizes.get(size);
     if (s == null) {
       System.err
-          .println("No such size: \"" + size + "\" for this benchmark");
+          .println("No such size: \"" + size + "\" for benchmark "+name);
       System.exit(-1);
     }
     return s;
