@@ -10,6 +10,7 @@ RELEASE PROCEDURES
 	svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapobench
 
 3. Produced a source build and rename it:
+        cd dacapobench/benchmarks
 	ant -Dbuild.version=$DACAPO_VERSION -Dbuild.nickname=$DACAPO_NICKNAME source
 	mv dacapo-src.zip dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
 
