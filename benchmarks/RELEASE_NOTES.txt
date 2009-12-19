@@ -11,40 +11,19 @@ RELEASE NOTES  2009-12-18
 ************************************************************************
 
 
-This is the first release candidate for the anticipated 2009 release of the
+This is the second release candidate for the anticipated 2009 release of the
 DaCapo benchmark suite.  These notes are structured as follows:
 
-    1. Purpose
-    2. Overview
-    3. Usage
-    4. Changes
-    5. Known problems and limitations
+    1. Overview
+    2. Usage
+    3. Changes
+    4. Known problems and limitations
 
 
 
-1. Purpose
-----------
-
-This release candidate exists specifically (and only) to allow community
-feedback and contribution to the upcoming major release, and to allow
-JVM vendors to test against the suite prior to the final release. We
-strongly encourage the community to explore and evaluate these
-benchmarks and to send feedback to the dacapo research group via the
-mailing list and/or bug tracker. Please check the list of known issues
-(below) before sending feedback.
-
-
-   mailing list: dacapobench-researchers@lists.sourceforge.net
-     (subscribe via: http://sourceforge.net/mail/?group_id=172498)
-
-   bug tracker:
-       http://sourceforge.net/tracker/?group_id=172498&atid=861957
-     or navigate to it from
-       http://sourceforge.net/projects/dacapobench/develop
-
-
-2. Overview
+1. Overview
 -----------
+
 The DaCapo benchmark suite is slated to be updated every few years.
 The 9.12 release will be the first major update of the suite, and is
 strictly incompatible with previous releases: new benchmarks have been
@@ -69,10 +48,10 @@ correctness nightly. Results are available here:
     o sanity:  http://dacapo.anu.edu.au/regression/sanity/latest/
 
 
-3. Usage
+2. Usage
 --------
 
-3.1 Downloading
+2.1 Downloading
 
   o Download the binary jar and/or source zip from:
       https://sourceforge.net/projects/dacapobench/files/
@@ -80,15 +59,18 @@ correctness nightly. Results are available here:
   o Access the source from subversion via
       svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapobench
 
-3.2 Running
+2.2 Running
+
+  o It is essential that you read and observe the usage guidelines
+    that appear in README.txt
 
   o Run a benchmark:
       java -jar <dacapo-jar-name>.jar <benchmark>
 
   o For usage information, run with no arguments.
+  
 
-
-3.3 Building
+2.3 Building
 
   o You must have a working, recent version of ant installed. Change
     to the benchmarks directory and then run:
@@ -98,10 +80,10 @@ correctness nightly. Results are available here:
     for instructions on how to build.
 
 
-4. Changes
+3. Changes
 ----------
 
-4.1. Additions since 2006-10-MR2
+3.1. Bencharm additions since 2006-10-MR2
 
       avrora: AVRORA is a set of simulation and analysis tools in a
               framework for AVR micro-controllers. The benchmark
@@ -144,7 +126,7 @@ correctness nightly. Results are available here:
               two systems.
 
 
-4.2. Deletions
+3.2. Benchmark deletions
 
        antlr: Antlr is single threaded and highly repetitive. The
               most recent version of jython uses antlr; so antlr
@@ -172,13 +154,13 @@ correctness nightly. Results are available here:
               performing database engine.
 
 
-4.3. Updates
+3.3. Benchmark updates
 
 All other benchmarks have been updated to reflect the latest release
 of the underlying application.
 
 
-4.4. Other Notable Changes
+3.4. Other Notable Changes
 
 The packaging of the DaCapo suite has been completely re-worked and
 the source code is entirely re-organized.
@@ -210,8 +192,17 @@ may be specified externally, but the number of server threads is
 determined within the server, and cannot be directly controlled by
 the user.
 
+We have introduced a "huge" size for a number of benchmarks, which
+scales the workload to run for much longer and consume significant
+memory.  We have also retired "large" sizes for some benchmarks where
+"large" was not distinctly different from "default".  Thus there are
+now four sizes: "small", "default", "large", and "huge", and "large"
+and "huge" are only available for some benchmarks.  If you attempt
+to run a benchmark at an unsupported size you will get an error
+message.
 
-5. Known Issues
+
+4. Known Issues
 ---------------
 
 Please consult the bug tracker for a complete and up to date list of
@@ -220,10 +211,10 @@ known issues (http://sourceforge.net/tracker/?group_id=172498&atid=861957).
 DaCapo is an open source community project. We welcome all assistance
 in addressing bugs and shortcomings in the suite.
 
-A few notable high priority issues are listed here:
+A few notable unresolved high priority issues are listed here:
 
 
-5.1 Avrora
+4.1 Avrora
 
 Avrora exhibits a memory leak.  We have tracked the leak and identified
 its source within avrora (ie it is not due to the DaCapo framework). We
@@ -233,7 +224,7 @@ of presenting real-world workloads "as-is", with their own real-world
 idiosyncrasies.
 
 
-5.2 Socket use by tradebeans, tradesoap and tomcat
+4.2 Socket use by tradebeans, tradesoap and tomcat
 
 Each of these benchmarks use sockets to communicate between their
 clients and server.  We have observed that connections are used very
@@ -248,14 +239,14 @@ our particular use of them.  As with all issues, we welcome feedback
 and fixes from the community.
 
 
-5.3 Tomcat
+4.3 Tomcat
 
 Tomcat remains less interesting than we would have liked. Performance
 results show that tomcat currently has a remarkably flat warm-up curve
 when compared to other benchmarks.
 
 
-5.4 Validation
+4.4 Validation
 
 Validation continues to used summarization via a checksum, so we are
 unable to provide a diff between expected and actual output in the
@@ -263,7 +254,7 @@ case of failure.   We hope to update this, and welcome community
 contributions.
 
 
-5.5 Support for whole-program static analysis
+4.5 Support for whole-program static analysis
 
 Despite significant help from the community, we have had to drop
 support for whole-program static analysis that was available in the
