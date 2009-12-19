@@ -6,7 +6,7 @@ RELEASE NOTES  2009-12-18
 * IMPORTANT: This pre-release is NOT SUITABLE AS A RESEARCH TOOL.      *
 *                                                                      *
 * Please wait for the full release before using the suite for research *
-* purposes.
+* purposes.                                                            *
 *                                                                      *
 ************************************************************************
 
@@ -135,11 +135,13 @@ correctness nightly. Results are available here:
 
               Note that tradebeans and tradesoap were intentionally
               added as a pair to allow researchers to evaluate and
-              analyze the overheads and behavior of communicating through
-              a protocol such as SOAP.  Tradesoap's "large" configuration
-              uses exactly the same workload as tradebeans' "default"
-              configuration, allowing researchers to directly compare
-              the two configurations.
+              analyze the overheads and behavior of communicating
+              through a protocol such as SOAP.  Tradesoap's "large"
+              configuration uses exactly the same workload as
+              tradebeans' "default" configuration, and tradesoap's
+              "huge" uses exactly the same workload as tradebeans'
+              "large", allowing researchers to directly compare the
+              two systems.
 
 
 4.2. Deletions
@@ -181,6 +183,15 @@ of the underlying application.
 The packaging of the DaCapo suite has been completely re-worked and
 the source code is entirely re-organized.
 
+We've changed the naming scheme for the releases.  Rather than
+"dacapo-YYYY-MM", we've moved to "dacapo-Y.M-TAG", where TAG is a
+nickname for the release.  Given the theme for this project, we're
+using musical names, and since this release is our second, we've given
+this one the nick-name "bach".  The release can therefore be referred
+to by its nickname, which rolls off the tounge a little more easily
+than our old names.  Of course we've borrowed this scheme from other
+projects (such as Ubuntu) which follow a similar pattern.
+
 The command-line arguments have be rationalized and now follow
 posix conventions.
 
@@ -209,8 +220,8 @@ known issues (http://sourceforge.net/tracker/?group_id=172498&atid=861957).
 DaCapo is an open source community project. We welcome all assistance
 in addressing bugs and shortcomings in the suite.
 
-
 A few notable high priority issues are listed here:
+
 
 5.1 Avrora
 
@@ -222,24 +233,40 @@ of presenting real-world workloads "as-is", with their own real-world
 idiosyncrasies.
 
 
-5.2 Tomcat
+5.2 Socket use by tradebeans, tradesoap and tomcat
+
+Each of these benchmarks use sockets to communicate between their
+clients and server.  We have observed that connections are used very
+liberally (we have seen more than 64,000 connections in use when
+running tradebeans in its "huge" configuration, according to netstat).
+We believe that this phenomena can lead to spurious failures,
+particularly on tradesoap, where the benchmark fails with an error
+message that indicates a garbled bean (stock name seen when userid
+expected).  At the time of writing, we believe these issues are
+platform-sensitive and are due to the underlying systems rather than
+our particular use of them.  As with all issues, we welcome feedback
+and fixes from the community.
+
+
+5.3 Tomcat
 
 Tomcat remains less interesting than we would have liked. Performance
 results show that tomcat currently has a remarkably flat warm-up curve
 when compared to other benchmarks.
 
 
-5.3 Validation
+5.4 Validation
 
 Validation continues to used summarization via a checksum, so we are
 unable to provide a diff between expected and actual output in the
 case of failure.   We hope to update this, and welcome community
 contributions.
 
-5.4 Support for whole program static analysis
+
+5.5 Support for whole-program static analysis
 
 Despite significant help from the community, we have had to drop
-support for whole program static analysis that was available in the
+support for whole-program static analysis that was available in the
 last major release.  The main reason for this is that the more
 systematic and extensive use of reflection and the enormous internal
 complexity of workloads such as tradebeans and tradesoap has made it
