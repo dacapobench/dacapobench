@@ -7,16 +7,19 @@ RELEASE PROCEDURES
 	export DACAPO_NICKNAME=bach
 	
 2. Make fresh svn checkout.
+   	mkdir svn
+	cd svn
 	svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapobench
 
 3. Produced a source build and rename it:
         cd dacapobench/benchmarks
 	ant -Dbuild.version=$DACAPO_VERSION -Dbuild.nickname=$DACAPO_NICKNAME source
-	mv dacapo-src.zip ../../dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
+	mv dacapo-src.zip ../../../dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
+	cd ../../..
 
 4. Create a new directory and unzip the new source
-	mkdir src
-	cd src
+	mkdir release
+	cd release
 	unzip ../dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
 
 5. Build the new source (using a proxy if necessary)
