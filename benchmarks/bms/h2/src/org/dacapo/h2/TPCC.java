@@ -371,7 +371,7 @@ public class TPCC {
     }
     System.out.println("Completed "+total+" transactions");
     String dots = "........................";
-    for (int i = 0; i < submitters.length; i++) {
+    for (int i = 0; i < transactions.length; i++) {
         System.out.format("\t"+TPCCSubmitter.TX_NAME[i]+" "+dots.substring(TPCCSubmitter.TX_NAME[i].length())+"%6d (%4.1f%%)%n", transactions[i], 100*((float) transactions[i]/total));
     }
   }
