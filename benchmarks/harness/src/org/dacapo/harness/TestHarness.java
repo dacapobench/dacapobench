@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-18 12:40:12 +1100 (Fri, 18 Dec 2009) $
- * @id $Id: TestHarness.java 692 2009-12-18 01:40:12Z jzigman $
+ * @date $Date: 2009-12-21 14:10:54 +1100 (Mon, 21 Dec 2009) $
+ * @id $Id: TestHarness.java 716 2009-12-21 03:10:54Z steveb-oss $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -156,13 +156,17 @@ public class TestHarness {
           System.err.println("No configuration size, " + size + ", for benchmark " + bm + ".");
         } else if (factor != 0 && harness.config.getThreadModel() != Config.ThreadModel.PER_CPU) {
           System.err.println("Can only set the thread factor for per_cpu configurable benchmarks");
-        } else if (! harness.isValidThreadCount(size)) {
-          System.err.println("The specified number of threads is outside the range [1," + (limit==0?"unlimited":""+limit) + "] and not 0 (unspecified)");
+        } else if (!harness.isValidThreadCount(size) && (harness.config.getThreadCountOverride() > 0 || factor > 0)) {
+          System.err.println("The specified number of threads ("+harness.config.getThreadCount(size)+") is outside the range [1," + (limit==0?"unlimited":""+limit) + "]");
         } else if (commandLineArgs.getInformation()) {
           harness.bmInfo(size);
         } else {
-          harness.dump(commandLineArgs.getVerbose());
+          if (!harness.isValidThreadCount(size)) {
+            System.err.println("The derived number of threads ("+harness.config.getThreadCount(size)+") is outside the range [1," + (limit==0?"unlimited":""+limit) + "]; rescaling to match thread limit.");
+            harness.config.setThreadCountOverride(harness.config.getThreadLimit(size));
+          }
 
+          harness.dump(commandLineArgs.getVerbose());
           runBenchmark(scratch, bm, harness);
         }
       }
