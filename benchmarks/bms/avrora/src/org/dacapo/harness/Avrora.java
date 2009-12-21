@@ -37,21 +37,4 @@ public class Avrora extends Benchmark {
   public void iterate(String size) throws Exception {
     method.invoke(null, (Object) args);
   }
-
-  /**
-   * Stub which exists <b>only</b> to facilitate whole program static analysis
-   * on a per-benchmark basis. See also the "split-deps" ant build target, which
-   * is also provided to enable whole program static analysis.
-   * 
-   * @author Eric Bodden
-   */
-  public static void main(String args[]) throws Exception {
-    File scratch = new File(CommandLineArgs.DEFAULT_SCRATCH_DIRECTORY).getAbsoluteFile();
-    Config config = Config.parse(Avrora.class.getClassLoader().getResourceAsStream("cnf/avrora.cnf"));
-    
-    TestHarness.makeCleanScratch(scratch);
-    Avrora avrora = new Avrora(config, scratch);
-    
-    avrora.method.invoke(null, (Object) args);
-  }
 }

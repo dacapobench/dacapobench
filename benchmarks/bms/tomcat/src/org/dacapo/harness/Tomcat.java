@@ -182,14 +182,4 @@ public class Tomcat extends Benchmark {
     System.out
         .printf("==================== Thread Dump End ====================%n");
   }
-
-  /**
-   * Stub which exists <b>only</b> to facilitate whole program static analysis
-   * on a per-benchmark basis. See also the "split-deps" ant build target, which
-   * is also provided to enable whole program static analysis.
-   */
-  public static void main(String args[]) throws Exception {
-    // create dummy harness and invoke with dummy arguments
-    (new Tomcat(null, null)).run(null, "");
-  }
 }

@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date: 2009-12-04 14:25:53 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Batik.java 658 2009-12-04 03:25:53Z jzigman $
+ * @date $Date: 2009-12-21 14:50:19 +1100 (Mon, 21 Dec 2009) $
+ * @id $Id: Batik.java 721 2009-12-21 03:50:19Z steveb-oss $
  *******************************************************************************/
 package org.dacapo.harness;
 
@@ -58,17 +58,5 @@ public class Batik extends Benchmark {
   public void iterate(String size) throws Exception {
     Object object = constructor.newInstance((Object) args);
     method.invoke(object);
-  }
-
-  /**
-   * Stub which exists <b>only</b> to facilitate whole program static analysis
-   * on a per-benchmark basis. See also the "split-deps" ant build target, which
-   * is also provided to enable whole program static analysis.
-   * 
-   * @author Eric Bodden
-   */
-  public static void main(String args[]) throws Exception {
-    // create dummy harness and invoke with dummy arguments
-    (new Batik(null, null)).run(null, "");
   }
 }
