@@ -84,34 +84,34 @@ public class CommandLineArgs {
   private static final String OPT_VALIDATION_REPORT = "validation-report";
   private static final String OPT_CONFIG = "config";
   private static final String OPT_VERBOSE = "verbose";
-  private static final String OPT_PRE_ITERATION_GC = "pre-iteration-gc";
+  private static final String OPT_NO_PRE_ITERATION_GC = "no-pre-iteration-gc";
   private static final String OPT_THREAD_COUNT = "thread-count";
   private static final String OPT_THREAD_FACTOR = "thread-factor";
 
   private static final Option[] OPTIONS = {
-      makeOption("c",  OPT_CALLBACK,          "Use class <callback> to bracket benchmark runs", "callback"),
-      makeOption("h",  OPT_HELP,              "Print this help", null),
-      makeOption("r",  OPT_RELEASE_NOTES,     "Print the release notes", null),
-      makeOption("l",  OPT_LIST_BENCHMARKS,   "List available benchmarks", null),
-      makeOption("i",  OPT_INFORMATION,       "Display benchmark information", null),
-      makeOption("s",  OPT_SIZE,              "Size of input data", "SIZE"),
-      makeOption(null, OPT_SCRATCH_DIRECTORY, "Specify an alternate scratch directory <dir>", "dir"),
-      makeOption("C",  OPT_CONVERGE,          "Allow benchmark times to converge before timing", null),
-      makeOption(null, OPT_MAX_ITERATIONS,    "Run a max of <max_iterations> iterations (default 20)", "max_iterations"),
-      makeOption(null, OPT_VARIANCE,          "Target coefficient of variation <pct> (default 3.0)", "pct"),
-      makeOption(null, OPT_WINDOW,            "Measure variance over <window> runs (default 3)", "window"),
-      makeOption("n",  OPT_ITERATIONS,        "Run the benchmark <iter> times", "iter"),
-      makeOption("d",  OPT_DEBUG,             "Verbose debugging information", null),
-      makeOption(null, OPT_IGNORE_VALIDATION, "Don't halt on validation failure", null),
-      makeOption(null, OPT_NO_DIGEST_OUTPUT,  "Turn off SHA1 digest of stdout/stderr", null),
-      makeOption(null, OPT_NO_VALIDATION,     "Don't validate at all", null),
-      makeOption(null, OPT_PRESERVE,          "Preserve output files (debug)", null),
-      makeOption(null, OPT_VALIDATION_REPORT, "Report digests, line counts etc", "report_file"),
-      makeOption(null, OPT_CONFIG, null,      "config_file"),
-      makeOption(null, OPT_PRE_ITERATION_GC,  "Perform System.gc() before the start of each iteration", null),
-      makeOption("t",  OPT_THREAD_COUNT,      "Set the thread count to drive the workload (mutually exclusive -k)", "thread_count"),
-      makeOption("k",  OPT_THREAD_FACTOR,     "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
-      makeOption("v",  OPT_VERBOSE,           "Verbose output", null) };
+      makeOption("c",  OPT_CALLBACK,            "Use class <callback> to bracket benchmark runs", "callback"),
+      makeOption("h",  OPT_HELP,                "Print this help", null),
+      makeOption("r",  OPT_RELEASE_NOTES,       "Print the release notes", null),
+      makeOption("l",  OPT_LIST_BENCHMARKS,     "List available benchmarks", null),
+      makeOption("i",  OPT_INFORMATION,         "Display benchmark information", null),
+      makeOption("s",  OPT_SIZE,                "Size of input data", "SIZE"),
+      makeOption(null, OPT_SCRATCH_DIRECTORY,   "Specify an alternate scratch directory <dir>", "dir"),
+      makeOption("C",  OPT_CONVERGE,            "Allow benchmark times to converge before timing", null),
+      makeOption(null, OPT_MAX_ITERATIONS,      "Run a max of <max_iterations> iterations (default 20)", "max_iterations"),
+      makeOption(null, OPT_VARIANCE,            "Target coefficient of variation <pct> (default 3.0)", "pct"),
+      makeOption(null, OPT_WINDOW,              "Measure variance over <window> runs (default 3)", "window"),
+      makeOption("n",  OPT_ITERATIONS,          "Run the benchmark <iter> times", "iter"),
+      makeOption("d",  OPT_DEBUG,               "Verbose debugging information", null),
+      makeOption(null, OPT_IGNORE_VALIDATION,   "Don't halt on validation failure", null),
+      makeOption(null, OPT_NO_DIGEST_OUTPUT,    "Turn off SHA1 digest of stdout/stderr", null),
+      makeOption(null, OPT_NO_VALIDATION,       "Don't validate at all", null),
+      makeOption(null, OPT_PRESERVE,            "Preserve output files (debug)", null),
+      makeOption(null, OPT_VALIDATION_REPORT,   "Report digests, line counts etc", "report_file"),
+      makeOption(null, OPT_CONFIG, null,        "config_file"),
+      makeOption(null, OPT_NO_PRE_ITERATION_GC, "Skip performing System.gc() before the start of each iteration", null),
+      makeOption("t",  OPT_THREAD_COUNT,        "Set the thread count to drive the workload (mutually exclusive -k)", "thread_count"),
+      makeOption("k",  OPT_THREAD_FACTOR,       "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
+      makeOption("v",  OPT_VERBOSE,             "Verbose output", null) };
 
   private static CommandLineParser parser = new PosixParser();
   private static Options options = new Options();
@@ -362,7 +362,7 @@ public class CommandLineArgs {
   }
 
   public boolean getPreIterationGC() {
-    return line.hasOption(OPT_PRE_ITERATION_GC);
+    return !line.hasOption(OPT_NO_PRE_ITERATION_GC);
   }
 
   public String getThreadCount() {
