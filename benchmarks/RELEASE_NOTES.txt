@@ -214,17 +214,7 @@ in addressing bugs and shortcomings in the suite.
 A few notable unresolved high priority issues are listed here:
 
 
-4.1 Avrora
-
-Avrora exhibits a memory leak.  We have tracked the leak and identified
-its source within avrora (ie it is not due to the DaCapo framework). We
-have reported the leak.   At the time of this release the leak remains,
-so we have left the leak as-is.   This is consistent with our policy
-of presenting real-world workloads "as-is", with their own real-world
-idiosyncrasies.
-
-
-4.2 Socket use by tradebeans, tradesoap and tomcat
+4.1 Socket use by tradebeans, tradesoap and tomcat
 
 Each of these benchmarks use sockets to communicate between their
 clients and server.  We have observed that connections are used very
@@ -239,14 +229,14 @@ our particular use of them.  As with all issues, we welcome feedback
 and fixes from the community.
 
 
-4.3 Tomcat
+4.2 Tomcat
 
 Tomcat remains less interesting than we would have liked. Performance
 results show that tomcat currently has a remarkably flat warm-up curve
 when compared to other benchmarks.
 
 
-4.4 Validation
+4.3 Validation
 
 Validation continues to used summarization via a checksum, so we are
 unable to provide a diff between expected and actual output in the
@@ -254,7 +244,7 @@ case of failure.   We hope to update this, and welcome community
 contributions.
 
 
-4.5 Support for whole-program static analysis
+4.4 Support for whole-program static analysis
 
 Despite significant help from the community, we have had to drop
 support for whole-program static analysis that was available in the
