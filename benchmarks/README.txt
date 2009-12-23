@@ -21,6 +21,9 @@ strongly request that:
 
    Please cite the 2006 OOPSLA paper (http://doi.acm.org/10.1145/1167473.1167488)
 
+- All command line options used be reported.  For example, if you
+  explicitly override the number of threads or set the number of
+  iterations, you must report this when you publish results.
 
 For more information see the Dacapo Benchmark web page,
 
