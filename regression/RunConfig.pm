@@ -23,7 +23,8 @@ $timeout_fallback_margin = 3;  # kill a job if it is > 3 X slower than recent ru
 $timedrun = "./timedrun.pl -t ";
 
 
-@perf_jars = ("2006-10-MR2", $dacapo_head_jar);
+#@perf_jars = ("2006-10-MR2", $dacapo_head_jar);
+@perf_jars = ("9.12-bach", $dacapo_head_jar);
 @sanity_jars = ($dacapo_head_jar);
 @perf_sizes = ("default");
 @sanity_sizes = ("small", "default", "large");
