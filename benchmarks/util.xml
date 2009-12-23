@@ -104,12 +104,17 @@
 			<delete dir="${tmpfile}" />
 			<mkdir dir="${tmpfile}"/>
 			<untar src="@{file}" dest="${tmpfile}" compression="@{compression}" />
-			<touch file="${tmpfile}.chk" />
-			<concat destfile="${tmpfile}.chk" binary="yes">
-				<fileset dir="${tmpfile}" />
-			</concat>
-			<checksum file="${tmpfile}.chk" fileext=".@{checksum-alg}" algorithm="@{checksum-alg}" />
-			<copy tofile="@{file}.@{checksum-alg}" file="${tmpfile}.chk.@{checksum-alg}" />
+
+			<checksum totalproperty="calculated-checksum" algorithm="${checksum-alg}">
+				<sort id="sorted-set" xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators" >
+					<rcmp:name />
+					<fileset dir="${tmpfile}" />
+				</sort>
+			</checksum>
+
+			<echo message="Content ${checksum-alg} for @{file} is ${calculated-checksum}" />
+
+			<echo message="${calculated-checksum}" file="@{file}.@{checksum-alg}" />
 			<delete file="${tmpfile}.chk" />
 			<delete file="${tmpfile}.chk.@{checksum-alg}" />
 			<delete dir="${tmpfile}" />
@@ -230,7 +235,7 @@
 		<property name="cvs-tmp" value="cvs-${build.time}"/>
 		<mkdir dir="${cvs-tmp}"/>
 		<echo message="Date is: ${cvs-date}"/>
-		<cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date}" compression="yes" failonerror="yes" />
+		<cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date} 06:00:00 Z" compression="yes" failonerror="yes" />
 		<!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->
 		<tar destfile="${target-filename}" basedir="${cvs-tmp}" compression="gzip" excludes=".cvs*/**,**/.cvs*/**"/>
 		<!-- <delete dir="${cvs-tmp}"/> -->
