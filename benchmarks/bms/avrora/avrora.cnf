@@ -6,38 +6,40 @@ benchmark avrora
 size small args "-seconds=30",
 	"-platform=mica2",
 	"-simulation=sensor-network",
-	"-nodecount=2,2",
+	"-nodecount=2,1",
 	"-stagger-start=1000000",
-	"test/tinyos/CntToRfm.elf"
+	"test/tinyos/CntToRfm.elf",
+	"test/tinyos/RfmToLeds.elf"
 
   output
         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "-seconds=30",
-		"-platform=mica2",
+	"-platform=mica2",
         "-simulation=sensor-network",
-        "-nodecount=3,3",
-		"-stagger-start=1000000",
-		"test/tinyos/CntToRfm.elf",
-		"test/tinyos/RfmToLeds.elf"
+        "-nodecount=4,2",
+	"-stagger-start=1000000",
+	"test/tinyos/CntToRfm.elf",
+	"test/tinyos/RfmToLeds.elf"
   output 
     	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-seconds=30",
-		"-platform=mica2",
-        "-simulation=sensor-network",
-        "-nodecount=7,7",
-		"-stagger-start=1000000",
-		"test/tinyos/CntToRfm.elf",
-		"test/tinyos/RfmToLeds.elf",
-                "test/tinyos/XnpOscopeRF.elf",
-		"test/tinyos/OscilloscopeRF.elf",
-		"test/tinyos/HighFrequencySampling.elf",
-		"test/tinyos/SenseToLeds.elf",
-		"test/tinyos/Surge.elf",
-		"test/tinyos/XnpRfmToLeds.elf",
-		"test/tinyos/RadioSenseToLeds_mica2.elf",
-		"test/tinyos/SecureTOSBase.elf";
+	"-platform=mica2",
+	"-simulation=sensor-network",
+	"-nodecount=7,3,7,2",
+	"-stagger-start=1000000",
+	"test/tinyos/CntToRfm.elf",
+	"test/tinyos/RfmToLeds.elf",
+	"test/tinyos/Surge.elf",
+	"test/tinyos/Blink_mica2.elf",
+	"test/tinyos/XnpOscopeRF.elf",
+	"test/tinyos/OscilloscopeRF.elf",
+	"test/tinyos/HighFrequencySampling.elf",
+	"test/tinyos/SenseToLeds.elf",
+	"test/tinyos/XnpRfmToLeds.elf",
+	"test/tinyos/RadioSenseToLeds_mica2.elf",
+	"test/tinyos/SecureTOSBase.elf";
   output 
     	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
