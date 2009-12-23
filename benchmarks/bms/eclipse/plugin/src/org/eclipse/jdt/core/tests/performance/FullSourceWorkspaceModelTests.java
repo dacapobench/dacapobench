@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Australian National University - adaptation to DaCapo benchmark suite
+ */
 package org.eclipse.jdt.core.tests.performance;
 
 import org.eclipse.core.resources.IProject;
@@ -11,7 +22,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.tests.model.AbstractJavaModelTests;
 
-/*
+/**
  * The original unmodified source this class can be found within
  *    eclipse/plugins/org.eclipse.sdk.tests.source_3.5.0.v20090227/src/org.eclipse.jdt.core.tests.performance_3.3.100.v_972_R35x
  *  which can be found within
@@ -19,6 +30,9 @@ import org.eclipse.jdt.core.tests.model.AbstractJavaModelTests;
  *  which can be found within
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
+ *  
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class FullSourceWorkspaceModelTests extends FullSourceWorkspaceTests {
   public static void runDaCapoTests() {
@@ -40,8 +54,7 @@ public class FullSourceWorkspaceModelTests extends FullSourceWorkspaceTests {
    * classpath.
    */
   private IJavaProject createJavaProject(String name) throws CoreException {
-    IProject project = ResourcesPlugin.getWorkspace().getRoot()
-        .getProject(name);
+    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
     if (project.exists())
       project.delete(true, null);
     project.create(null);
@@ -50,8 +63,7 @@ public class FullSourceWorkspaceModelTests extends FullSourceWorkspaceTests {
     description.setNatureIds(new String[] { JavaCore.NATURE_ID });
     project.setDescription(description, null);
     IJavaProject javaProject = JavaCore.create(project);
-    javaProject.setRawClasspath(new IClasspathEntry[] { JavaCore
-        .newVariableEntry(new Path("JRE_LIB"), null, null) }, null);
+    javaProject.setRawClasspath(new IClasspathEntry[] { JavaCore.newVariableEntry(new Path("JRE_LIB"), null, null) }, null);
     return javaProject;
   }
 
@@ -61,8 +73,7 @@ public class FullSourceWorkspaceModelTests extends FullSourceWorkspaceTests {
    */
   public void testFindType() throws CoreException {
 
-    IJavaModel model = JavaCore
-        .create(ResourcesPlugin.getWorkspace().getRoot());
+    IJavaModel model = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
     IJavaProject[] existingProjects = model.getJavaProjects();
 
     try {

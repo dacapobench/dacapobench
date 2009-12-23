@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -14,6 +14,10 @@ import java.lang.reflect.Method;
 
 import org.dacapo.parser.Config;
 
+/**
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ */
 public class Sunflow extends org.dacapo.harness.Benchmark {
 
   private final Constructor<?> constructor;
@@ -39,8 +43,7 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
    * case we create a new instance of a Sunflow benchmark, which sets up basic
    * data structures.
    * 
-   * @param size
-   *          The "size" of the iteration (small, default, large)
+   * @param size The "size" of the iteration (small, default, large)
    */
   public void preIteration(String size) throws Exception {
     String[] args = config.preprocessArgs(size, scratch);
@@ -56,8 +59,7 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
   /**
    * Perform a single iteration of the benchmark.
    * 
-   * @param size
-   *          The "size" of the iteration (small, default, large)
+   * @param size The "size" of the iteration (small, default, large)
    */
   public void iterate(String size) throws Exception {
     method.invoke(sunflow);
@@ -66,8 +68,7 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
   /**
    * Validate the output of the benchmark, OUTSIDE the timing loop.
    * 
-   * @param size
-   *          The "size" of the iteration (small, default, large)
+   * @param size The "size" of the iteration (small, default, large)
    */
   public boolean validate(String size) {
     if (!getValidate())

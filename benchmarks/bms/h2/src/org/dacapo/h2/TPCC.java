@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.h2;
 
 import java.io.File;
@@ -42,6 +42,10 @@ import org.h2.tools.Backup;
 import org.h2.tools.Restore;
 import org.h2.tools.Script;
 
+/**
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ */
 public class TPCC {
   public final static int RETRY_LIMIT = 5;
 
@@ -75,11 +79,9 @@ public class TPCC {
   // this loaderThreads seems determininstic and should be
   // to the number of CPU cores
   private short scale = DEF_SCALE;
-  private int totalTransactions = DEF_NUM_OF_TERMINALS
-      * DEF_TRANSACTIONS_PER_TERMINAL;
+  private int totalTransactions = DEF_NUM_OF_TERMINALS * DEF_TRANSACTIONS_PER_TERMINAL;
   private int numberOfTerminals = DEF_NUM_OF_TERMINALS;
-  private int[] transactionsPerTerminal = { DEF_TRANSACTIONS_PER_TERMINAL,
-      DEF_TRANSACTIONS_PER_TERMINAL }; // DEF_TRANSACTIONS_PER_TERMINAL;
+  private int[] transactionsPerTerminal = { DEF_TRANSACTIONS_PER_TERMINAL, DEF_TRANSACTIONS_PER_TERMINAL }; // DEF_TRANSACTIONS_PER_TERMINAL;
   private boolean generate = false; // by default we use the pre-generated
   // database
   private boolean inMemoryDB = true; // by default use the in memory db
@@ -118,13 +120,11 @@ public class TPCC {
   final static long SEED = 897523978813691l;
   final static int SEED_STEP = 100000;
 
-  public static TPCC make(Config config, File scratch, Boolean verbose,
-      Boolean preserve) throws Exception {
+  public static TPCC make(Config config, File scratch, Boolean verbose, Boolean preserve) throws Exception {
     return new TPCC(config, scratch, verbose, preserve);
   }
 
-  public TPCC(Config config, File scratch, boolean verbose, boolean preserve)
-      throws Exception {
+  public TPCC(Config config, File scratch, boolean verbose, boolean preserve) throws Exception {
     this.config = config;
     this.scratch = scratch;
     this.verbose = verbose;
@@ -141,8 +141,7 @@ public class TPCC {
     if (inMemoryDB)
       database = DATABASE_NAME_MEMORY;
     else
-      database = new File(new File(scratch, "db"), DATABASE_NAME_DISK).toURI()
-          .toString();
+      database = new File(new File(scratch, "db"), DATABASE_NAME_DISK).toURI().toString();
 
     // seem to need to set this early and in the system properties
     Class.forName(DRIVER_NAME);
@@ -163,12 +162,10 @@ public class TPCC {
 
     // set up the transactions for each terminal
     final int iterationsPerClient = totalTransactions / numberOfTerminals;
-    final int oddIterations = totalTransactions
-        - (iterationsPerClient * numberOfTerminals);
+    final int oddIterations = totalTransactions - (iterationsPerClient * numberOfTerminals);
 
     for (int i = 0; i < numberOfTerminals; i++)
-      transactionsPerTerminal[i] = iterationsPerClient
-          + (i < oddIterations ? 1 : 0);
+      transactionsPerTerminal[i] = iterationsPerClient + (i < oddIterations ? 1 : 0);
   }
 
   private void preIterationDiskDB() throws Exception {
@@ -197,13 +194,9 @@ public class TPCC {
 
       // backup the database
 
-      org.h2.tools.Backup
-          .execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir
-              .getAbsolutePath(), DATABASE_NAME_DISK, true);
+      org.h2.tools.Backup.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
     } else {
-      org.h2.tools.Restore
-          .execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir
-              .getAbsolutePath(), DATABASE_NAME_DISK, true);
+      org.h2.tools.Restore.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
     }
   }
 
@@ -241,8 +234,7 @@ public class TPCC {
 
       long value = calculateSumDB();
       if (value != checkSum)
-        System.err.println("Checksum Failed for Database, expected " + checkSum
-            + " got " + value);
+        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
     }
 
     // keep connection open so that database stays in memory
@@ -253,7 +245,7 @@ public class TPCC {
     assert this.size.equalsIgnoreCase(size);
 
     reporter.reset();
-    
+
     long start = System.currentTimeMillis();
 
     TPCCSubmitter.setSeed(SEED);
@@ -287,24 +279,24 @@ public class TPCC {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
-    // run all the submitters. this is taken from 
-    //   org.apache.derbyTesting.system.oe.client.MultiThreadSubmitter
+    // run all the submitters. this is taken from
+    // org.apache.derbyTesting.system.oe.client.MultiThreadSubmitter
     Thread[] threads = new Thread[submitters.length];
     for (int i = 0; i < submitters.length; i++) {
-        submitters[i].clearTransactionCount();
-        threads[i] = newThread(i, submitters[i], transactionsPerTerminal[i]);
+      submitters[i].clearTransactionCount();
+      threads[i] = newThread(i, submitters[i], transactionsPerTerminal[i]);
     }
 
     for (int i = 0; i < threads.length; i++)
-        threads[i].start();
+      threads[i].start();
 
     // and then wait for them to finish
     for (int i = 0; i < threads.length; i++) {
-        try {
-            threads[i].join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+      try {
+        threads[i].join();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
     // done running the submitters
 
@@ -319,8 +311,7 @@ public class TPCC {
 
       long value = calculateSumDB();
       if (value != checkSum)
-        System.err.println("Checksum Failed for Database, expected " + checkSum
-            + " got " + value);
+        System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
 
       resetToInitialDataTime = System.currentTimeMillis() - start;
     }
@@ -328,12 +319,10 @@ public class TPCC {
 
   public void postIteration(String size) throws Exception {
     if (verbose && (firstIteration || !inMemoryDB)) {
-      System.out.println("Time to perform pre-iteration phase: "
-          + preIterationTime + " msec");
+      System.out.println("Time to perform pre-iteration phase: " + preIterationTime + " msec");
     }
     if (verbose && (inMemoryDB && cleanupInIteration)) {
-      System.out.println("Time to reset data to initial state: "
-          + resetToInitialDataTime + " msec");
+      System.out.println("Time to reset data to initial state: " + resetToInitialDataTime + " msec");
     }
 
     firstIteration = false;
@@ -369,10 +358,11 @@ public class TPCC {
         total += subTx[j];
       }
     }
-    System.out.println("Completed "+total+" transactions");
+    System.out.println("Completed " + total + " transactions");
     String dots = "........................";
     for (int i = 0; i < transactions.length; i++) {
-        System.out.format("\t"+TPCCSubmitter.TX_NAME[i]+" "+dots.substring(TPCCSubmitter.TX_NAME[i].length())+"%6d (%4.1f%%)%n", transactions[i], 100*((float) transactions[i]/total));
+      System.out.format("\t" + TPCCSubmitter.TX_NAME[i] + " " + dots.substring(TPCCSubmitter.TX_NAME[i].length()) + "%6d (%4.1f%%)%n", transactions[i],
+          100 * ((float) transactions[i] / total));
     }
   }
 
@@ -491,10 +481,8 @@ public class TPCC {
     // remove all entries that are not marked as part of the initial\\
     // set of entries
     prepareStatement("DELETE FROM HISTORY WHERE H_INITIAL = FALSE").execute();
-    prepareStatement("DELETE FROM NEWORDERS WHERE NO_INITIAL = FALSE")
-        .execute();
-    prepareStatement("DELETE FROM ORDERLINE WHERE OL_INITIAL = FALSE")
-        .execute();
+    prepareStatement("DELETE FROM NEWORDERS WHERE NO_INITIAL = FALSE").execute();
+    prepareStatement("DELETE FROM ORDERLINE WHERE OL_INITIAL = FALSE").execute();
     prepareStatement("DELETE FROM ORDERS WHERE O_INITIAL = FALSE").execute();
 
     // commit deletes
@@ -506,33 +494,22 @@ public class TPCC {
     // less heap pressure
     // we also perform regular commits for the same reason
     prepareStatement(
-        "UPDATE CUSTOMER SET C_DATA = C_DATA_INITIAL, C_BALANCE = -10.0, C_YTD_PAYMENT = 10.0, C_PAYMENT_CNT = 1, C_DELIVERY_CNT = 0 WHERE C_DATA <> C_DATA_INITIAL OR C_BALANCE <> -10.0 OR C_YTD_PAYMENT <> 10.0 OR C_PAYMENT_CNT <> 1 OR C_DELIVERY_CNT <> 0")
-        .execute();
+        "UPDATE CUSTOMER SET C_DATA = C_DATA_INITIAL, C_BALANCE = -10.0, C_YTD_PAYMENT = 10.0, C_PAYMENT_CNT = 1, C_DELIVERY_CNT = 0 WHERE C_DATA <> C_DATA_INITIAL OR C_BALANCE <> -10.0 OR C_YTD_PAYMENT <> 10.0 OR C_PAYMENT_CNT <> 1 OR C_DELIVERY_CNT <> 0").execute();
     getConnection().commit();
 
-    prepareStatement(
-        "UPDATE DISTRICT SET D_YTD = 30000.0, D_NEXT_O_ID = 3001 WHERE D_YTD <> 30000.0 OR D_NEXT_O_ID <> 3001")
-        .execute();
+    prepareStatement("UPDATE DISTRICT SET D_YTD = 30000.0, D_NEXT_O_ID = 3001 WHERE D_YTD <> 30000.0 OR D_NEXT_O_ID <> 3001").execute();
     getConnection().commit();
 
-    prepareStatement(
-        "UPDATE WAREHOUSE SET W_YTD = 300000.0 WHERE W_YTD <> 300000.0")
-        .execute();
+    prepareStatement("UPDATE WAREHOUSE SET W_YTD = 300000.0 WHERE W_YTD <> 300000.0").execute();
     getConnection().commit();
 
-    prepareStatement(
-        "UPDATE STOCK SET S_QUANTITY = S_QUANTITY_INITIAL, S_ORDER_CNT = 0, S_YTD = 0, S_REMOTE_CNT = 0 WHERE S_QUANTITY <> S_QUANTITY_INITIAL OR S_ORDER_CNT <> 0 OR S_YTD <> 0 OR S_REMOTE_CNT <> 0")
-        .execute();
+    prepareStatement("UPDATE STOCK SET S_QUANTITY = S_QUANTITY_INITIAL, S_ORDER_CNT = 0, S_YTD = 0, S_REMOTE_CNT = 0 WHERE S_QUANTITY <> S_QUANTITY_INITIAL OR S_ORDER_CNT <> 0 OR S_YTD <> 0 OR S_REMOTE_CNT <> 0").execute();
     getConnection().commit();
 
-    prepareStatement(
-        "UPDATE ORDERS SET O_CARRIER_ID = O_CARRIER_ID_INITIAL WHERE O_CARRIER_ID <> O_CARRIER_ID_INITIAL")
-        .execute();
+    prepareStatement("UPDATE ORDERS SET O_CARRIER_ID = O_CARRIER_ID_INITIAL WHERE O_CARRIER_ID <> O_CARRIER_ID_INITIAL").execute();
     getConnection().commit();
 
-    prepareStatement(
-        "UPDATE ORDERLINE SET OL_DELIVERY_D = OL_DELIVERY_D_INITIAL WHERE OL_DELIVERY_D <> OL_DELIVERY_D_INITIAL")
-        .execute();
+    prepareStatement("UPDATE ORDERLINE SET OL_DELIVERY_D = OL_DELIVERY_D_INITIAL WHERE OL_DELIVERY_D <> OL_DELIVERY_D_INITIAL").execute();
     getConnection().commit();
   }
 
@@ -586,8 +563,7 @@ public class TPCC {
   }
 
   public int runScript(InputStream script, String encoding) throws Exception {
-    ResultSet results = RunScript.execute(getConnection(),
-        new InputStreamReader(script));
+    ResultSet results = RunScript.execute(getConnection(), new InputStreamReader(script));
 
     if (results != null)
       results.close();
@@ -598,27 +574,25 @@ public class TPCC {
   // helper function for getting database setup and creation scripts
   private static URL getTestResource(final String name) {
 
-    return (URL) AccessController
-        .doPrivileged(new java.security.PrivilegedAction() {
+    return (URL) AccessController.doPrivileged(new java.security.PrivilegedAction() {
 
-          public Object run() {
-            return TPCC.class.getClassLoader().getResource(name);
+      public Object run() {
+        return TPCC.class.getClassLoader().getResource(name);
 
-          }
+      }
 
-        });
+    });
   }
 
   private static InputStream openTestResource(final URL url) throws Exception {
-    return (InputStream) AccessController
-        .doPrivileged(new java.security.PrivilegedExceptionAction() {
+    return (InputStream) AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
 
-          public Object run() throws IOException {
-            return url.openStream();
+      public Object run() throws IOException {
+        return url.openStream();
 
-          }
+      }
 
-        });
+    });
   }
 
   // construct a database connection
@@ -641,8 +615,7 @@ public class TPCC {
 
   private PreparedStatement prepareStatement(String sql) throws SQLException {
     // Prepare all statements as forward-only, read-only, close at commit.
-    return getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY,
-        ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
+    return getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
   }
 
   // database name helper functions
@@ -718,70 +691,28 @@ public class TPCC {
   private void backupData() throws Exception {
     getBackupDir().mkdirs();
 
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("orderline.csv").getAbsolutePath()
-        + "', 'SELECT * FROM ORDERLINE', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("neworders.csv").getAbsolutePath()
-        + "', 'SELECT * FROM NEWORDERS', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("history.csv").getAbsolutePath()
-        + "', 'SELECT * FROM HISTORY', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("orders.csv").getAbsolutePath()
-        + "', 'SELECT * FROM ORDERS', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("customer.csv").getAbsolutePath()
-        + "', 'SELECT * FROM CUSTOMER', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("stock.csv").getAbsolutePath()
-        + "', 'SELECT * FROM STOCK', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("district.csv").getAbsolutePath()
-        + "', 'SELECT * FROM DISTRICT', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("item.csv").getAbsolutePath()
-        + "', 'SELECT * FROM ITEM', 'UTF-8');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('"
-        + getBackupFile("warehouse.csv").getAbsolutePath()
-        + "', 'SELECT * FROM WAREHOUSE', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("orderline.csv").getAbsolutePath() + "', 'SELECT * FROM ORDERLINE', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("neworders.csv").getAbsolutePath() + "', 'SELECT * FROM NEWORDERS', 'UTF-8');"), "US-ASCII");
+    runScript(
+        new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("history.csv").getAbsolutePath() + "', 'SELECT * FROM HISTORY', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("orders.csv").getAbsolutePath() + "', 'SELECT * FROM ORDERS', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("customer.csv").getAbsolutePath() + "', 'SELECT * FROM CUSTOMER', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("stock.csv").getAbsolutePath() + "', 'SELECT * FROM STOCK', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("district.csv").getAbsolutePath() + "', 'SELECT * FROM DISTRICT', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("item.csv").getAbsolutePath() + "', 'SELECT * FROM ITEM', 'UTF-8');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("CALL CSVWRITE('" + getBackupFile("warehouse.csv").getAbsolutePath() + "', 'SELECT * FROM WAREHOUSE', 'UTF-8');"), "US-ASCII");
   }
 
   private void restoreData() throws Exception {
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO WAREHOUSE SELECT * FROM CSVREAD('"
-            + getBackupFile("warehouse.csv").getAbsolutePath() + "');"),
-        "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO ITEM SELECT * FROM CSVREAD('"
-            + getBackupFile("item.csv").getAbsolutePath() + "');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO DISTRICT SELECT * FROM CSVREAD('"
-            + getBackupFile("district.csv").getAbsolutePath() + "');"),
-        "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO STOCK SELECT * FROM CSVREAD('"
-            + getBackupFile("stock.csv").getAbsolutePath() + "');"), "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO CUSTOMER SELECT * FROM CSVREAD('"
-            + getBackupFile("customer.csv").getAbsolutePath() + "');"),
-        "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO ORDERS SELECT * FROM CSVREAD('"
-            + getBackupFile("orders.csv").getAbsolutePath() + "');"),
-        "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO HISTORY SELECT * FROM CSVREAD('"
-            + getBackupFile("history.csv").getAbsolutePath() + "');"),
-        "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO NEWORDERS SELECT * FROM CSVREAD('"
-            + getBackupFile("neworders.csv").getAbsolutePath() + "');"),
-        "US-ASCII");
-    runScript(new java.io.StringBufferInputStream(
-        "INSERT INTO ORDERLINE SELECT * FROM CSVREAD('"
-            + getBackupFile("orderline.csv").getAbsolutePath() + "');"),
-        "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO WAREHOUSE SELECT * FROM CSVREAD('" + getBackupFile("warehouse.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO ITEM SELECT * FROM CSVREAD('" + getBackupFile("item.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO DISTRICT SELECT * FROM CSVREAD('" + getBackupFile("district.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO STOCK SELECT * FROM CSVREAD('" + getBackupFile("stock.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO CUSTOMER SELECT * FROM CSVREAD('" + getBackupFile("customer.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO ORDERS SELECT * FROM CSVREAD('" + getBackupFile("orders.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO HISTORY SELECT * FROM CSVREAD('" + getBackupFile("history.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO NEWORDERS SELECT * FROM CSVREAD('" + getBackupFile("neworders.csv").getAbsolutePath() + "');"), "US-ASCII");
+    runScript(new java.io.StringBufferInputStream("INSERT INTO ORDERLINE SELECT * FROM CSVREAD('" + getBackupFile("orderline.csv").getAbsolutePath() + "');"), "US-ASCII");
   }
 
   private static Thread newThread(final int threadId, final Submitter submitter, final int count) {

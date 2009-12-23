@@ -1,11 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2009 The Australian National University.
+/*
+ * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.tomcat;
 
 import java.io.File;
@@ -15,6 +15,9 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * A page accessed via a GET method
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class HttpGet extends Page {
 
@@ -22,8 +25,7 @@ public class HttpGet extends Page {
    * An HTTP Get request for the URL {@code address}. Expects an HTTP return
    * code of 200 and does not perform digest validation.
    * 
-   * @param address
-   *          The URL (server-relative)
+   * @param address The URL (server-relative)
    */
   public HttpGet(String address) {
     this(address, 200, null);
@@ -33,10 +35,8 @@ public class HttpGet extends Page {
    * An HTTP Get request for the URL {@code address}. Expects an HTTP return
    * code of 200 and performs digest validation.
    * 
-   * @param address
-   *          The URL (server-relative)
-   * @param digest
-   *          The expected digest
+   * @param address The URL (server-relative)
+   * @param digest The expected digest
    */
   public HttpGet(String address, String digest) {
     this(address, 200, digest);
@@ -46,10 +46,8 @@ public class HttpGet extends Page {
    * An HTTP Get request for the URL {@code address}. Does not perform digest
    * validation.
    * 
-   * @param address
-   *          The URL (server-relative)
-   * @param status
-   *          The expected HTTP status
+   * @param address The URL (server-relative)
+   * @param status The expected HTTP status
    */
   public HttpGet(String address, int status) {
     this(address, status, null);
@@ -58,12 +56,9 @@ public class HttpGet extends Page {
   /**
    * An HTTP Get request for the URL {@code address}.
    * 
-   * @param address
-   *          The URL (server-relative)
-   * @param status
-   *          The expected HTTP status
-   * @param digest
-   *          The expected digest
+   * @param address The URL (server-relative)
+   * @param status The expected HTTP status
+   * @param digest The expected digest
    */
   public HttpGet(String address, int status, String digest) {
     super(address, status, digest);
@@ -71,11 +66,10 @@ public class HttpGet extends Page {
 
   /**
    * @see org.dacapo.tomcat.Page#fetch(org.dacapo.tomcat.Session, java.io.File,
-   *      boolean)
+   * boolean)
    */
   @Override
-  public boolean fetch(Session session, File logFile, boolean keep)
-      throws IOException {
+  public boolean fetch(Session session, File logFile, boolean keep) throws IOException {
     return fetch(session, new GetMethod(formatUrl(session)), logFile, keep);
   }
 }

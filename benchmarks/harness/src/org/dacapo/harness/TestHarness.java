@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date: 2009-12-21 14:10:54 +1100 (Mon, 21 Dec 2009) $
- * @id $Id: TestHarness.java 716 2009-12-21 03:10:54Z steveb-oss $
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -21,7 +21,6 @@ import java.util.jar.Manifest;
 import java.util.jar.JarFile;
 import java.util.Locale;
 
-
 import org.dacapo.parser.Config;
 
 /**
@@ -29,9 +28,8 @@ import org.dacapo.parser.Config;
  * the specified benchmark, interprets command line arguments, and invokes the
  * benchmark-specific harness class.
  * 
- * @author Steve Blackburn
- * @author Robin Garner
- * 
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: TestHarness.java 729 2009-12-23 06:14:08Z steveb-oss $
  */
 public class TestHarness {
   public static final String PROP_BUILD_NICKNAME = "build.nickname";
@@ -76,8 +74,7 @@ public class TestHarness {
    * Calculates coefficient of variation of a set of longs (standard deviation
    * divided by mean).
    * 
-   * @param times
-   *          Array of input values
+   * @param times Array of input values
    * @return Coefficient of variation
    */
   public static double coeff_of_var(long[] times) {
@@ -100,7 +97,7 @@ public class TestHarness {
   public static void main(String[] args) {
     // force the locale so that we don't have any character set issues
     // when generating output for the digests.
-    Locale.setDefault(new Locale("en","AU"));
+    Locale.setDefault(new Locale("en", "AU"));
 
     /* All benchmarks run headless */
     System.setProperty("java.awt.headless", "true");
@@ -115,7 +112,8 @@ public class TestHarness {
       Benchmark.setCommandLineOptions(commandLineArgs);
       try {
         Config.setThreadCountOverride(Integer.parseInt(commandLineArgs.getThreadCount()));
-      } catch (RuntimeException re) { }
+      } catch (RuntimeException re) {
+      }
 
       // now get the benchmark names and run them
       for (String bm : commandLineArgs.benchmarks()) {
@@ -145,24 +143,27 @@ public class TestHarness {
 
         int factor = 0;
         int limit = harness.config.getThreadLimit(size);
-        
+
         try {
           factor = Integer.parseInt(commandLineArgs.getThreadFactor());
           if (0 < factor && harness.config.getThreadModel() == Config.ThreadModel.PER_CPU)
-            harness.config.setThreadFactor(size,factor);
-        } catch (RuntimeException re) { }
+            harness.config.setThreadFactor(size, factor);
+        } catch (RuntimeException re) {
+        }
 
-        if (! harness.isValidSize(size)) {
+        if (!harness.isValidSize(size)) {
           System.err.println("No configuration size, " + size + ", for benchmark " + bm + ".");
         } else if (factor != 0 && harness.config.getThreadModel() != Config.ThreadModel.PER_CPU) {
           System.err.println("Can only set the thread factor for per_cpu configurable benchmarks");
         } else if (!harness.isValidThreadCount(size) && (harness.config.getThreadCountOverride() > 0 || factor > 0)) {
-          System.err.println("The specified number of threads ("+harness.config.getThreadCount(size)+") is outside the range [1," + (limit==0?"unlimited":""+limit) + "]");
+          System.err.println("The specified number of threads (" + harness.config.getThreadCount(size) + ") is outside the range [1,"
+              + (limit == 0 ? "unlimited" : "" + limit) + "]");
         } else if (commandLineArgs.getInformation()) {
           harness.bmInfo(size);
         } else {
           if (!harness.isValidThreadCount(size)) {
-            System.err.println("The derived number of threads ("+harness.config.getThreadCount(size)+") is outside the range [1," + (limit==0?"unlimited":""+limit) + "]; rescaling to match thread limit.");
+            System.err.println("The derived number of threads (" + harness.config.getThreadCount(size) + ") is outside the range [1,"
+                + (limit == 0 ? "unlimited" : "" + limit) + "]; rescaling to match thread limit.");
             harness.config.setThreadCountOverride(harness.config.getThreadLimit(size));
           }
 
@@ -189,7 +190,7 @@ public class TestHarness {
   private boolean isValidThreadCount(String size) {
     return config.getThreadLimit(size) == 0 || config.getThreadCount(size) <= config.getThreadLimit(size);
   }
-  
+
   /**
    * @param scratch
    * @param bm
@@ -201,16 +202,13 @@ public class TestHarness {
    * @throws InvocationTargetException
    * @throws Exception
    */
-  private static void runBenchmark(File scratch, String bm, TestHarness harness)
-      throws NoSuchMethodException, InstantiationException,
-      IllegalAccessException, InvocationTargetException, Exception {
+  private static void runBenchmark(File scratch, String bm, TestHarness harness) throws NoSuchMethodException, InstantiationException, IllegalAccessException,
+      InvocationTargetException, Exception {
     harness.config.printThreadModel(System.out, commandLineArgs.getSize(), commandLineArgs.getVerbose());
 
-    Constructor<?> cons = harness.findClass().getConstructor(
-        new Class[] { Config.class, File.class });
+    Constructor<?> cons = harness.findClass().getConstructor(new Class[] { Config.class, File.class });
 
-    Benchmark b = (Benchmark) cons.newInstance(new Object[] { harness.config,
-        scratch });
+    Benchmark b = (Benchmark) cons.newInstance(new Object[] { harness.config, scratch });
 
     boolean valid = true;
     Callback callback = commandLineArgs.getCallback();
@@ -222,8 +220,7 @@ public class TestHarness {
     b.cleanup();
 
     if (!valid) {
-      System.err.println("Validation FAILED for " + bm + " "
-          + commandLineArgs.getSize());
+      System.err.println("Validation FAILED for " + bm + " " + commandLineArgs.getSize());
       if (!commandLineArgs.getIgnoreValidation())
         System.exit(-2);
     }
@@ -292,16 +289,13 @@ public class TestHarness {
 
   {
     try {
-      JarFile jarFile = new JarFile(new File(TestHarness.class
-          .getProtectionDomain().getCodeSource().getLocation().getFile()));
+      JarFile jarFile = new JarFile(new File(TestHarness.class.getProtectionDomain().getCodeSource().getLocation().getFile()));
 
       Manifest manifest = jarFile.getManifest();
       Attributes attributes = manifest.getMainAttributes();
 
-      String nickname = attributes.get(new Attributes.Name(BUILD_NICKNAME))
-          .toString();
-      String version = attributes.get(new Attributes.Name(BUILD_VERSION))
-          .toString();
+      String nickname = attributes.get(new Attributes.Name(BUILD_NICKNAME)).toString();
+      String version = attributes.get(new Attributes.Name(BUILD_VERSION)).toString();
 
       BuildNickName = nickname;
       BuildVersion = version;
@@ -310,5 +304,4 @@ public class TestHarness {
       BuildVersion = "unknown";
     }
   }
-
 }

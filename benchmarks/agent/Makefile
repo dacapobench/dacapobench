@@ -1,3 +1,12 @@
+#
+# Copyright (c) 2009 The Australian National University.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Apache License v2.0.
+# You may obtain the license at
+# 
+#    http://www.opensource.org/licenses/apache2.0.php
+#
+
 # Source lists
 LIBNAME=dacapoagent
 SOURCES=src/dacapoagent.c

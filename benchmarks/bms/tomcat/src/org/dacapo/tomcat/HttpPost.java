@@ -1,11 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2009 The Australian National University.
+/*
+ * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.tomcat;
 
 import java.io.File;
@@ -15,6 +15,9 @@ import org.apache.commons.httpclient.methods.PostMethod;
 
 /**
  * A page accessed via a POST method
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class HttpPost extends Page {
 
@@ -22,8 +25,7 @@ public class HttpPost extends Page {
    * An HTTP POST request for the URL {@code address}. Expects an HTTP return
    * code of 200 and does not perform digest validation.
    * 
-   * @param address
-   *          The URL (server-relative)
+   * @param address The URL (server-relative)
    */
   public HttpPost(String address) {
     this(address, 200, null);
@@ -33,10 +35,8 @@ public class HttpPost extends Page {
    * An HTTP POST request for the URL {@code address}. Expects an HTTP return
    * code of 200 and performs digest validation.
    * 
-   * @param address
-   *          The URL (server-relative)
-   * @param digest
-   *          The expected digest
+   * @param address The URL (server-relative)
+   * @param digest The expected digest
    */
   public HttpPost(String address, String digest) {
     this(address, 200, digest);
@@ -46,10 +46,8 @@ public class HttpPost extends Page {
    * An HTTP POST request for the URL {@code address}. Does not perform digest
    * validation.
    * 
-   * @param address
-   *          The URL (server-relative)
-   * @param status
-   *          The expected HTTP status
+   * @param address The URL (server-relative)
+   * @param status The expected HTTP status
    */
   public HttpPost(String address, int status) {
     this(address, status, null);
@@ -58,20 +56,16 @@ public class HttpPost extends Page {
   /**
    * An HTTP POST request for the URL {@code address}.
    * 
-   * @param address
-   *          The URL (server-relative)
-   * @param status
-   *          The expected HTTP status
-   * @param digest
-   *          The expected digest
+   * @param address The URL (server-relative)
+   * @param status The expected HTTP status
+   * @param digest The expected digest
    */
   public HttpPost(String address, int status, String digest) {
     super(address, status, digest);
   }
 
   @Override
-  protected boolean fetch(Session session, File logFile, boolean keep)
-      throws IOException {
+  protected boolean fetch(Session session, File logFile, boolean keep) throws IOException {
     PostMethod post = new PostMethod(formatUrl(session));
     return fetch(session, post, logFile, keep);
   }

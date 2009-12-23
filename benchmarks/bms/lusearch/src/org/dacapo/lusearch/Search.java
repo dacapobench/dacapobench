@@ -1,6 +1,4 @@
-package org.dacapo.lusearch;
-
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,7 +13,12 @@ package org.dacapo.lusearch;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Contributors:
+ *     Apache Software Foundation 
+ *     Australian National University - adaptation to DaCapo test harness
  */
+package org.dacapo.lusearch;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,7 +39,12 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TopDocCollector;
 
-/** Simple command-line based search demo. */
+/**
+ * Simple command-line based search demo.
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ */
 public class Search {
 
   static final int MAX_DOCS_TO_COLLECT = 20;
@@ -84,7 +92,7 @@ public class Search {
     String outBase = null;
     int threads = 1;
     int totalQueries = 32;
-    
+
     for (int i = 0; i < args.length; i++) {
       if ("-index".equals(args[i])) {
         index = args[i + 1];
@@ -113,14 +121,13 @@ public class Search {
         threads = Integer.parseInt(args[i + 1]);
         i++;
       } else if ("-totalqueries".equals(args[i])) {
-      	totalQueries = Integer.parseInt(args[i + 1]);
-      	i++;
+        totalQueries = Integer.parseInt(args[i + 1]);
+        i++;
       }
     }
     completed = 0;
     for (int j = 0; j < threads; j++) {
-      new QueryThread(this, "Query" + j, j, threads, totalQueries, index, outBase, queryBase, field,
-          normsField, raw, hitsPerPage).start();
+      new QueryThread(this, "Query" + j, j, threads, totalQueries, index, outBase, queryBase, field, normsField, raw, hitsPerPage).start();
     }
     synchronized (this) {
       while (completed != totalQueries) {
@@ -134,23 +141,21 @@ public class Search {
 
   class QueryThread extends Thread {
 
-    Search  parent;
-    int     id;
-    int     threadCount;
-    int     totalQueries;
-    String  name;
-    String  index;
-    String  outBase;
-    String  queryBase;
-    String  field;
-    String  normsField;
+    Search parent;
+    int id;
+    int threadCount;
+    int totalQueries;
+    String name;
+    String index;
+    String outBase;
+    String queryBase;
+    String field;
+    String normsField;
     boolean raw;
-    int     hitsPerPage;
-    
-    
-    public QueryThread(Search parent, String name, int id, int threadCount,
-        int totalQueries, String index, String outBase, String queryBase,
-        String field, String normsField, boolean raw, int hitsPerPage) {
+    int hitsPerPage;
+
+    public QueryThread(Search parent, String name, int id, int threadCount, int totalQueries, String index, String outBase, String queryBase, String field,
+        String normsField, boolean raw, int hitsPerPage) {
       super(name);
       this.parent = parent;
       this.id = id;
@@ -168,10 +173,10 @@ public class Search {
 
     public void run() {
       try {
-        int count = totalQueries/threadCount + (id<(totalQueries%threadCount)?1:0);
-        for(int i=0, queryId=id; i<count; i++, queryId += threadCount) {
+        int count = totalQueries / threadCount + (id < (totalQueries % threadCount) ? 1 : 0);
+        for (int i = 0, queryId = id; i < count; i++, queryId += threadCount) {
           // make and run query
-          new QueryProcessor(parent,name,queryId,index,outBase,queryBase,field,normsField,raw,hitsPerPage).run();
+          new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage).run();
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -179,7 +184,7 @@ public class Search {
     }
 
   }
-  
+
   public class QueryProcessor {
 
     Search parent;
@@ -192,9 +197,8 @@ public class Search {
     BufferedReader in;
     PrintWriter out;
 
-    public QueryProcessor(Search parent, String name, int id, String index,
-        String outBase, String queryBase, String field, String normsField,
-        boolean raw, int hitsPerPage) {
+    public QueryProcessor(Search parent, String name, int id, String index, String outBase, String queryBase, String field, String normsField, boolean raw,
+        int hitsPerPage) {
       this.parent = parent;
       this.field = field;
       this.raw = raw;
@@ -271,8 +275,7 @@ public class Search {
 
       int numTotalHits = collector.getTotalHits();
       if (numTotalHits > 0)
-        out.println(numTotalHits + " total matching documents for "
-            + query.toString(field));
+        out.println(numTotalHits + " total matching documents for " + query.toString(field));
 
       int start = 0;
       int end = Math.min(numTotalHits, hitsPerPage);

@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2005, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.xalan;
 
 import java.io.File;
@@ -26,6 +26,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+/**
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ */
 public class XSLTBench {
 
   final boolean verbose = false;
@@ -84,8 +88,7 @@ public class XSLTBench {
       try {
         if (verbose)
           System.out.println("Worker thread starting");
-        FileOutputStream outputStream = new FileOutputStream(new File(scratch,
-            "xalan.out." + _id));
+        FileOutputStream outputStream = new FileOutputStream(new File(scratch, "xalan.out." + _id));
         Result outFile = new StreamResult(outputStream);
         while (true) {
           String fileName = _queue.pop();
@@ -94,8 +97,7 @@ public class XSLTBench {
             break;
           Transformer transformer = _template.newTransformer();
           transformer.setErrorListener(this);
-          FileInputStream inputStream = new FileInputStream(new File(scratch,
-              fileName));
+          FileInputStream inputStream = new FileInputStream(new File(scratch, fileName));
           Source inFile = new StreamSource(inputStream);
           transformer.transform(inFile, outFile);
           inputStream.close();
@@ -112,18 +114,15 @@ public class XSLTBench {
     }
 
     // Provide an ErrorListener so that stderr warnings can be surpressed
-    public void error(TransformerException exception)
-        throws TransformerException {
+    public void error(TransformerException exception) throws TransformerException {
       throw exception;
     }
 
-    public void fatalError(TransformerException exception)
-        throws TransformerException {
+    public void fatalError(TransformerException exception) throws TransformerException {
       throw exception;
     }
 
-    public void warning(TransformerException exception)
-        throws TransformerException {
+    public void warning(TransformerException exception) throws TransformerException {
       // Ignore warnings, the test transforms create some
     }
   }
@@ -146,11 +145,9 @@ public class XSLTBench {
     if (!org.apache.xalan.Version.getVersion().equals(XALAN_VERSION)) {
       System.err.println("***  Incorrect version of Xalan in use!");
       System.err.println("***     Should be '" + XALAN_VERSION + "',");
-      System.err.println("***     actually is '"
-          + org.apache.xalan.Version.getVersion() + "').");
+      System.err.println("***     actually is '" + org.apache.xalan.Version.getVersion() + "').");
       System.err.println("***  To fix this, extract the included xalan.jar:");
-      System.err.println("***     unzip " + props.get("java.class.path")
-          + " xalan.jar");
+      System.err.println("***     unzip " + props.get("java.class.path") + " xalan.jar");
       System.err.println("***  and override your jvm's boot classpath:");
       System.err.println("***     java -Xbootclasspath/p:xalan.jar [...] ");
       throw new Exception("Please fix your bootclasspath and try again.");

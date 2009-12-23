@@ -1,14 +1,18 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: MyCallback.java 659 2009-12-04 03:33:59Z jzigman $
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 import org.dacapo.harness.Callback;
 import org.dacapo.harness.CommandLineArgs;
 
+/**
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: MyCallback.java 729 2009-12-23 06:14:08Z steveb-oss $
+ */
 public class MyCallback extends Callback {
 
   public MyCallback(CommandLineArgs args) {
@@ -17,8 +21,7 @@ public class MyCallback extends Callback {
 
   /* Immediately prior to start of the benchmark */
   public void start(String benchmark) {
-    System.err.println("my hook starting " + (isWarmup() ? "warmup " : "")
-        + benchmark);
+    System.err.println("my hook starting " + (isWarmup() ? "warmup " : "") + benchmark);
     super.start(benchmark);
   };
 
@@ -31,8 +34,7 @@ public class MyCallback extends Callback {
 
   public void complete(String benchmark, boolean valid) {
     super.complete(benchmark, valid);
-    System.err.println("my hook " + (valid ? "PASSED " : "FAILED ")
-        + (isWarmup() ? "warmup " : "") + benchmark);
+    System.err.println("my hook " + (valid ? "PASSED " : "FAILED ") + (isWarmup() ? "warmup " : "") + benchmark);
     System.err.flush();
   };
 }

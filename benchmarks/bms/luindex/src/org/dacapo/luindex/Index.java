@@ -1,7 +1,27 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Contributors:
+ *     Apache Software Foundation - org.apache.lucene.demo.IndexFiles
+ *     Australian National University - adaptation to DaCapo test harness
+ */
 package org.dacapo.luindex;
 
 /**
- * Copyright 2004 The Apache Software Foundation
+
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +49,8 @@ import org.dacapo.harness.DacapoException;
 import org.dacapo.parser.Config;
 
 /**
- * This is a modified version of org.apache.lucene.demo.IndexFiles, as
- * distributed with Lucene.
- * 
- * @author Apache
- * @author Robin Garner
- * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class Index {
 
@@ -47,15 +63,12 @@ public class Index {
   /**
    * Index all text files under a directory.
    */
-  public void main(final File INDEX_DIR, final String[] args)
-      throws DacapoException, IOException {
-    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(),
-        true, IndexWriter.MaxFieldLength.LIMITED);
+  public void main(final File INDEX_DIR, final String[] args) throws DacapoException, IOException {
+    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
     for (int arg = 0; arg < args.length; arg++) {
       final File docDir = new File(scratch, args[arg]);
       if (!docDir.exists() || !docDir.canRead()) {
-        System.out.println("Document directory '" + docDir.getAbsolutePath()
-            + "' does not exist or is not readable, please check the path");
+        System.out.println("Document directory '" + docDir.getAbsolutePath() + "' does not exist or is not readable, please check the path");
         throw new DacapoException("Cannot read from document directory");
       }
 

@@ -1,11 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2009 The Australian National University.
+/*
+ * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.tomcat;
 
 import java.io.BufferedReader;
@@ -22,6 +22,9 @@ import org.dacapo.harness.Digest;
 
 /**
  * Interact with an Http page
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public abstract class Page {
 
@@ -43,13 +46,9 @@ public abstract class Page {
   /**
    * An HTTP page, the expected Http status and the md5 digest of the expected
    * result
-   * 
-   * @param address
-   *          The URL (host-relative)
-   * @param status
-   *          Expected status code
-   * @param digest
-   *          Expected page digest (null for none)
+   * @param address The URL (host-relative)
+   * @param status Expected status code
+   * @param digest Expected page digest (null for none)
    */
   public Page(String address, int status, String digest) {
     this.address = address;
@@ -59,15 +58,12 @@ public abstract class Page {
 
   /**
    * Utility method to read an input stream and return it as a string
-   * 
    * @param responseStream
    * @return
    * @throws IOException
    */
-  protected static String readStream(InputStream responseStream)
-      throws IOException {
-    BufferedReader input = new BufferedReader(new InputStreamReader(
-        responseStream));
+  protected static String readStream(InputStream responseStream) throws IOException {
+    BufferedReader input = new BufferedReader(new InputStreamReader(responseStream));
     StringBuilder reply1 = new StringBuilder(4096);
     for (String line = input.readLine(); line != null; line = input.readLine()) {
       reply1.append(line);
@@ -98,24 +94,18 @@ public abstract class Page {
 
   /**
    * Sub-classes must override this
-   * 
    * @param logFile
    * @return
    * @throws IOException
    */
-  protected abstract boolean fetch(Session session, File logFile, boolean keep)
-      throws IOException;
+  protected abstract boolean fetch(Session session, File logFile, boolean keep) throws IOException;
 
   /**
    * Fetch a page from an Http connection, without keeping the log file.
-   * 
-   * @param session
-   *          The HTTP session
-   * @param logFile
-   *          Destination for the log file
+   * @param session The HTTP session
+   * @param logFile Destination for the log file
    * @return Whether the fetch failed or succeeded
-   * @throws IOException
-   *           A network or disk I/O error
+   * @throws IOException A network or disk I/O error
    */
   public final boolean fetch(Session session, File logFile) throws IOException {
     return fetch(session, logFile, false);
@@ -123,31 +113,22 @@ public abstract class Page {
 
   /**
    * Fetch a page from an Http connection.
-   * 
-   * @param method
-   *          The method to invoke
-   * @param logFile
-   *          Where to write the log (if written)
-   * @param keep
-   *          Write the log on success (always writes on failure)
+   * @param method The method to invoke
+   * @param logFile Where to write the log (if written)
+   * @param keep Write the log on success (always writes on failure)
    * @return Whether the fetch failed or succeeded
-   * @throws IOException
-   *           A network or disk I/O error
+   * @throws IOException A network or disk I/O error
    */
-  protected final boolean fetch(Session session, HttpMethod method,
-      File logFile, boolean keep) throws IOException {
+  protected final boolean fetch(Session session, HttpMethod method, File logFile, boolean keep) throws IOException {
     final int iGetResultCode = session.httpClient.executeMethod(method);
-    final String strGetResponseBody = readStream(method
-        .getResponseBodyAsStream());
-    final String strGetResponseBodyLocalized = strGetResponseBody.replace("\n",
-        System.getProperty("line.separator"));
+    final String strGetResponseBody = readStream(method.getResponseBodyAsStream());
+    final String strGetResponseBodyLocalized = strGetResponseBody.replace("\n", System.getProperty("line.separator"));
     if (keep) {
       writeLog(logFile, strGetResponseBodyLocalized);
     }
 
     if (iGetResultCode != expectedStatus) {
-      System.err.printf("URL %s returned status %d (expected %d)%n", address,
-          iGetResultCode, expectedStatus);
+      System.err.printf("URL %s returned status %d (expected %d)%n", address, iGetResultCode, expectedStatus);
       if (!keep)
         writeLog(logFile, strGetResponseBodyLocalized);
       return false;
@@ -162,16 +143,14 @@ public abstract class Page {
     if (!digestMatch) {
       if (!keep)
         writeLog(logFile, strGetResponseBodyLocalized);
-      System.err.printf("URL %s%n" + "   expected %s%n" + "   found    %s%n"
-          + "   response code %d, log file %s%n", address, expectedDigest,
-          digestString, iGetResultCode, logFile.getName());
+      System.err.printf("URL %s%n" + "   expected %s%n" + "   found    %s%n" + "   response code %d, log file %s%n", address, expectedDigest, digestString,
+          iGetResultCode, logFile.getName());
     }
     return digestMatch;
   }
 
   /**
    * Return the address
-   * 
    * @return The page-relative address
    */
   public String getAddress() {
@@ -180,7 +159,6 @@ public abstract class Page {
 
   /**
    * Write a string to a log file
-   * 
    * @param logFile
    * @param replyString
    * @throws IOException
@@ -196,8 +174,7 @@ public abstract class Page {
   }
 
   static String formatUrl(Session session, String addr) {
-    String formattedUrl = String.format("http://localhost:%d%s", session
-        .getPort(), addr);
+    String formattedUrl = String.format("http://localhost:%d%s", session.getPort(), addr);
     return formattedUrl;
   }
 

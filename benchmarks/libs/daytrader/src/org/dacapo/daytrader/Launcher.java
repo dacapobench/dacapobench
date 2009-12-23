@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.daytrader;
 
 import java.io.File;
@@ -16,21 +16,27 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+/** 
+* @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+* @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+*/
 public class Launcher {
   // Geronimo configuration
   private final static String GVERSION = "2.1.4";
   private final static String GTYPE = "minimal";
   private final static String GDIRECTORY = "geronimo-jetty6-" + GTYPE + "-" + GVERSION;
-  
-  // The daytrader-dacapo application 
+
+  // The daytrader-dacapo application
   private final static String CAR_NAME = "org.apache.geronimo.daytrader/daytrader-dacapo/2.2-SNAPSHOT/car";
-  
-  // These jars hold configuration information for the client and server geronimo environments.
-  private final static String[] CLIENT_BIN_JARS = { "client.jar"};
-  private final static String[] SERVER_BIN_JARS = { "server.jar"};
-  
-  // This jar contains the code that knows how to create and communicate with geronimo environments 
-  private final static String[] DACAPO_CLI_JAR = { "jar/daytrader.jar"};
+
+  // These jars hold configuration information for the client and server
+  // geronimo environments.
+  private final static String[] CLIENT_BIN_JARS = { "client.jar" };
+  private final static String[] SERVER_BIN_JARS = { "server.jar" };
+
+  // This jar contains the code that knows how to create and communicate with
+  // geronimo environments
+  private final static String[] DACAPO_CLI_JAR = { "jar/daytrader.jar" };
   
   // The following list is defined in the "Class-Path:" filed of MANIFEST.MF for the client and server jars
   private final static String[] GERONIMO_LIB_JARS = { "geronimo-cli-"+GVERSION+".jar", "geronimo-kernel-"+GVERSION+".jar", "geronimo-transformer-"+GVERSION+".jar", "asm-3.1.jar", "asm-commons-3.1.jar", "commons-cli-1.0.jar", "commons-logging-1.0.4.jar", "cglib-nodep-2.1_3.jar", "log4j-1.2.14.jar", "xpp3-1.1.3.4.0.jar", "xstream-1.2.2.jar"};
@@ -38,15 +44,15 @@ public class Launcher {
   private static int numThreads = -1;
   private static String size;
   private static boolean useBeans = true;
-  
+
   private static ClassLoader serverCLoader = null;
   private static ClassLoader clientCLoader = null;
   private static Method clientMethod = null;
   private static File scratch = null;
-  
+
   private static final String TRADEBEANS_LOG_FILE_NAME = "tradebeans.log";
-  private static final String TRADESOAP_LOG_FILE_NAME  = "tradesoap.log";
-  
+  private static final String TRADESOAP_LOG_FILE_NAME = "tradesoap.log";
+
   public static void initialize(File scratchdir, int threads, String dtSize, boolean beans) {
     numThreads = threads;
     size = dtSize;
@@ -54,14 +60,14 @@ public class Launcher {
     scratch = new File(scratchdir.getAbsolutePath());
     setGeronimoProperties();
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
-    
+
     try {
       // Create a server environment
       serverCLoader = createGeronimoClassLoader(originalCLoader, true);
       Thread.currentThread().setContextClassLoader(serverCLoader);
       Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
       Method method = clazz.getMethod("initialize", new Class[] {});
-      method.invoke(null, new Object[] { });
+      method.invoke(null, new Object[] {});
 
       // Create a client environment
       clientCLoader = createGeronimoClassLoader(originalCLoader, false);
@@ -78,11 +84,11 @@ public class Launcher {
       Thread.currentThread().setContextClassLoader(originalCLoader);
     }
   }
-  
+
   private static void setGeronimoProperties() {
     File geronimo = new File(scratch, GDIRECTORY);
     System.setProperty("org.apache.geronimo.base.dir", geronimo.getPath());
-    System.setProperty("java.ext.dirs", geronimo.getPath() + "/lib/ext:" +System.getProperty("java.home")+"/lib/ext");
+    System.setProperty("java.ext.dirs", geronimo.getPath() + "/lib/ext:" + System.getProperty("java.home") + "/lib/ext");
     System.setProperty("java.io.tmpdir", geronimo.getPath() + "/var/temp");
   }
 
@@ -102,10 +108,11 @@ public class Launcher {
       Thread.currentThread().setContextClassLoader(originalClassloader);
     }
   }
- 
+
   /**
-   * Create the classloader from within which to start the Geronimo client and/or server kernels.
-   *
+   * Create the classloader from within which to start the Geronimo client
+   * and/or server kernels.
+   * 
    * @param server Is this the server (or client) classloader
    * @return The classloader
    * @throws Exception
@@ -118,8 +125,9 @@ public class Launcher {
   }
 
   /**
-   * Get a list of jars (if any) which should be in the library classpath for this benchmark
-   *
+   * Get a list of jars (if any) which should be in the library classpath for
+   * this benchmark
+   * 
    * @param geronimo The base directory for the jars
    * @return An array of URLs, one URL for each jar
    */
@@ -131,28 +139,29 @@ public class Launcher {
       addJars(jars, endorsed, endorsed.list());
     }
     addJars(jars, scratch, DACAPO_CLI_JAR);
-   
+
     File lib = new File(geronimo, "lib");
     addJars(jars, lib, GERONIMO_LIB_JARS);
-    
+
     return jars.toArray(new URL[jars.size()]);
   }
 
   /**
-   * Get a list of jars (if any) which should be in the binary classpath for this benchmark.
-   *
+   * Get a list of jars (if any) which should be in the binary classpath for
+   * this benchmark.
+   * 
    * @param geronimo The base directory for the jars
    * @return An array of URLs, one URL for each jar
    */
   private static URL[] getGeronimoBinaryJars(File geronimo, boolean server) {
     List<URL> jars = new ArrayList<URL>();
-    addJars(jars, new File(geronimo, "bin"), (server ? SERVER_BIN_JARS : CLIENT_BIN_JARS ));
+    addJars(jars, new File(geronimo, "bin"), (server ? SERVER_BIN_JARS : CLIENT_BIN_JARS));
     return jars.toArray(new URL[jars.size()]);
   }
-  
+
   /**
    * Compile a list of paths to jars from a base directory and relative paths.
-   *
+   * 
    * @param config The config file for this benchmark, which lists the jars
    * @param scratch The scratch directory, in which the jars will be located
    * @return An array of URLs, one URL for each jar

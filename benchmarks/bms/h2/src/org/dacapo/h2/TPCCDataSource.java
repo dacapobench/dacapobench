@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.h2;
 
 import java.io.IOException;
@@ -21,6 +21,9 @@ import javax.sql.DataSource;
 /**
  * Simple DataSource for providing a wrapped connection for the Derby TPC-C to
  * populate the database.
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class TPCCDataSource implements DataSource {
 
@@ -46,8 +49,7 @@ public class TPCCDataSource implements DataSource {
     return driver.connect(dbname, properties);
   }
 
-  public Connection getConnection(String username, String password)
-      throws SQLException {
+  public Connection getConnection(String username, String password) throws SQLException {
     Properties props = (Properties) properties.clone();
 
     props.setProperty(USERNAME, USER);

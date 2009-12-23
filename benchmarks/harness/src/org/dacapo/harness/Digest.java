@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Digest.java 659 2009-12-04 03:33:59Z jzigman $
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.security.MessageDigest;
@@ -14,10 +14,8 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Encapsulate the digests used for validation of files.
  * 
- * @author Robin Garner
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Digest.java 659 2009-12-04 03:33:59Z jzigman $
- * 
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Digest.java 729 2009-12-23 06:14:08Z steveb-oss $
  */
 public class Digest {
 

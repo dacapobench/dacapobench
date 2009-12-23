@@ -1,129 +1,137 @@
+<!--
+ * Copyright (c) 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
 <project name="common">
-    <import file="../util.xml"/>
-    <import file="../libs/libs.xml"/>
-    <property file="dacapo.properties"/>
-    <property file="local.properties"/>
-    <property file="default.properties"/>
+	<import file="../util.xml"/>
+	<import file="../libs/libs.xml"/>
+	<property file="dacapo.properties"/>
+	<property file="local.properties"/>
+	<property file="default.properties"/>
 
-    <property name="bm-files" value="${basedir}/bms/${bm-name}"/>
-    <property name="bm-build-dir" value="${bm-files}/build"/>
-    <property name="bm-output-dir" value="${bm-files}/dist"/>
-    <property name="bm-deps-output-dir" value="${bm-files}/deps"/>
-    <property name="bm-data" value="${bm-files}/data"/>
-    <available file="${bm-data}" property="bm-data-exists" type="dir"/>
-    <property name="bm-src-dir" value="${bm-files}/src"/>
-    <property name="bm-downloads" value="${bm-files}/downloads"/>
+	<property name="bm-files" value="${basedir}/bms/${bm-name}"/>
+	<property name="bm-build-dir" value="${bm-files}/build"/>
+	<property name="bm-output-dir" value="${bm-files}/dist"/>
+	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
+	<property name="bm-data" value="${bm-files}/data"/>
+	<available file="${bm-data}" property="bm-data-exists" type="dir"/>
+	<property name="bm-src-dir" value="${bm-files}/src"/>
+	<property name="bm-downloads" value="${bm-files}/downloads"/>
 
-    <property name="bm-jars" value="${bm-output-dir}/jar"/>
-    <property name="bm-dat" value="${bm-output-dir}/dat"/>
-    <property name="bm-cnf" value="${bm-output-dir}/cnf"/>
-    
-    <property name="harness-classpath" value="harness/dist"/>
-    
-    <target name="all" depends="source, svn-source, cvs-source, pre-build, build, complete"/>
+	<property name="bm-jars" value="${bm-output-dir}/jar"/>
+	<property name="bm-dat" value="${bm-output-dir}/dat"/>
+	<property name="bm-cnf" value="${bm-output-dir}/cnf"/>
 
-    <target name="incremental">
-        <property name="incremental-build" value="true"/>
-        <antcall target="all"/>
-    </target>
-    
-    <target name="source" if="bm-url">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${bm-url}"/>
-            <param name="target-file" value="${bm-src}"/>
-        </antcall>
-    </target>
-        
-    <target name="svn-source" if="bm-svn-url">
-        <condition property="fail-on-error" value="no" else="yes">
-            <isset property="bm-ignore-failure"/>
-        </condition>
-        <antcall target="check-svn-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="svn-url" value="${bm-svn-url}"/>
-            <param name="svn-revision" value="${bm-svn-revision}"/>
-            <param name="target-file" value="${bm-src}"/>
-            <param name="fail-on-error" value="${bm-fail-on-error}"/>
-        </antcall>
-    </target>
-    
-    <target name="cvs-source" if="bm-cvs-root">
-        <condition property="fail-on-error" value="no" else="yes">
-            <isset property="bm-ignore-failure"/>
-        </condition>
-        <antcall target="check-cvs-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="cvs-root" value="${bm-cvs-root}"/>
-            <param name="cvs-package" value="${bm-cvs-package}"/>
-            <param name="cvs-date" value="${bm-cvs-date}"/>
-            <param name="target-file" value="${bm-src}"/>
-        </antcall>
-    </target>
-    
-    <target name="pre-build" depends="clean, init, unpack"/>
+	<property name="harness-classpath" value="harness/dist"/>
 
-    <target name="clean">
-        <delete dir="${bm-output-dir}"/>
-        <delete dir="${bm-build-dir}"/>
-        <delete dir="${bm-deps-output-dir}"/>
-    </target>
-    
-    <target name="init" depends="clean">
-        <mkdir dir="${bm-output-dir}"/>        
-        <mkdir dir="${bm-jars}"/>        
-        <mkdir dir="${bm-dat}"/>        
-        <mkdir dir="${bm-cnf}"/>        
-    </target>
-    
-    <target name="unpack"/>
-    
-    <target name="build" depends="dacapo-harness, benchmark, config, harness"/>
+	<target name="all" depends="source, svn-source, cvs-source, pre-build, build, complete"/>
 
-    <target name="benchmark" depends="bm-build, jar, data"/>
+	<target name="incremental">
+		<property name="incremental-build" value="true"/>
+		<antcall target="all"/>
+	</target>
 
-    <target name="bm-build"/>
-    
-    <target name="config">
-        <copy file="${bm-files}/${bm-name}.cnf" todir="${bm-cnf}"/>
-    </target>
-    
-    <target name="harness" depends="bm-harness"/>
-            
-    <target name="bm-harness">
-        <javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}"
+	<target name="source" if="bm-url">
+		<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${bm-url}"/>
+			<param name="target-file" value="${bm-src}"/>
+		</antcall>
+	</target>
+
+	<target name="svn-source" if="bm-svn-url">
+		<condition property="fail-on-error" value="no" else="yes">
+			<isset property="bm-ignore-failure"/>
+		</condition>
+		<antcall target="check-svn-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="svn-url" value="${bm-svn-url}"/>
+			<param name="svn-revision" value="${bm-svn-revision}"/>
+			<param name="target-file" value="${bm-src}"/>
+			<param name="fail-on-error" value="${bm-fail-on-error}"/>
+		</antcall>
+	</target>
+
+	<target name="cvs-source" if="bm-cvs-root">
+		<condition property="fail-on-error" value="no" else="yes">
+			<isset property="bm-ignore-failure"/>
+		</condition>
+		<antcall target="check-cvs-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="cvs-root" value="${bm-cvs-root}"/>
+			<param name="cvs-package" value="${bm-cvs-package}"/>
+			<param name="cvs-date" value="${bm-cvs-date}"/>
+			<param name="target-file" value="${bm-src}"/>
+		</antcall>
+	</target>
+
+	<target name="pre-build" depends="clean, init, unpack"/>
+
+	<target name="clean">
+		<delete dir="${bm-output-dir}"/>
+		<delete dir="${bm-build-dir}"/>
+		<delete dir="${bm-deps-output-dir}"/>
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${bm-output-dir}"/>
+		<mkdir dir="${bm-jars}"/>
+		<mkdir dir="${bm-dat}"/>
+		<mkdir dir="${bm-cnf}"/>
+	</target>
+
+	<target name="unpack"/>
+
+	<target name="build" depends="dacapo-harness, benchmark, config, harness"/>
+
+	<target name="benchmark" depends="bm-build, jar, data"/>
+
+	<target name="bm-build"/>
+
+	<target name="config">
+		<copy file="${bm-files}/${bm-name}.cnf" todir="${bm-cnf}"/>
+	</target>
+
+	<target name="harness" depends="bm-harness"/>
+
+	<target name="bm-harness">
+		<javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}"
            includes="org/dacapo/harness/**"
            debug="true" debuglevel="lines,vars,source"/>
-    </target>
-    
-    <target name="dacapo-harness" unless="incremental-build">
-        <ant antfile="harness/build.xml"/>
-    </target>
-        
-    <target name="patch">
-        <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes"/>
-    </target>
-    
-    <target name="untar" depends="build-init">
-        <untar src="${bm-downloads}/${bm-src}" dest="${bm-build-dir}/" compression="gzip"/>
-    </target>
+	</target>
 
-    <target name="unzip" depends="build-init">
-        <unzip src="${bm-downloads}/${bm-src}" dest="${bm-build-dir}/"/>
-    </target>
+	<target name="dacapo-harness" unless="incremental-build">
+		<ant antfile="harness/build.xml"/>
+	</target>
 
-    <target name="build-init">
-        <mkdir dir="${bm-build-dir}"/>        
-    </target>
-    
-    <target name="jar"/>
-        
-    <target name="data" if="bm-data-exists">
-        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
-    </target>
-    
-    <target name="complete">
-        <jar jarfile="${jar-target}" basedir="${bm-output-dir}" update="true"/>
-    </target>
+	<target name="patch">
+		<patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes"/>
+	</target>
+
+	<target name="untar" depends="build-init">
+		<untar src="${bm-downloads}/${bm-src}" dest="${bm-build-dir}/" compression="gzip"/>
+	</target>
+
+	<target name="unzip" depends="build-init">
+		<unzip src="${bm-downloads}/${bm-src}" dest="${bm-build-dir}/"/>
+	</target>
+
+	<target name="build-init">
+		<mkdir dir="${bm-build-dir}"/>
+	</target>
+
+	<target name="jar"/>
+
+	<target name="data" if="bm-data-exists">
+		<zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+	</target>
+
+	<target name="complete">
+		<jar jarfile="${jar-target}" basedir="${bm-output-dir}" update="true"/>
+	</target>
 
 </project>

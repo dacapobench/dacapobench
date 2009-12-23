@@ -1,16 +1,20 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date: 2009-12-19 11:41:21 +1100 (Sat, 19 Dec 2009) $
- * @id $Id: Callback.java 707 2009-12-19 00:41:21Z steveb-oss $
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import org.dacapo.harness.CommandLineArgs.Methodology;
 import org.dacapo.parser.Config;
 
+/**
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Callback.java 729 2009-12-23 06:14:08Z steveb-oss $
+ */
 public class Callback {
 
   /**
@@ -52,8 +56,7 @@ public class Callback {
   /**
    * Create a new callback.
    * 
-   * @param args
-   *          The parsed command-line arguments.
+   * @param args The parsed command-line arguments.
    */
   public Callback(CommandLineArgs args) {
     this.args = args;
@@ -130,11 +133,8 @@ public class Callback {
 
       /* Optionally report on progress towards convergence */
       if (iterations >= args.getWindow() && args.getVerbose()) {
-        System.err
-            .printf(
-                "Variation %4.2f%% achieved after %d iterations, target = %4.2f%%\n",
-                TestHarness.coeff_of_var(times) * 100, iterations, args
-                    .getTargetVar() * 100);
+        System.err.printf("Variation %4.2f%% achieved after %d iterations, target = %4.2f%%\n", TestHarness.coeff_of_var(times) * 100, iterations, args
+            .getTargetVar() * 100);
       }
 
       /* Not yet converged, repeat in warmup mode */
@@ -169,9 +169,8 @@ public class Callback {
 
   protected void start(String benchmark, boolean warmup) {
     timer = System.currentTimeMillis();
-    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " "
-        + benchmark + " starting ");
-    System.err.println((warmup ? ("warmup " + (iterations + 1) +  " ") : "") + "=====");
+    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
+    System.err.println((warmup ? ("warmup " + (iterations + 1) + " ") : "") + "=====");
     System.err.flush();
   }
 
@@ -200,11 +199,9 @@ public class Callback {
   };
 
   protected void complete(String benchmark, boolean valid, boolean warmup) {
-    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " "
-        + benchmark);
+    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);
     if (valid) {
-      System.err.print(warmup ? (" completed warmup " + (iterations + 1) + " ")
-          : " PASSED ");
+      System.err.print(warmup ? (" completed warmup " + (iterations + 1) + " ") : " PASSED ");
       System.err.print("in " + elapsed + " msec ");
     } else {
       System.err.print(" FAILED " + (warmup ? "warmup " : ""));

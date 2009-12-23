@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ *     Australian National University - adaptation to DaCapo benchmark suite
+ */
 package org.eclipse.jdt.core.tests.builder;
 
 import java.util.Enumeration;
@@ -27,6 +28,10 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.tests.util.AbstractCompilerTest;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 
+/**
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ */
 public class TestingEnvironment {
   private boolean isOpen = false;
   private IWorkspace workspace = null;
@@ -216,13 +221,11 @@ public class TestingEnvironment {
       requiredComplianceFlag = AbstractCompilerTest.F_1_7;
       compilerVersion = CompilerOptions.VERSION_1_7;
     } else if (!"1.4".equals(compliance) && !"1.3".equals(compliance)) {
-      throw new UnsupportedOperationException(
-          "Test framework doesn't support compliance level: " + compliance);
+      throw new UnsupportedOperationException("Test framework doesn't support compliance level: " + compliance);
     }
     if (requiredComplianceFlag != 0) {
       if ((AbstractCompilerTest.getPossibleComplianceLevels() & requiredComplianceFlag) == 0)
-        throw new RuntimeException("This test requires a " + compliance
-            + " JRE");
+        throw new RuntimeException("This test requires a " + compliance + " JRE");
       IJavaProject javaProject = JavaCore.create(project);
       Map options = new HashMap();
       options.put(CompilerOptions.OPTION_Compliance, compilerVersion);

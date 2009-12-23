@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -7,8 +7,8 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Australian National University - adaptation to DaCapo test harness
- *******************************************************************************/
+ *     Australian National University - adaptation to DaCapo benchmark suite
+ */
 package org.eclipse.jdt.core.tests.performance;
 
 import java.io.File;
@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 
-/*
+/**
  * The original unmodified source this class can be found within
  *    eclipse/plugins/org.eclipse.sdk.tests.source_3.5.0.v20090227/src/org.eclipse.jdt.core.tests.performance_3.3.100.v_972_R35x
  *  which can be found within
@@ -44,6 +44,9 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
  *  which can be found within
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
+ *  
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public abstract class FullSourceWorkspaceTests {
 
@@ -58,13 +61,18 @@ public abstract class FullSourceWorkspaceTests {
   protected static IJavaProject JDT_CORE_PROJECT;
   protected static ICompilationUnit PARSER_WORKING_COPY;
   protected final static String BIG_PROJECT_NAME = "BigProject";
-  // path to source relative to parent of workspace
-  protected final static String FULL_SOURCE_ZIP_REL_PATH = "full-source-R3_0"; 
+  protected final static String FULL_SOURCE_ZIP_REL_PATH = "full-source-R3_0"; // path
+  // to
+  // source
+  // relative
+  // to
+  // parent
+  // of
+  // workspace
   final static String COMPLIANCE = System.getProperty("compliance");
 
   // Index variables
-  protected static IndexManager INDEX_MANAGER = JavaModelManager
-      .getIndexManager();
+  protected static IndexManager INDEX_MANAGER = JavaModelManager.getIndexManager();
 
   public static final boolean VERBOSE = false;
 
@@ -108,13 +116,11 @@ public abstract class FullSourceWorkspaceTests {
     if (DACAPO_PRINT)
       System.out.print("Unzip workspace ");
     try {
-      final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-          .getRoot();
+      final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
       File targetWorkspaceDir = workspaceRoot.getLocation().toFile();
       String targetWorkspacePath = targetWorkspaceDir.getCanonicalPath();
       deleteWorkspace();
-      String fullSourceZipPath = targetWorkspaceDir.getParent()
-          + File.separator + FULL_SOURCE_ZIP_REL_PATH;
+      String fullSourceZipPath = targetWorkspaceDir.getParent() + File.separator + FULL_SOURCE_ZIP_REL_PATH;
       unzip(fullSourceZipPath + "-default.zip", targetWorkspacePath);
       if (large) {
         unzip(fullSourceZipPath + "-large.zip", targetWorkspacePath);
@@ -127,8 +133,7 @@ public abstract class FullSourceWorkspaceTests {
       System.out.println();
   }
 
-  private static void unzip(String sourceZipPath, String targetWorkspacePath)
-      throws IOException {
+  private static void unzip(String sourceZipPath, String targetWorkspacePath) throws IOException {
     if (VERBOSE) {
       System.err.println("Unzipping " + sourceZipPath);
       System.err.println("       in " + targetWorkspacePath + "...");
@@ -164,8 +169,10 @@ public abstract class FullSourceWorkspaceTests {
    */
   Map clearOptions(Map options) {
     // turn all errors and warnings into ignore. The customizable set of
-    // compiler options only contains additional Eclipse options. The standard 
-    // JDK compiler options can't be changed anyway.
+    // compiler
+    // options only contains additional Eclipse options. The standard JDK
+    // compiler
+    // options can't be changed anyway.
     for (Iterator iter = options.keySet().iterator(); iter.hasNext();) {
       String key = (String) iter.next();
       String value = (String) options.get(key);
@@ -185,8 +192,7 @@ public abstract class FullSourceWorkspaceTests {
    * Returns the specified compilation unit in the given project, root, and
    * package fragment or <code>null</code> if it does not exist.
    */
-  protected IClassFile getClassFile(IJavaProject project, String rootPath,
-      String packageName, String className) throws JavaModelException {
+  protected IClassFile getClassFile(IJavaProject project, String rootPath, String packageName, String className) throws JavaModelException {
     IPackageFragment pkg = getPackageFragment(project, rootPath, packageName);
     if (pkg == null) {
       return null;
@@ -196,14 +202,12 @@ public abstract class FullSourceWorkspaceTests {
 
   /**
    * Returns compilation unit with given name in given project and package.
-   * 
    * @param projectName
    * @param packageName
    * @param unitName
    * @return org.eclipse.jdt.core.ICompilationUnit
    */
-  protected ICompilationUnit getCompilationUnit(String projectName,
-      String packageName, String unitName) throws CoreException {
+  protected ICompilationUnit getCompilationUnit(String projectName, String packageName, String unitName) throws CoreException {
     IJavaProject javaProject = getProject(projectName);
     if (javaProject == null)
       return null;
@@ -220,8 +224,7 @@ public abstract class FullSourceWorkspaceTests {
    * project relative path. The empty path refers to the default package
    * fragment.
    */
-  protected IPackageFragment getPackageFragment(IJavaProject project,
-      String rootPath, String packageName) throws JavaModelException {
+  protected IPackageFragment getPackageFragment(IJavaProject project, String rootPath, String packageName) throws JavaModelException {
     IPackageFragmentRoot root = getPackageFragmentRoot(project, rootPath);
     if (root == null) {
       return null;
@@ -233,11 +236,10 @@ public abstract class FullSourceWorkspaceTests {
    * Returns the specified package fragment root in the given project, or
    * <code>null</code> if it does not exist. If relative, the rootPath must be
    * specified as a project relative path. The empty path refers to the package
-   * fragment root that is the project folder itself. If absolute, the rootPath
+   * fragment root that is the project folder iteslf. If absolute, the rootPath
    * refers to either an external jar, or a resource internal to the workspace
    */
-  public IPackageFragmentRoot getPackageFragmentRoot(IJavaProject project,
-      String rootPath) throws JavaModelException {
+  public IPackageFragmentRoot getPackageFragmentRoot(IJavaProject project, String rootPath) throws JavaModelException {
 
     if (project == null) {
       return null;
@@ -262,9 +264,7 @@ public abstract class FullSourceWorkspaceTests {
       }
       for (int i = 0; i < roots.length; i++) {
         IPackageFragmentRoot root = roots[i];
-        if (!root.isExternal()
-            && root.getUnderlyingResource().getProjectRelativePath().equals(
-                path)) {
+        if (!root.isExternal() && root.getUnderlyingResource().getProjectRelativePath().equals(path)) {
           return root;
         }
       }
@@ -272,8 +272,7 @@ public abstract class FullSourceWorkspaceTests {
     return getExternalJarFile(project, rootPath);
   }
 
-  protected IPackageFragmentRoot getExternalJarFile(IJavaProject project,
-      String jarSimpleName) throws JavaModelException {
+  protected IPackageFragmentRoot getExternalJarFile(IJavaProject project, String jarSimpleName) throws JavaModelException {
     IPackageFragmentRoot[] roots = project.getPackageFragmentRoots();
     if (roots == null || roots.length == 0) {
       return null;
@@ -289,7 +288,6 @@ public abstract class FullSourceWorkspaceTests {
 
   /**
    * Returns project corresponding to given name or null if none is found.
-   * 
    * @param projectName
    * @return IJavaProject
    */
@@ -305,13 +303,11 @@ public abstract class FullSourceWorkspaceTests {
     // Get wksp info
     IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IWorkspaceRoot workspaceRoot = workspace.getRoot();
-    String targetWorkspacePath = workspaceRoot.getLocation().toFile()
-        .getCanonicalPath();
+    String targetWorkspacePath = workspaceRoot.getLocation().toFile().getCanonicalPath();
 
     // Modify resources workspace preferences to avoid disturbing tests while
     // running them
-    IEclipsePreferences resourcesPreferences = new InstanceScope()
-        .getNode(ResourcesPlugin.PI_RESOURCES);
+    IEclipsePreferences resourcesPreferences = new InstanceScope().getNode(ResourcesPlugin.PI_RESOURCES);
     resourcesPreferences.put(ResourcesPlugin.PREF_AUTO_REFRESH, "false");
     workspace.getDescription().setSnapshotInterval(Long.MAX_VALUE);
     workspace.getDescription().setAutoBuilding(false);
@@ -347,9 +343,8 @@ public abstract class FullSourceWorkspaceTests {
     int jdkEntriesCount = 0;
     for (int i = 0; i < jdkLibsLength; i++) {
       if (!jdkLibs[i].equals(jreLibPath)) { // do not include JRE_LIB in
-                                            // additional JDK entries
-        jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(
-            jdkLibs[i]), null, null);
+        // additional JDK entries
+        jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(jdkLibs[i]), null, null);
       }
     }
 
@@ -371,11 +366,8 @@ public abstract class FullSourceWorkspaceTests {
       IClasspathEntry[] entries = ALL_PROJECTS[i].getRawClasspath();
       int entriesLength = entries.length;
       try {
-        System.arraycopy(entries, 0,
-            entries = new IClasspathEntry[jdkEntriesCount + entriesLength], 0,
-            entriesLength);
-        System
-            .arraycopy(jdkEntries, 0, entries, entriesLength, jdkEntriesCount);
+        System.arraycopy(entries, 0, entries = new IClasspathEntry[jdkEntriesCount + entriesLength], 0, entriesLength);
+        System.arraycopy(jdkEntries, 0, entries, entriesLength, jdkEntriesCount);
         ALL_PROJECTS[i].setRawClasspath(entries, null);
       } catch (CoreException jme) {
         // skip name collision as it means that JRE lib were already set on the
@@ -408,21 +400,14 @@ public abstract class FullSourceWorkspaceTests {
           if (token.equals("eclipse") && tokenizer.hasMoreTokens()) {
             return true;
             /*
-             * token = tokenizer.nextToken(); 
-             * if (token.equals("core") || token.equals("osgi") || token.equals("text")) { return true; }
-             * else if (token.equals("jdt")) { 
-             *   token = tokenizer.nextToken(); 
-             *   if (token.equals("core")) { return true; } 
-             * } 
-             * else if (token.equals("team")) { 
-             *   token = tokenizer.nextToken(); 
-             *   if (token.equals("core")) { return true; } 
-             * } 
-             * else if (token.equals("update")) { 
-             *   token = tokenizer.nextToken(); 
-             *   if (token.equals("configurator")) { return true; } 
-             * } 
-             * return false;
+             * token = tokenizer.nextToken(); if (token.equals("core") ||
+             * token.equals("osgi") || token.equals("text")) { return true; }
+             * else if (token.equals("jdt")) { token = tokenizer.nextToken(); if
+             * (token.equals("core")) { return true; } } else if
+             * (token.equals("team")) { token = tokenizer.nextToken(); if
+             * (token.equals("core")) { return true; } } else if
+             * (token.equals("update")) { token = tokenizer.nextToken(); if
+             * (token.equals("configurator")) { return true; } } return false;
              */
           }
         }
@@ -433,15 +418,11 @@ public abstract class FullSourceWorkspaceTests {
 
   /**
    * Returns all compilation units of a given project.
-   * 
-   * @param javaProject
-   *          Project to collect units
+   * @param javaProject Project to collect units
    * @return List of org.eclipse.jdt.core.ICompilationUnit
    */
-  protected List getProjectCompilationUnits(IJavaProject javaProject)
-      throws CoreException {
-    IPackageFragmentRoot[] fragmentRoots = javaProject
-        .getPackageFragmentRoots();
+  protected List getProjectCompilationUnits(IJavaProject javaProject) throws CoreException {
+    IPackageFragmentRoot[] fragmentRoots = javaProject.getPackageFragmentRoots();
     int length = fragmentRoots.length;
     List allUnits = new ArrayList();
     for (int i = 0; i < length; i++) {
@@ -469,17 +450,14 @@ public abstract class FullSourceWorkspaceTests {
     Hashtable optionsMap = JavaCore.getDefaultOptions();
     if (kind == 0) {
       // Default set since 3.1
-      optionsMap.put(CompilerOptions.OPTION_ReportUnusedImport,
-          CompilerOptions.IGNORE);
+      optionsMap.put(CompilerOptions.OPTION_ReportUnusedImport, CompilerOptions.IGNORE);
     } else {
       clearOptions(optionsMap);
       boolean all = kind == 1;
-      String generate = all ? CompilerOptions.GENERATE
-          : CompilerOptions.DO_NOT_GENERATE;
+      String generate = all ? CompilerOptions.GENERATE : CompilerOptions.DO_NOT_GENERATE;
       String warning = all ? CompilerOptions.WARNING : CompilerOptions.IGNORE;
       String enabled = all ? CompilerOptions.ENABLED : CompilerOptions.DISABLED;
-      String preserve = all ? CompilerOptions.OPTIMIZE_OUT
-          : CompilerOptions.PRESERVE;
+      String preserve = all ? CompilerOptions.OPTIMIZE_OUT : CompilerOptions.PRESERVE;
 
       // Set options values
       optionsMap.put(CompilerOptions.OPTION_LocalVariableAttribute, generate);
@@ -487,85 +465,53 @@ public abstract class FullSourceWorkspaceTests {
       optionsMap.put(CompilerOptions.OPTION_SourceFileAttribute, generate);
       optionsMap.put(CompilerOptions.OPTION_PreserveUnusedLocal, preserve);
       optionsMap.put(CompilerOptions.OPTION_DocCommentSupport, enabled);
-      optionsMap.put(CompilerOptions.OPTION_ReportMethodWithConstructorName,
-          warning);
-      optionsMap.put(
-          CompilerOptions.OPTION_ReportOverridingPackageDefaultMethod, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportMethodWithConstructorName, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportOverridingPackageDefaultMethod, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportDeprecation, warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportDeprecationInDeprecatedCode,
-          enabled);
-      optionsMap
-          .put(
-              CompilerOptions.OPTION_ReportDeprecationWhenOverridingDeprecatedMethod,
-              enabled);
+      optionsMap.put(CompilerOptions.OPTION_ReportDeprecationInDeprecatedCode, enabled);
+      optionsMap.put(CompilerOptions.OPTION_ReportDeprecationWhenOverridingDeprecatedMethod, enabled);
       optionsMap.put(CompilerOptions.OPTION_ReportHiddenCatchBlock, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportUnusedLocal, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportUnusedParameter, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportUnusedImport, warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportSyntheticAccessEmulation,
-          warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportSyntheticAccessEmulation, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportNoEffectAssignment, warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportNonExternalizedStringLiteral,
-          warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportNoImplicitStringConversion,
-          warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportNonStaticAccessToStatic,
-          warning);
-      optionsMap
-          .put(CompilerOptions.OPTION_ReportIndirectStaticAccess, warning);
-      optionsMap.put(
-          CompilerOptions.OPTION_ReportIncompatibleNonInheritedInterfaceMethod,
-          warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportNonExternalizedStringLiteral, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportNoImplicitStringConversion, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportNonStaticAccessToStatic, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportIndirectStaticAccess, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportIncompatibleNonInheritedInterfaceMethod, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportLocalVariableHiding, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportFieldHiding, warning);
-      optionsMap.put(
-          CompilerOptions.OPTION_ReportPossibleAccidentalBooleanAssignment,
-          warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportPossibleAccidentalBooleanAssignment, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportEmptyStatement, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportAssertIdentifier, warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportUndocumentedEmptyBlock,
-          warning);
-      optionsMap
-          .put(CompilerOptions.OPTION_ReportUnnecessaryTypeCheck, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportUndocumentedEmptyBlock, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportUnnecessaryTypeCheck, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportUnnecessaryElse, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportInvalidJavadoc, warning);
       optionsMap.put(CompilerOptions.OPTION_ReportInvalidJavadocTags, enabled);
       optionsMap.put(CompilerOptions.OPTION_ReportMissingJavadocTags, warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportMissingJavadocComments,
-          warning);
-      optionsMap.put(
-          CompilerOptions.OPTION_ReportFinallyBlockNotCompletingNormally,
-          warning);
-      optionsMap.put(
-          CompilerOptions.OPTION_ReportUnusedDeclaredThrownException, warning);
-      optionsMap.put(CompilerOptions.OPTION_ReportUnqualifiedFieldAccess,
-          warning);
-      optionsMap.put(CompilerOptions.OPTION_TaskTags,
-          all ? JavaCore.DEFAULT_TASK_TAGS : "");
-      optionsMap.put(CompilerOptions.OPTION_TaskPriorities,
-          all ? JavaCore.DEFAULT_TASK_PRIORITIES : "");
+      optionsMap.put(CompilerOptions.OPTION_ReportMissingJavadocComments, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportFinallyBlockNotCompletingNormally, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportUnusedDeclaredThrownException, warning);
+      optionsMap.put(CompilerOptions.OPTION_ReportUnqualifiedFieldAccess, warning);
+      optionsMap.put(CompilerOptions.OPTION_TaskTags, all ? JavaCore.DEFAULT_TASK_TAGS : "");
+      optionsMap.put(CompilerOptions.OPTION_TaskPriorities, all ? JavaCore.DEFAULT_TASK_PRIORITIES : "");
       optionsMap.put(CompilerOptions.OPTION_TaskCaseSensitive, enabled);
-      optionsMap.put(
-          CompilerOptions.OPTION_ReportUnusedParameterWhenImplementingAbstract,
-          enabled);
-      optionsMap.put(
-          CompilerOptions.OPTION_ReportUnusedParameterWhenOverridingConcrete,
-          enabled);
-      optionsMap.put(CompilerOptions.OPTION_ReportSpecialParameterHidingField,
-          enabled);
+      optionsMap.put(CompilerOptions.OPTION_ReportUnusedParameterWhenImplementingAbstract, enabled);
+      optionsMap.put(CompilerOptions.OPTION_ReportUnusedParameterWhenOverridingConcrete, enabled);
+      optionsMap.put(CompilerOptions.OPTION_ReportSpecialParameterHidingField, enabled);
       optionsMap.put(CompilerOptions.OPTION_InlineJsr, enabled);
     }
 
     // Ignore 3.1 options
-    optionsMap.put(CompilerOptions.OPTION_ReportMissingSerialVersion,
-        CompilerOptions.IGNORE);
-    optionsMap.put(CompilerOptions.OPTION_ReportEnumIdentifier,
-        CompilerOptions.IGNORE);
+    optionsMap.put(CompilerOptions.OPTION_ReportMissingSerialVersion, CompilerOptions.IGNORE);
+    optionsMap.put(CompilerOptions.OPTION_ReportEnumIdentifier, CompilerOptions.IGNORE);
 
     // Ignore 3.2 options
-    optionsMap.put(CompilerOptions.OPTION_ReportUnusedLabel,
-        CompilerOptions.IGNORE);
+    optionsMap.put(CompilerOptions.OPTION_ReportUnusedLabel, CompilerOptions.IGNORE);
 
     // Set compliance
     String compliance = compliance();

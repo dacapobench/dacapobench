@@ -1,11 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2009 The Australian National University.
+/*
+ * Copyright (c) 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.tomcat;
 
 import java.io.File;
@@ -18,6 +18,9 @@ import org.apache.catalina.startup.Bootstrap;
  * 
  * Separated into a single class with a single public method for ease of use via
  * reflection.
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class Control {
   /**
@@ -28,12 +31,9 @@ public class Control {
   private final File scratch;
 
   /**
-   * @param scratch
-   *          The scratch directory
-   * @param loader
-   *          The class loader
-   * @param port
-   *          The network port
+   * @param scratch The scratch directory
+   * @param loader The class loader
+   * @param port The network port
    */
   public Control(File scratch, ClassLoader loader, int port) {
     this.scratch = scratch;
@@ -46,11 +46,9 @@ public class Control {
    * the 'function' parameter, but we have classloader issues, so a string makes
    * life easier.
    * 
-   * @param function
-   *          The function to perform , one of "prepare","startIteration",
-   *          "stopIteration","cleanup".
-   * @throws Exception
-   *           Passed back from the Tomcat bootstrap
+   * @param function The function to perform , one of
+   * "prepare","startIteration", "stopIteration","cleanup".
+   * @throws Exception Passed back from the Tomcat bootstrap
    */
   public void exec(String function) throws Exception {
     if (function.equals("prepare")) {
@@ -65,13 +63,11 @@ public class Control {
   }
 
   private void startServer() throws IOException {
-    new StartApp("/examples").fetch(AuthenticatedSession.create("tomcat",
-        "s3cret", port), new File(scratch, "startApp.log"));
+    new StartApp("/examples").fetch(AuthenticatedSession.create("tomcat", "s3cret", port), new File(scratch, "startApp.log"));
   }
 
   private void stopServer() throws IOException {
-    new StopApp("/examples").fetch(AuthenticatedSession.create("tomcat",
-        "s3cret", port), new File(scratch, "stopApp.log"));
+    new StopApp("/examples").fetch(AuthenticatedSession.create("tomcat", "s3cret", port), new File(scratch, "stopApp.log"));
   }
 
 }

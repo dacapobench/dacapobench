@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -7,8 +7,8 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Australian National University - adaptation to DaCapo test harness
- *******************************************************************************/
+ *     Australian National University - adaptation to DaCapo benchmark suite
+ */
 package org.eclipse.jdt.core.tests.performance;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
-/*
+/**
  * The original unmodified source this class can be found within
  *    eclipse/plugins/org.eclipse.sdk.tests.source_3.5.0.v20090227/src/org.eclipse.jdt.core.tests.performance_3.3.100.v_972_R35x
  *  which can be found within
@@ -36,6 +36,9 @@ import org.eclipse.jdt.core.JavaCore;
  *  which can be found within
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
+ *  
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
 
@@ -56,14 +59,11 @@ public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
   /**
    * Start a build on given project or workspace using given options.
    * 
-   * @param javaProject
-   *          Project which must be (full) build or null if all workspace has to
-   *          be built.
-   * @param options
-   *          Options used while building
+   * @param javaProject Project which must be (full) build or null if all
+   * workspace has to be built.
+   * @param options Options used while building
    */
-  void build(final IJavaProject javaProject, Hashtable options,
-      boolean noWarning) throws IOException, CoreException {
+  void build(final IJavaProject javaProject, Hashtable options, boolean noWarning) throws IOException, CoreException {
     if (DEBUG)
       System.out.print("\tstart build...");
     JavaCore.setOptions(options);
@@ -83,15 +83,17 @@ public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
         }
       };
       IWorkspace workspace = ResourcesPlugin.getWorkspace();
-      workspace.run(compilation, null/* don't take any lock */,
-          IWorkspace.AVOID_UPDATE, null/* no progress available here */);
+      workspace.run(compilation, null/* don't take any lock */, IWorkspace.AVOID_UPDATE, null/*
+                                                                                              * no
+                                                                                              * progress
+                                                                                              * available
+                                                                                              * here
+                                                                                              */);
     }
 
     // Verify markers
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    IMarker[] markers = workspaceRoot.findMarkers(
-        IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true,
-        IResource.DEPTH_INFINITE);
+    IMarker[] markers = workspaceRoot.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
     List resources = new ArrayList();
     List messages = new ArrayList();
     int warnings = 0;
@@ -111,8 +113,7 @@ public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
         break;
       }
     }
-    workspaceRoot.deleteMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
-        true, IResource.DEPTH_INFINITE);
+    workspaceRoot.deleteMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
 
     // Assert result
     int size = messages.size();
@@ -124,11 +125,9 @@ public class FullSourceWorkspaceBuildTests extends FullSourceWorkspaceTests {
         debugBuffer.append(messages.get(i));
         debugBuffer.append('\n');
       }
-      System.out.println("Unexpected ERROR marker(s):\n"
-          + debugBuffer.toString());
+      System.out.println("Unexpected ERROR marker(s):\n" + debugBuffer.toString());
       System.out.println("--------------------");
-      String target = javaProject == null ? "workspace" : javaProject
-          .getElementName();
+      String target = javaProject == null ? "workspace" : javaProject.getElementName();
       // assertEquals("Found "+size+" unexpected errors while building "+target,
       // 0, size);
     }

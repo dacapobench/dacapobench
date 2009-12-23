@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Nina Rinskaya
  *              Fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=172820.
- *******************************************************************************/
+ */
 package org.eclipse.jdt.core.tests.util;
 
 import java.io.*;
@@ -24,26 +24,24 @@ public class Util {
    * could be found.
    * 
    * Example of use: [org.eclipse.jdt.core.tests.util.Util.getJavaClassLib()]
+   * 
+   * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+   * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
    */
   public static String[] getJavaClassLibs() {
     // check bootclasspath properties for Sun, JRockit and Harmony VMs
     String bootclasspathProperty = System.getProperty("sun.boot.class.path"); //$NON-NLS-1$
-    if ((bootclasspathProperty == null)
-        || (bootclasspathProperty.length() == 0)) {
+    if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
       // IBM J9 VMs
       bootclasspathProperty = System.getProperty("vm.boot.class.path"); //$NON-NLS-1$
-      if ((bootclasspathProperty == null)
-          || (bootclasspathProperty.length() == 0)) {
+      if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
         // Harmony using IBM VME
-        bootclasspathProperty = System
-            .getProperty("org.apache.harmony.boot.class.path"); //$NON-NLS-1$
+        bootclasspathProperty = System.getProperty("org.apache.harmony.boot.class.path"); //$NON-NLS-1$
       }
     }
     String[] jars = null;
-    if ((bootclasspathProperty != null)
-        && (bootclasspathProperty.length() != 0)) {
-      StringTokenizer tokenizer = new StringTokenizer(bootclasspathProperty,
-          File.pathSeparator);
+    if ((bootclasspathProperty != null) && (bootclasspathProperty.length() != 0)) {
+      StringTokenizer tokenizer = new StringTokenizer(bootclasspathProperty, File.pathSeparator);
       final int size = tokenizer.countTokens();
       jars = new String[size];
       int i = 0;
@@ -82,9 +80,7 @@ public class Util {
         jarsNames = new File(jreDir + "/lib/boot/").list(jarFilter);
         addJarEntries(jreDir + "/lib/boot/", jarsNames, paths);
       } else {
-        jarsNames = new String[] { "/lib/vm.jar", "/lib/rt.jar",
-            "/lib/core.jar", "/lib/security.jar", "/lib/xml.jar",
-            "/lib/graphics.jar" };
+        jarsNames = new String[] { "/lib/vm.jar", "/lib/rt.jar", "/lib/core.jar", "/lib/security.jar", "/lib/xml.jar", "/lib/graphics.jar" };
         addJarEntries(jreDir, jarsNames, paths);
       }
       jars = new String[paths.size()];
@@ -93,8 +89,7 @@ public class Util {
     return jars;
   }
 
-  private static void addJarEntries(String jreDir, String[] jarNames,
-      ArrayList paths) {
+  private static void addJarEntries(String jreDir, String[] jarNames, ArrayList paths) {
     for (int i = 0, max = jarNames.length; i < max; i++) {
       final String currentName = jreDir + jarNames[i];
       File f = new File(currentName);
@@ -119,18 +114,15 @@ public class Util {
    * File.getPath() and trimming any extra slash.
    */
   public static String toNativePath(String path) {
-    String nativePath = path.replace('\\', File.separatorChar).replace('/',
-        File.separatorChar);
-    return nativePath.endsWith("/") || nativePath.endsWith("\\") ? nativePath
-        .substring(0, nativePath.length() - 1) : nativePath;
+    String nativePath = path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
+    return nativePath.endsWith("/") || nativePath.endsWith("\\") ? nativePath.substring(0, nativePath.length() - 1) : nativePath;
   }
 
   /**
    * Unzip the contents of the given zip in the given directory (create it if it
    * doesn't exist)
    */
-  public static void unzip(String zipPath, String destDirPath)
-      throws IOException {
+  public static void unzip(String zipPath, String destDirPath) throws IOException {
 
     InputStream zipIn = new FileInputStream(zipPath);
     byte[] buf = new byte[8192];

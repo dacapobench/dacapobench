@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2005, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date: 2009-12-04 14:25:53 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Eclipse.java 658 2009-12-04 03:25:53Z jzigman $
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -15,13 +15,15 @@ import java.lang.reflect.Method;
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
+/**
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Eclipse.java 729 2009-12-23 06:14:08Z steveb-oss $
+ */
 public class Eclipse extends Benchmark {
 
   static final String WKSP_DIRECTORY_RELATIVE_TO_SCRATCH = "workspace";
   static final String PLUGIN_ID = "org.dacapo.eclipse.Harness";
-  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator
-      + "plugins" + File.separator
-      + "org.eclipse.osgi_3.5.1.R35x_v20090827.jar";
+  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.5.1.R35x_v20090827.jar";
 
   static String oldJavaHome = null;
   static Eclipse eclipse;
@@ -33,8 +35,7 @@ public class Eclipse extends Benchmark {
 
   public Eclipse(Config config, File scratch) throws Exception {
     super(config, scratch, false);
-    Class<?> clazz = Class.forName(
-        "org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
+    Class<?> clazz = Class.forName("org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
     this.method = clazz.getMethod("startup", String[].class, Runnable.class);
     this.isRunning = clazz.getMethod("isRunning");
     this.run = clazz.getMethod("run", Object.class);
@@ -50,8 +51,7 @@ public class Eclipse extends Benchmark {
     try {
       String[] largePluginArgs = { "large", "unzip" };
       String[] pluginArgs = { "unzip" };
-      run.invoke(null, new Object[] { size.equals("large") ? largePluginArgs
-          : pluginArgs });
+      run.invoke(null, new Object[] { size.equals("large") ? largePluginArgs : pluginArgs });
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -59,8 +59,8 @@ public class Eclipse extends Benchmark {
 
   public void iterate(String size) throws Exception {
     try {
-      // String[] pluginArgs = {"setup", "alltests" }; 
-      // get this from the bm config
+      // String[] pluginArgs = {"setup", "alltests" }; // get this from the bm
+      // config
       String[] pluginArgs = config.getArgs(size);
       run.invoke(null, new Object[] { pluginArgs });
     } catch (Exception e) {
@@ -92,11 +92,9 @@ public class Eclipse extends Benchmark {
       System.setProperty("osgi.os", "linux");
       System.setProperty("osgi.ws", "gtk");
       System.setProperty("osgi.arch", "x86");
-      System.setProperty("osgi.install.area", "file:"
-          + fileInScratch("eclipse/"));
+      System.setProperty("osgi.install.area", "file:" + fileInScratch("eclipse/"));
       System.setProperty("osgi.noShutdown", "true");
-      System.setProperty("osgi.framework", "file:"
-          + fileInScratch(OSGI_BOOTSTRAP_JAR));
+      System.setProperty("osgi.framework", "file:" + fileInScratch(OSGI_BOOTSTRAP_JAR));
       setJavaHomeIfRequired();
 
       String[] args = new String[4];

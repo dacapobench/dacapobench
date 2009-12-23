@@ -1,10 +1,10 @@
 <project name="pybench" default="pybench" basedir="..">
     <description>pybench benchmark, used by jython</description>
-
+        
     <property name="py-version" value="2.5.4"/>
     <property name="py-url" value="http://www.python.org/ftp/python/${py-version}"/>
     <property name="py-src" value="Python-${py-version}.tgz"/>
-
+        
     <target name="py-source">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
@@ -14,7 +14,7 @@
     </target>
 
     <target name="pybench" depends="py-untar, py-patch, py-build"/>
-
+        
     <target name="py-untar-src">
         <untar src="${bm-downloads}/${py-src}" dest="${bm-build-dir}" compression="gzip">
             <patternset>
@@ -40,7 +40,7 @@
                dir="${bm-build-dir}/jython"
                strip="0" ignorewhitespace="yes"/>
     </target>
-
+                
     <target name="py-build">
         <copy todir="${bm-build-dir}/jython/Lib">
             <fileset dir="${bm-build-dir}/Lib"/>

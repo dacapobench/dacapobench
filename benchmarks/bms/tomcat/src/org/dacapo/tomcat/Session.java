@@ -1,11 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2009 The Australian National University.
+/*
+ * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.tomcat;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -16,6 +16,9 @@ import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 
 /**
  * Per-session data
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class Session {
 
@@ -27,8 +30,7 @@ public class Session {
   protected final int port;
 
   /**
-   * @param port
-   *          TCP port
+   * @param port TCP port
    * @return A correctly initialized Session
    */
   public static Session create(int port) {
@@ -49,8 +51,7 @@ public class Session {
    * @return The instance, initialized
    */
   protected <T extends Session> T init() {
-    setConnectionManagerParams(httpClient.getHttpConnectionManager()
-        .getParams());
+    setConnectionManagerParams(httpClient.getHttpConnectionManager().getParams());
     setClientParams(httpClient.getParams());
     setClientState(httpClient.getState());
     @SuppressWarnings("unchecked")
@@ -60,7 +61,6 @@ public class Session {
 
   /**
    * Set connection manager parameters.
-   * 
    * @param params
    */
   protected void setConnectionManagerParams(HttpConnectionManagerParams params) {
@@ -79,7 +79,7 @@ public class Session {
   public int getPort() {
     return port;
   }
-  
+
   /**
    * shutdown the session cleanup all resources
    */

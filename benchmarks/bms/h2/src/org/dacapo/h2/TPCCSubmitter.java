@@ -1,10 +1,22 @@
 /* 
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Dacapo benchmark harness for TPC-C like workload running on H2.
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, 
+ * software distributed under the License is distributed on an 
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific 
+ * language governing permissions and limitations under the License.
  * 
- * Apache authored the original TPC-C like workload.
- * 
- * @author Apache
+ * Contributors:
+ *     Apache Software Foundation (ASF)
+ *     Australian National University - adaptation to DaCapo test harness
  */
 package org.dacapo.h2;
 
@@ -16,7 +28,10 @@ import org.apache.derbyTesting.system.oe.util.OERandom;
 /**
  * A TPC-C like Submitter that will execute a fixed number of transactions only
  * counting those transactions that succeed. Failed transactions are ignored and
- * another transaction is tried.
+ * another transaction is tried. Based on Apache Derby implementation.
+ * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class TPCCSubmitter extends Submitter {
   // percentage of transactions that we will tolerate failing
@@ -27,7 +42,7 @@ public class TPCCSubmitter extends Submitter {
 
   private OERandom rand;
   private TPCCReporter reporter;
-  
+
   static void setSeed(long seed) {
     globalSeed = seed;
   }
@@ -38,16 +53,14 @@ public class TPCCSubmitter extends Submitter {
     return result;
   }
 
-  public TPCCSubmitter(TPCCReporter reporter, Operations ops, OERandom rand,
-      short maxW) {
+  public TPCCSubmitter(TPCCReporter reporter, Operations ops, OERandom rand, short maxW) {
     super(null, ops, rand, maxW);
     this.rand = rand;
     this.reporter = reporter;
   }
 
   @Override
-  public long runTransactions(final Object displayData, final int count)
-      throws Exception {
+  public long runTransactions(final Object displayData, final int count) throws Exception {
     for (int i = 0; i < count; i++) {
       rand.setSeed(getNextSeed());
 
@@ -56,7 +69,8 @@ public class TPCCSubmitter extends Submitter {
       while (!success) {
         try {
           success = runTransaction(txType, displayData);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
       }
       transactionCount[txType]++;
       reporter.done();
@@ -65,12 +79,12 @@ public class TPCCSubmitter extends Submitter {
     // timing is done elsewhere
     return 0;
   }
-  
+
   private int getTransactionType() {
     int value = rand.randomInt(1, 1000);
     for (int type = 0; type < TX_CUM_PROB.length; type++) {
-	if (value <= TX_CUM_PROB[type])
-          return type;
+      if (value <= TX_CUM_PROB[type])
+        return type;
     }
     return -1; // unreachable
   }
@@ -106,6 +120,5 @@ public class TPCCSubmitter extends Submitter {
   }
 
   private static synchronized void doneTx() {
-    
   }
 }

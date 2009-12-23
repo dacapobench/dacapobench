@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date: 2009-12-19 22:53:42 +1100 (Sat, 19 Dec 2009) $
- * @id $Id: Config.java 713 2009-12-19 11:53:42Z steveb-oss $
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.parser;
 
 import java.io.File;
@@ -23,34 +23,32 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Vector;
 
-import org.dacapo.harness.Benchmark;
-
 /**
  * Container class for all options specified in a benchmark's configuration
  * file.
  * 
- * @author Robin Garner
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Config.java 729 2009-12-23 06:14:08Z steveb-oss $
  */
 public class Config {
 
   /**
-   * threadCount is the specified threadCountOverride from the user.  A value of 
+   * threadCount is the specified threadCountOverride from the user. A value of
    * 0 indicates that it is unspecified and not to override the standard
    * configuration
    */
   private static int threadCountOverride = 0;
-  
+
   public static void setThreadCountOverride(int threadCount) {
     threadCountOverride = threadCount;
   }
-  
+
   public static int getThreadCountOverride() {
     return threadCountOverride;
   }
-  
+
   public enum ThreadModel {
-    SINGLE("single threaded"), FIXED("fixed #threads"), PER_CPU(
-        "scaled to available CPUs");
+    SINGLE("single threaded"), FIXED("fixed #threads"), PER_CPU("scaled to available CPUs");
 
     private String description;
 
@@ -121,8 +119,7 @@ public class Config {
     private int nThreads = 1;
     private String description;
 
-    HashMap<String, OutputFile> outputFiles = new LinkedHashMap<String, OutputFile>(
-        20);
+    HashMap<String, OutputFile> outputFiles = new LinkedHashMap<String, OutputFile>(20);
 
     Size(String name, Vector<String> args) {
       this.args = (String[]) args.toArray(new String[0]);
@@ -140,11 +137,11 @@ public class Config {
     void setThreadLimit(int threadLimit) {
       this.threadLimit = threadLimit;
     }
-    
+
     int getThreadLimit() {
       return threadLimit;
     }
-    
+
     void setThreadCount(int nThreads) {
       this.nThreads = nThreads;
     }
@@ -223,8 +220,7 @@ public class Config {
   /**
    * Main - for testing purposes. Parse a config file and print its contents.
    * 
-   * @param args
-   *          Input file(s)
+   * @param args Input file(s)
    */
   public static void main(String[] args) {
     // TODO Auto-generated method stub
@@ -286,14 +282,12 @@ public class Config {
   /**
    * Set the jar from which this benchmark executes
    * 
-   * @param jarName
-   *          The name of the jar
+   * @param jarName The name of the jar
    * @throws ParseException
    */
   void setJar(String jarName) throws ParseException {
     if (this.jar != null) {
-      throw new ParseException(
-          "Configuration file error - cannot set jar name twice");
+      throw new ParseException("Configuration file error - cannot set jar name twice");
     }
     this.jar = jarName;
   }
@@ -301,14 +295,12 @@ public class Config {
   /**
    * Set the list of libraries on which this benchmark depends
    * 
-   * @param libs
-   *          An array of strings (jar names)
+   * @param libs An array of strings (jar names)
    * @throws ParseException
    */
   void setLibs(String[] libs) throws ParseException {
     if (this.libs != null) {
-      throw new ParseException(
-          "Configuration file error - cannot set libs twice");
+      throw new ParseException("Configuration file error - cannot set libs twice");
     }
     this.libs = libs;
   }
@@ -322,8 +314,7 @@ public class Config {
    */
   void setClass(String className) throws ParseException {
     if (this.className != null) {
-      throw new ParseException(
-          "Configuration file error - cannot set class name twice");
+      throw new ParseException("Configuration file error - cannot set class name twice");
     }
     this.className = className;
   }
@@ -336,8 +327,7 @@ public class Config {
    */
   void setThreadModel(ThreadModel model) throws ParseException {
     if (this.threadModel != null) {
-      throw new ParseException(
-          "Configuration file error - cannot set thread model twice");
+      throw new ParseException("Configuration file error - cannot set thread model twice");
     }
     this.threadModel = model;
   }
@@ -384,7 +374,7 @@ public class Config {
       throw new ParseException("Thread limit cannot be less than 0");
     getSize(size).setThreadLimit(threadLimit);
   }
-  
+
   /**
    * Set the threading factor for this size.
    */
@@ -401,8 +391,7 @@ public class Config {
   /**
    * 
    */
-  void setSizeDescription(String size, String description)
-      throws ParseException {
+  void setSizeDescription(String size, String description) throws ParseException {
     getSize(size).setDesc(description);
   }
 
@@ -451,12 +440,9 @@ public class Config {
   /**
    * Is this a text file (affects how it is read)
    * 
-   * @param size
-   *          benchmark size
-   * @param file
-   *          output file
-   * @param isText
-   *          Is this a text file ?
+   * @param size benchmark size
+   * @param file output file
+   * @param isText Is this a text file ?
    */
   public void setTextFile(String size, String file, boolean isText) {
     Size s = getSize(size);
@@ -519,7 +505,7 @@ public class Config {
   public int getThreadLimit(String size) {
     return getSize(size).getThreadLimit();
   }
-  
+
   /**
    * Get the threading factor for this size of this benchmark.
    * 
@@ -543,10 +529,8 @@ public class Config {
   /**
    * Get the expected digest for a given size/file pair
    * 
-   * @param size
-   *          benchmark size
-   * @param file
-   *          output file
+   * @param size benchmark size
+   * @param file output file
    */
   public String getDigest(String size, String file) {
     return getSize(size).getOutputFile(file).digest;
@@ -555,10 +539,8 @@ public class Config {
   /**
    * Does the given size/file pair have an expected file digest ?
    * 
-   * @param size
-   *          benchmark size
-   * @param file
-   *          output file
+   * @param size benchmark size
+   * @param file output file
    */
   public boolean hasDigest(String size, String file) {
     return getSize(size).getOutputFile(file).hasDigest();
@@ -567,10 +549,8 @@ public class Config {
   /**
    * Is this a text file (affects how it is read)
    * 
-   * @param size
-   *          benchmark size
-   * @param file
-   *          output file
+   * @param size benchmark size
+   * @param file output file
    * @return Is this a text file ?
    */
   public boolean isTextFile(String size, String file) {
@@ -651,8 +631,7 @@ public class Config {
     describe(str, size, false);
   }
 
-  private void describe(PrintStream str, String size, boolean decorated,
-      String desc, String trail) {
+  private void describe(PrintStream str, String size, boolean decorated, String desc, String trail) {
     if (decorated)
       str.print("  ");
     str.println(pad(desc, 10) + this.desc.get(desc) + (decorated ? trail : ""));
@@ -668,8 +647,7 @@ public class Config {
     describe(str, size, decorated, "copyright", ",");
     describe(str, size, decorated, "url", ",");
 
-    String sizeDesc = (size != null && getSize(size) != null) ? getSize(size)
-        .getDesc() : null;
+    String sizeDesc = (size != null && getSize(size) != null) ? getSize(size).getDesc() : null;
 
     if (sizeDesc == null)
       describe(str, size, decorated, "version", ";");
@@ -732,14 +710,11 @@ public class Config {
 
   public void printThreadModel(PrintStream str, String size, boolean verbose) {
     if (getThreadModel() == ThreadModel.PER_CPU) {
-      str.println("Using scaled threading model. "
-          + Runtime.getRuntime().availableProcessors()
-          + " processors detected, " + getThreadCount(size)
-          + " threads used to drive the workload, in a possible range of [1," + (getThreadLimit(size)==0?"unlimited":""+getThreadLimit(size)) + "]");
+      str.println("Using scaled threading model. " + Runtime.getRuntime().availableProcessors() + " processors detected, " + getThreadCount(size)
+          + " threads used to drive the workload, in a possible range of [1," + (getThreadLimit(size) == 0 ? "unlimited" : "" + getThreadLimit(size)) + "]");
     } else if (verbose) {
       if (getThreadModel() == ThreadModel.FIXED) {
-        str.println("Using a fixed threading model. " + getThreadCount(size)
-            + " threads used to drive the workload.");
+        str.println("Using a fixed threading model. " + getThreadCount(size) + " threads used to drive the workload.");
       } else if (getThreadModel() == ThreadModel.SINGLE) {
         str.println("Using a single thread to drive the workload.");
       }
@@ -762,7 +737,7 @@ public class Config {
     case FIXED:
       return getThreadFactor(size);
     case PER_CPU: {
-      return threadCountOverride!=0 ? threadCountOverride : getThreadFactor(size)*Runtime.getRuntime().availableProcessors();
+      return threadCountOverride != 0 ? threadCountOverride : getThreadFactor(size) * Runtime.getRuntime().availableProcessors();
     }
     default:
       throw new RuntimeException("Unknown thread model");
@@ -801,11 +776,9 @@ public class Config {
   private Size getSize(String size) {
     Size s = (Size) sizes.get(size);
     if (s == null) {
-      System.err
-          .println("No such size: \"" + size + "\" for benchmark "+name);
+      System.err.println("No such size: \"" + size + "\" for benchmark " + name);
       System.exit(-1);
     }
     return s;
   }
-
 }

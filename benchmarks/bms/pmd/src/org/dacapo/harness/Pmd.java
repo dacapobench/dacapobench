@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2005, 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -11,6 +19,10 @@ import java.util.List;
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
+/**
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Pmd.java 729 2009-12-23 06:14:08Z steveb-oss $
+ */
 public class Pmd extends Benchmark {
 
   String[] args;
@@ -29,8 +41,7 @@ public class Pmd extends Benchmark {
      * It's always possible that there are additional properties that need to be
      * set.
      */
-    System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-        "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+    System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
   }
 
   public void prepare(String size) {
@@ -49,8 +60,7 @@ public class Pmd extends Benchmark {
 
   private String collectFilesFromFile(String inputFileName) {
     try {
-      java.io.BufferedReader reader = new java.io.BufferedReader(
-          new InputStreamReader(new FileInputStream(inputFileName)));
+      java.io.BufferedReader reader = new java.io.BufferedReader(new InputStreamReader(new FileInputStream(inputFileName)));
 
       List<File> files = new ArrayList<File>();
 

@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2005, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date: 2009-12-21 14:50:19 +1100 (Mon, 21 Dec 2009) $
- * @id $Id: Fop.java 721 2009-12-21 03:50:19Z steveb-oss $
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -13,6 +13,10 @@ import java.io.File;
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
+/**
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Fop.java 729 2009-12-23 06:14:08Z steveb-oss $
+ */
 public class Fop extends Benchmark {
 
   private String[] args;

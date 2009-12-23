@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2005, 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -6,6 +14,10 @@ import java.lang.reflect.Method;
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
+/**
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Jython.java 729 2009-12-23 06:14:08Z steveb-oss $
+ */
 public class Jython extends Benchmark {
 
   private Method pySetArgsMethod;
@@ -14,16 +26,14 @@ public class Jython extends Benchmark {
     super(config, scratch);
     Class<?> clazz = Class.forName("org.python.util.jython", true, loader);
     this.method = clazz.getMethod("main", String[].class);
-    Class<?> pyClass = Class.forName("org.python.core.PySystemState", true,
-        loader);
+    Class<?> pyClass = Class.forName("org.python.core.PySystemState", true, loader);
     pySetArgsMethod = pyClass.getMethod("setArgv", String[].class);
     System.setProperty("python.home", fileInScratch("jython"));
     System.setProperty("python.cachedir", fileInScratch("cachedir"));
     System.setProperty("python.verbose", "warning");
     useBenchmarkClassLoader();
     try {
-      method.invoke(null,
-          (Object) new String[] { fileInScratch("jython/noop.py") });
+      method.invoke(null, (Object) new String[] { fileInScratch("jython/noop.py") });
     } finally {
       revertClassLoader();
     }

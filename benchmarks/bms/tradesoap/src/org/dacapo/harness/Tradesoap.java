@@ -1,11 +1,11 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -17,19 +17,16 @@ import org.dacapo.parser.Config;
 /**
  * Dacapo benchmark harness for tradesoap.
  * 
- * @author Apache
- * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
-
 public class Tradesoap extends Benchmark {
   private Method initializeMethod;
 
   public Tradesoap(Config config, File scratch) throws Exception {
     super(config, scratch, false);
-    Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true,
-        loader);
-    this.initializeMethod = clazz.getMethod("initialize", new Class[] {
-        File.class, Integer.TYPE, String.class, Boolean.TYPE });
+    Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
+    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, Integer.TYPE, String.class, Boolean.TYPE });
     this.method = clazz.getMethod("performIteration", new Class[] {});
   }
 
@@ -45,8 +42,7 @@ public class Tradesoap extends Benchmark {
     if (args.length == 1)
       dtSize = args[0];
 
-    initializeMethod.invoke(null, scratch, config.getThreadCount(size), dtSize,
-        false);
+    initializeMethod.invoke(null, scratch, config.getThreadCount(size), dtSize, false);
   }
 
   public void cleanup() {

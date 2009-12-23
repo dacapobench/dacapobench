@@ -1,27 +1,35 @@
+<!--
+ * Copyright (c) 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
 <project name="commons-httpclient" default="all" basedir="../..">
-    <description>Jakarta Commons HttpClient, required by tomcat</description>
-    <property file="ant/dacapo.properties"/>
+	<description>Jakarta Commons HttpClient, required by tomcat</description>
+	<property file="ant/dacapo.properties"/>
 
-    <property name="lib-name" value="commons-httpclient"/>
-    <property name="lib-version" value="3.1"/>
-    <property name="lib-url" value="${apache.dl.url}/httpcomponents/${lib-name}/source/"/>
-    <property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
-    
-    <import file="../common.xml"/>
+	<property name="lib-name" value="commons-httpclient"/>
+	<property name="lib-version" value="3.1"/>
+	<property name="lib-url" value="${apache.dl.url}/httpcomponents/${lib-name}/source/"/>
+	<property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
 
-    <property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}"/>
-    
-    <target name="unpack" depends="untar"/>
-    
-    <target name="build">
-        <ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
-            <property name="commons-logging.jar" location="${commons-logging-jar}"/>
-            <property name="commons-codec.jar" location="${commons-codec-jar}"/>
-            <target name="dist"/>
-        </ant>
-    </target>
+	<import file="../common.xml"/>
 
-    <target name="jar">
-        <copy file="${lib-build-top}/dist/commons-httpclient.jar" tofile="${commons-httpclient-jar}"/>
-    </target>
+	<property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}"/>
+
+	<target name="unpack" depends="untar"/>
+
+	<target name="build">
+		<ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
+			<property name="commons-logging.jar" location="${commons-logging-jar}"/>
+			<property name="commons-codec.jar" location="${commons-codec-jar}"/>
+			<target name="dist"/>
+		</ant>
+	</target>
+
+	<target name="jar">
+		<copy file="${lib-build-top}/dist/commons-httpclient.jar" tofile="${commons-httpclient-jar}"/>
+	</target>
 </project>

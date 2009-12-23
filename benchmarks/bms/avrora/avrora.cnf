@@ -16,8 +16,8 @@ size small args "-seconds=30",
 
 size default args "-seconds=30",
 	"-platform=mica2",
-        "-simulation=sensor-network",
-        "-nodecount=4,2",
+	"-simulation=sensor-network",
+	"-nodecount=4,2",
 	"-stagger-start=1000000",
 	"test/tinyos/CntToRfm.elf",
 	"test/tinyos/RfmToLeds.elf"

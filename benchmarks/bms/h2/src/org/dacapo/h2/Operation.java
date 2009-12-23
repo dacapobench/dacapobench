@@ -1,5 +1,4 @@
 /* 
- *
  * Derby - Class org.apache.derbyTesting.system.oe.direct.Standard
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -43,9 +42,10 @@ import org.apache.derbyTesting.system.oe.model.Warehouse;
  * Construct a wrapper sub-classs of the
  * org.apache.derbyTesting.system.oe.direct.Standard operations class, which can
  * be found in:
- *   db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java 
- * in the
- *   http://apache.wildit.net.au/db/derby/db-derby-10.5.3.0/db-derby-10.5.3.0-src.tar.gz
+ * db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system
+ * /oe/direct/Standard.java in the
+ * http://apache.wildit.net.au/db/derby/db-derby-
+ * 10.5.3.0/db-derby-10.5.3.0-src.tar.gz
  * 
  * This class is created as the parent class uses a Java call-back for updating
  * C_DATA for a client which Derby understands but H2 does not. Thus, we
@@ -55,14 +55,16 @@ import org.apache.derbyTesting.system.oe.model.Warehouse;
  * 
  * The method <code>paymentById</code> is taken from the clas Standard and is
  * modified to remove the call-back.
+ * 
+ * @date $Date: 2009-12-21 14:50:19 +1100 (Mon, 21 Dec 2009) $
+ * @id $Id: Batik.java 721 2009-12-21 03:50:19Z steveb-oss $
  */
 public final class Operation extends Standard {
 
   /**
-   * @param conn
-   *          A connection to the derby database.
-   * @param retryLimit
-   *          The maximum number of retries before catastrophic failure.
+   * @param conn A connection to the derby database.
+   * @param retryLimit The maximum number of retries before catastrophic
+   * failure.
    * @throws SQLException
    */
   public Operation(Connection conn) throws SQLException {
@@ -78,12 +80,9 @@ public final class Operation extends Standard {
    * customer first based upon last name (which will actually fetch and hence
    * lock a number of customers).
    */
-  public void payment(Display display, Object displayData, short w, short d,
-      short cw, short cd, String customerLast, String amount) throws Exception {
+  public void payment(Display display, Object displayData, short w, short d, short cw, short cd, String customerLast, String amount) throws Exception {
 
-    PreparedStatement pyCustomerByName = prepareStatement("SELECT C_ID "
-        + "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_LAST = ? "
-        + "ORDER BY C_FIRST");
+    PreparedStatement pyCustomerByName = prepareStatement("SELECT C_ID " + "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_LAST = ? " + "ORDER BY C_FIRST");
 
     // Since so much data is needed for the payment transaction
     // from the customer we don't fill it in as we select the
@@ -101,8 +100,7 @@ public final class Operation extends Standard {
       }
       reset(pyCustomerByName);
       if (nameList.isEmpty())
-        throw new SQLException("Payment by name - no matching customer "
-            + customerLast);
+        throw new SQLException("Payment by name - no matching customer " + customerLast);
 
       // Customer to use is midpoint (with round up) (see 2.5.2.2)
       int mid = nameList.size() / 2;
@@ -128,8 +126,7 @@ public final class Operation extends Standard {
    * and then fetched.
    * 
    */
-  public void payment(Display display, Object displayData, short w, short d,
-      short cw, short cd, int c, final String amount) throws Exception {
+  public void payment(Display display, Object displayData, short w, short d, short cw, short cd, int c, final String amount) throws Exception {
 
     try {
       paymentById(display, displayData, w, d, cw, cd, c, amount);
@@ -151,19 +148,13 @@ public final class Operation extends Standard {
   private final District district = new District();
   private final List nameList = new ArrayList();
 
-  private void paymentById(Display display, Object displayData, short w,
-      short d, short cw, short cd, int c, final String s_amount)
-      throws Exception {
+  private void paymentById(Display display, Object displayData, short w, short d, short cw, short cd, int c, final String s_amount) throws Exception {
 
-    PreparedStatement pyCustomerPayment = prepareStatement("UPDATE CUSTOMER SET C_BALANCE = C_BALANCE - ?, "
-        + "C_YTD_PAYMENT = C_YTD_PAYMENT + ?, "
-        + "C_PAYMENT_CNT = C_PAYMENT_CNT + 1 "
-        + "WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
+    PreparedStatement pyCustomerPayment = prepareStatement("UPDATE CUSTOMER SET C_BALANCE = C_BALANCE - ?, " + "C_YTD_PAYMENT = C_YTD_PAYMENT + ?, "
+        + "C_PAYMENT_CNT = C_PAYMENT_CNT + 1 " + "WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
 
-    PreparedStatement pyCustomerInfoId = prepareStatement("SELECT C_FIRST, C_MIDDLE, C_LAST, C_BALANCE, "
-        + "C_STREET_1, C_STREET_2, C_CITY, C_STATE, C_ZIP, "
-        + "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM, C_DISCOUNT, C_DATA "
-        + "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
+    PreparedStatement pyCustomerInfoId = prepareStatement("SELECT C_FIRST, C_MIDDLE, C_LAST, C_BALANCE, " + "C_STREET_1, C_STREET_2, C_CITY, C_STATE, C_ZIP, "
+        + "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM, C_DISCOUNT, C_DATA " + "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
 
     // This is removed as the call out to java from the SQL engine did not work
     // from H2, this value can be calculated externally and set so this callback
@@ -171,8 +162,7 @@ public final class Operation extends Standard {
     PreparedStatement pyCustomerUpdateBadCredit = prepareStatement(
     // "UPDATE CUSTOMER SET C_DATA = " +
     // " BAD_CREDIT_DATA(C_DATA, ?, ?, C_W_ID, C_W_ID, C_ID, ?) " +
-    "UPDATE CUSTOMER SET C_DATA = ? "
-        + "WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
+    "UPDATE CUSTOMER SET C_DATA = ? " + "WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
 
     PreparedStatement pyCustomerGetData = prepareStatement("SELECT SUBSTR(C_DATA, 1, 200) AS C_DATA_200 "
         + "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
@@ -180,11 +170,10 @@ public final class Operation extends Standard {
     PreparedStatement pyDistrictUpdate = prepareStatement("UPDATE DISTRICT SET D_YTD = D_YTD + ? WHERE D_W_ID = ? AND D_ID = ?");
     PreparedStatement pyDistrictInfo = prepareStatement("SELECT D_NAME, D_STREET_1, D_STREET_2, D_CITY, D_STATE, D_ZIP FROM DISTRICT WHERE D_W_ID = ? AND D_ID = ? ");
     PreparedStatement pyWarehouseUpdate = prepareStatement("UPDATE WAREHOUSE SET W_YTD = W_YTD + ? WHERE W_ID = ?");
-    PreparedStatement pyWarehouseInfo = prepareStatement("SELECT W_NAME, W_STREET_1, W_STREET_2, W_CITY, W_STATE, W_ZIP "
-        + "FROM WAREHOUSE WHERE W_ID = ?");
+    PreparedStatement pyWarehouseInfo = prepareStatement("SELECT W_NAME, W_STREET_1, W_STREET_2, W_CITY, W_STATE, W_ZIP " + "FROM WAREHOUSE WHERE W_ID = ?");
 
-    PreparedStatement pyHistory = prepareStatement("INSERT INTO HISTORY(H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, "
-        + "H_AMOUNT, H_DATA, H_DATE) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    PreparedStatement pyHistory = prepareStatement("INSERT INTO HISTORY(H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, " + "H_AMOUNT, H_DATA, H_DATE) "
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
     Customer customer = new Customer();
     customer.setWarehouse(cw);
@@ -228,8 +217,7 @@ public final class Operation extends Standard {
       // The following line is added (and indexes changed) as the field can be
       // calculated externally and the callback mechanism is not usable under
       // H2.
-      pyCustomerUpdateBadCredit.setString(1, Data.dataForBadCredit(customer
-          .getData(), w, d, cw, cd, c, new BigDecimal(s_amount)));
+      pyCustomerUpdateBadCredit.setString(1, Data.dataForBadCredit(customer.getData(), w, d, cw, cd, c, new BigDecimal(s_amount)));
       pyCustomerUpdateBadCredit.setShort(2, cw);
       pyCustomerUpdateBadCredit.setShort(3, cd);
       pyCustomerUpdateBadCredit.setInt(4, c);

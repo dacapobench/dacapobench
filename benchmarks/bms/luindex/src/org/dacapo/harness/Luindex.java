@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2005, 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -8,14 +16,9 @@ import org.dacapo.harness.DacapoException;
 import org.dacapo.parser.Config;
 
 /**
- * Dacapo benchmark harness for Lucene. This is a modified version of
- * org.apache.lucene.demo.IndexFiles, as distributed with Lucene.
- * 
- * @author Apache
- * @author Robin Garner
- * 
+ * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
+ * @id $Id: Luindex.java 729 2009-12-23 06:14:08Z steveb-oss $
  */
-
 public class Luindex extends Benchmark {
 
   private final Object benchmark;
@@ -56,8 +59,7 @@ public class Luindex extends Benchmark {
     final File INDEX_DIR = new File(scratch, "index");
 
     if (INDEX_DIR.exists()) {
-      System.out.println("Cannot save index to '" + INDEX_DIR
-          + "' directory, please delete it first");
+      System.out.println("Cannot save index to '" + INDEX_DIR + "' directory, please delete it first");
       throw new DacapoException("Cannot write to index directory");
     }
 

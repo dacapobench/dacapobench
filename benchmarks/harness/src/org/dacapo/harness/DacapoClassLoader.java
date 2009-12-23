@@ -1,19 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2009 The Australian National University.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
-/*******************************************************************************
+/*
  * Copyright (c) 2006, 2009 The Australian National University.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0
- *
- * @date $Date:$
- * @id $Id:$
- *******************************************************************************/
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ */
 package org.dacapo.harness;
 
 import java.io.File;
@@ -32,9 +24,8 @@ import org.dacapo.parser.Config;
  * benchmark as a set of jar files, rather than having to mix the classes for
  * all the benchmarks into the dacapo jar file.
  * 
- * @author Steve Blackburn
- * @author Robin Garner
- * 
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class DacapoClassLoader extends URLClassLoader {
 
@@ -42,13 +33,11 @@ public class DacapoClassLoader extends URLClassLoader {
    * Factory method to create the class loader to be used for each invocation of
    * this benchmark
    * 
-   * @param config
-   *          The config file, which contains information about the jars this
-   *          benchmark depends on
-   * @param scratch
-   *          The scratch directory (in which the jars will be located)
+   * @param config The config file, which contains information about the jars
+   * this benchmark depends on
+   * @param scratch The scratch directory (in which the jars will be located)
    * @return The class loader in which this benchmark's iterations should
-   *         execute.
+   * execute.
    * @throws Exception
    */
   public static DacapoClassLoader create(Config config, File scratch) {
@@ -61,8 +50,7 @@ public class DacapoClassLoader extends URLClassLoader {
           System.out.println("  " + url.toString());
         }
       }
-      rtn = new DacapoClassLoader(urls, Thread.currentThread()
-          .getContextClassLoader());
+      rtn = new DacapoClassLoader(urls, Thread.currentThread().getContextClassLoader());
     } catch (Exception e) {
       System.err.println("Unable to create loader for " + config.name + ":");
       e.printStackTrace();
@@ -91,8 +79,7 @@ public class DacapoClassLoader extends URLClassLoader {
    * @param parent
    * @param factory
    */
-  public DacapoClassLoader(URL[] urls, ClassLoader parent,
-      URLStreamHandlerFactory factory) {
+  public DacapoClassLoader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
     super(urls, parent, factory);
   }
 
@@ -100,15 +87,12 @@ public class DacapoClassLoader extends URLClassLoader {
    * Get a list of jars (if any) which should be in the classpath for this
    * benchmark
    * 
-   * @param config
-   *          The config file for this benchmark, which lists the jars
-   * @param scratch
-   *          The scratch directory, in which the jars will be located
+   * @param config The config file for this benchmark, which lists the jars
+   * @param scratch The scratch directory, in which the jars will be located
    * @return An array of URLs, one URL for each jar
    * @throws MalformedURLException
    */
-  private static URL[] getJars(Config config, File scratch)
-      throws MalformedURLException {
+  private static URL[] getJars(Config config, File scratch) throws MalformedURLException {
     List<URL> jars = new ArrayList<URL>();
     File jardir = new File(scratch, "jar");
     if (config.jar != null) {
@@ -130,8 +114,7 @@ public class DacapoClassLoader extends URLClassLoader {
    * those provided by the runtime environment.
    */
   @Override
-  protected synchronized Class<?> loadClass(String name, boolean resolve)
-      throws ClassNotFoundException {
+  protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
     // First, check if the class has already been loaded
     Class<?> c = findLoadedClass(name);
     if (c == null) {

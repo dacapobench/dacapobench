@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+/*
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,8 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Australian National University - adaptation to DaCapo test harness
- *******************************************************************************/
+ *     Australian National University - adaptation to DaCapo benchmark suite
+ */
 package org.eclipse.jdt.core.tests.performance;
 
 import java.util.Iterator;
@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 
-/*
+/**
  * The original unmodified source this class can be found within
  *    eclipse/plugins/org.eclipse.sdk.tests.source_3.5.0.v20090227/src/org.eclipse.jdt.core.tests.performance_3.3.100.v_972_R35x
  *  which can be found within
@@ -29,6 +29,9 @@ import org.eclipse.jdt.core.dom.*;
  *  which can be found within
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
+ *  
+ * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
+ * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
  */
 public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
 
@@ -51,16 +54,17 @@ public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
    */
   private void runAstCreation(IJavaProject javaProject) throws Exception {
     if (DEBUG)
-      System.out.println("Creating AST for project"
-          + javaProject.getElementName());
+      System.out.println("Creating AST for project" + javaProject.getElementName());
     ASTParser parser = ASTParser.newParser(AST.JLS3);
     parser.setResolveBindings(true);
     parser.setProject(javaProject);
 
     Map options = javaProject.getOptions(true);
     // turn all errors and warnings into ignore. The customizable set of
-    // compiler options only contains additional Eclipse options. The 
-    // standard JDK compiler options can't be changed anyway.
+    // compiler
+    // options only contains additional Eclipse options. The standard JDK
+    // compiler
+    // options can't be changed anyway.
     for (Iterator iter = options.keySet().iterator(); iter.hasNext();) {
       String key = (String) iter.next();
       String value = (String) options.get(key);
@@ -81,9 +85,7 @@ public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
 
     if (PRINT) {
       System.out.println("            - options: " + options);
-      System.out.println("            - " + compilationUnits.length
-          + " units will be parsed in " + javaProject.getElementName()
-          + " project");
+      System.out.println("            - " + compilationUnits.length + " units will be parsed in " + javaProject.getElementName() + " project");
     }
 
     // warm up
@@ -101,7 +103,11 @@ public class FullSourceWorkspaceASTTests extends FullSourceWorkspaceTests {
       }
     }, null);
 
-    parser.createASTs(compilationUnits, new String[0], new ASTRequestor() { }, null);
+    parser.createASTs(compilationUnits, new String[0], new ASTRequestor() {/*
+                                                                            * do
+                                                                            * nothing
+                                                                            */
+    }, null);
   }
 
   /**
