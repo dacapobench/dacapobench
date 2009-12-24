@@ -18,9 +18,9 @@ The DaCapo benchmark suite is slated to be updated every few years.
 The 9.12 release is the first major update of the suite, and is
 strictly incompatible with previous releases: new benchmarks have been
 added, old benchmarks have been removed, all other benchmarks have
-been substantially updated. It is for this reason that in any
-published use of the suite, the version of the suite must be
-explicitly stated.
+been substantially updated and the inputs have changed for every
+program. It is for this reason that in any published use of the suite,
+the version of the suite must be explicitly stated.
 
 The release sees the retirement of a number of single-threaded
 benchmarks (antlr, bloat and chart), the replacement of hsqldb by
@@ -73,7 +73,7 @@ correctness nightly. Results are available here:
 3. Changes
 ----------
 
-3.1. Bencharm additions since 2006-10-MR2
+3.1. Benchmark additions since 2006-10-MR2
 
       avrora: AVRORA is a set of simulation and analysis tools in a
               framework for AVR micro-controllers. The benchmark
@@ -228,7 +228,7 @@ when compared to other benchmarks.
 
 4.3 Validation
 
-Validation continues to used summarization via a checksum, so we are
+Validation continues to use summarization via a checksum, so we are
 unable to provide a diff between expected and actual output in the
 case of failure.   We hope to update this, and welcome community
 contributions.
