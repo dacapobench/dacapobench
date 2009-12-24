@@ -109,7 +109,7 @@ BUILDING:
          target: source
          ================================= -->
 	<target name="source" depends="set-build-version-info">
-		<echo file="SOURCE_README.txt">This source distribution was built from DaCapo ${build.nickname} version ${build.version}${line.separator}</echo>
+		<echo file="SOURCE_VERSION.txt">This source distribution was built from DaCapo release ${build.version} "${build.nickname}"${line.separator}</echo>
 
 		<zip destfile="dacapo-src.zip" level="9" whenempty="create">
 			<zipfileset dir="${basedir}/.." defaultexcludes="yes" filemode="755">
@@ -117,7 +117,7 @@ BUILDING:
 			</zipfileset>
 			<zipfileset dir="${basedir}/.." defaultexcludes="yes">
 				<!-- add source readme indicating where this is from -->
-				<include name="benchmarks/SOURCE_README.txt"/>
+				<include name="benchmarks/SOURCE_VERSION.txt"/>
 
 				<!-- benchmark top level source -->
 				<include name="benchmarks/*.xml"/>
