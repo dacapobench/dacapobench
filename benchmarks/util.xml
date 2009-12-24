@@ -235,7 +235,7 @@
 		<property name="cvs-tmp" value="cvs-${build.time}"/>
 		<mkdir dir="${cvs-tmp}"/>
 		<echo message="Date is: ${cvs-date}"/>
-		<cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date} 06:00:00 Z" compression="yes" failonerror="yes" />
+		<cvs cvsRoot="${cvs-root}" dest="${cvs-tmp}" package="${cvs-package}" date="${cvs-date} 00:00:00 Z" compression="yes" failonerror="yes" />
 		<!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->
 		<tar destfile="${target-filename}" basedir="${cvs-tmp}" compression="gzip" excludes=".cvs*/**,**/.cvs*/**"/>
 		<!-- <delete dir="${cvs-tmp}"/> -->
