@@ -19,8 +19,8 @@ import org.dacapo.parser.Config;
 /**
  * Dump the key info fields for each benchmark into a latex file
  * 
- * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
- * @id $Id: LatexDescriptions.java 729 2009-12-23 06:14:08Z steveb-oss $
+ * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * @id $Id: LatexDescriptions.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class LatexDescriptions {
   private static String[] items = { "short", "long", "threads", "repeats", "author", "license", "copyright", "url", "version" };

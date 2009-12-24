@@ -13,8 +13,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
- * @date $Date: 2009-12-04 14:33:59 +1100 (Fri, 04 Dec 2009) $
- * @id $Id: Slice.java 659 2009-12-04 03:33:59Z jzigman $
+ * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * @id $Id: TeePrintStream.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class TeePrintStream extends PrintStream {
 

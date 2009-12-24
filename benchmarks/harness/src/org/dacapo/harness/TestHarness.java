@@ -28,8 +28,8 @@ import org.dacapo.parser.Config;
  * the specified benchmark, interprets command line arguments, and invokes the
  * benchmark-specific harness class.
  * 
- * @date $Date: 2009-12-23 17:14:08 +1100 (Wed, 23 Dec 2009) $
- * @id $Id: TestHarness.java 729 2009-12-23 06:14:08Z steveb-oss $
+ * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * @id $Id: TestHarness.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class TestHarness {
   public static final String PROP_BUILD_NICKNAME = "build.nickname";

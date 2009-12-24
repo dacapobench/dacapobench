@@ -56,8 +56,8 @@ import org.apache.derbyTesting.system.oe.model.Warehouse;
  * The method <code>paymentById</code> is taken from the clas Standard and is
  * modified to remove the call-back.
  * 
- * @date $Date: 2009-12-21 14:50:19 +1100 (Mon, 21 Dec 2009) $
- * @id $Id: Batik.java 721 2009-12-21 03:50:19Z steveb-oss $
+ * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * @id $Id: Operation.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public final class Operation extends Standard {
 

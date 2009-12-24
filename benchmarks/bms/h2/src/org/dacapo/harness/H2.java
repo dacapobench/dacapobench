@@ -3,8 +3,8 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0
  *
- * @date $Date:$
- * @id $Id:$
+ * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * @id $Id: H2.java 738 2009-12-24 00:19:36Z steveb-oss $
  *******************************************************************************/
 package org.dacapo.harness;
 
