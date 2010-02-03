@@ -26,12 +26,13 @@
 	<target name="build-agent-linux" if="linux">
 		<exec executable="${make}" dir="agent">
 			<arg value="JAVA_HOME=${java.home}/.."/>
+			<arg value="OSNAME=linux"/>
 		</exec>
 	</target>
 
 	<target name="clean">
 		<exec executable="${make}" dir="agent">
-			<arg value="JAVA_HOME=${jdk.home}"/>
+			<arg value="JAVA_HOME=${java.home}"/>
 			<arg value="clean"/>
 		</exec>
 		<delete dir="agent/lib"/>

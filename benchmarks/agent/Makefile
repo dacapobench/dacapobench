@@ -39,6 +39,7 @@ CFLAGS += -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(OSNAME)
 
 # Default rule (build both native library and jar file)
 all: $(LIBRARY)
+	echo $(OSNAME)
 
 # Build native library
 $(LIBRARY): $(OBJECTS)
