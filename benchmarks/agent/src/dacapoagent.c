@@ -3,6 +3,7 @@
  */
 
 #include "stdlib.h"
+#include "stdio.h"
 
 #include "dacapoagent.h"
 
@@ -247,17 +248,76 @@ exitCriticalSection(jvmtiEnv *jvmti)
     }
 }
 
+#define BUFFER_SIZE_INC 8192
+
 void readClassData(char* infile, unsigned char** new_class_data, jint* new_class_data_len) {
-	new_class_data     = 0;
-	new_class_data_len = 0;
+	unsigned char* buffer = NULL;
+	jint buffer_offset = 0;
+	jint buffer_length = 0;
+
+	FILE* fh = fopen(infile, "r");
+	if (fh!=NULL) {
+		size_t number_read;
+
+		do {
+			if (buffer_length == buffer_offset) {
+				buffer_length = buffer_length + BUFFER_SIZE_INC;
+				unsigned char* tmp = (unsigned char*)malloc(buffer_length);
+
+				if (buffer != NULL) {
+					memcpy((void*)tmp, (void*)buffer, sizeof(unsigned char)*buffer_offset);
+					free(buffer);
+				}
+
+				buffer = tmp;
+			}
+
+			number_read = fread(buffer+buffer_offset, sizeof(unsigned char), buffer_length-buffer_offset, fh);
+
+			if (ferror(fh)==0)
+				buffer_offset += number_read;
+			else {
+				if (buffer!=NULL) free(buffer);
+				fprintf(stderr,"error reading data from \"%s\"",infile);
+				fclose(fh);
+				exit(1);
+			}
+		} while (! feof(fh));
+
+		fclose(fh);
+	}
+
+	*new_class_data     = 0;
+	*new_class_data_len = 0;
+
+	if (0<buffer_offset) {
+		*new_class_data     = buffer;
+		*new_class_data_len = buffer_offset;
+	}
 }
 
 void writeClassData(char* outfile, const unsigned char* class_data, jint class_data_len) {
+	FILE* fh = fopen(outfile, "w");
+
+	if(fh == NULL) {
+		fprintf(stderr, "failed to open \"%s\" for output of class file contents",outfile);
+		exit(1);
+	}
+
+	if ((size_t)class_data_len != fwrite((const void*)class_data, sizeof(unsigned char), class_data_len, fh)) {
+		fprintf(stderr, "failed to write all %d bytes to \"%s\"",class_data_len,outfile);
+		exit(1);
+	}
+
+	fclose(fh);
+
 	return;
 }
 
+#define TMP_FILE_NAME "class_data"
+
 void generateFileName(char* file_name, int max_file_name_len) {
-	strcpy(file_name,"file_name");
+	strcpy(file_name,TMP_FILE_NAME);
 }
 
 /* packages to be excluded from transformation */
@@ -289,7 +349,7 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 
 			writeClassData(outfile,class_data,class_data_len);
 
-			sprintf(command, "java -classpath dist/agent.jar:asm-3.2/lib/asm-3.2.jar org.dacapo.transform.DumpClass '%s' \"'%s'\"",(name!=NULL?name:"NULL"),agentOptions);
+			sprintf(command, "java -classpath dist/agent.jar:asm-3.2/lib/asm-3.2.jar org.dacapo.transform.DumpClass '%s' '%s' '%s' \"'%s'\"",infile,outfile,(name!=NULL?name:"NULL"),agentOptions);
 			if (system(command) == 0) {
 				readClassData(infile,new_class_data,new_class_data_len);
 			}
