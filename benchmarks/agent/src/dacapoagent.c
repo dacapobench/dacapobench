@@ -9,6 +9,13 @@
 #include "jni.h"
 #include "jvmti.h"
 
+#ifndef FALSE
+#define FALSE 0
+#endif
+#ifndef TRUE
+#define TRUE 0
+#endif
+
 /* Macro to get JVM function pointer. */
 #define JVM_FUNC_PTR(env,f) (*((*(env))->f))
 
@@ -33,16 +40,21 @@ jvmtiCapabilities   availableCapabilities;
 jvmtiCapabilities   capabilities;
 jvmtiEventCallbacks callbacks;
 jrawMonitorID       lock;
+jboolean            jvmRunning = FALSE;
+jboolean            jvmStopped = FALSE;
+char                agentOptions[128];
 
 /* ------------------------------------------------------------------- */
 extern void processCapabilities();
 extern void processOptions(char*);
-static void JNICALL cbClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
+static void JNICALL callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jclass class_being_redefined, jobject loader,
                 const char* name, jobject protection_domain,
                 jint class_data_len, const unsigned char* class_data,
                 jint* new_class_data_len,
                 unsigned char** new_class_data);
+static void JNICALL callbackVMInit(jvmtiEnv *jvmti, JNIEnv *env, jthread thread);
+static void JNICALL callbackVMDeath(jvmtiEnv *jvmti, JNIEnv *env);
 
 /* Agent_OnLoad: This is called immediately after the shared library is 
  *   loaded. This is the first code executed.
@@ -59,6 +71,9 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
     (void)memset(&availableCapabilities,0, sizeof(availableCapabilities));
     (void)memset(&callbacks,0, sizeof(callbacks));
     (void)memset(&lock,0, sizeof(lock));
+
+    strncpy(agentOptions,options,sizeof(agentOptions)-1);
+    agentOptions[sizeof(agentOptions)-1] = '\0';
 
 	jvm = vm;
     res = JVM_FUNC_PTR(jvm,GetEnv)(jvm, (void **)&env, JVMTI_VERSION_1);
@@ -132,6 +147,28 @@ void processCapabilities() {
 #endif // DEBUG
 }
 
+#define DEFINE_CALLBACK(c,s) \
+	callbacks.c = callback##c; \
+	if (JVMTI_FUNC_PTR(env,SetEventNotificationMode)(env, JVMTI_ENABLE, s, (jthread)NULL) != JNI_OK) { \
+	  fprintf(stderr, "unable to register event callback %s\n", #c); \
+	  exit(1); \
+	}
+
+void defineCallbacks() {
+	jint res;
+
+	DEFINE_CALLBACK(VMInit,JVMTI_EVENT_VM_INIT);
+	DEFINE_CALLBACK(VMDeath,JVMTI_EVENT_VM_DEATH);
+	DEFINE_CALLBACK(ClassFileLoadHook,JVMTI_EVENT_CLASS_FILE_LOAD_HOOK);
+
+    res = JVMTI_FUNC_PTR(env,SetEventCallbacks)(env, &callbacks, (jint)sizeof(callbacks));
+
+    if (res != JNI_OK) {
+    	fprintf(stderr, "unable to set event call backs\n");
+    	exit(1);
+    }
+}
+
 void processOptions(char* options) {
 	jint res;
 
@@ -143,25 +180,7 @@ void processOptions(char* options) {
     }
 #endif /* DEBUG */
 
-    /* callbackClassFileLoadHook */
-    callbacks.ClassFileLoadHook = &cbClassFileLoadHook;
-
-    res = JVMTI_FUNC_PTR(env,SetEventCallbacks)(env, &callbacks, (jint)sizeof(callbacks));
-
-    if (res != JNI_OK) {
-    	fprintf(stderr, "unable to set event call backs\n");
-    	exit(1);
-    }
-
-    res = JVMTI_FUNC_PTR(env,SetEventNotificationMode)(env, JVMTI_ENABLE,
-                          JVMTI_EVENT_CLASS_FILE_LOAD_HOOK,
-                          (jthread)NULL);
-    // In all the above calls, check errors.
-
-    if (res != JNI_OK) {
-    	fprintf(stderr, "failed to register callback for class file load hook\n");
-    	exit(1);
-    }
+    defineCallbacks();
 }
 
 char* intToboolean(int b) {
@@ -229,19 +248,41 @@ exitCriticalSection(jvmtiEnv *jvmti)
 }
 
 static void JNICALL
-cbClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
+callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jclass class_being_redefined, jobject loader,
                 const char* name, jobject protection_domain,
                 jint class_data_len, const unsigned char* class_data,
                 jint* new_class_data_len,
                 unsigned char** new_class_data)
 {
-    enterCriticalSection(jvmti);
+	if (! jvmStopped) {
+		enterCriticalSection(jvmti);
 
-    *new_class_data     = NULL;
-    *new_class_data_len = 0;
+		*new_class_data     = NULL;
+		*new_class_data_len = 0;
 
-    fprintf(stderr, "callbackClassFileLoadHook(...):\"%s\"\n",(name==NULL)?"NULL":name);
+		fprintf(stderr, "callbackClassFileLoadHook(...):\"%s\"\n",(name==NULL)?"NULL":name);
+		char command[256];
 
-    exitCriticalSection(jvmti);
+		sprintf(command, "java Hello %s \"%s\"",(name!=NULL?name:"NULL"),agentOptions);
+		system(command);
+
+		exitCriticalSection(jvmti);
+	}
 }
+
+/* JVMTI_EVENT_VM_INIT */
+static void JNICALL
+callbackVMInit(jvmtiEnv *jvmti, JNIEnv *env, jthread thread)
+{
+	jvmRunning = TRUE;
+}
+
+/* JVMTI_EVENT_VM_DEATH */
+static void JNICALL
+callbackVMDeath(jvmtiEnv *jvmti, JNIEnv *env)
+{
+	jvmStopped = TRUE;
+}
+
+
