@@ -247,6 +247,23 @@ exitCriticalSection(jvmtiEnv *jvmti)
     }
 }
 
+void readClassData(char* infile, unsigned char** new_class_data, jint* new_class_data_len) {
+	new_class_data     = 0;
+	new_class_data_len = 0;
+}
+
+void writeClassData(char* outfile, const unsigned char* class_data, jint class_data_len) {
+	return;
+}
+
+void generateFileName(char* file_name, int max_file_name_len) {
+	strcpy(file_name,"file_name");
+}
+
+/* packages to be excluded from transformation */
+#define ASM_PACKAGE_NAME     "org/objectweb/asm/"
+#define DACAPO_PACKAGE_NAME  "org/dacapo/transform/"
+
 static void JNICALL
 callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jclass class_being_redefined, jobject loader,
@@ -256,18 +273,29 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 unsigned char** new_class_data)
 {
 	if (! jvmStopped) {
-		enterCriticalSection(jvmti);
+		if (strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) {
+			enterCriticalSection(jvmti);
 
-		*new_class_data     = NULL;
-		*new_class_data_len = 0;
+			*new_class_data     = NULL;
+			*new_class_data_len = 0;
 
-		fprintf(stderr, "callbackClassFileLoadHook(...):\"%s\"\n",(name==NULL)?"NULL":name);
-		char command[256];
+			fprintf(stderr, "callbackClassFileLoadHook(...):\"%s\"\n",(name==NULL)?"NULL":name);
+			char command[1024];
+			char outfile[256];
+			char infile [256];
 
-		sprintf(command, "java Hello %s \"%s\"",(name!=NULL?name:"NULL"),agentOptions);
-		system(command);
+			generateFileName(outfile, sizeof(outfile));
+			generateFileName(infile, sizeof(infile));
 
-		exitCriticalSection(jvmti);
+			writeClassData(outfile,class_data,class_data_len);
+
+			sprintf(command, "java -classpath dist/agent.jar:asm-3.2/lib/asm-3.2.jar org.dacapo.transform.DumpClass '%s' \"'%s'\"",(name!=NULL?name:"NULL"),agentOptions);
+			if (system(command) == 0) {
+				readClassData(infile,new_class_data,new_class_data_len);
+			}
+
+			exitCriticalSection(jvmti);
+		}
 	}
 }
 

@@ -9,6 +9,7 @@
 <project name="DacapoAgent" default="all" basedir="..">
 	<description>DaCapo Agent</description>
 
+	<property name="agentdir" value="${basedir}/agent"/>
 	<property file="dacapo.properties"/>
 
 	<condition property="linux">
@@ -18,11 +19,18 @@
 	<property name="make" value="make"/>
 
 	<target name="init">
+		<mkdir dir="agent/build"/>
 		<mkdir dir="agent/lib"/>
+		<mkdir dir="agent/dist"/>
 	</target>
 
-	<target name="all" depends="init,build-agent-linux"/>
+	<target name="all" depends="init,jar,build-agent-linux"/>
 
+	<target name="jar">
+		<javac srcdir="agent/src" destdir="agent/build" classpath="agent/asm-3.2/lib/asm-3.2.jar" />
+		<jar destfile="agent/dist/agent.jar" basedir="agent/build" />
+	</target>
+	
 	<target name="build-agent-linux" if="linux">
 		<exec executable="${make}" dir="agent">
 			<arg value="JAVA_HOME=${java.home}/.."/>
@@ -35,7 +43,9 @@
 			<arg value="JAVA_HOME=${java.home}"/>
 			<arg value="clean"/>
 		</exec>
+		<delete dir="agent/dist"/>
 		<delete dir="agent/lib"/>
+		<delete dir="agent/build"/>
 	</target>
 
 </project>
