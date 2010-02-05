@@ -18,11 +18,14 @@ public class DumpClass {
 		String name    = args[2];
 		String options = args[3];
 
-		ClassReader reader = new ClassReader(new FileInputStream(infile));
-		
-		System.out.println("DumpClass: class name="+reader.getClassName());
-		
-		System.exit(1);
+		try {
+			ClassReader reader = new ClassReader(new FileInputStream(infile));
+			
+			System.out.println("DumpClass["+infile+", "+outfile+", "+name+", "+options+"]: class name="+reader.getClassName());
+		} catch (Exception e) {
+			System.err.println("failed to process class "+name);
+			System.exit(1);
+		}
 	}
 
 }

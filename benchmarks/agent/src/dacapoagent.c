@@ -291,8 +291,12 @@ void readClassData(char* infile, unsigned char** new_class_data, jint* new_class
 	*new_class_data_len = 0;
 
 	if (0<buffer_offset) {
+		/* now that the class buffer has been created who owns it? */
 		*new_class_data     = buffer;
 		*new_class_data_len = buffer_offset;
+	} else {
+		/* free the buffer if it has been created but not used */
+		if (buffer!=NULL) free(buffer);
 	}
 }
 
