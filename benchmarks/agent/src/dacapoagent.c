@@ -336,7 +336,7 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jint* new_class_data_len,
                 unsigned char** new_class_data)
 {
-	if (! jvmStopped) {
+	if (jvmRunning && ! jvmStopped) {
 		if (strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) {
 			enterCriticalSection(jvmti);
 
