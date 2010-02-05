@@ -9,26 +9,45 @@
 <project name="DacapoAgent" default="all" basedir="..">
 	<description>DaCapo Agent</description>
 
+	<import file="../util.xml"/>
+	
 	<property name="agentdir" value="${basedir}/agent"/>
+	<property name="dist-dir" value="${agentdir}/dist"/>
+	
 	<property file="dacapo.properties"/>
 
 	<condition property="linux">
 		<equals arg1="${os.name}" arg2="linux" casesensitive="no" trim="yes"/>
 	</condition>
 
+	<property name="download-dir" value="${agentdir}/download"/>
+	<property name="asm-verison" value="3.2"/>
+	<property name="asm-jar" value="asm-${asm-verison}.jar"/>
+	<property name="asm-url" value="http://download.forge.objectweb.org/asm"/>
+	
 	<property name="make" value="make"/>
 
 	<target name="init">
-		<mkdir dir="agent/build"/>
-		<mkdir dir="agent/lib"/>
-		<mkdir dir="agent/dist"/>
+		<mkdir dir="${agentdir}/build"/>
+		<mkdir dir="${agentdir}/lib"/>
+		<mkdir dir="${dist-dir}"/>
 	</target>
 
-	<target name="all" depends="init,jar,build-agent-linux"/>
-
+	<target name="libs" depends="init">
+		<antcall target="check-source">
+			<param name="target-file" value="${asm-jar}" />
+			<param name="target-dir"  value="${download-dir}" />
+			<param name="target-url"  value="${asm-url}"/>
+		</antcall>
+	</target>
+	
+	<target name="all" depends="init,libs,jar,build-agent-linux">
+		<copy file="${download-dir}/${asm-jar}" tofile="${dist-dir}/${asm-jar}"/>
+	</target>
+		
 	<target name="jar">
-		<javac srcdir="agent/src" destdir="agent/build" classpath="agent/asm-3.2/lib/asm-3.2.jar" />
-		<jar destfile="agent/dist/agent.jar" basedir="agent/build" />
+		<javac srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${agentdir}/asm-3.2/lib/asm-3.2.jar" />
+		<jar destfile="${agentdir}/dist/agent.jar" basedir="${agentdir}/build" />
 	</target>
 	
 	<target name="build-agent-linux" if="linux">
@@ -43,9 +62,9 @@
 			<arg value="JAVA_HOME=${java.home}"/>
 			<arg value="clean"/>
 		</exec>
-		<delete dir="agent/dist"/>
-		<delete dir="agent/lib"/>
-		<delete dir="agent/build"/>
+		<delete dir="${dist-dir}"/>
+		<delete dir="${agentdir}/lib"/>
+		<delete dir="${agentdir}/build"/>
 	</target>
 
 </project>

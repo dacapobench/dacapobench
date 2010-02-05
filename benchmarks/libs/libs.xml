@@ -93,4 +93,11 @@
 	<target name="xerces">
 		<ant antfile="${lib-base}/xerces/build.xml"/>
 	</target>
+
+  <!-- asm -->
+  <property name="asm-jar" value="${lib-base}/asm/dist/jar/asm-3.2.jar"/>
+  <target name="asm">
+    <ant antfile="${lib-base}/asm/build.xml"/>
+  </target>
+
 </project>
