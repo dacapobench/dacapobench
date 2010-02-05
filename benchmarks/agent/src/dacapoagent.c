@@ -13,9 +13,6 @@
 #ifndef FALSE
 #define FALSE 0
 #endif
-#ifndef TRUE
-#define TRUE 0
-#endif
 
 /* Macro to get JVM function pointer. */
 #define JVM_FUNC_PTR(env,f) (*((*(env))->f))
@@ -336,7 +333,7 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jint* new_class_data_len,
                 unsigned char** new_class_data)
 {
-	if (jvmRunning && ! jvmStopped) {
+	if (jvmRunning && !jvmStopped) {
 		if (strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) {
 			enterCriticalSection(jvmti);
 
@@ -367,14 +364,14 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 static void JNICALL
 callbackVMInit(jvmtiEnv *jvmti, JNIEnv *env, jthread thread)
 {
-	jvmRunning = TRUE;
+	jvmRunning = !FALSE;
 }
 
 /* JVMTI_EVENT_VM_DEATH */
 static void JNICALL
 callbackVMDeath(jvmtiEnv *jvmti, JNIEnv *env)
 {
-	jvmStopped = TRUE;
+	jvmStopped = !FALSE;
 }
 
 
