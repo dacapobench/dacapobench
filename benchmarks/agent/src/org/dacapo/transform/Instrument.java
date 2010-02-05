@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 
 import org.objectweb.asm.ClassReader;
 
-public class DumpClass {
+public class Instrument {
 
 	/**
 	 * @param args
@@ -21,7 +21,7 @@ public class DumpClass {
 		try {
 			ClassReader reader = new ClassReader(new FileInputStream(infile));
 			
-			System.out.println("DumpClass["+infile+", "+outfile+", "+name+", "+options+"]: class name="+reader.getClassName());
+			System.out.println("Instrument["+infile+", "+outfile+", "+name+", "+options+"]: class name="+reader.getClassName());
 		} catch (Exception e) {
 			System.err.println("failed to process class "+name);
 			System.exit(1);
