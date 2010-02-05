@@ -39,14 +39,14 @@
 			<param name="target-dir"  value="${download-dir}" />
 			<param name="target-url"  value="${asm-url}"/>
 		</antcall>
+		<copy file="${download-dir}/${asm-jar}" tofile="${dist-dir}/${asm-jar}"/>
 	</target>
 	
 	<target name="all" depends="init,libs,jar,build-agent-linux">
-		<copy file="${download-dir}/${asm-jar}" tofile="${dist-dir}/${asm-jar}"/>
 	</target>
 		
 	<target name="jar">
-		<javac srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${agentdir}/asm-3.2/lib/asm-3.2.jar" />
+		<javac srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${dist-dir}/${asm-jar}" />
 		<jar destfile="${agentdir}/dist/agent.jar" basedir="${agentdir}/build" />
 	</target>
 	
