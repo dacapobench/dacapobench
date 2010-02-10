@@ -23,6 +23,13 @@
 	<property name="download-dir" value="${agentdir}/download"/>
 	<property name="asm-verison" value="3.2"/>
 	<property name="asm-jar" value="asm-${asm-verison}.jar"/>
+	<property name="asm-analysis-jar" value="asm-analysis-${asm-verison}.jar"/>
+	<property name="asm-commons-jar" value="asm-commons-${asm-verison}.jar"/>
+	<property name="asm-parent-jar" value="asm-parent-${asm-verison}.jar"/>
+	<property name="asm-tree-jar" value="asm-tree-${asm-verison}.jar"/>
+	<property name="asm-util-jar" value="asm-util-${asm-verison}.jar"/>
+	<property name="asm-xml-jar" value="asm-xml-${asm-verison}.jar"/>
+	<property name="asm-zip" value="asm-${asm-verison}-bin.zip"/>
 	<property name="asm-url" value="http://download.forge.objectweb.org/asm"/>
 	
 	<property name="make" value="make"/>
@@ -35,18 +42,24 @@
 
 	<target name="libs" depends="init">
 		<antcall target="check-source">
-			<param name="target-file" value="${asm-jar}" />
+			<param name="target-file" value="${asm-zip}" />
 			<param name="target-dir"  value="${download-dir}" />
 			<param name="target-url"  value="${asm-url}"/>
 		</antcall>
-		<copy file="${download-dir}/${asm-jar}" tofile="${dist-dir}/${asm-jar}"/>
+		<unzip src="${download-dir}/${asm-zip}" dest="${agentdir}/build">
+		    <fileset dir=".">
+		        <include name="asm-3.2/lib/*.jar"/>
+		    </fileset>
+		</unzip>
+		<copy file="${agentdir}/build/asm-3.2/lib/${asm-jar}" todir="${dist-dir}"/>
+		<copy file="${agentdir}/build/asm-3.2/lib/${asm-commons-jar}" todir="${dist-dir}"/>
 	</target>
 	
 	<target name="all" depends="init,libs,jar,build-agent-linux">
 	</target>
 		
 	<target name="jar">
-		<javac srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${dist-dir}/${asm-jar}" />
+		<javac srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${dist-dir}/${asm-jar}:${dist-dir}/${asm-commons-jar}" />
 		<jar destfile="${agentdir}/dist/agent.jar" basedir="${agentdir}/build" />
 	</target>
 	
