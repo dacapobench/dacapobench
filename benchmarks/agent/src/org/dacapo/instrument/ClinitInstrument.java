@@ -22,6 +22,8 @@ public class ClinitInstrument  extends ClassAdapter {
 
 	private static final String   JAVA_PACKAGE         = "java/";
 	
+	private static final String   INSTRUMENT_PACKAGE   = "org/dacapo/instrument/";
+	
 	private static final String   LOG_INTERNAL_NAME    = "org/dacapo/instrument/Log";
 	private static final String   LOG_METHOD_NAME      = "reportClass";
 	private static final String   LOG_METHOD_SIGNATURE = "(Ljava/lang/String;)V"; 
@@ -74,32 +76,31 @@ public class ClinitInstrument  extends ClassAdapter {
 				System.out.println("Unable to find Log.reportClass method");
 			}
 		}
+		
 		super.visitEnd();
 	}
 	
 	private boolean instrument() {
-		// Can't instrument <clinit> for core VM classes without causing unrecoverable problems
-		return (access & Opcodes.ACC_INTERFACE) == 0 && ! className.startsWith(JAVA_PACKAGE); //  && !className.startsWith("sun/");
+		return (access & Opcodes.ACC_INTERFACE) == 0 && !className.startsWith(INSTRUMENT_PACKAGE);
 	}
-	
+
 	private class ClinitInstrumentMethod extends AdviceAdapter {
 		ClinitInstrumentMethod(int access, String name, String desc, String signature, String[] exceptions, MethodVisitor mv) {
 			super(mv, access, name, desc);
 		}
 		
 		protected void onMethodEnter() {
+			Label target = super.newLabel();
 			// invoke the logger, note that we may not know about the Log class yet so we must catch and ignore the
 			// exception here.
 			super.visitLdcInsn(className);
 			Label start = super.mark();
 			super.visitMethodInsn(Opcodes.INVOKESTATIC, LOG_INTERNAL_NAME, LOG_METHOD_NAME, LOG_METHOD_SIGNATURE);
 			Label end = super.mark();
-			Label target = super.newLabel();
 			super.visitJumpInsn(Opcodes.GOTO,target);
 			// catch the exception, discard the exception
 			super.catchException(start,end,Type.getType(NoClassDefFoundError.class));
-			super.visitInsn(Opcodes.POP);
-			super.visitJumpInsn(Opcodes.GOTO,target);
+			super.pop();
 			super.mark(target);
 			// remainder of the <clinit>
 		}

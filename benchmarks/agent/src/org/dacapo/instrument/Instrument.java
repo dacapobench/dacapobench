@@ -31,10 +31,11 @@ public class Instrument {
 			
 			ClassVisitor cv = writer; 
 			
-			cv = new ClinitInstrument(cv, reader.getClassName());
+			cv = new ClinitInstrument(cv, reader.getClassName()); // modify the <clinit> after the method instrumentation
+			cv = new MethodInstrument(cv, reader.getClassName());
 			cv = new RuntimeInstrument(cv);
 			
-			reader.accept(cv,0);
+			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 			
 			writeClassToFile(writer,outfile);
 		} catch (Exception e) {

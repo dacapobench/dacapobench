@@ -7,9 +7,9 @@ public final class Log {
 		return;
 	}
 	
-	public static void reportClass2(String className) {
-		System.out.println("F:"+className);
-		return;
+	public static boolean reportMethod(String className, String methodName) {
+		System.out.println("M:"+className+"."+methodName);
+		return true;
 	}
 	
 }
