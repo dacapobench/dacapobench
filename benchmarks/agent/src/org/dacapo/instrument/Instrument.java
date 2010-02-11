@@ -10,6 +10,8 @@ import org.objectweb.asm.ClassWriter;
 
 public class Instrument {
 
+	private static Options options = null;
+	
 	/**
 	 * @param args
 	 */
@@ -27,13 +29,18 @@ public class Instrument {
 			
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
-			processOptions(writer, new Options(commandLineOptions));
+			options = new Options(commandLineOptions);
 			
 			ClassVisitor cv = writer; 
 			
-			cv = new ClinitInstrument(cv, reader.getClassName()); // modify the <clinit> after the method instrumentation
-			cv = new MethodInstrument(cv, reader.getClassName());
-			cv = new RuntimeInstrument(cv);
+			if (options.classInitialization())
+				cv = new ClinitInstrument(cv, reader.getClassName()); 
+			
+			if (options.methodCalls())
+				cv = new MethodInstrument(cv, reader.getClassName());
+			
+			if (options.runtime())
+				cv = new RuntimeInstrument(cv);
 			
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 			
