@@ -25,15 +25,13 @@ public class Instrument {
 		try {
 			ClassReader reader = readClassFromFile(infile);
 			
-			System.out.println("Instrument<stuff>["+infile+", "+outfile+", "+name+", "+commandLineOptions+"]: class name="+reader.getClassName());
-
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
 			processOptions(writer, new Options(commandLineOptions));
 			
 			ClassVisitor cv = writer; 
 			
-			cv = new ClinitInstrument(cv);
+			cv = new ClinitInstrument(cv, reader.getClassName());
 			cv = new RuntimeInstrument(cv);
 			
 			reader.accept(cv,0);

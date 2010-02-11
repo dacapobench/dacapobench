@@ -59,7 +59,7 @@
 	</target>
 		
 	<target name="jar">
-		<javac srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${dist-dir}/${asm-jar}:${dist-dir}/${asm-commons-jar}" />
+		<javac debug="on" srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${dist-dir}/${asm-jar}:${dist-dir}/${asm-commons-jar}" />
 		<jar destfile="${agentdir}/dist/agent.jar" basedir="${agentdir}/build" />
 	</target>
 	
