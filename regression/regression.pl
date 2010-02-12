@@ -17,7 +17,7 @@ regression($id, $hour_id, $target_finish);
 sub update() {
   if ($vcs == "svn") {
     system("svn update --force");
-  } else if ($vcs == "hg") {
+  } elsif ($vcs == "hg") {
     system("( TARGET=$PWD && cd $HOME/dacapobench && hg pull && hg branch default && hg update && cd regression && cp -f * $TARGET/. )");
   }
 }
