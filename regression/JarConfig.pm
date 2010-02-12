@@ -23,7 +23,7 @@ $jar_path ="jar";
 $dacapo_head_build_path = $jar_path;
 $dacapo_head_jar = "head";
 
-$vcs = "svn";
+$vcs = "hg";
 
 $dacapo_svn_dir = "dacapo-svn";
 $dacapo_hg_dir  = "dacapo-hg";
