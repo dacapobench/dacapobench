@@ -15,8 +15,9 @@ regression($id, $hour_id, $target_finish);
 # Refresh all scripts before starting
 #
 sub update() {
+  print "update $vcs repository";
   if ($vcs == "svn") {
-    system("svn update --force");
+    system("svn update");
   } elsif ($vcs == "hg") {
     system("( cd ../dacapo-base && hg pull && hg branch default && hg update ) && cp -f ../dacapo-base/regression/* .");
   }
