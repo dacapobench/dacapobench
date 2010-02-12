@@ -18,7 +18,7 @@ sub update() {
   if ($vcs == "svn) {
     system("svn updatei --force");
   } else if ($vcs == "hg") {
-    system("( TARGET=$PWD && cd $HOME/dacapobench && hg pull && hg update default && cd regression && cp -f * $TARGET/. )");
+    system("( TARGET=$PWD && cd $HOME/dacapobench && hg pull && hg branch default && hg update && cd regression && cp -f * $TARGET/. )");
   }
 }
 

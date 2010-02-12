@@ -37,7 +37,7 @@ my %vcs_config = (
               "co"       => "svn co http://dacapo.anu.edu.au/svnroot/dacapobench/benchmarks/trunk $dacapo_svn_dir",
               "build"    => "(cd $dacapo_svn_dir/benchmarks && $dacapoant dist && mv dacapo-*.jar $root_dir/$jar_path/dacapo-$dacapo_head_jar.jar)" },
    "hg"  => { "clean"    => "rm -rf $dacapo_hg_dir/* $root_dir/$jar_path/dacapo-$dacapo_head_jar.jar",
-              "co"       => "( cd $dacapo_hg_dir && hg pull && hg update default )",
+              "co"       => "( cd $dacapo_hg_dir && hg pull && hg branch default && hg update )",
               "build"    => "(cd $dacapo_hg_dir/benchmarks && $dacapoant dist && mv dacapo-*.jar $root_dir/$jar_path/dacapo-$dacapo_head_jar.jar)" }
 );
 
