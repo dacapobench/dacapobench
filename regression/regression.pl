@@ -434,8 +434,8 @@ sub do_build() {
 #
 sub build_dacapo_head() {
   my ($id, $log) = @_;
-  my $buildlog = "$log_path/$id/build-dacapo-svn.log";
-  print $log "dacapo-svn ($buildlog) ";
+  my $buildlog = "$log_path/$id/build-dacapo-$vcs.log";
+  print $log "dacapo-$vcs ($buildlog) ";
   my $path = "$root_dir/$dacapo_head_build_path";
   $buildlog = "$root_dir/$buildlog";
   echo_stamp($buildlog, "start");
