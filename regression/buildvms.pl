@@ -138,8 +138,8 @@ sub init_log {
 sub build_dacapo_head {
   my ($id, $log) = @_;
   my $start = `date`;
-  my $buildlog = "$log_path/$id-build-dacapo-svn.log";
-  print $log "dacapo-svn ($buildlog) ";
+  my $buildlog = "$log_path/$id-build-dacapo-$vcs.log";
+  print $log "dacapo-$vcs ($buildlog) ";
   $buildlog = "$root_dir/$buildlog";
   system("echo 'Start: $start' > $buildlog");
   my $path = "$root_dir/$dacapo_head_build_path";
