@@ -44,7 +44,7 @@ my %vcs_config = (
 # $dacapo_clean = "rm -rf $dacapo_svn_dir $root_dir/$jar_path/dacapo-$dacapo_head_jar.jar";
 # $dacapo_co = "svn co http://dacapo.anu.edu.au/svnroot/dacapobench/benchmarks/trunk $dacapo_svn_dir";
 # $dacapo_build = "(cd $dacapo_svn_dir/benchmarks && $dacapoant dist && mv dacapo-*.jar $root_dir/$jar_path/dacapo-$dacapo_head_jar.jar)";
-$dacapo_clean = $vcs_config{$vcs}{"clean");
+$dacapo_clean = $vcs_config{$vcs}{"clean"};
 $dacapo_co    = $vcs_config{$vcs}{"co"};
 $dacapo_build = $vcs_config{$vcs}{"build"};
 
