@@ -21,7 +21,7 @@ sub update() {
     system("svn update");
   } elsif ($vcs eq "hg") {
     print "performing hg update\n";
-    system("( cd ../dacapo-base && hg pull && hg branch default && hg update ) && cp -f ../dacapo-base/regression/* .");
+    system("( cd ../dacapo-base && hg pull --force && hg branch --force default && hg update --clean ) && cp -f ../dacapo-base/regression/* .");
   }
 }
 
