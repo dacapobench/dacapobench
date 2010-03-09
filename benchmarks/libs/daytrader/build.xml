@@ -142,6 +142,9 @@
 		<copy file="${lib-data}/users.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
 		<copy file="${lib-data}/workload.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
 		<patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${dt-build}" strip="0" ignorewhitespace="yes"/>
+		<copy todir="${dt-build}">
+			<fileset dir="libs/${lib-name}/${lib-name}" />
+		</copy>
 	</target>
 
 	<target name="jar" depends="build">
