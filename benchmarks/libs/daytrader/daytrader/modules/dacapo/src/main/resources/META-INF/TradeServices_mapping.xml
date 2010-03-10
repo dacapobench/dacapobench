@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<java-wsdl-mapping version="1.1" xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd">
+    <package-mapping>
+        <package-type>org.apache.geronimo.samples.daytrader.client.ws</package-type>
+        <namespaceURI>http://daytrader.samples.geronimo.apache.org</namespaceURI>
+    </package-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean[]</java-type>
+        <anonymous-type-qname>http://daytrader.samples.geronimo.apache.org:QuoteDataBean[0,unbounded]</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+    </java-xml-type-mapping>
+<!--    <java-xml-type-mapping>
+        <java-type>double</java-type>
+        <root-type-qname xmlns:rtq="http://www.w3.org/2001/XMLSchema">rtq:double</root-type-qname>
+        <qname-scope>simpleType</qname-scope>
+    </java-xml-type-mapping>  -->
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:OrderDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>orderID</java-variable-name>
+            <xml-element-name>orderID</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>orderType</java-variable-name>
+            <xml-element-name>orderType</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>orderStatus</java-variable-name>
+            <xml-element-name>orderStatus</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>openDate</java-variable-name>
+            <xml-element-name>openDate</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>completionDate</java-variable-name>
+            <xml-element-name>completionDate</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>quantity</java-variable-name>
+            <xml-element-name>quantity</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>price</java-variable-name>
+            <xml-element-name>price</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>orderFee</java-variable-name>
+            <xml-element-name>orderFee</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>symbol</java-variable-name>
+            <xml-element-name>symbol</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+<!--    <java-xml-type-mapping>
+        <java-type>java.math.BigDecimal</java-type>
+        <root-type-qname xmlns:rtq="http://www.w3.org/2001/XMLSchema">rtq:decimal</root-type-qname>
+        <qname-scope>simpleType</qname-scope>
+    </java-xml-type-mapping>  -->
+<!--    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean[]</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:ArrayOfOrderDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>orderDataBean</java-variable-name>
+            <xml-element-name>OrderDataBean</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping> -->
+<!--    <java-xml-type-mapping>
+        <java-type>java.util.Calendar</java-type>
+        <root-type-qname xmlns:rtq="http://www.w3.org/2001/XMLSchema">rtq:dateTime</root-type-qname>
+        <qname-scope>simpleType</qname-scope>
+    </java-xml-type-mapping> -->
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:AccountProfileDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>userID</java-variable-name>
+            <xml-element-name>userID</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>password</java-variable-name>
+            <xml-element-name>password</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>fullName</java-variable-name>
+            <xml-element-name>fullName</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>address</java-variable-name>
+            <xml-element-name>address</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>email</java-variable-name>
+            <xml-element-name>email</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>creditCard</java-variable-name>
+            <xml-element-name>creditCard</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.AccountDataBean</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:AccountDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>accountID</java-variable-name>
+            <xml-element-name>accountID</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>loginCount</java-variable-name>
+            <xml-element-name>loginCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>logoutCount</java-variable-name>
+            <xml-element-name>logoutCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>lastLogin</java-variable-name>
+            <xml-element-name>lastLogin</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>creationDate</java-variable-name>
+            <xml-element-name>creationDate</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>balance</java-variable-name>
+            <xml-element-name>balance</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>openBalance</java-variable-name>
+            <xml-element-name>openBalance</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>profileID</java-variable-name>
+            <xml-element-name>profileID</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.RunStatsDataBean</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:RunStatsDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>tradeUserCount</java-variable-name>
+            <xml-element-name>tradeUserCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>newUserCount</java-variable-name>
+            <xml-element-name>newUserCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>sumLoginCount</java-variable-name>
+            <xml-element-name>sumLoginCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>sumLogoutCount</java-variable-name>
+            <xml-element-name>sumLogoutCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>holdingCount</java-variable-name>
+            <xml-element-name>holdingCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>buyOrderCount</java-variable-name>
+            <xml-element-name>buyOrderCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>sellOrderCount</java-variable-name>
+            <xml-element-name>sellOrderCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>cancelledOrderCount</java-variable-name>
+            <xml-element-name>cancelledOrderCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>openOrderCount</java-variable-name>
+            <xml-element-name>openOrderCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>deletedOrderCount</java-variable-name>
+            <xml-element-name>deletedOrderCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>orderCount</java-variable-name>
+            <xml-element-name>orderCount</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>tradeStockCount</java-variable-name>
+            <xml-element-name>tradeStockCount</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.HoldingDataBean[]</java-type>
+        <anonymous-type-qname>http://daytrader.samples.geronimo.apache.org:HoldingDataBean[0,unbounded]</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+    </java-xml-type-mapping>
+<!--    <java-xml-type-mapping>
+        <java-type>java.lang.String</java-type>
+        <root-type-qname xmlns:rtq="http://www.w3.org/2001/XMLSchema">rtq:string</root-type-qname>
+        <qname-scope>simpleType</qname-scope>
+    </java-xml-type-mapping>  -->
+<!--    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.HoldingDataBean[]</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:ArrayOfHoldingDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>holdingDataBean</java-variable-name>
+            <xml-element-name>HoldingDataBean</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping> -->
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:QuoteDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>symbol</java-variable-name>
+            <xml-element-name>symbol</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>companyName</java-variable-name>
+            <xml-element-name>companyName</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>price</java-variable-name>
+            <xml-element-name>price</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>open</java-variable-name>
+            <xml-element-name>open</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>low</java-variable-name>
+            <xml-element-name>low</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>high</java-variable-name>
+            <xml-element-name>high</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>change</java-variable-name>
+            <xml-element-name>change</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>volume</java-variable-name>
+            <xml-element-name>volume</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.MarketSummaryDataBeanWS</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:MarketSummaryDataBeanWS</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>TSIA</java-variable-name>
+            <xml-element-name>TSIA</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>openTSIA</java-variable-name>
+            <xml-element-name>openTSIA</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>volume</java-variable-name>
+            <xml-element-name>volume</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>topGainers</java-variable-name>
+            <xml-element-name>topGainers</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>topLosers</java-variable-name>
+            <xml-element-name>topLosers</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>summaryDate</java-variable-name>
+            <xml-element-name>summaryDate</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.HoldingDataBean</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:HoldingDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>holdingID</java-variable-name>
+            <xml-element-name>holdingID</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>quantity</java-variable-name>
+            <xml-element-name>quantity</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>purchasePrice</java-variable-name>
+            <xml-element-name>purchasePrice</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>purchaseDate</java-variable-name>
+            <xml-element-name>purchaseDate</xml-element-name>
+        </variable-mapping>
+        <variable-mapping>
+            <java-variable-name>quoteID</java-variable-name>
+            <xml-element-name>quoteID</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>
+<!--    <java-xml-type-mapping>
+        <java-type>int</java-type>
+        <root-type-qname xmlns:rtq="http://www.w3.org/2001/XMLSchema">rtq:int</root-type-qname>
+        <qname-scope>simpleType</qname-scope>
+    </java-xml-type-mapping>   -->
+<!--     <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean[]</java-type>
+        <root-type-qname xmlns:rtq="http://daytrader.samples.geronimo.apache.org">rtq:ArrayOfQuoteDataBean</root-type-qname>
+        <qname-scope>complexType</qname-scope>
+        <variable-mapping>
+            <java-variable-name>quoteDataBean</java-variable-name>
+            <xml-element-name>QuoteDataBean</xml-element-name>
+        </variable-mapping>
+    </java-xml-type-mapping>  -->
+<!--     <java-xml-type-mapping>
+        <java-type>boolean</java-type>
+        <root-type-qname xmlns:rtq="http://www.w3.org/2001/XMLSchema">rtq:boolean</root-type-qname>
+        <qname-scope>simpleType</qname-scope>
+    </java-xml-type-mapping>  -->
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean[]</java-type>
+        <anonymous-type-qname>http://daytrader.samples.geronimo.apache.org:OrderDataBean[0,unbounded]</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean[]</java-type>
+        <anonymous-type-qname>http://daytrader.samples.geronimo.apache.org:ArrayOfQuoteDataBean&gt;QuoteDataBean[0,unbounded]</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.HoldingDataBean[]</java-type>
+        <anonymous-type-qname>http://daytrader.samples.geronimo.apache.org:ArrayOfHoldingDataBean&gt;HoldingDataBean[0,unbounded]</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+    </java-xml-type-mapping>
+    <java-xml-type-mapping>
+        <java-type>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean[]</java-type>
+        <anonymous-type-qname>http://daytrader.samples.geronimo.apache.org:ArrayOfOrderDataBean&gt;OrderDataBean[0,unbounded]</anonymous-type-qname>
+        <qname-scope>complexType</qname-scope>
+    </java-xml-type-mapping>
+    <service-interface-mapping>
+        <service-interface>org.apache.geronimo.samples.daytrader.client.ws.Trade</service-interface>
+        <wsdl-service-name xmlns:sim="http://daytrader.samples.geronimo.apache.org">sim:Trade</wsdl-service-name>
+        <port-mapping>
+            <port-name>TradeWSServices</port-name>
+            <java-port-name>TradeWSServices</java-port-name>
+        </port-mapping>
+    </service-interface-mapping>
+    <service-endpoint-interface-mapping>
+        <service-endpoint-interface>org.apache.geronimo.samples.daytrader.client.ws.TradeWSServices</service-endpoint-interface>
+        <wsdl-port-type xmlns:seimwpt="http://daytrader.samples.geronimo.apache.org">seimwpt:TradeWSServices</wsdl-port-type>
+        <wsdl-binding xmlns:seimwb="http://daytrader.samples.geronimo.apache.org">seimwb:TradeWSServicesSoapBinding</wsdl-binding>
+        <service-endpoint-method-mapping>
+            <java-method-name>getHoldings</java-method-name>
+            <wsdl-operation>getHoldings</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:getHoldingsRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.HoldingDataBean[]</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getHoldingsResponse</wsdl-message>
+                <wsdl-message-part-name>getHoldingsReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>updateAccountProfile</java-method-name>
+            <wsdl-operation>updateAccountProfile</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:updateAccountProfileRequest</wsdl-message>
+                    <wsdl-message-part-name>profileData</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:updateAccountProfileResponse</wsdl-message>
+                <wsdl-message-part-name>updateAccountProfileReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getMarketSummary</java-method-name>
+            <wsdl-operation>getMarketSummary</wsdl-operation>
+            <wrapped-element/>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.MarketSummaryDataBeanWS</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getMarketSummaryResponse</wsdl-message>
+                <wsdl-message-part-name>getMarketSummaryReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>updateQuotePriceVolume</java-method-name>
+            <wsdl-operation>updateQuotePriceVolume</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:updateQuotePriceVolumeRequest</wsdl-message>
+                    <wsdl-message-part-name>symbol</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.math.BigDecimal</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:updateQuotePriceVolumeRequest</wsdl-message>
+                    <wsdl-message-part-name>newPrice</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>2</param-position>
+                <param-type>double</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:updateQuotePriceVolumeRequest</wsdl-message>
+                    <wsdl-message-part-name>sharesTraded</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:updateQuotePriceVolumeResponse</wsdl-message>
+                <wsdl-message-part-name>updateQuotePriceVolumeReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>register</java-method-name>
+            <wsdl-operation>register</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:registerRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:registerRequest</wsdl-message>
+                    <wsdl-message-part-name>password</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>2</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:registerRequest</wsdl-message>
+                    <wsdl-message-part-name>fullname</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>3</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:registerRequest</wsdl-message>
+                    <wsdl-message-part-name>address</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>4</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:registerRequest</wsdl-message>
+                    <wsdl-message-part-name>email</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>5</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:registerRequest</wsdl-message>
+                    <wsdl-message-part-name>creditcard</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>6</param-position>
+                <param-type>java.math.BigDecimal</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:registerRequest</wsdl-message>
+                    <wsdl-message-part-name>openBalance</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.AccountDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:registerResponse</wsdl-message>
+                <wsdl-message-part-name>registerReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getHolding</java-method-name>
+            <wsdl-operation>getHolding</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.Integer</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:getHoldingRequest</wsdl-message>
+                    <wsdl-message-part-name>holdingID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.HoldingDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getHoldingResponse</wsdl-message>
+                <wsdl-message-part-name>getHoldingReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getOrders</java-method-name>
+            <wsdl-operation>getOrders</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:getOrdersRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean[]</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getOrdersResponse</wsdl-message>
+                <wsdl-message-part-name>getOrdersReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>queueOrder</java-method-name>
+            <wsdl-operation>queueOrder</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.Integer</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:queueOrderRequest</wsdl-message>
+                    <wsdl-message-part-name>orderID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>boolean</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:queueOrderRequest</wsdl-message>
+                    <wsdl-message-part-name>twoPhase</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>void</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:queueOrderResponse</wsdl-message>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>cancelOrder</java-method-name>
+            <wsdl-operation>cancelOrder</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.Integer</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:cancelOrderRequest</wsdl-message>
+                    <wsdl-message-part-name>orderID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>boolean</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:cancelOrderRequest</wsdl-message>
+                    <wsdl-message-part-name>twoPhase</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>void</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:cancelOrderResponse</wsdl-message>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getAccountData</java-method-name>
+            <wsdl-operation>getAccountData</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:getAccountDataRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.AccountDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getAccountDataResponse</wsdl-message>
+                <wsdl-message-part-name>getAccountDataReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>sell</java-method-name>
+            <wsdl-operation>sell</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:sellRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.Integer</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:sellRequest</wsdl-message>
+                    <wsdl-message-part-name>holdingID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>2</param-position>
+                <param-type>int</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:sellRequest</wsdl-message>
+                    <wsdl-message-part-name>orderProcessingMode</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:sellResponse</wsdl-message>
+                <wsdl-message-part-name>sellReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>orderCompleted</java-method-name>
+            <wsdl-operation>orderCompleted</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:orderCompletedRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.Integer</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:orderCompletedRequest</wsdl-message>
+                    <wsdl-message-part-name>orderID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>void</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:orderCompletedResponse</wsdl-message>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getClosedOrders</java-method-name>
+            <wsdl-operation>getClosedOrders</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:getClosedOrdersRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean[]</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getClosedOrdersResponse</wsdl-message>
+                <wsdl-message-part-name>getClosedOrdersReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>logout</java-method-name>
+            <wsdl-operation>logout</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:logoutRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>boolean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:logoutResponse</wsdl-message>
+		<wsdl-message-part-name>logoutReturn</wsdl-message-part-name>
+	    </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>resetTrade</java-method-name>
+            <wsdl-operation>resetTrade</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>boolean</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetTradeRequest</wsdl-message>
+                    <wsdl-message-part-name>deleteAll</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.RunStatsDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:resetTradeResponse</wsdl-message>
+                <wsdl-message-part-name>resetTradeReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>createQuote</java-method-name>
+            <wsdl-operation>createQuote</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:createQuoteRequest</wsdl-message>
+                    <wsdl-message-part-name>symbol</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:createQuoteRequest</wsdl-message>
+                    <wsdl-message-part-name>companyName</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>2</param-position>
+                <param-type>java.math.BigDecimal</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:createQuoteRequest</wsdl-message>
+                    <wsdl-message-part-name>price</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:createQuoteResponse</wsdl-message>
+                <wsdl-message-part-name>createQuoteReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>buy</java-method-name>
+            <wsdl-operation>buy</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:buyRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:buyRequest</wsdl-message>
+                    <wsdl-message-part-name>symbol</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>2</param-position>
+                <param-type>double</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:buyRequest</wsdl-message>
+                    <wsdl-message-part-name>quantity</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>3</param-position>
+                <param-type>int</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:buyRequest</wsdl-message>
+                    <wsdl-message-part-name>orderProcessingMode</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:buyResponse</wsdl-message>
+                <wsdl-message-part-name>buyReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getAllQuotes</java-method-name>
+            <wsdl-operation>getAllQuotes</wsdl-operation>
+            <wrapped-element/>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean[]</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getAllQuotesResponse</wsdl-message>
+                <wsdl-message-part-name>getAllQuotesReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>login</java-method-name>
+            <wsdl-operation>login</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:loginRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:loginRequest</wsdl-message>
+                    <wsdl-message-part-name>password</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.AccountDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:loginResponse</wsdl-message>
+                <wsdl-message-part-name>loginReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getAccountProfileData</java-method-name>
+            <wsdl-operation>getAccountProfileData</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:getAccountProfileDataRequest</wsdl-message>
+                    <wsdl-message-part-name>userID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getAccountProfileDataResponse</wsdl-message>
+                <wsdl-message-part-name>getAccountProfileDataReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>getQuote</java-method-name>
+            <wsdl-operation>getQuote</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:getQuoteRequest</wsdl-message>
+                    <wsdl-message-part-name>symbol</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.QuoteDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:getQuoteResponse</wsdl-message>
+                <wsdl-message-part-name>getQuoteReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>completeOrder</java-method-name>
+            <wsdl-operation>completeOrder</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.Integer</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:completeOrderRequest</wsdl-message>
+                    <wsdl-message-part-name>orderID</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>boolean</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:completeOrderRequest</wsdl-message>
+                    <wsdl-message-part-name>twoPhase</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:completeOrderResponse</wsdl-message>
+                <wsdl-message-part-name>completeOrderReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>runDaCapoTrade</java-method-name>
+            <wsdl-operation>runDaCapoTrade</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
+                    <wsdl-message-part-name>size</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>int</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>2</param-position>
+                <param-type>boolean</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
+                    <wsdl-message-part-name>soap</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>boolean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:runDaCapoTradeResponse</wsdl-message>
+		<wsdl-message-part-name>runDaCapoTradeReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>initializeDaCapo</java-method-name>
+            <wsdl-operation>initializeDaCapo</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:initializeDaCapoRequest</wsdl-message>
+                    <wsdl-message-part-name>size</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>boolean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:initializeDaCapoResponse</wsdl-message>
+		<wsdl-message-part-name>initializeDaCapoReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+        <service-endpoint-method-mapping>
+            <java-method-name>resetDaCapo</java-method-name>
+            <wsdl-operation>resetDaCapo</wsdl-operation>
+            <wrapped-element/>
+            <method-param-parts-mapping>
+                <param-position>0</param-position>
+                <param-type>java.lang.String</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
+                    <wsdl-message-part-name>size</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <method-param-parts-mapping>
+                <param-position>1</param-position>
+                <param-type>int</param-type>
+                <wsdl-message-mapping>
+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
+                    <parameter-mode>IN</parameter-mode>
+                </wsdl-message-mapping>
+            </method-param-parts-mapping>
+            <wsdl-return-value-mapping>
+                <method-return-value>boolean</method-return-value>
+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:resetDaCapoResponse</wsdl-message>
+		<wsdl-message-part-name>resetDaCapoReturn</wsdl-message-part-name>
+            </wsdl-return-value-mapping>
+        </service-endpoint-method-mapping>
+    </service-endpoint-interface-mapping>
+</java-wsdl-mapping>

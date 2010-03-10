@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                                   http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.geronimo.daytrader</groupId>
+        <artifactId>daytrader</artifactId>
+        <version>2.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>daytrader-dacapo</artifactId>
+    <name>DayTrader :: DaCapo Workload</name>
+    <packaging>jar</packaging>
+    <description>Client demonstrating Web Services</description>
+    <scm>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/geronimo/daytrader/trunk/modules/dacapo</connection>
+        <developerConnection>
+            scm:svn:http://svn.apache.org/repos/asf/geronimo/daytrader/trunk/modules/dacapo</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/geronimo/daytrader/trunk/modules/dacapo</url>
+    </scm>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.geronimo.daytrader</groupId>
+            <artifactId>daytrader-ejb</artifactId>
+            <version>${pom.version}</version>
+            <scope>provided</scope>
+            <type>ejb</type>
+        </dependency>
+         <dependency>
+            <groupId>org.apache.geronimo.daytrader</groupId>
+            <artifactId>daytrader-wsappclient</artifactId>
+            <version>${pom.version}</version>
+            <scope>compile</scope>
+        </dependency>
+                <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_2.5_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jsp_2.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_3.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-ejb_3.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+    		<groupId>org.apache.geronimo.specs</groupId>
+    		<artifactId>geronimo-annotation_1.0_spec</artifactId>
+    		<scope>provided</scope>
+		</dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <!-- Caveat: The wsappclient module currently has a cyclic dependency on the EJB module. Thus we are forced
+            to include a manual class-path entry pointing to the EJB module. When this is fixed
+            remove the manifestEntries section below and this comment. -->
+                    <archive>
+                     <!--   <manifestEntries>
+                            <class-path>wsappclient.jar dt-ejb.jar</class-path>
+                        </manifestEntries> -->
+                        <manifestEntries>
+                            <class-path>wsappclient.jar dt-ejb.jar</class-path>
+                        </manifestEntries>
+                        <manifest>
+                           <main-class>org.apache.geronimo.samples.daytrader.dacapoclient.DaCapoClient</main-class>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- Caveat: Need to be replaced with axis plugin by Jesse
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wsdl2java-maven-plugin</artifactId>
+                <configuration>
+                    <packageSpace>org.apache.geronimo.samples.daytrader.client.dacapows</packageSpace>
+                    <serverSide>true</serverSide>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+	                    <goal>generate</goal>
+  	                </goals>
+	            </execution>
+	        </executions>
+            </plugin>
+            -->
+        </plugins>
+    </build>
+</project>
