@@ -64,7 +64,8 @@ public class CommandLineArgs {
                                                          // unspecified
   public static final String DEFAULT_THREAD_FACTOR = "0"; // 0 represents
                                                           // unspecified
-
+  public static final String DEFAULT_TIMEOUT_DIALATION = "1";
+  
   private static final String OPT_CALLBACK = "callback";
   private static final String OPT_HELP = "help";
   private static final String OPT_RELEASE_NOTES = "release-notes";
@@ -88,6 +89,7 @@ public class CommandLineArgs {
   private static final String OPT_NO_PRE_ITERATION_GC = "no-pre-iteration-gc";
   private static final String OPT_THREAD_COUNT = "thread-count";
   private static final String OPT_THREAD_FACTOR = "thread-factor";
+  private static final String OPT_TIMEOUT_DIALATION = "timeout-dialation";
 
   private static final Option[] OPTIONS = { 
     makeOption("c",  OPT_CALLBACK,            "Use class <callback> to bracket benchmark runs", "callback"),
@@ -106,6 +108,7 @@ public class CommandLineArgs {
     makeOption(null, OPT_NO_PRE_ITERATION_GC, "Skip performing System.gc() before the start of each iteration", null),
     makeOption("t",  OPT_THREAD_COUNT,        "Set the thread count to drive the workload (mutually exclusive -k)", "thread_count"),
     makeOption("k",  OPT_THREAD_FACTOR,       "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
+    makeOption("f",  OPT_TIMEOUT_DIALATION,   "Set the time dialation of the timeouts in the benchmark by the given integer factor.", "timeout_dialation"),
     makeOption("v",  OPT_VERBOSE,             "Verbose output", null)
   };
 
@@ -355,6 +358,10 @@ public class CommandLineArgs {
 
   public String getThreadFactor() {
     return line.getOptionValue(OPT_THREAD_FACTOR, DEFAULT_THREAD_FACTOR);
+  }
+  
+  public String getTimeoutDialation() {
+	  return line.getOptionValue(OPT_TIMEOUT_DIALATION, DEFAULT_TIMEOUT_DIALATION);
   }
 
   public List<String> getArgList() {

@@ -34,7 +34,11 @@ public abstract class Benchmark {
    * I/O buffer size for unzipping
    */
   private static final int BUFFER_SIZE = 2048;
-
+  /**
+   * Timeout Dialation property.
+   */
+  private static final String TIMEOUT_DIALATION_PROPERTY = "dacapo.timeout.dialation"; 
+  
   /*
    * Class variables
    */
@@ -79,6 +83,13 @@ public abstract class Benchmark {
    */
   private static boolean validationReport = false;
 
+  /**
+   * Factor used to increase the timeouts used in a benchmark.
+   * Note that it's impact is dependent on the particular benchmark
+   * utilizing this timeout.dialation property.
+   */
+  private static String timeoutDialation = "1";
+  
   /**
    * Saved System.out while redirected to the digest stream
    */
@@ -283,6 +294,7 @@ public abstract class Benchmark {
     if (verbose) {
       System.out.println("startIteration()");
     }
+    System.setProperty(TIMEOUT_DIALATION_PROPERTY, Benchmark.timeoutDialation);
     if (validateOutput) {
       System.setOut(out);
       System.setErr(err);
@@ -693,6 +705,7 @@ public abstract class Benchmark {
     validate = line.getValidate();
     validateOutput = line.getValidateOutput();
     preIterationGC = line.getPreIterationGC();
+    timeoutDialation = line.getTimeoutDialation();
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());
   }
