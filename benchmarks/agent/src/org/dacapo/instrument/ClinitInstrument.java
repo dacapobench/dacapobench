@@ -46,7 +46,7 @@ public class ClinitInstrument  extends ClassAdapter {
 	}
 	
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if (!foundClinit && CLINIT_NAME.equals(name) && instrument()) {
+		if (!foundClinit && standardMethod(access,true) && CLINIT_NAME.equals(name) && instrument()) {
 			foundClinit = true;
 			
 			return new ClinitInstrumentMethod(access, name, desc, signature, exceptions, super.visitMethod(access,name,desc,signature,exceptions));
@@ -60,7 +60,7 @@ public class ClinitInstrument  extends ClassAdapter {
 			// didn't find <clinit> so lets make one
 			try {
 				Class k = Log.class;
-				GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC, new Method(CLINIT_NAME, CLINIT_SIGNATURE), CLINIT_SIGNATURE, new Type[] {}, this);
+				GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, new Method(CLINIT_NAME, CLINIT_SIGNATURE), CLINIT_SIGNATURE, new Type[] {}, this);
 				
 				Label start = mg.mark();
 				mg.push(className);
@@ -68,7 +68,7 @@ public class ClinitInstrument  extends ClassAdapter {
 				Label end   = mg.mark();
 				mg.returnValue();
 				
-				mg.catchException(start, end, Type.getType(NoClassDefFoundError.class));
+				mg.catchException(start, end, Type.getType(Throwable.class));
 				mg.returnValue();
 				
 				mg.endMethod();
@@ -84,6 +84,10 @@ public class ClinitInstrument  extends ClassAdapter {
 		return (access & Opcodes.ACC_INTERFACE) == 0 && !className.startsWith(INSTRUMENT_PACKAGE);
 	}
 
+	private static boolean standardMethod(int access, boolean isStatic) {
+		return (access & Opcodes.ACC_NATIVE) == 0 && (access & Opcodes.ACC_ABSTRACT) == 0 && (access & Opcodes.ACC_STATIC)==(isStatic?Opcodes.ACC_STATIC:0); 
+	}
+	
 	private class ClinitInstrumentMethod extends AdviceAdapter {
 		ClinitInstrumentMethod(int access, String name, String desc, String signature, String[] exceptions, MethodVisitor mv) {
 			super(mv, access, name, desc);
@@ -99,7 +103,7 @@ public class ClinitInstrument  extends ClassAdapter {
 			Label end = super.mark();
 			super.visitJumpInsn(Opcodes.GOTO,target);
 			// catch the exception, discard the exception
-			super.catchException(start,end,Type.getType(NoClassDefFoundError.class));
+			super.catchException(start,end,Type.getType(Throwable.class));
 			super.pop();
 			super.mark(target);
 			// remainder of the <clinit>

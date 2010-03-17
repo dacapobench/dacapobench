@@ -1,33 +1,64 @@
 package org.dacapo.instrument;
 
-import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 class Options {
-	LinkedList<String> options = new LinkedList<String>();
+	private TreeMap<String,String> options = new TreeMap<String,String>();
+	private Set<String>            keys;
 	
-	private final String CLASSES_INITIALIZATION = "clinit";
-	private final String METHOD_CALLS = "method_calls";
+	public static final String CLASSES_INITIALIZATION = "clinit";
+	public static final String METHOD_INSTR           = "method_instr";
+	public static final String LOG_START              = "log_start";
+	public static final String LOG_STOP               = "log_stop";
+	public static final String RUNTIME                = "runtime";
+	public static final String ALLOCATE               = "allocate";
+	public static final String MONITOR                = "monitor";
 	
 	private boolean classInitialization = false;
 	private boolean methodCalls = false;
 	
+	public static void main(String[] args) {
+		String r = "";
+		
+		if (0<args.length) {
+			r=args[0];
+			for(int i=1; i<args.length; i++) r+=","+args[i];
+		}
+		
+		System.out.println(new Options(r).toString());
+	}
+	
 	Options(String opts) {
-		for(String opt: opts.split(",")) options.addLast(opt);
+		Pattern p = Pattern.compile("([\\p{Alnum}_]+)=(.+)");
+		for(String opt: opts.split(",")) {
+			Matcher m = p.matcher(opt);
+			boolean b = m.matches();
 
-		classInitialization = options.contains(CLASSES_INITIALIZATION);
-		methodCalls = options.contains(METHOD_CALLS);
+			if (!b) {
+				options.put(opt,null);
+			} else {
+				options.put(m.group(1),m.group(2));
+			}
+		}
+		keys = options.keySet();
 	}
 	
-	boolean classInitialization() {
-		return classInitialization;
+	boolean has(String opt) {
+		return keys.contains(opt);
 	}
 	
-	boolean methodCalls() {
-		return methodCalls;
+	String value(String opt) {
+		return options.get(opt);
 	}
-	
-	boolean runtime() {
-		return false;
+
+	public String toString() {
+		String r = "";
+		for(String k: keys) {
+			r += k + "\n  " + options.get(k) + "\n";
+		}
+		return r;
 	}
-	
 }

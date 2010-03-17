@@ -17,12 +17,16 @@ public class Instrument {
 	 */
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		if (args.length != 4) System.exit(1);
+		if (args.length < 4) System.exit(1);
 		
 		String infile             = args[0];
 		String outfile            = args[1];
 		String name               = args[2];
 		String commandLineOptions = args[3];
+		
+		for(int i=4; i<args.length; i++) {
+			commandLineOptions = commandLineOptions+" "+args[i];
+		}
 
 		try {
 			ClassReader reader = readClassFromFile(infile);
@@ -33,14 +37,34 @@ public class Instrument {
 			
 			ClassVisitor cv = writer; 
 			
-			if (options.classInitialization())
+			if (options.has(Options.RUNTIME))
+				cv = new RuntimeInstrument(cv);
+			
+			if (options.has(Options.MONITOR))
+				cv = new MonitorInstrument(cv);
+			
+			if (options.has(Options.CLASSES_INITIALIZATION))
 				cv = new ClinitInstrument(cv, reader.getClassName()); 
 			
-			if (options.methodCalls())
+			if (options.has(Options.ALLOCATE))
+				cv = new AllocateInstrument(cv);
+			
+			// The MethodInstrument is left out as there are a number of issues with 
+			// instrumenting the bootclasses that I have not been able to resolve.
+			//
+			if (options.has(Options.METHOD_INSTR))
 				cv = new MethodInstrument(cv, reader.getClassName());
 			
-			if (options.runtime())
-				cv = new RuntimeInstrument(cv);
+			if (options.has(Options.LOG_START)) {
+				String startMethod = options.value(Options.LOG_START);
+				String stopMethod  = options.value(Options.LOG_STOP);
+				
+				if (stopMethod != null) {
+					cv = new LogInstrument(cv, startMethod, stopMethod);
+				} else {
+					cv = new LogInstrument(cv, startMethod);
+				}
+			}
 			
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 			
@@ -53,10 +77,6 @@ public class Instrument {
 		}
 	}
 
-	private static void processOptions(ClassWriter writer, Options options) {
-		
-	}
-	
 	private static ClassReader readClassFromFile(String infile) throws Exception {
 		FileInputStream is = null;
 		try {
