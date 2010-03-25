@@ -55,6 +55,11 @@ public abstract class FullSourceWorkspaceTests {
   final static boolean PRINT = "true".equals(System.getProperty("print"));
   final static boolean DACAPO_PRINT = true;
 
+  // Default settings for workspace compiler
+  final static String DEFAULT_COMPLIANCE      = "1.4";
+  final static String DEFAULT_SOURCE          = "1.3";
+  final static String DEFAULT_TARGET_PLATFORM = "1.2";
+
   final static Hashtable INITIAL_OPTIONS = JavaCore.getOptions();
   protected static TestingEnvironment ENV = null;
   protected static IJavaProject[] ALL_PROJECTS;
@@ -300,6 +305,13 @@ public abstract class FullSourceWorkspaceTests {
   }
 
   static void setUpFullSourceWorkspace(boolean large) throws Exception {
+    // Set compiler options to be independent of the jvm used to run these tests
+    Hashtable options = JavaCore.getOptions();
+    options.put(CompilerOptions.OPTION_Compliance, DEFAULT_COMPLIANCE);
+    options.put(CompilerOptions.OPTION_Source, DEFAULT_SOURCE);
+    options.put(CompilerOptions.OPTION_TargetPlatform, DEFAULT_TARGET_PLATFORM);
+    JavaCore.setOptions(options);
+
     // Get wksp info
     IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IWorkspaceRoot workspaceRoot = workspace.getRoot();

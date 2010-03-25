@@ -162,8 +162,13 @@ public class TestingEnvironment {
     return (IProject) this.projects.get(projectName);
   }
 
-  private IProject createProject(String projectName) {
+  private synchronized IProject createProject(String projectName) {
     final IProject project = this.workspace.getRoot().getProject(projectName);
+
+    Object cmpl = JavaCore.getOption(CompilerOptions.OPTION_Compliance);
+    Object src  = JavaCore.getOption(CompilerOptions.OPTION_Source);
+    Object tgt  = JavaCore.getOption(CompilerOptions.OPTION_TargetPlatform);
+
     try {
       IWorkspaceRunnable create = new IWorkspaceRunnable() {
         public void run(IProgressMonitor monitor) throws CoreException {
@@ -176,6 +181,13 @@ public class TestingEnvironment {
       addBuilderSpecs(projectName);
     } catch (CoreException e) {
       handle(e);
+    } finally {
+      // restore workspace settings
+      Hashtable options = JavaCore.getOptions();
+      options.put(CompilerOptions.OPTION_Compliance,cmpl);
+      options.put(CompilerOptions.OPTION_Source,src);
+      options.put(CompilerOptions.OPTION_TargetPlatform,tgt);
+      JavaCore.setOptions(options);
     }
     return project;
   }

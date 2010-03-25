@@ -68,12 +68,12 @@ public class BenchmarkRunner implements IApplication {
     
     if (index)     { FullSourceWorkspaceSearchTests.runDaCapoTests(); }
     if (build)     { FullSourceWorkspaceBuildTests.runDaCapoTests();  }
+    if (search)    { FullSourceWorkspaceCompleteSearchTests.runDaCapoTests(); }
     if (hierarchy) { FullSourceWorkspaceTypeHierarchyTests.runDaCapoTests(); }
     if (ast)       { FullSourceWorkspaceASTTests.runDaCapoTests();}
     if (complete)  { FullSourceWorkspaceCompletionTests.runDaCapoTests(); }
     if (format)    { FullSourceWorkspaceFormatterTests.runDaCapoTests(); }
     if (model)     { FullSourceWorkspaceModelTests.runDaCapoTests(); }
-    if (search)    { FullSourceWorkspaceCompleteSearchTests.runDaCapoTests(); }
     
     if (teardown)  { FullSourceWorkspaceTests.tearDown(); }
     
