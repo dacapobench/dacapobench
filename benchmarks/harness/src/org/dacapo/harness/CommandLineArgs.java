@@ -72,6 +72,7 @@ public class CommandLineArgs {
   private static final String OPT_LIST_BENCHMARKS = "list-benchmarks";
   private static final String OPT_INFORMATION = "information";
   private static final String OPT_SIZE = "size";
+  private static final String OPT_SIZES = "sizes";
   private static final String OPT_SCRATCH_DIRECTORY = "scratch-directory";
   private static final String OPT_CONVERGE = "converge";
   private static final String OPT_MAX_ITERATIONS = "max-iterations";
@@ -96,6 +97,7 @@ public class CommandLineArgs {
     makeOption("h",  OPT_HELP,                "Print this help", null), makeOption("r", OPT_RELEASE_NOTES, "Print the release notes", null),
     makeOption("l",  OPT_LIST_BENCHMARKS,     "List available benchmarks", null), makeOption("i", OPT_INFORMATION, "Display benchmark information", null),
     makeOption("s",  OPT_SIZE,                "Size of input data", "SIZE"), makeOption(null, OPT_SCRATCH_DIRECTORY, "Specify an alternate scratch directory <dir>", "dir"),
+    makeOption(null, OPT_SIZES,               "Report the valid sizes for the specified benchmarks", null),
     makeOption("C",  OPT_CONVERGE,            "Allow benchmark times to converge before timing", null),
     makeOption(null, OPT_MAX_ITERATIONS,      "Run a max of <max_iterations> iterations (default 20)", "max_iterations"),
     makeOption(null, OPT_VARIANCE,            "Target coefficient of variation <pct> (default 3.0)", "pct"),
@@ -306,6 +308,10 @@ public class CommandLineArgs {
 
   public String getSize() {
     return line.getOptionValue(OPT_SIZE, DEFAULT_SIZE);
+  }
+
+  public boolean getSizes() {
+    return line.hasOption(OPT_SIZES);
   }
 
   public String getScratchDir() {

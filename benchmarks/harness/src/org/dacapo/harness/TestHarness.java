@@ -160,6 +160,8 @@ public class TestHarness {
               + (limit == 0 ? "unlimited" : "" + limit) + "]");
         } else if (commandLineArgs.getInformation()) {
           harness.bmInfo(size);
+        } else if (commandLineArgs.getSizes()) {
+          harness.bmSizes();
         } else {
           if (!harness.isValidThreadCount(size)) {
             System.err.println("The derived number of threads (" + harness.config.getThreadCount(size) + ") is outside the range [1,"
@@ -259,6 +261,10 @@ public class TestHarness {
 
   private void bmInfo(String size) {
     config.describe(System.err, size);
+  }
+
+  private void bmSizes() {
+    config.describeSizes(System.err);
   }
 
   private void dump(boolean verbose) {

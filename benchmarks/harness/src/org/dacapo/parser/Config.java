@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 /**
@@ -627,6 +628,20 @@ public class Config {
   /*
    * Manage the description fields
    */
+  public void describeSizes(PrintStream str, boolean decorated, String trail) {
+    TreeSet<String> ts = new TreeSet<String>(this.sizes.keySet());
+    String list = null;
+    for(String s: ts) {
+      if (list==null) list = s;
+      else list += " " + s;
+    }
+    str.println(pad("sizes", 10) + list + (decorated ? trail : ""));
+  }
+
+  public void describeSizes(PrintStream str) {
+    describeSizes(str, false, ",");
+  }
+
   public void describe(PrintStream str, String size) {
     describe(str, size, false);
   }
@@ -634,7 +649,9 @@ public class Config {
   private void describe(PrintStream str, String size, boolean decorated, String desc, String trail) {
     if (decorated)
       str.print("  ");
-    str.println(pad(desc, 10) + this.desc.get(desc) + (decorated ? trail : ""));
+    if (desc.equals("sizes")) {
+      describeSizes(str, decorated, trail);
+    } else str.println(pad(desc, 10) + this.desc.get(desc) + (decorated ? trail : ""));
   }
 
   public void describe(PrintStream str, String size, boolean decorated) {
@@ -655,6 +672,7 @@ public class Config {
       describe(str, size, decorated, "version", ",");
       str.println(pad("size", 10) + sizeDesc + (decorated ? ";" : ""));
     }
+    describe(str, size, decorated, "sizes", ",");
   }
 
   public String getDesc(String item) {
