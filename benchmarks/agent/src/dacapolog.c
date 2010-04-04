@@ -59,7 +59,10 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
 	    const char *c_m = JVMTI_FUNC_PTR(env,GetStringUTFChars)(env, m, &iscopy_m);
 
 	    enterCriticalSection(&lockLog);
-	    fprintf(logFile,"%s:%" FORMAT_JLONG ":%s\n",c_e,thread_tag,c_m);
+	    log_field_string(c_e);
+	    log_field_jlong(thread_tag);
+	    log_field_string(c_m);
+	    log_eol();
 	    exitCriticalSection(&lockLog);
 
 	    JVMTI_FUNC_PTR(env,ReleaseStringUTFChars)(env, e, c_e);
@@ -91,9 +94,12 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_setLogFileName
 JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_start
   (JNIEnv *env, jclass klass)
 {
-    logState = logFile != NULL;
-    if (logState) {
-    	fprintf(logFile,"START\n");
+    if (!logState) {
+	    logState = logFile != NULL;
+	    if (logState) {
+	    	log_field_string("START");
+	    	log_eol();
+	    }
 	}
 }
 
@@ -108,7 +114,8 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_stop
 	jboolean tmp = logState;
     logState = FALSE;
     if (tmp) {
-		fprintf(logFile,"STOP\n");
+    	log_field_string("STOP");
+    	log_eol();
 	}
 }
 
@@ -131,26 +138,41 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorEnter
 	exitCriticalSection(&lockTag);
 
 	enterCriticalSection(&lockLog);
+	log_field_string(LOG_PREFIX_MONITOR_AQUIRE);
+	
+	jniNativeInterface* jni_table;
 	if (thread_has_new_tag || object_has_new_tag) {
-		jniNativeInterface* jni_table;
 		if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 			fprintf(stderr, "failed to get JNI function table\n");
 			exit(1);
 		}
+	}
 
-		fprintf(logFile,"ME:%" FORMAT_JLONG,thread_tag);
-		if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,local_env,baseEnv,thread);
-		fprintf(logFile,":%" FORMAT_JLONG,object_tag);
-		if (object_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,local_env,baseEnv,object);
+	log_field_jlong(thread_tag);
+	if (thread_has_new_tag) {
+		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,thread);
+	} else {
+		log_field_string(NULL);
+	}
+	
+	log_field_jlong(object_tag);
+	if (object_has_new_tag) {
+		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,object);
+	} else {
+		log_field_string(NULL);
+	}
 
+	if (thread_has_new_tag) {
 		// get class and get thread name.
 		jvmtiThreadInfo info;
 		JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-		fprintf(logFile,":%s\n",info.name);
+		log_field_string(info.name);
 		if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 	} else {
-		fprintf(logFile,"ME:%" FORMAT_JLONG ":%" FORMAT_JLONG "\n",thread_tag,object_tag);
+		log_field_string(NULL);
 	}
+	
+	log_eol();
 	exitCriticalSection(&lockLog);
 }
 
@@ -172,28 +194,137 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
 	exitCriticalSection(&lockTag);
 
 	enterCriticalSection(&lockLog);
+	log_field_string(LOG_PREFIX_MONITOR_RELEASE);
+	
+	jniNativeInterface* jni_table;
 	if (thread_has_new_tag || object_has_new_tag) {
-		jniNativeInterface* jni_table;
 		if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 			fprintf(stderr, "failed to get JNI function table\n");
 			exit(1);
 		}
+	}
 
-		fprintf(logFile,"MX:%" FORMAT_JLONG,thread_tag);
-		if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,local_env,baseEnv,thread);
-		fprintf(logFile,":%" FORMAT_JLONG,object_tag);
-		if (object_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,local_env,baseEnv,object);
+	log_field_jlong(thread_tag);
+	if (thread_has_new_tag) {
+		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,thread);
+	} else {
+		log_field_string(NULL);
+	}
+	
+	log_field_jlong(object_tag);
+	if (object_has_new_tag) {
+		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,object);
+	} else {
+		log_field_string(NULL);
+	}
 
+	if (thread_has_new_tag) {
 		// get class and get thread name.
 		jvmtiThreadInfo info;
 		JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-		fprintf(logFile,":%s\n",info.name);
+		log_field_string(info.name);
 		if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 	} else {
-		fprintf(logFile,"MX:%" FORMAT_JLONG ":%" FORMAT_JLONG "\n",thread_tag,object_tag);
+		log_field_string(NULL);
 	}
+	
+	log_eol();
 	exitCriticalSection(&lockLog);
 }
 
+/*
+ */
+
+static _Bool first_field     = TRUE;
+static char  field_separator = ',';
+static char  field_delimiter = '\"';
+static char  end_of_line     = '\n';
+
+/* */
+
+static void write_field(const char* text, int text_length, _Bool use_delimiter) {
+  if (first_field)
+    first_field = FALSE;
+  else
+    fwrite(&field_separator,sizeof(char),1,logFile);
+  
+  if (use_delimiter) {
+    char temp_field[10240];
+    int  temp_length = 0;
+
+    temp_field[temp_length++] = field_delimiter;
+  
+	if (text!=NULL) {
+	  int i;
+	  for(i=0; i<text_length;++i) {
+	    if (text[i]==field_delimiter)
+	      temp_field[temp_length++] = field_delimiter;
+        temp_field[temp_length++] = field_delimiter;
+	  }
+	}
+    
+    temp_field[temp_length++] = field_delimiter;
+
+    fwrite(temp_field,sizeof(char),temp_length,logFile);
+  } else {
+    if(text!=NULL && 0<text_length)
+      fwrite(text,sizeof(char),text_length,logFile);
+  }
+}
+
+void log_field_string(const char* text) {
+  if (text==NULL)
+    write_field(NULL,0,TRUE);
+  else {
+    int text_length = 0;
+    _Bool use_delimiter = FALSE;
+    
+    while(text[text_length]!='\0') {
+       use_delimiter = text[text_length]==field_delimiter || text[text_length]==field_separator;
+       ++text_length;
+    }
+    
+    write_field(text,text_length,use_delimiter);
+  }
+}
+
+void log_field_jboolean(jboolean v) {
+  log_field_string(v?"true":"false");
+}
+
+void log_field_int(int v) {
+  char tmp[32];
+  sprintf(tmp,"%d",v);
+  log_field_string(tmp);
+}
+
+void log_field_jlong(jlong v) {
+  char tmp[64];
+  sprintf(tmp,"%" FORMAT_JLONG,v);
+  log_field_string(tmp);
+}
+
+void log_field_pointer(const void* p) {
+  char tmp[64];
+  sprintf(tmp,"%" FORMAT_PTR, PTR_CAST(p));
+  log_field_string(tmp);
+}
+
+void log_field_string_n(const char* text, int field_length) {
+  int i;
+  _Bool use_delimiter = FALSE;
+  
+  for(i=0; i<field_length && !use_delimiter; ++i) {
+  	use_delimiter = text[i]==field_delimiter || text[i]==field_separator;
+  }
+  
+  write_field(text,field_length,use_delimiter);
+}
+
+void log_eol() {
+  fwrite(&end_of_line,sizeof(char),1,logFile);
+  first_field = TRUE;
+  fflush(logFile);
+}
 
 

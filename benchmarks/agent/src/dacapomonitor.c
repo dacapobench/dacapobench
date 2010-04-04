@@ -16,26 +16,41 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 		exitCriticalSection(&lockTag);
 
 		enterCriticalSection(&lockLog);
+		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTER);
+		
+		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {
-			jniNativeInterface* jni_table;
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
+		}
 
-			fprintf(logFile,"MCE:%" FORMAT_JLONG,thread_tag);
-			if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,thread);
-			fprintf(logFile,":%" FORMAT_JLONG,object_tag);
-			if (object_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,object);
+		log_field_jlong(thread_tag);
+		if (thread_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
+		} else {
+			log_field_string(NULL);
+		}
+		
+		log_field_jlong(object_tag);
+		if (object_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
+		} else {
+			log_field_string(NULL);
+		}
 
+		if (thread_has_new_tag) {
 			// get class and get thread name.
 			jvmtiThreadInfo info;
 			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			fprintf(logFile,":%s\n",info.name);
+			log_field_string(info.name);
 			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
-			fprintf(logFile,"MCE:%" FORMAT_JLONG ":%" FORMAT_JLONG "\n",thread_tag,object_tag);
+			log_field_string(NULL);
 		}
+		
+		log_eol();
 		exitCriticalSection(&lockLog);
 	}
 }
@@ -52,26 +67,41 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 		exitCriticalSection(&lockTag);
 
 		enterCriticalSection(&lockLog);
+		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTERED);
+		
+		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {
-			jniNativeInterface* jni_table;
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
+		}
 
-			fprintf(logFile,"MCe:%" FORMAT_JLONG,thread_tag);
-			if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,thread);
-			fprintf(logFile,":%" FORMAT_JLONG,object_tag);
-			if (object_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,object);
+		log_field_jlong(thread_tag);
+		if (thread_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
+		} else {
+			log_field_string(NULL);
+		}
+		
+		log_field_jlong(object_tag);
+		if (object_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
+		} else {
+			log_field_string(NULL);
+		}
 
+		if (thread_has_new_tag) {
 			// get class and get thread name.
 			jvmtiThreadInfo info;
 			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			fprintf(logFile,":%s\n",info.name);
+			log_field_string(info.name);
 			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
-			fprintf(logFile,"MCe:%" FORMAT_JLONG ":%" FORMAT_JLONG "\n",thread_tag,object_tag);
+			log_field_string(NULL);
 		}
+		
+		log_eol();
 		exitCriticalSection(&lockLog);
 	}
 }
@@ -88,26 +118,41 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		exitCriticalSection(&lockTag);
 
 		enterCriticalSection(&lockLog);
+		log_field_string(LOG_PREFIX_MONITOR_WAIT);
+		
+		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {
-			jniNativeInterface* jni_table;
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
+		}
 
-			fprintf(logFile,"MW:%" FORMAT_JLONG,thread_tag);
-			if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,thread);
-			fprintf(logFile,":%" FORMAT_JLONG,object_tag);
-			if (object_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,object);
+		log_field_jlong(thread_tag);
+		if (thread_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
+		} else {
+			log_field_string(NULL);
+		}
+		
+		log_field_jlong(object_tag);
+		if (object_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
+		} else {
+			log_field_string(NULL);
+		}
 
+		if (thread_has_new_tag) {			
 			// get class and get thread name.
 			jvmtiThreadInfo info;
 			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			fprintf(logFile,":%s\n",info.name);
+			log_field_string(info.name);
 			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
-			fprintf(logFile,"MW:%" FORMAT_JLONG ":%" FORMAT_JLONG "\n",thread_tag,object_tag);
+			log_field_string(NULL);
 		}
+		
+		log_eol();
 		exitCriticalSection(&lockLog);
 	}
 }
@@ -124,26 +169,41 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 		exitCriticalSection(&lockTag);
 
 		enterCriticalSection(&lockLog);
+		log_field_string(LOG_PREFIX_MONITOR_WAITED);
+
+		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {
-			jniNativeInterface* jni_table;
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
+		}
+		
+		log_field_jlong(thread_tag);
+		if (thread_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
+		} else {
+			log_field_string(NULL);
+		}
+		
+		log_field_jlong(object_tag);
+		if (object_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
+		} else {
+			log_field_string(NULL);
+		}
 
-			fprintf(logFile,"Mw:%" FORMAT_JLONG,thread_tag);
-			if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,thread);
-			fprintf(logFile,":%" FORMAT_JLONG,object_tag);
-			if (object_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,object);
-
+		if (thread_has_new_tag) {
 			// get class and get thread name.
 			jvmtiThreadInfo info;
 			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			fprintf(logFile,":%s\n",info.name);
+			log_field_string(info.name);
 			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
-			fprintf(logFile,"Mw:%" FORMAT_JLONG ":%" FORMAT_JLONG "\n",thread_tag,object_tag);
+			log_field_string(NULL);
 		}
+		
+		log_eol();
 		exitCriticalSection(&lockLog);
 	}
 }

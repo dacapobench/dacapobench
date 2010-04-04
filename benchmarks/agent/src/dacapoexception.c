@@ -6,7 +6,7 @@
 
 void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method, jlocation location, jobject exception, jmethodID catch_method, jlocation catch_location)
 {
-	if (logState ) {
+	if (logState) {
 		jlong thread_tag = 0;
 		jlong exception_tag = 0;
 
@@ -16,25 +16,38 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 		exitCriticalSection(&lockTag);
 
 		enterCriticalSection(&lockLog);
+		log_field_string(LOG_PREFIX_EXCEPTION);
+
+		jniNativeInterface* jni_table;
+
 		if (thread_has_new_tag || exception_has_new_tag) {
-			jniNativeInterface* jni_table;
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
+		}
 
-			fprintf(logFile,"X:%" FORMAT_JLONG,thread_tag);
-			if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,thread);
-			fprintf(logFile,":%" FORMAT_JLONG,exception_tag);
-			if (exception_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,exception);
-
-			// get class and get thread name.
+		log_field_jlong(thread_tag);
+		if (thread_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
+		} else {
+			log_field_string(NULL);
+		}
+		
+		log_field_jlong(exception_tag);
+		if (exception_has_new_tag) {
+	 		LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,exception);
+		} else {
+			log_field_string(NULL);
+		}
+		
+		if (thread_has_new_tag) {
 			jvmtiThreadInfo info;
 			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			fprintf(logFile,":%s",info.name);
+			log_field_string(info.name);
 			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
-			fprintf(logFile,"X:%" FORMAT_JLONG ":%" FORMAT_JLONG "",thread_tag,exception_tag);
+			log_field_string(NULL);
 		}
 
 		char* name = NULL;
@@ -44,17 +57,15 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 		char* class_signature = NULL;
 		char* class_generic = NULL;
 
-		jint res = JVMTI_FUNC_PTR(baseEnv,GetMethodName)(baseEnv,method,&name,&signature,&generic);
+		log_field_pointer(catch_method);
 
-		if (res!=JNI_OK)
-			fprintf(logFile,":<error>");
-		else {
-			if (JVMTI_FUNC_PTR(baseEnv,GetMethodDeclaringClass)(baseEnv,method,&klass)==JNI_OK &&
-				JVMTI_FUNC_PTR(baseEnv,GetClassSignature)(baseEnv,klass,&class_signature,&class_generic)==JNI_OK)
-				fprintf(logFile,":%" FORMAT_PTR "{%s.%s%s}",PTR_CAST(catch_method),class_signature,name,signature);
-			else
-				fprintf(logFile,":%" FORMAT_PTR "{%s.%s%s}",PTR_CAST(catch_method),"<class_name>",name,signature);
-		}
+		JVMTI_FUNC_PTR(baseEnv,GetMethodDeclaringClass)(baseEnv,method,&klass)==JNI_OK &&
+		JVMTI_FUNC_PTR(baseEnv,GetMethodName)(baseEnv,method,&name,&signature,&generic)==JNI_OK &&
+		JVMTI_FUNC_PTR(baseEnv,GetClassSignature)(baseEnv,klass,&class_signature,&class_generic)==JNI_OK;
+
+		log_field_string(class_signature);
+		log_field_string(name);
+		log_field_string(signature);
 
 		if (class_signature!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)class_signature); class_signature = NULL; }
 		if (class_generic!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)class_generic); class_generic = NULL; }
@@ -62,33 +73,21 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 		if (signature!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature); signature = NULL; }
 		if (generic!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic); generic = NULL; }
 
-		res = JVMTI_FUNC_PTR(baseEnv,GetMethodDeclaringClass)(baseEnv,method,&klass);
-		if (res==JNI_OK) {
-			if (catch_method==NULL) {
-				fprintf(logFile,":NULL");
-			} else {
-			    res = JVMTI_FUNC_PTR(baseEnv,GetMethodName)(baseEnv,catch_method,&name,&signature,&generic);
-
-				if (res!=JNI_OK)
-					fprintf(logFile,":<error>");
-				else {
-					if (JVMTI_FUNC_PTR(baseEnv,GetMethodDeclaringClass)(baseEnv,catch_method,&klass)==JNI_OK &&
-						JVMTI_FUNC_PTR(baseEnv,GetClassSignature)(baseEnv,klass,&class_signature,&class_generic)==JNI_OK)
-						fprintf(logFile,":%" FORMAT_PTR "{%s.%s%s}",PTR_CAST(catch_method),class_signature,name,signature);
-					else
-						fprintf(logFile,":%" FORMAT_PTR "{%s.%s%s}",PTR_CAST(catch_method),"<class_name>",name,signature);
-
-				}
-			}
-		} else
-			fprintf(logFile,":<error>");
-		fprintf(logFile,"\n");
+		JVMTI_FUNC_PTR(baseEnv,GetMethodDeclaringClass)(baseEnv,catch_method,&klass)==JNI_OK &&
+		JVMTI_FUNC_PTR(baseEnv,GetMethodName)(baseEnv,catch_method,&name,&signature,&generic)==JNI_OK &&
+		JVMTI_FUNC_PTR(baseEnv,GetClassSignature)(baseEnv,klass,&class_signature,&class_generic)==JNI_OK;
+						
+		log_field_string(class_signature);
+		log_field_string(name);
+		log_field_string(signature);
 
 		if (class_signature!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)class_signature); class_signature = NULL; }
 		if (class_generic!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)class_generic); class_generic = NULL; }
 		if (name!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)name); name = NULL; }
 		if (signature!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature); signature = NULL; }
 		if (generic!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic); generic = NULL; }
+		
+		log_eol();
 
 		exitCriticalSection(&lockLog);
 	}
@@ -106,42 +105,55 @@ void JNICALL callbackExceptionCatch(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthrea
 		exitCriticalSection(&lockTag);
 
 		enterCriticalSection(&lockLog);
+		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || exception_has_new_tag) {
-			jniNativeInterface* jni_table;
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
+		}
 
-			fprintf(logFile,"XC:%" FORMAT_JLONG,thread_tag);
-			if (thread_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,thread);
-			fprintf(logFile,":%" FORMAT_JLONG,exception_tag);
-			if (exception_has_new_tag) LOG_OBJECT_CLASS(logFile,jni_table,jni_env,baseEnv,exception);
+		log_field_string(LOG_PREFIX_EXCEPTION_CATCH);
 
+		log_field_jlong(thread_tag);
+		if (thread_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
+		} else {
+			log_field_string(NULL);
+		}
+		
+		log_field_jlong(exception_tag);
+		if (exception_has_new_tag) {
+			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,exception);
+		} else {
+			log_field_string(NULL);
+		}
+
+		if (thread_has_new_tag) {
 			// get class and get thread name.
 			jvmtiThreadInfo info;
 			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			fprintf(logFile,":%s",info.name);
+			log_field_string(info.name);
 			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
-			fprintf(logFile,"XC:%" FORMAT_JLONG ":%" FORMAT_JLONG ":",thread_tag,exception_tag);
+			log_field_string(NULL);
 		}
+
 		char* name_ptr = NULL;
 		char* signature_ptr  = NULL;
 		char* generic_ptr = NULL;
 
-		jint res = JVMTI_FUNC_PTR(baseEnv,GetMethodName)(baseEnv,method,&name_ptr,&signature_ptr,&generic_ptr);
+		JVMTI_FUNC_PTR(baseEnv,GetMethodName)(baseEnv,method,&name_ptr,&signature_ptr,&generic_ptr);
 
-		if (res!=JNI_OK)
-			fprintf(logFile,"<error>\n");
-		else {
-			fprintf(logFile,":%" FORMAT_PTR ":%s.%s%s\n",PTR_CAST(method),"<class_name>",name_ptr,signature_ptr);
+		log_field_string("<class_name>");
+		log_field_string(name_ptr);
+		log_field_string(signature_ptr);
 
-			if (name_ptr!=NULL)      JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)name_ptr);
-			if (signature_ptr!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature_ptr);
-			if (generic_ptr!=NULL)   JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic_ptr);
-		}
-
+		if (name_ptr!=NULL)      JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)name_ptr);
+		if (signature_ptr!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature_ptr);
+		if (generic_ptr!=NULL)   JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic_ptr);
+	
+		log_eol();
 		exitCriticalSection(&lockLog);
 	}
 }

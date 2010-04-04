@@ -521,7 +521,7 @@ callbackVMDeath(jvmtiEnv *jvmti, JNIEnv *env)
     jvmStopped = !FALSE;
 }
 
-static void reportMethod(char* class_name, jmethodID method) {
+static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 	if (logFile==NULL) return;
 	
 	char* name_ptr = NULL;
@@ -532,7 +532,12 @@ static void reportMethod(char* class_name, jmethodID method) {
 
 	if (res!=JNI_OK) return;
 
-	fprintf(logFile,"method:%" FORMAT_PTR ":%s.%s%s\n",PTR_CAST(method),class_name,name_ptr,signature_ptr);
+	log_field_string(LOG_PREFIX_METHOD_PREPARE);
+	log_field_pointer(method);
+	log_field_jlong(class_tag);
+	log_field_string(name_ptr);
+	log_field_string(signature_ptr);
+	log_eol();
 
 	if (name_ptr!=NULL)      JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)name_ptr);
 	if (signature_ptr!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature_ptr);
@@ -576,8 +581,11 @@ callbackClassPrepare(jvmtiEnv *jvmti_env,
 
 	int i=0;	
 	enterCriticalSection(&lockLog);
-    fprintf(logFile,"C:%" FORMAT_JLONG ":%s\n",class_tag,signature);
-	while(i<method_count) reportMethod(signature,methods[i++]);
+	log_field_string(LOG_PREFIX_CLASS_PREPARE);
+	log_field_jlong(class_tag);
+	log_field_string(signature);
+	log_eol();
+	while(i<method_count) reportMethod(signature,class_tag,methods[i++]);
 	exitCriticalSection(&lockLog);
 	
 	JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)methods);

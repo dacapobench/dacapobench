@@ -72,7 +72,7 @@ void reportOptionsList() {
 	    tmp[opt->length] = '\0';
 		if (opt->argument!=NULL) {
 		    tmp[opt->length]=':';
-			strncpy(tmp+opt->length,opt->argument,opt->argLength);
+			strncpy(tmp+opt->length+1,opt->argument,opt->argLength);
 			tmp[opt->length+1+opt->argLength]='\0';
 		}
 		fprintf(stderr,"  %s\n",tmp);
@@ -81,10 +81,6 @@ void reportOptionsList() {
 }
 
 void makeOptionList(const char* options) {
-	/* makeOptionList(options); */
-
-	fprintf(stderr,"makeOptionList(%s)\n",options);
-
 	if (options != NULL) {
         int start = 0;
 		while (options[start]!='\0') {
@@ -123,6 +119,7 @@ void makeOptionList(const char* options) {
 		}
 	}
 
-	// reportOptionsList();
+	if (isSelected(OPT_REPORT_OPTIONS, NULL))
+		reportOptionsList();
 }
 

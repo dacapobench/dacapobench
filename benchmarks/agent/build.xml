@@ -70,14 +70,18 @@
 		</exec>
 	</target>
 
-	<target name="clean">
-		<exec executable="${make}" dir="agent">
-			<arg value="JAVA_HOME=${java.home}"/>
-			<arg value="clean"/>
-		</exec>
+	<target name="clean" depends="clean-linux">
 		<delete dir="${dist-dir}"/>
 		<delete dir="${agentdir}/lib"/>
 		<delete dir="${agentdir}/build"/>
+	</target>
+	
+	<target name="clean-linux" if="linux">
+		<exec executable="${make}" dir="agent">
+			<arg value="JAVA_HOME=${java.home}"/>
+			<arg value="OSNAME=linux"/>
+			<arg value="clean"/>
+		</exec>
 	</target>
 
 </project>
