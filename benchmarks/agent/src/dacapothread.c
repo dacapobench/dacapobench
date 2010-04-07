@@ -17,6 +17,7 @@ void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		log_field_jlong(thread_tag);
 		
 		log_field_string(LOG_PREFIX_THREAD_START);
+		log_field_time();
 	
 		if (thread_has_new_tag) {
 			jniNativeInterface* jni_table;
@@ -53,6 +54,8 @@ void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 
 		enterCriticalSection(&lockLog);
 		log_field_string(LOG_PREFIX_THREAD_STOP);
+		log_field_time();
+
 		log_field_jlong(thread_tag);
 		
 		if (thread_has_new_tag) {

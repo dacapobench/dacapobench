@@ -15,8 +15,10 @@ public class DaCapoTrader extends Thread {
 
   private static final boolean VERBOSE = false;
 
-  static final int MAX_INITIALIZATION_WAIT_CYCLES = 120;
-  static final int PAUSE_MS = 1000;
+  static final String MAX_INITIALIZATION_WAIT_CYCLES_PROP = "dacapo.daytrader.wait.cycles";
+  static final String PAUSE_MS_PROP = "dacapo.daytrader.pause.ms";
+  static final int MAX_INITIALIZATION_WAIT_CYCLES; //  = 120;
+  static final int PAUSE_MS; //  = 1000;
   static final int MIN_WORK_PARTITIONING_FACTOR = 4;  // higher -> better load balancing but more contention on session table
 
   private int[] consumed;
@@ -35,6 +37,20 @@ public class DaCapoTrader extends Thread {
   private int sessionIndex = -1;
   private int sessionBound = -1;
   private int threadID = -1;
+  
+  static {
+    int maxInitializationWaitCycless = 120;
+    try {
+      maxInitializationWaitCycless = Math.max(1,Integer.parseInt(System.getProperty(MAX_INITIALIZATION_WAIT_CYCLES_PROP)));
+    } catch (Exception e) { }
+    MAX_INITIALIZATION_WAIT_CYCLES = maxInitializationWaitCycless;
+    
+    int pauseMs = 1000;
+    try {
+      pauseMs = Math.max(1,Integer.parseInt(System.getProperty(PAUSE_MS_PROP)));
+    } catch (Exception e) { }
+    PAUSE_MS = pauseMs;
+  }
   
   public DaCapoTrader() {}
   

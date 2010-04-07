@@ -1,3 +1,5 @@
+#include <sys/time.h>
+
 #include "dacapolog.h"
 #include "dacapooptions.h"
 #include "dacapotag.h"
@@ -6,6 +8,7 @@
 jrawMonitorID       lockLog;
 FILE*               logFile = NULL;
 jboolean			logState = FALSE;
+struct timeval      startTime;
 
 void setLogFileName(const char* log_file) {
 	if (logFile!=NULL) {
@@ -24,6 +27,9 @@ _Bool dacapo_log_init() {
 	if (isSelected(OPT_LOG_FILE,tmpFile)) {
 		setLogFileName(tmpFile);
 	}
+	
+    gettimeofday(&startTime, NULL);
+    
 	return TRUE;
 }
 
@@ -139,6 +145,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorEnter
 
 	enterCriticalSection(&lockLog);
 	log_field_string(LOG_PREFIX_MONITOR_AQUIRE);
+	log_field_time();
 	
 	jniNativeInterface* jni_table;
 	if (thread_has_new_tag || object_has_new_tag) {
@@ -195,6 +202,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
 
 	enterCriticalSection(&lockLog);
 	log_field_string(LOG_PREFIX_MONITOR_RELEASE);
+	log_field_time();
 	
 	jniNativeInterface* jni_table;
 	if (thread_has_new_tag || object_has_new_tag) {
@@ -304,6 +312,12 @@ void log_field_jlong(jlong v) {
   log_field_string(tmp);
 }
 
+void log_field_long(long v) {
+  char tmp[64];
+  sprintf(tmp,"%ld",v);
+  log_field_string(tmp);
+}
+
 void log_field_pointer(const void* p) {
   char tmp[64];
   sprintf(tmp,"%" FORMAT_PTR, PTR_CAST(p));
@@ -319,6 +333,13 @@ void log_field_string_n(const char* text, int field_length) {
   }
   
   write_field(text,field_length,use_delimiter);
+}
+
+void log_field_time() {
+	struct timeval tv;
+    gettimeofday(&tv, NULL);
+    long t = (tv.tv_sec - startTime.tv_sec) * 1000000 + (tv.tv_usec - startTime.tv_usec);
+    log_field_long(t);
 }
 
 void log_eol() {

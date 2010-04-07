@@ -88,7 +88,6 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 		if (generic!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic); generic = NULL; }
 		
 		log_eol();
-
 		exitCriticalSection(&lockLog);
 	}
 }
@@ -105,6 +104,8 @@ void JNICALL callbackExceptionCatch(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthrea
 		exitCriticalSection(&lockTag);
 
 		enterCriticalSection(&lockLog);
+		log_field_string(LOG_PREFIX_EXCEPTION_CATCH);
+
 		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || exception_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
@@ -112,8 +113,6 @@ void JNICALL callbackExceptionCatch(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthrea
 				exit(1);
 			}
 		}
-
-		log_field_string(LOG_PREFIX_EXCEPTION_CATCH);
 
 		log_field_jlong(thread_tag);
 		if (thread_has_new_tag) {

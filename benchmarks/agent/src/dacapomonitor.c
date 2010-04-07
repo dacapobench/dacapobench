@@ -17,6 +17,7 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 
 		enterCriticalSection(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTER);
+		log_field_time();
 		
 		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {
@@ -68,6 +69,7 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 
 		enterCriticalSection(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTERED);
+		log_field_time();
 		
 		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {
@@ -119,6 +121,7 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 
 		enterCriticalSection(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAIT);
+		log_field_time();
 		
 		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {
@@ -170,6 +173,7 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 
 		enterCriticalSection(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAITED);
+		log_field_time();
 
 		jniNativeInterface* jni_table;
 		if (thread_has_new_tag || object_has_new_tag) {

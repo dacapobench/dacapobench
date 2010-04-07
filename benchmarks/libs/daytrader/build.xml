@@ -69,6 +69,7 @@
 	<import file="../common.xml"/>
 
 	<property name="dt-build" location="${lib-build-dir}/daytrader"/>
+	<property name="plugins-build" location="${lib-build-dir}/plugins"/>
 	<property name="launcher-build" location="${lib-build-dir}/launcher"/>
 	<property name="ger-home" location="${lib-build-dir}/${ger-name}-${ger-version}"/>
 	<property name="ger-cli-jar" value="${ger-home}/lib/geronimo-cli-${ger-version}.jar"/>
@@ -144,6 +145,9 @@
 		<patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${dt-build}" strip="0" ignorewhitespace="yes"/>
 		<copy todir="${dt-build}">
 			<fileset dir="libs/${lib-name}/${lib-name}" />
+		</copy>
+		<copy todir="${plugins-build}">
+			<fileset dir="libs/${lib-name}/plugins" />
 		</copy>
 	</target>
 

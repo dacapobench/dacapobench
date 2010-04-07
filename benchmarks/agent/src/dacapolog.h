@@ -25,6 +25,8 @@
 #define LOG_PREFIX_EXCEPTION                  "XT"
 #define LOG_PREFIX_EXCEPTION_CATCH            "XC"
 
+#define LOG_PREFIX_TIME                       "TM"
+
 extern jrawMonitorID       lockLog;
 extern FILE*               logFile;
 extern jboolean            logState;
@@ -38,6 +40,7 @@ void  log_field_int(int v);
 void  log_field_pointer(const void* p);
 void  log_field_jlong(jlong v);
 void  log_field_long(long v);
+void  log_field_time();
 void  log_eol();
 
 #endif

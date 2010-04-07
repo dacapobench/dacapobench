@@ -38,50 +38,46 @@ public final class Log {
 	}
 	
 	public static void reportAlloc(Object obj) {
-		obj.hashCode();
-		String m = obj.hashCode()+":"+obj.getClass().getName();
-		if (available && enableLogging)
-			Agent.log(Thread.currentThread(),"A",m);
-		else
-			out.println(m);
+		new Exception().printStackTrace();
+		System.exit(1);
 	}
 
 	public static void reportClass(String className) {
-		String m = className;
-		if (available && enableLogging)
-			Agent.log(Thread.currentThread(),"C",m);
-		else
-			out.println(m);
+		new Exception().printStackTrace();
+		System.exit(1);
 	}
 	
 	public static boolean reportMethod(String className, String methodName, String signature) {
-		String m = className+"."+methodName+signature;
-		if (available && enableLogging)
-			Agent.log(Thread.currentThread(),"M",m);
-		else
-			out.println(m);
+		new Exception().printStackTrace();
+		System.exit(1);
 		return true;
 	}
 	
 	public static void reportMonitorEnter(Object obj) {
-		if (available && enableLogging)
-			Agent.logMonitorEnter(Thread.currentThread(),obj);
-		else
-			out.println("ME:"+Thread.currentThread()+":"+obj.hashCode());
+		if (enableLogging) {
+			if (available)
+				Agent.logMonitorEnter(Thread.currentThread(),obj);
+			else
+				out.println("ME:"+Thread.currentThread()+":"+obj.hashCode());
+		}
 	}
 	
 	public static void reportMonitorExit(Object obj) {
-		if (available && enableLogging)
-			Agent.logMonitorExit(Thread.currentThread(),obj);
-		else
-			out.println("MX:"+Thread.currentThread()+":"+obj.hashCode());
+		if (enableLogging) {
+			if (available)
+				Agent.logMonitorExit(Thread.currentThread(),obj);
+			else
+				out.println("MX:"+Thread.currentThread()+":"+obj.hashCode());
+		}
 	}
 	
 	public static void reportBlank() {
-		if (available && enableLogging)
-			Agent.log(Thread.currentThread(),"_","blank");
-		else
-			out.println("blank");
+		if (enableLogging) {
+			if (available)
+				Agent.log(Thread.currentThread(),"_","blank");
+			else
+				out.println("blank");
+		}
 	}
 	
 	public static void main(String[] args) {
