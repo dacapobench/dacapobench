@@ -236,7 +236,7 @@ static void defineCallbacks() {
     
     if (isSelected(OPT_METHOD_EVENTS,NULL)) {
 	    capabilities.can_generate_method_entry_events    = availableCapabilities.can_generate_method_entry_events;
-    	// capabilities.can_generate_method_exit_events     = availableCapabilities.can_generate_method_exit_events;
+    	capabilities.can_generate_method_exit_events     = availableCapabilities.can_generate_method_exit_events;
 	}
 	
 	if (isSelected(OPT_MONITOR,NULL)) {
@@ -262,7 +262,7 @@ static void defineCallbacks() {
     
     if (isSelected(OPT_METHOD_EVENTS,NULL)) {
 	    if (capabilities.can_generate_method_entry_events) DEFINE_CALLBACK(MethodEntry,JVMTI_EVENT_METHOD_ENTRY);
-		// if (capabilities.can_generate_method_exit_events)  DEFINE_CALLBACK(MethodExit,JVMTI_EVENT_METHOD_EXIT);
+		if (capabilities.can_generate_method_exit_events)  DEFINE_CALLBACK(MethodExit,JVMTI_EVENT_METHOD_EXIT);
 	}
 
 	if (isSelected(OPT_METHOD_EVENTS,NULL) || isSelected(OPT_LOAD_CLASSES,NULL)) {
@@ -292,7 +292,6 @@ static void defineCallbacks() {
 		DEFINE_CALLBACK(Exception,JVMTI_EVENT_EXCEPTION);
 		DEFINE_CALLBACK(ExceptionCatch,JVMTI_EVENT_EXCEPTION_CATCH);
 	}
-
 
     res = JVMTI_FUNC_PTR(baseEnv,SetEventCallbacks)(baseEnv, &callbacks, (jint)sizeof(callbacks));
 
