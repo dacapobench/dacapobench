@@ -4,6 +4,23 @@
 #include "dacapolock.h"
 #include "dacapolog.h"
 
+#include "dacapooptions.h"
+
+void thread_init() {
+
+}
+
+void thread_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities) {
+
+}
+
+void thread_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks) {
+	if (isSelected(OPT_THREAD,NULL)) {
+		DEFINE_CALLBACK(callbacks,ThreadStart,JVMTI_EVENT_THREAD_START);
+		DEFINE_CALLBACK(callbacks,ThreadEnd,JVMTI_EVENT_THREAD_END);
+	}
+}
+
 void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread)
 {
 	if (logState) {
@@ -80,28 +97,3 @@ void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 	}
 }
 
-
-/* JVMTI_EVENT_METHOD_ENTRY */
-void JNICALL callbackMethodEntry(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method) {
-	if (logState) {
-		jlong thread_tag = 0;
-
-		enterCriticalSection(&lockTag);
-		getTag(thread, &thread_tag);
-		exitCriticalSection(&lockTag);
-
-		enterCriticalSection(&lockLog);
-		log_field_string(LOG_PREFIX_METHOD_ENTER);
-		log_field_jlong(thread_tag);
-		log_field_pointer(method);
-		log_eol();
-		exitCriticalSection(&lockLog);
-	}
-}
-
-/* JVMTI_EVENT_METHOD_EXIT */
-void JNICALL callbackMethodExit(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method, jboolean was_popped_by_exception, jvalue return_value) {
-	if (logState) {
-		/* record thread as exiting from method */
-	}
-}

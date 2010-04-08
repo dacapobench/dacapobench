@@ -4,6 +4,25 @@
 #include "dacapolog.h"
 #include "dacapolock.h"
 
+#include "dacapooptions.h"
+
+void exception_init() {
+
+}
+
+void exception_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities) {
+    if (isSelected(OPT_EXCEPTION,NULL)) {
+    	capabilities->can_generate_exception_events = availableCapabilities->can_generate_exception_events;
+    }
+}
+
+void exception_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks) {
+	if (isSelected(OPT_EXCEPTION,NULL)) {
+		DEFINE_CALLBACK(callbacks,Exception,JVMTI_EVENT_EXCEPTION);
+		DEFINE_CALLBACK(callbacks,ExceptionCatch,JVMTI_EVENT_EXCEPTION_CATCH);
+	}
+}
+
 void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method, jlocation location, jobject exception, jmethodID catch_method, jlocation catch_location)
 {
 	if (logState) {

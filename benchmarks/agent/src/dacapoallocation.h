@@ -44,6 +44,10 @@
  *          zero then the allocation took place before the agent was running.
  */
 
+void allocation_init();
+void allocation_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities);
+void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks);
+
 void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
                 jobject object, jclass object_klass, jlong size);
 void JNICALL callbackObjectFree(jvmtiEnv *jvmti, jlong tag);

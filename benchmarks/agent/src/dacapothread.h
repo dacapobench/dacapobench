@@ -3,6 +3,10 @@
 
 #include "dacapo.h"
 
+void thread_init();
+void thread_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities);
+void thread_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks);
+
 void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread);
 void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread);
 void JNICALL callbackMethodEntry(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method);

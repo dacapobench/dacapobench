@@ -60,10 +60,22 @@
 
 #define LOG_OBJECT_CLASS(jni_table,jni_env,jvmti_env,object) LOG_CLASS(jni_tble,jni_env,jvmti_env,JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object))
 
+#define DEFINE_CALLBACK(cb,c,s) \
+    (cb)->c = callback##c; \
+    { \
+      int retVal = JVMTI_FUNC_PTR(baseEnv,SetEventNotificationMode)(baseEnv, JVMTI_ENABLE, s, (jthread)NULL); \
+      if (retVal != JNI_OK) { \
+        fprintf(stderr, "unable to register event callback %s\n", #c); \
+        reportJVMTIError(stderr, retVal, NULL); \
+        /* exit(1); */ \
+      } \
+    }
+
 extern JavaVM*             jvm;
 extern jvmtiEnv*           baseEnv;
 extern jboolean            jvmRunning;
 extern jboolean            jvmStopped;
 
+void reportJVMTIError(FILE* fh, jvmtiError errorNumber, const char *str);
 
 #endif

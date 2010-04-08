@@ -17,6 +17,7 @@
 #define OPT_LOG_FILE         "log_file"
 #define OPT_EXCEPTION        "exception"
 #define OPT_REPORT_OPTIONS   "report_options"
+#define OPT_GC               "gc"
 
 _Bool isSelected(const char* option, char* argument);
 _Bool hasArgument(const char* option);

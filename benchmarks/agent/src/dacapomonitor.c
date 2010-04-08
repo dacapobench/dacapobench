@@ -3,6 +3,26 @@
 #include "dacapolog.h"
 #include "dacapotag.h"
 #include "dacapolock.h"
+#include "dacapooptions.h"
+
+void monitor_init() {
+
+}
+
+void monitor_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities) {
+	if (isSelected(OPT_MONITOR,NULL)) {
+		capabilities->can_generate_monitor_events         = availableCapabilities->can_generate_monitor_events;
+	}
+}
+
+void monitor_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks) {
+	if (capabilities->can_generate_monitor_events && isSelected(OPT_MONITOR,NULL)) {
+		DEFINE_CALLBACK(callbacks,MonitorContendedEnter,JVMTI_EVENT_MONITOR_CONTENDED_ENTER);
+		DEFINE_CALLBACK(callbacks,MonitorContendedEntered,JVMTI_EVENT_MONITOR_CONTENDED_ENTERED);
+		DEFINE_CALLBACK(callbacks,MonitorWait,JVMTI_EVENT_MONITOR_WAIT);
+		DEFINE_CALLBACK(callbacks,MonitorWaited,JVMTI_EVENT_MONITOR_WAITED);
+	}
+}
 
 void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object)
 {

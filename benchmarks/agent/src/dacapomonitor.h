@@ -3,6 +3,10 @@
 
 #include "dacapo.h"
 
+void monitor_init();
+void monitor_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities);
+void monitor_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks);
+
 void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object);
 void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object);
 void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object, jlong timeout);

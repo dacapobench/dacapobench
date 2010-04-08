@@ -27,6 +27,8 @@
 
 #define LOG_PREFIX_TIME                       "TM"
 
+#define LOG_PREFIX_GC                         "GC"
+
 extern jrawMonitorID       lockLog;
 extern FILE*               logFile;
 extern jboolean            logState;

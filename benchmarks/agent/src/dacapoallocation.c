@@ -4,6 +4,25 @@
 #include "dacapolog.h"
 #include "dacapolock.h"
 
+#include "dacapooptions.h"
+
+void allocation_init() {
+
+}
+
+void allocation_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities) {
+	if (isSelected(OPT_ALLOCATE,NULL)) {
+		capabilities->can_generate_vm_object_alloc_events = availableCapabilities->can_generate_vm_object_alloc_events;
+		capabilities->can_generate_object_free_events     = availableCapabilities->can_generate_object_free_events;
+	}
+}
+
+void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks) {
+	if (isSelected(OPT_ALLOCATE,NULL)) {
+		if (capabilities->can_generate_vm_object_alloc_events) DEFINE_CALLBACK(callbacks,VMObjectAlloc,JVMTI_EVENT_VM_OBJECT_ALLOC);
+		if (capabilities->can_generate_object_free_events) DEFINE_CALLBACK(callbacks,ObjectFree,JVMTI_EVENT_OBJECT_FREE);
+	}
+}
 
 /* Callback for JVMTI_EVENT_VM_OBJECT_ALLOC */
 void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,

@@ -9,7 +9,7 @@
 
 # Source lists
 LIBNAME=dacapoagent
-SOURCES=src/dacapooptions.c src/dacapoagent.c src/dacapoexception.c src/dacapolog.c src/dacapotag.c src/dacapolock.c src/dacapomonitor.c src/dacapothread.c src/dacapoallocation.c 
+SOURCES=src/dacapooptions.c src/dacapoagent.c src/dacapoexception.c src/dacapolog.c src/dacapotag.c src/dacapolock.c src/dacapomonitor.c src/dacapothread.c src/dacapoallocation.c src/dacapomethod.c 
 
 # Linux GNU C Compiler
 ifeq ($(OSNAME), linux)

@@ -24,6 +24,7 @@
 #include "dacapothread.h"
 #include "dacapoallocation.h"
 #include "dacapolock.h"
+#include "dacapomethod.h"
 
 #include <sys/stat.h>
 
@@ -84,7 +85,7 @@ static void JNICALL callbackClassPrepare(jvmtiEnv *jvmti_env, JNIEnv* jni_env, j
 static void makePath(const char* name);
 static void reportCapabilities(FILE* fh, jvmtiCapabilities* capabilities);
 
-static void reportJVMTIError(FILE* fh, jvmtiError errorNumber, const char *str)
+void reportJVMTIError(FILE* fh, jvmtiError errorNumber, const char *str)
 {
     char       *errorString;
     
@@ -171,6 +172,12 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
         exit(1);
     }
 
+	allocation_init();
+	exception_init();
+	method_init();
+	monitor_init();
+	thread_init();
+
     /* */
     char* storeClassFile = getenv(STORE_CLASS_FILE_BASE);
     if (storeClassFile == NULL) 
@@ -217,82 +224,35 @@ static void processCapabilities() {
 #endif // DEBUG
 }
 
-#define DEFINE_CALLBACK(c,s) \
-    callbacks.c = callback##c; \
-    { \
-      int retVal = JVMTI_FUNC_PTR(baseEnv,SetEventNotificationMode)(baseEnv, JVMTI_ENABLE, s, (jthread)NULL); \
-      if (retVal != JNI_OK) { \
-        fprintf(stderr, "unable to register event callback %s\n", #c); \
-        reportJVMTIError(stderr, retVal, NULL); \
-        /* exit(1); */ \
-      } \
-    }
-
 static void defineCallbacks() {
     jint res;
     jvmtiCapabilities tmp;
     
     (void)memset(&tmp,0, sizeof(tmp));
     
-    if (isSelected(OPT_METHOD_EVENTS,NULL)) {
-	    capabilities.can_generate_method_entry_events    = availableCapabilities.can_generate_method_entry_events;
-    	capabilities.can_generate_method_exit_events     = availableCapabilities.can_generate_method_exit_events;
-	}
-	
-	if (isSelected(OPT_MONITOR,NULL)) {
-		capabilities.can_generate_monitor_events         = availableCapabilities.can_generate_monitor_events;
-	}
-	
-	if (isSelected(OPT_ALLOCATE,NULL)) {
-		capabilities.can_generate_vm_object_alloc_events = availableCapabilities.can_generate_vm_object_alloc_events;
-		capabilities.can_generate_object_free_events     = availableCapabilities.can_generate_object_free_events;
-	}
+	method_capabilities(&availableCapabilities, &capabilities);
+	monitor_capabilities(&availableCapabilities, &capabilities);
+	allocation_capabilities(&availableCapabilities, &capabilities);
+    exception_capabilities(&availableCapabilities, &capabilities);
 
 	capabilities.can_tag_objects                     = availableCapabilities.can_tag_objects;
     
-    if (isSelected(OPT_EXCEPTION,NULL)) {
-    	capabilities.can_generate_exception_events = availableCapabilities.can_generate_exception_events;
-    }
-    
     res = JVMTI_FUNC_PTR(baseEnv,AddCapabilities)(baseEnv, &capabilities);
     
-	DEFINE_CALLBACK(VMInit,JVMTI_EVENT_VM_INIT);
-    DEFINE_CALLBACK(VMDeath,JVMTI_EVENT_VM_DEATH);
-    DEFINE_CALLBACK(ClassFileLoadHook,JVMTI_EVENT_CLASS_FILE_LOAD_HOOK);
+	DEFINE_CALLBACK(&callbacks,VMInit,JVMTI_EVENT_VM_INIT);
+    DEFINE_CALLBACK(&callbacks,VMDeath,JVMTI_EVENT_VM_DEATH);
+    DEFINE_CALLBACK(&callbacks,ClassFileLoadHook,JVMTI_EVENT_CLASS_FILE_LOAD_HOOK);
     
-    if (isSelected(OPT_METHOD_EVENTS,NULL)) {
-	    if (capabilities.can_generate_method_entry_events) DEFINE_CALLBACK(MethodEntry,JVMTI_EVENT_METHOD_ENTRY);
-		if (capabilities.can_generate_method_exit_events)  DEFINE_CALLBACK(MethodExit,JVMTI_EVENT_METHOD_EXIT);
-	}
-
 	if (isSelected(OPT_METHOD_EVENTS,NULL) || isSelected(OPT_LOAD_CLASSES,NULL)) {
-		DEFINE_CALLBACK(ClassPrepare,JVMTI_EVENT_CLASS_PREPARE);
+		DEFINE_CALLBACK(&callbacks,ClassPrepare,JVMTI_EVENT_CLASS_PREPARE);
 	}
 
-	if (isSelected(OPT_MONITOR,NULL)) {
-		if (capabilities.can_generate_monitor_events) {
-			DEFINE_CALLBACK(MonitorContendedEnter,JVMTI_EVENT_MONITOR_CONTENDED_ENTER);
-			DEFINE_CALLBACK(MonitorContendedEntered,JVMTI_EVENT_MONITOR_CONTENDED_ENTERED);
-			DEFINE_CALLBACK(MonitorWait,JVMTI_EVENT_MONITOR_WAIT);
-			DEFINE_CALLBACK(MonitorWaited,JVMTI_EVENT_MONITOR_WAITED);
-		}
-	}
+	monitor_callbacks(&capabilities, &callbacks);
+	allocation_callbacks(&capabilities, &callbacks);
+	exception_callbacks(&capabilities, &callbacks);
+	thread_callbacks(&capabilities, &callbacks);
+	method_callbacks(&capabilities, &callbacks);
 	
-	if (isSelected(OPT_ALLOCATE,NULL)) {
-		if (capabilities.can_generate_vm_object_alloc_events) DEFINE_CALLBACK(VMObjectAlloc,JVMTI_EVENT_VM_OBJECT_ALLOC);
-		if (capabilities.can_generate_object_free_events) DEFINE_CALLBACK(ObjectFree,JVMTI_EVENT_OBJECT_FREE);
-	}
-
-	if (isSelected(OPT_THREAD,NULL)) {
-		DEFINE_CALLBACK(ThreadStart,JVMTI_EVENT_THREAD_START);
-		DEFINE_CALLBACK(ThreadEnd,JVMTI_EVENT_THREAD_END);
-	}
-
-	if (isSelected(OPT_EXCEPTION,NULL)) {
-		DEFINE_CALLBACK(Exception,JVMTI_EVENT_EXCEPTION);
-		DEFINE_CALLBACK(ExceptionCatch,JVMTI_EVENT_EXCEPTION_CATCH);
-	}
-
     res = JVMTI_FUNC_PTR(baseEnv,SetEventCallbacks)(baseEnv, &callbacks, (jint)sizeof(callbacks));
 
     if (res != JNI_OK) {
