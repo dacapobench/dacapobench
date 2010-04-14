@@ -1,10 +1,13 @@
+#include "dacapolog.h"
+#include "dacapotag.h"
+#include "dacapooptions.h"
+#include "dacapolock.h"
+#include "dacapothread.h"
+
 #include "dacapoallocation.h"
 
-#include "dacapotag.h"
-#include "dacapolog.h"
-#include "dacapolock.h"
-
-#include "dacapooptions.h"
+static long gcForceCycle = 0;
+static long gcCount = 0;
 
 void allocation_init() {
 
@@ -22,6 +25,29 @@ void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallb
 		if (capabilities->can_generate_vm_object_alloc_events) DEFINE_CALLBACK(callbacks,VMObjectAlloc,JVMTI_EVENT_VM_OBJECT_ALLOC);
 		if (capabilities->can_generate_object_free_events) DEFINE_CALLBACK(callbacks,ObjectFree,JVMTI_EVENT_OBJECT_FREE);
 	}
+	char arg[1024];
+	if (isSelected(OPT_GC,arg)) {
+	    gcForceCycle = atol(arg);
+	}
+}
+
+static jint forceGC(JNIEnv *env) {
+	gcCount = 0;
+	enterCriticalSection(&lockTag);
+	log_field_string(LOG_PREFIX_GC);
+	log_eol();
+	exitCriticalSection(&lockTag);
+	jint res = JVMTI_FUNC_PTR(baseEnv,ForceGarbageCollection)(baseEnv);
+	setReportHeap(env);
+	return res;
+}
+
+void allocation_logon(JNIEnv* env) {
+	if (jvmRunning && !jvmStopped && 0<gcForceCycle) {
+		if (forceGC(env) != JNI_OK) {
+			fprintf(stderr,"force gc failed\n");
+		}
+	}
 }
 
 /* Callback for JVMTI_EVENT_VM_OBJECT_ALLOC */
@@ -32,6 +58,10 @@ void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
 		jlong class_tag  = 0;
 		jlong thread_tag = 0;
 
+		gcCount += size;
+		if (0<gcForceCycle && gcForceCycle<gcCount)
+			forceGC(env);
+		
 		enterCriticalSection(&lockTag);
 		jlong tag = setTag(object, size);
 		jboolean class_has_new_tag = getTag(object_klass, &class_tag);
@@ -40,26 +70,22 @@ void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
 
 		/* trace allocation */
 		enterCriticalSection(&lockLog);
-		jniNativeInterface* jni_table;
-		if (class_has_new_tag || thread_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-		}
-
 		log_field_string(LOG_PREFIX_ALLOCATION);
 
 		log_field_jlong(tag);
 	    if (class_has_new_tag) {
+			jniNativeInterface* jni_table;
+			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
+				fprintf(stderr, "failed to get JNI function table\n");
+				exit(1);
+			}
+
 	    	LOG_CLASS(jni_table,env,baseEnv,object_klass);
 	    } else 
 	    	log_field_string(NULL);
-		log_field_jlong(thread_tag);
-	    if (thread_has_new_tag) {
-	    	LOG_OBJECT_CLASS(jni_table,env,baseEnv,thread);
-	    } else
-	    	log_field_string(NULL);
+
+		thread_log(env,thread,thread_tag,thread_has_new_tag);
+
 		log_field_jlong(size);
 		
 		log_eol();

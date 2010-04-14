@@ -1,14 +1,25 @@
 #include <sys/time.h>
 
+#include <jni.h>
+
 #include "dacapolog.h"
 #include "dacapooptions.h"
 #include "dacapotag.h"
 #include "dacapolock.h"
 
+#include "dacapoallocation.h"
+#include "dacapoexception.h"
+#include "dacapomethod.h"
+#include "dacapomonitor.h"
+#include "dacapothread.h"
+
 jrawMonitorID       lockLog;
 FILE*               logFile = NULL;
 jboolean			logState = FALSE;
 struct timeval      startTime;
+jclass              log_class = NULL;
+jmethodID           reportHeapID;
+jfieldID            firstReportSinceForceGCID;
 
 void setLogFileName(const char* log_file) {
 	if (logFile!=NULL) {
@@ -16,6 +27,14 @@ void setLogFileName(const char* log_file) {
 		logFile = NULL;
 	}
 	logFile = fopen(log_file,"w");
+}
+
+void callReportHeap(JNIEnv *env) {
+	(*env)->CallStaticVoidMethod(env,log_class,reportHeapID);
+}
+
+void setReportHeap(JNIEnv *env) {
+	(*env)->SetStaticBooleanField(env,log_class,firstReportSinceForceGCID,(jboolean)TRUE);
 }
 
 _Bool dacapo_log_init() {
@@ -31,6 +50,23 @@ _Bool dacapo_log_init() {
     gettimeofday(&startTime, NULL);
     
 	return TRUE;
+}
+
+
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_localinit
+  (JNIEnv *env, jclass klass)
+{
+	reportHeapID              = (*env)->GetStaticMethodID(env,klass,"reportHeap","()V");
+	firstReportSinceForceGCID = (*env)->GetStaticFieldID(env,klass,"firstReportSinceForceGC","Z");
+	log_class                 = (*env)->NewGlobalRef(env, klass);
+}
+
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_wierd
+  (JNIEnv *env, jclass klass)
+{
+	fprintf(stderr,"Agent_wierd[start]\n");
+	callReportHeap(env);
+	fprintf(stderr,"Agent_wierd[stop]\n");
 }
 
 /*
@@ -56,9 +92,10 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
 	    jboolean iscopy_e;
 	    jboolean iscopy_m;
 	    jlong    thread_tag = 0;
+	    jboolean new_thread_tag;
 
-	    enterCriticalSection(&lockTag);
-		getTag(thread, &thread_tag);
+		enterCriticalSection(&lockTag);
+		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		exitCriticalSection(&lockTag);
 
 	    const char *c_e = JVMTI_FUNC_PTR(env,GetStringUTFChars)(env, e, &iscopy_e);
@@ -66,7 +103,27 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
 
 	    enterCriticalSection(&lockLog);
 	    log_field_string(c_e);
-	    log_field_jlong(thread_tag);
+	    
+		jniNativeInterface* jni_table;
+		if (thread_has_new_tag) {
+			jniNativeInterface* jni_table;
+			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
+				fprintf(stderr, "failed to get JNI function table\n");
+				exit(1);
+			}
+
+			LOG_OBJECT_CLASS(jni_table,env,baseEnv,thread);
+
+			// get class and get thread name.
+			jvmtiThreadInfo info;
+			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
+			log_field_string(info.name);
+			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
+		} else {
+			log_field_string(NULL);
+			log_field_string(NULL);
+		}
+		
 	    log_field_string(c_m);
 	    log_eol();
 	    exitCriticalSection(&lockLog);
@@ -105,6 +162,13 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_start
 	    if (logState) {
 	    	log_field_string("START");
 	    	log_eol();
+	    	
+	    	allocation_logon(env);
+			exception_logon(env);
+			method_logon(env);
+			monitor_logon(env);
+			thread_logon(env);
+	    	
 	    }
 	}
 }
@@ -238,6 +302,46 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
 	
 	log_eol();
 	exitCriticalSection(&lockLog);
+}
+
+/*
+ * Class:     org_dacapo_instrument_Agent
+ * Method:    writeHeapReport
+ * Signature: (JJJJ)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_writeHeapReport(JNIEnv *local_env, jclass klass, jobject thread, jlong used, jlong free, jlong total, jlong max) {
+	jlong thread_tag = 0;
+
+	enterCriticalSection(&lockTag);
+	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+	exitCriticalSection(&lockTag);
+
+	enterCriticalSection(&lockLog);
+	log_field_string(LOG_PREFIX_HEAP_REPORT);
+	
+	jniNativeInterface* jni_table;
+	if (thread_has_new_tag) {
+		if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
+			fprintf(stderr, "failed to get JNI function table\n");
+			exit(1);
+		}
+	}
+
+	log_field_jlong(thread_tag);
+	if (thread_has_new_tag) {
+		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,thread);
+	} else {
+		log_field_string(NULL);
+	}
+	
+	log_field_jlong(used);
+	log_field_jlong(free);
+	log_field_jlong(total);
+	log_field_jlong(max);
+	log_eol();    
+	exitCriticalSection(&lockLog);
+	
+    return;
 }
 
 /*

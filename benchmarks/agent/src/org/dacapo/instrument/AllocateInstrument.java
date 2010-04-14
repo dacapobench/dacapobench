@@ -14,16 +14,19 @@ import org.objectweb.asm.commons.Method;
 
 public class AllocateInstrument extends ClassAdapter {
 
-	private static final String   LOG_INTERNAL_NAME    = "org/dacapo/instrument/Log";
-//	private static final String   LOG_METHOD_ALLOCATE  = "reportAlloc";
-//	private static final String   LOG_METHOD_SIGNATURE = "(Ljava/lang/Object;)V"; 
-	private static final String   LOG_METHOD_ALLOCATE  = "reportBlank";
-	private static final String   LOG_METHOD_SIGNATURE = "()V"; 
+	private static final String   LOG_INTERNAL_NAME         = "org/dacapo/instrument/Log";
+	private static final String   LOG_REPORT_HEAP           = "reportHeap";
+	private static final String   LOG_REPORT_HEAP_SIGNATURE = "()V"; 
+	private static final String   LOG_INTERNAL_REPORT_HEAP  = "$$reportHeap";
+	private static final String   LOG_METHOD_ALLOCATE       = "reportBlank";
+	private static final String   LOG_METHOD_SIGNATURE      = "()V"; 
 
-	private String name;
-	private int    access;
+	private String  name;
+	private int     access;
+	private boolean done = false;
+	private boolean containsAllocate = false;
 	
-	private static final String   INSTRUMENT_PACKAGE   = "org/dacapo/instrument/";
+	private static final String   INSTRUMENT_PACKAGE        = "org/dacapo/instrument/";
 
 	public AllocateInstrument(ClassVisitor cv) {
 		super(cv);
@@ -36,17 +39,52 @@ public class AllocateInstrument extends ClassAdapter {
 	}
 		
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if (instrument() && (access & Opcodes.ACC_ABSTRACT) == 0 && (access & Opcodes.ACC_BRIDGE) == 0 && (access & Opcodes.ACC_NATIVE) == 0)
+		if (!done && instrument() && instrument(access))
 			return new AllocateInstrumentMethod(access, name, desc, signature, exceptions, super.visitMethod(access,name,desc,signature,exceptions));
 		else
 			return super.visitMethod(access,name,desc,signature,exceptions);
 	}
 	
-	private boolean instrument() {
-		// return (access & Opcodes.ACC_INTERFACE) == 0 && !name.startsWith(INSTRUMENT_PACKAGE);
-		return (access & Opcodes.ACC_INTERFACE) == 0 && name.equals("StuffIt");
+	public void visitEnd() {
+		if (!done) {
+			done = true;
+			if (containsAllocate) {
+				try {
+					Class k = Log.class;
+					
+					GeneratorAdapter mg;
+					Label start;
+					Label end;
+	
+					// generate Log monitorEnter function
+					mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_REPORT_HEAP, LOG_REPORT_HEAP_SIGNATURE), LOG_REPORT_HEAP_SIGNATURE, new Type[] {}, this);
+					
+					start = mg.mark();
+					mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_REPORT_HEAP)));
+					end   = mg.mark();
+					mg.returnValue();
+					
+					mg.catchException(start, end, Type.getType(Throwable.class));
+					mg.returnValue();
+					
+					mg.endMethod();
+				} catch (NoSuchMethodException nsme) {
+					System.err.println("Unable to find Log.reportHeap method");
+					System.err.println("M:"+nsme);
+					nsme.printStackTrace();
+				}
+			}
+		}
 	}
-
+	
+	private boolean instrument() {
+		return (access & Opcodes.ACC_INTERFACE) == 0 && !name.startsWith(INSTRUMENT_PACKAGE);
+	}
+	
+	private boolean instrument(int access) {
+		return (access & Opcodes.ACC_ABSTRACT) == 0 && (access & Opcodes.ACC_BRIDGE) == 0 && (access & Opcodes.ACC_NATIVE) == 0;
+	}
+	
 	private class AllocateInstrumentMethod extends AdviceAdapter {
 		AllocateInstrumentMethod(int access, String name, String desc, String signature, String[] exceptions, MethodVisitor mv) {
 			super(mv, access, name, desc);
@@ -59,15 +97,24 @@ public class AllocateInstrument extends ClassAdapter {
 		
 		public void visitTypeInsn(int opcode, String type) {
 			super.visitTypeInsn(opcode, type);
-			if (opcode == Opcodes.NEW || opcode == Opcodes.ANEWARRAY) addLog();
+			if (opcode == Opcodes.NEW || opcode == Opcodes.ANEWARRAY) {
+				containsAllocate = true;
+				addLog();
+			}
 		}
 		
 		public void visitIntInsn(int opcode, int operand) {
 			super.visitIntInsn(opcode, operand);
-			if (opcode == Opcodes.NEWARRAY) addLog();
+			if (opcode == Opcodes.NEWARRAY) {
+				containsAllocate = true;
+				addLog();
+			}
 		}
 		
 		private void addLog() {
+			super.visitMethodInsn(Opcodes.INVOKESTATIC, name, LOG_INTERNAL_REPORT_HEAP, LOG_REPORT_HEAP_SIGNATURE);
+			// invokestatic $$reportHeapGC
+			// 
 			/*
 			Label target = super.newLabel();
 

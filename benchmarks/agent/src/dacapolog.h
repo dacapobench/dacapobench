@@ -28,12 +28,16 @@
 #define LOG_PREFIX_TIME                       "TM"
 
 #define LOG_PREFIX_GC                         "GC"
+#define LOG_PREFIX_HEAP_REPORT                "HR"
 
 extern jrawMonitorID       lockLog;
 extern FILE*               logFile;
 extern jboolean            logState;
 
 _Bool dacapo_log_init();
+
+void  callReportHeap(JNIEnv *env);
+void  setReportHeap(JNIEnv *env);
 
 void  log_field_string(const char* text);
 void  log_field_string_n(const char* text, int text_length);

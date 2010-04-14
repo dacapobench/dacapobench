@@ -1,10 +1,10 @@
-#include "dacapoexception.h"
-
-#include "dacapotag.h"
 #include "dacapolog.h"
-#include "dacapolock.h"
-
+#include "dacapotag.h"
 #include "dacapooptions.h"
+#include "dacapolock.h"
+#include "dacapothread.h"
+
+#include "dacapoexception.h"
 
 void exception_init() {
 
@@ -14,6 +14,10 @@ void exception_capabilities(const jvmtiCapabilities* availableCapabilities, jvmt
     if (isSelected(OPT_EXCEPTION,NULL)) {
     	capabilities->can_generate_exception_events = availableCapabilities->can_generate_exception_events;
     }
+}
+
+void exception_logon(JNIEnv* env) {
+
 }
 
 void exception_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks) {
@@ -37,34 +41,18 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 		enterCriticalSection(&lockLog);
 		log_field_string(LOG_PREFIX_EXCEPTION);
 
-		jniNativeInterface* jni_table;
+		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 
-		if (thread_has_new_tag || exception_has_new_tag) {
+		jniNativeInterface* jni_table;
+		if (exception_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
 		}
-
-		log_field_jlong(thread_tag);
-		if (thread_has_new_tag) {
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
-		} else {
-			log_field_string(NULL);
-		}
-		
 		log_field_jlong(exception_tag);
 		if (exception_has_new_tag) {
 	 		LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,exception);
-		} else {
-			log_field_string(NULL);
-		}
-		
-		if (thread_has_new_tag) {
-			jvmtiThreadInfo info;
-			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			log_field_string(info.name);
-			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
 			log_field_string(NULL);
 		}
@@ -125,34 +113,19 @@ void JNICALL callbackExceptionCatch(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthrea
 		enterCriticalSection(&lockLog);
 		log_field_string(LOG_PREFIX_EXCEPTION_CATCH);
 
+		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+
 		jniNativeInterface* jni_table;
-		if (thread_has_new_tag || exception_has_new_tag) {
+		if (exception_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
 		}
 
-		log_field_jlong(thread_tag);
-		if (thread_has_new_tag) {
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,thread);
-		} else {
-			log_field_string(NULL);
-		}
-		
 		log_field_jlong(exception_tag);
 		if (exception_has_new_tag) {
 			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,exception);
-		} else {
-			log_field_string(NULL);
-		}
-
-		if (thread_has_new_tag) {
-			// get class and get thread name.
-			jvmtiThreadInfo info;
-			JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-			log_field_string(info.name);
-			if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 		} else {
 			log_field_string(NULL);
 		}

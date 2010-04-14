@@ -53,6 +53,11 @@ public final class Log {
 		return true;
 	}
 	
+	public static void reportHeap() {
+		if (enableLogging && available)
+			Agent.reportHeapAfterForceGC();
+	}
+	
 	public static void reportMonitorEnter(Object obj) {
 		if (enableLogging) {
 			if (available)
@@ -98,5 +103,4 @@ public final class Log {
 			enableLogging = false;
 		}
 	}
-	
 }
