@@ -113,24 +113,6 @@ public class AllocateInstrument extends ClassAdapter {
 		
 		private void addLog() {
 			super.visitMethodInsn(Opcodes.INVOKESTATIC, name, LOG_INTERNAL_REPORT_HEAP, LOG_REPORT_HEAP_SIGNATURE);
-			// invokestatic $$reportHeapGC
-			// 
-			/*
-			Label target = super.newLabel();
-
-			Label start = super.mark();
-//			super.dup();
-			super.visitMethodInsn(Opcodes.INVOKESTATIC, LOG_INTERNAL_NAME, LOG_METHOD_ALLOCATE, LOG_METHOD_SIGNATURE);
-			Label end = super.mark();
-//
-			super.visitJumpInsn(Opcodes.GOTO,target);
-			super.catchException(start,end,Type.getType(NoClassDefFoundError.class));
-			super.visitInsn(Opcodes.NOP);
-//			super.catchException(start,end,Type.getType(Exception.class));
-//			super.pop(); // for some unknown reason using super.visitInsn(Opcodes.POP); here causes an indexing error in ASM
-			super.visitJumpInsn(Opcodes.GOTO,target);
-			super.mark(target);
-			*/
 		}
 	}
 }
