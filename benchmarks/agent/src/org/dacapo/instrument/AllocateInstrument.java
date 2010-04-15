@@ -56,7 +56,12 @@ public class AllocateInstrument extends ClassAdapter {
 					Label start;
 					Label end;
 	
-					// generate Log monitorEnter function
+					// Call the Log.reportHeap function which will conditionally report the heap statistics.
+					// Note: We cannot get the Heap Statistics from JVMTI and we can't perform a JNI call from
+					//       the object allocation event callback so the call back sets a flag when we want the
+					//       heap states to be reported after a GC.
+					// Also note: Even though a GC can be forced there is no reason to expect that the heap would
+					//       be at minimal size due to the asynchronous behaviour of finalizers
 					mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_REPORT_HEAP, LOG_REPORT_HEAP_SIGNATURE), LOG_REPORT_HEAP_SIGNATURE, new Type[] {}, this);
 					
 					start = mg.mark();
@@ -75,6 +80,8 @@ public class AllocateInstrument extends ClassAdapter {
 				}
 			}
 		}
+		
+		super.visitEnd();
 	}
 	
 	private boolean instrument() {
