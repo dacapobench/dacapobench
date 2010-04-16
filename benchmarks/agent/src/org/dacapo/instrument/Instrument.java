@@ -49,6 +49,9 @@ public class Instrument {
 			if (options.has(Options.ALLOCATE))
 				cv = new AllocateInstrument(cv);
 			
+			if (options.has(Options.CALL_CHAIN))
+				cv = new CallChainInstrument(cv);
+			
 			// The MethodInstrument is left out as there are a number of issues with 
 			// instrumenting the bootclasses that I have not been able to resolve.
 			//

@@ -12,7 +12,7 @@ public final class Log {
 	
 	private static boolean available;
 	private static boolean enableLogging = false;
-	
+
 	static {
 		String logFileName = System.getenv(LOGFILE_ENV);
 		
@@ -73,6 +73,12 @@ public final class Log {
 				Agent.logMonitorExit(Thread.currentThread(),obj);
 			else
 				out.println("MX:"+Thread.currentThread()+":"+obj.hashCode());
+		}
+	}
+	
+	public static void reportCallChain() {
+		if (enableLogging && available) {
+			Agent.logCallChain();
 		}
 	}
 	

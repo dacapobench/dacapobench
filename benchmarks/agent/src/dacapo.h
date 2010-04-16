@@ -46,19 +46,19 @@
 
 #define NONE "<none>"
 
-#define LOG_CLASS(jni_table,jni_env,jvmti_env,klass) \
+#define LOG_CLASS(jni_table,jvmti_env,klass) \
         {\
 			char* signature = NULL;\
 			char* generic = NULL;\
 			\
-			JVMTI_FUNC_PTR(baseEnv,GetClassSignature)(jvmti_env,klass,&signature,&generic);\
+			JVMTI_FUNC_PTR(jvmti_env,GetClassSignature)(jvmti_env,klass,&signature,&generic);\
 			log_field_string(signature);\
 			\
 			if (signature!=NULL) JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)signature);\
 			if (generic!=NULL) JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)generic);\
 		}
 
-#define LOG_OBJECT_CLASS(jni_table,jni_env,jvmti_env,object) LOG_CLASS(jni_tble,jni_env,jvmti_env,JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object))
+#define LOG_OBJECT_CLASS(jni_table,jni_env,jvmti_env,object) LOG_CLASS(jni_tble,jvmti_env,JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object))
 
 #define DEFINE_CALLBACK(cb,c,s) \
     (cb)->c = callback##c; \

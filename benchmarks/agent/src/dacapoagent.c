@@ -25,6 +25,7 @@
 #include "dacapoallocation.h"
 #include "dacapolock.h"
 #include "dacapomethod.h"
+#include "dacapocallchain.h"
 
 #include <sys/stat.h>
 
@@ -177,6 +178,7 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
 	method_init();
 	monitor_init();
 	thread_init();
+	call_chain_init();
 
     /* */
     char* storeClassFile = getenv(STORE_CLASS_FILE_BASE);
@@ -234,6 +236,7 @@ static void defineCallbacks() {
 	monitor_capabilities(&availableCapabilities, &capabilities);
 	allocation_capabilities(&availableCapabilities, &capabilities);
     exception_capabilities(&availableCapabilities, &capabilities);
+    call_chain_capabilities(&availableCapabilities, &capabilities);
 
 	capabilities.can_tag_objects                     = availableCapabilities.can_tag_objects;
     
@@ -252,6 +255,7 @@ static void defineCallbacks() {
 	exception_callbacks(&capabilities, &callbacks);
 	thread_callbacks(&capabilities, &callbacks);
 	method_callbacks(&capabilities, &callbacks);
+	call_chain_callbacks(&capabilities, &callbacks);
 	
     res = JVMTI_FUNC_PTR(baseEnv,SetEventCallbacks)(baseEnv, &callbacks, (jint)sizeof(callbacks));
 

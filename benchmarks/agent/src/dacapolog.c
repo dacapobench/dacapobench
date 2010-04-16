@@ -12,6 +12,7 @@
 #include "dacapomethod.h"
 #include "dacapomonitor.h"
 #include "dacapothread.h"
+#include "dacapocallchain.h"
 
 jrawMonitorID       lockLog;
 FILE*               logFile = NULL;
@@ -20,6 +21,10 @@ struct timeval      startTime;
 jclass              log_class = NULL;
 jmethodID           reportHeapID;
 jfieldID            firstReportSinceForceGCID;
+
+jfieldID            callChainCountID;
+jfieldID            callChainFrequencyID;
+jfieldID            callChainEnableID;
 
 void setLogFileName(const char* log_file) {
 	if (logFile!=NULL) {
@@ -35,6 +40,14 @@ void callReportHeap(JNIEnv *env) {
 
 void setReportHeap(JNIEnv *env) {
 	(*env)->SetStaticBooleanField(env,log_class,firstReportSinceForceGCID,(jboolean)TRUE);
+}
+
+void setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable) {
+	if (enable) {
+		(*env)->SetStaticLongField(env,log_class,callChainFrequencyID,frequency);
+		(*env)->SetStaticLongField(env,log_class,callChainCountID,(jlong)0);
+	}
+	(*env)->SetStaticBooleanField(env,log_class,callChainEnableID,enable);
 }
 
 _Bool dacapo_log_init() {
@@ -58,6 +71,10 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_localinit
 {
 	reportHeapID              = (*env)->GetStaticMethodID(env,klass,"reportHeap","()V");
 	firstReportSinceForceGCID = (*env)->GetStaticFieldID(env,klass,"firstReportSinceForceGC","Z");
+	callChainCountID          = (*env)->GetStaticFieldID(env,klass,"callChainCount","J");
+	callChainFrequencyID      = (*env)->GetStaticFieldID(env,klass,"callChainFrequency","J");
+	callChainEnableID         = (*env)->GetStaticFieldID(env,klass,"callChainEnable","Z");
+
 	log_class                 = (*env)->NewGlobalRef(env, klass);
 }
 
@@ -160,15 +177,17 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_start
     if (!logState) {
 	    logState = logFile != NULL;
 	    if (logState) {
+		    enterCriticalSection(&lockLog);
 	    	log_field_string("START");
 	    	log_eol();
+		    exitCriticalSection(&lockLog);
 	    	
 	    	allocation_logon(env);
 			exception_logon(env);
 			method_logon(env);
 			monitor_logon(env);
 			thread_logon(env);
-	    	
+			call_chain_logon(env);
 	    }
 	}
 }
@@ -306,6 +325,16 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
 
 /*
  * Class:     org_dacapo_instrument_Agent
+ * Method:    logCallChain
+ * Signature: (Ljava/lang/Thread;)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logCallChain
+  (JNIEnv *env, jclass klass, jobject thread) {
+  	log_call_chain(env, klass, thread);
+}
+
+/*
+ * Class:     org_dacapo_instrument_Agent
  * Method:    writeHeapReport
  * Signature: (JJJJ)V
  */
@@ -318,21 +347,8 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_writeHeapReport(JNIEnv *
 
 	enterCriticalSection(&lockLog);
 	log_field_string(LOG_PREFIX_HEAP_REPORT);
-	
-	jniNativeInterface* jni_table;
-	if (thread_has_new_tag) {
-		if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-			fprintf(stderr, "failed to get JNI function table\n");
-			exit(1);
-		}
-	}
 
-	log_field_jlong(thread_tag);
-	if (thread_has_new_tag) {
-		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,thread);
-	} else {
-		log_field_string(NULL);
-	}
+	thread_log(local_env, thread, thread_tag, thread_has_new_tag);
 	
 	log_field_jlong(used);
 	log_field_jlong(free);

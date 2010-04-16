@@ -6,6 +6,12 @@
 
 #include "dacapoexception.h"
 
+#include "dacapolog.h"
+#include "dacapotag.h"
+#include "dacapooptions.h"
+#include "dacapolock.h"
+#include "dacapothread.h"
+
 void exception_init() {
 
 }

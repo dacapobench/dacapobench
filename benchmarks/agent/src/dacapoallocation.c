@@ -80,7 +80,7 @@ void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
 				exit(1);
 			}
 
-	    	LOG_CLASS(jni_table,env,baseEnv,object_klass);
+	    	LOG_CLASS(jni_table,baseEnv,object_klass);
 	    } else 
 	    	log_field_string(NULL);
 

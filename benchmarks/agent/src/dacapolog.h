@@ -30,6 +30,10 @@
 #define LOG_PREFIX_GC                         "GC"
 #define LOG_PREFIX_HEAP_REPORT                "HR"
 
+#define LOG_PREFIX_CALL_CHAIN_START           "ES"
+#define LOG_PREFIX_CALL_CHAIN_FRAME           "EF"
+#define LOG_PREFIX_CALL_CHAIN_STOP            "EE"
+
 extern jrawMonitorID       lockLog;
 extern FILE*               logFile;
 extern jboolean            logState;
@@ -38,6 +42,8 @@ _Bool dacapo_log_init();
 
 void  callReportHeap(JNIEnv *env);
 void  setReportHeap(JNIEnv *env);
+void  setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable);
+
 
 void  log_field_string(const char* text);
 void  log_field_string_n(const char* text, int text_length);

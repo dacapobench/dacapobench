@@ -16,6 +16,7 @@ class Options {
 	public static final String RUNTIME                = "runtime";
 	public static final String ALLOCATE               = "allocate";
 	public static final String MONITOR                = "monitor";
+	public static final String CALL_CHAIN             = "call_chain";
 	
 	private boolean classInitialization = false;
 	private boolean methodCalls = false;

@@ -5,6 +5,9 @@ public final class Agent {
 	public  static boolean firstReportSinceForceGC = false;
 
 	private static Runtime runtime = Runtime.getRuntime();
+	private static long    callChainCount     = 0;
+	private static long    callChainFrequency = 1;
+	private static boolean callChainEnable = false;
 	
 	static {
 		localinit();
@@ -27,6 +30,14 @@ public final class Agent {
 	public static native void logMonitorEnter(Thread thread, Object obj);
 	
 	public static native void logMonitorExit(Thread thread, Object obj);
+	
+	public static native void logCallChain(Thread thread);
+	
+	public static void logCallChain() {
+		if (callChainEnable && ((++callChainCount)%callChainFrequency) == 0) {
+			logCallChain(Thread.currentThread());
+		}
+	}
 
 	public static void reportHeapAfterForceGC() {
 		if (firstReportSinceForceGC) {
@@ -52,4 +63,5 @@ public final class Agent {
 	}
 	
 	private static native void writeHeapReport(Thread thread, long used, long free, long total, long max);
+
 }
