@@ -22,6 +22,9 @@
 #define LOG_PREFIX_MONITOR_WAIT               "MW"
 #define LOG_PREFIX_MONITOR_WAITED             "Mw"
 
+#define LOG_PREFIX_VOLATILE                   "VF"
+#define LOG_PREFIX_VOLATILE_ACCESS            "VA"
+
 #define LOG_PREFIX_EXCEPTION                  "XT"
 #define LOG_PREFIX_EXCEPTION_CATCH            "XC"
 

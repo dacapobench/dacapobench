@@ -2,19 +2,21 @@
  * Currently this is just a skeleton.
  */
 
-/*
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 
-#include "dacapoagent.h"
-
 #include "jni.h"
 #include "jvmti.h"
+
+/*
+#include "dacapoagent.h"
+
 */
 
+#include "dacapo.h"
 #include "dacapoagent.h"
 #include "dacapooptions.h"
 #include "dacapoexception.h"
@@ -27,22 +29,25 @@
 #include "dacapomethod.h"
 #include "dacapocallchain.h"
 
-#include <sys/stat.h>
-
 /* C macros to create strings from tokens */
 #define _STRING(s) #s
 #define STRING(s) _STRING(s)
 
 /* C macros for version numbers */
-#define MAJOR_VERSION(v) (int)(( v & JVMTI_VERSION_MASK_MAJOR ) >> JVMTI_VERSION_SHIFT_MAJOR)
-#define MINOR_VERSION(v) (int)(( v & JVMTI_VERSION_MASK_MINOR ) >> JVMTI_VERSION_SHIFT_MINOR)
-#define MICRO_VERSION(v) (int)(( v & JVMTI_VERSION_MASK_MICRO ) >> JVMTI_VERSION_SHIFT_MICRO)
+#define MAJOR_VERSION(v) (int)(((v) & JVMTI_VERSION_MASK_MAJOR ) >> JVMTI_VERSION_SHIFT_MAJOR)
+#define MINOR_VERSION(v) (int)(((v) & JVMTI_VERSION_MASK_MINOR ) >> JVMTI_VERSION_SHIFT_MINOR)
+#define MICRO_VERSION(v) (int)(((v) & JVMTI_VERSION_MASK_MICRO ) >> JVMTI_VERSION_SHIFT_MICRO)
 
 #define STORE_CLASS_FILE_BASE "DACAPO_STORE"
 #define DEFAULT_STORE_CLASS_FILE_BASE "store"
 
 #define LOG_FILE_NAME "DACAPO_JVMTI_LOG_FILE"
 #define DEFAULT_LOG_FILE_NAME "dacapo-jvmti.log"
+
+struct class_list_s {
+    struct class_list_s* next;
+    jclass               klass;
+} *class_list_head = NULL, *class_list_tail = NULL;
 
 /* ------------------------------------------------------------------- */
 /* Cached data */
@@ -81,7 +86,8 @@ static void JNICALL callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 unsigned char** new_class_data);
 static void JNICALL callbackVMInit(jvmtiEnv *jvmti, JNIEnv *env, jthread thread);
 static void JNICALL callbackVMDeath(jvmtiEnv *jvmti, JNIEnv *env);
-static void JNICALL callbackClassPrepare(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jclass klass);
+
+static void processClassPrepare(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jclass klass);
 
 static void makePath(const char* name);
 static void reportCapabilities(FILE* fh, jvmtiCapabilities* capabilities);
@@ -246,7 +252,7 @@ static void defineCallbacks() {
     DEFINE_CALLBACK(&callbacks,VMDeath,JVMTI_EVENT_VM_DEATH);
     DEFINE_CALLBACK(&callbacks,ClassFileLoadHook,JVMTI_EVENT_CLASS_FILE_LOAD_HOOK);
     
-	if (isSelected(OPT_METHOD_EVENTS,NULL) || isSelected(OPT_LOAD_CLASSES,NULL)) {
+	if (isSelected(OPT_LOAD_CLASSES,NULL)) {
 		DEFINE_CALLBACK(&callbacks,ClassPrepare,JVMTI_EVENT_CLASS_PREPARE);
 	}
 
@@ -473,7 +479,28 @@ static void JNICALL
 callbackVMInit(jvmtiEnv *env, JNIEnv *jnienv, jthread thread)
 {
     jvmRunning = !FALSE;
+    
+    allocation_live(env, jnienv);
+    exception_live(env, jnienv);
+    method_live(env, jnienv);
+    monitor_live(env, jnienv);
+    thread_live(env, jnienv);
+    
+    while (class_list_head!=NULL) {
+	    struct class_list_s* next = class_list_head->next;
+        jclass klass = class_list_head->klass;
 
+		processClassPrepare(env, jnienv, thread, klass);
+
+	    allocation_class(env, jnienv, klass);
+	    exception_class(env, jnienv, klass);
+	    method_class(env, jnienv, klass);
+	    monitor_class(env, jnienv, klass);
+	    thread_class(env, jnienv, klass);
+
+	    free(class_list_head);
+	    class_list_head = next;
+	}  
 }
 
 /* JVMTI_EVENT_VM_DEATH */
@@ -508,14 +535,10 @@ static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 }
 
 
-/* JVMTI_EVENT_CLASS_PREPARE */
-static void JNICALL
-callbackClassPrepare(jvmtiEnv *jvmti_env,
+static void processClassPrepare(jvmtiEnv *jvmti_env,
             JNIEnv* jni_env,
             jthread thread,
             jclass klass) {
-    if (logFile==NULL || jvmStopped) return;
-    
 	jlong thread_tag = 0;
 	jlong class_tag = 0;
 	
@@ -533,7 +556,7 @@ callbackClassPrepare(jvmtiEnv *jvmti_env,
 	if (res!=JNI_OK) return;
 
 	char* signature = NULL;
-	char* generic = NULL;
+	char* generic   = NULL;
 
 	res = JVMTI_FUNC_PTR(baseEnv,GetClassSignature)(baseEnv, klass, &signature, &generic);
 	
@@ -554,6 +577,30 @@ callbackClassPrepare(jvmtiEnv *jvmti_env,
 	JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)methods);
 	JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature);
 	JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic);
+}
+
+/* JVMTI_EVENT_CLASS_PREPARE */
+void JNICALL
+callbackClassPrepare(jvmtiEnv *jvmti_env,
+            JNIEnv* jni_env,
+            jthread thread,
+            jclass klass) {
+    if (logFile==NULL || jvmStopped) return;
+    
+    if (jvmRunning)
+		processClassPrepare(jvmti_env, jni_env, thread, klass);
+	else {
+		/* delay class processing */
+		struct class_list_s* gklass = (struct class_list_s *)malloc(sizeof(struct class_list_s));
+		
+		gklass->klass = (*jni_env)->NewGlobalRef(jni_env,klass);
+		if (class_list_tail==NULL) {
+			class_list_head = class_list_tail = gklass;
+		} else {
+			class_list_tail->next = gklass;
+			class_list_tail = gklass;
+		}
+	}
 }
 
 /* */

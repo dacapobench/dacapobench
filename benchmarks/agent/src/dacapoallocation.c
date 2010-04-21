@@ -50,6 +50,14 @@ void allocation_logon(JNIEnv* env) {
 	}
 }
 
+void allocation_live(jvmtiEnv* jvmti, JNIEnv* env) {
+
+}
+
+void allocation_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
+
+}
+
 /* Callback for JVMTI_EVENT_VM_OBJECT_ALLOC */
 void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
                 jobject object, jclass object_klass, jlong size)

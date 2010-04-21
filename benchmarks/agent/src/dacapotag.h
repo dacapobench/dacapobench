@@ -5,8 +5,11 @@
 
 extern jrawMonitorID       lockTag;
 
+#define getTag(obj,tag)  GET_TAG(__FILE__, __LINE__, obj, tag)
+#define setTag(obj,tag)  SET_TAG(__FILE__, __LINE__, obj, tag)
+
 _Bool dacapo_tag_init();
-jboolean getTag(jobject object, jlong*  tag);
-jlong    setTag(jobject object, jlong  size);
+jboolean GET_TAG(char* file, int line, jobject object, jlong*  tag);
+jlong    SET_TAG(char* file, int line, jobject object, jlong  size);
 
 #endif

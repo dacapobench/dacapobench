@@ -21,7 +21,15 @@ void thread_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks
 	}
 }
 
+void thread_live(jvmtiEnv* jvmti, JNIEnv* env) {
+	
+}
+
 void thread_logon(JNIEnv* env) {
+
+}
+
+void thread_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
 
 }
 

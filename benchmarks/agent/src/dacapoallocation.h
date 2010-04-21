@@ -47,7 +47,9 @@
 void allocation_init();
 void allocation_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities);
 void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks);
+void allocation_live(jvmtiEnv* jvmti, JNIEnv* env);
 void allocation_logon(JNIEnv* env);
+void allocation_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass);
 
 void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
                 jobject object, jclass object_klass, jlong size);

@@ -26,12 +26,58 @@ jfieldID            callChainCountID;
 jfieldID            callChainFrequencyID;
 jfieldID            callChainEnableID;
 
+#define LOG_FILE_NAME_MAX 10000
+#define LOG_FILE_EXT_MAX  10000
+#define SEQUENCE_MAX        100
+#define LOG_FILE_LIMIT    (1<<30)
+
+char                baseLogFileName[LOG_FILE_NAME_MAX];
+char                baseLogFileExt[LOG_FILE_EXT_MAX];
+int                 fileNameSequence      = 0;
+long                logFileSequenceLength = 0;
+jboolean            check_limit = FALSE;
+
+static FILE* openLogFile() {
+	char logFileName[LOG_FILE_NAME_MAX+SEQUENCE_MAX];
+	int  fileSeq = fileNameSequence++;
+	
+	if (strlen(baseLogFileExt)==0)
+		sprintf(logFileName,"%s-%d",baseLogFileName,fileSeq);
+	else
+		sprintf(logFileName,"%s-%d.%s",baseLogFileName,fileSeq,baseLogFileExt);
+	
+	FILE* tmp = fopen(logFileName,"w"); 
+	if (logFile!=NULL) {
+		fclose(logFile);
+	}
+
+	logFileSequenceLength = 0;
+	logFile = tmp;
+	
+	return logFile; 
+}
+
 void setLogFileName(const char* log_file) {
 	if (logFile!=NULL) {
 		fclose(logFile);
 		logFile = NULL;
 	}
-	logFile = fopen(log_file,"w");
+
+	int ext = strlen(log_file);
+	while (0<ext && log_file[ext]!='.') ext--;
+
+	if (0<ext) {
+		strncpy(baseLogFileName,log_file,(ext<(LOG_FILE_NAME_MAX-1))?ext:(LOG_FILE_NAME_MAX-1));
+		strncpy(baseLogFileExt,log_file+ext+1,SEQUENCE_MAX-1);
+		baseLogFileExt[SEQUENCE_MAX-1] = '\0';
+	} else {
+		strcpy(baseLogFileName,log_file);
+		baseLogFileExt[0]='\0';
+	}
+
+	fileNameSequence      = 0;
+	logFileSequenceLength = 0;
+	logFile               = openLogFile(log_file);
 }
 
 void callReportHeap(JNIEnv *env) {
@@ -53,6 +99,10 @@ void setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable) {
 _Bool dacapo_log_init() {
 	if (JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent data", &(lockLog)) != JNI_OK)
 		return FALSE;
+
+	if (isSelected(OPT_LOG_FILE_LIMIT,NULL)) {
+		check_limit = TRUE;
+	}
 
 	/* make log file */
 	char tmpFile[10240];
@@ -394,9 +444,14 @@ static void write_field(const char* text, int text_length, _Bool use_delimiter) 
     temp_field[temp_length++] = field_delimiter;
 
     fwrite(temp_field,sizeof(char),temp_length,logFile);
+    
+    logFileSequenceLength += temp_length;
   } else {
-    if(text!=NULL && 0<text_length)
+    if(text!=NULL && 0<text_length) {
       fwrite(text,sizeof(char),text_length,logFile);
+    
+	  logFileSequenceLength += text_length;
+    }
   }
 }
 
@@ -466,6 +521,10 @@ void log_eol() {
   fwrite(&end_of_line,sizeof(char),1,logFile);
   first_field = TRUE;
   fflush(logFile);
+  
+  if (check_limit && LOG_FILE_LIMIT <= logFileSequenceLength) {
+  	openLogFile();
+  }  
 }
 
 

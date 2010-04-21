@@ -24,7 +24,15 @@ void method_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks
 	}
 }
 
+void method_live(jvmtiEnv* jvmti, JNIEnv* env) {
+
+}
+
 void method_logon(JNIEnv* env) {
+
+}
+
+void method_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
 
 }
 

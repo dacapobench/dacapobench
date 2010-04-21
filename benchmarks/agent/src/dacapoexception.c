@@ -22,7 +22,15 @@ void exception_capabilities(const jvmtiCapabilities* availableCapabilities, jvmt
     }
 }
 
+void exception_live(jvmtiEnv* jvmti, JNIEnv* env) {
+
+}
+
 void exception_logon(JNIEnv* env) {
+
+}
+
+void exception_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
 
 }
 

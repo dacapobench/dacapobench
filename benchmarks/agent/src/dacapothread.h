@@ -6,7 +6,9 @@
 void thread_init();
 void thread_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities);
 void thread_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks);
+void thread_live(jvmtiEnv* jvmti, JNIEnv* env);
 void thread_logon(JNIEnv* env);
+void thread_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass);
 
 void thread_log(JNIEnv* env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag);
 
