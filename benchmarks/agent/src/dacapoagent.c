@@ -251,11 +251,8 @@ static void defineCallbacks() {
 	DEFINE_CALLBACK(&callbacks,VMInit,JVMTI_EVENT_VM_INIT);
     DEFINE_CALLBACK(&callbacks,VMDeath,JVMTI_EVENT_VM_DEATH);
     DEFINE_CALLBACK(&callbacks,ClassFileLoadHook,JVMTI_EVENT_CLASS_FILE_LOAD_HOOK);
+	DEFINE_CALLBACK(&callbacks,ClassPrepare,JVMTI_EVENT_CLASS_PREPARE);
     
-	if (isSelected(OPT_LOAD_CLASSES,NULL)) {
-		DEFINE_CALLBACK(&callbacks,ClassPrepare,JVMTI_EVENT_CLASS_PREPARE);
-	}
-
 	monitor_callbacks(&capabilities, &callbacks);
 	allocation_callbacks(&capabilities, &callbacks);
 	exception_callbacks(&capabilities, &callbacks);
@@ -478,6 +475,8 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 static void JNICALL
 callbackVMInit(jvmtiEnv *env, JNIEnv *jnienv, jthread thread)
 {
+	fprintf(stderr,"callbackVMInit\n"); 
+        
     jvmRunning = !FALSE;
     
     allocation_live(env, jnienv);
@@ -491,12 +490,6 @@ callbackVMInit(jvmtiEnv *env, JNIEnv *jnienv, jthread thread)
         jclass klass = class_list_head->klass;
 
 		processClassPrepare(env, jnienv, thread, klass);
-
-	    allocation_class(env, jnienv, klass);
-	    exception_class(env, jnienv, klass);
-	    method_class(env, jnienv, klass);
-	    monitor_class(env, jnienv, klass);
-	    thread_class(env, jnienv, klass);
 
 	    free(class_list_head);
 	    class_list_head = next;
@@ -551,17 +544,17 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	jint       method_count = 0;
 	jmethodID* methods = NULL;
 	          
-	jint res = JVMTI_FUNC_PTR(baseEnv,GetClassMethods)(baseEnv,klass,&method_count,&methods);
+	jint res = JVMTI_FUNC_PTR(jvmti_env,GetClassMethods)(jvmti_env,klass,&method_count,&methods);
 
 	if (res!=JNI_OK) return;
 
 	char* signature = NULL;
 	char* generic   = NULL;
 
-	res = JVMTI_FUNC_PTR(baseEnv,GetClassSignature)(baseEnv, klass, &signature, &generic);
+	res = JVMTI_FUNC_PTR(jvmti_env,GetClassSignature)(jvmti_env, klass, &signature, &generic);
 	
 	if (res!=JNI_OK) {
-		JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)methods);
+		JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)methods);
 		return;
 	}	
 
@@ -574,10 +567,18 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	while(i<method_count) reportMethod(signature,class_tag,methods[i++]);
 	exitCriticalSection(&lockLog);
 	
-	JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)methods);
-	JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature);
-	JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic);
+	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)methods);
+	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)signature);
+	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)generic);
+	
+	allocation_class(jvmti_env, jni_env, klass);
+	exception_class(jvmti_env, jni_env, klass);
+	method_class(jvmti_env, jni_env, klass);
+	monitor_class(jvmti_env, jni_env, klass);
+	thread_class(jvmti_env, jni_env, klass);
 }
+
+#define BIN_STR(x) ((x)?"true":"false")
 
 /* JVMTI_EVENT_CLASS_PREPARE */
 void JNICALL

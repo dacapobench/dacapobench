@@ -21,7 +21,7 @@ void monitor_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiC
 		monitor_events = TRUE;
 		capabilities->can_generate_monitor_events         = availableCapabilities->can_generate_monitor_events;
 		capabilities->can_generate_field_access_events    = availableCapabilities->can_generate_monitor_events;
-		if (capabilities->can_generate_field_access_events)
+		if (isSelected(OPT_VOLATILE,NULL) && capabilities->can_generate_field_access_events)
 			field_access_events = TRUE;
 	}
 }
@@ -33,7 +33,8 @@ void monitor_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallback
 		DEFINE_CALLBACK(callbacks,MonitorWait,JVMTI_EVENT_MONITOR_WAIT);
 		DEFINE_CALLBACK(callbacks,MonitorWaited,JVMTI_EVENT_MONITOR_WAITED);
 		DEFINE_CALLBACK(callbacks,ClassPrepare,JVMTI_EVENT_CLASS_PREPARE);
-		DEFINE_CALLBACK(callbacks,FieldAccess,JVMTI_EVENT_FIELD_ACCESS);
+		if (field_access_events)
+			DEFINE_CALLBACK(callbacks,FieldAccess,JVMTI_EVENT_FIELD_ACCESS);
 	}
 }
 
@@ -151,16 +152,14 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 		
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 		
+		log_field_jlong(object_tag);
 		jniNativeInterface* jni_table;
 		if (object_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
-		}
 
-		log_field_jlong(object_tag);
-		if (object_has_new_tag) {
 			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
 		} else {
 			log_field_string(NULL);
@@ -189,16 +188,14 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 		
+		log_field_jlong(object_tag);
 		jniNativeInterface* jni_table;
 		if (object_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
-		}
 
-		log_field_jlong(object_tag);
-		if (object_has_new_tag) {
 			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
 		} else {
 			log_field_string(NULL);
@@ -226,16 +223,14 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 		
+		log_field_jlong(object_tag);
 		jniNativeInterface* jni_table;
 		if (object_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
-		}
 
-		log_field_jlong(object_tag);
-		if (object_has_new_tag) {
 			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
 		} else {
 			log_field_string(NULL);
@@ -263,16 +258,14 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 
+		log_field_jlong(object_tag);
 		jniNativeInterface* jni_table;
 		if (object_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
-		}
-		
-		log_field_jlong(object_tag);
-		if (object_has_new_tag) {
+
 			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
 		} else {
 			log_field_string(NULL);
@@ -301,16 +294,14 @@ void JNICALL callbackFieldAccess(jvmtiEnv *jvmti_env,JNIEnv* jni_env,jthread thr
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 
+		log_field_jlong(object_tag);
 		jniNativeInterface* jni_table;
 		if (object_has_new_tag) {
 			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
 				fprintf(stderr, "failed to get JNI function table\n");
 				exit(1);
 			}
-		}
-		
-		log_field_jlong(object_tag);
-		if (object_has_new_tag) {
+
 			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
 		} else {
 			log_field_string(NULL);
