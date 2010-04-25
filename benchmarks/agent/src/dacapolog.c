@@ -15,6 +15,8 @@
 #include "dacapocallchain.h"
 
 jrawMonitorID       lockLog;
+jrawMonitorID       agentLock;
+
 FILE*               logFile = NULL;
 jboolean			logState = FALSE;
 struct timeval      startTime;
@@ -100,6 +102,10 @@ _Bool dacapo_log_init() {
 	if (JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent data", &(lockLog)) != JNI_OK)
 		return FALSE;
 
+	if (JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent lock", &(agentLock)) != JNI_OK) {
+		return FALSE;
+	}
+
 	if (isSelected(OPT_LOG_FILE_LIMIT,NULL)) {
 		check_limit = TRUE;
 	}
@@ -161,14 +167,14 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
 	    jlong    thread_tag = 0;
 	    jboolean new_thread_tag;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
 	    const char *c_e = JVMTI_FUNC_PTR(env,GetStringUTFChars)(env, e, &iscopy_e);
 	    const char *c_m = JVMTI_FUNC_PTR(env,GetStringUTFChars)(env, m, &iscopy_m);
 
-	    enterCriticalSection(&lockLog);
+	    rawMonitorEnter(&lockLog);
 	    log_field_string(c_e);
 	    
 		jniNativeInterface* jni_table;
@@ -193,7 +199,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
 		
 	    log_field_string(c_m);
 	    log_eol();
-	    exitCriticalSection(&lockLog);
+	    rawMonitorExit(&lockLog);
 
 	    JVMTI_FUNC_PTR(env,ReleaseStringUTFChars)(env, e, c_e);
 	    JVMTI_FUNC_PTR(env,ReleaseStringUTFChars)(env, m, c_m);
@@ -227,10 +233,10 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_start
     if (!logState) {
 	    logState = logFile != NULL;
 	    if (logState) {
-		    enterCriticalSection(&lockLog);
+		    rawMonitorEnter(&lockLog);
 	    	log_field_string("START");
 	    	log_eol();
-		    exitCriticalSection(&lockLog);
+		    rawMonitorExit(&lockLog);
 	    	
 	    	allocation_logon(env);
 			exception_logon(env);
@@ -271,12 +277,12 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorEnter
 	jlong thread_tag = 0;
 	jlong object_tag = 0;
 
-	enterCriticalSection(&lockTag);
+	rawMonitorEnter(&lockTag);
 	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 	jboolean object_has_new_tag = getTag(object, &object_tag);
-	exitCriticalSection(&lockTag);
+	rawMonitorExit(&lockTag);
 
-	enterCriticalSection(&lockLog);
+	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_MONITOR_AQUIRE);
 	log_field_time();
 	
@@ -313,7 +319,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorEnter
 	}
 	
 	log_eol();
-	exitCriticalSection(&lockLog);
+	rawMonitorExit(&lockLog);
 }
 
 /*
@@ -328,12 +334,12 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
 	jlong thread_tag = 0;
 	jlong object_tag = 0;
 
-	enterCriticalSection(&lockTag);
+	rawMonitorEnter(&lockTag);
 	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 	jboolean object_has_new_tag = getTag(object, &object_tag);
-	exitCriticalSection(&lockTag);
+	rawMonitorExit(&lockTag);
 
-	enterCriticalSection(&lockLog);
+	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_MONITOR_RELEASE);
 	log_field_time();
 	
@@ -370,7 +376,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
 	}
 	
 	log_eol();
-	exitCriticalSection(&lockLog);
+	rawMonitorExit(&lockLog);
 }
 
 /*
@@ -391,11 +397,11 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logCallChain
 JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_writeHeapReport(JNIEnv *local_env, jclass klass, jobject thread, jlong used, jlong free, jlong total, jlong max) {
 	jlong thread_tag = 0;
 
-	enterCriticalSection(&lockTag);
+	rawMonitorEnter(&lockTag);
 	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-	exitCriticalSection(&lockTag);
+	rawMonitorExit(&lockTag);
 
-	enterCriticalSection(&lockLog);
+	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_HEAP_REPORT);
 
 	thread_log(local_env, thread, thread_tag, thread_has_new_tag);
@@ -405,7 +411,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_writeHeapReport(JNIEnv *
 	log_field_jlong(total);
 	log_field_jlong(max);
 	log_eol();    
-	exitCriticalSection(&lockLog);
+	rawMonitorExit(&lockLog);
 	
     return;
 }
@@ -525,6 +531,24 @@ void log_eol() {
   if (check_limit && LOG_FILE_LIMIT <= logFileSequenceLength) {
   	openLogFile();
   }  
+}
+
+/*
+ * Class:     org_dacapo_instrument_Agent
+ * Method:    agentThread
+ * Signature: (Ljava/lang/Thread;)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_agentThread
+  (JNIEnv *env, jclass klass, jobject thread) {
+
+	rawMonitorEnter(&agentLock);
+
+	while (!jvmStopped) {
+		rawMonitorWait(&agentLock,0);
+	}
+	
+	rawMonitorExit(&agentLock);
+  
 }
 
 

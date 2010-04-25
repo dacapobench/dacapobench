@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include <pthread.h>
+
 #include "jni.h"
 #include "jvmti.h"
 
@@ -77,6 +79,7 @@ char                breakOnLoadClass[10240];
 /* ------------------------------------------------------------------- */
 static void processCapabilities();
 static void processOptions();
+static void agent_thread_main(void* arg);
 
 static void JNICALL callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jclass class_being_redefined, jobject loader,
@@ -434,7 +437,7 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 {
     if (jvmRunning && !jvmStopped) {
         char temp[10240];
-        enterCriticalSection(&lockClass);
+        rawMonitorEnter(&lockClass);
 
         if (instrumentClasses && strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) {
             *new_class_data     = NULL;
@@ -467,7 +470,7 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 			if (strcmp(name,breakOnLoadClass)==0) exit(1);
 		}
 
-        exitCriticalSection(&lockClass);
+        rawMonitorExit(&lockClass);
     }
 }
 
@@ -475,8 +478,6 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 static void JNICALL
 callbackVMInit(jvmtiEnv *env, JNIEnv *jnienv, jthread thread)
 {
-	fprintf(stderr,"callbackVMInit\n"); 
-        
     jvmRunning = !FALSE;
     
     allocation_live(env, jnienv);
@@ -502,6 +503,10 @@ callbackVMDeath(jvmtiEnv *jvmti, JNIEnv *env)
 {
     logState   = FALSE;
     jvmStopped = !FALSE;
+    
+    rawMonitorEnter(&agentLock);
+    rawMonitorNotify(&agentLock);
+    rawMonitorExit(&agentLock);
 }
 
 static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
@@ -536,10 +541,10 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	jlong class_tag = 0;
 	
 	// jclass GetObjectClass(JNIEnv *env, jobject obj);
-	enterCriticalSection(&lockTag);
+	rawMonitorEnter(&lockTag);
 	getTag(thread,&thread_tag);
 	getTag(klass,&class_tag);
-	exitCriticalSection(&lockTag);
+	rawMonitorExit(&lockTag);
 
 	jint       method_count = 0;
 	jmethodID* methods = NULL;
@@ -559,13 +564,13 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	}	
 
 	int i=0;	
-	enterCriticalSection(&lockLog);
+	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_CLASS_PREPARE);
 	log_field_jlong(class_tag);
 	log_field_string(signature);
 	log_eol();
 	while(i<method_count) reportMethod(signature,class_tag,methods[i++]);
-	exitCriticalSection(&lockLog);
+	rawMonitorExit(&lockLog);
 	
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)methods);
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)signature);
@@ -595,6 +600,7 @@ callbackClassPrepare(jvmtiEnv *jvmti_env,
 		struct class_list_s* gklass = (struct class_list_s *)malloc(sizeof(struct class_list_s));
 		
 		gklass->klass = (*jni_env)->NewGlobalRef(jni_env,klass);
+		gklass->next  = NULL;
 		if (class_list_tail==NULL) {
 			class_list_head = class_list_tail = gklass;
 		} else {
@@ -626,4 +632,3 @@ static void makePath(const char* name) {
         while(fullName[pos]!='\0'&&fullName[pos]!='/') pos++;
     }
 }
-

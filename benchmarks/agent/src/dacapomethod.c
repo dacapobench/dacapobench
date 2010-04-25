@@ -41,16 +41,16 @@ void JNICALL callbackMethodEntry(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 	if (logState) {
 		jlong thread_tag = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_METHOD_ENTER);
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 		log_field_pointer(method);
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 

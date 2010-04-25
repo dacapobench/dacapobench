@@ -47,12 +47,12 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 		jlong thread_tag = 0;
 		jlong exception_tag = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean exception_has_new_tag = getTag(exception, &exception_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_EXCEPTION);
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
@@ -109,7 +109,7 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 		if (generic!=NULL) { JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic); generic = NULL; }
 		
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 
@@ -119,12 +119,12 @@ void JNICALL callbackExceptionCatch(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthrea
 		jlong thread_tag = 0;
 		jlong exception_tag = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean exception_has_new_tag = getTag(exception, &exception_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_EXCEPTION_CATCH);
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
@@ -159,7 +159,7 @@ void JNICALL callbackExceptionCatch(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthrea
 		if (generic_ptr!=NULL)   JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic_ptr);
 	
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 

@@ -33,10 +33,10 @@ void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallb
 
 static jint forceGC(JNIEnv *env) {
 	gcCount = 0;
-	enterCriticalSection(&lockTag);
+	rawMonitorEnter(&lockTag);
 	log_field_string(LOG_PREFIX_GC);
 	log_eol();
-	exitCriticalSection(&lockTag);
+	rawMonitorExit(&lockTag);
 	jint res = JVMTI_FUNC_PTR(baseEnv,ForceGarbageCollection)(baseEnv);
 	setReportHeap(env);
 	return res;
@@ -70,14 +70,14 @@ void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
 		if (0<gcForceCycle && gcForceCycle<gcCount)
 			forceGC(env);
 		
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jlong tag = setTag(object, size);
 		jboolean class_has_new_tag = getTag(object_klass, &class_tag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
 		/* trace allocation */
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_ALLOCATION);
 
 		log_field_jlong(tag);
@@ -97,8 +97,7 @@ void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
 		log_field_jlong(size);
 		
 		log_eol();
-		
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 

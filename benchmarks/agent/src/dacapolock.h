@@ -3,7 +3,9 @@
 
 #include "dacapo.h"
 
-void enterCriticalSection(jrawMonitorID* lock);
-void exitCriticalSection(jrawMonitorID* lock);
+void     rawMonitorEnter(jrawMonitorID* lock);
+void     rawMonitorExit(jrawMonitorID* lock);
+jboolean rawMonitorWait(jrawMonitorID* lock,jlong timeout);
+void     rawMonitorNotify(jrawMonitorID* lock);
 
 #endif

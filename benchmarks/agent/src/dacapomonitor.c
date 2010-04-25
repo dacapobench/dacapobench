@@ -83,10 +83,10 @@ void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
 
 	jlong class_tag = 0;
 
-	enterCriticalSection(&lockTag);
+	rawMonitorEnter(&lockTag);
 	/* the class must have been tagged already */
 	getTag(klass, &class_tag);
-	exitCriticalSection(&lockTag);
+	rawMonitorExit(&lockTag);
 
 
 	/*
@@ -141,12 +141,12 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 		jlong thread_tag = 0;
 		jlong object_tag = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTER);
 		log_field_time();
 		
@@ -166,7 +166,7 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 		}
 
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 
@@ -176,12 +176,12 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 		jlong thread_tag = 0;
 		jlong object_tag = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTERED);
 		log_field_time();
 
@@ -202,7 +202,7 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 		}
 
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 
@@ -212,12 +212,12 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		jlong thread_tag = 0;
 		jlong object_tag = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAIT);
 		log_field_time();
 
@@ -237,7 +237,7 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		}
 
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 
@@ -247,12 +247,12 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 		jlong thread_tag = 0;
 		jlong object_tag = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAITED);
 		log_field_time();
 
@@ -272,7 +272,7 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 		}
 		
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }
 
@@ -282,14 +282,14 @@ void JNICALL callbackFieldAccess(jvmtiEnv *jvmti_env,JNIEnv* jni_env,jthread thr
 		jlong object_tag = 0;
 		jlong class_tag  = 0;
 
-		enterCriticalSection(&lockTag);
+		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean object_has_new_tag = FALSE;
 		if (object!=NULL) object_has_new_tag = getTag(object, &object_tag);
 		getTag(field_klass, &class_tag);
-		exitCriticalSection(&lockTag);
+		rawMonitorExit(&lockTag);
 			
-		enterCriticalSection(&lockLog);
+		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_VOLATILE_ACCESS);
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
@@ -311,6 +311,6 @@ void JNICALL callbackFieldAccess(jvmtiEnv *jvmti_env,JNIEnv* jni_env,jthread thr
 		log_field_pointer(field);
 		
 		log_eol();
-		exitCriticalSection(&lockLog);
+		rawMonitorExit(&lockLog);
 	}
 }

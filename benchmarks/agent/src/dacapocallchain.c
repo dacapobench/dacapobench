@@ -37,9 +37,9 @@ void call_chain_logon(JNIEnv* env) {
 void log_call_chain(JNIEnv *env, jclass klass, jobject thread) {
 	jlong thread_tag = 0;
 
-	enterCriticalSection(&lockTag);
+	rawMonitorEnter(&lockTag);
 	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-	exitCriticalSection(&lockTag);
+	rawMonitorExit(&lockTag);
 
 	/* iterate through frames */
 	jvmtiFrameInfo frames[MAX_NUMBER_OF_FRAMES];
@@ -48,7 +48,7 @@ void log_call_chain(JNIEnv *env, jclass klass, jobject thread) {
 
 	err = JVMTI_FUNC_PTR(baseEnv,GetStackTrace)(baseEnv, thread, START_FRAME, MAX_NUMBER_OF_FRAMES,frames, &count);
 
-	enterCriticalSection(&lockLog);
+	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_CALL_CHAIN_START);
 	thread_log(env, thread, thread_tag, thread_has_new_tag);
 	log_eol();
@@ -112,7 +112,7 @@ void log_call_chain(JNIEnv *env, jclass klass, jobject thread) {
 	log_field_string(LOG_PREFIX_CALL_CHAIN_STOP);
 	log_field_jlong(thread_tag);
 	log_eol();
-	exitCriticalSection(&lockLog);
+	rawMonitorExit(&lockLog);
 }
 
 

@@ -11,6 +11,28 @@ public final class Agent {
 	
 	static {
 		localinit();
+		
+		final Object waiter = new Object();
+		
+		synchronized (waiter) {
+			Thread thread = new Thread () {
+				public void run() {
+					synchronized(waiter) {
+						waiter.notify();
+					};
+					agentThread(this);
+				}
+			};
+			
+			thread.setDaemon(true);
+			
+			thread.start();
+			
+			try {
+				// wait for the Agent daemon to start
+				waiter.wait();
+			} catch (Exception e) { }
+		};
 	}
 	
 	public static native void localinit();
@@ -64,4 +86,5 @@ public final class Agent {
 	
 	private static native void writeHeapReport(Thread thread, long used, long free, long total, long max);
 
+	protected static native void agentThread(Thread thread);
 }

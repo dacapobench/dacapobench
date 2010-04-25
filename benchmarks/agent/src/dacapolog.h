@@ -38,6 +38,8 @@
 #define LOG_PREFIX_CALL_CHAIN_STOP            "EE"
 
 extern jrawMonitorID       lockLog;
+extern jrawMonitorID       agentLock;
+
 extern FILE*               logFile;
 extern jboolean            logState;
 
