@@ -11,6 +11,7 @@
 
 #define LOG_PREFIX_THREAD_START               "TS"
 #define LOG_PREFIX_THREAD_STOP                "TE"
+#define LOG_PREFIX_THREAD_STATUS              "TA"
 
 #define LOG_PREFIX_METHOD_ENTER               "CS"
 #define LOG_PREFIX_METHOD_EXIT                "CE"

@@ -7,32 +7,83 @@ public final class Agent {
 	private static Runtime runtime = Runtime.getRuntime();
 	private static long    callChainCount     = 0;
 	private static long    callChainFrequency = 1;
+	private static long    agentIntervalTime  = 0; // the number of milliseconds the agent should act on
 	private static boolean callChainEnable = false;
+	private static Object  waiter = new Object();
+	private static AgentThread agentThread = null;
+	
+	private static class AgentThread extends Thread {
+		boolean agentThreadStarted = false;
+		boolean logon = false;
+		
+		public AgentThread() {
+			super("agent thread");
+			
+			setDaemon(true);
+		}
+
+		public synchronized boolean setLogon(boolean value) {
+			boolean tmp = logon;
+			logon = value;
+			if (!tmp && value) notify();
+			return value != tmp;
+		}
+		
+		private synchronized void startup() {
+			agentThreadStarted = true;
+			notify();
+		}
+		
+		public synchronized void started() {
+			while (! agentThreadStarted) {
+				try { wait(); } catch (Exception e) { }
+			}
+		}
+		
+		public void run() {
+			startup();
+
+			if (0 < agentIntervalTime)
+				for(;;) intervalAgent();
+		}
+		
+		private synchronized void waitForLogon() {
+			while (! logon) {
+				try { wait(); } catch (Exception e) { }
+			}
+		}
+		
+		private void intervalAgent() {
+			// set a start time.
+			long currentTime = System.currentTimeMillis();
+			
+			waitForLogon();
+			
+			agentThread(this);
+			
+			// set up an alarm...
+			long tempTime  = System.currentTimeMillis();
+			long sleepTime = agentIntervalTime + tempTime - currentTime;
+			
+			// set new current time, to next interval
+			currentTime += agentIntervalTime*((tempTime - currentTime)%agentIntervalTime + 1);
+			
+			// wait what ever time required
+			if (sleepTime>0) 
+				try { 
+					this.sleep(sleepTime); 
+				} catch (Exception e) { }
+		}
+	};
 	
 	static {
 		localinit();
 		
-		final Object waiter = new Object();
+		agentThread = new AgentThread();
 		
-		synchronized (waiter) {
-			Thread thread = new Thread () {
-				public void run() {
-					synchronized(waiter) {
-						waiter.notify();
-					};
-					agentThread(this);
-				}
-			};
-			
-			thread.setDaemon(true);
-			
-			thread.start();
-			
-			try {
-				// wait for the Agent daemon to start
-				waiter.wait();
-			} catch (Exception e) { }
-		};
+		agentThread.start();
+
+		agentThread.started();
 	}
 	
 	public static native void localinit();
@@ -45,9 +96,19 @@ public final class Agent {
 	
 	public static native void logAlloc(Thread thread, Object obj);
 	
-	public static native void start();
+	public static void start() {
+		if (agentThread.setLogon(true))
+			internalStart();
+	}
 	
-	public static native void stop();
+	private static native void internalStart();
+	
+	public static void stop() {
+		if (agentThread.setLogon(false))
+			internalStop();
+	}
+	
+	private static native void internalStop();
 	
 	public static native void logMonitorEnter(Thread thread, Object obj);
 	

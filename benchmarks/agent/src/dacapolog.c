@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <sys/time.h>
 
 #include <jni.h>
@@ -23,6 +24,7 @@ struct timeval      startTime;
 jclass              log_class = NULL;
 jmethodID           reportHeapID;
 jfieldID            firstReportSinceForceGCID;
+jfieldID            agentIntervalTimeID;
 
 jfieldID            callChainCountID;
 jfieldID            callChainFrequencyID;
@@ -127,11 +129,20 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_localinit
 {
 	reportHeapID              = (*env)->GetStaticMethodID(env,klass,"reportHeap","()V");
 	firstReportSinceForceGCID = (*env)->GetStaticFieldID(env,klass,"firstReportSinceForceGC","Z");
+	agentIntervalTimeID       = (*env)->GetStaticFieldID(env,klass,"agentIntervalTime","J");
 	callChainCountID          = (*env)->GetStaticFieldID(env,klass,"callChainCount","J");
 	callChainFrequencyID      = (*env)->GetStaticFieldID(env,klass,"callChainFrequency","J");
 	callChainEnableID         = (*env)->GetStaticFieldID(env,klass,"callChainEnable","Z");
 
 	log_class                 = (*env)->NewGlobalRef(env, klass);
+	
+	char tmp[1024];
+	if (isSelected(OPT_INTERVAL,tmp)) {
+		int value = atoi(tmp);
+		
+		if (value > 0)
+			(*env)->SetStaticLongField(env,log_class,agentIntervalTimeID,(jlong)value);
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_wierd
@@ -227,7 +238,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_setLogFileName
  * Method:    start
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_start
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalStart
   (JNIEnv *env, jclass klass)
 {
     if (!logState) {
@@ -253,7 +264,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_start
  * Method:    stop
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_stop
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalStop
   (JNIEnv *env, jclass klass)
 {
 	jboolean tmp = logState;
@@ -538,17 +549,8 @@ void log_eol() {
  * Method:    agentThread
  * Signature: (Ljava/lang/Thread;)V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_agentThread
-  (JNIEnv *env, jclass klass, jobject thread) {
-
-	rawMonitorEnter(&agentLock);
-
-	while (!jvmStopped) {
-		rawMonitorWait(&agentLock,0);
-	}
-	
-	rawMonitorExit(&agentLock);
-  
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_agentThread(JNIEnv *env, jclass klass, jobject thread) {
+	fprintf(stderr,"agentThread\n");
 }
 
 

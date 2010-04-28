@@ -12,6 +12,8 @@ void thread_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass);
 
 void thread_log(JNIEnv* env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag);
 
+void threads_states(JNIEnv* env);
+
 void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread);
 void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread);
 void JNICALL callbackMethodEntry(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method);

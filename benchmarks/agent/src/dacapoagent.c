@@ -492,6 +492,8 @@ callbackVMInit(jvmtiEnv *env, JNIEnv *jnienv, jthread thread)
 
 		processClassPrepare(env, jnienv, thread, klass);
 
+		(*jnienv)->DeleteGlobalRef(jnienv,klass);
+
 	    free(class_list_head);
 	    class_list_head = next;
 	}  

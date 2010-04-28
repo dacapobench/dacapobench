@@ -21,6 +21,7 @@
 #define OPT_CALL_CHAIN       "call_chain"
 #define OPT_LOG_FILE_LIMIT   "log_limit"
 #define OPT_VOLATILE         "volatile"
+#define OPT_INTERVAL         "interval"
 
 _Bool isSelected(const char* option, char* argument);
 _Bool hasArgument(const char* option);
