@@ -148,7 +148,7 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTER);
-		log_field_time();
+		log_field_current_time();
 		
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 		
@@ -183,7 +183,7 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTERED);
-		log_field_time();
+		log_field_current_time();
 
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
@@ -219,7 +219,7 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAIT);
-		log_field_time();
+		log_field_current_time();
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 		
@@ -254,7 +254,7 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAITED);
-		log_field_time();
+		log_field_current_time();
 
 		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 

@@ -12,6 +12,7 @@
 #define LOG_PREFIX_THREAD_START               "TS"
 #define LOG_PREFIX_THREAD_STOP                "TE"
 #define LOG_PREFIX_THREAD_STATUS              "TA"
+#define LOG_PREFIX_THREAD_TIME                "TT"               
 
 #define LOG_PREFIX_METHOD_ENTER               "CS"
 #define LOG_PREFIX_METHOD_EXIT                "CE"
@@ -38,6 +39,7 @@
 #define LOG_PREFIX_CALL_CHAIN_FRAME           "EF"
 #define LOG_PREFIX_CALL_CHAIN_STOP            "EE"
 
+
 extern jrawMonitorID       lockLog;
 extern jrawMonitorID       agentLock;
 
@@ -58,7 +60,8 @@ void  log_field_int(int v);
 void  log_field_pointer(const void* p);
 void  log_field_jlong(jlong v);
 void  log_field_long(long v);
-void  log_field_time();
+void  log_field_current_time();
+void  log_field_time(struct timeval* tv);
 void  log_eol();
 
 #endif

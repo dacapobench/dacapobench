@@ -1,3 +1,5 @@
+#include <sys/time.h>
+
 #include "dacapothread.h"
 
 #include "dacapotag.h"
@@ -19,6 +21,8 @@ struct thread_list_s {
 	struct thread_list_s* next;
 	jlong     tag;
 	jthread   thread;
+	jlong     lastCPUTime;
+	jlong     diffCPUTime;
 };
 
 jrawMonitorID       lockThreadData;
@@ -38,7 +42,9 @@ void thread_init() {
 }
 
 void thread_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities) {
-
+	if (isSelected(OPT_INTERVAL,NULL)) {
+		capabilities->can_get_thread_cpu_time = availableCapabilities->can_get_thread_cpu_time;
+	}
 }
 
 void thread_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks) {
@@ -64,7 +70,6 @@ void thread_live(jvmtiEnv* jvmti, JNIEnv* env) {
 }
 
 void thread_logon(JNIEnv* jnienv) {
-	/*
 	rawMonitorEnter(&lockThreadData);
 	while (thread_head!=NULL) {
 		struct thread_s* temp = thread_head;
@@ -105,12 +110,14 @@ void thread_logon(JNIEnv* jnienv) {
 			} else {
 				struct thread_list_s* tempList = (struct thread_list_s*)malloc(sizeof(struct thread_list_s));
 				
-				tempList->thread = temp->thread;
-				tempList->next   = NULL;
-				tempList->tag    = temp->tag;
+				tempList->thread      = temp->thread;
+				tempList->next        = NULL;
+				tempList->tag         = temp->tag;
+				tempList->lastCPUTime = 0;
+				JVMTI_FUNC_PTR(baseEnv,GetThreadCpuTime)(baseEnv,temp->thread,&(tempList->lastCPUTime));
 				
 				if (thread_list_tail==NULL) {
-					thread_list_head = thread_list_tail = tempList;				
+					thread_list_head       = thread_list_tail = tempList;				
 				} else {
 					thread_list_tail->next = tempList;
 					thread_list_tail       = tempList;				
@@ -119,7 +126,6 @@ void thread_logon(JNIEnv* jnienv) {
 		}
 	}
 	rawMonitorExit(&lockThreadData);
-	*/
 }
 
 void thread_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
@@ -153,7 +159,7 @@ static void logThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread,
 {
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_THREAD_START);
-	log_field_time();
+	log_field_current_time();
 
 	thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 	
@@ -189,9 +195,10 @@ void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		if (found==NULL) {
 			found = (struct thread_list_s*)malloc(sizeof(struct thread_list_s));
 			
-			found->thread = (*jni_env)->NewGlobalRef(jni_env,thread);
-			found->tag    = thread_tag;
-			found->next   = NULL;
+			found->thread        = (*jni_env)->NewGlobalRef(jni_env,thread);
+			found->tag           = thread_tag;
+			found->next          = NULL;
+			found->lastCPUTime   = 0;
 			
 			if (thread_list_head == NULL)
 				thread_list_head = thread_list_tail = found;
@@ -229,7 +236,7 @@ static void logThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, j
 {
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_THREAD_STOP);
-	log_field_time();
+	log_field_current_time();
 	
 	thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
 	
@@ -316,5 +323,32 @@ void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 }
 
 void threads_states(JNIEnv* env) {
-	return;
+	struct timeval tv;
+    gettimeofday(&tv, NULL);
+
+	jlong index = 0;
+	rawMonitorEnter(&lockThreadData);
+	struct thread_list_s *temp = thread_list_head;
+	while (temp != NULL) {
+		jlong thread_time = temp->lastCPUTime;
+		JVMTI_FUNC_PTR(baseEnv,GetThreadCpuTime)(baseEnv,temp->thread,&thread_time);
+
+		temp->diffCPUTime = thread_time - temp->lastCPUTime;
+		temp->lastCPUTime = thread_time;
+		temp = temp->next;
+	}
+
+	temp = thread_list_head;
+	while (temp != NULL) {
+		rawMonitorEnter(&lockLog);
+		log_field_string(LOG_PREFIX_THREAD_TIME);
+		log_field_time(&tv);
+		log_field_jlong(index++);
+		log_field_jlong(temp->tag);
+		log_field_jlong(temp->diffCPUTime/1000); /* time in microseconds */
+		log_eol();
+		rawMonitorExit(&lockLog);
+		temp = temp->next;
+	}
+	rawMonitorExit(&lockThreadData);
 }

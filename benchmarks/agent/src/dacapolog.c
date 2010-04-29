@@ -295,7 +295,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorEnter
 
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_MONITOR_AQUIRE);
-	log_field_time();
+	log_field_current_time();
 	
 	jniNativeInterface* jni_table;
 	if (thread_has_new_tag || object_has_new_tag) {
@@ -352,7 +352,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
 
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_MONITOR_RELEASE);
-	log_field_time();
+	log_field_current_time();
 	
 	jniNativeInterface* jni_table;
 	if (thread_has_new_tag || object_has_new_tag) {
@@ -527,11 +527,15 @@ void log_field_string_n(const char* text, int field_length) {
   write_field(text,field_length,use_delimiter);
 }
 
-void log_field_time() {
+void log_field_time(struct timeval* tv) {
+    long t = (tv->tv_sec - startTime.tv_sec) * 1000000 + (tv->tv_usec - startTime.tv_usec);
+    log_field_long(t);
+}
+
+void log_field_current_time() {
 	struct timeval tv;
     gettimeofday(&tv, NULL);
-    long t = (tv.tv_sec - startTime.tv_sec) * 1000000 + (tv.tv_usec - startTime.tv_usec);
-    log_field_long(t);
+    log_field_time(&tv);
 }
 
 void log_eol() {
@@ -550,7 +554,7 @@ void log_eol() {
  * Signature: (Ljava/lang/Thread;)V
  */
 JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_agentThread(JNIEnv *env, jclass klass, jobject thread) {
-	fprintf(stderr,"agentThread\n");
+	threads_states(env);
 }
 
 

@@ -246,6 +246,7 @@ static void defineCallbacks() {
 	allocation_capabilities(&availableCapabilities, &capabilities);
     exception_capabilities(&availableCapabilities, &capabilities);
     call_chain_capabilities(&availableCapabilities, &capabilities);
+    thread_capabilities(&availableCapabilities, &capabilities);
 
 	capabilities.can_tag_objects                     = availableCapabilities.can_tag_objects;
     
