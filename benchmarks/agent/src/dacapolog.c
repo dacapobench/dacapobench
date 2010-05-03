@@ -20,6 +20,7 @@ jrawMonitorID       agentLock;
 
 FILE*               logFile = NULL;
 jboolean			logState = FALSE;
+jboolean            localInitDone = FALSE;
 struct timeval      startTime;
 jclass              log_class = NULL;
 jmethodID           reportHeapID;
@@ -89,15 +90,18 @@ void callReportHeap(JNIEnv *env) {
 }
 
 void setReportHeap(JNIEnv *env) {
-	(*env)->SetStaticBooleanField(env,log_class,firstReportSinceForceGCID,(jboolean)TRUE);
+	if (localInitDone)
+		(*env)->SetStaticBooleanField(env,log_class,firstReportSinceForceGCID,(jboolean)TRUE);
 }
 
 void setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable) {
-	if (enable) {
-		(*env)->SetStaticLongField(env,log_class,callChainFrequencyID,frequency);
-		(*env)->SetStaticLongField(env,log_class,callChainCountID,(jlong)0);
+	if (localInitDone) {
+		if (enable) {
+			(*env)->SetStaticLongField(env,log_class,callChainFrequencyID,frequency);
+			(*env)->SetStaticLongField(env,log_class,callChainCountID,(jlong)0);
+		}
+		(*env)->SetStaticBooleanField(env,log_class,callChainEnableID,enable);
 	}
-	(*env)->SetStaticBooleanField(env,log_class,callChainEnableID,enable);
 }
 
 _Bool dacapo_log_init() {
@@ -143,6 +147,8 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_localinit
 		if (value > 0)
 			(*env)->SetStaticLongField(env,log_class,agentIntervalTimeID,(jlong)value);
 	}
+	
+	localInitDone = !FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_wierd
