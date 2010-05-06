@@ -130,7 +130,6 @@ public final class Agent {
 
 	private static synchronized void reportHeapAfterForceGCSync() {
 		if (firstReportSinceForceGC) {
-			firstReportSinceForceGC = false;
 			reportHeap();
 		}
 	}

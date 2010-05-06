@@ -9,6 +9,12 @@
 <project name="libs">
 	<property name="lib-base" value="${basedir}/libs"/>
 
+	<!-- bcel -->
+	<property name="bcel-jar" value="${lib-base}/bcel/dist/jar/bcel-5.2.jar"/>
+	<target name="bcel">
+		<ant antfile="${lib-base}/bcel/build.xml"/>
+	</target>
+
 	<!-- daytrader -->
 	<target name="daytrader">
 		<ant antfile="${lib-base}/daytrader/build.xml"/>

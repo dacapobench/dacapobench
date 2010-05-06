@@ -1,0 +1,100 @@
+<!--
+ * Copyright (c) 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+<project name="DacapoAnalysis" default="all" basedir="..">
+	<description>DaCapo Analysis</description>
+
+	<import file="../util.xml"/>
+	<import file="../libs/libs.xml"/>
+	
+	<property name="analysisdir" value="${basedir}/analysis"/>
+	<property name="dist-dir" value="${analysisdir}/dist"/>
+	<property name="build-dir" value="${analysisdir}/build"/>
+	<property name="javabin-dir" value="${analysisdir}/javabin"/>
+
+	<property file="dacapo.properties"/>
+
+	<condition property="linux">
+		<equals arg1="${os.name}" arg2="linux" casesensitive="no" trim="yes"/>
+	</condition>
+	
+
+	<property name="download-dir" value="${analysisdir}/download"/>
+	
+    <property name="cli" value="commons-cli"/>
+    <property name="cli-version" value="1.2"/>
+    <property name="cli-basename" value="${cli}-${cli-version}"/>
+	<property name="cli-jar" value="${cli-basename}.jar"/>
+    <property name="cli-name" value="${cli-basename}-bin.tar.gz"/>
+    <property name="cli-url" value="${apache.dl.url}/commons/cli/binaries"/>
+
+	<!--
+	<property name="bcel" value="bcel"/>
+	<property name="bcel-version" value="5.2"/>
+	<property name="bcel-basename" value="${bcel}-${bcel-version}"/>
+	<property name="bcel-jar" value="${bcel-basename}.jar"/>
+	-->
+	
+	<property name="ckjm-version" value="1.9"/>
+	<property name="ckjm-basename" value="ckjm-${ckjm-version}"/>
+	<property name="ckjm-jar" value="${ckjm-basename}.jar"/>
+	<property name="ckjm-name" value="${ckjm-basename}.tar.gz"/>
+	<property name="ckjm-url" value="http://www.spinellis.gr/sw/ckjm"/>
+	
+	<property name="make" value="make"/>
+
+	<target name="init">
+		<mkdir dir="${analysisdir}/lib"/>
+		<mkdir dir="${build-dir}"/>
+		<mkdir dir="${dist-dir}"/>
+		<mkdir dir="${javabin-dir}"/>
+	</target>
+
+	<target name="libs" depends="bcel,init">
+		<!-- get ckjm library -->
+		<antcall target="check-source">
+			<param name="target-file" value="${ckjm-name}" />
+			<param name="target-dir"  value="${download-dir}" />
+			<param name="target-url"  value="${ckjm-url}"/>
+		</antcall>
+		<untar src="${download-dir}/${ckjm-name}" dest="${build-dir}" compression="gzip"/>
+		<copy todir="${dist-dir}" flatten="yes">
+		    <fileset dir="${build-dir}">
+		        <include name="${ckjm-basename}/build/*.jar"/>
+		        <!-- <include name="${ckjm-basename}/lib/*.jar"/> -->
+		    </fileset>
+		</copy>
+
+		<!-- get commons commandline -->
+		<antcall target="check-source">
+			<param name="target-file" value="${cli-name}" />
+			<param name="target-dir"  value="${download-dir}" />
+			<param name="target-url"  value="${cli-url}"/>
+		</antcall>
+		<untar src="${download-dir}/${cli-name}" dest="${build-dir}" compression="gzip"/>
+
+		<copy file="${build-dir}/${cli-basename}/${cli-basename}.jar" todir="${dist-dir}"/>
+		<copy file="${bcel-jar}" todir="${dist-dir}"/>
+	</target>
+	
+	<target name="jar">
+		<javac debug="on" srcdir="${analysisdir}/src" destdir="${javabin-dir}" classpath="${dist-dir}/${cli-jar}:${bcel-jar}:${dist-dir}/${ckjm-jar}" />
+		<jar destfile="${analysisdir}/dist/analysis.jar" basedir="${javabin-dir}" />
+	</target>
+
+	<target name="all" depends="init,libs,jar">
+	</target>
+	
+	<target name="clean" depends="init">
+		<delete dir="${build-dir}" />
+		<delete dir="${dist-dir}" />
+		<delete dir="${analysisdir}/javabin"/>
+	</target>
+	
+</project>
+

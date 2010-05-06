@@ -17,6 +17,7 @@
 
 jrawMonitorID       lockLog;
 jrawMonitorID       agentLock;
+jrawMonitorID       gcLock;
 
 FILE*               logFile = NULL;
 jboolean			logState = FALSE;
@@ -89,9 +90,11 @@ void callReportHeap(JNIEnv *env) {
 	(*env)->CallStaticVoidMethod(env,log_class,reportHeapID);
 }
 
-void setReportHeap(JNIEnv *env) {
+void setReportHeap(JNIEnv *env, jboolean flag) {
+    rawMonitorEnter(&gcLock);
 	if (localInitDone)
-		(*env)->SetStaticBooleanField(env,log_class,firstReportSinceForceGCID,(jboolean)TRUE);
+		(*env)->SetStaticBooleanField(env,log_class,firstReportSinceForceGCID,flag);
+    rawMonitorExit(&gcLock);
 }
 
 void setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable) {
@@ -111,6 +114,11 @@ _Bool dacapo_log_init() {
 	if (JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent lock", &(agentLock)) != JNI_OK) {
 		return FALSE;
 	}
+
+	if (JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "gc lock", &(gcLock)) != JNI_OK) {
+		return FALSE;
+	}
+	
 
 	if (isSelected(OPT_LOG_FILE_LIMIT,NULL)) {
 		check_limit = TRUE;
@@ -251,7 +259,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalStart
 	    logState = logFile != NULL;
 	    if (logState) {
 		    rawMonitorEnter(&lockLog);
-	    	log_field_string("START");
+	    	log_field_string(LOG_PREFIX_START);
 	    	log_eol();
 		    rawMonitorExit(&lockLog);
 	    	
@@ -276,7 +284,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalStop
 	jboolean tmp = logState;
     logState = FALSE;
     if (tmp) {
-    	log_field_string("STOP");
+    	log_field_string(LOG_PREFIX_STOP);
     	log_eol();
 	}
 }

@@ -436,14 +436,15 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jint* new_class_data_len,
                 unsigned char** new_class_data)
 {
+    char temp[10240];
+    
+    *new_class_data     = NULL;
+    *new_class_data_len = 0;
+
     if (jvmRunning && !jvmStopped) {
-        char temp[10240];
         rawMonitorEnter(&lockClass);
 
         if (instrumentClasses && strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) {
-            *new_class_data     = NULL;
-            *new_class_data_len = 0;
-
             char command[1024];
             char outfile[256];
             char infile [256];
@@ -459,20 +460,20 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
             }
         }
 
-        if (storeClassFiles) {
-            jboolean old = !storeClassFilesTXed || *new_class_data == NULL;
-            makePath(name);
-            sprintf(temp,"%s/%s.class",storeClassFileBase,name);
-            // fprintf(stderr,"writing %s class files to store %s [%lx:%d,%lx:%d]\n",old?"old":"new",temp,(unsigned long)class_data,class_data_len,(unsigned long)(*new_class_data),*new_class_data_len);
-            writeClassData(temp,(old?class_data:*new_class_data),(old?class_data_len:*new_class_data_len));
-        }
-
-		if (breakOnLoad) {
-			if (strcmp(name,breakOnLoadClass)==0) exit(1);
-		}
-
         rawMonitorExit(&lockClass);
     }
+	
+    if (storeClassFiles) {
+        jboolean old = !storeClassFilesTXed || *new_class_data == NULL;
+        makePath(name);
+        sprintf(temp,"%s/%s.class",storeClassFileBase,name);
+        // fprintf(stderr,"writing %s class files to store %s [%lx:%d,%lx:%d]\n",old?"old":"new",temp,(unsigned long)class_data,class_data_len,(unsigned long)(*new_class_data),*new_class_data_len);
+        writeClassData(temp,(old?class_data:*new_class_data),(old?class_data_len:*new_class_data_len));
+    }
+
+	if (breakOnLoad) {
+		if (strcmp(name,breakOnLoadClass)==0) exit(1);
+	}
 }
 
 /* JVMTI_EVENT_VM_INIT */

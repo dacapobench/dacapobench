@@ -3,6 +3,9 @@
 
 #include "dacapo.h"
 
+#define LOG_PREFIX_START                      "START"
+#define LOG_PREFIX_STOP                       "STOP"
+
 #define LOG_PREFIX_ALLOCATION                 "HA"
 #define LOG_PREFIX_FREE                       "HF"
 
@@ -49,7 +52,7 @@ extern jboolean            logState;
 _Bool dacapo_log_init();
 
 void  callReportHeap(JNIEnv *env);
-void  setReportHeap(JNIEnv *env);
+void  setReportHeap(JNIEnv *env, jboolean flag);
 void  setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable);
 
 

@@ -1,0 +1,40 @@
+diff -urNw dt-a/bcel-5.2/src/java/org/apache/bcel/util/ClassPath.java dt-e/bcel-5.2/src/java/org/apache/bcel/util/ClassPath.java
+--- dt-a/bcel-5.2/src/java/org/apache/bcel/util/ClassPath.java	2006-06-03 13:48:24.000000000 +1000
++++ dt-e/bcel-5.2/src/java/org/apache/bcel/util/ClassPath.java	2010-05-06 20:17:23.232911150 +1000
+@@ -41,9 +41,22 @@
+ public class ClassPath implements Serializable {
+ 
+     public static final ClassPath SYSTEM_CLASS_PATH = new ClassPath();
++    
+     private PathEntry[] paths;
+     private String class_path;
+ 
++    private static ClassPath defaultClassPath = SYSTEM_CLASS_PATH;
++
++    public static void setDefaultClassPath(ClassPath classPath) {
++    	if (classPath!=null)
++    		defaultClassPath = classPath;
++    	else
++    		defaultClassPath = SYSTEM_CLASS_PATH;
++    }
++    
++    public static ClassPath getDefaultClassPath() {
++    	return defaultClassPath;
++    }
+ 
+     /**
+      * Search for classes in given path.
+diff -urNw dt-a/bcel-5.2/src/java/org/apache/bcel/util/SyntheticRepository.java dt-e/bcel-5.2/src/java/org/apache/bcel/util/SyntheticRepository.java
+--- dt-a/bcel-5.2/src/java/org/apache/bcel/util/SyntheticRepository.java	2006-06-03 13:48:24.000000000 +1000
++++ dt-e/bcel-5.2/src/java/org/apache/bcel/util/SyntheticRepository.java	2010-05-06 20:24:44.100369098 +1000
+@@ -57,9 +57,8 @@
+         _path = path;
+     }
+ 
+-
+     public static SyntheticRepository getInstance() {
+-        return getInstance(ClassPath.SYSTEM_CLASS_PATH);
++        return getInstance(ClassPath.getDefaultClassPath());
+     }
+ 
+ 

@@ -33,12 +33,12 @@ void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallb
 
 static jint forceGC(JNIEnv *env) {
 	gcCount = 0;
-	rawMonitorEnter(&lockTag);
+	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_GC);
 	log_eol();
-	rawMonitorExit(&lockTag);
+	rawMonitorExit(&lockLog);
 	jint res = JVMTI_FUNC_PTR(baseEnv,ForceGarbageCollection)(baseEnv);
-	setReportHeap(env);
+	setReportHeap(env,!FALSE);
 	return res;
 }
 
