@@ -1,5 +1,7 @@
 package org.dacapo.instrument;
 
+import java.util.LinkedList;
+
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -27,9 +29,24 @@ public class AllocateInstrument extends ClassAdapter {
 	private boolean containsAllocate = false;
 	
 	private static final String   INSTRUMENT_PACKAGE        = "org/dacapo/instrument/";
-
-	public AllocateInstrument(ClassVisitor cv) {
+	// normally exclude sun/reflect/
+	
+	private LinkedList<String> excludePackages = new LinkedList<String>();
+	
+	public AllocateInstrument(ClassVisitor cv, String excludeList) {
 		super(cv);
+		
+		// always add the instrument package to the exclude list
+		excludePackages.add(INSTRUMENT_PACKAGE);
+		if (excludeList!=null) {
+			String[] packageList = excludeList.split(";");
+			for(String p: packageList) {
+				p = p.replace('.','/');
+				if (! p.endsWith("/"))
+					p += p+"/";
+				excludePackages.add(p);
+			}
+		}
 	}
 
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -85,7 +102,13 @@ public class AllocateInstrument extends ClassAdapter {
 	}
 	
 	private boolean instrument() {
-		return (access & Opcodes.ACC_INTERFACE) == 0 && !name.startsWith(INSTRUMENT_PACKAGE);
+		if ((access & Opcodes.ACC_INTERFACE) != 0) return false;
+		
+		for(String k: excludePackages) {
+			if (name.startsWith(k)) return false;
+		}
+		
+		return true;
 	}
 	
 	private boolean instrument(int access) {

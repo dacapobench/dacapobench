@@ -17,6 +17,7 @@ class Options {
 	public static final String ALLOCATE               = "allocate";
 	public static final String MONITOR                = "monitor";
 	public static final String CALL_CHAIN             = "call_chain";
+	public static final String EXCLUDE_PACKAGES       = "exclude";
 	
 	private boolean classInitialization = false;
 	private boolean methodCalls = false;

@@ -43,8 +43,8 @@ public final class Log {
 	}
 
 	public static void reportClass(String className) {
-		new Exception().printStackTrace();
-		System.exit(1);
+		if (enableLogging && available)
+			Agent.reportClass(className);
 	}
 	
 	public static boolean reportMethod(String className, String methodName, String signature) {

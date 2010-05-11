@@ -25,7 +25,7 @@ public class Instrument {
 		String commandLineOptions = args[3];
 		
 		for(int i=4; i<args.length; i++) {
-			commandLineOptions = commandLineOptions+" "+args[i];
+			commandLineOptions = commandLineOptions+","+args[i];
 		}
 
 		try {
@@ -44,10 +44,10 @@ public class Instrument {
 				cv = new MonitorInstrument(cv);
 			
 			if (options.has(Options.CLASSES_INITIALIZATION))
-				cv = new ClinitInstrument(cv, reader.getClassName()); 
+				cv = new ClinitInstrument(cv, options.value(Options.CLASSES_INITIALIZATION)); 
 			
 			if (options.has(Options.ALLOCATE))
-				cv = new AllocateInstrument(cv);
+				cv = new AllocateInstrument(cv, options.value(Options.ALLOCATE));
 			
 			if (options.has(Options.CALL_CHAIN))
 				cv = new CallChainInstrument(cv);

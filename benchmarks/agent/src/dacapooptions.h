@@ -22,6 +22,7 @@
 #define OPT_LOG_FILE_LIMIT   "log_limit"
 #define OPT_VOLATILE         "volatile"
 #define OPT_INTERVAL         "interval"
+#define OPT_EXCLUDE_PACKAGES "exclude"
 
 _Bool isSelected(const char* option, char* argument);
 _Bool hasArgument(const char* option);

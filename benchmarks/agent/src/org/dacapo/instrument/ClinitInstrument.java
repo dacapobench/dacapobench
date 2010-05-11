@@ -1,5 +1,7 @@
 package org.dacapo.instrument;
 
+import java.util.LinkedList;
+
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -33,15 +35,25 @@ public class ClinitInstrument  extends ClassAdapter {
 	private ClassVisitor        cv          = null;
 	private String              className   = null;
 	
-	public ClinitInstrument(ClassVisitor cv, String className) {
+	private LinkedList<String>  excludePackages = new LinkedList<String>();
+	
+	public ClinitInstrument(ClassVisitor cv, String excludeList) {
 		super(cv);
 		this.cv = cv;
-		this.className = className;
+		
+		excludePackages.add(INSTRUMENT_PACKAGE);
+		if (excludeList!=null) {
+			String[] packageList = excludeList.split(",");
+			for(String p: packageList) {
+				excludePackages.add(p);
+			}
+		}
 	}
 	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.access = access;
 		this.foundClinit = false;
+		this.className = name;
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	
@@ -81,7 +93,13 @@ public class ClinitInstrument  extends ClassAdapter {
 	}
 	
 	private boolean instrument() {
-		return (access & Opcodes.ACC_INTERFACE) == 0 && !className.startsWith(INSTRUMENT_PACKAGE);
+		if ((access & Opcodes.ACC_INTERFACE) != 0) return false;
+		
+		for(String p: excludePackages) {
+			if (className.startsWith(p)) return false;
+		}
+		
+		return true;
 	}
 
 	private static boolean standardMethod(int access, boolean isStatic) {

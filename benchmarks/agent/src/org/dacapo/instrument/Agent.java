@@ -12,6 +12,8 @@ public final class Agent {
 	private static Object  waiter = new Object();
 	private static AgentThread agentThread = null;
 	
+	private static final String  LOG_PREFIX_CLASS_INITIALIZATION = "CI"; 
+	
 	private static class AgentThread extends Thread {
 		boolean agentThreadStarted = false;
 		boolean logon = false;
@@ -86,35 +88,39 @@ public final class Agent {
 		agentThread.started();
 	}
 	
-	public static native void localinit();
+	public static void localinit() { internalLocalInit(); }
+
+	public static boolean available() { return internalAvailable(); }
 	
-	public static native boolean available();
+	public static void setLogFileName(String fileName) { internalSetLogFileName(fileName); }
 	
-	public static native void setLogFileName(String fileName);
+	public static void log(Thread thread, String event, String message) {
+		internalLog(thread,event,message);
+	}
+
+	public static void logAlloc(Thread thread, Object obj) {
+		new Exception().printStackTrace();
+		// internalLogAlloc(thread,obj);
+		System.exit(10);
+	}
 	
-	public static native void log(Thread thread, String event, String message);
-	
-	public static native void logAlloc(Thread thread, Object obj);
+	public static void logCallChain(Thread thread) {
+		// internalLogCallChain(thread);
+	}
 	
 	public static void start() {
 		if (agentThread.setLogon(true))
 			internalStart();
 	}
 	
-	private static native void internalStart();
-	
 	public static void stop() {
 		if (agentThread.setLogon(false))
 			internalStop();
 	}
 	
-	private static native void internalStop();
+	public static void logMonitorEnter(Thread thread, Object obj) { internalLogMonitorEnter(thread, obj); }
 	
-	public static native void logMonitorEnter(Thread thread, Object obj);
-	
-	public static native void logMonitorExit(Thread thread, Object obj);
-	
-	public static native void logCallChain(Thread thread);
+	public static void logMonitorExit(Thread thread, Object obj) { internalLogMonitorExit(thread, obj); }
 	
 	public static void logCallChain() {
 		if (callChainEnable && ((++callChainCount)%callChainFrequency) == 0) {
@@ -128,12 +134,6 @@ public final class Agent {
 		}
 	}
 
-	private static synchronized void reportHeapAfterForceGCSync() {
-		if (firstReportSinceForceGC) {
-			reportHeap();
-		}
-	}
-	
 	public static void reportHeap() {
 		long free  = runtime.freeMemory();
 		long max   = runtime.maxMemory();
@@ -141,10 +141,41 @@ public final class Agent {
 		
 		long used  = total - free;
 
-		writeHeapReport(Thread.currentThread(), used, free, total, max);
+		internalHeapReport(Thread.currentThread(), used, free, total, max);
 	}
 	
-	private static native void writeHeapReport(Thread thread, long used, long free, long total, long max);
-
+	public static void reportClass(String className) {
+		internalLog(Thread.currentThread(),LOG_PREFIX_CLASS_INITIALIZATION,className);
+	}
+	
 	protected static native void agentThread(Thread thread);
+
+	private static native void internalLocalInit();
+
+	private static native void internalLog(Thread thread, String event, String message);
+	
+	private static native void internalLogAlloc(Thread thread, Object obj);
+	
+	private static native void internalLogMonitorEnter(Thread thread, Object obj);
+	
+	private static native void internalLogMonitorExit(Thread thread, Object obj);
+	
+	// private static native void internalLogCallChain(Thread thread);
+	
+	private static native boolean internalAvailable();
+	
+	private static native void internalSetLogFileName(String fileName);
+	
+	private static native void internalStart();
+	
+	private static native void internalStop();
+
+	private static synchronized void reportHeapAfterForceGCSync() {
+		if (firstReportSinceForceGC) {
+			reportHeap();
+		}
+	}
+	
+	private static native void internalHeapReport(Thread thread, long used, long free, long total, long max);
+
 }

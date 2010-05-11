@@ -436,11 +436,6 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jint* new_class_data_len,
                 unsigned char** new_class_data)
 {
-    char temp[10240];
-    
-    *new_class_data     = NULL;
-    *new_class_data_len = 0;
-
     if (jvmRunning && !jvmStopped) {
         rawMonitorEnter(&lockClass);
 
@@ -454,6 +449,9 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 
             writeClassData(outfile,class_data,class_data_len);
 
+		    *new_class_data     = NULL;
+		    *new_class_data_len = 0;
+
             sprintf(command, "java -classpath dist/agent.jar:dist/asm-3.2.jar:dist/asm-commons-3.2.jar org.dacapo.instrument.Instrument '%s' '%s' '%s' \"%s\"",infile,outfile,(name!=NULL?name:"NULL"),agentOptions);
             if (system(command) == 0) {
                 readClassData(infile,new_class_data,new_class_data_len);
@@ -464,6 +462,7 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
     }
 	
     if (storeClassFiles) {
+	    char temp[10240];
         jboolean old = !storeClassFilesTXed || *new_class_data == NULL;
         makePath(name);
         sprintf(temp,"%s/%s.class",storeClassFileBase,name);
@@ -564,7 +563,8 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	
 	if (res!=JNI_OK) {
 		JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)methods);
-		return;
+		fprintf(stderr,"processclassPrepare fail\n");
+		exit(10);
 	}	
 
 	int i=0;	
@@ -575,7 +575,7 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	log_eol();
 	while(i<method_count) reportMethod(signature,class_tag,methods[i++]);
 	rawMonitorExit(&lockLog);
-	
+
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)methods);
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)signature);
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)generic);
@@ -585,6 +585,7 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	method_class(jvmti_env, jni_env, klass);
 	monitor_class(jvmti_env, jni_env, klass);
 	thread_class(jvmti_env, jni_env, klass);
+	
 }
 
 #define BIN_STR(x) ((x)?"true":"false")

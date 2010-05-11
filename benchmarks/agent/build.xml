@@ -32,6 +32,13 @@
 	<property name="asm-zip" value="asm-${asm-verison}-bin.zip"/>
 	<property name="asm-url" value="http://download.forge.objectweb.org/asm"/>
 	
+    <property name="cli" value="commons-cli"/>
+    <property name="cli-version" value="1.2"/>
+    <property name="cli-basename" value="${cli}-${cli-version}"/>
+	<property name="cli-jar" value="${cli-basename}.jar"/>
+    <property name="cli-name" value="${cli-basename}-bin.tar.gz"/>
+    <property name="cli-url" value="${apache.dl.url}/commons/cli/binaries"/>
+
 	<property name="make" value="make"/>
 
 	<target name="init">
@@ -53,7 +60,17 @@
 		</unzip>
 		<copy file="${agentdir}/build/asm-3.2/lib/${asm-jar}" todir="${dist-dir}"/>
 		<copy file="${agentdir}/build/asm-3.2/lib/${asm-commons-jar}" todir="${dist-dir}"/>
-	</target>
+
+		<!-- get commons commandline -->
+		<antcall target="check-source">
+			<param name="target-file" value="${cli-name}" />
+			<param name="target-dir"  value="${download-dir}" />
+			<param name="target-url"  value="${cli-url}"/>
+		</antcall>
+		<untar src="${download-dir}/${cli-name}" dest="${build-dir}" compression="gzip"/>
+
+		<copy file="${build-dir}/${cli-basename}/${cli-basename}.jar" todir="${dist-dir}"/>
+</target>
 	
 	<target name="all" depends="init,libs,jar,build-agent-linux">
 	</target>

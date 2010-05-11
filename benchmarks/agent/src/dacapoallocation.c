@@ -79,6 +79,7 @@ void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *env, jthread thread,
 		/* trace allocation */
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_ALLOCATION);
+		log_field_current_time();
 
 		log_field_jlong(tag);
 	    if (class_has_new_tag) {
@@ -107,6 +108,7 @@ void JNICALL callbackObjectFree(jvmtiEnv *jvmti, jlong tag)
 	if (jvmRunning && !jvmStopped) {
 		/* trace free */
 		log_field_string(LOG_PREFIX_FREE);
+		log_field_current_time();
 		log_field_jlong(tag);
 		log_eol();
 	}

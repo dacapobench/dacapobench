@@ -11,6 +11,7 @@
 
 #define LOG_PREFIX_CLASS_PREPARE              "LD"
 #define LOG_PREFIX_METHOD_PREPARE             "LM"
+#define LOG_PREFIX_CLASS_INITIALIZATION       "CI"
 
 #define LOG_PREFIX_THREAD_START               "TS"
 #define LOG_PREFIX_THREAD_STOP                "TE"

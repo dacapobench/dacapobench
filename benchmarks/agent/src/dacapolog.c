@@ -136,7 +136,7 @@ _Bool dacapo_log_init() {
 }
 
 
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_localinit
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLocalInit
   (JNIEnv *env, jclass klass)
 {
 	reportHeapID              = (*env)->GetStaticMethodID(env,klass,"reportHeap","()V");
@@ -172,7 +172,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_wierd
  * Method:    available
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_dacapo_instrument_Agent_available
+JNIEXPORT jboolean JNICALL Java_org_dacapo_instrument_Agent_internalAvailable
   (JNIEnv *env, jclass klass)
 {
     return !FALSE;
@@ -183,7 +183,7 @@ JNIEXPORT jboolean JNICALL Java_org_dacapo_instrument_Agent_available
  * Method:    log
  * Signature: (Ljava/lang/Thread;Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLog
   (JNIEnv *env, jclass klass, jobject thread, jstring e, jstring m)
 {
     if (logState) {
@@ -201,6 +201,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
 
 	    rawMonitorEnter(&lockLog);
 	    log_field_string(c_e);
+		log_field_current_time();
 	    
 		jniNativeInterface* jni_table;
 		if (thread_has_new_tag) {
@@ -236,7 +237,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_log
  * Method:    setLogFileName
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_setLogFileName
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalSetLogFileName
   (JNIEnv *env, jclass klass, jstring s)
 {
     jboolean iscopy;
@@ -295,7 +296,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalStop
  * Method:    reportMonitorEnter
  * Signature: (Ljava/lang/Thread;Ljava/lang/Object;)V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorEnter
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorEnter
   (JNIEnv *local_env, jclass klass, jobject thread, jobject object)
 {
 	// jclass GetObjectClass(JNIEnv *env, jobject obj);
@@ -352,7 +353,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorEnter
  * Method:    reportMonitorExit
  * Signature: (Ljava/lang/Thread;Ljava/lang/Object;)V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorExit
   (JNIEnv *local_env, jclass klass, jobject thread, jobject object)
 {
 	// jclass GetObjectClass(JNIEnv *env, jobject obj);
@@ -409,7 +410,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logMonitorExit
  * Method:    logCallChain
  * Signature: (Ljava/lang/Thread;)V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logCallChain
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogCallChain
   (JNIEnv *env, jclass klass, jobject thread) {
   	log_call_chain(env, klass, thread);
 }
@@ -419,7 +420,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_logCallChain
  * Method:    writeHeapReport
  * Signature: (JJJJ)V
  */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_writeHeapReport(JNIEnv *local_env, jclass klass, jobject thread, jlong used, jlong free, jlong total, jlong max) {
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalHeapReport(JNIEnv *local_env, jclass klass, jobject thread, jlong used, jlong free, jlong total, jlong max) {
 	jlong thread_tag = 0;
 
 	rawMonitorEnter(&lockTag);
@@ -428,6 +429,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_writeHeapReport(JNIEnv *
 
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_HEAP_REPORT);
+	log_field_current_time();
 
 	thread_log(local_env, thread, thread_tag, thread_has_new_tag);
 	
