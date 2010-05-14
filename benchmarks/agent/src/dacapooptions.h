@@ -23,6 +23,7 @@
 #define OPT_VOLATILE         "volatile"
 #define OPT_INTERVAL         "interval"
 #define OPT_EXCLUDE_PACKAGES "exclude"
+#define OPT_EXCLUDE_CLASSES  "exclude_classes"
 
 _Bool isSelected(const char* option, char* argument);
 _Bool hasArgument(const char* option);

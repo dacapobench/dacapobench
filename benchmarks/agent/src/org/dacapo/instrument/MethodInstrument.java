@@ -55,11 +55,10 @@ public class MethodInstrument extends ClassAdapter {
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.access = access;
 		if ((version&0xffff)<49) {
-			System.err.println("MethodInstrument:changing version from " + (version&0xffff) + "." + (version >> 16));
+			// System.err.println("MethodInstrument:changing version from " + (version&0xffff) + "." + (version >> 16));
 			version = 49;
 		}
 		super.visit(version, access, name, signature, superName, interfaces);
-		System.err.println("Class:"+name);
 	}
 	
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {

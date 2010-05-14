@@ -48,6 +48,7 @@
 	</target>
 
 	<target name="libs" depends="init">
+		<!--
 		<antcall target="check-source">
 			<param name="target-file" value="${asm-zip}" />
 			<param name="target-dir"  value="${download-dir}" />
@@ -60,7 +61,8 @@
 		</unzip>
 		<copy file="${agentdir}/build/asm-3.2/lib/${asm-jar}" todir="${dist-dir}"/>
 		<copy file="${agentdir}/build/asm-3.2/lib/${asm-commons-jar}" todir="${dist-dir}"/>
-
+		-->
+		
 		<!-- get commons commandline -->
 		<antcall target="check-source">
 			<param name="target-file" value="${cli-name}" />
@@ -76,8 +78,8 @@
 	</target>
 		
 	<target name="jar">
-		<javac debug="on" srcdir="${agentdir}/src" destdir="${agentdir}/build" classpath="${dist-dir}/${asm-jar}:${dist-dir}/${asm-commons-jar}" />
-		<jar destfile="${agentdir}/dist/agent.jar" basedir="${agentdir}/build" />
+		<javac debug="on" srcdir="${agentdir}/src" destdir="${agentdir}/src" classpath="${dist-dir}/${asm-jar}:${dist-dir}/${asm-commons-jar}" />
+		<jar destfile="${agentdir}/dist/agent.jar" basedir="${agentdir}/src" />
 	</target>
 	
 	<target name="build-agent-linux" if="linux">

@@ -76,6 +76,12 @@ jboolean            breakOnLoad = FALSE;
 
 char                breakOnLoadClass[10240];
 
+struct exclude_list_s {
+	struct exclude_list_s* next;
+	char*                  name;
+	int                    length;
+} *exclude_package_list_head = NULL, *exclude_package_list_tail = NULL, *exclude_class_list_head = NULL, *exclude_class_list_tail = NULL;
+
 /* ------------------------------------------------------------------- */
 static void processCapabilities();
 static void processOptions();
@@ -106,6 +112,62 @@ void reportJVMTIError(FILE* fh, jvmtiError errorNumber, const char *str)
     fprintf(fh,"JVMTI Error (%d:\"%s\"): %s\n", errorNumber, errorString, str);
 }
 
+#define MAX_EXCLUDE_LIST_LENGTH 10240
+
+static void agent_exclude_list()
+{
+	char temp[MAX_EXCLUDE_LIST_LENGTH];
+	
+	if (isSelected(OPT_EXCLUDE_CLASSES,temp)) {
+		int start=0, next=0;
+		
+		while (temp[next] != '\0') {
+			while (temp[next] != '\0' && temp[next] != ';') next++;
+			struct exclude_list_s *item = (struct exclude_list_s *)malloc(sizeof(struct exclude_list_s));
+			
+			item->next = NULL;
+			item->name = (char*)malloc(sizeof(char)*(next-start+1));
+			item->length = next-start;
+			strncpy(item->name,temp+start,item->length);
+			item->name[item->length] = '\0';
+
+			if (exclude_class_list_tail==NULL)
+				exclude_class_list_head = exclude_class_list_tail = item;
+			else {
+				exclude_class_list_tail->next = item;
+				exclude_class_list_tail       = item;
+			}
+			
+			if (temp[next] != '\0')
+				start = ++next;
+		}
+	}
+	
+	if (isSelected(OPT_EXCLUDE_PACKAGES,temp)) {
+		int start=0, next=0;
+		
+		while (temp[next] != '\0') {
+			while (temp[next] != '\0' && temp[next] != ';') next++;
+			struct exclude_list_s *item = (struct exclude_list_s *)malloc(sizeof(struct exclude_list_s));
+			
+			item->next = NULL;
+			item->name = (char*)malloc(sizeof(char)*(next-start+1));
+			item->length = next-start;
+			strncpy(item->name,temp+start,item->length);
+			item->name[item->length] = '\0';
+
+			if (exclude_package_list_tail == NULL)
+				exclude_package_list_head = exclude_package_list_tail = item;
+			else {
+				exclude_package_list_tail->next = item;
+				exclude_package_list_tail       = item;
+			}
+			
+			if (temp[next] != '\0')
+				start = ++next;
+		}
+	}
+}
 
 /* Agent_OnLoad: This is called immediately after the shared library is 
  *   loaded. This is the first code executed.
@@ -182,6 +244,7 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
         exit(1);
     }
 
+	agent_exclude_list();
 	allocation_init();
 	exception_init();
 	method_init();
@@ -428,6 +491,23 @@ static void generateFileName(char* file_name, int max_file_name_len) {
 #define ASM_PACKAGE_NAME     "org/objectweb/asm/"
 #define DACAPO_PACKAGE_NAME  "org/dacapo/instrument/"
 
+static jboolean isNotExcluded(const char* name)
+{
+	struct exclude_list_s* chk;
+
+	if (strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))==0) return FALSE;
+
+	for(chk = exclude_package_list_head; chk!=NULL; chk = chk->next) {
+		if (strncmp(name,chk->name,chk->length)==0) return FALSE;
+	}
+
+	for(chk = exclude_class_list_head; chk!=NULL; chk = chk->next) {
+		if (strcmp(name,chk->name)==0) return FALSE;
+	}
+
+	return !FALSE;
+}
+
 static void JNICALL
 callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jclass class_being_redefined, jobject loader,
@@ -439,7 +519,8 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
     if (jvmRunning && !jvmStopped) {
         rawMonitorEnter(&lockClass);
 
-        if (instrumentClasses && strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) {
+        if (instrumentClasses && isNotExcluded(name)) { 
+            /* strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) { */
             char command[1024];
             char outfile[256];
             char infile [256];

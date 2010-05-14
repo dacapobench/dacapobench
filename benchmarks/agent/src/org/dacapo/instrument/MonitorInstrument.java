@@ -1,9 +1,13 @@
 package org.dacapo.instrument;
 
+import java.util.Comparator;
+import java.util.TreeMap;
+
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -11,6 +15,9 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
+
+import org.objectweb.asm.commons.LocalVariablesSorter;
+
 
 public class MonitorInstrument extends ClassAdapter {
 
@@ -29,6 +36,7 @@ public class MonitorInstrument extends ClassAdapter {
 	private int                   access                    = 0;
 
 	private boolean				  has_monitor_operation     = false;
+	private boolean               classDone                 = false;
 	
 	public MonitorInstrument(ClassVisitor cv) {
 		super(cv);
@@ -52,7 +60,8 @@ public class MonitorInstrument extends ClassAdapter {
 	}
 
 	public void visitEnd() {
-		if ((access & Opcodes.ACC_INTERFACE) == 0) {
+		if (!classDone && (access & Opcodes.ACC_INTERFACE) == 0) {
+			classDone = true;
 			try {
 				Class k = Log.class;
 				
@@ -128,7 +137,7 @@ public class MonitorInstrument extends ClassAdapter {
 			(access & Opcodes.ACC_BRIDGE) == 0 && 
 			(access & Opcodes.ACC_NATIVE) == 0;
 	}
-	
+
 	private class MonitorInstrumentMethod extends AdviceAdapter {
 		private String   name;
 		private int      access;
@@ -177,7 +186,7 @@ public class MonitorInstrument extends ClassAdapter {
 		}
 		
 		protected void onMethodEnter() {
-			if (! isSynchronized()) return;
+			if (done || ! isSynchronized()) return;
 			
 			has_monitor_operation = true;
 			super.visitInsn(Opcodes.ACONST_NULL);
@@ -188,7 +197,7 @@ public class MonitorInstrument extends ClassAdapter {
 		}
 		
 		protected void onMethodExit(int opcode) {
-			if (!isSynchronized() || done || opcode == Opcodes.ATHROW) return;
+			if (done || opcode == Opcodes.ATHROW || !isSynchronized()) return;
 			
 			has_monitor_operation = true;
 			super.visitMethodInsn(Opcodes.INVOKESTATIC, className, LOG_INTERNAL_EXIT_METHOD, LOG_CLASS_SIGNATURE);
