@@ -261,6 +261,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalStart
 	    if (logState) {
 		    rawMonitorEnter(&lockLog);
 	    	log_field_string(LOG_PREFIX_START);
+	    	log_field_current_time();
 	    	log_eol();
 		    rawMonitorExit(&lockLog);
 	    	
@@ -286,6 +287,7 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalStop
     logState = FALSE;
     if (tmp) {
     	log_field_string(LOG_PREFIX_STOP);
+    	log_field_current_time();
     	log_eol();
 	}
 }
@@ -323,23 +325,19 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorEnter
 	log_field_jlong(thread_tag);
 	if (thread_has_new_tag) {
 		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,thread);
+		// get class and get thread name.
+		jvmtiThreadInfo info;
+		JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
+		log_field_string(info.name);
+		if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 	} else {
+		log_field_string(NULL);
 		log_field_string(NULL);
 	}
 	
 	log_field_jlong(object_tag);
 	if (object_has_new_tag) {
 		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,object);
-	} else {
-		log_field_string(NULL);
-	}
-
-	if (thread_has_new_tag) {
-		// get class and get thread name.
-		jvmtiThreadInfo info;
-		JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-		log_field_string(info.name);
-		if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 	} else {
 		log_field_string(NULL);
 	}
@@ -380,7 +378,13 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorExit
 	log_field_jlong(thread_tag);
 	if (thread_has_new_tag) {
 		LOG_OBJECT_CLASS(jni_table,local_env,baseEnv,thread);
+		// get class and get thread name.
+		jvmtiThreadInfo info;
+		JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
+		log_field_string(info.name);
+		if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
 	} else {
+		log_field_string(NULL);
 		log_field_string(NULL);
 	}
 	
@@ -391,16 +395,6 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorExit
 		log_field_string(NULL);
 	}
 
-	if (thread_has_new_tag) {
-		// get class and get thread name.
-		jvmtiThreadInfo info;
-		JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-		log_field_string(info.name);
-		if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
-	} else {
-		log_field_string(NULL);
-	}
-	
 	log_eol();
 	rawMonitorExit(&lockLog);
 }

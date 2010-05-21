@@ -55,12 +55,16 @@ void thread_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks
 }
 
 void thread_live(jvmtiEnv* jvmti, JNIEnv* env) {
+	struct timeval tv;
+    gettimeofday(&tv, NULL);
+
 	rawMonitorEnter(&lockThreadData);
 	
 	struct thread_list_s* temp = thread_list_head;
 	while (temp!=NULL) {
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_THREAD_STATUS);
+		log_field_time(&tv);
 		log_field_jlong(temp->tag);
 		log_eol();
 		rawMonitorExit(&lockLog);

@@ -4,23 +4,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 import gr.spinellis.ckjm.*;
 import org.apache.bcel.generic.Type;
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.events.Event;
+import org.dacapo.analysis.util.events.EventClassPrepare;
+import org.dacapo.analysis.util.events.EventStart;
+import org.dacapo.analysis.util.events.EventStop;
 
 import org.apache.bcel.Repository;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
+
+import org.dacapo.instrument.LogTags;
 
 public class CKJM {
 	
 	private static final String DEFAULT_EXTENSION        = ".csv";
 	private static final String CLASS_EXTENSION          = ".class";
 	
-	private static final String LOG_PREFIX_START         = "START";
-	private static final String LOG_PREFIX_STOP          = "STOP";
-	private static final String LOG_PREFIX_CLASS_PREPARE = "LD";
+//	private static final String LOG_PREFIX_START         = "START";
+//	private static final String LOG_PREFIX_STOP          = "STOP";
+//	private static final String LOG_PREFIX_CLASS_PREPARE = "LD";
 	
 	public static void main(String[] args) throws Exception {
 		CommandLineArgs commandLine = new CommandLineArgs(args);
@@ -83,25 +90,37 @@ public class CKJM {
 		return list;
 	}
 	
+	private static TreeSet<String> EVENT_MASK;
+	
+	static {
+		EVENT_MASK = new TreeSet<String>();
+		
+		EVENT_MASK.add(EventClassPrepare.TAG);
+		EVENT_MASK.add(EventStart.TAG);
+		EVENT_MASK.add(EventStop.TAG);
+	}
+	
+	private static LinkedList<Event> makeEventList(CSVInputStream is) {
+		LinkedList<Event> events = Event.parseEvents(is, true, EVENT_MASK);
+		
+		System.err.println("Events#"+events.size());
+		for(Event e: events) {
+			System.err.println("  E:"+e.getLogPrefix());
+		}
+		
+		return events;
+	}
+	
 	private static LinkedList<String> makeClassList(LinkedList<File> fileList, boolean loggedOnly) throws IOException, CSVInputStream.CSVException {
 		LinkedList<String> classList = new LinkedList<String>();
 		
 		for(File f: fileList) {
 			CSVInputStream cis = new CSVInputStream(new FileInputStream(f));
-			
-			boolean logPeriod = false;
-			
-			while (cis.nextRow()) {
-				String logTag = cis.nextFieldString();
-				
-				if (logTag.equals(LOG_PREFIX_START))
-					logPeriod = true;
-				else if (logTag.equals(LOG_PREFIX_STOP))
-					logPeriod = false;
-				else if ((!loggedOnly || logPeriod) && logTag.equals(LOG_PREFIX_CLASS_PREPARE)) {
-					long   tag       = cis.nextFieldLong();
-					String className = cis.nextFieldString();
-					
+
+			for (Event e: Event.parseEvents(cis, true, EVENT_MASK)) {
+
+				if (e.getLogPrefix() == EventClassPrepare.TAG) {
+					String className = ((EventClassPrepare)e).getClassName(); 
 					classList.add(className.substring(1,className.length()-1).replace('/','.'));
 				}
 			}

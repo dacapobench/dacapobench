@@ -57,7 +57,7 @@ public class LogInstrument extends ClassAdapter {
 	}
 	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		this.className  = name;
+		this.className  = name.replace('.', '/');
 		this.access     = access;
 		super.visit(version, access, name, signature, superName, interfaces);
 	}

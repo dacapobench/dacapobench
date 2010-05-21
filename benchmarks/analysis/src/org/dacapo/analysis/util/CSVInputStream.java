@@ -74,6 +74,22 @@ public class CSVInputStream {
 		}
 	}
 	
+	public long nextFieldPointer() throws NoFieldAvailable, ParseError {
+		String field = nextFieldString();
+		long v = 0;
+		for(char c: field.toCharArray()) {
+			if ('0'<=c && c<='9') 
+				v = v<<4 + (c-'0');
+			else if ('a'<=c && c<='f')
+				v = v<<4 + (c-'a'+10);
+			else if ('A'<=c && c<='F')
+				v = v<<4 + (c-'a'+10);
+			else
+				throw new ParseError("pointer not in hexadecimal");
+		}
+		return v;
+	}
+	
 	public boolean nextRow() throws CSVException {
 		if (eof) return false;
 		
@@ -188,7 +204,7 @@ public class CSVInputStream {
 		try {
 			setMark();
 			int c = readChar();
-			reset();
+			resetMark();
 			return c;
 		} catch (IOException ioe) {
 			return EOF;
@@ -204,7 +220,7 @@ public class CSVInputStream {
 		mark = true;
 	}
 	
-	private void reset() throws IOException {
+	private void resetMark() throws IOException {
 		assert mark;
 		mark = false;
 	}

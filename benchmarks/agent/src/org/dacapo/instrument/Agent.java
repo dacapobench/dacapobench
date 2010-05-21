@@ -12,7 +12,7 @@ public final class Agent {
 	private static Object  waiter = new Object();
 	private static AgentThread agentThread = null;
 	
-	private static final String  LOG_PREFIX_CLASS_INITIALIZATION = "CI"; 
+	// private static final String  LOG_PREFIX_CLASS_INITIALIZATION = "CI"; 
 	
 	private static class AgentThread extends Thread {
 		boolean agentThreadStarted = false;
@@ -145,7 +145,7 @@ public final class Agent {
 	}
 	
 	public static void reportClass(String className) {
-		internalLog(Thread.currentThread(),LOG_PREFIX_CLASS_INITIALIZATION,className);
+		internalLog(Thread.currentThread(),LogTags.LOG_PREFIX_CLASS_INITIALIZATION,className);
 	}
 	
 	protected static native void agentThread(Thread thread);

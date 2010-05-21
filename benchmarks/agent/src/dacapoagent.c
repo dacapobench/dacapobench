@@ -605,6 +605,7 @@ static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 	if (res!=JNI_OK) return;
 
 	log_field_string(LOG_PREFIX_METHOD_PREPARE);
+	log_field_current_time();
 	log_field_pointer(method);
 	log_field_jlong(class_tag);
 	log_field_string(name_ptr);
@@ -651,6 +652,7 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	int i=0;	
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_CLASS_PREPARE);
+	log_field_current_time();
 	log_field_jlong(class_tag);
 	log_field_string(signature);
 	log_eol();

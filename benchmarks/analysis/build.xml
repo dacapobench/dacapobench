@@ -12,11 +12,14 @@
 	<import file="../util.xml"/>
 	<import file="../libs/libs.xml"/>
 	
-	<property name="analysisdir" value="${basedir}/analysis"/>
-	<property name="dist-dir" value="${analysisdir}/dist"/>
-	<property name="build-dir" value="${analysisdir}/build"/>
-	<property name="javabin-dir" value="${analysisdir}/javabin"/>
+	<property name="analysis-dir" value="${basedir}/analysis"/>
+	<property name="dist-dir" value="${analysis-dir}/dist"/>
+	<property name="build-dir" value="${analysis-dir}/build"/>
+	<property name="javabin-dir" value="${analysis-dir}/javabin"/>
 
+	<property name="agent-dir" value="${basedir}/agent"/>
+	<property name="agent-jar" value="agent.jar"/>
+	
 	<property file="dacapo.properties"/>
 
 	<condition property="linux">
@@ -24,7 +27,7 @@
 	</condition>
 	
 
-	<property name="download-dir" value="${analysisdir}/download"/>
+	<property name="download-dir" value="${analysis-dir}/download"/>
 	
     <property name="cli" value="commons-cli"/>
     <property name="cli-version" value="1.2"/>
@@ -42,10 +45,11 @@
 	<property name="make" value="make"/>
 
 	<target name="init">
-		<mkdir dir="${analysisdir}/lib"/>
+		<mkdir dir="${analysis-dir}/lib"/>
 		<mkdir dir="${build-dir}"/>
 		<mkdir dir="${dist-dir}"/>
 		<mkdir dir="${javabin-dir}"/>
+		<ant dir="${basedir}" antfile="${agent-dir}/build.xml" />
 	</target>
 
 	<target name="libs" depends="bcel,init">
@@ -73,11 +77,12 @@
 
 		<copy file="${build-dir}/${cli-basename}/${cli-basename}.jar" todir="${dist-dir}"/>
 		<copy file="${bcel-jar}" todir="${dist-dir}"/>
+		<copy file="${agent-dir}/dist/${agent-jar}" todir="${dist-dir}" />
 	</target>
 	
 	<target name="jar">
-		<javac debug="on" srcdir="${analysisdir}/src" destdir="${javabin-dir}" classpath="${dist-dir}/${cli-jar}:${bcel-jar}:${dist-dir}/${ckjm-jar}" />
-		<jar destfile="${analysisdir}/dist/analysis.jar" basedir="${javabin-dir}" />
+		<javac debug="on" srcdir="${analysis-dir}/src" destdir="${javabin-dir}" classpath="${dist-dir}/${agent-jar}:${dist-dir}/${cli-jar}:${bcel-jar}:${dist-dir}/${ckjm-jar}" />
+		<jar destfile="${analysis-dir}/dist/analysis.jar" basedir="${javabin-dir}" />
 	</target>
 
 	<target name="all" depends="init,libs,jar">
@@ -86,7 +91,7 @@
 	<target name="clean" depends="init">
 		<delete dir="${build-dir}" />
 		<delete dir="${dist-dir}" />
-		<delete dir="${analysisdir}/javabin"/>
+		<delete dir="${analysis-dir}/javabin"/>
 	</target>
 	
 </project>

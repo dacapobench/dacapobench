@@ -58,6 +58,7 @@ static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 	if (res!=JNI_OK) return;
 
 	log_field_string(LOG_PREFIX_METHOD_PREPARE);
+	log_field_current_time();
 	log_field_pointer(method);
 	log_field_jlong(class_tag);
 	log_field_string(name_ptr);
@@ -115,6 +116,7 @@ void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
 			res = JVMTI_FUNC_PTR(env,GetFieldName)(env,klass,fields[i],&name_ptr,&signature_ptr,&generic_ptr);
 
 			log_field_string(LOG_PREFIX_VOLATILE);
+			log_field_current_time();
 			log_field_jlong(class_tag);
 			log_field_pointer(fields[i]);
 			log_field_string(name_ptr);
