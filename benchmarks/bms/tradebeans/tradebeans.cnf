@@ -1,7 +1,7 @@
 benchmark tradebeans
   class org.dacapo.harness.Tradebeans
   thread-model per_cpu
-  libs "daytrader.jar";
+  jars "daytrader.jar";
 
 size small args "tiny" 
   threads 1      // per available processor

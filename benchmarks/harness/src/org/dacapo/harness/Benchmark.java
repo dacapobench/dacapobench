@@ -233,11 +233,9 @@ public abstract class Benchmark {
     File file = new File(scratch + "/jar");
     if (!file.exists())
       file.mkdir();
-    if (config.jar != null)
-      extractFileResource("jar/" + config.jar, scratch);
-    if (config.libs != null) {
-      for (int i = 0; i < config.libs.length; i++) {
-        extractFileResource("jar/" + config.libs[i], scratch);
+    if (config.jars != null) {
+      for (int i = 0; i < config.jars.length; i++) {
+        extractFileResource("jar/" + config.jars[i], scratch);
       }
     }
   }
