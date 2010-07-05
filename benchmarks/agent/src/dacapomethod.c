@@ -32,24 +32,31 @@ void method_logon(JNIEnv* env) {
 
 }
 
-void method_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
+void method_class(jvmtiEnv *env, JNIEnv *jnienv, jthread thread, jclass klass) {
 
 }
 
 /* JVMTI_EVENT_METHOD_ENTRY */
 void JNICALL callbackMethodEntry(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method) {
 	if (logState) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+
 		jlong thread_tag = 0;
+		jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jlong thread_klass_tag = 0;
 
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+		jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
 		rawMonitorExit(&lockTag);
 
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_METHOD_ENTER);
 		log_field_current_time();
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
-		log_field_pointer(method);
+		
+		log_thread(thread, thread_tag, thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
+
+		log_field_jlong((jlong)method);
 		log_eol();
 		rawMonitorExit(&lockLog);
 	}

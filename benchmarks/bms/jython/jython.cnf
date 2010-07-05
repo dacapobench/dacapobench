@@ -1,8 +1,7 @@
 benchmark jython
   class org.dacapo.harness.Jython
   thread-model single
-  jar "jython.jar"
-  libs "antlr-3.1.3.jar", "asm-3.1.jar", "asm-commons-3.1.jar", "constantine-0.4.jar", "jna-posix.jar", "jna.jar";
+  jars "jython.jar", "antlr-3.1.3.jar", "asm-3.1.jar", "asm-commons-3.1.jar", "constantine-0.4.jar", "jna-posix.jar", "jna.jar";
 
 size small args "${SCRATCH}/jython/sieve.py","50"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,

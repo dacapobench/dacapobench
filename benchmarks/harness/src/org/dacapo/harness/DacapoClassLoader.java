@@ -95,13 +95,9 @@ public class DacapoClassLoader extends URLClassLoader {
   private static URL[] getJars(Config config, File scratch) throws MalformedURLException {
     List<URL> jars = new ArrayList<URL>();
     File jardir = new File(scratch, "jar");
-    if (config.jar != null) {
-      File jar = new File(jardir, config.jar);
-      jars.add(jar.toURL());
-    }
-    if (config.libs != null) {
-      for (int i = 0; i < config.libs.length; i++) {
-        File jar = new File(jardir, config.libs[i]);
+    if (config.jars != null) {
+      for (int i = 0; i < config.jars.length; i++) {
+        File jar = new File(jardir, config.jars[i]);
         jars.add(jar.toURL());
       }
     }

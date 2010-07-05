@@ -49,10 +49,11 @@
 		<mkdir dir="${build-dir}"/>
 		<mkdir dir="${dist-dir}"/>
 		<mkdir dir="${javabin-dir}"/>
-		<ant dir="${basedir}" antfile="${agent-dir}/build.xml" />
 	</target>
 
 	<target name="libs" depends="bcel,init">
+		<!-- we need the LogTags from the agent library -->
+		<exec executable="ant" dir="${agent-dir}" failonerror="yes" />
 		<!-- get ckjm library -->
 		<antcall target="check-source">
 			<param name="target-file" value="${ckjm-name}" />

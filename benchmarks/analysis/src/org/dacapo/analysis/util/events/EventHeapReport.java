@@ -1,25 +1,31 @@
 package org.dacapo.analysis.util.events;
 
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.CSVOutputStream;
+import org.dacapo.analysis.util.CSVInputStream.NoFieldAvailable;
+import org.dacapo.analysis.util.CSVInputStream.ParseError;
 import org.dacapo.instrument.LogTags;
 
-public class EventHeapReport extends Event {
+public class EventHeapReport extends Event implements EventHasThread {
 	
 	public  static final String TAG = LogTags.LOG_PREFIX_HEAP_REPORT;
 		
 	private long   threadTag;
-	private String threadClassName;
+	private long   threadClassTag;
+	private String threadClass;
 	private String threadName;
 	private long   used;
 	private long   free;
 	private long   total;
 	private long   max;
 	
-	public EventHeapReport(long time, long threadTag, String threadClassName, String threadName,
+	public EventHeapReport(long time, 
+						   long threadTag, long threadClassTag, String threadClass, String threadName,
 						   long used, long free,      long   total,           long   max) {
 		super(time);
 		this.threadTag = threadTag;
-		this.threadClassName = threadClassName;
+		this.threadClassTag = threadClassTag;
+		this.threadClass = threadClass;
 		this.threadName = threadName;
 		this.used = used;
 		this.free = free;
@@ -32,10 +38,16 @@ public class EventHeapReport extends Event {
 	}
 
 	public long getThreadTag() { return threadTag; }
+	public void setThreadTag(long threadTag) { this.threadTag = threadTag; }
 	
-	public String getThreadClassName() { return threadClassName; }
+	public long getThreadClassTag() { return threadClassTag; }
+	public void setThreadClassTag(long threadClassTag) { this.threadClassTag = threadClassTag; }
+	
+	public String getThreadClass() { return threadClass; }
+	public void   setThreadClass(String threadClass) { this.threadClass = threadClass; }
 	
 	public String getThreadName() { return threadName; }
+	public void setThreadName(String threadName) { this.threadName = threadName; }
 	
 	public long getUsed() { return used; }
 	
@@ -44,26 +56,31 @@ public class EventHeapReport extends Event {
 	public long getTotal() { return total; }
 	
 	public long getMax() { return max; }
-	
-	static Event parse(CSVInputStream is) throws EventParseException {
-		try {
-			long time              = is.nextFieldLong();
-			
-			long threadTag         = is.nextFieldLong();
-			String threadClassName = is.nextFieldString();
-			String threadName      = is.nextFieldString();
 
-			long used              = is.nextFieldLong();
-			long free              = is.nextFieldLong();
-			long total             = is.nextFieldLong();
-			long max               = is.nextFieldLong();
-			
-			if (is.numberOfFieldsLeft()==0) 
-				return new EventHeapReport(time, threadTag, threadClassName, threadName,
-										   used, free,      total,           max);
-			
-		} catch (Exception nfe) { }
+	protected void writeEvent(CSVOutputStream os) {
+		os.write(""+getTime());
 		
-		throw new EventParseException("format error "+TAG);
+		EventThread.write(os, this);
+		
+		os.write(""+used);
+		os.write(""+free);
+		os.write(""+total);
+		os.write(""+max);
+	}
+	
+	EventHeapReport(CSVInputStream is) throws NoFieldAvailable, ParseError, EventParseException {
+		super(is);
+		
+		EventThread.read(is, this);
+		
+		used              = is.nextFieldLong();
+		free              = is.nextFieldLong();
+		total             = is.nextFieldLong();
+		max               = is.nextFieldLong();
+		
+		if (is.numberOfFieldsLeft()!=0 && this instanceof EventHeapReport) 
+			throw new EventParseException("additional fields", null);
+		
+
 	}
 }

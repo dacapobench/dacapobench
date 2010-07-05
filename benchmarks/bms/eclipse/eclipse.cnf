@@ -1,7 +1,7 @@
 benchmark eclipse
   class org.dacapo.harness.Eclipse
   thread-model single
-  jar "eclipse.jar";
+  jars "eclipse.jar";
 
 size small   args "setup"
   output stdout digest 0x9d0460a842b72206720942a60581729eaed17d9f,

@@ -1,6 +1,9 @@
 package org.dacapo.analysis.util.events;
 
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.CSVOutputStream;
+import org.dacapo.analysis.util.CSVInputStream.NoFieldAvailable;
+import org.dacapo.analysis.util.CSVInputStream.ParseError;
 import org.dacapo.instrument.LogTags;
 
 public class EventClassPrepare extends Event {
@@ -20,22 +23,24 @@ public class EventClassPrepare extends Event {
 		return TAG;
 	}
 	
+	
+	protected void writeEvent(CSVOutputStream os) {
+		os.write(""+getTime());
+		// os.write(""+classTag);
+		os.write(className);
+	}
+
 	public long getClassTag() { return classTag; }
 	
 	public String getClassName() { return className; }
 
-	static Event parse(CSVInputStream is) throws EventParseException {
-		try {
-			long time              = is.nextFieldLong();
+	EventClassPrepare(CSVInputStream is) throws NoFieldAvailable, ParseError, EventParseException {
+		super(is);
 
-			long classTag          = is.nextFieldLong();
-			String className       = is.nextFieldString(); 
+		// classTag        = is.nextFieldLong();
+		className       = is.nextFieldString(); 
 
-			if (is.numberOfFieldsLeft()==0) 
-				return new EventClassPrepare(time, classTag, className);
-			
-		} catch (Exception nfe) { }
-		
-		throw new EventParseException("format error "+TAG);
+		if (is.numberOfFieldsLeft()!=0 && this instanceof EventClassPrepare) 
+			throw new EventParseException("additional fields", null);
 	}
 }

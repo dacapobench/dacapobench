@@ -1,6 +1,9 @@
 package org.dacapo.analysis.util.events;
 
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.CSVOutputStream;
+import org.dacapo.analysis.util.CSVInputStream.NoFieldAvailable;
+import org.dacapo.analysis.util.CSVInputStream.ParseError;
 import org.dacapo.instrument.LogTags;
 
 public class EventMethodPrepare extends Event {
@@ -9,13 +12,15 @@ public class EventMethodPrepare extends Event {
 	
 	private long methodId;
 	private long classTag;
+	private String classSignature;
 	private String methodName;
 	private String methodSignature;
 	
-	public EventMethodPrepare(long time, long methodId, long classTag, String methodName, String methodSignature) {
+	public EventMethodPrepare(long time, long methodId, long classTag, String classSignature, String methodName, String methodSignature) {
 		super(time);
 		this.methodId = methodId;
 		this.classTag = classTag;
+		this.classSignature = classSignature;
 		this.methodName = methodName;
 		this.methodSignature = methodSignature;
 	}
@@ -24,22 +29,26 @@ public class EventMethodPrepare extends Event {
 		return TAG;
 	}
 	
-	static Event parse(CSVInputStream is) throws EventParseException {
-		try {
-			long time              = is.nextFieldLong();
-
-			long methodId          = is.nextFieldPointer();
-
-			long classTag          = is.nextFieldLong();
-			String methodName      = is.nextFieldString();
-			String methodSignature = is.nextFieldString();
-
-			if (is.numberOfFieldsLeft()==0) 
-				return new EventMethodPrepare(time, methodId, classTag, methodName, methodSignature);
-			
-		} catch (Exception nfe) { }
-		
-		throw new EventParseException("format error "+TAG);
+	protected void writeEvent(CSVOutputStream os) {
+		os.write(""+getTime());
+		os.write(classSignature);
+		os.write(""+methodId);
+		os.write(methodName);
+		os.write(methodSignature);
 	}
+	
+	EventMethodPrepare(CSVInputStream is) throws EventParseException, NoFieldAvailable, ParseError {
+		super(is);
+		
+		// classTag        = is.nextFieldLong();
+		classSignature  = is.nextFieldString();
 
+		methodId        = is.nextFieldPointer();
+
+		methodName      = is.nextFieldString();
+		methodSignature = is.nextFieldString();
+		
+		if (is.numberOfFieldsLeft()!=0 && this instanceof EventMethodPrepare) 
+			throw new EventParseException("additional fields", null);
+	}
 }

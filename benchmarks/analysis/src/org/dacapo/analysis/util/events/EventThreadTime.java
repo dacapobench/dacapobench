@@ -1,6 +1,9 @@
 package org.dacapo.analysis.util.events;
 
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.CSVOutputStream;
+import org.dacapo.analysis.util.CSVInputStream.NoFieldAvailable;
+import org.dacapo.analysis.util.CSVInputStream.ParseError;
 import org.dacapo.instrument.LogTags;
 
 public class EventThreadTime extends Event {
@@ -18,22 +21,33 @@ public class EventThreadTime extends Event {
 		this.runTime = runTime;
 	}
 	
-	public String getLogPrefix() {
-		return TAG;
+	public String getLogPrefix() { return TAG; }
+	
+	public long getIndex() { return index; }
+	
+	public long getThreadTag() { return threadTag; }
+	
+	public long getRunTime() { return runTime; }
+	
+	public String toString() { 
+		return super.toString()+":"+getIndex()+":"+getThreadTag()+":"+getRunTime();
 	}
 
-	static Event parse(CSVInputStream is) throws EventParseException {
-		try {
-			long time              = is.nextFieldLong();
-
-			long   index           = is.nextFieldLong();
-			long   threadTag       = is.nextFieldLong();
-			long   runTime         = is.nextFieldLong();
-			
-			if (is.numberOfFieldsLeft()==0) 
-				return new EventThreadTime(time, index, threadTag, runTime);
-		} catch (Exception nfe) { }
+	protected void writeEvent(CSVOutputStream os) {
+		os.write(""+getTime());
+		os.write(""+index);
+		os.write(""+threadTag);
+		os.write(""+runTime);
+	}
+	
+	EventThreadTime(CSVInputStream is) throws NoFieldAvailable, ParseError, EventParseException {
+		super(is);
 		
-		throw new EventParseException("format error "+TAG);
+		index           = is.nextFieldLong();
+		threadTag       = is.nextFieldLong();
+		runTime         = is.nextFieldLong();
+		
+		if (is.numberOfFieldsLeft()!=0 && this instanceof EventThreadTime) 
+			throw new EventParseException("additional fields", null);
 	}
 }

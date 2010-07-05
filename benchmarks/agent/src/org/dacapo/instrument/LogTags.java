@@ -7,6 +7,7 @@ public final class LogTags {
 
 	public static final String LOG_PREFIX_ALLOCATION                = "HA";
 	public static final String LOG_PREFIX_FREE                      = "HF";
+	public static final String LOG_PREFIX_POINTER                   = "HC";
 
 	public static final String LOG_PREFIX_CLASS_PREPARE             = "LD";
 	public static final String LOG_PREFIX_METHOD_PREPARE            = "LM";
@@ -22,6 +23,7 @@ public final class LogTags {
 
 	public static final String LOG_PREFIX_MONITOR_ACQUIRE           = "MS";
 	public static final String LOG_PREFIX_MONITOR_RELEASE           = "ME";
+	public static final String LOG_PREFIX_MONITOR_NOTIFY            = "MN";
 	public static final String LOG_PREFIX_MONITOR_CONTENTED_ENTER   = "MC";
 	public static final String LOG_PREFIX_MONITOR_CONTENTED_ENTERED = "Mc";
 	public static final String LOG_PREFIX_MONITOR_WAIT              = "MW";

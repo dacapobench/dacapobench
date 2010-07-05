@@ -31,7 +31,7 @@ public class CSVOutputStream {
 	}
 
 	public synchronized void write(String field) {
-		if (field==null) {
+		if (field==null || field.length()==0) {
 			writeField("",true);
 		} else if (containsCharToBeDelimited(field)) {
 			writeField(field,true);

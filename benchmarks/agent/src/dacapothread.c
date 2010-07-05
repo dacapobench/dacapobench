@@ -1,5 +1,7 @@
 #include <sys/time.h>
 
+#include "dacapo.h"
+
 #include "dacapothread.h"
 
 #include "dacapotag.h"
@@ -13,6 +15,9 @@ struct thread_s {
     jboolean  new_tag;
     jlong     tag;
     jthread   thread;
+    jlong     thread_klass_tag;
+    jclass    thread_klass;
+    jboolean  thread_klass_has_new_tag;
     jboolean  start;
     jboolean  end;
 };
@@ -21,21 +26,24 @@ struct thread_list_s {
 	struct thread_list_s* next;
 	jlong     tag;
 	jthread   thread;
+	jclass    thread_klass;
+	jlong     thread_klass_tag;
 	jlong     lastCPUTime;
 	jlong     diffCPUTime;
 };
 
-jrawMonitorID       lockThreadData;
+MonitorLockType       lockThreadData;
 
 struct thread_s *thread_head = NULL, *thread_tail = NULL;
 
 struct thread_list_s *thread_list_head = NULL, *thread_list_tail = NULL;
 
-static void logThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag);
-static void logThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag);
+static void logThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jclass thread_class, jlong thread_class_tag, jboolean thread_class_has_new_tag);
+static void logThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jclass thread_class, jlong thread_class_tag, jboolean thread_class_has_new_tag);
 
 void thread_init() {
-	if (JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "thread data", &(lockThreadData)) != JNI_OK) {
+	if (!rawMonitorInit(baseEnv,"thread data",&lockThreadData)) {
+		/* JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "thread data", &(lockThreadData)) != JNI_OK) { */
 		fprintf(stderr,"unable to create thread data lock\n");
 		exit(10);
 	}
@@ -55,6 +63,8 @@ void thread_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks
 }
 
 void thread_live(jvmtiEnv* jvmti, JNIEnv* env) {
+	/* fprintf(stderr,"thread_live %s\n",(logState?"true":"false")); */
+
 	struct timeval tv;
     gettimeofday(&tv, NULL);
 
@@ -74,15 +84,17 @@ void thread_live(jvmtiEnv* jvmti, JNIEnv* env) {
 }
 
 void thread_logon(JNIEnv* jnienv) {
+	/* fprintf(stderr,"thread_logon %s\n",(logState?"true":"false")); */
+
 	rawMonitorEnter(&lockThreadData);
 	while (thread_head!=NULL) {
 		struct thread_s* temp = thread_head;
+		thread_head = thread_head->next;
 		if (thread_head==NULL) thread_tail = NULL;
-		else thread_head = thread_head->next;
 
 		if (temp!=NULL) {
-			if (temp->start) logThreadStart(baseEnv, jnienv, temp->thread, temp->tag, temp->new_tag);
-			if (temp->end)   logThreadEnd(baseEnv, jnienv, temp->thread, temp->tag, temp->new_tag);
+			if (temp->start) logThreadStart(baseEnv, jnienv, temp->thread, temp->tag, temp->new_tag, temp->thread_klass, temp->thread_klass_tag, temp->thread_klass_has_new_tag);
+			if (temp->end)   logThreadEnd(baseEnv, jnienv, temp->thread, temp->tag, temp->new_tag, temp->thread_klass, temp->thread_klass_tag, temp->thread_klass_has_new_tag);
 			
 			if (temp->end) {
 				(*jnienv)->DeleteGlobalRef(jnienv,temp->thread);
@@ -108,16 +120,22 @@ void thread_logon(JNIEnv* jnienv) {
 					if (thread_list_tail==found) thread_list_tail = previous;
 
 					(*jnienv)->DeleteGlobalRef(jnienv,found->thread);
+					(*jnienv)->DeleteGlobalRef(jnienv,found->thread_klass);
 
 					free(found);
 				}
 			} else {
 				struct thread_list_s* tempList = (struct thread_list_s*)malloc(sizeof(struct thread_list_s));
 				
-				tempList->thread      = temp->thread;
 				tempList->next        = NULL;
-				tempList->tag         = temp->tag;
+
+				tempList->thread       = temp->thread;
+				tempList->tag          = temp->tag;
+				tempList->thread_klass = temp->thread_klass;
+				tempList->thread_klass_tag = temp->thread_klass_tag;
+
 				tempList->lastCPUTime = 0;
+
 				JVMTI_FUNC_PTR(baseEnv,GetThreadCpuTime)(baseEnv,temp->thread,&(tempList->lastCPUTime));
 				
 				if (thread_list_tail==NULL) {
@@ -132,40 +150,22 @@ void thread_logon(JNIEnv* jnienv) {
 	rawMonitorExit(&lockThreadData);
 }
 
-void thread_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
+void thread_class(jvmtiEnv *env, JNIEnv *jnienv, jthread thread, jclass klass) {
+	
+}
+
+void thread_agent_log(JNIEnv *env, jclass klass, jobject thread)
+{
 
 }
 
-void thread_log(JNIEnv* env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag) {
-	jniNativeInterface* jni_table;
-	log_field_jlong(thread_tag);
-	if (thread_has_new_tag) {
-		jniNativeInterface* jni_table;
-		if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-			fprintf(stderr, "failed to get JNI function table\n");
-			exit(1);
-		}
-
-		LOG_OBJECT_CLASS(jni_table,env,baseEnv,thread);
-
-		// get class and get thread name.
-		jvmtiThreadInfo info;
-		JVMTI_FUNC_PTR(baseEnv,GetThreadInfo)(baseEnv, thread, &info);
-		log_field_string(info.name);
-		if (info.name!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)info.name);
-	} else {
-		log_field_string(NULL);
-		log_field_string(NULL);
-	}
-}
-
-static void logThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag)
+static void logThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jclass thread_klass, jlong thread_klass_tag, jboolean thread_klass_has_new_tag)
 {
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_THREAD_START);
 	log_field_current_time();
 
-	thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 	
 	log_eol();
 	rawMonitorExit(&lockLog);
@@ -173,15 +173,22 @@ static void logThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread,
 
 void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread)
 {
+	/* fprintf(stderr,"callbackThreadStart %s\n",(logState?"true":"false")); */
+	jniNativeInterface* jni_table = JNIFunctionTable();
+
+	jlong thread_tag = 0;
+	jlong thread_klass_tag = 0;
+	jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+	
+	rawMonitorEnter(&lockTag);
+	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+	jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
+	rawMonitorExit(&lockTag);
+
 	if (logState) {
 		/* log thread start */
-		jlong thread_tag = 0;
 
-		rawMonitorEnter(&lockTag);
-		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-		rawMonitorExit(&lockTag);
-
-		logThreadStart(jvmti_env, jni_env, thread, thread_tag, thread_has_new_tag);
+		logThreadStart(jvmti_env, jni_env, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
 		/* add to the thread list */
 		rawMonitorEnter(&lockThreadData);
@@ -199,8 +206,10 @@ void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		if (found==NULL) {
 			found = (struct thread_list_s*)malloc(sizeof(struct thread_list_s));
 			
-			found->thread        = (*jni_env)->NewGlobalRef(jni_env,thread);
-			found->tag           = thread_tag;
+			found->thread                   = (*jni_env)->NewGlobalRef(jni_env,thread);
+			found->tag                      = thread_tag;
+			found->thread_klass             = (*jni_env)->NewGlobalRef(jni_env,thread_klass);
+			found->thread_klass_tag         = thread_klass_tag;
 			found->next          = NULL;
 			found->lastCPUTime   = 0;
 			
@@ -215,15 +224,17 @@ void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 	} else {
 		struct thread_s* new_thread = (struct thread_s*)malloc(sizeof(struct thread_s));
 	
-		new_thread->next   = NULL;
-		new_thread->thread = (*jni_env)->NewGlobalRef(jni_env,thread);
-		   
-		new_thread->start  = !FALSE;
-		new_thread->end    = FALSE;
+		new_thread->next    = NULL;
 
-		rawMonitorEnter(&lockTag);
-		new_thread->new_tag = getTag(thread, &(new_thread->tag));
-		rawMonitorExit(&lockTag);
+		new_thread->thread  = (*jni_env)->NewGlobalRef(jni_env,thread);
+		new_thread->new_tag = thread_has_new_tag;
+		new_thread->tag     = thread_tag;
+		new_thread->thread_klass = (*jni_env)->NewGlobalRef(jni_env,thread_klass);
+		new_thread->thread_klass_tag = thread_klass_tag;
+		new_thread->thread_klass_has_new_tag = thread_klass_has_new_tag;
+		   
+		new_thread->start   = !FALSE;
+		new_thread->end     = FALSE;
 
 		rawMonitorEnter(&lockThreadData);
 		if (thread_tail==NULL) {
@@ -236,13 +247,13 @@ void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 	}
 }
 
-static void logThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag)
+static void logThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jclass thread_klass, jlong thread_klass_tag, jboolean thread_klass_has_new_tag)
 {
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_THREAD_STOP);
 	log_field_current_time();
-	
-	thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+
+	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);	
 	
 	log_eol();
 	rawMonitorExit(&lockLog);
@@ -250,14 +261,21 @@ static void logThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, j
 
 void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread)
 {
-	if (logState ) {
-		jlong thread_tag = 0;
-	
-		rawMonitorEnter(&lockTag);
-		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-		rawMonitorExit(&lockTag);
+	/* fprintf(stderr,"callbackThreadEnd %s\n",(logState?"true":"false")); */
 
-		logThreadEnd(jvmti_env, jni_env, thread, thread_tag, thread_has_new_tag);
+	jniNativeInterface* jni_table = JNIFunctionTable();
+
+	jlong thread_tag = 0;
+	jlong thread_klass_tag = 0;
+	jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+	
+	rawMonitorEnter(&lockTag);
+	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+	jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
+	rawMonitorExit(&lockTag);
+
+	if (logState ) {
+		logThreadEnd(jvmti_env, jni_env, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 
 		rawMonitorEnter(&lockThreadData); 
 		struct thread_list_s* found    = NULL;
@@ -281,20 +299,15 @@ void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 			if (thread_list_tail==found) thread_list_tail = previous;
 		
 			(*jni_env)->DeleteGlobalRef(jni_env,found->thread);
+			(*jni_env)->DeleteGlobalRef(jni_env,found->thread_klass);
 			
 			free(found);
 		}
 		rawMonitorExit(&lockThreadData); 
 	} else {
-		jlong  thread_tag = 0;
-
-		rawMonitorEnter(&lockTag);
-		jboolean new_thread_tag = getTag(thread, &thread_tag);
-		rawMonitorExit(&lockTag);
-
 		rawMonitorEnter(&lockThreadData);
 		struct thread_s* found = NULL;
-		if (!new_thread_tag) {
+		if (!thread_has_new_tag) {
 			struct thread_s* temp  = thread_head;
 			
 			while(found==NULL && temp!=NULL) {
@@ -309,9 +322,15 @@ void JNICALL callbackThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 			struct thread_s* new_thread = (struct thread_s*)malloc(sizeof(struct thread_s));
 	
 			new_thread->next   = NULL;
+
 			new_thread->thread = (*jni_env)->NewGlobalRef(jni_env,thread);
-			new_thread->new_tag = new_thread_tag;
+			new_thread->new_tag = thread_has_new_tag;
 			new_thread->tag    = thread_tag;
+
+			new_thread->thread_klass = (*jni_env)->NewGlobalRef(jni_env,thread_klass);
+			new_thread->thread_klass_tag = thread_klass_tag;
+			new_thread->thread_klass_has_new_tag = thread_klass_has_new_tag;
+
 			new_thread->start  = FALSE;
 			new_thread->end    = !FALSE;
 

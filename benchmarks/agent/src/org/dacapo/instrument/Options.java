@@ -15,6 +15,7 @@ class Options {
 	public static final String LOG_STOP               = "log_stop";
 	public static final String RUNTIME                = "runtime";
 	public static final String ALLOCATE               = "allocate";
+	public static final String POINTER                = "pointer";
 	public static final String MONITOR                = "monitor";
 	public static final String CALL_CHAIN             = "call_chain";
 	public static final String EXCLUDE_PACKAGES       = "exclude";

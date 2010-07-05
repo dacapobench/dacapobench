@@ -1,6 +1,9 @@
 package org.dacapo.analysis.util.events;
 
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.CSVOutputStream;
+import org.dacapo.analysis.util.CSVInputStream.NoFieldAvailable;
+import org.dacapo.analysis.util.CSVInputStream.ParseError;
 import org.dacapo.instrument.LogTags;
 
 public class EventTime extends Event {
@@ -15,14 +18,14 @@ public class EventTime extends Event {
 		return TAG;
 	}
 
-	static Event parse(CSVInputStream is) throws EventParseException {
-		try {
-			long time              = is.nextFieldLong();
-
-			if (is.numberOfFieldsLeft()==0) 
-				return new EventTime(time);
-		} catch (Exception nfe) { }
+	protected void writeEvent(CSVOutputStream os) {
+		os.write(""+getTime());
+	}
+	
+	EventTime(CSVInputStream is) throws NoFieldAvailable, ParseError, EventParseException {
+		super(is);
 		
-		throw new EventParseException("format error "+TAG);
+		if (is.numberOfFieldsLeft()!=0 && this instanceof EventTime) 
+			throw new EventParseException("additional fields", null);
 	}
 }

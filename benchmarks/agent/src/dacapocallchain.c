@@ -34,11 +34,16 @@ void call_chain_logon(JNIEnv* env) {
 #define MAX_NUMBER_OF_FRAMES 64
 #define START_FRAME 4
 
-void log_call_chain(JNIEnv *env, jclass klass, jobject thread) {
+void log_call_chain(JNIEnv *jni_env, jclass klass, jobject thread) {
+	jniNativeInterface* jni_table = JNIFunctionTable();
+
 	jlong thread_tag = 0;
+	jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+	jlong thread_klass_tag = 0;
 
 	rawMonitorEnter(&lockTag);
 	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+	jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
 	rawMonitorExit(&lockTag);
 
 	/* iterate through frames */
@@ -50,26 +55,27 @@ void log_call_chain(JNIEnv *env, jclass klass, jobject thread) {
 
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_CALL_CHAIN_START);
-	thread_log(env, thread, thread_tag, thread_has_new_tag);
+	log_thread(thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
 	log_eol();
-
-	jniNativeInterface* jni_table;
-	if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-		fprintf(stderr, "failed to get JNI function table\n");
-		exit(1);
-	}
+	rawMonitorExit(&lockLog);
 
 	int i;
 	for(i=0; i<count; i++) {
 		jlong class_tag = 0;
 
-		log_field_string(LOG_PREFIX_CALL_CHAIN_FRAME);
-		log_field_jlong((jlong)i);
+		jclass klass = NULL;
+		jlong  klass_tag = 0;
+		err = JVMTI_FUNC_PTR(baseEnv,GetMethodDeclaringClass)(baseEnv,frames[i].method,&klass);
+		
+		rawMonitorEnter(&lockTag);
+		jboolean klass_has_new_tag = getTag(klass,&klass_tag);
+		rawMonitorExit(&lockTag);
 
-		jclass declClass = NULL;
-		err = JVMTI_FUNC_PTR(baseEnv,GetMethodDeclaringClass)(baseEnv,frames[i].method,&declClass);
-		getTag(declClass,&class_tag);
-    	LOG_CLASS(jni_table,baseEnv,declClass);
+		rawMonitorEnter(&lockLog);		
+		log_field_string(LOG_PREFIX_CALL_CHAIN_FRAME);
+		log_field_jlong(thread_tag);
+		log_field_jlong((jlong)i);
+		log_class(klass,klass_tag,klass_has_new_tag);
 
     	char* name_ptr = NULL;
     	char* signature_ptr  = NULL;
@@ -88,6 +94,7 @@ void log_call_chain(JNIEnv *env, jclass klass, jobject thread) {
     	if (generic_ptr!=NULL)   JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic_ptr);
 
     	log_eol();
+		rawMonitorExit(&lockLog);		
 	}
 
 	/*
@@ -109,6 +116,7 @@ void log_call_chain(JNIEnv *env, jclass klass, jobject thread) {
 	}
 	*/
 
+	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_CALL_CHAIN_STOP);
 	log_field_jlong(thread_tag);
 	log_eol();

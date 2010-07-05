@@ -60,7 +60,8 @@ jvmtiCapabilities   availableCapabilities;
 jvmtiCapabilities   capabilities;
 jvmtiEventCallbacks callbacks;
 
-jrawMonitorID       lockClass;
+MonitorLockType       agentLock;
+MonitorLockType       lockClass;
 
 jboolean            jvmRunning = FALSE;
 jboolean            jvmStopped = FALSE;
@@ -86,6 +87,18 @@ struct exclude_list_s {
 static void processCapabilities();
 static void processOptions();
 static void agent_thread_main(void* arg);
+
+static jniNativeInterface* jni_table = NULL;
+
+jniNativeInterface* getJNIFunctionTable(char* file, int line) {
+	if (jni_table==NULL) {
+		if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
+			fprintf(stderr, "failed to get JNI function table: %s:%d\n",file,line);
+			exit(1);
+		}
+	}
+	return jni_table;
+}
 
 static void JNICALL callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jclass class_being_redefined, jobject loader,
@@ -239,10 +252,17 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
         fprintf(stderr, "failed to initialize tag\n");
         exit(1);
     }
-    if (JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent data", &(lockClass))!=JNI_OK) {
+    
+    if (!rawMonitorInit(baseEnv, "agent data", &lockClass)) {
+    	/* JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent data", &(lockClass))!=JNI_OK) { */
         fprintf(stderr, "failed to create raw monitor\n");
         exit(1);
     }
+
+	if (!rawMonitorInit(baseEnv,"agent lock",&agentLock)) {
+		/* JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent lock", &(agentLock)) != JNI_OK) { */
+		return FALSE;
+	}
 
 	agent_exclude_list();
 	allocation_init();
@@ -273,12 +293,7 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
 JNIEXPORT void JNICALL 
 Agent_OnUnload(JavaVM *vm)
 {
-    if (logFile != NULL) {
-        FILE* tmp = logFile;
-        logFile = NULL;
-        fflush(tmp);
-        fclose(tmp);
-    }
+	dacapo_log_stop();
 }
 
 /* ------------------------------------------------------------------- */
@@ -491,6 +506,8 @@ static void generateFileName(char* file_name, int max_file_name_len) {
 #define ASM_PACKAGE_NAME     "org/objectweb/asm/"
 #define DACAPO_PACKAGE_NAME  "org/dacapo/instrument/"
 
+#define EXCLUDE_CHECK "sun/reflect/"
+
 static jboolean isNotExcluded(const char* name)
 {
 	struct exclude_list_s* chk;
@@ -594,7 +611,7 @@ callbackVMDeath(jvmtiEnv *jvmti, JNIEnv *env)
 }
 
 static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
-	if (logFile==NULL) return;
+	if (! logFileOpen()) return;
 	
 	char* name_ptr = NULL;
 	char* signature_ptr  = NULL;
@@ -606,8 +623,9 @@ static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 
 	log_field_string(LOG_PREFIX_METHOD_PREPARE);
 	log_field_current_time();
-	log_field_pointer(method);
-	log_field_jlong(class_tag);
+	log_field_string(class_name);
+	log_field_jlong((jlong)method);
+	/* log_field_jlong(class_tag); */
 	log_field_string(name_ptr);
 	log_field_string(signature_ptr);
 	log_eol();
@@ -626,11 +644,12 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	jlong class_tag = 0;
 	
 	// jclass GetObjectClass(JNIEnv *env, jobject obj);
+	/*
 	rawMonitorEnter(&lockTag);
-	getTag(thread,&thread_tag);
-	getTag(klass,&class_tag);
+	jboolean klass_new_tag  = getTag(klass,&class_tag);
 	rawMonitorExit(&lockTag);
-
+	*/
+	
 	jint       method_count = 0;
 	jmethodID* methods = NULL;
 	          
@@ -653,21 +672,25 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_CLASS_PREPARE);
 	log_field_current_time();
-	log_field_jlong(class_tag);
+	// log_field_jlong(class_tag);
 	log_field_string(signature);
 	log_eol();
-	while(i<method_count) reportMethod(signature,class_tag,methods[i++]);
 	rawMonitorExit(&lockLog);
+	while(i<method_count) {
+		rawMonitorEnter(&lockLog);
+		reportMethod(signature,class_tag,methods[i++]);
+		rawMonitorExit(&lockLog);
+	}
 
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)methods);
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)signature);
 	JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)generic);
 	
-	allocation_class(jvmti_env, jni_env, klass);
-	exception_class(jvmti_env, jni_env, klass);
-	method_class(jvmti_env, jni_env, klass);
-	monitor_class(jvmti_env, jni_env, klass);
-	thread_class(jvmti_env, jni_env, klass);
+	allocation_class(jvmti_env, jni_env, thread, klass);
+	exception_class(jvmti_env, jni_env, thread, klass);
+	method_class(jvmti_env, jni_env, thread, klass);
+	monitor_class(jvmti_env, jni_env, thread, klass);
+	thread_class(jvmti_env, jni_env, thread, klass);
 	
 }
 
@@ -679,7 +702,7 @@ callbackClassPrepare(jvmtiEnv *jvmti_env,
             JNIEnv* jni_env,
             jthread thread,
             jclass klass) {
-    if (logFile==NULL || jvmStopped) return;
+    if (jvmStopped || !logFileOpen()) return;
     
     if (jvmRunning)
 		processClassPrepare(jvmti_env, jni_env, thread, klass);

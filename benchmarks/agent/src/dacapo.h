@@ -46,6 +46,7 @@
 
 #define NONE "<none>"
 
+/*
 #define LOG_CLASS(jni_table,jvmti_env,klass) \
         {\
 			char* signature = NULL;\
@@ -58,7 +59,31 @@
 			if (generic!=NULL) JVMTI_FUNC_PTR(jvmti_env,Deallocate)(jvmti_env,(unsigned char*)generic);\
 		}
 
-#define LOG_OBJECT_CLASS(jni_table,jni_env,jvmti_env,object) LOG_CLASS(jni_tble,jvmti_env,JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object))
+#define LOG_OBJECT_CLASS(x)
+*/
+
+/*
+#define LOG_OBJECT_CLASS(jni_table,jni_env,jvmti_env,object) \
+	{\
+		if (object != NULL) {\
+			jobject klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object); \
+			jlong klass_tag = 0; \
+			\
+			jboolean klass_has_new_tag = getTag(klass,&klass_tag);\
+			\
+			log_field_jlong(klass_tag);\
+			\
+			if (klass_has_new_tag) {\
+				LOG_CLASS(jni_table,jvmti_env,JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object));\
+			} else {\
+				log_field_string(NULL); \
+			}\
+		} else {\
+			log_field_jlong(0);\
+			log_field_string(NULL);\
+		}\
+	}
+*/
 
 #define DEFINE_CALLBACK(cb,c,s) \
     (cb)->c = callback##c; \
@@ -75,6 +100,10 @@ extern JavaVM*             jvm;
 extern jvmtiEnv*           baseEnv;
 extern jboolean            jvmRunning;
 extern jboolean            jvmStopped;
+
+jniNativeInterface* getJNIFunctionTable(char* file, int line);
+
+#define JNIFunctionTable() getJNIFunctionTable(__FILE__,__LINE__)
 
 void reportJVMTIError(FILE* fh, jvmtiError errorNumber, const char *str);
 

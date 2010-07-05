@@ -1,16 +1,18 @@
+#include "dacapolock.h"
 #include "dacapotag.h"
 
-jrawMonitorID       lockTag;
+MonitorLockType       lockTag;
 jlong               objectNumber =  4;
 jlong               internalTag  = 0;
 
 _Bool dacapo_tag_init() {
-    return JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "tag data", &(lockTag))==JNI_OK;
+    /* return JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "tag data", &(lockTag))==JNI_OK; */
+    return rawMonitorInit(baseEnv,"tag data",&lockTag);
 }
 
 jboolean GET_TAG(char* file, int line, jobject object, jlong* tag) {
 	jint res = JVMTI_FUNC_PTR(baseEnv,GetTag)(baseEnv,object,tag);
-	if (*tag == 0) {
+	if (object != NULL && *tag == 0) {
 		*tag = --internalTag;
 		JVMTI_FUNC_PTR(baseEnv,SetTag)(baseEnv,object,*tag);
 		jlong tmp_tag = 0;
@@ -20,8 +22,9 @@ jboolean GET_TAG(char* file, int line, jobject object, jlong* tag) {
 		    exit(1);
 		}
 		return !FALSE;
-	} else
+	} else {
 		return FALSE;
+	}
 }
 
 jlong SET_TAG(char* file, int line, jobject object, jlong size) {

@@ -46,8 +46,8 @@ public class Instrument {
 			if (options.has(Options.CLASSES_INITIALIZATION))
 				cv = new ClinitInstrument(cv, options.value(Options.CLASSES_INITIALIZATION)); 
 			
-			if (options.has(Options.ALLOCATE))
-				cv = new AllocateInstrument(cv, options.value(Options.ALLOCATE));
+			if (options.has(Options.ALLOCATE) || options.has(Options.POINTER))
+				cv = new AllocateInstrument(cv, options.value(Options.ALLOCATE), options.has(Options.POINTER));
 			
 			if (options.has(Options.CALL_CHAIN))
 				cv = new CallChainInstrument(cv);

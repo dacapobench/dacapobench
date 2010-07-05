@@ -30,7 +30,7 @@ void exception_logon(JNIEnv* env) {
 
 }
 
-void exception_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
+void exception_class(jvmtiEnv *env, JNIEnv *jnienv, jthread thread, jclass klass) {
 
 }
 
@@ -44,37 +44,35 @@ void exception_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallba
 void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method, jlocation location, jobject exception, jmethodID catch_method, jlocation catch_location)
 {
 	if (logState) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+
 		jlong thread_tag = 0;
 		jlong exception_tag = 0;
+		jlong klass_tag = 0;
+		jlong exception_klass_tag = 0;
 
+		jclass klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jobject exception_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,exception);
+		
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean exception_has_new_tag = getTag(exception, &exception_tag);
+		jboolean klass_has_new_tag = getTag(klass, &klass_tag);
+		jboolean exception_klass_has_new_tag = getTag(exception_klass, &exception_klass_tag);
 		rawMonitorExit(&lockTag);
 
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_EXCEPTION);
 
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+		log_thread(thread, thread_tag, thread_has_new_tag, klass, klass_tag, klass_has_new_tag);
 
-		jniNativeInterface* jni_table;
-		if (exception_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-		}
 		log_field_jlong(exception_tag);
-		if (exception_has_new_tag) {
-	 		LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,exception);
-		} else {
-			log_field_string(NULL);
-		}
-
+		
+		log_class(exception_klass, exception_klass_tag, exception_klass_has_new_tag);
+		
 		char* name = NULL;
 		char* signature  = NULL;
 		char* generic = NULL;
-		jclass klass = NULL;
 		char* class_signature = NULL;
 		char* class_generic = NULL;
 
@@ -116,33 +114,31 @@ void JNICALL callbackException(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thr
 void JNICALL callbackExceptionCatch(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jmethodID method, jlocation location, jobject exception)
 {
 	if (logState ) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+
+		jclass klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jclass exception_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,exception);
+
 		jlong thread_tag = 0;
 		jlong exception_tag = 0;
+		jlong klass_tag = 0;
+		jlong exception_klass_tag = 0;
 
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
 		jboolean exception_has_new_tag = getTag(exception, &exception_tag);
+		jboolean klass_has_new_tag = getTag(klass, &klass_tag);
+		jboolean exception_klass_has_new_tag = getTag(exception_klass, &exception_klass_tag);
 		rawMonitorExit(&lockTag);
 
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_EXCEPTION_CATCH);
 
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
-
-		jniNativeInterface* jni_table;
-		if (exception_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-		}
+		log_thread(thread, thread_tag, thread_has_new_tag, klass, klass_tag, klass_has_new_tag);
 
 		log_field_jlong(exception_tag);
-		if (exception_has_new_tag) {
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,exception);
-		} else {
-			log_field_string(NULL);
-		}
+		
+		log_class(exception_klass, exception_klass_tag, exception_klass_has_new_tag);
 
 		char* name_ptr = NULL;
 		char* signature_ptr  = NULL;

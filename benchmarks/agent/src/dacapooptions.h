@@ -12,6 +12,7 @@
 #define OPT_LOAD_CLASSES     "load_classes"
 #define OPT_THREAD           "thread"
 #define OPT_ALLOCATE         "allocate"
+#define OPT_POINTER         "pointer"
 #define OPT_BREAK            "break"
 #define OPT_MONITOR          "monitor"
 #define OPT_LOG_FILE         "log_file"
@@ -20,9 +21,10 @@
 #define OPT_GC               "gc"
 #define OPT_CALL_CHAIN       "call_chain"
 #define OPT_LOG_FILE_LIMIT   "log_limit"
+#define OPT_LOG_FILE_GZIP    "gzip"
 #define OPT_VOLATILE         "volatile"
 #define OPT_INTERVAL         "interval"
-#define OPT_EXCLUDE_PACKAGES "exclude"
+#define OPT_EXCLUDE_PACKAGES "exclude_package"
 #define OPT_EXCLUDE_CLASSES  "exclude_classes"
 
 _Bool isSelected(const char* option, char* argument);

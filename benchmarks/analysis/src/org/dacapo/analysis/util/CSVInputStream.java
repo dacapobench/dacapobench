@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 public class CSVInputStream {
 	
@@ -27,7 +28,8 @@ public class CSVInputStream {
 	private int                parseRow  = 1;
 	private int                parseChar;
 	
-	private LinkedList<String> currentRow;
+	private Vector<String>     currentRow;
+	private int                fieldIndex = 0;
 	
 	public CSVInputStream(InputStream is) {
 		this(is,DELIMITER,SEPARATOR);
@@ -41,13 +43,13 @@ public class CSVInputStream {
 		this.is = is;
 		this.delimiter = delimiter;
 		this.separator = separator;
-		this.currentRow = new LinkedList<String>();
+		this.currentRow = new Vector<String>();
 	}
 	
 	public synchronized String nextFieldString() throws NoFieldAvailable {
-		if (currentRow.isEmpty())
+		if (currentRow.size() <= fieldIndex)
 			throw new NoFieldAvailable("no fields left");
-		return currentRow.pop();
+		return currentRow.elementAt(fieldIndex++);
 	}
 	
 	public boolean nextFieldBoolean() throws NoFieldAvailable {
@@ -89,6 +91,10 @@ public class CSVInputStream {
 		}
 		return v;
 	}
+
+	public int currentRowNumber() {
+		return parseRow;
+	}
 	
 	public boolean nextRow() throws CSVException {
 		if (eof) return false;
@@ -97,6 +103,7 @@ public class CSVInputStream {
 
 		eol = false;
 		currentRow.clear();
+		fieldIndex = 0;
 		parseChar = 0;
 		
 		while (found && !eol) {
@@ -104,7 +111,7 @@ public class CSVInputStream {
 			
 			found = field != null;
 			
-			if (found) currentRow.addLast(field);
+			if (found) currentRow.add(field);
 		}
 		
 		boolean foundRow = !currentRow.isEmpty() || !eof;
@@ -114,8 +121,34 @@ public class CSVInputStream {
 		return foundRow;
 	}
 	
+	public Vector<String> getAllFields() {
+		return (Vector<String>)(currentRow.clone());
+	}
+	
 	public int numberOfFieldsLeft() {
-		return currentRow.size();
+		return currentRow.size() - fieldIndex;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		for(String file: args) {
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				CSVInputStream is = new CSVInputStream(fis);
+				
+				System.err.println("FILE:"+file);
+				
+				while (is.nextRow()) {
+					System.err.println("  ROW #"+is.currentRowNumber());
+					for(int i=0; i<is.numberOfFieldsLeft(); i++) {
+						System.err.println("    FIELD #"+i+":"+is.nextFieldString());
+					}
+				}
+			} finally {
+				if (fis != null) 
+					fis.close();
+			}
+		}
 	}
 	
 	private String readField() throws CSVException {
@@ -265,16 +298,4 @@ public class CSVInputStream {
 		}
 	};
 
-	public static void main(String[] args) throws Exception {
-		CSVInputStream is = new CSVInputStream(new FileInputStream(new File(args[0])));
-		
-		int rowCount = 0;
-		while (is.nextRow()) {
-			System.out.println("ROW #"+ ++rowCount);
-			int fieldCount = 0;
-			while (is.numberOfFieldsLeft()!=0) {
-				System.out.println("  Field #"+ ++fieldCount + is.nextFieldString());
-			}
-		}
-	}
 }

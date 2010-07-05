@@ -10,9 +10,10 @@
 	<description>DaCapo Agent</description>
 
 	<import file="../util.xml"/>
+	<import file="../libs/libs.xml"/>
 	
-	<property name="agentdir" value="${basedir}/agent"/>
-	<property name="dist-dir" value="${agentdir}/dist"/>
+	<property name="agent-dir" value="${basedir}/agent"/>
+	<property name="dist-dir" value="${agent-dir}/dist"/>
 	
 	<property file="dacapo.properties"/>
 
@@ -20,7 +21,8 @@
 		<equals arg1="${os.name}" arg2="linux" casesensitive="no" trim="yes"/>
 	</condition>
 
-	<property name="download-dir" value="${agentdir}/download"/>
+	<property name="download-dir" value="${agent-dir}/download"/>
+	<!--
 	<property name="asm-verison" value="3.2"/>
 	<property name="asm-jar" value="asm-${asm-verison}.jar"/>
 	<property name="asm-analysis-jar" value="asm-analysis-${asm-verison}.jar"/>
@@ -31,6 +33,16 @@
 	<property name="asm-xml-jar" value="asm-xml-${asm-verison}.jar"/>
 	<property name="asm-zip" value="asm-${asm-verison}-bin.zip"/>
 	<property name="asm-url" value="http://download.forge.objectweb.org/asm"/>
+	-->
+	
+	<!-- http://zlib.net/zlib-1.2.5.tar.gz -->
+	
+	<property name="zlib" value="zlib"/>
+	<property name="zlib-version" value="1.2.5"/>
+	<property name="zlib-basename" value="${zlib}-${zlib-version}"/>
+	<property name="zlib-name" value="${zlib-basename}.tar.gz"/>
+	<property name="zlib-url" value="http://${zlib}.net"/>
+	<property name="zlib-lib-base" value="z"/>
 	
     <property name="cli" value="commons-cli"/>
     <property name="cli-version" value="1.2"/>
@@ -42,26 +54,38 @@
 	<property name="make" value="make"/>
 
 	<target name="init">
-		<mkdir dir="${agentdir}/build"/>
-		<mkdir dir="${agentdir}/lib"/>
+		<mkdir dir="${agent-dir}/build"/>
+		<mkdir dir="${agent-dir}/lib"/>
 		<mkdir dir="${dist-dir}"/>
 	</target>
 
-	<target name="libs" depends="init">
+	<target name="libs" depends="init,asm,bcel">
+		<antcall target="check-source">
+			<param name="target-file" value="${zlib-name}" />
+			<param name="target-dir"  value="${download-dir}" />
+			<param name="target-url"  value="${zlib-url}"/>
+		</antcall>
+		<untar src="${download-dir}/${zlib-name}" dest="${agent-dir}/build" compression="gzip"/>
+		<exec executable="sh" dir="${agent-dir}/build/${zlib-basename}" >
+			<arg value="configure"/>
+		</exec>
+		<exec executable="make" dir="${agent-dir}/build/${zlib-basename}" />
 		<!--
 		<antcall target="check-source">
 			<param name="target-file" value="${asm-zip}" />
 			<param name="target-dir"  value="${download-dir}" />
 			<param name="target-url"  value="${asm-url}"/>
 		</antcall>
-		<unzip src="${download-dir}/${asm-zip}" dest="${agentdir}/build">
+		<unzip src="${download-dir}/${asm-zip}" dest="${agent-dir}/build">
 		    <fileset dir=".">
 		        <include name="asm-3.2/lib/*.jar"/>
 		    </fileset>
 		</unzip>
-		<copy file="${agentdir}/build/asm-3.2/lib/${asm-jar}" todir="${dist-dir}"/>
-		<copy file="${agentdir}/build/asm-3.2/lib/${asm-commons-jar}" todir="${dist-dir}"/>
+		<copy file="${agent-dir}/build/asm-3.2/lib/${asm-jar}" todir="${dist-dir}"/>
+		<copy file="${agent-dir}/build/asm-3.2/lib/${asm-commons-jar}" todir="${dist-dir}"/>
 		-->
+		<copy file="${asm-jar}" todir="${dist-dir}"/>
+		<copy file="${asm-commons-jar}" todir="${dist-dir}"/>
 		
 		<!-- get commons commandline -->
 		<antcall target="check-source">
@@ -72,27 +96,43 @@
 		<untar src="${download-dir}/${cli-name}" dest="${build-dir}" compression="gzip"/>
 
 		<copy file="${build-dir}/${cli-basename}/${cli-basename}.jar" todir="${dist-dir}"/>
-</target>
+	</target>
 	
 	<target name="all" depends="init,libs,jar,build-agent-linux">
 	</target>
 		
 	<target name="jar">
-		<javac debug="on" srcdir="${agentdir}/src" destdir="${agentdir}/src" classpath="${dist-dir}/${asm-jar}:${dist-dir}/${asm-commons-jar}" />
-		<jar destfile="${agentdir}/dist/agent.jar" basedir="${agentdir}/src" />
+		<javac debug="on" srcdir="${agent-dir}/src" destdir="${agent-dir}/src" classpath="${asm-jar}:${asm-commons-jar}" />
+		<jar destfile="${agent-dir}/dist/agent.jar" basedir="${agent-dir}/src" />
 	</target>
 	
 	<target name="build-agent-linux" if="linux">
-		<exec executable="${make}" dir="agent">
+		<mkdir dir="${agent-dir}/build/agent" />
+		<copy todir="${agent-dir}/build/agent" >
+			<fileset dir="${agent-dir}/src">
+				<include name="**.c"/>
+				<include name="**.h"/>
+				<include name="Makefile"/>
+			</fileset>
+		</copy>
+		<exec executable="${make}" dir="${agent-dir}/build/agent">
 			<arg value="JAVA_HOME=${java.home}/.."/>
 			<arg value="OSNAME=linux"/>
+			<!-- <arg value="OPT=true"/> -->
+			<arg value="ZLIB_DIR=${agent-dir}/build/${zlib-basename}"/>
+			<arg value="ZLIB_LIB=${zlib-lib-base}"/>
 		</exec>
+		<copy todir="${agent-dir}/lib">
+			<fileset dir="${agent-dir}/build/agent">
+				<include name="lib*.so"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="clean" depends="clean-linux">
 		<delete dir="${dist-dir}"/>
-		<delete dir="${agentdir}/lib"/>
-		<delete dir="${agentdir}/build"/>
+		<delete dir="${agent-dir}/lib"/>
+		<delete dir="${agent-dir}/build"/>
 	</target>
 	
 	<target name="clean-linux" if="linux">

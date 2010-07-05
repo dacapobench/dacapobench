@@ -12,8 +12,10 @@
 static jboolean monitor_events = FALSE; 
 static jboolean field_access_events = FALSE;
 
-void monitor_init() {
+struct MonitorLockType_s monitorLock;
 
+void monitor_init() {
+	rawMonitorInit(baseEnv, "monitor lock", &monitorLock);
 }
 
 void monitor_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiCapabilities* capabilities) {
@@ -47,7 +49,7 @@ void monitor_logon(JNIEnv* env) {
 }
 
 static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
-	if (logFile==NULL) return;
+	if (! logFileOpen()) return;
 	
 	char* name_ptr = NULL;
 	char* signature_ptr  = NULL;
@@ -72,7 +74,7 @@ static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 
 
 
-void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
+void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jthread thread, jclass klass) {
 	if (!field_access_events) return;
 
 	jint       field_count = 0;
@@ -137,36 +139,149 @@ void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass) {
 	*/
 }
 
+/*
+ * Class:     org_dacapo_instrument_Agent
+ * Method:    reportMonitorEnter
+ * Signature: (Ljava/lang/Thread;Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorEnter
+  (JNIEnv *local_env, jclass klass, jobject thread, jobject object)
+{
+	jniNativeInterface* jni_table = JNIFunctionTable();
+
+	// jclass GetObjectClass(JNIEnv *env, jobject obj);
+	jlong thread_tag = 0;
+	jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(local_env,thread);
+	jlong thread_klass_tag = 0;
+	jlong object_tag = 0;
+	jclass object_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(local_env,object);
+	jlong object_klass_tag = 0;
+	
+	rawMonitorEnter(&lockTag);
+	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+	jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
+	jboolean object_has_new_tag = getTag(object, &object_tag);
+	jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
+	rawMonitorExit(&lockTag);
+
+	rawMonitorEnter(&lockLog);
+	log_field_string(LOG_PREFIX_MONITOR_ACQUIRE);
+	log_field_current_time();
+	
+	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+	
+	log_field_jlong(object_tag);
+	log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+	
+	log_eol();
+	rawMonitorExit(&lockLog);
+}
+
+/*
+ * Class:     org_dacapo_instrument_Agent
+ * Method:    reportMonitorExit
+ * Signature: (Ljava/lang/Thread;Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorExit
+  (JNIEnv *local_env, jclass klass, jobject thread, jobject object)
+{
+	jniNativeInterface* jni_table = JNIFunctionTable();
+
+	// jclass GetObjectClass(JNIEnv *env, jobject obj);
+	jlong thread_tag = 0;
+	jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(local_env,thread);
+	jlong thread_klass_tag = 0;
+	jlong object_tag = 0;
+	jclass object_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(local_env,object);
+	jlong object_klass_tag = 0;
+
+	rawMonitorEnter(&lockTag);
+	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+	jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
+	jboolean object_has_new_tag = getTag(object, &object_tag);
+	jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
+	rawMonitorExit(&lockTag);
+
+	rawMonitorEnter(&lockLog);
+	log_field_string(LOG_PREFIX_MONITOR_RELEASE);
+	log_field_current_time();
+	
+	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+	
+	log_field_jlong(object_tag);
+	log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+
+	log_eol();
+	rawMonitorExit(&lockLog);
+}
+
+/*
+ * Class:     org_dacapo_instrument_Agent
+ * Method:    reportMonitorExit
+ * Signature: (Ljava/lang/Thread;Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorNotify
+  (JNIEnv *local_env, jclass klass, jobject thread, jobject object)
+{
+	jniNativeInterface* jni_table = JNIFunctionTable();
+
+	// jclass GetObjectClass(JNIEnv *env, jobject obj);
+	jlong thread_tag = 0;
+	jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(local_env,thread);
+	jlong thread_klass_tag = 0;
+	jlong object_tag = 0;
+	jclass object_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(local_env,object);
+	jlong object_klass_tag = 0;
+
+	rawMonitorEnter(&lockTag);
+	jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+	jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
+	jboolean object_has_new_tag = getTag(object, &object_tag);
+	jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
+	rawMonitorExit(&lockTag);
+
+	rawMonitorEnter(&lockLog);
+	log_field_string(LOG_PREFIX_MONITOR_NOTIFY);
+	log_field_current_time();
+	
+	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+	
+	log_field_jlong(object_tag);
+	log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+
+	log_eol();
+	rawMonitorExit(&lockLog);
+}
+
 void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object)
 {
-	if (logState ) {
+	if (logState) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+	
+		// jclass GetObjectClass(JNIEnv *env, jobject obj);
 		jlong thread_tag = 0;
+		jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jlong thread_klass_tag = 0;
 		jlong object_tag = 0;
-
+		jclass object_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object);
+		jlong object_klass_tag = 0;
+	
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+		jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
+		jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
 		rawMonitorExit(&lockTag);
-
+	
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTER);
 		log_field_current_time();
 		
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
 		log_field_jlong(object_tag);
-		jniNativeInterface* jni_table;
-		if (object_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
-		} else {
-			log_field_string(NULL);
-		}
-
+		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+	
 		log_eol();
 		rawMonitorExit(&lockLog);
 	}
@@ -174,35 +289,33 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 
 void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object)
 {
-	if (logState ) {
+	if (logState) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+	
+		// jclass GetObjectClass(JNIEnv *env, jobject obj);
 		jlong thread_tag = 0;
+		jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jlong thread_klass_tag = 0;
 		jlong object_tag = 0;
-
+		jclass object_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object);
+		jlong object_klass_tag = 0;
+	
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+		jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
+		jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
 		rawMonitorExit(&lockTag);
-
+	
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTERED);
 		log_field_current_time();
-
-
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+		
+		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
 		log_field_jlong(object_tag);
-		jniNativeInterface* jni_table;
-		if (object_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
-		} else {
-			log_field_string(NULL);
-		}
-
+		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+	
 		log_eol();
 		rawMonitorExit(&lockLog);
 	}
@@ -210,34 +323,35 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 
 void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object, jlong timeout)
 {
-	if (logState ) {
+	if (logState) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+	
+		// jclass GetObjectClass(JNIEnv *env, jobject obj);
 		jlong thread_tag = 0;
+		jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jlong thread_klass_tag = 0;
 		jlong object_tag = 0;
-
+		jclass object_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object);
+		jlong object_klass_tag = 0;
+	
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+		jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
+		jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
 		rawMonitorExit(&lockTag);
-
+	
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAIT);
 		log_field_current_time();
-
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+		
+		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
 		log_field_jlong(object_tag);
-		jniNativeInterface* jni_table;
-		if (object_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
-		} else {
-			log_field_string(NULL);
-		}
-
+		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+		
+		log_field_jlong(timeout);
+	
 		log_eol();
 		rawMonitorExit(&lockLog);
 	}
@@ -245,34 +359,35 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 
 void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object, jboolean timed_out)
 {
-	if (logState ) {
+	if (logState) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+	
+		// jclass GetObjectClass(JNIEnv *env, jobject obj);
 		jlong thread_tag = 0;
+		jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jlong thread_klass_tag = 0;
 		jlong object_tag = 0;
-
+		jclass object_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object);
+		jlong object_klass_tag = 0;
+	
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+		jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
 		jboolean object_has_new_tag = getTag(object, &object_tag);
+		jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
 		rawMonitorExit(&lockTag);
-
+	
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_MONITOR_WAITED);
 		log_field_current_time();
-
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
-
-		log_field_jlong(object_tag);
-		jniNativeInterface* jni_table;
-		if (object_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
-		} else {
-			log_field_string(NULL);
-		}
 		
+		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+		
+		log_field_jlong(object_tag);
+		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+		
+		log_field_jboolean(timed_out);
+	
 		log_eol();
 		rawMonitorExit(&lockLog);
 	}
@@ -280,34 +395,31 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 
 void JNICALL callbackFieldAccess(jvmtiEnv *jvmti_env,JNIEnv* jni_env,jthread thread,jmethodID method,jlocation location,jclass field_klass,jobject object,jfieldID field) {
 	if (logState) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+		
 		jlong thread_tag = 0;
+		jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jlong thread_klass_tag = 0;
 		jlong object_tag = 0;
+		jclass object_klass = (object!=NULL)?JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,object):NULL;
+		jlong object_klass_tag = 0;
 		jlong class_tag  = 0;
 
 		rawMonitorEnter(&lockTag);
 		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
-		jboolean object_has_new_tag = FALSE;
-		if (object!=NULL) object_has_new_tag = getTag(object, &object_tag);
+		jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
+		jboolean object_has_new_tag = (object!=NULL)?getTag(object, &object_tag):FALSE;
+		jboolean object_klass_has_new_tag = (object!=NULL)?getTag(object_klass, &object_klass_tag):FALSE;
 		getTag(field_klass, &class_tag);
 		rawMonitorExit(&lockTag);
-			
+		
 		rawMonitorEnter(&lockLog);
 		log_field_string(LOG_PREFIX_VOLATILE_ACCESS);
 
-		thread_log(jni_env, thread, thread_tag, thread_has_new_tag);
+		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 
 		log_field_jlong(object_tag);
-		jniNativeInterface* jni_table;
-		if (object_has_new_tag) {
-			if (JVMTI_FUNC_PTR(baseEnv,GetJNIFunctionTable)(baseEnv,&jni_table) != JNI_OK) {
-				fprintf(stderr, "failed to get JNI function table\n");
-				exit(1);
-			}
-
-			LOG_OBJECT_CLASS(jni_table,jni_env,baseEnv,object);
-		} else {
-			log_field_string(NULL);
-		}
+		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
 		
 		log_field_jlong(class_tag);
 		log_field_pointer(field);

@@ -1,5 +1,8 @@
 package org.dacapo.instrument;
 
+import java.util.LinkedList;
+import java.util.Vector;
+
 public final class Agent {
 
 	public  static boolean firstReportSinceForceGC = false;
@@ -11,6 +14,8 @@ public final class Agent {
 	private static boolean callChainEnable = false;
 	private static Object  waiter = new Object();
 	private static AgentThread agentThread = null;
+
+	private static ThreadLocal<DelayAllocReport> delayAllocReport = new ThreadLocal<DelayAllocReport>();
 	
 	// private static final String  LOG_PREFIX_CLASS_INITIALIZATION = "CI"; 
 	
@@ -77,7 +82,183 @@ public final class Agent {
 				} catch (Exception e) { }
 		}
 	};
+
+	private static class DelayAllocReport {
+		private static final int DEFAULT_SIZE = 16;
+
+		private static final int BEFORE = 0;
+		private static final int OBJECT = 1;
+		private static final int AFTER  = 2;
+		private static final int POINTERS_PER_PUTFIELD = 3;
+		
+		int delayCount = 0;
+		
+		Object[][] nodes = new Object[DEFAULT_SIZE][DEFAULT_SIZE];
+		int[]      depth = new int[DEFAULT_SIZE];
+		int        size = 0;
+		
+		Object[]   putfields = new Object[POINTERS_PER_PUTFIELD*DEFAULT_SIZE];
+		int        putfieldsSize = 0;
+		
+		void extend(int newSize) {
+			if (nodes.length <= newSize) {
+				// System.err.println("Extending#"+hashCode()+":to "+newSize);
+				newSize = DEFAULT_SIZE * ((newSize / DEFAULT_SIZE) + 1);
+				
+				Object[][] tmpNodes = new Object[newSize][];
+				int[]      tmpDepth = new int[newSize];
+				
+				for(int i=0; i<nodes.length; ++i) {
+					tmpNodes[i] = nodes[i];
+					tmpDepth[i] = depth[i];
+					
+					nodes[i] = null;
+				}
+				for(int i=nodes.length; i<newSize; ++i) {
+					tmpNodes[i] = new Object[DEFAULT_SIZE];
+					tmpDepth[i] = 0;
+				}
+				
+				nodes = tmpNodes;
+				depth = tmpDepth;
+			}
+			size = newSize;
+		}
+		void inc() { 
+			++delayCount;
+			// System.err.println("INC#"+hashCode()+":"+delayCount);
+		}
+		void dec() { 
+			--delayCount;
+			// System.err.println("DEC#"+hashCode()+":"+delayCount);
+		}
+		void report(Object obj) {
+			if (obj==null) return;
+			if (size<=delayCount)
+				extend(delayCount+1);
+			Object[] stack = nodes[delayCount];
+			int      slot  = depth[delayCount];
+			if (stack.length <= slot) {
+				Object[] tmpStack = new Object[stack.length + DEFAULT_SIZE];
+				// System.err.println("AddSlot#"+hashCode()+":["+delayCount+"]to "+stack.length);
+				for(int i = 0; i < stack.length; ++i) {
+					tmpStack[i] = stack[i];
+					stack[i] = null;
+				}
+				stack = tmpStack;
+				nodes[delayCount] = stack;
+			}
+			stack[slot] = obj; 
+			depth[delayCount] = slot + 1;
+		}
+		
+		void putfield(Object after, Object obj, Object before) {
+			if (0<delayCount) {
+				if (putfields.length < putfieldsSize) {
+					Object[] tmp = new Object[putfields.length + POINTERS_PER_PUTFIELD*DEFAULT_SIZE];
+					for(int i = 0; i<putfields.length; i++)
+						tmp[i] = putfields[i];
+					putfields = tmp;
+				}
+				putfields[putfieldsSize+BEFORE] = before;
+				putfields[putfieldsSize+OBJECT] = obj;
+				putfields[putfieldsSize+AFTER]  = after;
+				putfieldsSize += POINTERS_PER_PUTFIELD;
+			} else {
+				internalLogPointerChange(Thread.currentThread(), after, obj, before);
+			}
+		}
+		
+		void done() {
+			if (delayCount==0) {
+				Thread t = Thread.currentThread();
+				for(int i = 0; i < size; ++i) {
+					for(int j = 0, d = depth[i]; j < d; ++j) {
+						if (nodes[i][j] != null) {
+							// System.err.println("Alloc:"+nodes[i][j].getClass());
+							internalAllocReport(t,nodes[i][j],nodes[i][j].getClass());
+							nodes[i][j] = null;
+						}
+					}
+					depth[i] = 0;
+				}
+				size = 0;
+				for(int i = 0; i<putfieldsSize; i += 3) {
+					internalLogPointerChange(t, putfields[i+AFTER], putfields[i+OBJECT], putfields[i+BEFORE]);
+					putfields[i+BEFORE] = null;
+					putfields[i+OBJECT] = null;
+					putfields[i+AFTER]  = null;
+				}
+				putfieldsSize = 0;
+			}
+		}
+	};
+
 	
+//	private static class DelayAllocReport {
+//		private static final int DEFAULT_SIZE = 16;
+//		
+//		int delayCount = 0;
+//		
+//		Object[][] nodes = new Object[DEFAULT_SIZE][DEFAULT_SIZE];
+//		int[]      depth = new int[DEFAULT_SIZE];
+//		int        size = 0;
+//		
+//		void extend(int newSize) {
+//			if (nodes.length <= newSize) {
+//				newSize = DEFAULT_SIZE * ((newSize / DEFAULT_SIZE) + 1);
+//				
+//				Object[][] tmpNodes = new Object[newSize][];
+//				int[]      tmpDepth = new int[newSize];
+//				
+//				for(int i=0; i<nodes.length; ++i) {
+//					tmpNodes[i] = nodes[i];
+//					tmpDepth[i] = depth[i];
+//					
+//					nodes[i] = null;
+//				}
+//				for(int i=nodes.length; i<newSize; ++i) {
+//					tmpNodes[i] = new Object[DEFAULT_SIZE];
+//					tmpDepth[i] = 0;
+//				}
+//				
+//				nodes = tmpNodes;
+//				depth = tmpDepth;
+//			}
+//			size = newSize;
+//		}
+//		void inc() { ++delayCount; }
+//		void dec() { --delayCount; }
+//		void report(Object obj) {
+//			if (size<=delayCount)
+//				extend(delayCount+1);
+//			Object[] stack = nodes[delayCount];
+//			int      slot  = depth[delayCount];
+//			if (stack.length <= slot) {
+//				Object[] tmpStack = new Object[stack.length + DEFAULT_SIZE];
+//				for(int i = 0; i < stack.length; ++i) {
+//					tmpStack[i] = stack[i];
+//					stack[i] = null;
+//				}
+//				stack = tmpStack;
+//				nodes[delayCount] = stack;
+//			}
+//			stack[slot] = obj; 
+//			depth[delayCount] = slot + 1;
+//		}
+//		void done() {
+//			for(int i = 0; i < size; ++i) {
+//				for(int j = 0, d = depth[i]; j < d; ++j) {
+//					if (nodes[i][j] != null) {
+//						// internalAllocReport(nodes[i][j]);
+//						nodes[i][j] = null;
+//					}
+//				}
+//				depth[i] = 0;
+//			}
+//		}
+//	};
+
 	static {
 		localinit();
 		
@@ -98,6 +279,10 @@ public final class Agent {
 		internalLog(thread,event,message);
 	}
 
+	public static void logThread() {
+		internalLogThread(Thread.currentThread());
+	}
+	
 	public static void logAlloc(Thread thread, Object obj) {
 		new Exception().printStackTrace();
 		// internalLogAlloc(thread,obj);
@@ -109,18 +294,28 @@ public final class Agent {
 	}
 	
 	public static void start() {
-		if (agentThread.setLogon(true))
+		if (agentThread.setLogon(true)) {
 			internalStart();
+		}
 	}
 	
 	public static void stop() {
-		if (agentThread.setLogon(false))
+		if (agentThread.setLogon(false)) {
 			internalStop();
+		}
 	}
 	
-	public static void logMonitorEnter(Thread thread, Object obj) { internalLogMonitorEnter(thread, obj); }
+	public static void logMonitorEnter(Thread thread, Object obj) {
+		internalLogMonitorEnter(thread, obj);
+	}
 	
-	public static void logMonitorExit(Thread thread, Object obj) { internalLogMonitorExit(thread, obj); }
+	public static void logMonitorExit(Thread thread, Object obj) { 
+		internalLogMonitorExit(thread, obj);
+	}
+	
+	public static void logMonitorNotify(Thread thread, Object obj) {
+		internalLogMonitorNotify(thread, obj);
+	}
 	
 	public static void logCallChain() {
 		if (callChainEnable && ((++callChainCount)%callChainFrequency) == 0) {
@@ -128,6 +323,33 @@ public final class Agent {
 		}
 	}
 
+	public static void logPointerChange(Object after, Object obj, Object before) {
+		if (delayAllocReport.get()==null)
+			delayAllocReport.set(new DelayAllocReport());
+		delayAllocReport.get().putfield(after, obj, before);
+	}
+
+	public static void allocInc() {
+		if (delayAllocReport.get()==null)
+			delayAllocReport.set(new DelayAllocReport());
+		delayAllocReport.get().inc();
+	}
+	
+	public static void allocDec() {
+		delayAllocReport.get().dec();
+	}
+	
+	public static void allocReport(Object obj) {
+		if (delayAllocReport.get()==null)
+			delayAllocReport.set(new DelayAllocReport());
+		delayAllocReport.get().report(obj);
+	}
+	
+	public static void allocDone() {
+		if (delayAllocReport.get()!=null)
+			delayAllocReport.get().done();
+	}
+	
 	public static void reportHeapAfterForceGC() {
 		if (firstReportSinceForceGC) {
 			reportHeapAfterForceGCSync();
@@ -154,11 +376,17 @@ public final class Agent {
 
 	private static native void internalLog(Thread thread, String event, String message);
 	
+	private static native void internalLogThread(Thread thread);
+
 	private static native void internalLogAlloc(Thread thread, Object obj);
+
+	private static native void internalLogPointerChange(Thread thread, Object after, Object obj, Object before);
 	
 	private static native void internalLogMonitorEnter(Thread thread, Object obj);
 	
 	private static native void internalLogMonitorExit(Thread thread, Object obj);
+	
+	private static native void internalLogMonitorNotify(Thread thread, Object obj);
 	
 	// private static native void internalLogCallChain(Thread thread);
 	
@@ -170,6 +398,8 @@ public final class Agent {
 	
 	private static native void internalStop();
 
+	private static native void internalAllocReport(Thread thread, Object obj, Class klass);
+	
 	private static synchronized void reportHeapAfterForceGCSync() {
 		if (firstReportSinceForceGC) {
 			reportHeap();

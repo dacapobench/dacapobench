@@ -1,24 +1,29 @@
 package org.dacapo.analysis.util.events;
 
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.CSVOutputStream;
+import org.dacapo.analysis.util.CSVInputStream.NoFieldAvailable;
+import org.dacapo.analysis.util.CSVInputStream.ParseError;
 import org.dacapo.instrument.LogTags;
 
-public class EventVolatileAccess extends Event {
+public class EventVolatileAccess extends Event implements EventHasThread {
 
 	public  static final String TAG = LogTags.LOG_PREFIX_VOLATILE_ACCESS;
 	
 	private long   threadTag;
-	private String threadClassName;
+	private long   threadClassTag;
+	private String threadClass;
 	private String threadName;
 	
 	private long   classTag;
 	private long   fieldId;
 	
-	public EventVolatileAccess(long time, long threadTag, String threadClassName, String threadName,
+	public EventVolatileAccess(long time, long threadTag, long threadClassTag, String threadClass, String threadName,
 							   long classTag, long fieldId) {
 		super(time);
 		this.threadTag = threadTag;
-		this.threadClassName = threadClassName;
+		this.threadClassTag = threadClassTag;
+		this.threadClass = threadClass;
 		this.threadName = threadName;
 		this.classTag = classTag;
 		this.fieldId = fieldId;
@@ -28,21 +33,37 @@ public class EventVolatileAccess extends Event {
 		return TAG;
 	}
 	
-	static Event parse(CSVInputStream is) throws EventParseException {
-		try {
-			long time              = is.nextFieldLong();
-
-			long   threadTag       = is.nextFieldLong();
-			String threadClassName = is.nextFieldString();
-			String threadName      = is.nextFieldString();
-			
-			long   classTag        = is.nextFieldLong();
-			long   fieldId         = is.nextFieldPointer();
-			
-			if (is.numberOfFieldsLeft()==0) 
-				return new EventVolatileAccess(time, threadTag, threadClassName, threadName, classTag, fieldId);
-		} catch (Exception nfe) { }
+	protected void writeEvent(CSVOutputStream os) {
+		os.write(""+getTime());
 		
-		throw new EventParseException("format error "+TAG);
+		EventThread.write(os, this);
+		
+		os.write(""+classTag);
+		os.write(""+fieldId);
 	}
+	
+	EventVolatileAccess(CSVInputStream is) throws NoFieldAvailable, ParseError, EventParseException {
+		super(is);
+		
+		EventThread.read(is, this);
+		
+		classTag  = is.nextFieldLong();
+		fieldId   = is.nextFieldPointer();
+		
+		if (is.numberOfFieldsLeft()!=0) 
+			throw new EventParseException("additional fields", null);
+	}
+
+	public long getThreadTag() { return threadTag; }
+	public void setThreadTag(long threadTag) { this.threadTag = threadTag; }
+
+	public long getThreadClassTag() { return threadClassTag; }
+	public void setThreadClassTag(long threadClassTag) { this.threadClassTag = threadClassTag; }
+
+	public String getThreadClass() { return threadClass; }
+	public void setThreadClass(String threadClass) { this.threadClass = threadClass; }
+
+	public String getThreadName() { return threadName; }
+	public void setThreadName(String threadName) { this.threadName = threadName; }
+
 }

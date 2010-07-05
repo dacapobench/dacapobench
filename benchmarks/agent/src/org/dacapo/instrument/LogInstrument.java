@@ -56,9 +56,14 @@ public class LogInstrument extends ClassAdapter {
 		this.logOffSignature = getSignatureFrom(logOff);
 	}
 	
+	public String toString() {
+		return "Start: "+logOnClass+"."+logOnMethod+logOnSignature+" Stop: "+logOffClass+"."+logOffMethod+logOffSignature;
+	}
+	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.className  = name.replace('.', '/');
 		this.access     = access;
+
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	

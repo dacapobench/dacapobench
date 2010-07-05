@@ -8,7 +8,7 @@ void monitor_capabilities(const jvmtiCapabilities* availableCapabilities, jvmtiC
 void monitor_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallbacks* callbacks);
 void monitor_live(jvmtiEnv* jvmti, JNIEnv* env);
 void monitor_logon(JNIEnv* env);
-void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jclass klass);
+void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jthread thread, jclass klass);
 
 void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object);
 void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jobject object);

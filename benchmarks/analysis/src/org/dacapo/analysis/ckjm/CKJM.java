@@ -11,8 +11,11 @@ import org.apache.bcel.generic.Type;
 import org.dacapo.analysis.util.CSVInputStream;
 import org.dacapo.analysis.util.events.Event;
 import org.dacapo.analysis.util.events.EventClassPrepare;
+import org.dacapo.analysis.util.events.EventListener;
+import org.dacapo.analysis.util.events.EventParseException;
 import org.dacapo.analysis.util.events.EventStart;
 import org.dacapo.analysis.util.events.EventStop;
+import org.dacapo.analysis.util.LogFiles;
 
 import org.apache.bcel.Repository;
 import org.apache.bcel.util.ClassPath;
@@ -22,12 +25,7 @@ import org.dacapo.instrument.LogTags;
 
 public class CKJM {
 	
-	private static final String DEFAULT_EXTENSION        = ".csv";
 	private static final String CLASS_EXTENSION          = ".class";
-	
-//	private static final String LOG_PREFIX_START         = "START";
-//	private static final String LOG_PREFIX_STOP          = "STOP";
-//	private static final String LOG_PREFIX_CLASS_PREPARE = "LD";
 	
 	public static void main(String[] args) throws Exception {
 		CommandLineArgs commandLine = new CommandLineArgs(args);
@@ -41,7 +39,7 @@ public class CKJM {
 		}
 		ClassPath.setDefaultClassPath(new ClassPath(classPathString.toString()));
 		
-		LinkedList<File> fileList = makeFileList(commandLine.getLogFile());
+		LinkedList<File> fileList = LogFiles.orderedLogFileList(commandLine.getLogFile());
 		
 		LinkedList<String> classList = makeClassList(fileList,commandLine.getLogged());
 
@@ -49,84 +47,35 @@ public class CKJM {
 		
 		String[] classFileList = makeClassFileList(classList, commandLine.getClassPath());
 		
-//		System.err.println("Load Classes into repository");
-//		for(String className: classList) {
-//			try {
-//				System.err.println("  Class:"+className);
-//				syntheticRepository.loadClass(className);
-//			} catch (ClassNotFoundException cnfe) {
-//				System.err.println("Unable to load "+className);
-//			}
-//		}
-//		System.err.println("Process metrics");
-		
 		MetricsFilter.runMetrics(classFileList, output);
 		output.reportTotal();
 	}
 	
-	private static LinkedList<File> makeFileList(String fileName) {
-		LinkedList<File> list           = new LinkedList<File>();
-		int              extensionPoint = fileName.lastIndexOf('.');
-
-		String extension = DEFAULT_EXTENSION;
-		String baseName  = fileName;
-		
-		if (0 < extensionPoint) {
-			extension = fileName.substring(extensionPoint);
-			baseName  = fileName.substring(0,extensionPoint);
-		}
-		
-		int fileNumber = 0;
-		File file = null;
-		do {
-			file = new File(baseName+"-"+fileNumber+extension);
-			if (file.exists() && file.canRead())
-				list.add(file);
-			else
-				file = null;
-			fileNumber++;
-		} while (file != null);
-		
-		return list;
-	}
-	
-	private static TreeSet<String> EVENT_MASK;
-	
-	static {
-		EVENT_MASK = new TreeSet<String>();
-		
-		EVENT_MASK.add(EventClassPrepare.TAG);
-		EVENT_MASK.add(EventStart.TAG);
-		EVENT_MASK.add(EventStop.TAG);
-	}
-	
-	private static LinkedList<Event> makeEventList(CSVInputStream is) {
-		LinkedList<Event> events = Event.parseEvents(is, true, EVENT_MASK);
-		
-		System.err.println("Events#"+events.size());
-		for(Event e: events) {
-			System.err.println("  E:"+e.getLogPrefix());
-		}
-		
-		return events;
-	}
-	
-	private static LinkedList<String> makeClassList(LinkedList<File> fileList, boolean loggedOnly) throws IOException, CSVInputStream.CSVException {
+	private static class Listener extends EventListener {
 		LinkedList<String> classList = new LinkedList<String>();
+		
+		public void processStart() { }
+		
+		public void processEvent(Event e) {
+			if (getLogOn() && e.getLogPrefix()==EventClassPrepare.TAG) {
+				String className = ((EventClassPrepare)e).getClassName(); 
+				classList.add(className.substring(1,className.length()-1).replace('/','.'));
+			}
+		}
+		
+		public void processStop() { }
+	};
+	
+	private static LinkedList<String> makeClassList(LinkedList<File> fileList, boolean loggedOnly) throws IOException, CSVInputStream.CSVException, EventParseException {
+		Listener listener = new Listener();
 		
 		for(File f: fileList) {
 			CSVInputStream cis = new CSVInputStream(new FileInputStream(f));
 
-			for (Event e: Event.parseEvents(cis, true, EVENT_MASK)) {
-
-				if (e.getLogPrefix() == EventClassPrepare.TAG) {
-					String className = ((EventClassPrepare)e).getClassName(); 
-					classList.add(className.substring(1,className.length()-1).replace('/','.'));
-				}
-			}
+			Event.parseEvents(listener, cis);
 		}
 		
-		return classList;
+		return listener.classList;
 	}
 	
 	private static String[] makeClassFileList(LinkedList<String> classList, LinkedList<String> pathList) {
@@ -143,7 +92,6 @@ public class CKJM {
 		int index = 0;
 		for(File f: classFileList) {
 			fileList[index] = f.toString(); 
-//			fileList[index] = "/tmp/store.jar "+f.toString();
 			index++;
 		}
 		
@@ -153,9 +101,6 @@ public class CKJM {
 	private static File findClassFile(String klass, LinkedList<String> pathList) {
 		for(String path: pathList) {
 			File file = new File(new File(path),klass.replace('.', '/')+CLASS_EXTENSION);
-//			File file = new File(new File(path),klass+CLASS_EXTENSION);
-			
-//			if (file.exists() && file.canRead()) return new File(klass.replace('.','/')+CLASS_EXTENSION);
 			if (file.exists() && file.canRead()) return file;
 		}
 		

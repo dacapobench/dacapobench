@@ -254,14 +254,9 @@ public class Config {
   HashMap<String, String> desc = new HashMap<String, String>(6);
 
   /**
-   * The name of the jar containing this bm
-   */
-  public String jar;
-
-  /**
    * The list of jars upon which this bm depends
    */
-  public String[] libs;
+  public String[] jars;
 
   /**
    * Constructor. These are always constructed by the parser, and at time of
@@ -281,29 +276,16 @@ public class Config {
    */
 
   /**
-   * Set the jar from which this benchmark executes
-   * 
-   * @param jarName The name of the jar
-   * @throws ParseException
-   */
-  void setJar(String jarName) throws ParseException {
-    if (this.jar != null) {
-      throw new ParseException("Configuration file error - cannot set jar name twice");
-    }
-    this.jar = jarName;
-  }
-
-  /**
    * Set the list of libraries on which this benchmark depends
    * 
    * @param libs An array of strings (jar names)
    * @throws ParseException
    */
-  void setLibs(String[] libs) throws ParseException {
-    if (this.libs != null) {
+  void setJars(String[] jars) throws ParseException {
+    if (this.jars != null) {
       throw new ParseException("Configuration file error - cannot set libs twice");
     }
-    this.libs = libs;
+    this.jars = jars;
   }
 
   /**

@@ -37,11 +37,6 @@ public final class Log {
 		}
 	}
 	
-	public static void reportAlloc(Object obj) {
-		new Exception().printStackTrace();
-		System.exit(1);
-	}
-
 	public static void reportClass(String className) {
 		if (enableLogging && available)
 			Agent.reportClass(className);
@@ -53,9 +48,29 @@ public final class Log {
 		return true;
 	}
 	
-	public static void reportHeap() {
-		if (enableLogging && available)
-			Agent.reportHeapAfterForceGC();
+	public static void logPointerChange(Object after, Object obj, Object before) {
+		if (available)
+			Agent.logPointerChange(after, obj, before);
+	}
+	
+	public static void allocInc() {
+		if (available)
+			Agent.allocInc();
+	}
+	
+	public static void allocDec() {
+		if (available)
+			Agent.allocDec();
+	}
+	
+	public static void allocReport(Object obj) {
+		if (available)
+			Agent.allocReport(obj);
+	}
+	
+	public static void allocDone() {
+		if (available)
+			Agent.allocDone();
 	}
 	
 	public static void reportMonitorEnter(Object obj) {
@@ -63,7 +78,7 @@ public final class Log {
 			if (available)
 				Agent.logMonitorEnter(Thread.currentThread(),obj);
 			else
-				out.println("ME:"+Thread.currentThread()+":"+obj.hashCode());
+				out.println(LogTags.LOG_PREFIX_MONITOR_ACQUIRE+":"+Thread.currentThread()+":"+obj.hashCode());
 		}
 	}
 	
@@ -72,7 +87,16 @@ public final class Log {
 			if (available)
 				Agent.logMonitorExit(Thread.currentThread(),obj);
 			else
-				out.println("MX:"+Thread.currentThread()+":"+obj.hashCode());
+				out.println(LogTags.LOG_PREFIX_MONITOR_RELEASE+":"+Thread.currentThread()+":"+obj.hashCode());
+		}
+	}
+	
+	public static void reportMonitorNotify(Object obj) {
+		if (enableLogging) {
+			if (available)
+				Agent.logMonitorNotify(Thread.currentThread(),obj);
+			else
+				out.println(LogTags.LOG_PREFIX_MONITOR_NOTIFY+":"+Thread.currentThread()+":"+obj.hashCode());
 		}
 	}
 	

@@ -1,48 +1,26 @@
 package org.dacapo.analysis.util.events;
 
 import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.analysis.util.CSVOutputStream;
+import org.dacapo.analysis.util.CSVInputStream.CSVException;
 import org.dacapo.instrument.LogTags;
 
-public class EventMonitorContendedEntered extends Event {
+public class EventMonitorContendedEntered extends EventMonitor {
 
 	public  static final String TAG = LogTags.LOG_PREFIX_MONITOR_CONTENTED_ENTERED;
 	
-	private long threadTag;
-	private String threadClassName;
-	private String threadName;
-	private long objectTag;
-	private String objectClassName;
+	public EventMonitorContendedEntered(long time, long threadTag, String threadClassName, String threadName, long objectTag, String objectClassName) {
+		super(time, threadTag, threadClassName, threadName, objectTag, objectClassName);
+	}
 	
-	public EventMonitorContendedEntered(long time, long threadTag, String threadClassName, String threadName,
-			   long objectTag, String objectClassName) {
-		super(time);
-		this.threadTag = threadTag;
-		this.threadClassName = threadClassName;
-		this.threadName = threadName;
-		this.objectTag = objectTag;
-		this.objectClassName = objectClassName;
-	}
-
-	public String getLogPrefix() {
-		return TAG;
-	}
-
-	static Event parse(CSVInputStream is) throws EventParseException {
-		try {
-			long time              = is.nextFieldLong();
-
-			long   threadTag       = is.nextFieldLong();
-			String threadClassName = is.nextFieldString();
-			String threadName      = is.nextFieldString();
-			
-			long   objectTag       = is.nextFieldLong();
-			String objectClassName = is.nextFieldString();
-
-			if (is.numberOfFieldsLeft()==0) 
-				return new EventMonitorContendedEntered(time, threadTag, threadClassName, threadName,
-    					   objectTag, objectClassName);
-		} catch (Exception nfe) { }
+	public String getLogPrefix() { return TAG; }
+	
+	protected void writeEvent(CSVOutputStream os) { super.writeEvent(os); }
+	
+	EventMonitorContendedEntered(CSVInputStream is) throws CSVException, EventParseException {
+		super(is);
 		
-		throw new EventParseException("format error "+TAG);
+		if (is.numberOfFieldsLeft()!=0 && this instanceof EventMonitorContendedEntered) 
+			throw new EventParseException("additional fields", null);
 	}
 }

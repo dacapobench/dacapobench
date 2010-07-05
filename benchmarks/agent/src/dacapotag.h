@@ -3,7 +3,9 @@
 
 #include "dacapo.h"
 
-extern jrawMonitorID       lockTag;
+#include "dacapolock.h"
+
+extern MonitorLockType       lockTag;
 
 #define getTag(obj,tag)  GET_TAG(__FILE__, __LINE__, obj, tag)
 #define setTag(obj,tag)  SET_TAG(__FILE__, __LINE__, obj, tag)
