@@ -48,7 +48,7 @@ public class CSVInputStream {
 	
 	public synchronized String nextFieldString() throws NoFieldAvailable {
 		if (currentRow.size() <= fieldIndex)
-			throw new NoFieldAvailable("no fields left");
+			throw new NoFieldAvailable("no fields left Row#"+currentRowNumber());
 		return currentRow.elementAt(fieldIndex++);
 	}
 	

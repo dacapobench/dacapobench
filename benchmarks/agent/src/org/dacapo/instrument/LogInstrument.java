@@ -1,5 +1,7 @@
 package org.dacapo.instrument;
 
+import java.util.TreeMap;
+
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -12,7 +14,7 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-public class LogInstrument extends ClassAdapter {
+public class LogInstrument extends Instrument {
 	
 	private static final String   LOG_INTERNAL_NAME    = "org/dacapo/instrument/Log";
 	private static final String   LOG_METHOD_START     = "start";
@@ -41,12 +43,12 @@ public class LogInstrument extends ClassAdapter {
 		}
 	}
 	
-	public LogInstrument(ClassVisitor cv, String logOn) {
-		this(cv,logOn,logOn);
+	public LogInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String logOn) {
+		this(cv,methodToLargestLocal,logOn,logOn);
 	}
 	
-	public LogInstrument(ClassVisitor cv, String logOn, String logOff) {
-		super(cv);
+	public LogInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String logOn, String logOff) {
+		super(cv,methodToLargestLocal);
 		this.cv = cv;
 		this.logOnClass      = getClassFrom(logOn);
 		this.logOnMethod     = getMethodFrom(logOn);

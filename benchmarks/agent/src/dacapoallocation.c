@@ -35,6 +35,7 @@ static jint forceGC(JNIEnv *env) {
 	gcCount = 0;
 	rawMonitorEnter(&lockLog);
 	log_field_string(LOG_PREFIX_GC);
+	log_field_current_time();
 	log_eol();
 	rawMonitorExit(&lockLog);
 	jint res = JVMTI_FUNC_PTR(baseEnv,ForceGarbageCollection)(baseEnv);

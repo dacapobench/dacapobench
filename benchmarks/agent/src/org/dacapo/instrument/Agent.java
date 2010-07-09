@@ -177,6 +177,9 @@ public final class Agent {
 						if (nodes[i][j] != null) {
 							// System.err.println("Alloc:"+nodes[i][j].getClass());
 							internalAllocReport(t,nodes[i][j],nodes[i][j].getClass());
+							if (firstReportSinceForceGC) {
+								reportHeapAfterForceGC();
+							}
 							nodes[i][j] = null;
 						}
 					}
@@ -295,12 +298,16 @@ public final class Agent {
 	
 	public static void start() {
 		if (agentThread.setLogon(true)) {
+			System.err.println("START:");
+			(new Exception()).printStackTrace();
 			internalStart();
 		}
 	}
 	
 	public static void stop() {
 		if (agentThread.setLogon(false)) {
+			System.err.println("STOP:");
+			(new Exception()).printStackTrace();
 			internalStop();
 		}
 	}
@@ -352,11 +359,12 @@ public final class Agent {
 	
 	public static void reportHeapAfterForceGC() {
 		if (firstReportSinceForceGC) {
+			firstReportSinceForceGC = false;
 			reportHeapAfterForceGCSync();
 		}
 	}
 
-	public static void reportHeap() {
+	public synchronized static void reportHeap() {
 		long free  = runtime.freeMemory();
 		long max   = runtime.maxMemory();
 		long total = runtime.totalMemory();
@@ -402,6 +410,7 @@ public final class Agent {
 	
 	private static synchronized void reportHeapAfterForceGCSync() {
 		if (firstReportSinceForceGC) {
+			firstReportSinceForceGC = false;
 			reportHeap();
 		}
 	}

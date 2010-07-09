@@ -22,18 +22,6 @@
 	</condition>
 
 	<property name="download-dir" value="${agent-dir}/download"/>
-	<!--
-	<property name="asm-verison" value="3.2"/>
-	<property name="asm-jar" value="asm-${asm-verison}.jar"/>
-	<property name="asm-analysis-jar" value="asm-analysis-${asm-verison}.jar"/>
-	<property name="asm-commons-jar" value="asm-commons-${asm-verison}.jar"/>
-	<property name="asm-parent-jar" value="asm-parent-${asm-verison}.jar"/>
-	<property name="asm-tree-jar" value="asm-tree-${asm-verison}.jar"/>
-	<property name="asm-util-jar" value="asm-util-${asm-verison}.jar"/>
-	<property name="asm-xml-jar" value="asm-xml-${asm-verison}.jar"/>
-	<property name="asm-zip" value="asm-${asm-verison}-bin.zip"/>
-	<property name="asm-url" value="http://download.forge.objectweb.org/asm"/>
-	-->
 	
 	<!-- http://zlib.net/zlib-1.2.5.tar.gz -->
 	
@@ -70,20 +58,6 @@
 			<arg value="configure"/>
 		</exec>
 		<exec executable="make" dir="${agent-dir}/build/${zlib-basename}" />
-		<!--
-		<antcall target="check-source">
-			<param name="target-file" value="${asm-zip}" />
-			<param name="target-dir"  value="${download-dir}" />
-			<param name="target-url"  value="${asm-url}"/>
-		</antcall>
-		<unzip src="${download-dir}/${asm-zip}" dest="${agent-dir}/build">
-		    <fileset dir=".">
-		        <include name="asm-3.2/lib/*.jar"/>
-		    </fileset>
-		</unzip>
-		<copy file="${agent-dir}/build/asm-3.2/lib/${asm-jar}" todir="${dist-dir}"/>
-		<copy file="${agent-dir}/build/asm-3.2/lib/${asm-commons-jar}" todir="${dist-dir}"/>
-		-->
 		<copy file="${asm-jar}" todir="${dist-dir}"/>
 		<copy file="${asm-commons-jar}" todir="${dist-dir}"/>
 		

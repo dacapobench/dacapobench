@@ -15,7 +15,7 @@ import org.objectweb.asm.commons.Method;
 import java.util.TreeMap;
 import java.util.Set;
 
-public class MethodInstrument extends ClassAdapter {
+public class MethodInstrument extends Instrument {
 
 	private static final int      CLINIT_ACCESS          = Opcodes.ACC_STATIC;
 	private static final String   CLINIT_NAME            = "<clinit>";
@@ -46,8 +46,8 @@ public class MethodInstrument extends ClassAdapter {
 	
 	private Method                logBridgeMethod = null;
 	
-	public MethodInstrument(ClassVisitor cv, String className) {
-		super(cv);
+	public MethodInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String className) {
+		super(cv, methodToLargestLocal);
 		this.cv = cv;
 		this.className = className;
 	}

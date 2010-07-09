@@ -18,7 +18,7 @@ import org.objectweb.asm.commons.Method;
 
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
-public class MonitorInstrument extends ClassAdapter {
+public class MonitorInstrument extends Instrument {
 
 	private static final String   LOG_INTERNAL_NAME          = "org/dacapo/instrument/Log";
 	private static final String   LOG_ENTER_METHOD           = "reportMonitorEnter";
@@ -45,8 +45,8 @@ public class MonitorInstrument extends ClassAdapter {
 	private boolean				  has_monitor_notify         = true;
 	private boolean               classDone                  = false;
 	
-	public MonitorInstrument(ClassVisitor cv) {
-		super(cv);
+	public MonitorInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal) {
+		super(cv, methodToLargestLocal);
 		this.cv = cv;
 	}
 	

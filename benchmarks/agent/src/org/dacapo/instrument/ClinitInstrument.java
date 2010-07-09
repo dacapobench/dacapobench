@@ -1,6 +1,7 @@
 package org.dacapo.instrument;
 
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
@@ -14,7 +15,7 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-public class ClinitInstrument  extends ClassAdapter {
+public class ClinitInstrument  extends Instrument {
 
 	private static final int      CLINIT_ACCESS        = Opcodes.ACC_STATIC;
 	private static final String   CLINIT_NAME          = "<clinit>";
@@ -37,8 +38,8 @@ public class ClinitInstrument  extends ClassAdapter {
 	
 	private LinkedList<String>  excludePackages = new LinkedList<String>();
 	
-	public ClinitInstrument(ClassVisitor cv, String excludeList) {
-		super(cv);
+	public ClinitInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String excludeList) {
+		super(cv, methodToLargestLocal);
 		this.cv = cv;
 		
 		excludePackages.add(INSTRUMENT_PACKAGE);

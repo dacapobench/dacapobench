@@ -15,7 +15,7 @@ import org.objectweb.asm.commons.Method;
 import java.util.TreeMap;
 import java.util.Set;
 
-public class CallChainInstrument extends ClassAdapter {
+public class CallChainInstrument extends Instrument {
 
 	private static final String   INSTRUMENT_PACKAGE     = "org/dacapo/instrument/";
 	
@@ -31,8 +31,8 @@ public class CallChainInstrument extends ClassAdapter {
 	private boolean               done        = false;
 	private boolean               found       = false;
 	
-	public CallChainInstrument(ClassVisitor cv) {
-		super(cv);
+	public CallChainInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal) {
+		super(cv, methodToLargestLocal);
 		this.cv = cv;
 	}
 	

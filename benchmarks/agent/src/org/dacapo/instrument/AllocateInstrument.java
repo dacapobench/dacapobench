@@ -15,9 +15,10 @@ import org.objectweb.asm.Type;
 
 import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.commons.Method;
 
-public class AllocateInstrument extends ClassAdapter {
+public class AllocateInstrument extends Instrument {
 
 	// we need to instrument a call to alloc in the constructor, after the super
 	// class init but before the other code.  This should call the reportAlloc
@@ -75,8 +76,31 @@ public class AllocateInstrument extends ClassAdapter {
 	
 	private LinkedList<String> excludePackages = new LinkedList<String>();
 	
-	public AllocateInstrument(ClassVisitor cv, String excludeList, boolean logPointerChange) {
-		super(cv);
+	private static final Type OBJECT_TYPE = Type.getType(Object.class);
+	
+	private static class Pair {
+		public String type;
+		public int    var;
+	}
+	
+	private static class CountLocals extends MethodAdapter {
+		int max;
+		public CountLocals(int access, MethodVisitor mv) {
+			super(mv);
+			max = ((access & Opcodes.ACC_STATIC)!=0)?-1:0;
+		}
+		public int getMaxLocals() {
+			super.visitCode();
+			return max;
+		}
+		public void visitVarInsn(int opcode, int var) {
+			super.visitVarInsn(opcode, var);
+			max = Math.max(max, var);
+		}
+	};
+	
+	public AllocateInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String excludeList, boolean logPointerChange) {
+		super(cv, methodToLargestLocal);
 		this.logPointerChange = logPointerChange;
 		
 		// always add the instrument package to the exclude list
@@ -96,7 +120,6 @@ public class AllocateInstrument extends ClassAdapter {
 		this.name      = name;
 		this.access    = access;
 		this.superName = superName;
-//		this.type   = Type.getType(name);
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	
@@ -108,9 +131,13 @@ public class AllocateInstrument extends ClassAdapter {
 	}
 	
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if (!done && instrument() && instrument(access))
-			return new AllocateInstrumentMethod(access, name, desc, signature, exceptions, super.visitMethod(access,name,desc,signature,exceptions), logPointerChange);
-		else
+		if (!done && instrument() && instrument(access)) {
+			// CountLocals locals = new CountLocals(access, super.visitMethod(access,name,desc,signature,exceptions));
+			// int nextLocal = 0; // locals.getMaxLocals()+1;
+			// LocalVariablesSorter lvs = new LocalVariablesSorter(access, desc, super.visitMethod(access, name, desc, signature, exceptions));
+			
+			return new AllocateInstrumentMethod(access, name, desc, signature, exceptions, super.visitMethod(access, name, desc, signature, exceptions), logPointerChange);
+		} else
 			return super.visitMethod(access,name,desc,signature,exceptions);
 	}
 	
@@ -224,6 +251,10 @@ public class AllocateInstrument extends ClassAdapter {
 		boolean constructor;
 		boolean firstInstruction;
 
+		private String   encodedName;
+		private int      localsBase = 0;
+		private int      maxLocals;
+		private MethodVisitor mv; 
 		private Label    methodStartLabel;
 		private String[] exceptions;
 		private boolean  methodDone;
@@ -234,16 +265,23 @@ public class AllocateInstrument extends ClassAdapter {
 		private static final boolean DO_INC_DEC = true;
 		private static final boolean DO_NEW_INVOKESPECIAL_SEQUENCE = true;
 		
-		LinkedList<String> newTypeStack = new LinkedList<String>();
-		
-		AllocateInstrumentMethod(int access, String name, String desc, String signature, String[] exceptions, MethodVisitor mv, boolean logPointerChanges) {
-			super(mv, access, name, desc);
-			this.constructor = DO_INC_DEC && CONSTRUCTOR.equals(name);
+		// LinkedList<String> newTypeStack = new LinkedList<String>();
+		LinkedList<Pair> newTypeStack = new LinkedList<Pair>();
+
+		AllocateInstrumentMethod(int access, String methodName, String desc, String signature, String[] exceptions, MethodVisitor mv, boolean logPointerChanges) {
+			super(mv, access, methodName, desc);
+			this.mv = mv;
+			this.constructor = DO_INC_DEC && CONSTRUCTOR.equals(methodName);
 			this.firstInstruction = constructor;
 			this.methodStartLabel = null;
 			this.exceptions = exceptions;
 			this.methodDone = false;
 			this.doneSuperConstructor = !constructor;
+			this.encodedName = Instrument.encodeMethodName(name, methodName, desc);
+			if (! methodToLargestLocal.containsKey(this.encodedName))
+				methodToLargestLocal.put(this.encodedName, Instrument.getArgumentSizes(access,desc));
+			this.localsBase = methodToLargestLocal.get(this.encodedName);
+			this.maxLocals = this.localsBase;
 		}
 		
 		public void onMethodExit(int opcode) {
@@ -310,11 +348,12 @@ public class AllocateInstrument extends ClassAdapter {
 			super.visitMethodInsn(opcode,owner,methodName,desc);
 			if (opcode == Opcodes.INVOKESPECIAL && CONSTRUCTOR.equals(methodName)) {
 				if (DO_NEW_INVOKESPECIAL_SEQUENCE && !newTypeStack.isEmpty()) {
-					String type = newTypeStack.removeLast();
-					if (! type.equals(owner)) {
-						System.err.println("Excepted type: "+type+" found: "+owner);
+					Pair p = newTypeStack.removeLast();
+					if (! p.type.equals(owner)) {
+						System.err.println("Excepted type: "+p.type+" found: "+owner);
 						System.exit(10);
 					}
+					super.visitVarInsn(Opcodes.ALOAD,p.var);
 					addLog(false);
 				}
 				if (superName.equals(owner)) {
@@ -375,8 +414,17 @@ public class AllocateInstrument extends ClassAdapter {
 			if (opcode == Opcodes.ANEWARRAY)
 				addLog(true);
 			else if (DO_NEW_INVOKESPECIAL_SEQUENCE && opcode == Opcodes.NEW) {
-				newTypeStack.addLast(type);
 				super.visitInsn(Opcodes.DUP);
+				Pair p = new Pair();
+				p.type = type;
+				p.var  = this.localsBase + 1 + newTypeStack.size();
+				if (this.maxLocals < p.var) {
+					this.maxLocals = p.var;
+					methodToLargestLocal.put(this.encodedName, new Integer(p.var));
+				}
+				super.setLocalType(p.var,OBJECT_TYPE);	// super.newLocal(OBJECT_TYPE);
+				newTypeStack.addLast(p);
+				super.visitVarInsn(Opcodes.ASTORE,p.var);
 			}
 		}
 		public void visitIntInsn(int opcode, int operand) {

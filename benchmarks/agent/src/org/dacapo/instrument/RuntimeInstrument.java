@@ -1,5 +1,7 @@
 package org.dacapo.instrument;
 
+import java.util.TreeMap;
+
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -10,7 +12,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-public class RuntimeInstrument extends ClassAdapter {
+public class RuntimeInstrument extends Instrument {
 	
 	private static final String   RUNTIME_CLASS_NAME           = "java/lang/Runtime";
 	private static final String   RUNTIME_METHOD_NAME          = "availableProcessors";
@@ -34,8 +36,8 @@ public class RuntimeInstrument extends ClassAdapter {
 	private boolean             inherit;
 	private boolean             overridden                     = false;
 	
-	public RuntimeInstrument(ClassVisitor cv) {
-		super(cv);
+	public RuntimeInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal) {
+		super(cv, methodToLargestLocal);
 		this.cv = cv;
 	}
 

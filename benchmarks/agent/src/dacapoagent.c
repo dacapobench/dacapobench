@@ -550,7 +550,7 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 		    *new_class_data     = NULL;
 		    *new_class_data_len = 0;
 
-            sprintf(command, "java -classpath dist/agent.jar:dist/asm-3.2.jar:dist/asm-commons-3.2.jar org.dacapo.instrument.Instrument '%s' '%s' '%s' \"%s\"",infile,outfile,(name!=NULL?name:"NULL"),agentOptions);
+            sprintf(command, "java -classpath dist/agent.jar:dist/asm-3.3.jar:dist/asm-commons-3.3.jar org.dacapo.instrument.Instrument '%s' '%s' '%s' \"%s\"",infile,outfile,(name!=NULL?name:"NULL"),agentOptions);
             if (system(command) == 0) {
                 readClassData(infile,new_class_data,new_class_data_len);
             }
