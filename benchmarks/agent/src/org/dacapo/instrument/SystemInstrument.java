@@ -37,8 +37,6 @@ public class SystemInstrument extends Instrument {
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		String systemClassName = System.class.getName().replace('.','/');
 		
-		System.err.println("Class: "+name+" extends: "+superName);
-		
 		if (systemClassName.equals(name)) {
 			doneAddField   = false;
 			doneAddMethod  = false;

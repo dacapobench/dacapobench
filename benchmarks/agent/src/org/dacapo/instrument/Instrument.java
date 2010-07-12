@@ -64,7 +64,8 @@ public class Instrument extends ClassAdapter {
 			
 			options = new Options(commandLineOptions);
 			
-			cv = new SystemInstrument(cv, methodToLargestLocal);
+			// Unable to 
+			// cv = new SystemInstrument(cv, methodToLargestLocal);
 			
 			if (options.has(Options.RUNTIME))
 				cv = new RuntimeInstrument(cv, methodToLargestLocal);
