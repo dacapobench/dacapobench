@@ -8,6 +8,7 @@ public final class LogTags {
 	public static final String LOG_PREFIX_ALLOCATION                = "HA";
 	public static final String LOG_PREFIX_FREE                      = "HF";
 	public static final String LOG_PREFIX_POINTER                   = "HC";
+	public static final String LOG_PREFIX_STATIC_POINTER            = "HS";
 
 	public static final String LOG_PREFIX_CLASS_PREPARE             = "LD";
 	public static final String LOG_PREFIX_METHOD_PREPARE            = "LM";

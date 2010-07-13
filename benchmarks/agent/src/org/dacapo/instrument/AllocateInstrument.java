@@ -43,20 +43,24 @@ public class AllocateInstrument extends Instrument {
 	private static final String   LOG_ALLOC_DONE              = "allocDone";
 	private static final String   LOG_ALLOC_REPORT            = "allocReport";
 	private static final String   LOG_POINTER_CHANGE          = "logPointerChange";
+	private static final String   LOG_STATIC_POINTER_CHANGE          = "logStaticPointerChange";
 	
 	private static final String   LOG_INTERNAL_ALLOC_INC      = INTERNAL_PREFIX + LOG_ALLOC_INC;
 	private static final String   LOG_INTERNAL_ALLOC_DEC      = INTERNAL_PREFIX + LOG_ALLOC_DEC;
 	private static final String   LOG_INTERNAL_ALLOC_DONE     = INTERNAL_PREFIX + LOG_ALLOC_DONE;
 	private static final String   LOG_INTERNAL_ALLOC_REPORT   = INTERNAL_PREFIX + LOG_ALLOC_REPORT;
 	private static final String   LOG_INTERNAL_POINTER_CHANGE = INTERNAL_PREFIX + LOG_POINTER_CHANGE;
+	private static final String   LOG_INTERNAL_STATIC_POINTER_CHANGE = INTERNAL_PREFIX + LOG_STATIC_POINTER_CHANGE;
 	
 	private static final String   LOG_INTERNAL_NAME          = "org/dacapo/instrument/Log";
 
 	private static final String   VOID_SIGNATURE             = "()V";
 	private static final String   OBJECT_SIGNATURE           = "(Ljava/lang/Object;)V";
 	private static final String   POINTER_CHANGE_SIGNATURE   = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V";
+	private static final String   STATIC_POINTER_CHANGE_SIGNATURE   = "(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/Object;)V";
 	
-	private static final String JAVA_LANG_CLASS = org.objectweb.asm.Type.getInternalName(Class.class);
+	private static final Type   JAVA_LANG_CLASS_TYPE = org.objectweb.asm.Type.getType(Class.class);
+	private static final String JAVA_LANG_CLASS = JAVA_LANG_CLASS_TYPE.getInternalName();
 	private static final String JAVA_LANG_CONSTRUCTOR = org.objectweb.asm.Type.getInternalName(java.lang.reflect.Constructor.class);
 	private static final String NEW_INSTANCE = "newInstance";
 
@@ -221,7 +225,20 @@ public class AllocateInstrument extends Instrument {
 				mg.returnValue();
 				
 				mg.endMethod();
-			} catch (NoSuchMethodException nsme) {
+
+				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_STATIC_POINTER_CHANGE, STATIC_POINTER_CHANGE_SIGNATURE), STATIC_POINTER_CHANGE_SIGNATURE, new Type[] {}, this);
+				
+				start = mg.mark();
+				mg.loadArgs();
+				mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_STATIC_POINTER_CHANGE, Object.class, Class.class, Object.class)));
+				end   = mg.mark();
+				mg.returnValue();
+				
+				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.returnValue();
+				
+				mg.endMethod();
+} catch (NoSuchMethodException nsme) {
 				System.err.println("Unable to find "+LOG_INTERNAL_NAME);
 				System.err.println("M:"+nsme);
 				nsme.printStackTrace();
@@ -312,6 +329,24 @@ public class AllocateInstrument extends Instrument {
 					super.visitFieldInsn(Opcodes.GETFIELD,owner,fieldName,desc);
 					super.visitMethodInsn(Opcodes.INVOKESTATIC, name, LOG_INTERNAL_POINTER_CHANGE, POINTER_CHANGE_SIGNATURE);
 				}
+			} else if (logPointerChange && opcode == Opcodes.PUTSTATIC && desc.charAt(0) == 'L') {
+//				if (finalFields.contains(fieldName)) {
+//					// assume field is initially null
+//					super.visitInsn(Opcodes.DUP);
+//				} else {
+					// instrument reference changes from
+					//   putstatic ...,v' => ...
+					// to
+					//   dup       ...,v' => ...,v',v'
+					//   ldc owner.class ...,v',v' => ...,v',v',k
+					//   getstatic ...,v',v',k => ...,v',v',k,v
+					//   invokespecial staticpointerchangelog(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/Object;)V
+					//         ...,v',v',k,v => ...,v'
+					super.visitInsn(Opcodes.DUP);
+					super.visitLdcInsn(Type.getObjectType(owner));
+					super.visitFieldInsn(Opcodes.GETSTATIC, owner, fieldName, desc);
+					super.visitMethodInsn(Opcodes.INVOKESTATIC, name, LOG_INTERNAL_STATIC_POINTER_CHANGE, STATIC_POINTER_CHANGE_SIGNATURE);
+//				}
 			}
 			super.visitFieldInsn(opcode,owner,fieldName,desc);
 		} 

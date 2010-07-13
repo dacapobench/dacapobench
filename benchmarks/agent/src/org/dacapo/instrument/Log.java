@@ -53,6 +53,11 @@ public final class Log {
 			Agent.logPointerChange(after, obj, before);
 	}
 	
+	public static void logStaticPointerChange(Object after, Class klass, Object before) {
+		if (available)
+			Agent.logStaticPointerChange(after, klass, before);
+	}
+	
 	public static void allocInc() {
 		if (available)
 			Agent.allocInc();

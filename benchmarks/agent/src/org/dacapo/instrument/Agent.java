@@ -298,16 +298,12 @@ public final class Agent {
 	
 	public static void start() {
 		if (agentThread.setLogon(true)) {
-			System.err.println("START:");
-			(new Exception()).printStackTrace();
 			internalStart();
 		}
 	}
 	
 	public static void stop() {
 		if (agentThread.setLogon(false)) {
-			System.err.println("STOP:");
-			(new Exception()).printStackTrace();
 			internalStop();
 		}
 	}
@@ -336,6 +332,14 @@ public final class Agent {
 		delayAllocReport.get().putfield(after, obj, before);
 	}
 
+	public static void logStaticPointerChange(Object after, Class klass, Object before) {
+		if (delayAllocReport.get()==null)
+			delayAllocReport.set(new DelayAllocReport());
+		// delayAllocReport.get().putfield(after, obj, before);
+		internalLogStaticPointerChange(Thread.currentThread(),after,klass,before);
+	}
+
+	
 	public static void allocInc() {
 		if (delayAllocReport.get()==null)
 			delayAllocReport.set(new DelayAllocReport());
@@ -389,6 +393,8 @@ public final class Agent {
 	private static native void internalLogAlloc(Thread thread, Object obj);
 
 	private static native void internalLogPointerChange(Thread thread, Object after, Object obj, Object before);
+	
+	private static native void internalLogStaticPointerChange(Thread thread, Object after, Object obj, Object before);
 	
 	private static native void internalLogMonitorEnter(Thread thread, Object obj);
 	

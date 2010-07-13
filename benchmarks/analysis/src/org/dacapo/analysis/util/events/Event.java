@@ -106,6 +106,8 @@ public abstract class Event {
 			return new EventAllocation(is);
 		else if (EventPointerChange.TAG.equals(eventTag))
 			return new EventPointerChange(is);
+		else if (EventStaticPointerChange.TAG.equals(eventTag))
+			return new EventStaticPointerChange(is);
 		else if (EventFree.TAG.equals(eventTag))
 			return new EventFree(is);
 		else if (EventGC.TAG.equals(eventTag))

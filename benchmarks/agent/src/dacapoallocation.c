@@ -119,6 +119,58 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogPointerChange
 
 /*
  * Class:     org_dacapo_instrument_Agent
+ * Method:    internalLogPointerChange
+ * Signature: (Ljava/lang/Thread;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogStaticPointerChange
+  (JNIEnv *jni_env, jclass agent_klass, jthread thread, jobject after, jclass object_klass, jobject before)
+{
+	if (jvmRunning && !jvmStopped) {
+		jniNativeInterface* jni_table = JNIFunctionTable();
+
+		jlong thread_tag = 0;
+		jclass thread_klass = JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,thread);
+		jlong thread_klass_tag = 0;
+		jlong before_tag = 0;
+		jclass before_klass = (before!=NULL)?JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,before):NULL;
+		jlong before_klass_tag = 0;
+		jlong object_klass_tag = 0;
+		jlong after_tag  = 0;
+		jclass after_klass = (after!=NULL)?JVM_FUNC_PTR(jni_table,GetObjectClass)(jni_env,after):NULL;
+		jlong after_klass_tag  = 0;
+
+		rawMonitorEnter(&lockTag);
+		jboolean thread_has_new_tag = getTag(thread, &thread_tag);
+		jboolean thread_klass_has_new_tag = getTag(thread_klass, &thread_klass_tag);
+		jboolean before_has_new_tag = getTag(before, &before_tag);
+		jboolean before_klass_has_new_tag = getTag(before_klass, &before_klass_tag);
+		jboolean object_klass_has_new_tag = getTag(object_klass, &object_klass_tag);
+		jboolean after_has_new_tag  = getTag(after,  &after_tag);
+		jboolean after_klass_has_new_tag  = getTag(after_klass,  &after_klass_tag);
+		rawMonitorExit(&lockTag);
+
+		/* trace allocation */
+		rawMonitorEnter(&lockLog);
+		log_field_string(LOG_PREFIX_STATIC_POINTER);
+		log_field_current_time();
+
+		log_thread(thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
+
+		log_class(object_klass,object_klass_tag,object_klass_has_new_tag);
+
+		log_field_jlong(before_tag);
+		log_class(before_klass,before_klass_tag,before_klass_has_new_tag);
+
+		log_field_jlong(after_tag);
+		log_class(after_klass,after_klass_tag,after_klass_has_new_tag);
+
+		log_eol();
+		rawMonitorExit(&lockLog);
+	}
+}
+
+/*
+ * Class:     org_dacapo_instrument_Agent
  * Method:    internalAllocReport
  * Signature: (Ljava/lang/Thread;Ljava/lang/Object;Ljava/lang/Class;)V
  */

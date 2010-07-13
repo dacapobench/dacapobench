@@ -11,6 +11,7 @@
 #define LOG_PREFIX_ALLOCATION                 "HA"
 #define LOG_PREFIX_FREE                       "HF"
 #define LOG_PREFIX_POINTER                    "HC"
+#define LOG_PREFIX_STATIC_POINTER             "HS"
 
 #define LOG_PREFIX_CLASS_PREPARE              "LD"
 #define LOG_PREFIX_METHOD_PREPARE             "LM"
