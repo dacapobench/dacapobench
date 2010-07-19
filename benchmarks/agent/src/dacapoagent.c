@@ -46,6 +46,9 @@
 #define LOG_FILE_NAME "DACAPO_JVMTI_LOG_FILE"
 #define DEFAULT_LOG_FILE_NAME "dacapo-jvmti.log"
 
+#define JAR_LIST "agent.jar:asm-3.3.jar:asm-commons-3.3.jar"
+#define JAR_BASE "dist"
+
 struct class_list_s {
     struct class_list_s* next;
     jclass               klass;
@@ -60,12 +63,15 @@ jvmtiCapabilities   availableCapabilities;
 jvmtiCapabilities   capabilities;
 jvmtiEventCallbacks callbacks;
 
-MonitorLockType       agentLock;
-MonitorLockType       lockClass;
+MonitorLockType     agentLock;
+MonitorLockType     lockClass;
 
 jboolean            jvmRunning = FALSE;
 jboolean            jvmStopped = FALSE;
-char                agentOptions[12800];
+char*               agentOptions = NULL; // [12800];
+char*               jarList = JAR_LIST;
+char*               jarBase = JAR_BASE;
+char*               jarSet = NULL;
 jboolean            requiresTransform = FALSE;
 jboolean            storeClassFiles = FALSE;
 jboolean            instrumentClasses = FALSE;
@@ -75,7 +81,7 @@ jboolean            storeClassFilesTXed = FALSE;
 char                storeClassFileBase[8192];
 jboolean            breakOnLoad = FALSE;
 
-char                breakOnLoadClass[10240];
+char*               breakOnLoadClass = NULL;
 
 struct exclude_list_s {
 	struct exclude_list_s* next;
@@ -129,9 +135,9 @@ void reportJVMTIError(FILE* fh, jvmtiError errorNumber, const char *str)
 
 static void agent_exclude_list()
 {
-	char temp[MAX_EXCLUDE_LIST_LENGTH];
+	char* temp = NULL;
 	
-	if (isSelected(OPT_EXCLUDE_CLASSES,temp)) {
+	if (isSelected(OPT_EXCLUDE_CLASSES,&temp)) {
 		int start=0, next=0;
 		
 		while (temp[next] != '\0') {
@@ -156,7 +162,12 @@ static void agent_exclude_list()
 		}
 	}
 	
-	if (isSelected(OPT_EXCLUDE_PACKAGES,temp)) {
+	if (temp != NULL) {
+		free(temp);
+		temp = NULL;
+	}
+	
+	if (isSelected(OPT_EXCLUDE_PACKAGES,&temp)) {
 		int start=0, next=0;
 		
 		while (temp[next] != '\0') {
@@ -180,7 +191,57 @@ static void agent_exclude_list()
 				start = ++next;
 		}
 	}
+	
+	if (temp != NULL) {
+		free(temp);
+		temp = NULL;
+	}
 }
+
+static void agent_ext_java()
+{
+	char* temp = NULL;
+	const char* newJarBase = jarBase;
+	
+	if (isSelected(OPT_BASE,&temp)) 
+		newJarBase = (temp != NULL)?temp:jarBase;
+		
+	int newJarBaseLength = strlen(newJarBase);
+	int jarCount      = 1;		
+	int i             = 0;
+	int jarListLength = strlen(jarList);
+	
+	for(i = 0; i < jarListLength; i++) {
+		if (jarList[i] == ':') jarCount++;
+	}
+	
+	int slash = newJarBase[newJarBaseLength-1]=='/'?0:1;
+	int jarSetSize = (newJarBaseLength + slash) * jarCount + jarListLength; 
+		
+	jarSet = (char*)malloc(sizeof(char)*(jarSetSize + 1));
+	
+	char* jarSetPtr = jarSet;
+	int   j = -1;
+
+	for(i = 0; i < jarCount; i++) {
+		strcpy(jarSetPtr,newJarBase);
+		jarSetPtr += newJarBaseLength;
+		if (slash==1) *(jarSetPtr++) = '/';
+		int k = j+1;
+		while (jarList[k]!=':' && jarList[k]!='\0') {
+			*(jarSetPtr++) = jarList[k++];
+		}
+		if ((i + 1) < jarCount) *(jarSetPtr++) = ':';
+		j = k;
+	}
+	jarSet[jarSetSize] = '\0';
+	
+	if (temp != NULL) {
+		free(temp);
+		temp = NULL;
+	}
+}
+
 
 /* Agent_OnLoad: This is called immediately after the shared library is 
  *   loaded. This is the first code executed.
@@ -200,12 +261,10 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
     (void)memset(&lockTag,0, sizeof(lockTag));
     (void)memset(&lockClass,0, sizeof(lockClass));
 
-    if (options==NULL || strlen(options)==0) {
-        agentOptions[0] = '\0';
-    } else {
-        strncpy(agentOptions,options,sizeof(agentOptions)-1);
+    if (options!=NULL && strlen(options)!=0) {
+    	agentOptions = (char*)malloc(strlen(options)+1);
+        strcpy(agentOptions,options);
     }
-    agentOptions[sizeof(agentOptions)-1] = '\0';
 
     jvm = vm;
     res = JVMTI_FUNC_PTR(jvm,GetEnv)(jvm, (void **)&baseEnv, JVMTI_VERSION_1);
@@ -263,6 +322,8 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
 		/* JVMTI_FUNC_PTR(baseEnv,CreateRawMonitor)(baseEnv, "agent lock", &(agentLock)) != JNI_OK) { */
 		return FALSE;
 	}
+
+	agent_ext_java();
 
 	agent_exclude_list();
 	allocation_init();
@@ -358,7 +419,7 @@ static void processOptions() {
 	
 	loadClasses = isSelected(OPT_LOAD_CLASSES,NULL);
 	methodCalls = isSelected(OPT_METHOD_EVENTS,NULL);
-	breakOnLoad = isSelected(OPT_BREAK,breakOnLoadClass);
+	breakOnLoad = isSelected(OPT_BREAK,&breakOnLoadClass);
 	
 	instrumentClasses =
 		isSelected(OPT_CLINIT,NULL) ||
@@ -550,7 +611,8 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 		    *new_class_data     = NULL;
 		    *new_class_data_len = 0;
 
-            sprintf(command, "java -classpath dist/agent.jar:dist/asm-3.3.jar:dist/asm-commons-3.3.jar org.dacapo.instrument.Instrument '%s' '%s' '%s' \"%s\"",infile,outfile,(name!=NULL?name:"NULL"),agentOptions);
+            sprintf(command, "java -classpath \"%s\" org.dacapo.instrument.Instrument \"%s\" \"%s\" \"%s\" \"%s\"",jarSet,infile,outfile,(name!=NULL?name:"NULL"),agentOptions);
+
             if (system(command) == 0) {
                 readClassData(infile,new_class_data,new_class_data_len);
             }

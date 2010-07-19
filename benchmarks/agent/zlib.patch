@@ -1,0 +1,12 @@
+diff -urNw zl-a/zlib-1.2.5/configure zl-e/zlib-1.2.5/configure
+--- zl-a/zlib-1.2.5/configure	2010-04-20 14:15:19.000000000 +1000
++++ zl-e/zlib-1.2.5/configure	2010-07-15 11:14:43.758060936 +1000
+@@ -106,7 +106,7 @@
+ if test "$gcc" -eq 1 && ($cc -c $cflags $test.c) 2>/dev/null; then
+   CC="$cc"
+   SFLAGS="${CFLAGS--O3} -fPIC"
+-  CFLAGS="${CFLAGS--O3}"
++  CFLAGS="${CFLAGS--O3} -fPIC"
+   if test $build64 -eq 1; then
+     CFLAGS="${CFLAGS} -m64"
+     SFLAGS="${SFLAGS} -m64"

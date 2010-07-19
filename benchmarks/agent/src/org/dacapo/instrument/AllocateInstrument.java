@@ -238,7 +238,7 @@ public class AllocateInstrument extends Instrument {
 				mg.returnValue();
 				
 				mg.endMethod();
-} catch (NoSuchMethodException nsme) {
+			} catch (NoSuchMethodException nsme) {
 				System.err.println("Unable to find "+LOG_INTERNAL_NAME);
 				System.err.println("M:"+nsme);
 				nsme.printStackTrace();

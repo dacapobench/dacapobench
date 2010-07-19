@@ -12,7 +12,7 @@
 #define OPT_LOAD_CLASSES     "load_classes"
 #define OPT_THREAD           "thread"
 #define OPT_ALLOCATE         "allocate"
-#define OPT_POINTER         "pointer"
+#define OPT_POINTER          "pointer"
 #define OPT_BREAK            "break"
 #define OPT_MONITOR          "monitor"
 #define OPT_LOG_FILE         "log_file"
@@ -26,8 +26,9 @@
 #define OPT_INTERVAL         "interval"
 #define OPT_EXCLUDE_PACKAGES "exclude_package"
 #define OPT_EXCLUDE_CLASSES  "exclude_classes"
+#define OPT_BASE             "base"
 
-_Bool isSelected(const char* option, char* argument);
+_Bool isSelected(const char* option, char** argument);
 _Bool hasArgument(const char* option);
 void reportOptionsList();
 void makeOptionList(const char* options);

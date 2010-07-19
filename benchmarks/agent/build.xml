@@ -21,17 +21,24 @@
 		<equals arg1="${os.name}" arg2="linux" casesensitive="no" trim="yes"/>
 	</condition>
 
+	<condition property="32bit">
+		<equals arg1="${os.name}" arg2="32" casesensitive="no" trim="yes"/>
+	</condition>
+	
+	<condition property="64bit">
+		<equals arg1="${os.name}" arg2="64" casesensitive="no" trim="yes"/>
+	</condition>
+	
 	<property name="download-dir" value="${agent-dir}/download"/>
 	
 	<!-- http://zlib.net/zlib-1.2.5.tar.gz -->
-	
 	<property name="zlib" value="zlib"/>
 	<property name="zlib-version" value="1.2.5"/>
 	<property name="zlib-basename" value="${zlib}-${zlib-version}"/>
 	<property name="zlib-name" value="${zlib-basename}.tar.gz"/>
 	<property name="zlib-url" value="http://${zlib}.net"/>
 	<property name="zlib-lib-base" value="z"/>
-	
+
     <property name="cli" value="commons-cli"/>
     <property name="cli-version" value="1.2"/>
     <property name="cli-basename" value="${cli}-${cli-version}"/>
@@ -47,17 +54,34 @@
 		<mkdir dir="${dist-dir}"/>
 	</target>
 
-	<target name="libs" depends="init,asm,bcel">
+	<target name="zlibsrc" depends="init">
 		<antcall target="check-source">
 			<param name="target-file" value="${zlib-name}" />
 			<param name="target-dir"  value="${download-dir}" />
 			<param name="target-url"  value="${zlib-url}"/>
 		</antcall>
 		<untar src="${download-dir}/${zlib-name}" dest="${agent-dir}/build" compression="gzip"/>
+    <patch patchfile="${agent-dir}/${zlib}.patch" dir="${agent-dir}/build" strip="1" ignorewhitespace="yes"/>
+	</target>
+	
+	<target name="buildzlib32" depends="init,zlibsrc" unless="64bit">
 		<exec executable="sh" dir="${agent-dir}/build/${zlib-basename}" >
 			<arg value="configure"/>
 		</exec>
 		<exec executable="make" dir="${agent-dir}/build/${zlib-basename}" />
+	</target>
+		
+	<target name="buildzlib64" depends="init,zlibsrc" if="64bit">
+		<exec executable="sh" dir="${agent-dir}/build/${zlib-basename}" >
+			<arg value="configure"/>
+			<arg value="--64"/>
+		</exec>
+		<exec executable="make" dir="${agent-dir}/build/${zlib-basename}" />
+	</target>
+	
+	<target name="buildzlib" depends="buildzlib32,buildzlib64"/>
+	
+	<target name="libs" depends="init,asm,bcel,buildzlib">
 		<copy file="${asm-jar}" todir="${dist-dir}"/>
 		<copy file="${asm-commons-jar}" todir="${dist-dir}"/>
 		
@@ -93,7 +117,7 @@
 			<arg value="JAVA_HOME=${java.home}/.."/>
 			<arg value="OSNAME=linux"/>
 			<!-- <arg value="OPT=true"/> -->
-			<arg value="ZLIB_DIR=${agent-dir}/build/${zlib-basename}"/>
+			<arg value="ZLIB_DIR=${agent-dir}/build/${zlib-basename}"/> 
 			<arg value="ZLIB_LIB=${zlib-lib-base}"/>
 		</exec>
 		<copy todir="${agent-dir}/lib">

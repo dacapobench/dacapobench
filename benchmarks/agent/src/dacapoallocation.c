@@ -25,9 +25,13 @@ void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallb
 		if (capabilities->can_generate_vm_object_alloc_events) DEFINE_CALLBACK(callbacks,VMObjectAlloc,JVMTI_EVENT_VM_OBJECT_ALLOC);
 		if (capabilities->can_generate_object_free_events) DEFINE_CALLBACK(callbacks,ObjectFree,JVMTI_EVENT_OBJECT_FREE);
 	}
-	char arg[1024];
-	if (isSelected(OPT_GC,arg)) {
+	char* arg = NULL;
+	if (isSelected(OPT_GC,&arg)) {
 	    gcForceCycle = atol(arg);
+	    if (arg != NULL) {
+	    	free(arg);
+	    	arg = NULL;
+	    }
 	}
 }
 

@@ -44,14 +44,16 @@ static struct option_s* findOption(const char* option) {
 	return NULL;
 }
 
-_Bool isSelected(const char* option, char* argument) {
+_Bool isSelected(const char* option, char** argument) {
 	struct option_s* opt = findOption(option);
 
-	if (opt!=NULL && argument!=NULL) {
-		if (opt->argument!=NULL)
-			strncpy(argument,opt->argument,opt->argLength);
-		argument[opt->argLength]='\0';
+	if (opt != NULL && argument != NULL) {
+		if (*argument==NULL)
+			*argument = (char*)malloc(opt->argLength+1);
+		if (0 < opt->argLength) strncpy(*argument,opt->argument,opt->argLength);
+		(*argument)[opt->argLength]='\0';
 	}
+
 	return opt!=NULL;
 }
 

@@ -18,10 +18,12 @@ void call_chain_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallb
 
 void call_chain_logon(JNIEnv* env) {
 	if (jvmRunning && !jvmStopped) {
-		char arg[1024];
+		char* arg = NULL;
 		long frequency = 0;
-		if (isSelected(OPT_CALL_CHAIN,arg))
+		if (isSelected(OPT_CALL_CHAIN,&arg))
 			frequency = atol(arg);
+
+		free(arg);
 
 		if (0 < frequency) {
 			setReportCallChain(env, frequency, (jboolean)TRUE);

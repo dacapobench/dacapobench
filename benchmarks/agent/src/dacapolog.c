@@ -195,9 +195,13 @@ _Bool dacapo_log_init() {
 	}
 	
 	/* make log file */
-	char tmpFile[10240];
-	if (isSelected(OPT_LOG_FILE,tmpFile)) {
+	char* tmpFile = NULL;
+	if (isSelected(OPT_LOG_FILE,&tmpFile)) {
 		setLogFileName(tmpFile);
+		if (tmpFile != NULL) {
+			free(tmpFile);
+			tmpFile = NULL;
+		}
 	}
 	
     gettimeofday(&startTime, NULL);
