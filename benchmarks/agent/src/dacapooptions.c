@@ -1,3 +1,11 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#include <stdlib.h>
+#include <sys/time.h>
+#include <unistd.h>
+
 /*
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,9 +30,9 @@
 
 struct option_s {
     struct option_s*  next;
-    const char*       option;
+    char*             option;
     int               length;
-    const char*       argument;
+    char*             argument;
     int               argLength;
 };
 
@@ -82,7 +90,7 @@ void reportOptionsList() {
 	}
 }
 
-void makeOptionList(const char* options) {
+void makeOptionList(char* options) {
 	if (options != NULL) {
         int start = 0;
 		while (options[start]!='\0') {
@@ -125,3 +133,201 @@ void makeOptionList(const char* options) {
 		reportOptionsList();
 }
 
+#define CONFIG_FILE_NAME "config.txt"
+#define DEFAULT_DIR "."
+#define FILE_SEP_CHAR '/'
+
+#define FILE_TYPE int
+
+#define FILE_IS_CLOSED -1
+#define FILE_FLAGS      (O_RDONLY)
+#define FILE_MODE       (S_IRUSR)
+
+/*
+close(logFile);
+logFile = open(f,FILE_FLAGS,FILE_MODE);
+logFileSequenceLength += write(logFile,b,(e)*(n));
+ssize_t read(int fd, void *buf, size_t count);
+
+*/
+
+enum State {
+	UNKNOWN,
+	COMMENT,
+	KEY,
+	KEY_ESCAPE,
+	VALUE,
+	VALUE_ESCAPE
+};
+
+void append(char** buf, int* length, int* maxLength, char c)
+{
+	if (*length == *maxLength) {
+		*maxLength = 2 * *maxLength;
+		char* tmp = (char*)malloc(sizeof(char) * *maxLength);
+
+		int i;		
+		for(i = 0; i < *length; i++) tmp[i] = (*buf)[i];
+		
+		free(*buf);
+		*buf = tmp;
+	}
+	
+	(*buf)[*length] = c;
+	*length = *length + 1;
+}
+	
+void makeOptionListFromFile(char* agentDir) 
+{
+	char* fileName = CONFIG_FILE_NAME;
+	char* fullFileName = NULL;
+	
+	if (agentDir == NULL) agentDir = DEFAULT_DIR; 
+	
+	int   length = strlen(agentDir);
+	
+	if (agentDir[length] != FILE_SEP_CHAR) {
+		fullFileName = (char*)malloc(sizeof(char)*(length + 1 + strlen(fileName)));
+		strcpy(fullFileName, agentDir);
+		fullFileName[length] = FILE_SEP_CHAR;
+		strcpy(fullFileName + length + 1, fileName);
+	} else {
+		strcpy(fullFileName, agentDir);
+		strcpy(fullFileName + length, fileName);
+	}
+
+    FILE_TYPE fh = open(fullFileName,FILE_FLAGS,FILE_MODE);
+	
+	if (fh == FILE_IS_CLOSED) {
+		fprintf(stderr, "unable to read config file %s\n", fullFileName);
+		exit(10);
+	}
+
+	char c = '\0';
+	size_t bytes = read(fh, &c, sizeof(char));
+	
+	enum State state = UNKNOWN;
+	
+	int keyLength      = 0;
+	int keyMaxLength   = 128;
+	char* key          = (char*)malloc(keyMaxLength);
+
+	int valueLength    = 0;
+	int valueMaxLength = 1024;
+	char* value        = (char*)malloc(valueMaxLength);
+		
+	while (bytes != 0) {
+		if (state == UNKNOWN) {
+			switch (c) {
+			case '-': case '#': 
+				state = COMMENT;
+				break;
+			case '\n': case '\r':
+				break;
+			case '\\':
+				state = KEY_ESCAPE;
+				break;
+			default:
+				state = KEY;
+				append(&key, &keyLength, &keyMaxLength, c);
+				break;
+			}
+		} else if (state == KEY) {
+			switch (c) {
+			case '\\':
+				state = KEY_ESCAPE;
+				break;
+			case '=':
+				state = VALUE;
+				break;
+			default:
+				append(&key, &keyLength, &keyMaxLength, c);
+				break;
+			}
+		} else if (state == KEY_ESCAPE) {
+			switch (c) {
+			case 'n':
+				append(&key, &keyLength, &keyMaxLength, '\n');
+				break;
+			case 'r':
+				append(&key, &keyLength, &keyMaxLength, '\r');
+				break;
+			case 't':
+				append(&key, &keyLength, &keyMaxLength, '\t');
+				break;
+			default:
+				append(&key, &keyLength, &keyMaxLength, c);
+				break;
+			}
+			state = KEY;
+		} else if (state == VALUE) {
+			switch (c) {
+			case '\\':
+				state = VALUE_ESCAPE;
+				break;
+			case '\r': case '\n':
+				state = UNKNOWN;
+
+				struct option_s* opt = (struct option_s*)malloc(sizeof(struct option_s));
+				
+				opt->next = NULL;
+				
+				opt->option = (char*)malloc(sizeof(char)*(keyLength+1));
+				opt->length = keyLength;
+				strncpy(opt->option,key,sizeof(char)*keyLength);
+				opt->option[keyLength] = '\0';
+				
+				opt->argument = (char*)malloc(sizeof(char)*(valueLength+1));
+				opt->argLength = valueLength;
+				strncpy(opt->argument,value,sizeof(char)*valueLength);
+				opt->argument[valueLength] = '\0';
+
+				if (optionList == NULL)
+					optionList = optionTail = opt;
+				else {
+					optionTail->next = opt;
+					optionTail = opt;
+				}
+
+				keyLength   = 0;
+				valueLength = 0;
+				break;
+			default:
+				append(&value, &valueLength, &valueMaxLength, c);
+				break;
+			}
+		} else if (state == VALUE_ESCAPE) {
+			switch (c) {
+			case 'n':
+				append(&value, &valueLength, &valueMaxLength, '\n');
+				break;
+			case 'r':
+				append(&value, &valueLength, &valueMaxLength, '\r');
+				break;
+			case 't':
+				append(&value, &valueLength, &valueMaxLength, '\t');
+				break;
+			default:
+				append(&value, &valueLength, &valueMaxLength, c);
+				break;
+			}
+			state = VALUE;
+		} else if (state == COMMENT) {
+			switch (c) {
+			case '\r': case '\n':
+				state = UNKNOWN;
+				break;
+			default:
+				break;
+			}
+		} else {
+			fprintf(stderr, "we should never reach this state\n");
+			exit(10);
+		}
+	
+		bytes = read(fh, &c, sizeof(char));
+	}	
+	
+	close(fh);
+	free(fullFileName);
+}

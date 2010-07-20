@@ -81,7 +81,7 @@ public final class Log {
 	public static void reportMonitorEnter(Object obj) {
 		if (enableLogging) {
 			if (available)
-				Agent.logMonitorEnter(Thread.currentThread(),obj);
+				Agent.logMonitorEnter(obj);
 			else
 				out.println(LogTags.LOG_PREFIX_MONITOR_ACQUIRE+":"+Thread.currentThread()+":"+obj.hashCode());
 		}
@@ -90,7 +90,7 @@ public final class Log {
 	public static void reportMonitorExit(Object obj) {
 		if (enableLogging) {
 			if (available)
-				Agent.logMonitorExit(Thread.currentThread(),obj);
+				Agent.logMonitorExit(obj);
 			else
 				out.println(LogTags.LOG_PREFIX_MONITOR_RELEASE+":"+Thread.currentThread()+":"+obj.hashCode());
 		}
@@ -99,7 +99,7 @@ public final class Log {
 	public static void reportMonitorNotify(Object obj) {
 		if (enableLogging) {
 			if (available)
-				Agent.logMonitorNotify(Thread.currentThread(),obj);
+				Agent.logMonitorNotify(obj);
 			else
 				out.println(LogTags.LOG_PREFIX_MONITOR_NOTIFY+":"+Thread.currentThread()+":"+obj.hashCode());
 		}

@@ -27,7 +27,7 @@ public class ClinitInstrument  extends Instrument {
 	
 	private static final String   INSTRUMENT_PACKAGE   = "org/dacapo/instrument/";
 	
-	private static final String   LOG_INTERNAL_NAME    = "org/dacapo/instrument/Log";
+	private static final String   LOG_INTERNAL_NAME    = "org/dacapo/instrument/Agent"; // Log
 	private static final String   LOG_METHOD_NAME      = "reportClass";
 	private static final String   LOG_METHOD_SIGNATURE = "(Ljava/lang/String;)V"; 
 	
@@ -72,7 +72,7 @@ public class ClinitInstrument  extends Instrument {
 		if (!foundClinit && instrument()) {
 			// didn't find <clinit> so lets make one
 			try {
-				Class k = Log.class;
+				Class k = Agent.class; // Log.class
 				GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, new Method(CLINIT_NAME, CLINIT_SIGNATURE), CLINIT_SIGNATURE, new Type[] {}, this);
 				
 				Label start = mg.mark();
@@ -86,7 +86,7 @@ public class ClinitInstrument  extends Instrument {
 				
 				mg.endMethod();
 			} catch (NoSuchMethodException nsme) {
-				System.out.println("Unable to find Log.reportClass method");
+				System.out.println("Unable to find Agent.reportClass method");
 			}
 		}
 		

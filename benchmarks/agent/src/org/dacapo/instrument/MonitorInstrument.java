@@ -20,13 +20,13 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
 
 public class MonitorInstrument extends Instrument {
 
-	private static final String   LOG_INTERNAL_NAME          = "org/dacapo/instrument/Log";
-	private static final String   LOG_ENTER_METHOD           = "reportMonitorEnter";
-	private static final String   LOG_EXIT_METHOD            = "reportMonitorExit";
-	private static final String   LOG_NOTIFY_METHOD          = "reportMonitorNotify";
-	private static final String   LOG_INTERNAL_ENTER_METHOD  = "$$monitorEnter";
-	private static final String   LOG_INTERNAL_EXIT_METHOD   = "$$monitorExit";
-	private static final String   LOG_INTERNAL_NOTIFY_METHOD = "$$monitorNotify";
+	private static final String   LOG_INTERNAL_NAME          = "org/dacapo/instrument/Agent"; // Log
+	private static final String   LOG_ENTER_METHOD           = "logMonitorEnter";
+	private static final String   LOG_EXIT_METHOD            = "logMonitorExit";
+	private static final String   LOG_NOTIFY_METHOD          = "logMonitorNotify";
+	private static final String   LOG_INTERNAL_ENTER_METHOD  = "$$" + LOG_ENTER_METHOD;
+	private static final String   LOG_INTERNAL_EXIT_METHOD   = "$$" + LOG_EXIT_METHOD;
+	private static final String   LOG_INTERNAL_NOTIFY_METHOD = "$$" + LOG_NOTIFY_METHOD;
 	private static final String   LOG_CLASS_SIGNATURE        = "()V";
 	private static final String   LOG_OBJECT_SIGNATURE       = "(Ljava/lang/Object;)V";
 	
@@ -53,8 +53,8 @@ public class MonitorInstrument extends Instrument {
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.className  = name;
 		this.access     = access;
-		if ((version&0xffff)<49)
-			version = 49;
+//		if ((version&0xffff)<49)
+//			version = 49;
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	
@@ -71,7 +71,7 @@ public class MonitorInstrument extends Instrument {
 			classDone = true;
 			if (has_monitor_operation)
 				try {
-					Class k = Log.class;
+					Class logClass = Agent.class;
 					
 					GeneratorAdapter mg;
 					Label start;
@@ -82,7 +82,7 @@ public class MonitorInstrument extends Instrument {
 					
 					mg.loadArg(0);
 					start = mg.mark();
-					mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_ENTER_METHOD, Object.class)));
+					mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_ENTER_METHOD, Object.class)));
 					end   = mg.mark();
 					mg.returnValue();
 					
@@ -97,7 +97,7 @@ public class MonitorInstrument extends Instrument {
 					
 					mg.loadArg(0);
 					start = mg.mark();
-					mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_EXIT_METHOD, Object.class)));
+					mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_EXIT_METHOD, Object.class)));
 					end   = mg.mark();
 					mg.returnValue();
 					
@@ -131,7 +131,7 @@ public class MonitorInstrument extends Instrument {
 						
 						mg.loadArg(0);
 						start = mg.mark();
-						mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_NOTIFY_METHOD, Object.class)));
+						mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_NOTIFY_METHOD, Object.class)));
 						end   = mg.mark();
 						mg.returnValue();
 						
@@ -142,7 +142,7 @@ public class MonitorInstrument extends Instrument {
 						mg.endMethod();
 					}
 				} catch (NoSuchMethodException nsme) {
-					System.err.println("Unable to find Log.reportMonitorEnter or Log.reportMonitorExit method");
+					System.err.println("Unable to find Agent.logMonitorEnter, Agent.logMonitorExit or Agent.logMonitorNotify method");
 					System.err.println("M:"+nsme);
 					nsme.printStackTrace();
 				}

@@ -19,11 +19,11 @@ public class CallChainInstrument extends Instrument {
 
 	private static final String   INSTRUMENT_PACKAGE     = "org/dacapo/instrument/";
 	
-	private static final String   LOG_INTERNAL_NAME      = "org/dacapo/instrument/Log";
-	private static final String   LOG_METHOD_NAME        = "reportCallChain";
+	private static final String   LOG_INTERNAL_NAME      = "org/dacapo/instrument/Agent"; // Log
+	private static final String   LOG_METHOD_NAME        = "logCallChain";
 	private static final String   LOG_METHOD_SIGNATURE   = "()V"; 
 	
-	private static final String   LOG_INTERNAL_METHOD    = "$$reportCallChain";
+	private static final String   LOG_INTERNAL_METHOD    = "$$" + LOG_METHOD_NAME;
 	
 	private int                   access      = 0;
 	private ClassVisitor          cv          = null;
@@ -52,12 +52,13 @@ public class CallChainInstrument extends Instrument {
 
 	public void visitEnd() {
 		if (!done && found) {
+			Class logClass = Agent.class;
 			done = true;
 			try {
 				GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_METHOD, LOG_METHOD_SIGNATURE), LOG_METHOD_SIGNATURE, new Type[] {}, this);
 
 				Label start = mg.mark();
-				mg.invokeStatic(Type.getType(Log.class), Method.getMethod(Log.class.getMethod(LOG_METHOD_NAME)));
+				mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_METHOD_NAME)));
 				mg.returnValue();
 				Label end   = mg.mark();
 				mg.catchException(start, end, Type.getType(Throwable.class));
@@ -65,7 +66,7 @@ public class CallChainInstrument extends Instrument {
 				
 				mg.endMethod();
 			} catch (NoSuchMethodException nsme) {
-				System.err.println("Unable to find Log.reportMonitorEnter or Log.reportMonitorExit method");
+				System.err.println("Unable to find Agent.rlogCallChain method");
 				System.err.println("M:"+nsme);
 				nsme.printStackTrace();
 			}

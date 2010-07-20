@@ -27,12 +27,12 @@ public class MethodInstrument extends Instrument {
 	
 	private static final String   INSTRUMENT_PACKAGE     = "org/dacapo/instrument/";
 	
-	private static final String   LOG_INTERNAL_NAME      = "org/dacapo/instrument/Log";
-	private static final String   LOG_METHOD_NAME        = "reportMethod";
+	private static final String   LOG_INTERNAL_NAME      = "org/dacapo/instrument/Agent";
+	private static final String   LOG_METHOD_NAME        = "logMethod";
 	private static final String   LOG_METHOD_SIGNATURE   = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z"; 
 	private static final String   LOG_BRIDGE_SIGNATURE   = "(Ljava/lang/String;Ljava/lang/String;)V";
 	
-	private static final String   LOG_INTERNAL_METHOD    = "$$reportMethod";
+	private static final String   LOG_INTERNAL_METHOD    = "$$" + LOG_METHOD_NAME;
 	private static final String   LOG_INTERNAL_SIGNATURE = "(Ljava/lang/String;Ljava/lang/String;)Z";
 	
 	private static final Integer  ZERO                   = new Integer(0);
@@ -54,10 +54,10 @@ public class MethodInstrument extends Instrument {
 	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.access = access;
-		if ((version&0xffff)<49) {
-			// System.err.println("MethodInstrument:changing version from " + (version&0xffff) + "." + (version >> 16));
-			version = 49;
-		}
+//		if ((version&0xffff)<49) {
+//			// System.err.println("MethodInstrument:changing version from " + (version&0xffff) + "." + (version >> 16));
+//			version = 49;
+//		}
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	
@@ -73,7 +73,7 @@ public class MethodInstrument extends Instrument {
 		if (!done && (access & Opcodes.ACC_INTERFACE) == 0) {
 			done = true;
 			try {
-				Class k = Log.class;
+				Class logClass = Agent.class;
 				
 				GeneratorAdapter mg;
 				Label start;
@@ -83,13 +83,13 @@ public class MethodInstrument extends Instrument {
 				
 				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, logBridgeMethod, LOG_INTERNAL_SIGNATURE, new Type[] {}, this);
 
-				java.lang.reflect.Method m = k.getMethod(LOG_METHOD_NAME, String.class, String.class, String.class);
+				java.lang.reflect.Method m = logClass.getMethod(LOG_METHOD_NAME, String.class, String.class, String.class);
 
 				start = mg.mark();
 				mg.push(className);
 				mg.loadArg(0);
 				mg.loadArg(1);
-				mg.invokeStatic(Type.getType(k), Method.getMethod(m));
+				mg.invokeStatic(Type.getType(logClass), Method.getMethod(m));
 				mg.returnValue();
 				end   = mg.mark();
 				mg.catchException(start, end, Type.getType(Throwable.class));
@@ -104,7 +104,7 @@ public class MethodInstrument extends Instrument {
 					makeMethod(methName, methods.get(methName));
 				}
 			} catch (NoSuchMethodException nsme) {
-				System.err.println("Unable to find Log.reportMonitorEnter or Log.reportMonitorExit method");
+				System.err.println("Unable to find Agent.logMethod method");
 				System.err.println("M:"+nsme);
 				nsme.printStackTrace();
 			}

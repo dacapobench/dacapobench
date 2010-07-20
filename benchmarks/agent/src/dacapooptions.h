@@ -31,6 +31,7 @@
 _Bool isSelected(const char* option, char** argument);
 _Bool hasArgument(const char* option);
 void reportOptionsList();
-void makeOptionList(const char* options);
+void makeOptionList(char* options);
+void makeOptionListFromFile(char* agentDir);
 
 #endif

@@ -64,6 +64,9 @@ public class Instrument extends ClassAdapter {
 			
 			options = new Options(commandLineOptions);
 			
+			// always change the version of the class to allow  SomeClass.class constants
+			cv = new VersionChanger(cv);
+			
 			// Unable to 
 			// cv = new SystemInstrument(cv, methodToLargestLocal);
 			

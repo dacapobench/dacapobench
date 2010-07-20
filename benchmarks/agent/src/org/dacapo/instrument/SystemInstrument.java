@@ -20,7 +20,7 @@ import org.objectweb.asm.commons.Method;
 
 public class SystemInstrument extends Instrument {
 
-	private static final String   LOG_INTERNAL_NAME                = "org/dacapo/instrument/Log";
+	private static final String   LOG_INTERNAL_NAME                = "org/dacapo/instrument/Agent";
 	
 	private static final String   SYSTEM_GET_LOG_CLASS_METHOD      = "getLogClass";
 	private static final String   SYSTEM_GET_LOG_CLASS_SIGNATURE   = "()Ljava/lang/Class;";
@@ -49,20 +49,20 @@ public class SystemInstrument extends Instrument {
 		if (! doneAddField) {
 			doneAddField = true;
 			
-			super.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, SYSTEM_LOG_CLASS_FIELD, Type.getDescriptor(Log.class), null, null);
+			super.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, SYSTEM_LOG_CLASS_FIELD, Type.getDescriptor(Agent.class), null, null);
 		}
 		
 		if (! doneAddMethod) {
 			doneAddMethod = true;
 
-			Class k = Log.class;
+			Class logClass = Agent.class;
 			
 			GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, new Method(SYSTEM_GET_LOG_CLASS_METHOD, SYSTEM_GET_LOG_CLASS_SIGNATURE), SYSTEM_GET_LOG_CLASS_SIGNATURE, new Type[] {}, this);
 
 			Label target = mg.newLabel();
 			mg.getStatic(Type.getType(System.class), SYSTEM_LOG_CLASS_FIELD, Type.getType(Class.class));
 			mg.ifNull(target);
-			mg.push(Type.getType(Log.class));
+			mg.push(Type.getType(logClass));
 			mg.putStatic(Type.getType(System.class), SYSTEM_LOG_CLASS_FIELD, Type.getType(Class.class));
 			mg.mark(target);
 			mg.getStatic(Type.getType(System.class), SYSTEM_LOG_CLASS_FIELD, Type.getType(Class.class));

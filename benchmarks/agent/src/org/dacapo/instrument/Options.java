@@ -1,5 +1,6 @@
 package org.dacapo.instrument;
 
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
