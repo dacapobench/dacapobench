@@ -300,7 +300,8 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
        if they are not then we should avoid this as writing and reading is 
        expensive.
     */
-	makeOptionList(options);
+    makeOptionListFromFile(options);
+	// makeOptionList(options);
 
     /* Create a raw monitor in the agent for critical sections. */
     if (!dacapo_log_init()) {

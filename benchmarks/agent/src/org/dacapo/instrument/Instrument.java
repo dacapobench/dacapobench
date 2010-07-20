@@ -28,6 +28,8 @@ public class Instrument extends ClassAdapter {
 	}
 
 	private static Options options = null;
+
+	private final static String CONFIG_FILE_NAME = "config.txt";
 	
 	/**
 	 * @param args
@@ -39,11 +41,12 @@ public class Instrument extends ClassAdapter {
 		String infile             = args[0];
 		String outfile            = args[1];
 		String name               = args[2];
-		String commandLineOptions = args[3];
+		// String commandLineOptions = args[3];
+		String agentDir           = args[3];
 		
-		for(int i=4; i<args.length; i++) {
-			commandLineOptions = commandLineOptions+","+args[i];
-		}
+//		for(int i=4; i<args.length; i++) {
+//			commandLineOptions = commandLineOptions+","+args[i];
+//		}
 
 		try {
 			TreeMap<String,Integer> methodToLargestLocal = new TreeMap<String,Integer>();
@@ -62,7 +65,8 @@ public class Instrument extends ClassAdapter {
 			
 			cv = writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			options = new Options(commandLineOptions);
+			// options = new Options(commandLineOptions);
+			options = new Options(new FileInputStream(new File(agentDir, CONFIG_FILE_NAME)));
 			
 			// always change the version of the class to allow  SomeClass.class constants
 			cv = new VersionChanger(cv);

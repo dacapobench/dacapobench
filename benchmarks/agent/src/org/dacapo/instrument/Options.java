@@ -1,5 +1,7 @@
 package org.dacapo.instrument;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
@@ -50,6 +52,20 @@ class Options {
 		keys = options.keySet();
 	}
 	
+	Options(InputStream is) {
+		Properties prop = new Properties();
+		
+		try {
+			prop.load(is);
+		} catch (IOException ioe) { }
+		
+		init(prop);
+	}
+	
+	Options(Properties prop) {
+		init(prop);
+	}
+	
 	boolean has(String opt) {
 		return keys.contains(opt);
 	}
@@ -64,5 +80,15 @@ class Options {
 			r += k + "\n  " + options.get(k) + "\n";
 		}
 		return r;
+	}
+
+	private void init(Properties prop) {
+		for(Object k: prop.keySet()) {
+			String key = (String)k;
+			String value = prop.getProperty((String)k);
+
+			options.put(key, value);
+		}
+		keys = options.keySet();
 	}
 }
