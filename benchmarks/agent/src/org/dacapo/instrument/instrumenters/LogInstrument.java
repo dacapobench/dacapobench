@@ -1,5 +1,6 @@
-package org.dacapo.instrument;
+package org.dacapo.instrument.instrumenters;
 
+import java.util.Properties;
 import java.util.TreeMap;
 
 import org.objectweb.asm.ClassAdapter;
@@ -14,12 +15,20 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-public class LogInstrument extends Instrument {
+import org.dacapo.instrument.Agent;
+
+public class LogInstrument extends Instrumenter {
 	
-	private static final String   LOG_INTERNAL_NAME    = "org/dacapo/instrument/Log";
+	public static final String    LOG_START            = "log_start";
+	public static final String    LOG_STOP             = "log_stop";
+	
 	private static final String   LOG_METHOD_START     = "start";
 	private static final String   LOG_METHOD_STOP      = "stop";
-	private static final String   LOG_METHOD_SIGNATURE = "()V"; 
+	private static final String   LOG_METHOD_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]); 
+	
+	private static final String   LOG_INTERNAL_START_METHOD = INTERNAL_PREFIX + LOG_METHOD_START;
+	private static final String   LOG_INTERNAL_STOP_METHOD  = INTERNAL_PREFIX + LOG_METHOD_STOP;
+	private static final String   LOG_INTERNAL_SIGNATURE    = LOG_METHOD_SIGNATURE;
 	
 	private ClassVisitor          cv                   = null;
 	private String                logOnClass           = null;
@@ -42,13 +51,31 @@ public class LogInstrument extends Instrument {
 			System.out.println("  "+getSignatureFrom(a));
 		}
 	}
-	
-	public LogInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String logOn) {
-		this(cv,methodToLargestLocal,logOn,logOn);
+
+	public static ClassVisitor make(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
+			Properties options, Properties state) {
+		if (options.containsKey(LOG_START)) {
+			String startMethod = options.getProperty(LOG_START);
+			String stopMethod  = options.getProperty(LOG_STOP);
+			
+			if (stopMethod != null) {
+				cv = new LogInstrument(cv, methodToLargestLocal, options, state, startMethod, stopMethod);
+			} else {
+				cv = new LogInstrument(cv, methodToLargestLocal, options, state, startMethod);
+			}
+		}
+		return cv;
+	}
+		
+	protected LogInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
+			Properties options, Properties state, String logOn) {
+		this(cv,methodToLargestLocal,options,state,logOn,logOn);
 	}
 	
-	public LogInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String logOn, String logOff) {
-		super(cv,methodToLargestLocal);
+	protected LogInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
+			Properties options, Properties state, 
+			String logOn, String logOff) {
+		super(cv,methodToLargestLocal, options, state);
 		this.cv = cv;
 		this.logOnClass      = getClassFrom(logOn);
 		this.logOnMethod     = getMethodFrom(logOn);
@@ -77,49 +104,40 @@ public class LogInstrument extends Instrument {
 		}
 	}
 
-	private static final String LOG_INTERNAL_START_METHOD = "$$log_start";
-	private static final String LOG_INTERNAL_STOP_METHOD  = "$$log_stop";
-	private static final String LOG_SIGNATURE    = "()V";
-	
-	private static final String LOG_START_METHOD = "start";
-	private static final String LOG_STOP_METHOD  = "stop";
-	
 	public void visitEnd() {
 		if (instrument()) {
 			try {
-				Class k = Log.class;
-				
 				GeneratorAdapter mg;
 				Label start;
 				Label end;
 				
 				// generate Log start function
-				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_START_METHOD, LOG_SIGNATURE), LOG_SIGNATURE, new Type[] {}, this);
+				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_START_METHOD, LOG_INTERNAL_SIGNATURE), LOG_INTERNAL_SIGNATURE, new Type[] {}, this);
 				
 				start = mg.mark();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_START_METHOD)));
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(LOG_METHOD_START)));
 				end   = mg.mark();
 				mg.returnValue();
 				
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 				
 				mg.endMethod();
 				
 				// generate Log stop function
-				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_STOP_METHOD, LOG_SIGNATURE), LOG_SIGNATURE, new Type[] {}, this);
+				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_STOP_METHOD, LOG_INTERNAL_SIGNATURE), LOG_INTERNAL_SIGNATURE, new Type[] {}, this);
 				
 				start = mg.mark();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_STOP_METHOD)));
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(LOG_METHOD_STOP)));
 				end   = mg.mark();
 				mg.returnValue();
 				
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 				
 				mg.endMethod();
 			} catch (NoSuchMethodException nsme) {
-				System.err.println("Unable to find Log.stop or Log.start method");
+				System.err.println("Unable to find Agent.stop or Agent.start method");
 			}
 		}
 		
@@ -216,13 +234,13 @@ public class LogInstrument extends Instrument {
 
 			if (!entry) return;
 			
-			super.visitMethodInsn(Opcodes.INVOKESTATIC, className, LOG_INTERNAL_START_METHOD, LOG_SIGNATURE);
+			super.visitMethodInsn(Opcodes.INVOKESTATIC, className, LOG_INTERNAL_START_METHOD, LOG_INTERNAL_SIGNATURE);
 		}
 		
 		protected void onMethodExit(int opcode) {
 			if (!exit || done) return;
 			
-			super.visitMethodInsn(Opcodes.INVOKESTATIC, className, LOG_INTERNAL_STOP_METHOD, LOG_SIGNATURE);
+			super.visitMethodInsn(Opcodes.INVOKESTATIC, className, LOG_INTERNAL_STOP_METHOD, LOG_INTERNAL_SIGNATURE);
 		}
 	}
 

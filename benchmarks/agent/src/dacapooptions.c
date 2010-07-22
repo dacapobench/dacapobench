@@ -176,6 +176,29 @@ void append(char** buf, int* length, int* maxLength, char c)
 	(*buf)[*length] = c;
 	*length = *length + 1;
 }
+
+static void addOption(char* key, int keyLength, char* value, int valueLength) {
+	struct option_s* opt = (struct option_s*)malloc(sizeof(struct option_s));
+	
+	opt->next = NULL;
+	
+	opt->option = (char*)malloc(sizeof(char)*(keyLength+1));
+	opt->length = keyLength;
+	strncpy(opt->option,key,sizeof(char)*keyLength);
+	opt->option[keyLength] = '\0';
+				
+	opt->argument = (char*)malloc(sizeof(char)*(valueLength+1));
+	opt->argLength = valueLength;
+	strncpy(opt->argument,value,sizeof(char)*valueLength);
+	opt->argument[valueLength] = '\0';
+				
+	if (optionList == NULL)
+		optionList = optionTail = opt;
+	else {
+		optionTail->next = opt;
+		optionTail = opt;
+	}
+}
 	
 void makeOptionListFromFile(char* agentDir) 
 {
@@ -240,6 +263,14 @@ void makeOptionListFromFile(char* agentDir)
 			case '=':
 				state = VALUE;
 				break;
+			case '\r': case '\n':
+				state = UNKNOWN;
+
+				addOption(key,keyLength,value,valueLength);
+
+				keyLength   = 0;
+				valueLength = 0;
+				break;
 			default:
 				append(&key, &keyLength, &keyMaxLength, c);
 				break;
@@ -268,26 +299,7 @@ void makeOptionListFromFile(char* agentDir)
 			case '\r': case '\n':
 				state = UNKNOWN;
 
-				struct option_s* opt = (struct option_s*)malloc(sizeof(struct option_s));
-				
-				opt->next = NULL;
-				
-				opt->option = (char*)malloc(sizeof(char)*(keyLength+1));
-				opt->length = keyLength;
-				strncpy(opt->option,key,sizeof(char)*keyLength);
-				opt->option[keyLength] = '\0';
-				
-				opt->argument = (char*)malloc(sizeof(char)*(valueLength+1));
-				opt->argLength = valueLength;
-				strncpy(opt->argument,value,sizeof(char)*valueLength);
-				opt->argument[valueLength] = '\0';
-
-				if (optionList == NULL)
-					optionList = optionTail = opt;
-				else {
-					optionTail->next = opt;
-					optionTail = opt;
-				}
+				addOption(key,keyLength,value,valueLength);
 
 				keyLength   = 0;
 				valueLength = 0;

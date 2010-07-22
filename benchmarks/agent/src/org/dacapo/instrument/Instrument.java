@@ -4,8 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Properties;
 import java.util.TreeMap;
 
+import org.dacapo.instrument.instrumenters.AllocateInstrument;
+import org.dacapo.instrument.instrumenters.CallChainInstrument;
+import org.dacapo.instrument.instrumenters.ClinitInstrument;
+import org.dacapo.instrument.instrumenters.Instrumenter;
+import org.dacapo.instrument.instrumenters.LogInstrument;
+import org.dacapo.instrument.instrumenters.MethodInstrument;
+import org.dacapo.instrument.instrumenters.MonitorInstrument;
+import org.dacapo.instrument.instrumenters.RuntimeInstrument;
+import org.dacapo.instrument.instrumenters.VersionChanger;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -17,19 +28,14 @@ import org.objectweb.asm.Type;
 
 import org.objectweb.asm.commons.AdviceAdapter;
 
-public class Instrument extends ClassAdapter {
+public class Instrument extends Instrumenter {
 
-	protected TreeMap<String,Integer> methodToLargestLocal;
-	
-	public Instrument(ClassVisitor arg0, TreeMap<String,Integer> methodToLargestLocal) {
-		super(arg0);
-		
-		this.methodToLargestLocal = methodToLargestLocal;
+	public Instrument(ClassVisitor arg0, TreeMap<String,Integer> methodToLargestLocal, Properties options, Properties state) {
+		super(arg0, methodToLargestLocal, options, state);
 	}
 
-	private static Options options = null;
-
 	private final static String CONFIG_FILE_NAME = "config.txt";
+	private final static String STATE_FILE_NAME = "state.txt";
 	
 	/**
 	 * @param args
@@ -42,11 +48,12 @@ public class Instrument extends ClassAdapter {
 		String outfile            = args[1];
 		String name               = args[2];
 		// String commandLineOptions = args[3];
-		String agentDir           = args[3];
+		File   agentDir           = new File(args[3]).getAbsoluteFile();
 		
-//		for(int i=4; i<args.length; i++) {
-//			commandLineOptions = commandLineOptions+","+args[i];
-//		}
+		if (!agentDir.exists() || !agentDir.isDirectory()) {
+			System.err.println("agentDir does not exist or is not a directory");
+			System.exit(10);
+		}
 
 		try {
 			TreeMap<String,Integer> methodToLargestLocal = new TreeMap<String,Integer>();
@@ -62,53 +69,47 @@ public class Instrument extends ClassAdapter {
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 
 			reader = readClassFromFile(infile);
-			
+
 			cv = writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			// options = new Options(commandLineOptions);
-			options = new Options(new FileInputStream(new File(agentDir, CONFIG_FILE_NAME)));
+			Properties options = new Properties();
+			if (! readProperties(options, new File(agentDir, CONFIG_FILE_NAME))) {
+				System.err.println("Must specify an agent working directory");
+				System.exit(10);
+			}
+			options.setProperty(PROP_CLASS_NAME,reader.getClassName());
+
+			Properties state = new Properties();
+			readProperties(state, new File(agentDir, STATE_FILE_NAME));
 			
 			// always change the version of the class to allow  SomeClass.class constants
-			cv = new VersionChanger(cv);
+			cv = VersionChanger.make(cv, methodToLargestLocal, options, state);
 			
 			// Unable to 
 			// cv = new SystemInstrument(cv, methodToLargestLocal);
 			
-			if (options.has(Options.RUNTIME))
-				cv = new RuntimeInstrument(cv, methodToLargestLocal);
+			cv = RuntimeInstrument.make(cv, methodToLargestLocal, options, state);
 			
-			if (options.has(Options.MONITOR))
-				cv = new MonitorInstrument(cv, methodToLargestLocal);
+			cv = MonitorInstrument.make(cv, methodToLargestLocal, options, state);
 			
-			if (options.has(Options.CLASSES_INITIALIZATION))
-				cv = new ClinitInstrument(cv, methodToLargestLocal, options.value(Options.CLASSES_INITIALIZATION)); 
+			cv = ClinitInstrument.make(cv, methodToLargestLocal, options, state);
 			
-			if (options.has(Options.ALLOCATE) || options.has(Options.POINTER))
-				cv = new AllocateInstrument(cv, methodToLargestLocal, options.value(Options.ALLOCATE), options.has(Options.POINTER));
+			cv = AllocateInstrument.make(cv, methodToLargestLocal, options, state);
 			
-			if (options.has(Options.CALL_CHAIN))
-				cv = new CallChainInstrument(cv, methodToLargestLocal);
+			cv = CallChainInstrument.make(cv, methodToLargestLocal, options, state);
 			
 			// The MethodInstrument is left out as there are a number of issues with 
 			// instrumenting the bootclasses that I have not been able to resolve.
 			//
-			if (options.has(Options.METHOD_INSTR))
-				cv = new MethodInstrument(cv, methodToLargestLocal, reader.getClassName());
+			cv = MethodInstrument.make(cv, methodToLargestLocal, options, state);
 			
-			if (options.has(Options.LOG_START)) {
-				String startMethod = options.value(Options.LOG_START);
-				String stopMethod  = options.value(Options.LOG_STOP);
-				
-				if (stopMethod != null) {
-					cv = new LogInstrument(cv, methodToLargestLocal, startMethod, stopMethod);
-				} else {
-					cv = new LogInstrument(cv, methodToLargestLocal, startMethod);
-				}
-			}
+			cv = LogInstrument.make(cv, methodToLargestLocal, options, state);
 			
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 			
 			writeClassToFile(writer,outfile);
+
+			writeProperties(state, new File(agentDir, STATE_FILE_NAME));
 		} catch (Exception e) {
 			System.err.println("failed to process class "+name);
 			System.err.println("exception "+e);
@@ -117,12 +118,6 @@ public class Instrument extends ClassAdapter {
 		}
 	}
 
-	static int getArgumentSizes(int access, String desc) {
-		return 
-			(((access & Opcodes.ACC_STATIC) == 0)?1:0) +		
-			Type.getArgumentsAndReturnSizes(desc) >> 2; 
-	}
-	
 	private static ClassReader readClassFromFile(String infile) throws Exception {
 		FileInputStream is = null;
 		try {
@@ -146,10 +141,6 @@ public class Instrument extends ClassAdapter {
 		}
 	}
 
-	static String encodeMethodName(String klass, String method, String signature) {
-		return klass+"."+method+signature;
-	}
-	
 	private static class LocalSizes extends ClassAdapter {
 		private TreeMap<String,Integer> methodToLargestLocal;
 		
@@ -207,4 +198,39 @@ public class Instrument extends ClassAdapter {
 			super.visitMaxs(maxStack, maxLocals);
 		}
 	}
+
+	private static boolean readProperties(Properties prop, File file) {
+		if (!file.exists() || !file.canRead())
+			return false;
+
+		try {
+			FileInputStream is = new FileInputStream(file);
+			try {
+				prop.load(is);
+				return true;
+			} finally {
+				is.close();
+			}
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
+	private static boolean writeProperties(Properties prop, File file) {
+		if (file.exists() && !file.canWrite())
+			return false;
+
+		try {
+			PrintStream os = new PrintStream(file);
+			try {
+				prop.store(os, "properties");
+				return true;
+			} finally {
+				os.close();
+			}
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+
 }

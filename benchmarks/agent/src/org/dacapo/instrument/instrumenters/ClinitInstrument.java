@@ -1,8 +1,10 @@
-package org.dacapo.instrument;
+package org.dacapo.instrument.instrumenters;
 
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.TreeMap;
 
+import org.dacapo.instrument.Agent;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -15,21 +17,18 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-public class ClinitInstrument  extends Instrument {
+public class ClinitInstrument  extends Instrumenter {
+
+	public static final String    CLASSES_INITIALIZATION = "clinit";
 
 	private static final int      CLINIT_ACCESS        = Opcodes.ACC_STATIC;
 	private static final String   CLINIT_NAME          = "<clinit>";
 	private static final String   CLINIT_DESCRIPTION   = null;
-	private static final String   CLINIT_SIGNATURE     = "()V";
+	private static final String   CLINIT_SIGNATURE     = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]);
 	private static final String[] CLINIT_EXCEPTIONS    = { };
 
-	private static final String   JAVA_PACKAGE         = "java/";
-	
-	private static final String   INSTRUMENT_PACKAGE   = "org/dacapo/instrument/";
-	
-	private static final String   LOG_INTERNAL_NAME    = "org/dacapo/instrument/Agent"; // Log
 	private static final String   LOG_METHOD_NAME      = "reportClass";
-	private static final String   LOG_METHOD_SIGNATURE = "(Ljava/lang/String;)V"; 
+	private static final String   LOG_METHOD_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_STRING_TYPE });
 	
 	private boolean             foundClinit = false;
 	private int                 access      = 0;
@@ -37,9 +36,17 @@ public class ClinitInstrument  extends Instrument {
 	private String              className   = null;
 	
 	private LinkedList<String>  excludePackages = new LinkedList<String>();
+
+	public static ClassVisitor make(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
+			Properties options, Properties state) {
+		if (options.containsKey(CLASSES_INITIALIZATION))
+			cv = new ClinitInstrument(cv, methodToLargestLocal, options, state, options.getProperty(CLASSES_INITIALIZATION)); 
+		return cv;
+	}
 	
-	public ClinitInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String excludeList) {
-		super(cv, methodToLargestLocal);
+	protected ClinitInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
+			Properties options, Properties state, String excludeList) {
+		super(cv, methodToLargestLocal, options, state);
 		this.cv = cv;
 		
 		excludePackages.add(INSTRUMENT_PACKAGE);
@@ -72,16 +79,15 @@ public class ClinitInstrument  extends Instrument {
 		if (!foundClinit && instrument()) {
 			// didn't find <clinit> so lets make one
 			try {
-				Class k = Agent.class; // Log.class
 				GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, new Method(CLINIT_NAME, CLINIT_SIGNATURE), CLINIT_SIGNATURE, new Type[] {}, this);
 				
 				Label start = mg.mark();
 				mg.push(className);
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(LOG_METHOD_NAME, String.class)));
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(LOG_METHOD_NAME, String.class)));
 				Label end   = mg.mark();
 				mg.returnValue();
 				
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 				
 				mg.endMethod();
@@ -118,11 +124,11 @@ public class ClinitInstrument  extends Instrument {
 			// exception here.
 			super.visitLdcInsn(className);
 			Label start = super.mark();
-			super.visitMethodInsn(Opcodes.INVOKESTATIC, LOG_INTERNAL_NAME, LOG_METHOD_NAME, LOG_METHOD_SIGNATURE);
+			super.visitMethodInsn(Opcodes.INVOKESTATIC, LOG_INTERNAL, LOG_METHOD_NAME, LOG_METHOD_SIGNATURE);
 			Label end = super.mark();
 			super.visitJumpInsn(Opcodes.GOTO,target);
 			// catch the exception, discard the exception
-			super.catchException(start,end,Type.getType(Throwable.class));
+			super.catchException(start,end,JAVA_LANG_THROWABLE_TYPE);
 			super.pop();
 			super.mark(target);
 			// remainder of the <clinit>

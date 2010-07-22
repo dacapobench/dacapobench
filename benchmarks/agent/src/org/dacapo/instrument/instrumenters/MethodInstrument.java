@@ -1,5 +1,6 @@
-package org.dacapo.instrument;
+package org.dacapo.instrument.instrumenters;
 
+import org.dacapo.instrument.Agent;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -12,28 +13,32 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.Set;
 
-public class MethodInstrument extends Instrument {
+public class MethodInstrument extends Instrumenter {
+
+	public static final String    METHOD_INSTR           = "method_instr";
 
 	private static final int      CLINIT_ACCESS          = Opcodes.ACC_STATIC;
 	private static final String   CLINIT_NAME            = "<clinit>";
 	private static final String   CLINIT_DESCRIPTION     = null;
-	private static final String   CLINIT_SIGNATURE       = "()V";
+	private static final String   CLINIT_SIGNATURE       = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]);
 	private static final String[] CLINIT_EXCEPTIONS      = { };
 
-	private static final String   JAVA_PACKAGE           = "java/";
-	
-	private static final String   INSTRUMENT_PACKAGE     = "org/dacapo/instrument/";
-	
-	private static final String   LOG_INTERNAL_NAME      = "org/dacapo/instrument/Agent";
 	private static final String   LOG_METHOD_NAME        = "logMethod";
-	private static final String   LOG_METHOD_SIGNATURE   = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z"; 
-	private static final String   LOG_BRIDGE_SIGNATURE   = "(Ljava/lang/String;Ljava/lang/String;)V";
+	private static final String   LOG_METHOD_SIGNATURE   = 
+		Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] { JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE });
+		// "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z"; 
+	private static final String   LOG_BRIDGE_SIGNATURE   = 
+		Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE });
+		// "(Ljava/lang/String;Ljava/lang/String;)V";
 	
 	private static final String   LOG_INTERNAL_METHOD    = "$$" + LOG_METHOD_NAME;
-	private static final String   LOG_INTERNAL_SIGNATURE = "(Ljava/lang/String;Ljava/lang/String;)Z";
+	private static final String   LOG_INTERNAL_SIGNATURE = 
+		Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] { JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE });
+		// "(Ljava/lang/String;Ljava/lang/String;)Z";
 	
 	private static final Integer  ZERO                   = new Integer(0);
 	
@@ -45,19 +50,23 @@ public class MethodInstrument extends Instrument {
 	private TreeMap<String,String>    methods = new TreeMap<String,String>();
 	
 	private Method                logBridgeMethod = null;
+
+	public static ClassVisitor make(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
+			Properties options, Properties state) {
+		if (options.containsKey(METHOD_INSTR))
+			cv = new MethodInstrument(cv, methodToLargestLocal, options, state, options.getProperty(PROP_CLASS_NAME));
+		return cv;
+	}
 	
-	public MethodInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, String className) {
-		super(cv, methodToLargestLocal);
+	protected MethodInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
+			Properties options, Properties state, String className) {
+		super(cv, methodToLargestLocal, options, state);
 		this.cv = cv;
 		this.className = className;
 	}
 	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.access = access;
-//		if ((version&0xffff)<49) {
-//			// System.err.println("MethodInstrument:changing version from " + (version&0xffff) + "." + (version >> 16));
-//			version = 49;
-//		}
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	
@@ -73,8 +82,6 @@ public class MethodInstrument extends Instrument {
 		if (!done && (access & Opcodes.ACC_INTERFACE) == 0) {
 			done = true;
 			try {
-				Class logClass = Agent.class;
-				
 				GeneratorAdapter mg;
 				Label start;
 				Label end;
@@ -83,16 +90,16 @@ public class MethodInstrument extends Instrument {
 				
 				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, logBridgeMethod, LOG_INTERNAL_SIGNATURE, new Type[] {}, this);
 
-				java.lang.reflect.Method m = logClass.getMethod(LOG_METHOD_NAME, String.class, String.class, String.class);
+				java.lang.reflect.Method m = LOG_INTERNAL_CLASS.getMethod(LOG_METHOD_NAME, String.class, String.class, String.class);
 
 				start = mg.mark();
 				mg.push(className);
 				mg.loadArg(0);
 				mg.loadArg(1);
-				mg.invokeStatic(Type.getType(logClass), Method.getMethod(m));
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(m));
 				mg.returnValue();
 				end   = mg.mark();
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.visitInsn(Opcodes.ICONST_0); // return false
 				mg.returnValue();
 				

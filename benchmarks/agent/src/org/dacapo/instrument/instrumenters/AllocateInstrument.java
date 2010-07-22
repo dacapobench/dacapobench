@@ -1,9 +1,12 @@
-package org.dacapo.instrument;
+package org.dacapo.instrument.instrumenters;
 
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.dacapo.instrument.Agent;
+import org.dacapo.instrument.Instrument;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
@@ -18,7 +21,7 @@ import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.commons.Method;
 
-public class AllocateInstrument extends Instrument {
+public class AllocateInstrument extends Instrumenter {
 
 	// we need to instrument a call to alloc in the constructor, after the super
 	// class init but before the other code. This should call the reportAlloc
@@ -38,7 +41,8 @@ public class AllocateInstrument extends Instrument {
 	// ...,obj,v',v',obj,v => ...,obj,v'
 	// putfield ...,obj,v' =>
 
-	private static final String INTERNAL_PREFIX = "$$";
+	public static final String ALLOCATE               = "allocate";
+	public static final String POINTER                = "pointer";
 
 	private static final String LOG_ALLOC_INC = "allocInc";
 	private static final String LOG_ALLOC_DEC = "allocDec";
@@ -60,19 +64,14 @@ public class AllocateInstrument extends Instrument {
 	private static final String LOG_INTERNAL_STATIC_POINTER_CHANGE = INTERNAL_PREFIX
 			+ LOG_STATIC_POINTER_CHANGE;
 
-	private static final String LOG_INTERNAL_NAME = "org/dacapo/instrument/Agent"; // Log
+	private static final String VOID_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]); // "()V";
+	private static final String OBJECT_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE }); // "(Ljava/lang/Object;)V";
+	private static final String POINTER_CHANGE_SIGNATURE = 
+		Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE, JAVA_LANG_OBJECT_TYPE, JAVA_LANG_OBJECT_TYPE });
+	private static final String STATIC_POINTER_CHANGE_SIGNATURE =
+		Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE, JAVA_LANG_CLASS_TYPE, JAVA_LANG_OBJECT_TYPE });
 
-	private static final String VOID_SIGNATURE = "()V";
-	private static final String OBJECT_SIGNATURE = "(Ljava/lang/Object;)V";
-	private static final String POINTER_CHANGE_SIGNATURE = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V";
-	private static final String STATIC_POINTER_CHANGE_SIGNATURE = "(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/Object;)V";
-
-	private static final Type JAVA_LANG_CLASS_TYPE = org.objectweb.asm.Type
-			.getType(Class.class);
-	private static final String JAVA_LANG_CLASS = JAVA_LANG_CLASS_TYPE
-			.getInternalName();
-	private static final String JAVA_LANG_CONSTRUCTOR = org.objectweb.asm.Type
-			.getInternalName(java.lang.reflect.Constructor.class);
+	private static final String JAVA_LANG_CONSTRUCTOR = Type.getInternalName(java.lang.reflect.Constructor.class);
 	private static final String NEW_INSTANCE = "newInstance";
 
 	private String name;
@@ -84,14 +83,7 @@ public class AllocateInstrument extends Instrument {
 	private boolean logPointerChange = false;
 	private TreeSet<String> finalFields = new TreeSet<String>();
 
-	// private Type type;
-
-	private static final String INSTRUMENT_PACKAGE = "org/dacapo/instrument/";
-	// normally exclude sun/reflect/
-
 	private LinkedList<String> excludePackages = new LinkedList<String>();
-
-	private static final Type OBJECT_TYPE = Type.getType(Object.class);
 
 	private static class Pair {
 		public String type;
@@ -117,10 +109,20 @@ public class AllocateInstrument extends Instrument {
 		}
 	};
 
-	public AllocateInstrument(ClassVisitor cv,
-			TreeMap<String, Integer> methodToLargestLocal, String excludeList,
+	public static ClassVisitor make(ClassVisitor cv, TreeMap<String, Integer> methodToLargestLocal,
+			Properties options, Properties state) {
+		if (options.containsKey(ALLOCATE) || options.containsKey(POINTER)) {
+			cv = new AllocateInstrument(cv, methodToLargestLocal, options, state, options.getProperty(ALLOCATE), options.containsKey(POINTER));
+		}
+		return cv;
+	}
+	
+	protected AllocateInstrument(ClassVisitor cv,
+			TreeMap<String, Integer> methodToLargestLocal,
+			Properties options, Properties state,
+			String excludeList,
 			boolean logPointerChange) {
-		super(cv, methodToLargestLocal);
+		super(cv, methodToLargestLocal, options, state);
 		this.logPointerChange = logPointerChange;
 
 		// always add the instrument package to the exclude list
@@ -172,13 +174,11 @@ public class AllocateInstrument extends Instrument {
 		if (!done && instrument()) {
 			done = true;
 			try {
-				Class k = Agent.class; // Log.class
-
 				GeneratorAdapter mg;
 				Label start;
 				Label end;
 
-				// Call the Log.reportHeap function which will conditionally
+				// Call the Agent.reportHeap function which will conditionally
 				// report the heap statistics.
 				// Note: We cannot get the Heap Statistics from JVMTI and we
 				// can't perform a JNI call from
@@ -196,12 +196,12 @@ public class AllocateInstrument extends Instrument {
 
 				start = mg.mark();
 				mg.loadArgs();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS
 						.getMethod(LOG_ALLOC_INC)));
 				end = mg.mark();
 				mg.returnValue();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 
 				mg.endMethod();
@@ -213,12 +213,12 @@ public class AllocateInstrument extends Instrument {
 
 				start = mg.mark();
 				mg.loadArgs();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS
 						.getMethod(LOG_ALLOC_DEC)));
 				end = mg.mark();
 				mg.returnValue();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 
 				mg.endMethod();
@@ -230,12 +230,12 @@ public class AllocateInstrument extends Instrument {
 
 				start = mg.mark();
 				mg.loadArgs();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(
 						LOG_ALLOC_REPORT, Object.class)));
 				end = mg.mark();
 				mg.returnValue();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 
 				mg.endMethod();
@@ -247,12 +247,12 @@ public class AllocateInstrument extends Instrument {
 
 				start = mg.mark();
 				mg.loadArgs();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS
 						.getMethod(LOG_ALLOC_DONE)));
 				end = mg.mark();
 				mg.returnValue();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 
 				mg.endMethod();
@@ -264,13 +264,13 @@ public class AllocateInstrument extends Instrument {
 
 				start = mg.mark();
 				mg.loadArgs();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(
 						LOG_POINTER_CHANGE, Object.class, Object.class,
 						Object.class)));
 				end = mg.mark();
 				mg.returnValue();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 
 				mg.endMethod();
@@ -283,18 +283,18 @@ public class AllocateInstrument extends Instrument {
 
 				start = mg.mark();
 				mg.loadArgs();
-				mg.invokeStatic(Type.getType(k), Method.getMethod(k.getMethod(
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(
 						LOG_STATIC_POINTER_CHANGE, Object.class, Class.class,
 						Object.class)));
 				end = mg.mark();
 				mg.returnValue();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 
 				mg.endMethod();
 			} catch (NoSuchMethodException nsme) {
-				System.err.println("Unable to find " + LOG_INTERNAL_NAME);
+				System.err.println("Unable to find " + LOG_INTERNAL);
 				System.err.println("M:" + nsme);
 				nsme.printStackTrace();
 			}
@@ -355,11 +355,9 @@ public class AllocateInstrument extends Instrument {
 			this.exceptions = exceptions;
 			this.methodDone = false;
 			this.doneSuperConstructor = !constructor;
-			this.encodedName = Instrument.encodeMethodName(name, methodName,
-					desc);
+			this.encodedName = encodeMethodName(name, methodName, desc);
 			if (!methodToLargestLocal.containsKey(this.encodedName))
-				methodToLargestLocal.put(this.encodedName, Instrument
-						.getArgumentSizes(access, desc));
+				methodToLargestLocal.put(this.encodedName, getArgumentSizes(access, desc));
 			this.localsBase = methodToLargestLocal.get(this.encodedName);
 			this.maxLocals = this.localsBase;
 		}
@@ -497,13 +495,12 @@ public class AllocateInstrument extends Instrument {
 				}
 			} else if (reportReflectConstruction) {
 				if (!constructor) {
-					Type throwType = Type.getType(Throwable.class);
 					Label wrapTo = super.mark();
 					addDec();
 					addLog(true);
 					Label target = super.newLabel();
 					super.visitJumpInsn(Opcodes.GOTO, target);
-					super.catchException(wrapFrom, wrapTo, throwType);
+					super.catchException(wrapFrom, wrapTo, JAVA_LANG_THROWABLE_TYPE);
 					addDec();
 					super.visitMethodInsn(Opcodes.INVOKESTATIC, name,
 							LOG_INTERNAL_ALLOC_DONE, VOID_SIGNATURE);
@@ -552,7 +549,7 @@ public class AllocateInstrument extends Instrument {
 					methodToLargestLocal.put(this.encodedName, new Integer(
 							p.var));
 				}
-				super.setLocalType(p.var, OBJECT_TYPE); // super.newLocal(OBJECT_TYPE);
+				super.setLocalType(p.var, JAVA_LANG_OBJECT_TYPE); // super.newLocal(OBJECT_TYPE);
 				newTypeStack.addLast(p);
 				super.visitVarInsn(Opcodes.ASTORE, p.var);
 			}

@@ -1,5 +1,6 @@
-package org.dacapo.instrument;
+package org.dacapo.instrument.instrumenters;
 
+import org.dacapo.instrument.Agent;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -12,16 +13,16 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.Set;
 
-public class CallChainInstrument extends Instrument {
+public class CallChainInstrument extends Instrumenter {
 
-	private static final String   INSTRUMENT_PACKAGE     = "org/dacapo/instrument/";
-	
-	private static final String   LOG_INTERNAL_NAME      = "org/dacapo/instrument/Agent"; // Log
+	public static final String    CALL_CHAIN             = "call_chain";
+
 	private static final String   LOG_METHOD_NAME        = "logCallChain";
-	private static final String   LOG_METHOD_SIGNATURE   = "()V"; 
+	private static final String   LOG_METHOD_SIGNATURE   = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]); 
 	
 	private static final String   LOG_INTERNAL_METHOD    = "$$" + LOG_METHOD_NAME;
 	
@@ -31,8 +32,16 @@ public class CallChainInstrument extends Instrument {
 	private boolean               done        = false;
 	private boolean               found       = false;
 	
-	public CallChainInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal) {
-		super(cv, methodToLargestLocal);
+	public static ClassVisitor make(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal,
+			Properties options, Properties state) {
+		if (options.containsKey(CALL_CHAIN))
+			cv = new CallChainInstrument(cv, methodToLargestLocal, options, state);
+		return cv;
+	}
+	
+	protected CallChainInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal,
+			Properties options, Properties state) {
+		super(cv, methodToLargestLocal, options, state);
 		this.cv = cv;
 	}
 	
@@ -52,16 +61,15 @@ public class CallChainInstrument extends Instrument {
 
 	public void visitEnd() {
 		if (!done && found) {
-			Class logClass = Agent.class;
 			done = true;
 			try {
 				GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_METHOD, LOG_METHOD_SIGNATURE), LOG_METHOD_SIGNATURE, new Type[] {}, this);
 
 				Label start = mg.mark();
-				mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_METHOD_NAME)));
+				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(LOG_METHOD_NAME)));
 				mg.returnValue();
 				Label end   = mg.mark();
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				mg.returnValue();
 				
 				mg.endMethod();

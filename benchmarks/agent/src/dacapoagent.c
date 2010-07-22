@@ -301,7 +301,6 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
        expensive.
     */
     makeOptionListFromFile(options);
-	// makeOptionList(options);
 
     /* Create a raw monitor in the agent for critical sections. */
     if (!dacapo_log_init()) {

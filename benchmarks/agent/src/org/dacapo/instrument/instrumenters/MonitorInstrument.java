@@ -1,8 +1,10 @@
-package org.dacapo.instrument;
+package org.dacapo.instrument.instrumenters;
 
 import java.util.Comparator;
+import java.util.Properties;
 import java.util.TreeMap;
 
+import org.dacapo.instrument.Agent;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassAdapter;
@@ -18,22 +20,22 @@ import org.objectweb.asm.commons.Method;
 
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
-public class MonitorInstrument extends Instrument {
+public class MonitorInstrument extends Instrumenter {
 
-	private static final String   LOG_INTERNAL_NAME          = "org/dacapo/instrument/Agent"; // Log
+	public static final String    MONITOR                    = "monitor";
+
 	private static final String   LOG_ENTER_METHOD           = "logMonitorEnter";
 	private static final String   LOG_EXIT_METHOD            = "logMonitorExit";
 	private static final String   LOG_NOTIFY_METHOD          = "logMonitorNotify";
-	private static final String   LOG_INTERNAL_ENTER_METHOD  = "$$" + LOG_ENTER_METHOD;
-	private static final String   LOG_INTERNAL_EXIT_METHOD   = "$$" + LOG_EXIT_METHOD;
-	private static final String   LOG_INTERNAL_NOTIFY_METHOD = "$$" + LOG_NOTIFY_METHOD;
-	private static final String   LOG_CLASS_SIGNATURE        = "()V";
-	private static final String   LOG_OBJECT_SIGNATURE       = "(Ljava/lang/Object;)V";
+	private static final String   LOG_INTERNAL_ENTER_METHOD  = INTERNAL_PREFIX + LOG_ENTER_METHOD;
+	private static final String   LOG_INTERNAL_EXIT_METHOD   = INTERNAL_PREFIX + LOG_EXIT_METHOD;
+	private static final String   LOG_INTERNAL_NOTIFY_METHOD = INTERNAL_PREFIX + LOG_NOTIFY_METHOD;
+	private static final String   LOG_CLASS_SIGNATURE        = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]);
+	private static final String   LOG_OBJECT_SIGNATURE       = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE });
 	
-	private static final String   OBJECT_TYPE_NAME           = "java/lang/Object";
 	private static final String   NOTIFY_METHOD              = "notify";
 	private static final String   NOTIFY_ALL_METHOD          = "notifyAll";
-	private static final String   NOTIFY_SIGNATURE           = "()V";
+	private static final String   NOTIFY_SIGNATURE           = LOG_CLASS_SIGNATURE;
 	
 	private ClassVisitor          cv                         = null;
 
@@ -44,17 +46,23 @@ public class MonitorInstrument extends Instrument {
 	private boolean				  has_monitor_operation      = false;
 	private boolean				  has_monitor_notify         = true;
 	private boolean               classDone                  = false;
+
+	public static ClassVisitor make(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal,
+			Properties options, Properties state) {
+		if (options.containsKey(MONITOR))
+			cv = new MonitorInstrument(cv, methodToLargestLocal, options, state);
+		return cv;
+	}
 	
-	public MonitorInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal) {
-		super(cv, methodToLargestLocal);
+	private MonitorInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal,
+			Properties options, Properties state) {
+		super(cv, methodToLargestLocal, options, state);
 		this.cv = cv;
 	}
 	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.className  = name;
 		this.access     = access;
-//		if ((version&0xffff)<49)
-//			version = 49;
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	
@@ -71,8 +79,7 @@ public class MonitorInstrument extends Instrument {
 			classDone = true;
 			if (has_monitor_operation)
 				try {
-					Class logClass = Agent.class;
-					
+					Type thisClassType = Type.getObjectType(className);
 					GeneratorAdapter mg;
 					Label start;
 					Label end;
@@ -82,11 +89,11 @@ public class MonitorInstrument extends Instrument {
 					
 					mg.loadArg(0);
 					start = mg.mark();
-					mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_ENTER_METHOD, Object.class)));
+					mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(LOG_ENTER_METHOD, Object.class)));
 					end   = mg.mark();
 					mg.returnValue();
 					
-					mg.catchException(start, end, Type.getType(Throwable.class));
+					mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 					mg.pop();
 					mg.returnValue();
 					
@@ -97,11 +104,11 @@ public class MonitorInstrument extends Instrument {
 					
 					mg.loadArg(0);
 					start = mg.mark();
-					mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_EXIT_METHOD, Object.class)));
+					mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(LOG_EXIT_METHOD, Object.class)));
 					end   = mg.mark();
 					mg.returnValue();
 					
-					mg.catchException(start, end, Type.getType(Throwable.class));
+					mg.catchException(start, end, LOG_INTERNAL_TYPE);
 					mg.pop();
 					mg.returnValue();
 					
@@ -110,8 +117,8 @@ public class MonitorInstrument extends Instrument {
 					// generate Log monitorEnter function
 					mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_ENTER_METHOD, LOG_CLASS_SIGNATURE), LOG_CLASS_SIGNATURE, new Type[] {}, this);
 					
-					mg.push(Type.getObjectType(className));
-					mg.invokeStatic(Type.getObjectType(className), new Method(LOG_INTERNAL_ENTER_METHOD, LOG_OBJECT_SIGNATURE));
+					mg.push(thisClassType);
+					mg.invokeStatic(thisClassType, new Method(LOG_INTERNAL_ENTER_METHOD, LOG_OBJECT_SIGNATURE));
 					mg.returnValue();
 					
 					mg.endMethod();
@@ -119,8 +126,8 @@ public class MonitorInstrument extends Instrument {
 					// generate Log monitorExit function
 					mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, new Method(LOG_INTERNAL_EXIT_METHOD, LOG_CLASS_SIGNATURE), LOG_CLASS_SIGNATURE, new Type[] {}, this);
 					
-					mg.push(Type.getObjectType(className));
-					mg.invokeStatic(Type.getObjectType(className), new Method(LOG_INTERNAL_EXIT_METHOD, LOG_OBJECT_SIGNATURE));
+					mg.push(thisClassType);
+					mg.invokeStatic(thisClassType, new Method(LOG_INTERNAL_EXIT_METHOD, LOG_OBJECT_SIGNATURE));
 					mg.returnValue();
 					
 					mg.endMethod();
@@ -131,11 +138,11 @@ public class MonitorInstrument extends Instrument {
 						
 						mg.loadArg(0);
 						start = mg.mark();
-						mg.invokeStatic(Type.getType(logClass), Method.getMethod(logClass.getMethod(LOG_NOTIFY_METHOD, Object.class)));
+						mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(LOG_NOTIFY_METHOD, Object.class)));
 						end   = mg.mark();
 						mg.returnValue();
 						
-						mg.catchException(start, end, Type.getType(Throwable.class));
+						mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 						mg.pop();
 						mg.returnValue();
 						
@@ -195,7 +202,7 @@ public class MonitorInstrument extends Instrument {
 		
 		public void visitMethodInsn(int opcode, String owner, String name, String desc) {
 			if (opcode == Opcodes.INVOKEVIRTUAL &&
-				OBJECT_TYPE_NAME.equals(owner) &&
+				JAVA_LANG_OBJECT.equals(owner) &&
 				NOTIFY_SIGNATURE.equals(desc) && 
 				(NOTIFY_METHOD.equals(name) || NOTIFY_ALL_METHOD.equals(name))) {
 				super.dup();
@@ -209,9 +216,6 @@ public class MonitorInstrument extends Instrument {
 				has_monitor_operation = true;
 				done = true;
 				Label methodEndLabel = super.mark();
-				super.catchException(methodStartLabel,methodEndLabel,Type.getType(RuntimeException.class));
-				super.visitMethodInsn(Opcodes.INVOKESTATIC, className, LOG_INTERNAL_EXIT_METHOD, LOG_CLASS_SIGNATURE);
-				super.visitInsn(Opcodes.ATHROW);
 				if (exceptions!=null) {
 					for(String ex: exceptions) {
 						super.catchException(methodStartLabel,methodEndLabel,Type.getObjectType(ex));
@@ -219,6 +223,9 @@ public class MonitorInstrument extends Instrument {
 						super.visitInsn(Opcodes.ATHROW);
 					}
 				}
+				super.catchException(methodStartLabel,methodEndLabel,Type.getType(RuntimeException.class));
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, className, LOG_INTERNAL_EXIT_METHOD, LOG_CLASS_SIGNATURE);
+				super.visitInsn(Opcodes.ATHROW);
 			}
 			super.visitEnd();
 		}

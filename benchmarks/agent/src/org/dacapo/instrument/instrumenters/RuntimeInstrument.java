@@ -1,7 +1,9 @@
-package org.dacapo.instrument;
+package org.dacapo.instrument.instrumenters;
 
+import java.util.Properties;
 import java.util.TreeMap;
 
+import org.dacapo.instrument.Configuration;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -12,19 +14,24 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-public class RuntimeInstrument extends Instrument {
+public class RuntimeInstrument extends Instrumenter {
 	
-	private static final String   RUNTIME_CLASS_NAME           = "java/lang/Runtime";
-	private static final String   RUNTIME_METHOD_NAME          = "availableProcessors";
-	private static final String   RUNTIME_SIGNATURE            = "()I"; 
+	public static final String    RUNTIME                      = "runtime";
 
-	private static final String   CONFIGURATION_CLASS_NAME     = "org/dacapo/instrument/Configuration";
-	private static final String   CONFIGURATION_METHOD_NAME    = "availableProcessors";
-	private static final String   CONFIGURATION_SIGNATURE      = "(Ljava/lang/Runtime;)I";
+	private static final Type     JAVA_LANG_RUNTIME_TYPE       = Type.getType(Runtime.class);
+	private static final String   JAVA_LANG_RUNTIME            = JAVA_LANG_RUNTIME_TYPE.getInternalName();
+	private static final String   RUNTIME_METHOD_NAME          = "availableProcessors";
+	private static final String   RUNTIME_SIGNATURE            = Type.getMethodDescriptor(Type.INT_TYPE, new Type[0]);
+
+	private static final Type     CONFIGURATION_TYPE           = Type.getType(Configuration.class);
+	
+	private static final String   CONFIGURATION                = CONFIGURATION_TYPE.getInternalName();
+	private static final String   CONFIGURATION_METHOD_NAME    = RUNTIME_METHOD_NAME;
+	private static final String   CONFIGURATION_SIGNATURE      = Type.getMethodDescriptor(Type.INT_TYPE, new Type[] { JAVA_LANG_RUNTIME_TYPE });
 	private static final String   CONFIGURATION_FIELD_NAME     = "processorCount";
 
-	private static final String   RUNTIME_INTERNAL_METHOD_NAME = "$$availableProcessors";
-	private static final String   RUNTIME_INTERNAL_SIGNATURE   = "(Ljava/lang/Runtime;)I";
+	private static final String   RUNTIME_INTERNAL_METHOD_NAME = INTERNAL_PREFIX + CONFIGURATION_METHOD_NAME;
+	private static final String   RUNTIME_INTERNAL_SIGNATURE   = CONFIGURATION_SIGNATURE;
 	
 	private ClassVisitor        cv                             = null;
 	
@@ -35,16 +42,22 @@ public class RuntimeInstrument extends Instrument {
 	private String              methodName;
 	private boolean             inherit;
 	private boolean             overridden                     = false;
+
+	public static ClassVisitor make(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, Properties options, Properties state) {
+		if (options.containsKey(RUNTIME))
+			cv = new RuntimeInstrument(cv, methodToLargestLocal, options, state);
+		return cv;
+	}
 	
-	public RuntimeInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal) {
-		super(cv, methodToLargestLocal);
+	private RuntimeInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, Properties options, Properties state) {
+		super(cv, methodToLargestLocal, options, state);
 		this.cv = cv;
 	}
 
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		this.name       = name;
 		this.access     = access;
-		this.inherit    = superName!=null?RUNTIME_CLASS_NAME.equals(superName.replace('.', '/')):false;
+		this.inherit    = superName!=null?JAVA_LANG_RUNTIME.equals(superName.replace('.', '/')):false;
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 		
@@ -70,8 +83,6 @@ public class RuntimeInstrument extends Instrument {
 			done = true;
 			if (inherit && !overridden) {
 				// add method to retrieve processor count that overrides the parent method.
-				Type superType = Type.getObjectType(RUNTIME_CLASS_NAME);
-				
 				GeneratorAdapter mg;
 				Method m = new Method(RUNTIME_METHOD_NAME, RUNTIME_SIGNATURE);
 				
@@ -79,14 +90,14 @@ public class RuntimeInstrument extends Instrument {
 
 				Label start = mg.mark();
 				// attempt to invoke
-			    mg.invokeStatic(Type.getObjectType(CONFIGURATION_CLASS_NAME), new Method(CONFIGURATION_METHOD_NAME, CONFIGURATION_SIGNATURE));
+			    mg.invokeStatic(CONFIGURATION_TYPE, new Method(CONFIGURATION_METHOD_NAME, CONFIGURATION_SIGNATURE));
 				mg.returnValue();
 				Label end = mg.mark();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				
 				mg.loadArg(0);
-				mg.invokeVirtual(Type.getObjectType(RUNTIME_CLASS_NAME), m);
+				mg.invokeVirtual(JAVA_LANG_RUNTIME_TYPE, m);
 				mg.returnValue();
 
 				mg.endMethod();
@@ -102,14 +113,14 @@ public class RuntimeInstrument extends Instrument {
 				Label start = mg.mark();
 				// attempt to invoke
 				mg.loadArg(0);
-			    mg.invokeStatic(Type.getObjectType(CONFIGURATION_CLASS_NAME), new Method(CONFIGURATION_METHOD_NAME, CONFIGURATION_SIGNATURE));
+			    mg.invokeStatic(CONFIGURATION_TYPE, new Method(CONFIGURATION_METHOD_NAME, CONFIGURATION_SIGNATURE));
 				mg.returnValue();
 				Label end = mg.mark();
 
-				mg.catchException(start, end, Type.getType(Throwable.class));
+				mg.catchException(start, end, JAVA_LANG_THROWABLE_TYPE);
 				
 				mg.loadArg(0);
-				mg.invokeVirtual(Type.getObjectType(RUNTIME_CLASS_NAME), new Method(RUNTIME_METHOD_NAME, RUNTIME_SIGNATURE));
+				mg.invokeVirtual(JAVA_LANG_RUNTIME_TYPE, new Method(RUNTIME_METHOD_NAME, RUNTIME_SIGNATURE));
 				mg.returnValue();
 
 				mg.endMethod();
@@ -141,7 +152,7 @@ public class RuntimeInstrument extends Instrument {
 			Label start  = new Label();
 			Label normal = new Label();
 			super.visitLabel(start);
-			super.visitFieldInsn(Opcodes.GETSTATIC, CONFIGURATION_CLASS_NAME, CONFIGURATION_FIELD_NAME, Type.INT_TYPE.getDescriptor());
+			super.visitFieldInsn(Opcodes.GETSTATIC, CONFIGURATION, CONFIGURATION_FIELD_NAME, Type.INT_TYPE.getDescriptor());
 			super.visitInsn(Opcodes.DUP);
 			super.visitJumpInsn(Opcodes.IFEQ, normal);
 			super.visitInsn(Opcodes.IRETURN);
@@ -162,7 +173,7 @@ public class RuntimeInstrument extends Instrument {
 		}
 		
 		public void visitMethodInsn(int opcode, String owner, String methodName, String desc) {
-			if ((RUNTIME_CLASS_NAME.equals(owner) || (inherit && name.equals(owner))) &&
+			if ((JAVA_LANG_RUNTIME.equals(owner) || (inherit && name.equals(owner))) &&
 				RUNTIME_METHOD_NAME.equals(methodName) &&
 				RUNTIME_SIGNATURE.equals(desc)) {
 				found = true;
