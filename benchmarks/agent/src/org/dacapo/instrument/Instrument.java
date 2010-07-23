@@ -65,13 +65,17 @@ public class Instrument extends Instrumenter {
 
 		try {
 			TreeMap<String,Integer> methodToLargestLocal = new TreeMap<String,Integer>();
-			
+
+			// read the class to do some pre-processing
 			ClassReader reader = readClassFromFile(infile);
 			
+			//
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
 			ClassVisitor cv = writer; 
 
+			// make a map of local variable sizes for later use,
+			// this is to get around either a short coming or 
 			cv = new LocalSizes(writer, methodToLargestLocal);
 			
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
@@ -87,38 +91,22 @@ public class Instrument extends Instrumenter {
 			}
 			options.setProperty(PROP_CLASS_NAME,reader.getClassName());
 
+			// make a state property
 			Properties state = new Properties();
-			readProperties(state, new File(agentDir, STATE_FILE_NAME));
 			
+			// read state properties from the previous run
+			readProperties(state, new File(agentDir, STATE_FILE_NAME));
+
+			// make the transform chain
 			cv = InstrumenterFactory.makeTransformChain(cv, methodToLargestLocal, options, state);
 			
-//			// always change the version of the class to allow  SomeClass.class constants
-//			cv = VersionChanger.make(cv, methodToLargestLocal, options, state);
-//			
-//			// Unable to 
-//			// cv = new SystemInstrument(cv, methodToLargestLocal);
-//			
-//			cv = RuntimeInstrument.make(cv, methodToLargestLocal, options, state);
-//			
-//			cv = MonitorInstrument.make(cv, methodToLargestLocal, options, state);
-//			
-//			cv = ClinitInstrument.make(cv, methodToLargestLocal, options, state);
-//			
-//			cv = AllocateInstrument.make(cv, methodToLargestLocal, options, state);
-//			
-//			cv = CallChainInstrument.make(cv, methodToLargestLocal, options, state);
-//			
-//			// The MethodInstrument is left out as there are a number of issues with 
-//			// instrumenting the bootclasses that I have not been able to resolve.
-//			//
-//			cv = MethodInstrument.make(cv, methodToLargestLocal, options, state);
-//			
-//			cv = LogInstrument.make(cv, methodToLargestLocal, options, state);
-			
+			// transform the class
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 			
+			// write the transformed class
 			writeClassToFile(writer,outfile);
 
+			// save the state
 			writeProperties(state, new File(agentDir, STATE_FILE_NAME));
 		} catch (Exception e) {
 			System.err.println("failed to process class "+name);
