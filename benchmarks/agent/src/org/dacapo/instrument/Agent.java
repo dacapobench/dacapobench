@@ -1,8 +1,5 @@
 package org.dacapo.instrument;
 
-import java.util.LinkedList;
-import java.util.Vector;
-
 public final class Agent {
 
 	public static boolean firstReportSinceForceGC = false;
@@ -13,12 +10,9 @@ public final class Agent {
 	private static long agentIntervalTime = 0; // the number of milliseconds the
 												// agent should act on
 	private static boolean callChainEnable = false;
-	private static Object waiter = new Object();
 	private static AgentThread agentThread = null;
 
 	private static ThreadLocal<DelayAllocReport> delayAllocReport = new ThreadLocal<DelayAllocReport>();
-
-	// private static final String LOG_PREFIX_CLASS_INITIALIZATION = "CI";
 
 	private static class AgentThread extends Thread {
 		boolean agentThreadStarted = false;
@@ -88,7 +82,7 @@ public final class Agent {
 			// wait what ever time required
 			if (sleepTime > 0)
 				try {
-					this.sleep(sleepTime);
+					Thread.sleep(sleepTime);
 				} catch (Exception e) {
 				}
 		}
@@ -362,11 +356,11 @@ public final class Agent {
 		delayAllocReport.get().putfield(after, obj, before);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void logStaticPointerChange(Object after, Class klass,
 			Object before) {
 		if (delayAllocReport.get() == null)
 			delayAllocReport.set(new DelayAllocReport());
-		// delayAllocReport.get().putfield(after, obj, before);
 		internalLogStaticPointerChange(Thread.currentThread(), after, klass,
 				before);
 	}
@@ -448,8 +442,8 @@ public final class Agent {
 
 	private static native void internalStop();
 
-	private static native void internalAllocReport(Thread thread, Object obj,
-			Class klass);
+	@SuppressWarnings("unchecked")
+	private static native void internalAllocReport(Thread thread, Object obj, Class klass);
 
 	private static synchronized void reportHeapAfterForceGCSync() {
 		if (firstReportSinceForceGC) {

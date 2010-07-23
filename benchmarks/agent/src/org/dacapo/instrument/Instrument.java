@@ -4,14 +4,23 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 import org.dacapo.instrument.instrumenters.AllocateInstrument;
 import org.dacapo.instrument.instrumenters.CallChainInstrument;
 import org.dacapo.instrument.instrumenters.ClinitInstrument;
 import org.dacapo.instrument.instrumenters.Instrumenter;
+import org.dacapo.instrument.instrumenters.InstrumenterFactory;
 import org.dacapo.instrument.instrumenters.LogInstrument;
 import org.dacapo.instrument.instrumenters.MethodInstrument;
 import org.dacapo.instrument.instrumenters.MonitorInstrument;
@@ -41,7 +50,6 @@ public class Instrument extends Instrumenter {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
 		if (args.length < 4) System.exit(1);
 		
 		String infile             = args[0];
@@ -82,28 +90,30 @@ public class Instrument extends Instrumenter {
 			Properties state = new Properties();
 			readProperties(state, new File(agentDir, STATE_FILE_NAME));
 			
-			// always change the version of the class to allow  SomeClass.class constants
-			cv = VersionChanger.make(cv, methodToLargestLocal, options, state);
+			cv = InstrumenterFactory.makeTransformChain(cv, methodToLargestLocal, options, state);
 			
-			// Unable to 
-			// cv = new SystemInstrument(cv, methodToLargestLocal);
-			
-			cv = RuntimeInstrument.make(cv, methodToLargestLocal, options, state);
-			
-			cv = MonitorInstrument.make(cv, methodToLargestLocal, options, state);
-			
-			cv = ClinitInstrument.make(cv, methodToLargestLocal, options, state);
-			
-			cv = AllocateInstrument.make(cv, methodToLargestLocal, options, state);
-			
-			cv = CallChainInstrument.make(cv, methodToLargestLocal, options, state);
-			
-			// The MethodInstrument is left out as there are a number of issues with 
-			// instrumenting the bootclasses that I have not been able to resolve.
-			//
-			cv = MethodInstrument.make(cv, methodToLargestLocal, options, state);
-			
-			cv = LogInstrument.make(cv, methodToLargestLocal, options, state);
+//			// always change the version of the class to allow  SomeClass.class constants
+//			cv = VersionChanger.make(cv, methodToLargestLocal, options, state);
+//			
+//			// Unable to 
+//			// cv = new SystemInstrument(cv, methodToLargestLocal);
+//			
+//			cv = RuntimeInstrument.make(cv, methodToLargestLocal, options, state);
+//			
+//			cv = MonitorInstrument.make(cv, methodToLargestLocal, options, state);
+//			
+//			cv = ClinitInstrument.make(cv, methodToLargestLocal, options, state);
+//			
+//			cv = AllocateInstrument.make(cv, methodToLargestLocal, options, state);
+//			
+//			cv = CallChainInstrument.make(cv, methodToLargestLocal, options, state);
+//			
+//			// The MethodInstrument is left out as there are a number of issues with 
+//			// instrumenting the bootclasses that I have not been able to resolve.
+//			//
+//			cv = MethodInstrument.make(cv, methodToLargestLocal, options, state);
+//			
+//			cv = LogInstrument.make(cv, methodToLargestLocal, options, state);
 			
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 			
@@ -232,5 +242,4 @@ public class Instrument extends Instrumenter {
 			return false;
 		}
 	}
-
 }

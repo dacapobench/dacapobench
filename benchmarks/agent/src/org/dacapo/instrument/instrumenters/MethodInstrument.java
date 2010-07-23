@@ -1,10 +1,7 @@
 package org.dacapo.instrument.instrumenters;
 
-import org.dacapo.instrument.Agent;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -19,31 +16,23 @@ import java.util.Set;
 
 public class MethodInstrument extends Instrumenter {
 
+	public static final Class[]   DEPENDENCIES = new Class[] { CallChainInstrument.class };
+
 	public static final String    METHOD_INSTR           = "method_instr";
 
-	private static final int      CLINIT_ACCESS          = Opcodes.ACC_STATIC;
 	private static final String   CLINIT_NAME            = "<clinit>";
-	private static final String   CLINIT_DESCRIPTION     = null;
-	private static final String   CLINIT_SIGNATURE       = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]);
-	private static final String[] CLINIT_EXCEPTIONS      = { };
 
 	private static final String   LOG_METHOD_NAME        = "logMethod";
-	private static final String   LOG_METHOD_SIGNATURE   = 
-		Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] { JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE });
-		// "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z"; 
 	private static final String   LOG_BRIDGE_SIGNATURE   = 
 		Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE });
-		// "(Ljava/lang/String;Ljava/lang/String;)V";
 	
 	private static final String   LOG_INTERNAL_METHOD    = "$$" + LOG_METHOD_NAME;
 	private static final String   LOG_INTERNAL_SIGNATURE = 
 		Type.getMethodDescriptor(Type.BOOLEAN_TYPE, new Type[] { JAVA_LANG_STRING_TYPE, JAVA_LANG_STRING_TYPE });
-		// "(Ljava/lang/String;Ljava/lang/String;)Z";
 	
 	private static final Integer  ZERO                   = new Integer(0);
 	
 	private int                   access      = 0;
-	private ClassVisitor          cv          = null;
 	private String                className   = null;
 	private boolean               done        = false;
 	
@@ -61,7 +50,6 @@ public class MethodInstrument extends Instrumenter {
 	protected MethodInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
 			Properties options, Properties state, String className) {
 		super(cv, methodToLargestLocal, options, state);
-		this.cv = cv;
 		this.className = className;
 	}
 	
@@ -78,6 +66,7 @@ public class MethodInstrument extends Instrumenter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void visitEnd() {
 		if (!done && (access & Opcodes.ACC_INTERFACE) == 0) {
 			done = true;
@@ -159,17 +148,14 @@ public class MethodInstrument extends Instrumenter {
 		private String  desc;
 		private String  flagName;
 		private String  methName;
-		private int     access;
 		private boolean added = false;
 		
 		MethodInstrumentMethod(int access, String name, String desc, String signature, String[] exceptions, MethodVisitor mv) {
 			super(mv, access, name, desc);
 			this.name = name;
 			this.desc = desc;
-			this.flagName = "$$$_"+(name+desc).replaceAll("[^\\p{Alnum}]","_");
-			this.methName = "$$_"+(name+desc).replaceAll("[^\\p{Alnum}]","_");
-			this.access = access;
-
+			this.flagName = INTERNAL_FIELD_PREFIX+(name+desc).replaceAll("[^\\p{Alnum}]","_");
+			this.methName = INTERNAL_METHOD_PREFIX+(name+desc).replaceAll("[^\\p{Alnum}]","_");
 		}
 		
 		protected void onMethodEnter() {

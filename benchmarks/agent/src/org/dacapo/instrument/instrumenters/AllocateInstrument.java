@@ -5,9 +5,6 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.dacapo.instrument.Agent;
-import org.dacapo.instrument.Instrument;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
@@ -18,10 +15,11 @@ import org.objectweb.asm.Type;
 
 import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.commons.Method;
 
 public class AllocateInstrument extends Instrumenter {
+
+	public static final Class[] DEPENDENCIES = new Class[] { ClinitInstrument.class };
 
 	// we need to instrument a call to alloc in the constructor, after the super
 	// class init but before the other code. This should call the reportAlloc
@@ -51,17 +49,17 @@ public class AllocateInstrument extends Instrumenter {
 	private static final String LOG_POINTER_CHANGE = "logPointerChange";
 	private static final String LOG_STATIC_POINTER_CHANGE = "logStaticPointerChange";
 
-	private static final String LOG_INTERNAL_ALLOC_INC = INTERNAL_PREFIX
+	private static final String LOG_INTERNAL_ALLOC_INC = INTERNAL_LOG_PREFIX
 			+ LOG_ALLOC_INC;
-	private static final String LOG_INTERNAL_ALLOC_DEC = INTERNAL_PREFIX
+	private static final String LOG_INTERNAL_ALLOC_DEC = INTERNAL_LOG_PREFIX
 			+ LOG_ALLOC_DEC;
-	private static final String LOG_INTERNAL_ALLOC_DONE = INTERNAL_PREFIX
+	private static final String LOG_INTERNAL_ALLOC_DONE = INTERNAL_LOG_PREFIX
 			+ LOG_ALLOC_DONE;
-	private static final String LOG_INTERNAL_ALLOC_REPORT = INTERNAL_PREFIX
+	private static final String LOG_INTERNAL_ALLOC_REPORT = INTERNAL_LOG_PREFIX
 			+ LOG_ALLOC_REPORT;
-	private static final String LOG_INTERNAL_POINTER_CHANGE = INTERNAL_PREFIX
+	private static final String LOG_INTERNAL_POINTER_CHANGE = INTERNAL_LOG_PREFIX
 			+ LOG_POINTER_CHANGE;
-	private static final String LOG_INTERNAL_STATIC_POINTER_CHANGE = INTERNAL_PREFIX
+	private static final String LOG_INTERNAL_STATIC_POINTER_CHANGE = INTERNAL_LOG_PREFIX
 			+ LOG_STATIC_POINTER_CHANGE;
 
 	private static final String VOID_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]); // "()V";
@@ -156,7 +154,7 @@ public class AllocateInstrument extends Instrumenter {
 
 	public MethodVisitor visitMethod(int access, String name, String desc,
 			String signature, String[] exceptions) {
-		if (!done && instrument() && instrument(access)) {
+		if (!done && instrument() && !isGenerated(name) && instrument(access)) {
 			// CountLocals locals = new CountLocals(access,
 			// super.visitMethod(access,name,desc,signature,exceptions));
 			// int nextLocal = 0; // locals.getMaxLocals()+1;

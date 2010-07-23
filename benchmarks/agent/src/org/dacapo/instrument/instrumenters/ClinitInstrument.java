@@ -4,11 +4,8 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.TreeMap;
 
-import org.dacapo.instrument.Agent;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -19,20 +16,18 @@ import org.objectweb.asm.commons.Method;
 
 public class ClinitInstrument  extends Instrumenter {
 
+	public static final Class[]   DEPENDENCIES = new Class[] { MonitorInstrument.class };
+
 	public static final String    CLASSES_INITIALIZATION = "clinit";
 
-	private static final int      CLINIT_ACCESS        = Opcodes.ACC_STATIC;
 	private static final String   CLINIT_NAME          = "<clinit>";
-	private static final String   CLINIT_DESCRIPTION   = null;
 	private static final String   CLINIT_SIGNATURE     = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]);
-	private static final String[] CLINIT_EXCEPTIONS    = { };
 
 	private static final String   LOG_METHOD_NAME      = "reportClass";
 	private static final String   LOG_METHOD_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_STRING_TYPE });
 	
 	private boolean             foundClinit = false;
 	private int                 access      = 0;
-	private ClassVisitor        cv          = null;
 	private String              className   = null;
 	
 	private LinkedList<String>  excludePackages = new LinkedList<String>();
@@ -47,7 +42,6 @@ public class ClinitInstrument  extends Instrumenter {
 	protected ClinitInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, 
 			Properties options, Properties state, String excludeList) {
 		super(cv, methodToLargestLocal, options, state);
-		this.cv = cv;
 		
 		excludePackages.add(INSTRUMENT_PACKAGE);
 		if (excludeList!=null) {
@@ -75,6 +69,7 @@ public class ClinitInstrument  extends Instrumenter {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void visitEnd() {
 		if (!foundClinit && instrument()) {
 			// didn't find <clinit> so lets make one

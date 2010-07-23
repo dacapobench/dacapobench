@@ -14,6 +14,8 @@ import org.objectweb.asm.commons.Method;
 
 public class SystemInstrument extends Instrumenter {
 
+	public static final Class[]   DEPENDENCIES = new Class[] { RuntimeInstrument.class };
+
 	private static final String   LOG_CLASS_METHOD      = "getLogClass";
 	private static final String   LOG_CLASS_SIGNATURE   = Type.getMethodDescriptor(JAVA_LANG_CLASS_TYPE, new Type[0]);
 

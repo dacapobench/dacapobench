@@ -7,6 +7,8 @@ import org.objectweb.asm.ClassVisitor;
 
 public class VersionChanger extends Instrumenter {
 
+	public static final Class[] DEPENDENCIES = new Class[] { };
+
 	public static ClassVisitor make(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, Properties options, Properties state) {
 		return new VersionChanger(cv, methodToLargestLocal, options, state); 
 	}

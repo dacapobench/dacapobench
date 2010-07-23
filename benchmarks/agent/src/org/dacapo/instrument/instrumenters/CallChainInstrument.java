@@ -1,10 +1,7 @@
 package org.dacapo.instrument.instrumenters;
 
-import org.dacapo.instrument.Agent;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -15,9 +12,10 @@ import org.objectweb.asm.commons.Method;
 
 import java.util.Properties;
 import java.util.TreeMap;
-import java.util.Set;
 
 public class CallChainInstrument extends Instrumenter {
+
+	public static final Class[]   DEPENDENCIES = new Class[] { AllocateInstrument.class };
 
 	public static final String    CALL_CHAIN             = "call_chain";
 
@@ -27,7 +25,6 @@ public class CallChainInstrument extends Instrumenter {
 	private static final String   LOG_INTERNAL_METHOD    = "$$" + LOG_METHOD_NAME;
 	
 	private int                   access      = 0;
-	private ClassVisitor          cv          = null;
 	private String                className   = null;
 	private boolean               done        = false;
 	private boolean               found       = false;
@@ -42,7 +39,6 @@ public class CallChainInstrument extends Instrumenter {
 	protected CallChainInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal,
 			Properties options, Properties state) {
 		super(cv, methodToLargestLocal, options, state);
-		this.cv = cv;
 	}
 	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -52,13 +48,14 @@ public class CallChainInstrument extends Instrumenter {
 	}
 	
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if (!done && instrument() && instrument(name,access)) {
+		if (!done && instrument() && !isGenerated(name) && instrument(name,access)) {
 			return new CallChainInstrumentMethod(access, name, desc, signature, exceptions, super.visitMethod(access,name,desc,signature,exceptions));
 		} else {
 			return super.visitMethod(access,name,desc,signature,exceptions);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void visitEnd() {
 		if (!done && found) {
 			done = true;

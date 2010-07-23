@@ -1,13 +1,8 @@
 package org.dacapo.instrument.instrumenters;
 
-import java.util.Comparator;
 import java.util.Properties;
 import java.util.TreeMap;
 
-import org.dacapo.instrument.Agent;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -18,18 +13,18 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-import org.objectweb.asm.commons.LocalVariablesSorter;
-
 public class MonitorInstrument extends Instrumenter {
+
+	public static final Class[]   DEPENDENCIES = new Class[] { SystemInstrument.class };
 
 	public static final String    MONITOR                    = "monitor";
 
 	private static final String   LOG_ENTER_METHOD           = "logMonitorEnter";
 	private static final String   LOG_EXIT_METHOD            = "logMonitorExit";
 	private static final String   LOG_NOTIFY_METHOD          = "logMonitorNotify";
-	private static final String   LOG_INTERNAL_ENTER_METHOD  = INTERNAL_PREFIX + LOG_ENTER_METHOD;
-	private static final String   LOG_INTERNAL_EXIT_METHOD   = INTERNAL_PREFIX + LOG_EXIT_METHOD;
-	private static final String   LOG_INTERNAL_NOTIFY_METHOD = INTERNAL_PREFIX + LOG_NOTIFY_METHOD;
+	private static final String   LOG_INTERNAL_ENTER_METHOD  = INTERNAL_LOG_PREFIX + LOG_ENTER_METHOD;
+	private static final String   LOG_INTERNAL_EXIT_METHOD   = INTERNAL_LOG_PREFIX + LOG_EXIT_METHOD;
+	private static final String   LOG_INTERNAL_NOTIFY_METHOD = INTERNAL_LOG_PREFIX + LOG_NOTIFY_METHOD;
 	private static final String   LOG_CLASS_SIGNATURE        = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]);
 	private static final String   LOG_OBJECT_SIGNATURE       = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE });
 	
@@ -37,10 +32,7 @@ public class MonitorInstrument extends Instrumenter {
 	private static final String   NOTIFY_ALL_METHOD          = "notifyAll";
 	private static final String   NOTIFY_SIGNATURE           = LOG_CLASS_SIGNATURE;
 	
-	private ClassVisitor          cv                         = null;
-
 	private String                className                  = null;
-	private String                name                       = null;
 	private int                   access                     = 0;
 
 	private boolean				  has_monitor_operation      = false;
@@ -57,7 +49,6 @@ public class MonitorInstrument extends Instrumenter {
 	private MonitorInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal,
 			Properties options, Properties state) {
 		super(cv, methodToLargestLocal, options, state);
-		this.cv = cv;
 	}
 	
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -67,13 +58,14 @@ public class MonitorInstrument extends Instrumenter {
 	}
 	
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if (instrument() && instrument(access)) {
+		if (instrument() && !isGenerated(name) && instrument(access)) {
 			return new MonitorInstrumentMethod(access, name, desc, signature, exceptions, super.visitMethod(access,name,desc,signature,exceptions));
 		} else {
 			return super.visitMethod(access,name,desc,signature,exceptions);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void visitEnd() {
 		if (!classDone && (access & Opcodes.ACC_INTERFACE) == 0) {
 			classDone = true;
@@ -170,7 +162,6 @@ public class MonitorInstrument extends Instrumenter {
 	}
 
 	private class MonitorInstrumentMethod extends AdviceAdapter {
-		private String   name;
 		private int      access;
 		private Label    methodStartLabel;
 		private String[] exceptions;
@@ -179,7 +170,6 @@ public class MonitorInstrument extends Instrumenter {
 		
 		MonitorInstrumentMethod(int access, String name, String desc, String signature, String[] exceptions, MethodVisitor mv) {
 			super(mv, access, name, desc);
-			this.name       = name;
 			this.access     = access;
 			this.exceptions = exceptions;
 		}

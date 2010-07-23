@@ -4,7 +4,6 @@ import java.util.Properties;
 import java.util.TreeMap;
 
 import org.dacapo.instrument.Configuration;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodAdapter;
@@ -16,6 +15,8 @@ import org.objectweb.asm.commons.Method;
 
 public class RuntimeInstrument extends Instrumenter {
 	
+	public static final Class[]   DEPENDENCIES = new Class[] { VersionChanger.class };
+
 	public static final String    RUNTIME                      = "runtime";
 
 	private static final Type     JAVA_LANG_RUNTIME_TYPE       = Type.getType(Runtime.class);
@@ -30,16 +31,13 @@ public class RuntimeInstrument extends Instrumenter {
 	private static final String   CONFIGURATION_SIGNATURE      = Type.getMethodDescriptor(Type.INT_TYPE, new Type[] { JAVA_LANG_RUNTIME_TYPE });
 	private static final String   CONFIGURATION_FIELD_NAME     = "processorCount";
 
-	private static final String   RUNTIME_INTERNAL_METHOD_NAME = INTERNAL_PREFIX + CONFIGURATION_METHOD_NAME;
+	private static final String   RUNTIME_INTERNAL_METHOD_NAME = INTERNAL_LOG_PREFIX + CONFIGURATION_METHOD_NAME;
 	private static final String   RUNTIME_INTERNAL_SIGNATURE   = CONFIGURATION_SIGNATURE;
-	
-	private ClassVisitor        cv                             = null;
 	
 	private boolean             done                           = false;
 	private boolean             found                          = false;
 	private String              name;
 	private int                 access;
-	private String              methodName;
 	private boolean             inherit;
 	private boolean             overridden                     = false;
 
@@ -51,7 +49,6 @@ public class RuntimeInstrument extends Instrumenter {
 	
 	private RuntimeInstrument(ClassVisitor cv, TreeMap<String,Integer> methodToLargestLocal, Properties options, Properties state) {
 		super(cv, methodToLargestLocal, options, state);
-		this.cv = cv;
 	}
 
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -67,12 +64,11 @@ public class RuntimeInstrument extends Instrumenter {
 	//   org.dacapo.instrument.Configuration.availableProcessors(Ljava/lang/Runtime;)I;
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		MethodVisitor mv = super.visitMethod(access,name,desc,signature,exceptions);
-		methodName = name;
 		if (done)
 			return mv;
 		else if (inherit && RUNTIME_METHOD_NAME.equals(name) && RUNTIME_SIGNATURE.equals(signature) && instrument(access))
 			return new InheritInstrumentMethod(mv);
-		else if (instrument() && instrument(access))
+		else if (instrument() && !isGenerated(name) && instrument(access))
 			return new RuntimeInstrumentMethod(mv);
 		else
 			return mv;
@@ -139,12 +135,11 @@ public class RuntimeInstrument extends Instrumenter {
 	}
 	
 	private class InheritInstrumentMethod extends MethodAdapter {
-		private MethodVisitor mv;
 		InheritInstrumentMethod(MethodVisitor mv) {
 			super(mv);
-			this.mv = mv;
 		}
 
+		@SuppressWarnings("unused")
 		protected void onMethodEnter() {
 			if (done) return;
 
@@ -166,7 +161,6 @@ public class RuntimeInstrument extends Instrumenter {
 }
 	
 	private class RuntimeInstrumentMethod extends MethodAdapter {
-		private MethodVisitor mv;
 		RuntimeInstrumentMethod(MethodVisitor mv) {
 			super(mv);
 			this.mv = mv;

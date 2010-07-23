@@ -3,10 +3,8 @@ package org.dacapo.instrument.instrumenters;
 import java.util.Properties;
 import java.util.TreeMap;
 
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -15,10 +13,10 @@ import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-import org.dacapo.instrument.Agent;
-
 public class LogInstrument extends Instrumenter {
 	
+	public static final Class[]   DEPENDENCIES = new Class[] { MethodInstrument.class };
+
 	public static final String    LOG_START            = "log_start";
 	public static final String    LOG_STOP             = "log_stop";
 	
@@ -26,11 +24,10 @@ public class LogInstrument extends Instrumenter {
 	private static final String   LOG_METHOD_STOP      = "stop";
 	private static final String   LOG_METHOD_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]); 
 	
-	private static final String   LOG_INTERNAL_START_METHOD = INTERNAL_PREFIX + LOG_METHOD_START;
-	private static final String   LOG_INTERNAL_STOP_METHOD  = INTERNAL_PREFIX + LOG_METHOD_STOP;
+	private static final String   LOG_INTERNAL_START_METHOD = INTERNAL_LOG_PREFIX + LOG_METHOD_START;
+	private static final String   LOG_INTERNAL_STOP_METHOD  = INTERNAL_LOG_PREFIX + LOG_METHOD_STOP;
 	private static final String   LOG_INTERNAL_SIGNATURE    = LOG_METHOD_SIGNATURE;
 	
-	private ClassVisitor          cv                   = null;
 	private String                logOnClass           = null;
 	private String                logOnMethod          = null;
 	private String                logOnSignature       = null;
@@ -39,7 +36,6 @@ public class LogInstrument extends Instrumenter {
 	private String                logOffSignature      = null;
 
 	private String                className            = null;
-	private String                name                 = null;
 	private int                   access               = 0;
 
 	
@@ -76,7 +72,6 @@ public class LogInstrument extends Instrumenter {
 			Properties options, Properties state, 
 			String logOn, String logOff) {
 		super(cv,methodToLargestLocal, options, state);
-		this.cv = cv;
 		this.logOnClass      = getClassFrom(logOn);
 		this.logOnMethod     = getMethodFrom(logOn);
 		this.logOnSignature  = getSignatureFrom(logOn);
@@ -97,13 +92,14 @@ public class LogInstrument extends Instrumenter {
 	}
 	
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if (instrument() && instrument(name,desc,access)) {
+		if (instrument() && !isGenerated(name) && instrument(name,desc,access)) {
 			return new LogInstrumentMethod(access, name, desc, signature, exceptions, isEntryPoint(name, desc), isExitPoint(name, desc), super.visitMethod(access,name,desc,signature,exceptions));
 		} else {
 			return super.visitMethod(access,name,desc,signature,exceptions);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void visitEnd() {
 		if (instrument()) {
 			try {
@@ -192,8 +188,6 @@ public class LogInstrument extends Instrumenter {
 	}
 
 	private class LogInstrumentMethod extends AdviceAdapter {
-		private String   name;
-		private int      access;
 		private boolean  entry;
 		private boolean  exit;
 		private Label    methodStartLabel;
@@ -203,8 +197,6 @@ public class LogInstrument extends Instrumenter {
 		
 		LogInstrumentMethod(int access, String name, String desc, String signature, String[] exceptions, boolean entry, boolean exit, MethodVisitor mv) {
 			super(mv, access, name, desc);
-			this.name       = name;
-			this.access     = access;
 			this.entry      = entry;
 			this.exit       = exit;
 			this.exceptions = exceptions;
