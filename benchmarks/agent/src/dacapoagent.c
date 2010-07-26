@@ -629,9 +629,6 @@ invokeProcessClassFile(const char* jarSet, const char* infile, const char* outfi
 		execvp(JAVA_COMMAND,args);
 		exit(10);
 	} else if (pid == -1) {
-
-		fprintf(stderr,"HERE(B)\n");
-
 		/* failed to create child */
 		return -10;
 	} else {
