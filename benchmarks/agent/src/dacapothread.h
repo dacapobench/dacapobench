@@ -10,8 +10,6 @@ void thread_live(jvmtiEnv* jvmti, JNIEnv* env);
 void thread_logon(JNIEnv* env);
 void thread_class(jvmtiEnv *env, JNIEnv *jnienv, jthread thread, jclass klass);
 
-/* void thread_log(JNIEnv* env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag); */
-
 void thread_agent_log(JNIEnv *env, jclass klass, jobject thread);
 
 void threads_states(JNIEnv* env);

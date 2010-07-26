@@ -7,6 +7,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #include <pthread.h>
 
@@ -586,6 +591,59 @@ static jboolean isNotExcluded(const char* name)
 	return !FALSE;
 }
 
+/*
+ */
+#define JAVA_COMMAND "java"
+
+static int
+invokeProcessClassFile(const char* jarSet, const char* infile, const char* outfile, const char* name, const char* agentOptions) {
+	if (name == NULL) name = "NULL";
+
+	pid_t pid = fork();
+	if (pid == 0) {
+		char* jarSet_Tmp = (char*)malloc(sizeof(char)*(strlen(jarSet)+1));
+		char* infile_Tmp = (char*)malloc(sizeof(char)*(strlen(infile)+1));
+		char* outfile_Tmp = (char*)malloc(sizeof(char)*(strlen(outfile)+1));
+		char* agentOptions_Tmp = (char*)malloc(sizeof(char)*(strlen(agentOptions)+1));
+		char* name_Tmp = (char*)malloc(sizeof(char)*(strlen(name)+1));
+
+		strcpy(jarSet_Tmp, jarSet);
+		strcpy(infile_Tmp, infile);
+		strcpy(outfile_Tmp, outfile);
+		strcpy(agentOptions_Tmp, agentOptions);
+		strcpy(name_Tmp, name);
+
+		/* child execvp */
+		char *const args[] = {
+				JAVA_COMMAND,
+				"-classpath",
+				jarSet_Tmp,
+				"org.dacapo.instrument.Instrument",
+				infile_Tmp,
+				outfile_Tmp,
+				name_Tmp,
+				agentOptions_Tmp,
+				NULL
+		};
+
+		execvp(JAVA_COMMAND,args);
+		exit(10);
+	} else if (pid == -1) {
+
+		fprintf(stderr,"HERE(B)\n");
+
+		/* failed to create child */
+		return -10;
+	} else {
+		/* parent wait4 child */
+		int status  = 0;
+		int options = 0;
+		pid_t cpid = waitpid(pid,&status,options);
+
+		return (pid!=cpid)?-10:WEXITSTATUS(status);
+	}
+}
+
 static void JNICALL
 callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
                 jclass class_being_redefined, jobject loader,
@@ -611,10 +669,16 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
 		    *new_class_data     = NULL;
 		    *new_class_data_len = 0;
 
+            /*
             sprintf(command, "java -classpath \"%s\" org.dacapo.instrument.Instrument \"%s\" \"%s\" \"%s\" \"%s\"",jarSet,infile,outfile,(name!=NULL?name:"NULL"),agentOptions);
 
             if (system(command) == 0) {
                 readClassData(infile,new_class_data,new_class_data_len);
+            }
+            */
+
+            if (invokeProcessClassFile(jarSet, infile, outfile, name, agentOptions) == 0) {
+            	readClassData(infile,new_class_data,new_class_data_len);
             }
         }
 

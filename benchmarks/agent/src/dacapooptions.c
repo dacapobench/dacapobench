@@ -6,27 +6,11 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stddef.h>
-#include <stdarg.h>
-*/
-
 #include "dacapooptions.h"
 
 #ifndef FALSE
 #define FALSE 0
 #endif
-
-/*
-	public static final String CLASSES_INITIALIZATION = "clinit";
-	public static final String METHOD_CALLS           = "method_calls";
-	public static final String LOG_START              = "log_start";
-	public static final String LOG_STOP               = "log_stop";
-	public static final String RUNTIME                = "runtime";
-*/
 
 struct option_s {
     struct option_s*  next;

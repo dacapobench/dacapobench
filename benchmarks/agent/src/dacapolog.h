@@ -52,7 +52,6 @@
 extern MonitorLockType       lockLog;
 extern MonitorLockType       agentLock;
 
-/* extern FILE*               logFile; */
 extern jboolean            logState;
 
 _Bool dacapo_log_init();

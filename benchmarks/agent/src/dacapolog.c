@@ -24,20 +24,6 @@
 MonitorLockType       lockLog;
 MonitorLockType       gcLock;
 
-/*
-#define FILE_TYPE FILE*
-
-#define FILE_IS_CLOSED NULL
-#define FILE_FLAGS      "w+"
-
-#define CLOSE(f)       fclose(f)
-#define OPEN(f,m)      fopen(f,FILE_FLAGS)
-#define FLUSH(f)       fflush(f)
-#define WRITE(b,e,n,f) fwrite(b,e,n,f)
-
-FILE_TYPE               logFile = FILE_IS_CLOSED;
-*/
-
 #define FILE_TYPE int
 
 #define FILE_IS_CLOSED -1

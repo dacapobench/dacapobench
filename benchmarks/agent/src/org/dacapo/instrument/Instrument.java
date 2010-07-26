@@ -1,39 +1,20 @@
 package org.dacapo.instrument;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URI;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
 
-import org.dacapo.instrument.instrumenters.AllocateInstrument;
-import org.dacapo.instrument.instrumenters.CallChainInstrument;
-import org.dacapo.instrument.instrumenters.ClinitInstrument;
 import org.dacapo.instrument.instrumenters.Instrumenter;
 import org.dacapo.instrument.instrumenters.InstrumenterFactory;
-import org.dacapo.instrument.instrumenters.LogInstrument;
-import org.dacapo.instrument.instrumenters.MethodInstrument;
-import org.dacapo.instrument.instrumenters.MonitorInstrument;
-import org.dacapo.instrument.instrumenters.RuntimeInstrument;
-import org.dacapo.instrument.instrumenters.VersionChanger;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 import org.objectweb.asm.commons.AdviceAdapter;
 
@@ -68,8 +49,6 @@ public class Instrument extends Instrumenter {
 
 			// read the class to do some pre-processing
 			ClassReader reader = readClassFromFile(infile);
-			
-			//
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
 			ClassVisitor cv = writer; 
@@ -165,7 +144,6 @@ public class Instrument extends Instrumenter {
 	private static class Maxs extends AdviceAdapter {
 		public String encodedName;
 		public int    maxLocals;
-		public int    maxStack;
 		private TreeMap<String,Integer> methodToLargestLocal;
 		
 		public Maxs(int access, String klass, String name, String desc, MethodVisitor mv, TreeMap<String,Integer> methodToLargestLocal) {
@@ -173,7 +151,6 @@ public class Instrument extends Instrumenter {
 			
 			this.encodedName = encodeMethodName(klass,name,desc);
 			this.maxLocals = getArgumentSizes(access, desc);
-			this.maxStack  = 0; 
 			this.methodToLargestLocal = methodToLargestLocal;
 			
 			this.methodToLargestLocal.put(this.encodedName, new Integer(this.maxLocals));
@@ -190,7 +167,6 @@ public class Instrument extends Instrumenter {
 		public void visitMaxs(int maxStack, int maxLocals) {
 			this.maxLocals = maxLocals;
 			if (this.maxLocals < maxStack) {
-				this.maxStack  = maxStack;
 				methodToLargestLocal.put(encodedName, new Integer(this.maxLocals));
 			}
 			super.visitMaxs(maxStack, maxLocals);
