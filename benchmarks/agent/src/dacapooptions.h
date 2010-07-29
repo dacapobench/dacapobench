@@ -5,6 +5,7 @@
 
 #define OPT_CLINIT           "clinit"
 #define OPT_STORE_CLASS_FILE "store"
+#define OPT_STORE_DIRECTORY  "store_dir"
 #define OPT_METHOD_EVENTS    "method_events"
 #define OPT_METHOD_INSTR     "method_instr"
 #define OPT_LOG_START        "log_start"

@@ -45,6 +45,8 @@
 #define MINOR_VERSION(v) (int)(((v) & JVMTI_VERSION_MASK_MINOR ) >> JVMTI_VERSION_SHIFT_MINOR)
 #define MICRO_VERSION(v) (int)(((v) & JVMTI_VERSION_MASK_MICRO ) >> JVMTI_VERSION_SHIFT_MICRO)
 
+#define FILE_SEPARATOR_CHAR '/'
+
 #define STORE_CLASS_FILE_BASE "DACAPO_STORE"
 #define DEFAULT_STORE_CLASS_FILE_BASE "store"
 
@@ -83,7 +85,7 @@ jboolean            instrumentClasses = FALSE;
 jboolean            methodCalls = FALSE;
 jboolean            loadClasses = FALSE;
 jboolean            storeClassFilesTXed = FALSE;
-char                storeClassFileBase[8192];
+char*               storeClassFileBase = NULL; // [8192];
 jboolean            breakOnLoad = FALSE;
 
 char*               breakOnLoadClass = NULL;
@@ -338,12 +340,6 @@ Agent_OnLoad(JavaVM *vm, char *options, void *reserved)
 	thread_init();
 	call_chain_init();
 
-    /* */
-    char* storeClassFile = getenv(STORE_CLASS_FILE_BASE);
-    if (storeClassFile == NULL) 
-        storeClassFile = DEFAULT_STORE_CLASS_FILE_BASE;
-    strcpy(storeClassFileBase,storeClassFile);
-
     /* get capabilities */
     processCapabilities();
 
@@ -433,6 +429,18 @@ static void processOptions() {
 		isSelected(OPT_MONITOR,NULL) ||
 		isSelected(OPT_METHOD_INSTR,NULL) ||
 		isSelected(OPT_ALLOCATE,NULL);
+	
+	char* storeDir = NULL;
+	if (isSelected(OPT_STORE_DIRECTORY,&storeDir)) {
+		storeClassFileBase = storeDir;
+	} else {
+		int agentOptionsLength = strlen(agentOptions);
+		int slashLength = (agentOptionsLength<=0 || agentOptions[agentOptionsLength-1]=='/')?0:1;
+		storeClassFileBase = (char*)malloc(sizeof(char)*(agentOptionsLength+slashLength+strlen(DEFAULT_STORE_CLASS_FILE_BASE)+1));
+		strcpy(storeClassFileBase,agentOptions);
+		if (slashLength!=0) storeClassFileBase[agentOptionsLength++] = FILE_SEPARATOR_CHAR;
+		strcpy(storeClassFileBase+agentOptionsLength,DEFAULT_STORE_CLASS_FILE_BASE);
+	}
 	
     defineCallbacks();
 }
@@ -568,6 +576,22 @@ static void generateFileName(char* file_name, int max_file_name_len) {
     file_name[max_file_name_len-1]='\0';
 }
 
+static char* generateTmpClassFileName() {
+	int   agentOptionsLength = strlen(agentOptions);
+	int   slashLength = (agentOptions<=0 || agentOptions[agentOptionsLength-1]=='/')?0:1;
+	char* classFileName = (char*)malloc(sizeof(char)*(agentOptionsLength+slashLength+strlen(TMP_FILE_NAME)+1));
+
+	if (0<agentOptionsLength) {
+		strcpy(classFileName, agentOptions);
+		if (slashLength!=0)
+			classFileName[agentOptionsLength++] = '/';
+	}
+	strcpy(classFileName+agentOptionsLength,TMP_FILE_NAME);
+	
+	return classFileName;
+}
+
+
 /* packages to be excluded from transformation */
 #define ASM_PACKAGE_NAME     "org/objectweb/asm/"
 #define DACAPO_PACKAGE_NAME  "org/dacapo/instrument/"
@@ -655,11 +679,15 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
         if (instrumentClasses && isNotExcluded(name)) { 
             /* strncmp(DACAPO_PACKAGE_NAME,name,strlen(DACAPO_PACKAGE_NAME))!=0) { */
             char command[1024];
+            /* 
             char outfile[256];
             char infile [256];
 
             generateFileName(outfile, sizeof(outfile));
             generateFileName(infile, sizeof(infile));
+            */
+            char* outfile = generateTmpClassFileName();
+            char* infile  = generateTmpClassFileName();
 
             writeClassData(outfile,class_data,class_data_len);
 
@@ -677,6 +705,9 @@ callbackClassFileLoadHook(jvmtiEnv *jvmti, JNIEnv* env,
             if (invokeProcessClassFile(jarSet, infile, outfile, name, agentOptions) == 0) {
             	readClassData(infile,new_class_data,new_class_data_len);
             }
+            
+            free(infile);
+            free(outfile);
         }
 
         rawMonitorExit(&lockClass);

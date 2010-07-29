@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.LinkedList;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import org.dacapo.instrument.instrumenters.Instrumenter;
 import org.dacapo.instrument.instrumenters.InstrumenterFactory;
@@ -48,7 +50,8 @@ public class Instrument extends Instrumenter {
 			TreeMap<String,Integer> methodToLargestLocal = new TreeMap<String,Integer>();
 
 			// read the class to do some pre-processing
-			ClassReader reader = readClassFromFile(infile);
+			byte[] classBytes = readClassBytesFromFile(infile);
+			ClassReader reader = new ClassReader(classBytes);
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
 			ClassVisitor cv = writer; 
@@ -59,7 +62,7 @@ public class Instrument extends Instrumenter {
 			
 			reader.accept(cv,ClassReader.EXPAND_FRAMES);
 
-			reader = readClassFromFile(infile);
+			reader = new ClassReader(classBytes);
 
 			cv = writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
@@ -99,15 +102,48 @@ public class Instrument extends Instrumenter {
 		}
 	}
 
-	private static ClassReader readClassFromFile(String infile) throws Exception {
-		FileInputStream is = null;
+	private static final int  DEFAULT_CLASS_FILE_SIZE = 1024;
+	private static final long RIDICULOUS_CLASS_SIZE   = 2 * 1024 * 1024;
+	
+	private static byte[] readClassBytesFromFile(String infile) throws Exception {
+		byte[] data = null;
+		byte[] buffer = new byte[DEFAULT_CLASS_FILE_SIZE];
+		LinkedList<byte[]> segments = new LinkedList<byte[]>();
+		File file = new File(infile);
+		
+		if (!file.exists() || file.isDirectory() && !file.canRead() && RIDICULOUS_CLASS_SIZE<file.length()) 
+			return null;
+
+		FileInputStream is = new FileInputStream(file);
+		int totalRead = 0;
 		try {
-			is = new FileInputStream(infile);
-			ClassReader reader = new ClassReader(is);
-			return reader;
+			int dataRead = 0;
+			do {
+				dataRead = is.read(buffer);
+				if (0<dataRead) {
+					totalRead += dataRead;
+					if (dataRead == buffer.length) {
+						segments.addLast(buffer);
+						buffer = new byte[DEFAULT_CLASS_FILE_SIZE];
+					} else {
+						byte[] segment = new byte[dataRead];
+						System.arraycopy(buffer, 0, segment, 0, dataRead);
+						segments.addLast(segment);
+					}
+				}
+			} while (dataRead >= 0);
 		} finally {
-			if (is != null) is.close();
+			is.close();
 		}
+
+		data = new byte[totalRead];
+		int position = 0;
+		for(byte[] segment: segments) {
+			System.arraycopy(segment, 0, data, position, segment.length);
+			position += segment.length;
+		}
+		
+		return data;
 	}
 	
 	private static void writeClassToFile(ClassWriter writer, String outfile) throws Exception {
