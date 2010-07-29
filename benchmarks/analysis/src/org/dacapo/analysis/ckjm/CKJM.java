@@ -8,20 +8,20 @@ import java.util.TreeSet;
 
 import gr.spinellis.ckjm.*;
 import org.apache.bcel.generic.Type;
-import org.dacapo.analysis.util.CSVInputStream;
 import org.dacapo.analysis.util.events.Event;
 import org.dacapo.analysis.util.events.EventClassPrepare;
 import org.dacapo.analysis.util.events.EventListener;
 import org.dacapo.analysis.util.events.EventParseException;
 import org.dacapo.analysis.util.events.EventStart;
 import org.dacapo.analysis.util.events.EventStop;
-import org.dacapo.analysis.util.LogFiles;
 
 import org.apache.bcel.Repository;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
 import org.dacapo.instrument.LogTags;
+import org.dacapo.util.CSVInputStream;
+import org.dacapo.util.LogFiles;
 
 public class CKJM {
 	

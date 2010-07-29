@@ -1,4 +1,4 @@
-package org.dacapo.analysis.util;
+package org.dacapo.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,6 +44,10 @@ public class CSVInputStream {
 		this.delimiter = delimiter;
 		this.separator = separator;
 		this.currentRow = new Vector<String>();
+	}
+	
+	public void close() throws IOException {
+		is.close();
 	}
 	
 	public synchronized String nextFieldString() throws NoFieldAvailable {

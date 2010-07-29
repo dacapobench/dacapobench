@@ -99,6 +99,7 @@ public final class Agent {
 		int delayCount = 0;
 
 		Object[][] nodes = new Object[DEFAULT_SIZE][DEFAULT_SIZE];
+		int[][]    sites = new int[DEFAULT_SIZE][DEFAULT_SIZE];
 		int[] depth = new int[DEFAULT_SIZE];
 		int size = 0;
 
@@ -111,20 +112,25 @@ public final class Agent {
 				newSize = DEFAULT_SIZE * ((newSize / DEFAULT_SIZE) + 1);
 
 				Object[][] tmpNodes = new Object[newSize][];
+				int[][]    tmpSites = new int[newSize][];
 				int[] tmpDepth = new int[newSize];
 
 				for (int i = 0; i < nodes.length; ++i) {
 					tmpNodes[i] = nodes[i];
+					tmpSites[i] = sites[i];
 					tmpDepth[i] = depth[i];
 
 					nodes[i] = null;
+					sites[i] = null;
 				}
 				for (int i = nodes.length; i < newSize; ++i) {
 					tmpNodes[i] = new Object[DEFAULT_SIZE];
+					tmpSites[i] = new int[DEFAULT_SIZE];
 					tmpDepth[i] = 0;
 				}
 
 				nodes = tmpNodes;
+				sites = tmpSites;
 				depth = tmpDepth;
 			}
 			size = newSize;
@@ -141,23 +147,33 @@ public final class Agent {
 		}
 
 		void report(Object obj) {
+			report(obj,0);
+		}
+		
+		void report(Object obj,int site) {
 			if (obj == null)
 				return;
 			if (size <= delayCount)
 				extend(delayCount + 1);
-			Object[] stack = nodes[delayCount];
+			Object[] nodeStack = nodes[delayCount];
+			int[]    siteStack = sites[delayCount];
 			int slot = depth[delayCount];
-			if (stack.length <= slot) {
-				Object[] tmpStack = new Object[stack.length + DEFAULT_SIZE];
+			if (nodeStack.length <= slot) {
+				Object[] tmpNodeStack = new Object[nodeStack.length + DEFAULT_SIZE];
+				int[]    tmpSiteStack = new int[nodeStack.length + DEFAULT_SIZE];
 				// System.err.println("AddSlot#"+hashCode()+":["+delayCount+"]to "+stack.length);
-				for (int i = 0; i < stack.length; ++i) {
-					tmpStack[i] = stack[i];
-					stack[i] = null;
+				for (int i = 0; i < nodeStack.length; ++i) {
+					tmpNodeStack[i] = nodeStack[i];
+					tmpSiteStack[i] = siteStack[i];
+					nodeStack[i] = null;
+					siteStack[i] = 0;
 				}
-				stack = tmpStack;
-				nodes[delayCount] = stack;
+				nodeStack = tmpNodeStack;
+				siteStack = tmpSiteStack;
+				nodes[delayCount] = nodeStack;
 			}
-			stack[slot] = obj;
+			nodeStack[slot] = obj;
+			siteStack[slot] = site;
 			depth[delayCount] = slot + 1;
 		}
 
@@ -188,11 +204,12 @@ public final class Agent {
 						if (nodes[i][j] != null) {
 							// System.err.println("Alloc:"+nodes[i][j].getClass());
 							internalAllocReport(t, nodes[i][j], nodes[i][j]
-									.getClass());
+									.getClass(), sites[i][j]);
 							if (firstReportSinceForceGC) {
 								reportHeapAfterForceGC();
 							}
 							nodes[i][j] = null;
+							sites[i][j] = 0;
 						}
 					}
 					depth[i] = 0;
@@ -375,10 +392,14 @@ public final class Agent {
 		delayAllocReport.get().dec();
 	}
 
-	public static void allocReport(Object obj) {
+//	public static void allocReport(Object obj) {
+//		allocReport(obj, 0);
+//	}
+
+	public static void allocReport(Object obj, int site) {
 		if (delayAllocReport.get() == null)
 			delayAllocReport.set(new DelayAllocReport());
-		delayAllocReport.get().report(obj);
+		delayAllocReport.get().report(obj, site);
 	}
 
 	public static void allocDone() {
@@ -417,7 +438,7 @@ public final class Agent {
 
 	private static native void internalLogThread(Thread thread);
 
-	private static native void internalLogAlloc(Thread thread, Object obj);
+	// private static native void internalLogAlloc(Thread thread, Object obj);
 
 	private static native void internalLogPointerChange(Thread thread,
 			Object after, Object obj, Object before);
@@ -443,7 +464,7 @@ public final class Agent {
 	private static native void internalStop();
 
 	@SuppressWarnings("unchecked")
-	private static native void internalAllocReport(Thread thread, Object obj, Class klass);
+	private static native void internalAllocReport(Thread thread, Object obj, Class klass, int site);
 
 	private static synchronized void reportHeapAfterForceGCSync() {
 		if (firstReportSinceForceGC) {

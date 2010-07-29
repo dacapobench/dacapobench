@@ -19,15 +19,18 @@
 #ifdef __WORDSIZE
 #if __WORDSIZE == 64
 #define FORMAT_JLONG "ld"
+#define FORMAT_JINT  "d"
 #define FORMAT_PTR "lx"
 #define PTR_CAST(a) ((long)(a))
 #else
 #define FORMAT_JLONG "lld"
+#define FORMAT_JINT  "d"
 #define FORMAT_PTR "lx"
 #define PTR_CAST(a) ((long)(a))
 #endif
 #else
 #define FORMAT_JLONG "lld"
+#define FORMAT_JINT  "d"
 #define FORMAT_PTR "llx"
 #define PTR_CAST(a) ((long long)(a))
 #endif

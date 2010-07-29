@@ -1,10 +1,10 @@
 package org.dacapo.analysis.util.events;
 
-import org.dacapo.analysis.util.CSVInputStream;
-import org.dacapo.analysis.util.CSVOutputStream;
-import org.dacapo.analysis.util.CSVInputStream.NoFieldAvailable;
-import org.dacapo.analysis.util.CSVInputStream.ParseError;
 import org.dacapo.instrument.LogTags;
+import org.dacapo.util.CSVInputStream;
+import org.dacapo.util.CSVOutputStream;
+import org.dacapo.util.CSVInputStream.NoFieldAvailable;
+import org.dacapo.util.CSVInputStream.ParseError;
 
 public class EventCallChainFrame extends Event {
 

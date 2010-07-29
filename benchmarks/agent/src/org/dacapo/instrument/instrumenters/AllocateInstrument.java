@@ -1,5 +1,7 @@
 package org.dacapo.instrument.instrumenters;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -64,6 +66,7 @@ public class AllocateInstrument extends Instrumenter {
 
 	private static final String VOID_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]); // "()V";
 	private static final String OBJECT_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE }); // "(Ljava/lang/Object;)V";
+	private static final String OBJECT_SITE_SIGNATURE = Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE, Type.INT_TYPE });
 	private static final String POINTER_CHANGE_SIGNATURE = 
 		Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] { JAVA_LANG_OBJECT_TYPE, JAVA_LANG_OBJECT_TYPE, JAVA_LANG_OBJECT_TYPE });
 	private static final String STATIC_POINTER_CHANGE_SIGNATURE =
@@ -71,6 +74,9 @@ public class AllocateInstrument extends Instrumenter {
 
 	private static final String JAVA_LANG_CONSTRUCTOR = Type.getInternalName(java.lang.reflect.Constructor.class);
 	private static final String NEW_INSTANCE = "newInstance";
+	
+	private static final String ALLOCATE_BASE_LOG_FILE_NAME = "allocate.csv";
+	private static final String PROP_SITE_ID = "allocate.instrument.site.id";
 
 	private String name;
 	private String superName;
@@ -80,12 +86,15 @@ public class AllocateInstrument extends Instrumenter {
 	private boolean hasConstructor = false;
 	private boolean logPointerChange = false;
 	private TreeSet<String> finalFields = new TreeSet<String>();
-
+	
 	private LinkedList<String> excludePackages = new LinkedList<String>();
-
-	private static class Pair {
+	
+	private String  allocateLogBaseName = null;
+	
+	private static class Triplet {
 		public String type;
 		public int var;
+		public int siteId;
 	}
 
 	private static class CountLocals extends MethodAdapter {
@@ -132,6 +141,16 @@ public class AllocateInstrument extends Instrumenter {
 				if (!p.endsWith("/"))
 					p += p + "/";
 				excludePackages.add(p);
+			}
+		}
+		
+		String path = options.getProperty(PROP_AGENT_DIRECTORY);
+		if (path!=null) {
+			File agentPath = new File(path);
+			File log = new File(agentPath,ALLOCATE_BASE_LOG_FILE_NAME);
+			if (agentPath.exists() && agentPath.canWrite()) {
+				if (!log.exists() || (log.exists() && log.canWrite()))
+					this.allocateLogBaseName = log.getAbsolutePath();
 			}
 		}
 	}
@@ -223,13 +242,14 @@ public class AllocateInstrument extends Instrumenter {
 
 				mg = new GeneratorAdapter(Opcodes.ACC_PRIVATE
 						| Opcodes.ACC_STATIC, new Method(
-						LOG_INTERNAL_ALLOC_REPORT, OBJECT_SIGNATURE),
+						LOG_INTERNAL_ALLOC_REPORT, OBJECT_SITE_SIGNATURE),
 						OBJECT_SIGNATURE, new Type[] {}, this);
 
 				start = mg.mark();
 				mg.loadArgs();
+				// mg.push((int)0);
 				mg.invokeStatic(LOG_INTERNAL_TYPE, Method.getMethod(LOG_INTERNAL_CLASS.getMethod(
-						LOG_ALLOC_REPORT, Object.class)));
+						LOG_ALLOC_REPORT, Object.class, int.class))); // 
 				end = mg.mark();
 				mg.returnValue();
 
@@ -301,6 +321,16 @@ public class AllocateInstrument extends Instrumenter {
 		super.visitEnd();
 	}
 
+	protected int getNextAllocateSiteId() {
+		synchronized (this.state) {
+			String valueStr = this.state.getProperty(AllocateInstrument.PROP_SITE_ID);
+			int value = 1;
+			if (valueStr!=null) value = Integer.parseInt(valueStr);
+			this.state.setProperty(AllocateInstrument.PROP_SITE_ID, Integer.toString(value+1));
+			return value;
+		}
+	}
+	
 	private boolean instrument() {
 		if ((access & Opcodes.ACC_INTERFACE) != 0)
 			return false;
@@ -339,8 +369,10 @@ public class AllocateInstrument extends Instrumenter {
 		private static final boolean DO_INC_DEC = true;
 		private static final boolean DO_NEW_INVOKESPECIAL_SEQUENCE = true;
 
+		private int siteNumber;
+		
 		// LinkedList<String> newTypeStack = new LinkedList<String>();
-		LinkedList<Pair> newTypeStack = new LinkedList<Pair>();
+		LinkedList<Triplet> newTypeStack = new LinkedList<Triplet>();
 
 		AllocateInstrumentMethod(int access, String methodName, String desc,
 				String signature, String[] exceptions, MethodVisitor mv,
@@ -358,6 +390,7 @@ public class AllocateInstrument extends Instrumenter {
 				methodToLargestLocal.put(this.encodedName, getArgumentSizes(access, desc));
 			this.localsBase = methodToLargestLocal.get(this.encodedName);
 			this.maxLocals = this.localsBase;
+			this.siteNumber = 0;
 		}
 
 		public void onMethodExit(int opcode) {
@@ -365,6 +398,22 @@ public class AllocateInstrument extends Instrumenter {
 				addDec();
 		}
 
+		public int getNextSiteId() {
+			Integer siteId = getNextAllocateSiteId();
+			if (allocateLogBaseName!=null) {
+				try {
+					Integer intraMethodSiteId = this.siteNumber++;
+					Object[] siteData = {
+						siteId,
+						this.encodedName,
+						intraMethodSiteId
+					};
+					write(allocateLogBaseName, siteData);
+				} catch (FileNotFoundException fnfe) { }
+			}
+			return siteId;
+		}
+		
 		public void visitFieldInsn(int opcode, String owner, String fieldName,
 				String desc) {
 			if (firstInstruction)
@@ -463,14 +512,14 @@ public class AllocateInstrument extends Instrumenter {
 			if (opcode == Opcodes.INVOKESPECIAL
 					&& CONSTRUCTOR.equals(methodName)) {
 				if (DO_NEW_INVOKESPECIAL_SEQUENCE && !newTypeStack.isEmpty()) {
-					Pair p = newTypeStack.removeLast();
+					Triplet p = newTypeStack.removeLast();
 					if (!p.type.equals(owner)) {
 						System.err.println("Excepted type: " + p.type
 								+ " found: " + owner);
 						System.exit(10);
 					}
 					super.visitVarInsn(Opcodes.ALOAD, p.var);
-					addLog(false);
+					addLog(false, p.siteId);
 				}
 				if (superName.equals(owner)) {
 					doneSuperConstructor = true;
@@ -492,10 +541,11 @@ public class AllocateInstrument extends Instrumenter {
 					}
 				}
 			} else if (reportReflectConstruction) {
+				int   siteId = getNextSiteId();
 				if (!constructor) {
 					Label wrapTo = super.mark();
-					addDec();
-					addLog(true);
+					addInc();
+					addLog(true, siteId);
 					Label target = super.newLabel();
 					super.visitJumpInsn(Opcodes.GOTO, target);
 					super.catchException(wrapFrom, wrapTo, JAVA_LANG_THROWABLE_TYPE);
@@ -505,7 +555,7 @@ public class AllocateInstrument extends Instrumenter {
 					super.visitInsn(Opcodes.ATHROW);
 					super.mark(target);
 				} else {
-					addLog(true);
+					addLog(true,siteId);
 				}
 			}
 		}
@@ -527,7 +577,8 @@ public class AllocateInstrument extends Instrumenter {
 			if (firstInstruction)
 				addInc();
 			super.visitMultiANewArrayInsn(desc, dims);
-			addLog(true);
+			int   siteId = getNextSiteId();
+			addLog(true, siteId);
 		}
 
 		public void visitTypeInsn(int opcode, String type) {
@@ -535,13 +586,15 @@ public class AllocateInstrument extends Instrumenter {
 				addInc();
 			super.visitTypeInsn(opcode, type);
 			// we deal with Opcodes.NEW through the constructors
-			if (opcode == Opcodes.ANEWARRAY)
-				addLog(true);
-			else if (DO_NEW_INVOKESPECIAL_SEQUENCE && opcode == Opcodes.NEW) {
+			if (opcode == Opcodes.ANEWARRAY) {
+				int   siteId = getNextSiteId();
+				addLog(true, siteId);
+			} else if (DO_NEW_INVOKESPECIAL_SEQUENCE && opcode == Opcodes.NEW) {
 				super.visitInsn(Opcodes.DUP);
-				Pair p = new Pair();
+				Triplet p = new Triplet();
 				p.type = type;
 				p.var = this.localsBase + 1 + newTypeStack.size();
+				p.siteId = getNextSiteId();
 				if (this.maxLocals < p.var) {
 					this.maxLocals = p.var;
 					methodToLargestLocal.put(this.encodedName, new Integer(
@@ -557,8 +610,10 @@ public class AllocateInstrument extends Instrumenter {
 			if (firstInstruction)
 				addInc();
 			super.visitIntInsn(opcode, operand);
-			if (opcode == Opcodes.NEWARRAY)
-				addLog(true);
+			if (opcode == Opcodes.NEWARRAY) {
+				int   siteId = getNextSiteId();
+				addLog(true, siteId);
+			}
 		}
 
 		public void visitEnd() {
@@ -598,11 +653,12 @@ public class AllocateInstrument extends Instrumenter {
 						LOG_INTERNAL_ALLOC_DEC, VOID_SIGNATURE);
 		}
 
-		private void addLog(boolean dup) {
+		private void addLog(boolean dup, int site) {
 			if (dup)
 				super.visitInsn(Opcodes.DUP);
+			super.visitLdcInsn(new Integer(site));
 			super.visitMethodInsn(Opcodes.INVOKESTATIC, name,
-					LOG_INTERNAL_ALLOC_REPORT, OBJECT_SIGNATURE);
+					LOG_INTERNAL_ALLOC_REPORT, OBJECT_SITE_SIGNATURE);
 			if (!constructor)
 				super.visitMethodInsn(Opcodes.INVOKESTATIC, name,
 						LOG_INTERNAL_ALLOC_DONE, VOID_SIGNATURE);

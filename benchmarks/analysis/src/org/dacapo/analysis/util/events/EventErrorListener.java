@@ -1,6 +1,6 @@
 package org.dacapo.analysis.util.events;
 
-import org.dacapo.analysis.util.CSVInputStream.CSVException;
+import org.dacapo.util.CSVInputStream.CSVException;
 
 public interface EventErrorListener {
 	

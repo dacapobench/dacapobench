@@ -466,6 +466,12 @@ void log_field_int(int v) {
   log_field_string(tmp);
 }
 
+void log_field_jint(jint v) {
+  char tmp[32];
+  sprintf(tmp,"%" FORMAT_JINT,v);
+  log_field_string(tmp);
+}
+
 void log_field_jlong(jlong v) {
   char tmp[64];
   sprintf(tmp,"%" FORMAT_JLONG,v);

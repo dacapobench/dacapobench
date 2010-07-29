@@ -1,9 +1,9 @@
 package org.dacapo.analysis.util.events;
 
-import org.dacapo.analysis.util.CSVInputStream;
-import org.dacapo.analysis.util.CSVOutputStream;
-import org.dacapo.analysis.util.CSVInputStream.CSVException;
 import org.dacapo.instrument.LogTags;
+import org.dacapo.util.CSVInputStream;
+import org.dacapo.util.CSVOutputStream;
+import org.dacapo.util.CSVInputStream.CSVException;
 
 public class EventMonitorAcquire extends EventMonitor {
 

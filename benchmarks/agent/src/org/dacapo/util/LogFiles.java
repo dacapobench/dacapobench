@@ -1,4 +1,4 @@
-package org.dacapo.analysis.util;
+package org.dacapo.util;
 
 import java.io.File;
 import java.util.LinkedList;

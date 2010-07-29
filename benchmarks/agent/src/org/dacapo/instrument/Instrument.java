@@ -69,6 +69,7 @@ public class Instrument extends Instrumenter {
 				System.exit(10);
 			}
 			options.setProperty(PROP_CLASS_NAME,reader.getClassName());
+			options.setProperty(PROP_AGENT_DIRECTORY, agentDir.getAbsolutePath());
 
 			// make a state property
 			Properties state = new Properties();
@@ -87,6 +88,9 @@ public class Instrument extends Instrumenter {
 
 			// save the state
 			writeProperties(state, new File(agentDir, STATE_FILE_NAME));
+			
+			// flush any logs made
+			Instrumenter.closeLogs();
 		} catch (Exception e) {
 			System.err.println("failed to process class "+name);
 			System.err.println("exception "+e);

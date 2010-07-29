@@ -1,7 +1,11 @@
 package org.dacapo.instrument.instrumenters;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +21,7 @@ import java.util.jar.JarInputStream;
 import java.util.jar.JarEntry;
 
 import org.dacapo.instrument.Agent;
+import org.dacapo.util.CSVOutputStream;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
@@ -27,7 +32,8 @@ public class Instrumenter extends ClassAdapter {
 	public static final String INSTRUMENT_PACKAGE = "org/dacapo/instrument/";
 	
 	public static final String PROP_CLASS_NAME = "class_name";
-	
+	public static final String PROP_AGENT_DIRECTORY = "agent.directory";
+
 	@SuppressWarnings("unchecked")
 	public static final Class  LOG_INTERNAL_CLASS = Agent.class;
 	public static final Class  INSTRUMENTER_CLASS = Instrumenter.class;
@@ -60,12 +66,27 @@ public class Instrumenter extends ClassAdapter {
 	protected Properties options = null;
 	protected Properties state = null; 
 
+	private static TreeMap<String,CSVOutputStream> writeLogs = new TreeMap<String,CSVOutputStream>();
+	
+	static {
+		// any generate resource setup
+	}
+	
 	public Instrumenter(ClassVisitor arg0, TreeMap<String,Integer> methodToLargestLocal, Properties options, Properties state) {
 		super(arg0);
 		
 		this.methodToLargestLocal = methodToLargestLocal;
 		this.state = state;
 		this.options = options;
+	}
+	
+	public synchronized static void closeLogs() {
+		for(String log: writeLogs.keySet()) {
+			try {
+				writeLogs.get(log).close();
+			} catch (IOException io) { }
+		}
+		writeLogs.clear();
 	}
 	
 	protected static String encodeMethodName(String klass, String method, String signature) {
@@ -81,5 +102,38 @@ public class Instrumenter extends ClassAdapter {
 	protected static boolean isGenerated(String method) {
 		return method.startsWith(INTERNAL_LOG_PREFIX);
 	}
-
+	
+	protected static synchronized void write(String log, Object[] fields) throws FileNotFoundException {
+		if (log==null) return;
+		
+		CSVOutputStream logFile = getLog(log);
+		
+		if (fields!=null)
+			for(Object obj: fields)
+				logFile.write(obj.toString());
+		logFile.eol();
+	}
+	
+	protected static synchronized <T> void write(String log, LinkedList<T> fields) throws FileNotFoundException {
+		if (log==null) return;
+		
+		CSVOutputStream logFile = getLog(log);
+		
+		if (fields!=null)
+			for(Object obj: fields)
+				logFile.write(obj.toString());
+		logFile.eol();
+	}
+	
+	private static CSVOutputStream getLog(String log) throws FileNotFoundException {
+		CSVOutputStream logFile = writeLogs.get(log);
+		
+		if (logFile==null) {
+			// these are append type log functionality
+			logFile = new CSVOutputStream(new FileOutputStream(log, true));
+			writeLogs.put(log, logFile);
+		}
+		
+		return logFile;
+	}
 }

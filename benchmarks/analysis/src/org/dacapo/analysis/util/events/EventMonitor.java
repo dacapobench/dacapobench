@@ -1,7 +1,7 @@
 package org.dacapo.analysis.util.events;
 
-import org.dacapo.analysis.util.CSVOutputStream;
-import org.dacapo.analysis.util.CSVInputStream;
+import org.dacapo.util.CSVInputStream;
+import org.dacapo.util.CSVOutputStream;
 
 public abstract class EventMonitor extends Event implements EventHasThread {
 

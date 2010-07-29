@@ -173,24 +173,11 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogStaticPointer
 	}
 }
 
-/*
- * Class:     org_dacapo_instrument_Agent
- * Method:    internalAllocReport
- * Signature: (Ljava/lang/Thread;Ljava/lang/Object;Ljava/lang/Class;)V
- */
-JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalAllocReport
-  (JNIEnv *jni_env, jclass agent_klass, jthread thread, jobject object, jclass klass)
-{
-	jlong size = 0;
-	
-	JVMTI_FUNC_PTR(baseEnv,GetObjectSize)(baseEnv,object,&size);
-
-	callbackVMObjectAlloc(baseEnv, jni_env, thread, object, klass, size);	
-}
+#define UNKNOWN_SITE 0
 
 /* Callback for JVMTI_EVENT_VM_OBJECT_ALLOC */
-void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
-                jobject object, jclass object_klass, jlong size)
+static void internalReportAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
+                jobject object, jclass object_klass, jlong size, jint site)
 {
 	if (jvmRunning && !jvmStopped) {
 		jniNativeInterface* jni_table = JNIFunctionTable();
@@ -222,10 +209,33 @@ void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thr
 		log_class(object_klass,object_klass_tag,object_klass_has_new_tag);
 
 		log_field_jlong(size);
+		log_field_jint(site);
 		
 		log_eol();
 		rawMonitorExit(&lockLog);
 	}
+}
+
+/*
+ * Class:     org_dacapo_instrument_Agent
+ * Method:    internalAllocReport
+ * Signature: (Ljava/lang/Thread;Ljava/lang/Object;Ljava/lang/Class;)V
+ */
+JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalAllocReport
+  (JNIEnv *jni_env, jclass agent_klass, jthread thread, jobject object, jclass klass, jint site)
+{
+	jlong size = 0;
+	
+	JVMTI_FUNC_PTR(baseEnv,GetObjectSize)(baseEnv,object,&size);
+
+	internalReportAlloc(baseEnv, jni_env, thread, object, klass, size, site);	
+}
+
+/* Callback for JVMTI_EVENT_VM_OBJECT_ALLOC */
+void JNICALL callbackVMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
+                jobject object, jclass object_klass, jlong size)
+{
+	internalReportAlloc(jvmti, jni_env, thread, object, object_klass, size, UNKNOWN_SITE);
 }
 
 /* Callback for JVMTI_EVENT_OBJECT_FREE */

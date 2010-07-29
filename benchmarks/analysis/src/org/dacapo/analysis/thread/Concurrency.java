@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.dacapo.analysis.util.*;
 import org.dacapo.analysis.util.events.*;
 import org.dacapo.analysis.vm.VM;
 import org.dacapo.analysis.vm.VMClass;
@@ -17,6 +16,7 @@ import org.dacapo.analysis.vm.VMThreadState;
 import org.dacapo.analysis.vm.VMThreadStates;
 
 import org.dacapo.instrument.LogTags;
+import org.dacapo.util.*;
 
 public class Concurrency {
 

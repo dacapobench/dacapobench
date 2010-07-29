@@ -65,6 +65,7 @@ void  setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable);
 void  log_field_string(const char* text);
 void  log_field_string_n(const char* text, int text_length);
 void  log_field_jboolean(jboolean v);
+void  log_field_jint(int v);
 void  log_field_int(int v);
 void  log_field_pointer(const void* p);
 void  log_field_jlong(jlong v);

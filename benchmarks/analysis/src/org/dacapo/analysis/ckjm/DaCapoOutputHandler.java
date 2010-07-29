@@ -4,8 +4,8 @@ import java.io.OutputStream;
 
 import gr.spinellis.ckjm.*;
 
-import org.dacapo.analysis.util.CSVOutputStream;
 import org.dacapo.analysis.util.ClassMetricAccumulator;
+import org.dacapo.util.CSVOutputStream;
 
 public class DaCapoOutputHandler implements CkjmOutputHandler {
 
