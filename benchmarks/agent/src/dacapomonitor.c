@@ -59,13 +59,14 @@ static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 
 	if (res!=JNI_OK) return;
 
-	log_field_string(LOG_PREFIX_METHOD_PREPARE);
-	log_field_current_time();
-	log_field_pointer(method);
-	log_field_jlong(class_tag);
-	log_field_string(name_ptr);
-	log_field_string(signature_ptr);
-	log_eol();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_METHOD_PREPARE);
+	log_field_current_time(buffer);
+	log_field_pointer(buffer, method);
+	log_field_jlong(buffer, class_tag);
+	log_field_string(buffer, name_ptr);
+	log_field_string(buffer, signature_ptr);
+	log_eol(buffer);
 
 	if (name_ptr!=NULL)      JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)name_ptr);
 	if (signature_ptr!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature_ptr);
@@ -117,13 +118,14 @@ void monitor_class(jvmtiEnv *env, JNIEnv *jnienv, jthread thread, jclass klass) 
 
 			res = JVMTI_FUNC_PTR(env,GetFieldName)(env,klass,fields[i],&name_ptr,&signature_ptr,&generic_ptr);
 
-			log_field_string(LOG_PREFIX_VOLATILE);
-			log_field_current_time();
-			log_field_jlong(class_tag);
-			log_field_pointer(fields[i]);
-			log_field_string(name_ptr);
-			log_field_string(signature_ptr);
-			log_eol();
+			void* buffer = log_buffer_get();
+			log_field_string(buffer, LOG_PREFIX_VOLATILE);
+			log_field_current_time(buffer);
+			log_field_jlong(buffer, class_tag);
+			log_field_pointer(buffer, fields[i]);
+			log_field_string(buffer, name_ptr);
+			log_field_string(buffer, signature_ptr);
+			log_eol(buffer);
 
 			if (name_ptr!=NULL)      JVMTI_FUNC_PTR(env,Deallocate)(env,(unsigned char*)name_ptr);
 			if (signature_ptr!=NULL) JVMTI_FUNC_PTR(env,Deallocate)(env,(unsigned char*)signature_ptr);
@@ -165,15 +167,16 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorEnter
 	rawMonitorExit(&lockTag);
 
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_MONITOR_ACQUIRE);
-	log_field_current_time();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_MONITOR_ACQUIRE);
+	log_field_current_time(buffer);
 	
-	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+	log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 	
-	log_field_jlong(object_tag);
-	log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+	log_field_jlong(buffer, object_tag);
+	log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 	
-	log_eol();
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 }
 
@@ -203,15 +206,16 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorExit
 	rawMonitorExit(&lockTag);
 
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_MONITOR_RELEASE);
-	log_field_current_time();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_MONITOR_RELEASE);
+	log_field_current_time(buffer);
 	
-	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+	log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 	
-	log_field_jlong(object_tag);
-	log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+	log_field_jlong(buffer, object_tag);
+	log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 
-	log_eol();
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 }
 
@@ -241,15 +245,16 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogMonitorNotify
 	rawMonitorExit(&lockTag);
 
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_MONITOR_NOTIFY);
-	log_field_current_time();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_MONITOR_NOTIFY);
+	log_field_current_time(buffer);
 	
-	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+	log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 	
-	log_field_jlong(object_tag);
-	log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+	log_field_jlong(buffer, object_tag);
+	log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 
-	log_eol();
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 }
 
@@ -274,15 +279,16 @@ void JNICALL callbackMonitorContendedEnter(jvmtiEnv *jvmti_env, JNIEnv* jni_env,
 		rawMonitorExit(&lockTag);
 	
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTER);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_MONITOR_CONTENTED_ENTER);
+		log_field_current_time(buffer);
 		
-		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+		log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
-		log_field_jlong(object_tag);
-		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+		log_field_jlong(buffer, object_tag);
+		log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 	
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }
@@ -308,15 +314,16 @@ void JNICALL callbackMonitorContendedEntered(jvmtiEnv *jvmti_env, JNIEnv* jni_en
 		rawMonitorExit(&lockTag);
 	
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_MONITOR_CONTENTED_ENTERED);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_MONITOR_CONTENTED_ENTERED);
+		log_field_current_time(buffer);
 		
-		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+		log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
-		log_field_jlong(object_tag);
-		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+		log_field_jlong(buffer, object_tag);
+		log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 	
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }
@@ -342,17 +349,18 @@ void JNICALL callbackMonitorWait(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		rawMonitorExit(&lockTag);
 	
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_MONITOR_WAIT);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_MONITOR_WAIT);
+		log_field_current_time(buffer);
 		
-		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+		log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
-		log_field_jlong(object_tag);
-		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+		log_field_jlong(buffer, object_tag);
+		log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 		
-		log_field_jlong(timeout);
+		log_field_jlong(buffer, timeout);
 	
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }
@@ -378,17 +386,18 @@ void JNICALL callbackMonitorWaited(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread
 		rawMonitorExit(&lockTag);
 	
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_MONITOR_WAITED);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_MONITOR_WAITED);
+		log_field_current_time(buffer);
 		
-		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+		log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 		
-		log_field_jlong(object_tag);
-		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+		log_field_jlong(buffer, object_tag);
+		log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 		
-		log_field_jboolean(timed_out);
+		log_field_jboolean(buffer, timed_out);
 	
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }
@@ -414,17 +423,18 @@ void JNICALL callbackFieldAccess(jvmtiEnv *jvmti_env,JNIEnv* jni_env,jthread thr
 		rawMonitorExit(&lockTag);
 		
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_VOLATILE_ACCESS);
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_VOLATILE_ACCESS);
 
-		log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+		log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 
-		log_field_jlong(object_tag);
-		log_class(object_klass, object_klass_tag, object_klass_has_new_tag);
+		log_field_jlong(buffer, object_tag);
+		log_class(buffer, object_klass, object_klass_tag, object_klass_has_new_tag);
 		
-		log_field_jlong(class_tag);
-		log_field_pointer(field);
+		log_field_jlong(buffer, class_tag);
+		log_field_pointer(buffer, field);
 		
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }

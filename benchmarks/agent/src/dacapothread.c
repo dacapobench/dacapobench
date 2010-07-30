@@ -73,10 +73,11 @@ void thread_live(jvmtiEnv* jvmti, JNIEnv* env) {
 	struct thread_list_s* temp = thread_list_head;
 	while (temp!=NULL) {
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_THREAD_STATUS);
-		log_field_time(&tv);
-		log_field_jlong(temp->tag);
-		log_eol();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_THREAD_STATUS);
+		log_field_time(buffer, &tv);
+		log_field_jlong(buffer, temp->tag);
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 
@@ -162,12 +163,13 @@ void thread_agent_log(JNIEnv *env, jclass klass, jobject thread)
 static void logThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jclass thread_klass, jlong thread_klass_tag, jboolean thread_klass_has_new_tag)
 {
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_THREAD_START);
-	log_field_current_time();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_THREAD_START);
+	log_field_current_time(buffer);
 
-	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
+	log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);
 	
-	log_eol();
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 }
 
@@ -250,12 +252,13 @@ void JNICALL callbackThreadStart(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 static void logThreadEnd(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jclass thread_klass, jlong thread_klass_tag, jboolean thread_klass_has_new_tag)
 {
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_THREAD_STOP);
-	log_field_current_time();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_THREAD_STOP);
+	log_field_current_time(buffer);
 
-	log_thread(thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);	
+	log_thread(buffer, thread, thread_tag, thread_has_new_tag, thread_klass, thread_klass_tag, thread_klass_has_new_tag);	
 	
-	log_eol();
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 }
 
@@ -364,12 +367,13 @@ void threads_states(JNIEnv* env) {
 	temp = thread_list_head;
 	while (temp != NULL) {
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_THREAD_TIME);
-		log_field_time(&tv);
-		log_field_jlong(index++);
-		log_field_jlong(temp->tag);
-		log_field_jlong(temp->diffCPUTime/1000); /* time in microseconds */
-		log_eol();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_THREAD_TIME);
+		log_field_time(buffer, &tv);
+		log_field_jlong(buffer, index++);
+		log_field_jlong(buffer, temp->tag);
+		log_field_jlong(buffer, temp->diffCPUTime/1000); /* time in microseconds */
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 		temp = temp->next;
 	}

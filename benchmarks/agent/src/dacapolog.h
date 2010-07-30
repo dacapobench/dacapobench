@@ -62,19 +62,19 @@ void  callReportHeap(JNIEnv *env);
 void  setReportHeap(JNIEnv *env, jboolean flag);
 void  setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable);
 
-void* log_get_buffer();
-void  log_field_string(const char* text);
-void  log_field_string_n(const char* text, int text_length);
-void  log_field_jboolean(jboolean v);
-void  log_field_jint(int v);
-void  log_field_int(int v);
-void  log_field_pointer(const void* p);
-void  log_field_jlong(jlong v);
-void  log_field_long(long v);
-void  log_field_current_time();
-void  log_thread(jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jobject klass, jlong klass_tag, jboolean klass_has_new_tag);
-void  log_class(jobject klass, jlong klass_tag, jboolean klass_has_new_tag);
-void  log_field_time(struct timeval* tv);
-void  log_eol();
+void* log_buffer_get();
+void  log_field_string(void* buffer, const char* text);
+void  log_field_string_n(void* buffer, const char* text, int text_length);
+void  log_field_jboolean(void* buffer, jboolean v);
+void  log_field_jint(void* buffer, int v);
+void  log_field_int(void* buffer, int v);
+void  log_field_pointer(void* buffer, const void* p);
+void  log_field_jlong(void* buffer, jlong v);
+void  log_field_long(void* buffer, long v);
+void  log_field_current_time(void* buffer);
+void  log_thread(void* buffer, jthread thread, jlong thread_tag, jboolean thread_has_new_tag, jobject klass, jlong klass_tag, jboolean klass_has_new_tag);
+void  log_class(void* buffer, jobject klass, jlong klass_tag, jboolean klass_has_new_tag);
+void  log_field_time(void* buffer, struct timeval* tv);
+void  log_eol(void* buffer);
 
 #endif

@@ -775,14 +775,15 @@ static void reportMethod(char* class_name, jlong class_tag, jmethodID method) {
 
 	if (res!=JNI_OK) return;
 
-	log_field_string(LOG_PREFIX_METHOD_PREPARE);
-	log_field_current_time();
-	log_field_string(class_name);
-	log_field_jlong((jlong)method);
-	/* log_field_jlong(class_tag); */
-	log_field_string(name_ptr);
-	log_field_string(signature_ptr);
-	log_eol();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_METHOD_PREPARE);
+	log_field_current_time(buffer);
+	log_field_string(buffer, class_name);
+	log_field_jlong(buffer, (jlong)method);
+	/* log_field_jlong(buffer, class_tag); */
+	log_field_string(buffer, name_ptr);
+	log_field_string(buffer, signature_ptr);
+	log_eol(buffer);
 
 	if (name_ptr!=NULL)      JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)name_ptr);
 	if (signature_ptr!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature_ptr);
@@ -824,11 +825,12 @@ static void processClassPrepare(jvmtiEnv *jvmti_env,
 
 	int i=0;	
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_CLASS_PREPARE);
-	log_field_current_time();
-	// log_field_jlong(class_tag);
-	log_field_string(signature);
-	log_eol();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_CLASS_PREPARE);
+	log_field_current_time(buffer);
+	// log_field_jlong(buffer, class_tag);
+	log_field_string(buffer, signature);
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 	while(i<method_count) {
 		rawMonitorEnter(&lockLog);

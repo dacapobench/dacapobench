@@ -51,13 +51,14 @@ void JNICALL callbackMethodEntry(jvmtiEnv *jvmti_env, JNIEnv* jni_env, jthread t
 		rawMonitorExit(&lockTag);
 
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_METHOD_ENTER);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_METHOD_ENTER);
+		log_field_current_time(buffer);
 		
-		log_thread(thread, thread_tag, thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
+		log_thread(buffer, thread, thread_tag, thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
 
-		log_field_jlong((jlong)method);
-		log_eol();
+		log_field_jlong(buffer, (jlong)method);
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }

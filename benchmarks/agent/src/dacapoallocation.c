@@ -38,9 +38,10 @@ void allocation_callbacks(const jvmtiCapabilities* capabilities, jvmtiEventCallb
 static jint forceGC(JNIEnv *env) {
 	gcCount = 0;
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_GC);
-	log_field_current_time();
-	log_eol();
+	void* buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_GC);
+	log_field_current_time(buffer);
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 	jint res = JVMTI_FUNC_PTR(baseEnv,ForceGarbageCollection)(baseEnv);
 	setReportHeap(env,!FALSE);
@@ -102,21 +103,22 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogPointerChange
 		
 		/* trace allocation */
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_POINTER);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_POINTER);
+		log_field_current_time(buffer);
 		
-		log_thread(thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
+		log_thread(buffer, thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
 		
-		log_field_jlong(object_tag);
-		log_class(object_klass,object_klass_tag,object_klass_has_new_tag);
+		log_field_jlong(buffer, object_tag);
+		log_class(buffer, object_klass,object_klass_tag,object_klass_has_new_tag);
 		
-		log_field_jlong(before_tag);
-		log_class(before_klass,before_klass_tag,before_klass_has_new_tag);
+		log_field_jlong(buffer, before_tag);
+		log_class(buffer, before_klass,before_klass_tag,before_klass_has_new_tag);
 		
-		log_field_jlong(after_tag);
-		log_class(after_klass,after_klass_tag,after_klass_has_new_tag);
+		log_field_jlong(buffer, after_tag);
+		log_class(buffer, after_klass,after_klass_tag,after_klass_has_new_tag);
 		
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }
@@ -155,20 +157,21 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLogStaticPointer
 
 		/* trace allocation */
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_STATIC_POINTER);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_STATIC_POINTER);
+		log_field_current_time(buffer);
 
-		log_thread(thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
+		log_thread(buffer, thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
 
-		log_class(object_klass,object_klass_tag,object_klass_has_new_tag);
+		log_class(buffer, object_klass,object_klass_tag,object_klass_has_new_tag);
 
-		log_field_jlong(before_tag);
-		log_class(before_klass,before_klass_tag,before_klass_has_new_tag);
+		log_field_jlong(buffer, before_tag);
+		log_class(buffer, before_klass,before_klass_tag,before_klass_has_new_tag);
 
-		log_field_jlong(after_tag);
-		log_class(after_klass,after_klass_tag,after_klass_has_new_tag);
+		log_field_jlong(buffer, after_tag);
+		log_class(buffer, after_klass,after_klass_tag,after_klass_has_new_tag);
 
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }
@@ -200,18 +203,19 @@ static void internalReportAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread
 
 		/* trace allocation */
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_ALLOCATION);
-		log_field_current_time();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_ALLOCATION);
+		log_field_current_time(buffer);
 
-		log_thread(thread,thread_tag,thread_has_new_tag,object_klass,object_klass_tag,object_klass_has_new_tag);
+		log_thread(buffer, thread,thread_tag,thread_has_new_tag,object_klass,object_klass_tag,object_klass_has_new_tag);
 
-		log_field_jlong(tag);
-		log_class(object_klass,object_klass_tag,object_klass_has_new_tag);
+		log_field_jlong(buffer, tag);
+		log_class(buffer, object_klass,object_klass_tag,object_klass_has_new_tag);
 
-		log_field_jlong(size);
-		log_field_jint(site);
+		log_field_jlong(buffer, size);
+		log_field_jint(buffer, site);
 		
-		log_eol();
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }
@@ -244,10 +248,11 @@ void JNICALL callbackObjectFree(jvmtiEnv *jvmti, jlong tag)
 	if (jvmRunning && !jvmStopped) {
 		/* trace free */
 		rawMonitorEnter(&lockLog);
-		log_field_string(LOG_PREFIX_FREE);
-		log_field_current_time();
-		log_field_jlong(tag);
-		log_eol();
+		void* buffer = log_buffer_get();
+		log_field_string(buffer, LOG_PREFIX_FREE);
+		log_field_current_time(buffer);
+		log_field_jlong(buffer, tag);
+		log_eol(buffer);
 		rawMonitorExit(&lockLog);
 	}
 }

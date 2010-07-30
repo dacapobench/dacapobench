@@ -37,6 +37,7 @@ void call_chain_logon(JNIEnv* env) {
 #define START_FRAME 4
 
 void log_call_chain(JNIEnv *jni_env, jclass klass, jobject thread) {
+	void* buffer = NULL;
 	jniNativeInterface* jni_table = JNIFunctionTable();
 
 	jlong thread_tag = 0;
@@ -56,9 +57,10 @@ void log_call_chain(JNIEnv *jni_env, jclass klass, jobject thread) {
 	err = JVMTI_FUNC_PTR(baseEnv,GetStackTrace)(baseEnv, thread, START_FRAME, MAX_NUMBER_OF_FRAMES,frames, &count);
 
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_CALL_CHAIN_START);
-	log_thread(thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
-	log_eol();
+	buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_CALL_CHAIN_START);
+	log_thread(buffer, thread,thread_tag,thread_has_new_tag,thread_klass,thread_klass_tag,thread_klass_has_new_tag);
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 
 	int i;
@@ -73,11 +75,12 @@ void log_call_chain(JNIEnv *jni_env, jclass klass, jobject thread) {
 		jboolean klass_has_new_tag = getTag(klass,&klass_tag);
 		rawMonitorExit(&lockTag);
 
-		rawMonitorEnter(&lockLog);		
-		log_field_string(LOG_PREFIX_CALL_CHAIN_FRAME);
-		log_field_jlong(thread_tag);
-		log_field_jlong((jlong)i);
-		log_class(klass,klass_tag,klass_has_new_tag);
+		rawMonitorEnter(&lockLog);
+		buffer = log_buffer_get();		
+		log_field_string(buffer, LOG_PREFIX_CALL_CHAIN_FRAME);
+		log_field_jlong(buffer, thread_tag);
+		log_field_jlong(buffer, (jlong)i);
+		log_class(buffer, klass,klass_tag,klass_has_new_tag);
 
     	char* name_ptr = NULL;
     	char* signature_ptr  = NULL;
@@ -85,17 +88,17 @@ void log_call_chain(JNIEnv *jni_env, jclass klass, jobject thread) {
 
     	jint res = JVMTI_FUNC_PTR(baseEnv,GetMethodName)(baseEnv,frames[i].method,&name_ptr,&signature_ptr,&generic_ptr);
 
-    	log_field_string(LOG_PREFIX_METHOD_PREPARE);
-    	log_field_pointer(frames[i].method);
-    	log_field_jlong(class_tag);
-    	log_field_string(name_ptr);
-    	log_field_string(signature_ptr);
+    	log_field_string(buffer, LOG_PREFIX_METHOD_PREPARE);
+    	log_field_pointer(buffer, frames[i].method);
+    	log_field_jlong(buffer, class_tag);
+    	log_field_string(buffer, name_ptr);
+    	log_field_string(buffer, signature_ptr);
 
     	if (name_ptr!=NULL)      JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)name_ptr);
     	if (signature_ptr!=NULL) JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)signature_ptr);
     	if (generic_ptr!=NULL)   JVMTI_FUNC_PTR(baseEnv,Deallocate)(baseEnv,(unsigned char*)generic_ptr);
 
-    	log_eol();
+    	log_eol(buffer);
 		rawMonitorExit(&lockLog);		
 	}
 
@@ -119,9 +122,10 @@ void log_call_chain(JNIEnv *jni_env, jclass klass, jobject thread) {
 	*/
 
 	rawMonitorEnter(&lockLog);
-	log_field_string(LOG_PREFIX_CALL_CHAIN_STOP);
-	log_field_jlong(thread_tag);
-	log_eol();
+	buffer = log_buffer_get();
+	log_field_string(buffer, LOG_PREFIX_CALL_CHAIN_STOP);
+	log_field_jlong(buffer, thread_tag);
+	log_eol(buffer);
 	rawMonitorExit(&lockLog);
 }
 
