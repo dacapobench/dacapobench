@@ -578,7 +578,7 @@ static void generateFileName(char* file_name, int max_file_name_len) {
 
 static char* generateTmpClassFileName() {
 	int   agentOptionsLength = strlen(agentOptions);
-	int   slashLength = (agentOptions<=0 || agentOptions[agentOptionsLength-1]=='/')?0:1;
+	int   slashLength = (agentOptionsLength<=0 || agentOptions[agentOptionsLength-1]=='/')?0:1;
 	char* classFileName = (char*)malloc(sizeof(char)*(agentOptionsLength+slashLength+strlen(TMP_FILE_NAME)+1));
 
 	if (0<agentOptionsLength) {
