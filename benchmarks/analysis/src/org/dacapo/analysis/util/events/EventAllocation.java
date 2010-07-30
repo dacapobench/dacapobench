@@ -18,11 +18,12 @@ public class EventAllocation extends Event implements EventHasThread {
 	private String threadClass;
 	private String threadName;
 	private long   size;
+	private int    siteId;
 	
 	public EventAllocation(long time,      long objectTag,      
 						   long classTag,  String className,
 						   long threadTag, long threadClassTag, String threadClassName, String threadName,
-						   long size) {
+						   long size,      int siteId) {
 		super(time);
 		this.objectTag       = objectTag;
 		this.allocClassTag   = classTag;
@@ -32,6 +33,7 @@ public class EventAllocation extends Event implements EventHasThread {
 		this.threadClass     = threadClassName;
 		this.threadName      = threadName;
 		this.size            = size;
+		this.siteId          = siteId;
 	}
 
 	public String getLogPrefix() {
@@ -69,6 +71,7 @@ public class EventAllocation extends Event implements EventHasThread {
 	public void setThreadName(String threadName) { this.threadName = threadName; }
 	
 	public long getSize() { return size; }
+	public int  getSiteId() { return siteId; }
 	
 	EventAllocation(CSVInputStream is) throws NoFieldAvailable, ParseError, EventParseException {
 		super(is);
@@ -81,6 +84,7 @@ public class EventAllocation extends Event implements EventHasThread {
 		this.allocClass      = is.nextFieldString();
 
 		this.size            = is.nextFieldLong();
+		this.siteId          = is.nextFieldInt();
 		
 		if (is.numberOfFieldsLeft()!=0 && this instanceof EventAllocation)
 			throw new EventParseException("additional field",null);

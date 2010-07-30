@@ -88,6 +88,15 @@ int                 fileNameSequence      = 0;
 long                logFileSequenceLength = 0;
 jboolean            check_limit = FALSE;
 
+#define BUFFER_SIZE 16384
+
+struct buffer_s {
+	struct buffer_s* next;
+    char* buffer;
+    int   buffer_len;
+    int   buffer_pos;
+} *buffer_head = NULL;
+
 static void openLogFile() {
 	char logFileName[LOG_FILE_NAME_MAX+SEQUENCE_MAX];
 	int  fileSeq = fileNameSequence++;
@@ -403,6 +412,25 @@ static char  end_of_line     = '\n';
 
 /* */
 
+void* log_get_buffer() {
+	struct buffer_s* buffer = NULL;
+	if (buffer_head == NULL) {
+		buffer = (struct buffer_s*)malloc(sizeof(struct buffer_s));
+		buffer->buffer = (char*)malloc(sizeof(char)*BUFFER_SIZE);
+		buffer->buffer_len = BUFFER_SIZE;
+	} else {
+		buffer = buffer_head;
+		buffer_head = buffer_head->next;
+	}
+	buffer->buffer_pos = 0;
+	return buffer;
+}
+
+void log_put_buffer(void* buffer) {
+	((struct buffer_s*)buffer)->next = buffer_head;
+	buffer_head = (struct buffer_s*)buffer;
+}
+
 static void write_field(const char* text, int text_length, _Bool use_delimiter) {
   if (logFile == FILE_IS_CLOSED) {
   	fprintf(stderr,"LOG_FILE IS CLOSED\n");
@@ -557,6 +585,35 @@ void log_eol() {
   	openLogFile();
   }  
 }
+
+void log_buffer_ensure_space(struct buffer_s* b, int size) {
+	if ((b->buffer_len - b->buffer_pos) < 0) {
+		char* tmp = (char*)malloc(sizeof(char)*(2*b->buffer_len));
+		memcpy(tmp, b->buffer, sizeof(char)*b->buffer_len);
+		free(b->buffer);
+		b->buffer = tmp;
+	}
+}
+
+/*
+void log_eol(void* buffer) {
+	struct buffer_s* b = buffer;
+	
+	log_buffer_ensure_space(b, 1);
+	
+	b->buffer[b->buffer_pos++] = end_of_line;
+	
+	WRITE(b->buffer,sizeof(char),b->buffer_pos);
+	first_field = TRUE;
+	FLUSH();
+	
+	log_put_buffer(b);
+	
+	if (check_limit && LOG_FILE_LIMIT <= logFileSequenceLength) {
+		openLogFile();
+	}
+}
+*/
 
 /*
  * Class:     org_dacapo_instrument_Agent

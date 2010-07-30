@@ -62,6 +62,7 @@ void  callReportHeap(JNIEnv *env);
 void  setReportHeap(JNIEnv *env, jboolean flag);
 void  setReportCallChain(JNIEnv *env, jlong frequency, jboolean enable);
 
+void* log_get_buffer();
 void  log_field_string(const char* text);
 void  log_field_string_n(const char* text, int text_length);
 void  log_field_jboolean(jboolean v);
