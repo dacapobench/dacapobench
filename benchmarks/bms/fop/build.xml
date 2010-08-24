@@ -17,7 +17,7 @@
 
 	<import file="../common.xml" />
 
-	<property name="bm-harness-classpath" value="${bm-jars}/fop.jar" />
+	<!-- <property name="bm-harness-classpath" value="${bm-jars}/fop.jar" /> -->
 	<property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}" />
 
 	<target name="unpack" depends="untar, patch" />

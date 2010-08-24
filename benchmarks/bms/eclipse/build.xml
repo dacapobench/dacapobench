@@ -37,15 +37,6 @@
 		</antcall>
 	</target>
 
-	<target name="bm-harness">
-		<javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" includes="org/dacapo/harness/*.java"
-                debug="true" debuglevel="lines,vars,source">
-			<classpath>
-				<pathelement path="${harness-classpath}"/>
-			</classpath>
-		</javac>
-	</target>
-
 	<target name="unpack" depends="untar"/>
 
 	<target name="bm-build">

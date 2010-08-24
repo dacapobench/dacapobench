@@ -50,7 +50,7 @@ public class DacapoClassLoader extends URLClassLoader {
           System.out.println("  " + url.toString());
         }
       }
-      rtn = new DacapoClassLoader(urls, Thread.currentThread().getContextClassLoader());
+      rtn = new DacapoClassLoader(urls, ClassLoader.getSystemClassLoader());
     } catch (Exception e) {
       System.err.println("Unable to create loader for " + config.name + ":");
       e.printStackTrace();

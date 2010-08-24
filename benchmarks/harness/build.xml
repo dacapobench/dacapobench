@@ -2,13 +2,15 @@
     <description>DaCapo benchmark harness</description>
 	
     <import file="../util.xml"/>
+	<import file="../libs/libs.xml"/>
 	
     <property file="ant/local.properties"/>
     <property file="ant/dacapo.properties"/>
     
     <property name="base-dir" value="harness"/>
     <property name="src" value="${base-dir}/src"/>
-    <property name="output-dir" value="${base-dir}/dist"/>
+	<property name="output-parent-dir" value="${base-dir}/dist"/>
+    <property name="output-dir" value="${output-parent-dir}/harness"/>
     <property name="build-dir" value="${base-dir}/build"/>
     
     <property name="harness-downloads" value="${base-dir}/downloads"/>
@@ -22,7 +24,7 @@
     <target name="all" depends="clean, init, harness, jar"/>
     
     <target name="clean">
-        <delete dir="${output-dir}"/>
+        <delete dir="${output-parent-dir}"/>
         <delete dir="${build-dir}"/>
     </target>
     
@@ -53,17 +55,20 @@
     </target>
 	
     <target name="manifest">
-        <copy file="${src}/META-INF/MANIFEST.MF" todir="${output-dir}"/>
-        <echo file="${output-dir}/MANIFEST.MF" append="yes">Specification-Version: ${build.nickname}${line.separator}</echo>
-        <echo file="${output-dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
+        <copy file="${src}/META-INF/MANIFEST.MF" todir="${output-parent-dir}"/>
+        <echo file="${output-parent-dir}/MANIFEST.MF" append="yes">Specification-Version: ${build.nickname}${line.separator}</echo>
+        <echo file="${output-parent-dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
     </target>
 
-    <target name="harness" depends="init,cli,parser,manifest">
+    <target name="harness" depends="init,dacapo-digest,cli,parser,manifest">
+    	<!-- include digest --> 
+    	<unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
-        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${output-dir}" />
+    	<copy file="${output-dir}/Harness.class" todir="${output-parent-dir}" />
+        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${output-parent-dir}" />
     </target>
     
     <target name="jar">
-        <jar jarfile="${jar-target}" basedir="${output-dir}" update="false" manifest="${output-dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+        <jar jarfile="${jar-target}" basedir="${output-parent-dir}" update="false" manifest="${output-parent-dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
     </target>
 </project>

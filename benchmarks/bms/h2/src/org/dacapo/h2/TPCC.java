@@ -24,6 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
@@ -36,7 +37,6 @@ import org.apache.derbyTesting.system.oe.direct.Standard;
 import org.apache.derbyTesting.system.oe.load.ThreadInsert;
 import org.apache.derbyTesting.system.oe.util.OERandom;
 
-import org.dacapo.parser.Config;
 import org.h2.tools.RunScript;
 import org.h2.tools.Backup;
 import org.h2.tools.Restore;
@@ -95,7 +95,9 @@ public class TPCC {
   private TPCCReporter reporter = new TPCCReporter();
   private OERandom[] rands;
 
-  private Config config;
+  private TreeMap<String,String>   threadMap;
+  private TreeMap<String,String[]> argMap;
+  
   private File scratch;
   private boolean verbose;
   private boolean preserve;
@@ -120,12 +122,15 @@ public class TPCC {
   final static long SEED = 897523978813691l;
   final static int SEED_STEP = 100000;
 
-  public static TPCC make(Config config, File scratch, Boolean verbose, Boolean preserve) throws Exception {
-    return new TPCC(config, scratch, verbose, preserve);
+  
+     
+  public static TPCC make(TreeMap<String,String> threadMap, TreeMap<String,String[]> argMap, File scratch, Boolean verbose, Boolean preserve) throws Exception {
+    return new TPCC(threadMap, argMap, scratch, verbose, preserve);
   }
 
-  public TPCC(Config config, File scratch, boolean verbose, boolean preserve) throws Exception {
-    this.config = config;
+  public TPCC(TreeMap<String,String> threadMap, TreeMap<String,String[]> argMap, File scratch, boolean verbose, boolean preserve) throws Exception {
+	this.threadMap = threadMap;
+	this.argMap = argMap;
     this.scratch = scratch;
     this.verbose = verbose;
     this.preserve = preserve;
@@ -653,9 +658,9 @@ public class TPCC {
 
   // helper function for interpreting the configuration data
   private void configure() {
-    String[] args = config.preprocessArgs(size, scratch);
-
-    this.numberOfTerminals = config.getThreadCount(size);
+    String[] args = argMap.get(size);
+    
+    this.numberOfTerminals = Integer.parseInt(threadMap.get(size));
 
     for (int i = 0; i < args.length; i++) {
       if ("--numberOfTerminals".equalsIgnoreCase(args[i])) {
