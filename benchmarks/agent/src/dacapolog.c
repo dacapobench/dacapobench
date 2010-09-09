@@ -38,33 +38,6 @@ gzFile                 gzLogFile;
 
 jboolean			gzLog = FALSE;
 
-#define CLOSE()       { \
-  if (gzLog) gzclose(gzLogFile); \
-  close(logFile); \
-  logFile = FILE_IS_CLOSED; \
-}
-#define OPEN(f)        { \
-  FILE_TYPE tmp = logFile; \
-  gzFile    tmpgz = gzLogFile; \
-  logFile = open(f,FILE_FLAGS,FILE_MODE); \
-  if (gzLog) { \
-    gzFile localtmpgz = gzdopen(logFile,GZ_FILE_MODE); \
-    gzbuffer(localtmpgz, GZ_BUFFER_SIZE); \
-    gzLogFile = localtmpgz; \
-  } \
-  if (tmp != FILE_IS_CLOSED) { \
-    if (gzLog) gzclose(tmpgz); \
-    close(tmp); \
-  } \
-}
-    
-#define FLUSH()
-
-#define WRITE(b,e,n) { \
-  if (gzLog) { logFileSequenceLength += gzwrite(gzLogFile,b,(e)*(n)); } \
-  else { logFileSequenceLength += write(logFile,b,(e)*(n)); } \
-}
-
 jboolean			logState = FALSE;
 jboolean            localInitDone = FALSE;
 struct timeval      startTime;
@@ -97,6 +70,40 @@ struct buffer_s {
     int   buffer_pos;
 } *buffer_head = NULL;
 
+static void log_close() {
+  if (gzLog) 
+    gzclose(gzLogFile);
+  close(logFile);
+  logFile = FILE_IS_CLOSED;
+}
+
+static void log_open(const char* f) {
+  FILE_TYPE tmp = logFile;
+  gzFile    tmpgz = gzLogFile;
+  logFile = open(f,FILE_FLAGS,FILE_MODE);
+  if (gzLog) {
+    gzFile localtmpgz = gzdopen(logFile,GZ_FILE_MODE);
+    gzbuffer(localtmpgz, GZ_BUFFER_SIZE);
+    gzLogFile = localtmpgz;
+  }
+  if (tmp != FILE_IS_CLOSED) {
+    if (gzLog) gzclose(tmpgz);
+    close(tmp);
+  }
+}
+    
+static void log_flush() {
+  return;
+}
+
+static void log_write(struct buffer_s* b) {
+  if (gzLog) {
+    logFileSequenceLength += gzwrite(gzLogFile,b->buffer,sizeof(char)*(b->buffer_pos)); 
+  } else {
+    logFileSequenceLength += write(logFile,b->buffer,sizeof(char)*(b->buffer_pos));
+  }
+}
+
 static void openLogFile() {
 	char logFileName[LOG_FILE_NAME_MAX+SEQUENCE_MAX];
 	int  fileSeq = fileNameSequence++;
@@ -113,7 +120,7 @@ static void openLogFile() {
 			sprintf(logFileName,"%s-%d.%s",baseLogFileName,fileSeq,baseLogFileExt);
 	}
 	
-	OPEN(logFileName);
+	log_open(logFileName);
 	
 	logFileSequenceLength = 0;
 }
@@ -124,7 +131,7 @@ _Bool logFileOpen() {
 
 void  dacapo_log_stop() {
     if (logFile != FILE_IS_CLOSED)
-    	CLOSE();
+    	log_close();
 }
 
 void setLogFileName(const char* log_file) {
@@ -217,12 +224,14 @@ JNIEXPORT void JNICALL Java_org_dacapo_instrument_Agent_internalLocalInit
 
 	log_java_class                 = (*env)->NewGlobalRef(env, klass);
 	
-	char tmp[1024];
-	if (isSelected(OPT_INTERVAL,tmp)) {
+	char* tmp = NULL;
+	if (isSelected(OPT_INTERVAL,&tmp)) {
 		int value = atoi(tmp);
 		
 		if (value > 0)
 			(*env)->SetStaticLongField(env,log_java_class,agentIntervalTimeID,(jlong)value);
+
+	    free(tmp);
 	}
 	
 	localInitDone = !FALSE;
@@ -597,9 +606,9 @@ void log_eol(void* buffer) {
 	
   b->buffer[b->buffer_pos++] = end_of_line;
 	
-  WRITE(b->buffer,sizeof(char),b->buffer_pos);
+  log_write(b);
   first_field = TRUE;
-  FLUSH();
+  log_flush();
 	
   log_buffer_put(b);
 	

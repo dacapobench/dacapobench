@@ -71,6 +71,6 @@ public class Harness {
     } else
       urls = new URL[] { harnessJarURL };
 
-    return new URLClassLoader(urls);
+    return URLClassLoader.newInstance(urls, classLoader);
   }
 }
