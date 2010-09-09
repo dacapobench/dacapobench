@@ -107,7 +107,7 @@
 	<target name="build-agent-linux" if="linux">
 		<mkdir dir="${agent-dir}/build/agent" />
 		<copy todir="${agent-dir}/build/agent" >
-			<fileset dir="${agent-dir}/src">
+			<fileset dir="${agent-dir}/c/src">
 				<include name="**.c"/>
 				<include name="**.h"/>
 				<include name="Makefile"/>
