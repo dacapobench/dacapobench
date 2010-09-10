@@ -71,6 +71,9 @@ BUILDING:
     <property name="log.build.pass" value="${log.dir}/${build.time}/pass.txt"/>
     <property name="log.build.fail" value="${log.dir}/${build.time}/fail.txt"/>
 
+    <property name="dacapo.build.dir" value="${basedir}/build"/>
+    <property name="dacapo.src.dir" value="${basedir}/src"/>
+
     <target name="check-svn-present">
         <available property="svn.present" file=".svn" type="dir"/>
         <property name="svn.exe" value="svn"/>
@@ -192,10 +195,34 @@ BUILDING:
         <!-- Create the time stamp -->
         <tstamp/>
         <delete dir="${log.build.dir}" />
+        <delete dir="${dacapo.build.dir}" />
+
         <mkdir dir="${log.build.dir}" />
+        <mkdir dir="${dacapo.build.dir}" />
 
         <echo>build.nickname=${build.nickname}</echo>
         <echo>build.version=${build.version}</echo>
+    </target>
+
+    <!-- =================================
+         target: bootstrap for running harness
+         ================================= -->
+    <target name="bootstrap" depends="init">
+        <javac srcdir="${dacapo.src.dir}" destdir="${dacapo.build.dir}"/>
+
+        <copy file="${basedir}/LICENSE-2.0.txt" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/README.txt" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.dir}"/>
+
+        <copy file="${dacapo.src.dir}/META-INF/MANIFEST.MF" todir="${dacapo.build.dir}"/>
+        <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Specification-Version: ${build.nickname}${line.separator}</echo>
+        <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
+
+        <jar jarfile="${jar-target}" basedir="${dacapo.build.dir}" update="false" manifest="${dacapo.build.dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+    </target>
+
+    <target name="clean-bootstrap" depends="init">
+        <delete dir="${dacpao.build.dir}"/>
     </target>
 
     <!-- ================================= 
@@ -209,10 +236,51 @@ BUILDING:
     <!-- ================================= 
          target: harness           
          ================================= -->
-    <target name="harness" depends="init" description="compile the source ">
+    <target name="harness" depends="init,bootstrap" description="compile the source ">
         <ant antfile="harness/build.xml"/>
     </target>
 
+    <target name="clean-harness" depends="init">
+        <ant antfile="harness/build.xml" target="clean"/>
+    </target>
+
+    <!-- *************************************************************************** -->
+    <!--                            Clean                                            -->
+    <!-- *************************************************************************** -->
+
+    <macrodef name="clean.bm">
+        <attribute name="benchmark"/>
+        <sequential>
+            <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="clean-@{benchmark}-status">
+                <arg value="-Dtoolsdir=${toolsdir}"/>
+                <arg value="-Dbuild.time=${build.time}"/>
+                <arg value="-Dlog.build.dir=${log.build.dir}"/>
+                <arg value="-buildfile"/>
+                <arg value="bms/@{benchmark}/build.xml"/>
+                <arg value="clean"/>
+            </exec>
+        </sequential>
+    </macrodef>
+ 
+    <target name="clean-benchmarks" depends="init">
+        <clean.bm benchmark="avrora"/>
+        <clean.bm benchmark="batik"/>
+        <clean.bm benchmark="h2"/>
+        <clean.bm benchmark="eclipse"/>
+        <clean.bm benchmark="fop"/>
+        <clean.bm benchmark="jython"/>
+        <clean.bm benchmark="luindex"/>
+        <clean.bm benchmark="lusearch"/>
+        <clean.bm benchmark="pmd"/>
+        <clean.bm benchmark="sunflow"/>
+        <clean.bm benchmark="tomcat"/>
+        <clean.bm benchmark="tradebeans"/>
+        <clean.bm benchmark="tradesoap"/>
+        <clean.bm benchmark="xalan"/>
+    </target>
+
+    <target name="clean" depends="clean-benchmarks,clean-harness,clean-bootstrap"/>
+  
     <!-- *************************************************************************** -->
     <!--                            Build                                            -->
     <!-- *************************************************************************** -->

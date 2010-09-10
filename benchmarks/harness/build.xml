@@ -54,21 +54,13 @@
         </unjar>
     </target>
     
-    <target name="manifest">
-        <copy file="${src}/META-INF/MANIFEST.MF" todir="${output-parent-dir}"/>
-        <echo file="${output-parent-dir}/MANIFEST.MF" append="yes">Specification-Version: ${build.nickname}${line.separator}</echo>
-        <echo file="${output-parent-dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
-    </target>
-
-    <target name="harness" depends="init,dacapo-digest,cli,parser,manifest">
+    <target name="harness" depends="init,dacapo-digest,cli,parser">
         <!-- include digest --> 
         <unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
-        <copy file="${output-dir}/Harness.class" todir="${output-parent-dir}" />
-        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${output-parent-dir}" />
     </target>
     
     <target name="jar">
-        <jar jarfile="${jar-target}" basedir="${output-parent-dir}" update="false" manifest="${output-parent-dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+        <jar jarfile="${jar-target}" basedir="${output-parent-dir}" update="true"/>
     </target>
 </project>
