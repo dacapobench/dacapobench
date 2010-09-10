@@ -7,28 +7,28 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="lucene" default="all" basedir="../..">
-	<description>lucene library, required by lusearch and luindex</description>
-	<property file="ant/dacapo.properties"/>
+    <description>lucene library, required by lusearch and luindex</description>
+    <property file="ant/dacapo.properties"/>
 
-	<property name="lib-name" value="lucene"/>
-	<property name="lib-major-version" value="2.4"/>
-	<property name="lib-version" value="${lib-major-version}.1"/>
-	<property name="lib-url" value="${apache.dl.url}/lucene/java"/>
-	<property name="lib-src" value="lucene-${lib-version}-src.tar.gz"/>
+    <property name="lib-name" value="lucene"/>
+    <property name="lib-major-version" value="2.4"/>
+    <property name="lib-version" value="${lib-major-version}.1"/>
+    <property name="lib-url" value="${apache.dl.url}/lucene/java"/>
+    <property name="lib-src" value="lucene-${lib-version}-src.tar.gz"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<property name="lib-build-top" value="${lib-build-dir}/lucene-${lib-version}"/>
+    <property name="lib-build-top" value="${lib-build-dir}/lucene-${lib-version}"/>
 
-	<target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar"/>
 
-	<target name="build">
-		<ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
-		<ant antfile="build.xml" target="jar-demo" dir="${lib-build-top}" inheritall="false"/>
-	</target>
+    <target name="build">
+        <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
+        <ant antfile="build.xml" target="jar-demo" dir="${lib-build-top}" inheritall="false"/>
+    </target>
 
-	<target name="jar">
-		<copy file="${lib-build-top}/build/lucene-core-${lib-major-version}.jar" todir="${lib-jars}"/>
-		<copy file="${lib-build-top}/build/lucene-demos-${lib-major-version}.jar" todir="${lib-jars}"/>
-	</target>
+    <target name="jar">
+        <copy file="${lib-build-top}/build/lucene-core-${lib-major-version}.jar" todir="${lib-jars}"/>
+        <copy file="${lib-build-top}/build/lucene-demos-${lib-major-version}.jar" todir="${lib-jars}"/>
+    </target>
 </project>

@@ -7,38 +7,38 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="bcel" default="all" basedir="../..">
-	<description>BCEL library</description>
+    <description>BCEL library</description>
 
-	<property environment="env"/>
+    <property environment="env"/>
 
-	<property file="ant/dacapo.properties"/>
+    <property file="ant/dacapo.properties"/>
 
-	<property name="lib-name" value="bcel"/>
+    <property name="lib-name" value="bcel"/>
 
     <property name="lib-version" value="5.2"/>
     <property name="lib-url" value="http://apache.wildit.net.au/jakarta/${lib-name}/source"/>
     <property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
-	<property name="lib-jar" value="${lib-name}-${lib-version}.jar"/>
+    <property name="lib-jar" value="${lib-name}-${lib-version}.jar"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
     <target name="unpack" depends="untar">
             <patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" strip="1" ignorewhitespace="yes"/>
     </target>
 
-	<target name="jar" depends="build">
-		<copy file="${lib-build-dir}/${lib-name}-${lib-version}/target/${lib-jar}" tofile="${lib-output-dir}/jar/${lib-jar}" />
-	</target>
+    <target name="jar" depends="build">
+        <copy file="${lib-build-dir}/${lib-name}-${lib-version}/target/${lib-jar}" tofile="${lib-output-dir}/jar/${lib-jar}" />
+    </target>
 
-	<target name="build" depends="build.init,data">
-		<ant dir="${lib-build-dir}/${lib-name}-${lib-version}" />
-	</target>
+    <target name="build" depends="build.init,data">
+        <ant dir="${lib-build-dir}/${lib-name}-${lib-version}" />
+    </target>
 
-	<target name="build.init">
-	</target>
+    <target name="build.init">
+    </target>
 
-	<target name="data" depends="build.init">
-	</target>
-	
+    <target name="data" depends="build.init">
+    </target>
+    
 </project>
 

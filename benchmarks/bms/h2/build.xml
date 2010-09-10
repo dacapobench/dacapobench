@@ -7,29 +7,29 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="h2" default="all" basedir="../..">
-	<description>DaCapo h2 benchmark</description>
-	<property file="dacapo.properties"/>
+    <description>DaCapo h2 benchmark</description>
+    <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="h2"/>
+    <property name="bm-name" value="h2"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<target name="bm-build" depends="junit,h2,derby">
-		<javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"
-	            sourcepath="${bm-src-dir}"
-	            source="1.5">
-			<classpath>
-				<pathelement location="${derbytesting-jar}"/>
-				<pathelement location="${h2-jar}"/>
-				<pathelement location="${junit-jar}"/>
-			</classpath>
-		</javac>
-		<jar destfile="${bm-jars}/tpcc.jar">
-			<fileset dir="${bm-build-dir}">
-				<include name="org/dacapo/h2/**"/>
-			</fileset>
-		</jar>
-	</target>
+    <target name="bm-build" depends="junit,h2,derby">
+        <javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"
+                sourcepath="${bm-src-dir}"
+                source="1.5">
+            <classpath>
+                <pathelement location="${derbytesting-jar}"/>
+                <pathelement location="${h2-jar}"/>
+                <pathelement location="${junit-jar}"/>
+            </classpath>
+        </javac>
+        <jar destfile="${bm-jars}/tpcc.jar">
+            <fileset dir="${bm-build-dir}">
+                <include name="org/dacapo/h2/**"/>
+            </fileset>
+        </jar>
+    </target>
 
 
 </project>

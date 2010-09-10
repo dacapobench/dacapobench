@@ -7,53 +7,53 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="luindex" default="all" basedir="../..">
-	<description>DaCapo luindex benchmark</description>
-	<property file="dacapo.properties"/>
+    <description>DaCapo luindex benchmark</description>
+    <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="luindex"/>
+    <property name="bm-name" value="luindex"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
-	<property name="bible.url" value="${sfdata.url}/kjv.zip"/>
+    <property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
+    <property name="bible.url" value="${sfdata.url}/kjv.zip"/>
 
-	<target name="source">
-		<antcall target="check-source">
-			<param name="target-dir" value="${bm-downloads}"/>
-			<param name="target-url" value="${sfdata.url}"/>
-			<param name="target-file" value="shakespeare.tgz"/>
-		</antcall>
-		<antcall target="check-source">
-			<param name="target-dir" value="${bm-downloads}"/>
-			<param name="target-url" value="${sfdata.url}"/>
-			<param name="target-file" value="kjv.zip"/>
-		</antcall>
-	</target>
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${sfdata.url}"/>
+            <param name="target-file" value="shakespeare.tgz"/>
+        </antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${sfdata.url}"/>
+            <param name="target-file" value="kjv.zip"/>
+        </antcall>
+    </target>
 
-	<target name="bm-build" depends="lucene">
-		<mkdir dir="${bm-build-dir}"/>
-		<javac srcdir="${bm-src-dir}" source="1.5"
+    <target name="bm-build" depends="lucene">
+        <mkdir dir="${bm-build-dir}"/>
+        <javac srcdir="${bm-src-dir}" source="1.5"
            classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}" 
            destdir="${bm-build-dir}" 
            includes="org/dacapo/luindex/*" debug="true" debuglevel="lines,vars,source"/>
-	</target>
+    </target>
 
-	<target name="jar">
-		<jar destfile="${bm-jars}/luindex.jar" basedir="${bm-build-dir}"/>
-	</target>
+    <target name="jar">
+        <jar destfile="${bm-jars}/luindex.jar" basedir="${bm-build-dir}"/>
+    </target>
 
 
-	<target name="data">
-		<mkdir dir="${bm-data}/luindex"/>
-		<mkdir dir="${bm-data}/luindex/william"/>
-		<untar src="${bm-downloads}/shakespeare.tgz" dest="${bm-data}/luindex/william" compression="gzip"/>
-		<mkdir dir="${bm-data}/luindex/kjv"/>
-		<unzip src="${bm-downloads}/kjv.zip" dest="${bm-data}/luindex/kjv"/>
-		<zip destfile="${bm-dat}/luindex.zip">
-			<fileset dir="${bm-data}/" includes="luindex/kjv/**/*"/>
-			<fileset dir="${bm-data}/" includes="luindex/william/**/*"/>
-		</zip>
-		<delete dir="${bm-data}/luindex"/>
-	</target>
+    <target name="data">
+        <mkdir dir="${bm-data}/luindex"/>
+        <mkdir dir="${bm-data}/luindex/william"/>
+        <untar src="${bm-downloads}/shakespeare.tgz" dest="${bm-data}/luindex/william" compression="gzip"/>
+        <mkdir dir="${bm-data}/luindex/kjv"/>
+        <unzip src="${bm-downloads}/kjv.zip" dest="${bm-data}/luindex/kjv"/>
+        <zip destfile="${bm-dat}/luindex.zip">
+            <fileset dir="${bm-data}/" includes="luindex/kjv/**/*"/>
+            <fileset dir="${bm-data}/" includes="luindex/william/**/*"/>
+        </zip>
+        <delete dir="${bm-data}/luindex"/>
+    </target>
 
 </project>

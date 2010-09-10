@@ -7,23 +7,23 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="h2" default="all" basedir="../..">
-	<description>h2 library, required by trade and h2</description>
-	<property file="ant/dacapo.properties"/>
+    <description>h2 library, required by trade and h2</description>
+    <property file="ant/dacapo.properties"/>
 
-	<property name="lib-name" value="h2"/>
-	<property name="lib-version" value="1.2.123"/>
-	<property name="lib-url" value="http://repo2.maven.org/maven2/com/h2database/${lib-name}/${lib-version}/"/>
-	<property name="lib-src" value="h2-${lib-version}.jar"/>
+    <property name="lib-name" value="h2"/>
+    <property name="lib-version" value="1.2.123"/>
+    <property name="lib-url" value="http://repo2.maven.org/maven2/com/h2database/${lib-name}/${lib-version}/"/>
+    <property name="lib-src" value="h2-${lib-version}.jar"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<target name="jar" depends="h2-jar-check" unless="h2-build-done">
-		<copy file="${lib-downloads}/h2-${lib-version}.jar" tofile="${h2-jar}"/>
-	</target>
+    <target name="jar" depends="h2-jar-check" unless="h2-build-done">
+        <copy file="${lib-downloads}/h2-${lib-version}.jar" tofile="${h2-jar}"/>
+    </target>
 
-	<target name="h2-jar-check">
-		<condition property="h2-build-done">
-			<available file="${h2-jar}"/>
-		</condition>
-	</target>
+    <target name="h2-jar-check">
+        <condition property="h2-build-done">
+            <available file="${h2-jar}"/>
+        </condition>
+    </target>
 </project>

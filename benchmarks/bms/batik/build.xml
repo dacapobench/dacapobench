@@ -7,39 +7,39 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="batik" default="all" basedir="../..">
-	<description>DaCapo Batik benchmark</description>
-	<property file="dacapo.properties"/>
+    <description>DaCapo Batik benchmark</description>
+    <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="batik"/>
-	<property name="batik.major.version" value="1.7"/>
-	<property name="bm-version" value="${batik.major.version}beta1"/>
-	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
-	<property name="bm-url" value="${apache.dl.url}/xmlgraphics/batik"/>
+    <property name="bm-name" value="batik"/>
+    <property name="batik.major.version" value="1.7"/>
+    <property name="bm-version" value="${batik.major.version}beta1"/>
+    <property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
+    <property name="bm-url" value="${apache.dl.url}/xmlgraphics/batik"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<property name="batik-top" value="${bm-build-dir}/batik-${batik.major.version}"/>
+    <property name="batik-top" value="${bm-build-dir}/batik-${batik.major.version}"/>
 
-	<target name="unpack" depends="unzip"/>
+    <target name="unpack" depends="unzip"/>
 
-	<target name="bm-build">
-		<ant antfile="build.xml" dir="${batik-top}" target="all-jar" inheritall="false">
-			<property name="debug" value="on"/>
-		</ant>
-	</target>
+    <target name="bm-build">
+        <ant antfile="build.xml" dir="${batik-top}" target="all-jar" inheritall="false">
+            <property name="debug" value="on"/>
+        </ant>
+    </target>
 
-	<target name="jar" depends="deps">
-		<copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all.jar" todir="${bm-jars}"/>
-		<copy file="${batik-top}/lib/build/crimson-1.1.3.jar" todir="${bm-jars}"/>
-		<copy file="${batik-top}/lib/xalan-2.6.0.jar" todir="${bm-jars}"/>
-		<copy file="${batik-top}/lib/xerces_2_5_0.jar" todir="${bm-jars}"/>
-		<copy file="${batik-top}/lib/xml-apis.jar" todir="${bm-jars}"/>
-		<copy file="${batik-top}/lib/xml-apis-ext.jar" todir="${bm-jars}"/>
-	</target>
+    <target name="jar" depends="deps">
+        <copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/build/crimson-1.1.3.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xalan-2.6.0.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xerces_2_5_0.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xml-apis.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xml-apis-ext.jar" todir="${bm-jars}"/>
+    </target>
 
-	<target name="deps">
-		<copy file="${batik-top}/lib/js.jar" todir="${bm-deps-output-dir}"/>
-		<copy file="${batik-top}/lib/pdf-transcoder.jar" todir="${bm-deps-output-dir}"/>
-	</target>
+    <target name="deps">
+        <copy file="${batik-top}/lib/js.jar" todir="${bm-deps-output-dir}"/>
+        <copy file="${batik-top}/lib/pdf-transcoder.jar" todir="${bm-deps-output-dir}"/>
+    </target>
 
 </project>
