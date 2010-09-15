@@ -11,6 +11,7 @@
     <property name="src" value="${base-dir}/src"/>
     <property name="output-parent-dir" value="${base-dir}/dist"/>
     <property name="output-dir" value="${output-parent-dir}/harness"/>
+    <property name="output-doc-dir" value="${output-parent-dir}/doc/harness"/>
     <property name="build-dir" value="${base-dir}/build"/>
     
     <property name="harness-downloads" value="${base-dir}/downloads"/>
@@ -21,7 +22,7 @@
     <property name="cli-basename" value="${cli}-${cli-version}"/>
     <property name="cli-name" value="${cli-basename}-bin.tar.gz"/>
     
-    <target name="all" depends="clean, init, harness, jar"/>
+    <target name="all" depends="clean,init,harness,jar"/>
     
     <target name="clean">
         <delete dir="${output-parent-dir}"/>
@@ -30,6 +31,7 @@
     
     <target name="init">
         <mkdir dir="${output-dir}"/>
+        <mkdir dir="${output-doc-dir}"/>
         <mkdir dir="${build-dir}"/>
     </target>
     
@@ -58,6 +60,7 @@
         <!-- include digest --> 
         <unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
+        <javadoc sourcepath="${src}" destdir="${output-doc-dir}" />
     </target>
     
     <target name="jar">

@@ -72,7 +72,9 @@ BUILDING:
     <property name="log.build.fail" value="${log.dir}/${build.time}/fail.txt"/>
 
     <property name="dacapo.build.dir" value="${basedir}/build"/>
-    <property name="dacapo.src.dir" value="${basedir}/src"/>
+	<property name="dacapo.build.doc.dir" value="${dacapo.build.dir}/doc"/>
+	<property name="dacapo.doc.dir" value="${basedir}/doc"/>
+	<property name="dacapo.src.dir" value="${basedir}/src"/>
 
     <target name="check-svn-present">
         <available property="svn.present" file=".svn" type="dir"/>
@@ -105,6 +107,20 @@ BUILDING:
         <property name="build.version"  value="head-r${svn.revision}"/>
     </target>
 
+    <target name="init" depends="set-build-version-info">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <delete dir="${log.build.dir}" />
+        <delete dir="${dacapo.build.doc.dir}"/>
+        <delete dir="${dacapo.build.dir}" />
+
+        <mkdir dir="${log.build.dir}" />
+        <mkdir dir="${dacapo.build.dir}" />
+        <mkdir dir="${dacapo.build.doc.dir}"/>
+    	
+        <echo>build.nickname=${build.nickname}</echo>
+        <echo>build.version=${build.version}</echo>
+    </target>
 
     <!-- BEGIN PUBLIC TARGETS -->
 
@@ -191,37 +207,44 @@ BUILDING:
         <move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
     </target>
 
-    <target name="init" depends="set-build-version-info">
-        <!-- Create the time stamp -->
-        <tstamp/>
-        <delete dir="${log.build.dir}" />
-        <delete dir="${dacapo.build.dir}" />
-
-        <mkdir dir="${log.build.dir}" />
-        <mkdir dir="${dacapo.build.dir}" />
-
-        <echo>build.nickname=${build.nickname}</echo>
-        <echo>build.version=${build.version}</echo>
+    <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation">
+    	
+    	<jar /> 
     </target>
 
+	
     <!-- =================================
          target: bootstrap for running harness
          ================================= -->
     <target name="bootstrap" depends="init">
+    	<!-- construct the bootstrap -->
         <javac srcdir="${dacapo.src.dir}" destdir="${dacapo.build.dir}"/>
 
-        <copy file="${basedir}/LICENSE-2.0.txt" todir="${dacapo.build.dir}"/>
-        <copy file="${basedir}/README.txt" todir="${dacapo.build.dir}"/>
-        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.dir}"/>
-
+    	<!-- set the manifest for the jar -->
         <copy file="${dacapo.src.dir}/META-INF/MANIFEST.MF" todir="${dacapo.build.dir}"/>
         <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Specification-Version: ${build.nickname}${line.separator}</echo>
         <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
 
+    	<!-- form the top level info -->
+        <copy file="${basedir}/LICENSE-2.0.txt" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/README.txt" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.dir}"/>
+
+    	<!-- this forms the base document section -->
+		<copy file="${basedir}/LICENSE-2.0.txt" tofile="${dacapo.build.doc.dir}/LICENSE.txt" />
+		<copy file="${basedir}/README.txt" todir="${dacapo.build.doc.dir}" />
+		<copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.doc.dir}" />
+
+		<copy todir="${dacapo.build.doc.dir}">
+			<fileset dir="${dacapo.doc.dir}"/>
+		</copy>
+
+    	<!-- construct the base jar -->
         <jar jarfile="${jar-target}" basedir="${dacapo.build.dir}" update="false" manifest="${dacapo.build.dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
     </target>
 
     <target name="clean-bootstrap" depends="init">
+        <delete dir="${dacpao.build.doc.dir}"/>
         <delete dir="${dacpao.build.dir}"/>
     </target>
 
@@ -232,14 +255,14 @@ BUILDING:
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
-
+	
     <!-- ================================= 
          target: harness           
          ================================= -->
     <target name="harness" depends="init,bootstrap" description="compile the source ">
         <ant antfile="harness/build.xml"/>
     </target>
-
+	
     <target name="clean-harness" depends="init">
         <ant antfile="harness/build.xml" target="clean"/>
     </target>

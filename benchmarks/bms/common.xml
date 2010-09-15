@@ -9,13 +9,20 @@
 <project name="common">
 	<import file="../util.xml"/>
 	<import file="../libs/libs.xml"/>
+
+	<tstamp>
+		<format property="build.time" pattern="yyyyMMdd-hhmm"/>
+	</tstamp>
+
 	<property file="dacapo.properties"/>
 	<property file="local.properties"/>
 	<property file="default.properties"/>
 
 	<property name="bm-files" value="${basedir}/bms/${bm-name}"/>
 	<property name="bm-build-dir" value="${bm-files}/build"/>
+	<property name="bm-doc-dir" value="${bm-files}/doc"/>
 	<property name="bm-output-dir" value="${bm-files}/dist"/>
+	<property name="bm-output-doc-dir" value="${bm-files}/dist/doc/${bm-name}"/>
 	<property name="bm-output-harness-dir" value="${bm-files}/dist/harness"/>
 	<property name="bm-output-benchmark-dir" value="${bm-files}/dist/benchmark"/>
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
@@ -32,7 +39,7 @@
 
 	<property name="harness-classpath" value="harness/dist/harness"/>
 
-	<target name="all" depends="source, svn-source, cvs-source, pre-build, build, complete"/>
+	<target name="all" depends="source,svn-source,cvs-source,pre-build,build,complete"/>
 
 	<target name="incremental">
 		<property name="incremental-build" value="true"/>
@@ -108,12 +115,24 @@
 		<javac srcdir="${bm-src-harness-dir}" classpath="${harness-classpath}" destdir="${bm-output-harness-dir}"
 			includes="org/dacapo/harness/**"
 			debug="true" debuglevel="lines,vars,source"/>
+		<copy todir="${bm-output-doc-dir}">
+			<fileset dir="${bm-doc-dir}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<javadoc sourcepath="${bm-src-harness-dir}" classpath="${harness-classpath}" destdir="${bm-output-doc-dir}"/>
 	</target>
 
 	<target name="bm-harness-with" if="bm-harness-classpath">
 		<javac srcdir="${bm-src-harness-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-harness-dir}"
 			includes="org/dacapo/harness/**"
 			debug="true" debuglevel="lines,vars,source"/>
+		<copy todir="${bm-output-doc-dir}">
+			<fileset dir="${bm-doc-dir}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<javadoc sourcepath="${bm-src-harness-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-doc-dir}"/>
 	</target>
 
 	<target name="dacapo-harness" unless="incremental-build">
@@ -143,6 +162,19 @@
 	</target>
 
 	<target name="complete">
+		<unjar src="${jar-target}" dest="${bm-output-dir}" overwrite="yes">
+			<patternset>
+				<include name="doc/menu.html"/>
+			</patternset>
+		</unjar>
+		<tempfile property="temp.file" destdir="${bm-output-dir}/doc"/>
+		<java jar="${toolsdir}/transformer/bin/transformer.jar" fork="yes">
+			<arg value="${bm-output-dir}/doc/menu.html"/>
+			<arg value="${bm-name}"/>
+			<arg value="${temp.file}"/>
+		</java>
+		<copy file="${temp.file}" tofile="${bm-output-dir}/doc/menu.html"/>
+		<delete file="${temp.file}"/>
 		<jar jarfile="${jar-target}" basedir="${bm-output-dir}" update="true"/>
 	</target>
 
