@@ -23,7 +23,7 @@
 	</target>
 	
     <target name="all" depends="init">
-        <javac source="1.5" srcdir="${src.dir}" destdir="${build.dir}"/>
+        <javac source="1.5" target="1.5" srcdir="${src.dir}" destdir="${build.dir}"/>
         <jar destfile="${bin.dir}/transformer.jar" basedir="${build.dir}" manifest="${src.dir}/META-INF/MANIFEST.MF"/>
     </target>
 </project>
