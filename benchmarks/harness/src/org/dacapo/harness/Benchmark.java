@@ -11,6 +11,7 @@ package org.dacapo.harness;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -125,6 +126,13 @@ public abstract class Benchmark {
   private ClassLoader savedClassLoader;
 
   /**
+   * The system properties that were in effect when the harness was started.
+   * 
+   * @see System#getProperties()
+   */
+  private Properties savedSystemProperties;
+
+  /**
    * Output stream for validating System.err
    */
   private static TeePrintStream err = null;
@@ -212,6 +220,8 @@ public abstract class Benchmark {
   }
 
   protected void initialize() throws Exception {
+    savedSystemProperties = System.getProperties();
+
     System.setProperty("java.util.logging.config.file", fileIn(scratch, config.name + ".log"));
     synchronized (System.out) {
       if (out == null) {
@@ -299,6 +309,11 @@ public abstract class Benchmark {
       System.out.println("startIteration()");
     }
     System.setProperty(TIMEOUT_DIALATION_PROPERTY, Benchmark.timeoutDialation);
+
+    final Properties augmentedSystemProperties = new Properties(savedSystemProperties);
+    augmentSystemProperties(augmentedSystemProperties);
+    System.setProperties(augmentedSystemProperties);
+
     if (validateOutput) {
       System.setOut(out);
       System.setErr(err);
@@ -311,6 +326,15 @@ public abstract class Benchmark {
     }
     useBenchmarkClassLoader();
   }
+
+  /**
+   * Augments the system properties in case additional properties need to be in
+   * effect during the actual benchmark iteration.
+   * 
+   * @param systemProperties the system properties that need to be augmented.
+   *   (They may be modified freely.)
+   */
+  public void augmentSystemProperties(Properties systemProperties) { }
 
   /**
    * An actual iteration of the benchmark. This is what is timed.
@@ -332,6 +356,9 @@ public abstract class Benchmark {
       System.setOut(savedOut);
       System.setErr(savedErr);
     }
+
+    System.setProperties(savedSystemProperties);
+
     if (verbose) {
       System.out.println("stopIteration()");
     }
