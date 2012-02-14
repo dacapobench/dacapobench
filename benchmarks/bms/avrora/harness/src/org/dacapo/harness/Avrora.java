@@ -9,6 +9,7 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.util.Properties;
 
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
@@ -31,6 +32,16 @@ public class Avrora extends Benchmark {
   protected void prepare(String size) throws Exception {
     super.prepare(size);
     args = config.preprocessArgs(size, scratch);
+  }
+
+  @Override
+  public void augmentSystemProperties(Properties systemProperties) {
+
+    /*
+     * The benchmark attempts to access a configuration file under
+     * "${user.home}/.avrora". Make sure that it does not exist.
+     */
+    systemProperties.setProperty("user.home", fileInScratch(config.name));
   }
 
   public void iterate(String size) throws Exception {
