@@ -310,7 +310,7 @@ public abstract class Benchmark {
     }
     System.setProperty(TIMEOUT_DIALATION_PROPERTY, Benchmark.timeoutDialation);
 
-    final Properties augmentedSystemProperties = new Properties(savedSystemProperties);
+    final Properties augmentedSystemProperties = (Properties) savedSystemProperties.clone();
     augmentSystemProperties(augmentedSystemProperties);
     System.setProperties(augmentedSystemProperties);
 

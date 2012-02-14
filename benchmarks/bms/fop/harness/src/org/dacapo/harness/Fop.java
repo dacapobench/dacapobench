@@ -9,6 +9,7 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.util.Properties;
 
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
@@ -31,6 +32,33 @@ public class Fop extends Benchmark {
   protected void prepare(String size) throws Exception {
     super.prepare(size);
     args = config.preprocessArgs(size, scratch);
+  }
+
+  @Override
+  public void augmentSystemProperties(Properties systemProperties) {
+
+    /*
+     * The benchmark attempts to access an external font cache under
+     * "${user.home}/.fop/fop-fonts.cache". Make sure that no such cache is
+     * found.
+     */
+    systemProperties.setProperty("user.home", fileInScratch(config.name));
+
+    /*
+     * Clear all logging-related system properties (except for
+     * "java.util.logging.config.file") to make sure that the default logging
+     * implementation is used.
+     */
+    systemProperties.remove("org.apache.commons.logging.LogFactory");
+    systemProperties.remove("org.apache.commons.logging.Log");
+    systemProperties.remove("org.apache.commons.logging.log");
+    systemProperties.remove("java.util.logging.manager");
+    systemProperties.remove("java.util.logging.config.class");
+
+    /*
+     * Make sure that JAXP debug messages are disabled.
+     */
+    systemProperties.remove("jaxp.debug");
   }
 
   public void iterate(String size) throws Exception {
