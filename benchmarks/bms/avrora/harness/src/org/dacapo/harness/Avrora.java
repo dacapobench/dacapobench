@@ -31,11 +31,6 @@ public class Avrora extends Benchmark {
   protected void prepare(String size) throws Exception {
     super.prepare(size);
     args = config.preprocessArgs(size, scratch);
-    /* Retarget input/output files into scratch directory */
-    for (int i = 0; i < args.length; i++) {
-      if (args[i].charAt(0) != '-')
-        args[i] = fileInScratch(args[i]);
-    }
   }
 
   public void iterate(String size) throws Exception {

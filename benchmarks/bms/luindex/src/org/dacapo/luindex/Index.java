@@ -63,7 +63,7 @@ public class Index {
   public void main(final File INDEX_DIR, final String[] args) throws IOException {
     IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
     for (int arg = 0; arg < args.length; arg++) {
-      final File docDir = new File(scratch, args[arg]);
+      final File docDir = new File(args[arg]);
       if (!docDir.exists() || !docDir.canRead()) {
         System.out.println("Document directory '" + docDir.getAbsolutePath() + "' does not exist or is not readable, please check the path");
         throw new IOException("Cannot read from document directory");

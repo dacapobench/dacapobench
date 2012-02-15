@@ -8,8 +8,8 @@ size small args "-seconds=30",
 	"-simulation=sensor-network",
 	"-nodecount=2,1",
 	"-stagger-start=1000000",
-	"test/tinyos/CntToRfm.elf",
-	"test/tinyos/RfmToLeds.elf"
+	"${SCRATCH}/test/tinyos/CntToRfm.elf",
+	"${SCRATCH}/test/tinyos/RfmToLeds.elf"
 
   output
         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
@@ -19,8 +19,8 @@ size default args "-seconds=30",
 	"-simulation=sensor-network",
 	"-nodecount=4,2",
 	"-stagger-start=1000000",
-	"test/tinyos/CntToRfm.elf",
-	"test/tinyos/RfmToLeds.elf"
+	"${SCRATCH}/test/tinyos/CntToRfm.elf",
+	"${SCRATCH}/test/tinyos/RfmToLeds.elf"
   output 
     	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -29,17 +29,17 @@ size large args "-seconds=30",
 	"-simulation=sensor-network",
 	"-nodecount=7,3,7,2",
 	"-stagger-start=1000000",
-	"test/tinyos/CntToRfm.elf",
-	"test/tinyos/RfmToLeds.elf",
-	"test/tinyos/Surge.elf",
-	"test/tinyos/Blink_mica2.elf",
-	"test/tinyos/XnpOscopeRF.elf",
-	"test/tinyos/OscilloscopeRF.elf",
-	"test/tinyos/HighFrequencySampling.elf",
-	"test/tinyos/SenseToLeds.elf",
-	"test/tinyos/XnpRfmToLeds.elf",
-	"test/tinyos/RadioSenseToLeds_mica2.elf",
-	"test/tinyos/SecureTOSBase.elf";
+	"${SCRATCH}/test/tinyos/CntToRfm.elf",
+	"${SCRATCH}/test/tinyos/RfmToLeds.elf",
+	"${SCRATCH}/test/tinyos/Surge.elf",
+	"${SCRATCH}/test/tinyos/Blink_mica2.elf",
+	"${SCRATCH}/test/tinyos/XnpOscopeRF.elf",
+	"${SCRATCH}/test/tinyos/OscilloscopeRF.elf",
+	"${SCRATCH}/test/tinyos/HighFrequencySampling.elf",
+	"${SCRATCH}/test/tinyos/SenseToLeds.elf",
+	"${SCRATCH}/test/tinyos/XnpRfmToLeds.elf",
+	"${SCRATCH}/test/tinyos/RadioSenseToLeds_mica2.elf",
+	"${SCRATCH}/test/tinyos/SecureTOSBase.elf";
   output 
     	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
