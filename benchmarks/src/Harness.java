@@ -9,8 +9,6 @@
  * @id $Id: Harness.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -29,10 +27,7 @@ public class Harness {
   //
   private static final String CALLBACK_CLASSPATH_PROPERTY = "dacapo.callback.classpath";
 
-  public static void main(String[] args) throws MalformedURLException,
-      URISyntaxException, ClassNotFoundException, SecurityException,
-      NoSuchMethodException, IllegalArgumentException, IllegalAccessException,
-      InvocationTargetException {
+  public static void main(String[] args) throws Exception {
     ClassLoader harnessClassLoader = makeHarnessClassLoader();
 
     Thread.currentThread().setContextClassLoader(harnessClassLoader);

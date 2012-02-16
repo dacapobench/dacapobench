@@ -14,8 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.jar.JarFile;
@@ -32,8 +30,6 @@ import org.dacapo.parser.Config;
  * @id $Id: TestHarness.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class TestHarness {
-  public static final String PROP_BUILD_NICKNAME = "build.nickname";
-  public static final String PROP_BUILD_VERSION = "build.version";
 
   public static final String BUILD_NICKNAME = "Specification-Version";
   public static final String BUILD_VERSION = "Implementation-Version";
@@ -45,29 +41,12 @@ public class TestHarness {
   private final Config config;
   private static CommandLineArgs commandLineArgs;
 
-  public static final DecimalFormat two_dp = twoDecimalPlaces();
-
   public static String getBuildNickName() {
     return BuildNickName;
   }
 
   public static String getBuildVersion() {
     return BuildVersion;
-  }
-
-  private static URL getURL(String fn) {
-    ClassLoader cl = TestHarness.class.getClassLoader();
-    if (commandLineArgs.getVerbose())
-      System.out.println("TestHarness.getURL: returns " + cl.getResource(fn));
-    return cl.getResource(fn);
-  }
-
-  public static boolean exists(File f) {
-    return exists(f.getPath());
-  }
-
-  public static boolean exists(String fn) {
-    return getURL(fn) != null;
   }
 
   /**
@@ -228,18 +207,6 @@ public class TestHarness {
     }
   }
 
-  /**
-   * @return A Decimal Format object
-   */
-  private static DecimalFormat twoDecimalPlaces() {
-    DecimalFormat two_dp;
-    two_dp = new DecimalFormat();
-    two_dp.setMaximumFractionDigits(2);
-    two_dp.setMinimumFractionDigits(2);
-    two_dp.setGroupingUsed(true);
-    return two_dp;
-  }
-
   private static void rmdir(File dir) {
     String[] files = dir.list();
     if (files != null) {
@@ -251,12 +218,6 @@ public class TestHarness {
           System.err.println("Could not delete " + files[f]);
       }
     }
-  }
-
-  public static int TEST(int i) {
-    System.err.println("In TEST");
-    System.err.println(i);
-    return 2 * i;
   }
 
   private void bmInfo(String size) {
