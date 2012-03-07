@@ -83,6 +83,7 @@ public class DelayCallback extends Callback {
     super(args);
   }
 
+  @Override
   protected void start(String benchmark, boolean warmup) {
     if (!warmup) {
       if (sleepTimeVerbose)
@@ -96,8 +97,9 @@ public class DelayCallback extends Callback {
     super.start(benchmark,warmup);
   }
 
-  public void stop(boolean warmup) {
-    super.stop(warmup);
+  @Override
+  public void stop(long duration, boolean warmup) {
+    super.stop(duration, warmup);
     if (!warmup) {
       try {
         Thread.currentThread().sleep(sleepTime*1000);

@@ -174,6 +174,8 @@ public abstract class Benchmark {
 
     callback.start(config.name);
 
+    final long start = System.currentTimeMillis();
+
     startIteration();
     try {
       iterate(size);
@@ -181,7 +183,9 @@ public abstract class Benchmark {
       stopIteration();
     }
 
-    callback.stop();
+    final long duration = System.currentTimeMillis() - start;
+
+    callback.stop(duration);
 
     boolean valid = validate(size);
     callback.complete(config.name, valid);

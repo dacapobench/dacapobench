@@ -22,6 +22,7 @@ public class MMTkCallback extends Callback {
   }
 
   /* Immediately prior to start of the benchmark */
+  @Override
   public void start(String benchmark) {
     if (!isWarmup())
       harness.harnessBegin();
@@ -29,8 +30,9 @@ public class MMTkCallback extends Callback {
   };
 
   /* Immediately after the end of the benchmark */
-  public void stop() {
-    super.stop();
+  @Override
+  public void stop(long duration) {
+    super.stop(duration);
     if (!isWarmup())
       harness.harnessEnd();
   }
