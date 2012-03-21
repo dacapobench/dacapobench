@@ -86,7 +86,7 @@ public class Index {
   void indexDocs(IndexWriter writer, File file) throws IOException {
 
     /* Strip the absolute part of the path name from file name output */
-    int scratchP = scratch.getPath().length() + 1;
+    int scratchP = scratch.getCanonicalPath().length() + 1;
 
     /* do not try to index files that cannot be read */
     if (file.canRead()) {
@@ -100,7 +100,7 @@ public class Index {
           }
         }
       } else {
-        System.out.println("adding " + file.getPath().substring(scratchP));
+        System.out.println("adding " + file.getCanonicalPath().substring(scratchP));
         try {
           writer.addDocument(FileDocument.Document(file));
         }
