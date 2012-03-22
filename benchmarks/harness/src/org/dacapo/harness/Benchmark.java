@@ -218,6 +218,8 @@ public abstract class Benchmark {
   }
 
   protected void initialize() throws Exception {
+    savedSystemProperties = System.getProperties();
+
     System.setProperty("java.util.logging.config.file", fileInScratch(config.name + ".log"));
     synchronized (System.out) {
       if (out == null) {
