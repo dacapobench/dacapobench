@@ -208,7 +208,7 @@ public class Config {
 
   public static Config parse(InputStream stream) {
     try {
-      ConfigFile parser = new ConfigFile(stream);
+      ConfigFile parser = new ConfigFile(stream, "UTF-8");
 
       return parser.configFile();
     } catch (ParseException e) {
