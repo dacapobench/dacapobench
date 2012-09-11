@@ -24,7 +24,7 @@
                 <pathelement location="${junit-jar}"/>
             </classpath>
         </javac>
-        <jar destfile="${bm-jars}/tpcc.jar">
+        <jar destfile="${bm-jars}/dacapo-${bm-name}.jar">
             <fileset dir="${bm-build-dir}">
                 <include name="org/dacapo/h2/**"/>
             </fileset>

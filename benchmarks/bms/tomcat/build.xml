@@ -35,12 +35,12 @@
             <property name="base.path" value="${bm-downloads}"/>
             <target name="dist-static"/>
         </ant>
-        <javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" 
+        <mkdir dir="${bm-build-dir}/benchmark"/>
+        <javac srcdir="${bm-src-dir}" destdir="${bm-build-dir}/benchmark" 
                   source="1.5" target="1.5"
                     includes="org/dacapo/tomcat/*"
                     debug="true" debuglevel="lines,vars,source">
             <classpath>
-                <pathelement path="${harness-classpath}"/>
                 <pathelement path="${commons-httpclient-jar}"/>
                 <pathelement path="${dacapo-digest-jar}"/>
                 <fileset dir="${bm-build-top}/output/dist/lib">
@@ -75,7 +75,7 @@
         </copy>
 
         <jar destfile="${bm-jars}/dacapo-tomcat.jar">
-            <fileset dir="${bm-output-dir}" includes="**/*.class"/>
+            <fileset dir="${bm-build-dir}/benchmark" includes="**/*.class"/>
         </jar>
     </target>
 

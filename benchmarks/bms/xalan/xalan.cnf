@@ -1,7 +1,7 @@
 benchmark xalan
   class org.dacapo.harness.Xalan
   thread-model per_cpu
-  jars "xalan-benchmark.jar", "xalan.jar", "xercesImpl.jar", "xml-apis.jar", "serializer.jar";
+  jars "dacapo-xalan.jar", "xalan.jar", "xercesImpl.jar", "xml-apis.jar", "serializer.jar";
 
 size small args "10"
   threads 1
