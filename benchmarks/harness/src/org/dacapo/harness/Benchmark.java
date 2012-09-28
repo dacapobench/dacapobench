@@ -199,14 +199,6 @@ public abstract class Benchmark {
     return valid;
   }
 
-  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
-    // TODO this is very ugly
-    Benchmark.silent = silent;
-    this.scratch = scratch;
-    this.config = config;
-    initialize();
-  }
-
   /**
    * When an instance of a Benchmark is created, it is expected to prepare its
    * scratch directory, unloading files from the jar file if required.
@@ -217,7 +209,15 @@ public abstract class Benchmark {
     this(config, scratch, true);
   }
 
-  protected void initialize() throws Exception {
+  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
+    // TODO this is very ugly
+    Benchmark.silent = silent;
+    this.scratch = scratch;
+    this.config = config;
+    initialize();
+  }
+
+  private void initialize() throws Exception {
     savedSystemProperties = System.getProperties();
 
     System.setProperty("java.util.logging.config.file", fileInScratch(config.name + ".log"));
