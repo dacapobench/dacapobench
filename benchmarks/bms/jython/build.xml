@@ -11,10 +11,10 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="jython"/>
-    <property name="bm-svn-url" value="https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_5_2/jython"/>
-    <property name="bm-svn-revision" value="7206"/> <!-- 2.5.2 -->
-    <property name="bm-version" value="svn-${bm-svn-revision}"/>
-    <property name="bm-ignore-failure" value="yes" />
+    <property name="bm-hg-url" value="https://bitbucket.org/jython/jython"/>
+    <property name="bm-hg-revision" value="v2.7.1"/>
+    <property name="bm-version" value="hg-${bm-hg-revision}"/>
+    <property name="bm-ignore-failure" value="no" />
     <property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
     <!-- grab the jython from the jython release and benchmarks from the Python release
 
