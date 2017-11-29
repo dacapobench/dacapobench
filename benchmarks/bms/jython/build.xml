@@ -24,9 +24,20 @@
      -->
 
     <property name="antlr-version" value="3.1.3"/>
-    <property name="asm-version" value="3.1"/>
-    <property name="guava-version" value="r07"/>
-    <property name="jline-version" value="0.9.95-SNAPSHOT"/>
+    <property name="asm-version" value="5.2"/>
+    <property name="guava-version" value="22.0-android"/>
+    <property name="jline-version" value="2.14.3"/>
+    <property name="bcpkix-version" value="jdk15on-1.57"/>
+    <property name="commons-compress-version" value="1.14"/>
+    <property name="icu4j-version" value="59_1"/>
+    <property name="netty-version" value="4.1.11.Final"/>
+    <property name="java-sizeof-version" value="0.0.5"/>
+    <property name="jffi-version" value="1.2.15"/>
+    <property name="jnr-ffi-version" value="2.1.5"/>
+    <property name="jnr-netdb-version" value="1.1.6"/>
+    <property name="jnr-posix-version" value="3.0.41"/>
+    <property name="jnr-constants-version" value="0.9.9"/>
+    <property name="xercesImpl-version" value="2.11.0"/>
 
     <import file="../common.xml"/>
     <import file="pybench.xml"/>
@@ -52,14 +63,34 @@
     <target name="jar">
         <copy file="${bm-build-dir}/dist/jython-dev.jar" todir="${bm-jars}"/>
         <move file="${bm-jars}/jython-dev.jar" tofile="${bm-jars}/jython.jar"/>
+
         <copy file="${bm-build-dir}/dist/javalib/antlr-${antlr-version}.jar" todir="${bm-jars}"/>
+
         <copy file="${bm-build-dir}/dist/javalib/asm-${asm-version}.jar" todir="${bm-jars}"/>
         <copy file="${bm-build-dir}/dist/javalib/asm-commons-${asm-version}.jar" todir="${bm-jars}"/>
-        <copy file="${bm-build-dir}/dist/javalib/constantine.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/asm-util-${asm-version}.jar" todir="${bm-jars}"/>
+
+        <copy file="${bm-build-dir}/dist/javalib/bcpkix-${bcpkix-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/commons-compress-${commons-compress-version}.jar" todir="${bm-jars}"/>
         <copy file="${bm-build-dir}/dist/javalib/guava-${guava-version}.jar" todir="${bm-jars}"/>
-        <copy file="${bm-build-dir}/dist/javalib/jaffl.jar" todir="${bm-jars}"/>
+
+        <copy file="${bm-build-dir}/dist/javalib/icu4j-${icu4j-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/netty-buffer-${netty-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/netty-codec-${netty-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/netty-common-${netty-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/netty-handler-${netty-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/netty-resolver-${netty-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/netty-transport-${netty-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/java-sizeof-${java-sizeof-version}.jar" todir="${bm-jars}"/>
+
+        <copy file="${bm-build-dir}/dist/javalib/jffi-${jffi-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/jnr-ffi-${jnr-ffi-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/jnr-netdb-${jnr-netdb-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/jnr-posix-${jnr-posix-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/jnr-constants-${jnr-constants-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/dist/javalib/xercesImpl-${xercesImpl-version}.jar" todir="${bm-jars}"/>
+
         <copy file="${bm-build-dir}/dist/javalib/jline-${jline-version}.jar" todir="${bm-jars}"/>
-        <copy file="${bm-build-dir}/dist/javalib/jnr-posix.jar" todir="${bm-jars}"/>
     </target>
 
     <target name="data" depends="pybench">
