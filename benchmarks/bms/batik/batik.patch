@@ -1,0 +1,30 @@
+--- batik-1.9/batik-dom/src/main/java/org/apache/batik/dom/util/SAXDocumentFactory.java	2017-03-17 15:55:00.000000000 +1100
++++ ../SAXDocumentFactory.java	2017-11-29 17:01:48.733040452 +1100
+@@ -399,17 +399,6 @@
+     static SAXParserFactory saxFactory;
+     static {
+         saxFactory = SAXParserFactory.newInstance();
+-        try {
+-            saxFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+-            saxFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+-            saxFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+-        } catch (SAXNotRecognizedException e) {
+-            e.printStackTrace();
+-        } catch (SAXNotSupportedException e) {
+-            e.printStackTrace();
+-        } catch (ParserConfigurationException e) {
+-            e.printStackTrace();
+-        }
+     }
+ 
+     /**
+@@ -445,9 +434,6 @@
+                               true);
+             parser.setFeature("http://xml.org/sax/features/validation",
+                               isValidating);
+-            parser.setFeature("http://xml.org/sax/features/external-general-entities", false);
+-            parser.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+-            parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+             parser.setProperty("http://xml.org/sax/properties/lexical-handler",
+                                this);
+             parser.parse(is);
