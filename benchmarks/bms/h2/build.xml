@@ -17,7 +17,7 @@
     <target name="bm-build" depends="junit,h2,derby">
         <javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"
                 sourcepath="${bm-src-dir}"
-                source="1.5">
+                source="1.8">
             <classpath>
                 <pathelement location="${derbytesting-jar}"/>
                 <pathelement location="${h2-jar}"/>
