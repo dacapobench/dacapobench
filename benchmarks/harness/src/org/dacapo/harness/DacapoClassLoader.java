@@ -38,7 +38,6 @@ public class DacapoClassLoader extends URLClassLoader {
    * @param scratch The scratch directory (in which the jars will be located)
    * @return The class loader in which this benchmark's iterations should
    * execute.
-   * @throws Exception
    */
   public static DacapoClassLoader create(Config config, File scratch) {
     DacapoClassLoader rtn = null;

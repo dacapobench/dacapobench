@@ -503,7 +503,7 @@ public class Config {
    * Get the set of output files for a benchmark size
    * 
    * @param size
-   * @return Set\<String\> of file names
+   * @return set of file name strings
    */
   public Set<String> getOutputs(String size) {
     return Collections.unmodifiableSet(getSize(size).outputFiles.keySet());

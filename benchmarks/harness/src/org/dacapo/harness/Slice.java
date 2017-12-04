@@ -50,7 +50,7 @@ public class Slice {
 
   /**
    * Slice a file into a number of sub files. Output in the given directory.
-   * Files are called <input-file>.<fraction>.<numerator>.<index> such that file
+   * Files are called {input-file}.{fraction}.{numerator}.{index} such that file
    * "x.4.3.1" is the first file, 3/4 of the size of the input file.
    * 
    * @param file File to slice

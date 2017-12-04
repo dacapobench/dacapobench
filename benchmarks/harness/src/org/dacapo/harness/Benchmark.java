@@ -153,7 +153,6 @@ public abstract class Benchmark {
    * 
    * @param callback The user-specified timing callback
    * @param size The size (as given on the command line)
-   * @param timing Is this the timing loop ? Affects how we call the callback.
    * @return Whether the run was valid or not.
    * @throws Exception Whatever exception the target application dies with
    */
@@ -337,7 +336,7 @@ public abstract class Benchmark {
   /**
    * An actual iteration of the benchmark. This is what is timed.
    * 
-   * @param args Arguments to the benchmark
+   * @param size Argument to the benchmark iteration.
    */
   public abstract void iterate(String size) throws Exception;
 
@@ -514,7 +513,7 @@ public abstract class Benchmark {
   /**
    * Perform post-iteration cleanup.
    * 
-   * @param size
+   * @param size Argument to the benchmark iteration.
    */
   protected void postIterationCleanup(String size) {
     for (String file : config.getOutputs(size)) {

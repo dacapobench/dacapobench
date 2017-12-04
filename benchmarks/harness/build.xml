@@ -60,7 +60,7 @@
         <!-- include digest --> 
         <unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
-        <javadoc sourcepath="${src}" destdir="${output-doc-dir}" />
+        <javadoc sourcepath="${src}" destdir="${output-doc-dir}" classpath="${output-dir}"/>
     </target>
     
     <target name="jar">
