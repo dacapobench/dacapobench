@@ -11,11 +11,11 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="eclipse"/>
-    <property name="bm-version" value="4.7.1a"/>
-    <property name="bm-drop" value="201710090410"/>
-    <property name="bm-url" value="http://mirror.lagoon.nc/pub/eclipse/eclipse/downloads/drops4/R-${bm-version}-${bm-drop}"/>
-    <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa-x86_64.tar.gz"/>
-    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.12.50.v20170928-1321.jar"/>
+    <property name="bm-version" value="3.5.1"/>
+    <property name="bm-drop" value="200909170800"/>
+    <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${bm-version}-${bm-drop}"/>
+    <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa.tar.gz"/>
+    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.5.1.R35x_v20090827.jar"/>
 
     <import file="../common.xml"/>
     <property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
@@ -78,7 +78,7 @@
          jar from the eclipse directory so for now we do the dumb thing
          of duplicating the jar -->
     <target name="jar" depends="unpack">
-        <copy file="${bm-build-dir}/Eclipse.app/Contents/Eclipse/plugins/${osgi-bootstrap-jar}" tofile="${bm-jars}/eclipse.jar"/>
+        <copy file="${bm-build-dir}/eclipse/plugins/${osgi-bootstrap-jar}" tofile="${bm-jars}/eclipse.jar"/>
     </target>
 
     <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
