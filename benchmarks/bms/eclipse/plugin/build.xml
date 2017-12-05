@@ -18,9 +18,9 @@
     <property name="compilerArg" value=""/>
     <property name="javacSource" value="1.3"/>
     <property name="javacTarget" value="1.2"/>
-    <condition property="dir_bootclasspath" value="${java.home}/../Classes">
+    <!--condition property="dir_bootclasspath" value="${java.home}/../Classes">
         <os family="mac"/>
-    </condition>
+    </condition-->
     <property name="dir_bootclasspath" value="${java.home}/lib"/>
     <path id="path_bootclasspath">
         <fileset dir="${dir_bootclasspath}">
@@ -66,7 +66,6 @@
 
     <target name="properties" if="eclipse.running">
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-
     </target>
 
     <target name="build.update.jar" depends="init" description="Build the plug-in: org.dacapo.eclipse for an update site.">
@@ -84,33 +83,35 @@
         <delete dir="${build.result.folder}/@dot"/>
         <mkdir dir="${build.result.folder}/@dot"/>
         <path id="@dot.classpath">
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime_3.5.0.v20090525.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi_3.5.1.R35x_v20090827.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800/runtime_registry_compatibility.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.registry_3.4.100.v20090520-1800.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.preferences_3.2.300.v20090520-1800.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.contenttype_3.4.1.R35x_v20090826-0451.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.100.v20090413.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.app_1.2.0.v20090520-1800.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi.services_3.2.0.v20090520-1800.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/javax.servlet_2.5.0.v200806031605.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.core_3.5.1.v_972_R35x.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.apt_1.0.201.R35x_v20090825-1530.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.tool_1.0.100.v_972_R35x.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.resources_3.5.1.R35x_v20090826-0451.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.resources.compatibility_3.4.0.v20090505.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.ant.core_3.2.100.v20090817_r351.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.variables_3.2.200.v20090521.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.expressions_3.4.100.v20090429-1800.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem_1.2.0.v20090507.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem.macosx_1.1.0.v20090112.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.text_3.5.0.v20090513-2000.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/com.ibm.icu_4.0.1.v20090822.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.commands_3.5.0.I20090525-2000.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.team.core_3.5.0.I20090527-0620.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime_3.13.0.v20170207-1030.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi_3.12.50.v20170928-1321.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.common_3.9.0.v20170207-1454.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.jobs_3.9.1.v20170714-0547.jar"/>
+            <!--pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800/runtime_registry_compatibility.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800"/-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.registry_3.7.0.v20170222-1344.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.preferences_3.7.0.v20170126-2132.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.contenttype_3.6.0.v20170207-1037.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.app_1.3.400.v20150715-1528.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi.services_3.6.0.v20170228-1906.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/javax.servlet_3.1.0.v201410161800.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.launching_3.9.50.v20171009-0349.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.core_3.13.50.v20171007-0855.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.apt_1.3.50.v20170920-0950.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.tool_1.2.50.v20170920-0950.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.resources_3.12.0.v20170417-1558.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.simpleconfigurator_1.2.0.v20170110-1705.jar"/>
+            <!--pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.resources.compatibility_3.4.0.v20090505.jar"/-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.ant.core_3.5.0.v20170509-2149.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.variables_3.4.0.v20170113-2056.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.debug.core_3.11.0.v20170605-1534.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.expressions_3.6.0.v20170207-1037.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem_1.7.0.v20170406-1337.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem.macosx_1.3.0.v20140124-1940.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.text_3.6.100.v20170203-0814.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/com.ibm.icu_58.2.0.v20170418-1837.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.commands_3.9.0.v20170530-1048.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.team.core_3.8.100.v20170516-0820.jar"/>
         </path>
         <!-- compile the source code -->
         <javac destdir="${build.result.folder}/@dot" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"        >
