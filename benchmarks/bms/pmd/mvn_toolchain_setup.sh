@@ -23,7 +23,7 @@ if [ ! -e $1 ]; then
   <toolchain>
     <type>jdk</type>
     <provides>
-      <version>$jver</version>
+      <version>1.$jver</version>
     </provides>
     <configuration> 
       <jdkHome>$JAVA_HOME</jdkHome>
