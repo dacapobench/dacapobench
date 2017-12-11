@@ -8,10 +8,11 @@
  -->
 <project name="commons-codec" default="all" basedir="../..">
     <description>Jakarta Commons Logging, required by httpclient (and therefore tomcat)</description>
-    <property file="ant/dacapo.properties"/>
+    <property file="dacapo.properties"/>
+    <property environment="env"/>
 
     <property name="lib-name" value="commons-codec"/>
-    <property name="lib-version" value="1.4"/>
+    <property name="lib-version" value="1.11"/>
     <property name="lib-url" value="${apache.dl.url}/commons/codec/source/"/>
     <property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
 
@@ -20,16 +21,20 @@
     <property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}-src"/>
 
     <target name="unpack" depends="untar"/>
+    <property name="mvn" value="../tools/apache-maven-${mvn.version}/bin/mvn"/>
+    <property name="toolsdir" value="../tools"/>
 
     <target name="build">
-        <!-- oddness in codec build.xml -->
-        <touch file="${lib-build-dir}/LICENSE"/>
-        <ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
-            <target name="jar"/>
-        </ant>
+        <exec executable="mvn" dir="${lib-build-top}">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
+            <env key="JAVA_HOME" path="${java.home}"/>
+            <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
     </target>
 
     <target name="jar">
-        <copy file="${lib-build-top}/dist/${lib-name}-${lib-version}.jar" tofile="${commons-codec-jar}"/>
+        <copy file="${lib-build-top}/target/${lib-name}-${lib-version}.jar" tofile="${commons-codec-jar}"/>
     </target>
 </project>
