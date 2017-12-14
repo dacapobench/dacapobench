@@ -10,11 +10,11 @@
   <description>lucene library, required by lusearch and luindex</description>
   <property file="ant/dacapo.properties"/>
 
-  <property name="lib-name" value="lucene"/>
-  <property name="lib-major-version" value="2.4"/>
-  <property name="lib-version" value="${lib-major-version}.1"/>
-  <property name="lib-url" value="${apache.dl.url}/lucene/java"/>
-  <property name="lib-src" value="lucene-${lib-version}-src.tar.gz"/>
+    <property name="lib-name" value="lucene"/>
+    <property name="lib-major-version" value="7.1"/>
+    <property name="lib-version" value="${lib-major-version}.0"/>
+    <property name="lib-url" value="${apache.dl.url}/lucene/java/${lib-version}"/>
+    <property name="lib-src" value="lucene-${lib-version}-src.tgz"/>
 
   <import file="../common.xml"/>
 
@@ -22,13 +22,21 @@
 
   <target name="unpack" depends="untar"/>
 
-  <target name="build">
-    <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
-    <ant antfile="build.xml" target="jar-demo" dir="${lib-build-top}" inheritall="false"/>
-  </target>
+    <target name="build">
+        <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
+        <ant antfile="build.xml" target="default" dir="${lib-build-top}/demo/" inheritall="false"/>
+    </target>
 
-  <target name="jar">
-    <copy file="${lib-build-top}/build/lucene-core-${lib-major-version}.jar" todir="${lib-jars}"/>
-    <copy file="${lib-build-top}/build/lucene-demos-${lib-major-version}.jar" todir="${lib-jars}"/>
-  </target>
+    <target name="jar">
+        <copy todir="${lib-jars}">
+            <fileset dir="${lib-build-top}/build/core">
+                <include name="lucene-core-*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${lib-jars}">
+            <fileset dir="${lib-build-top}/build/demo">
+                <include name="lucene-demo-*.jar"/>
+            </fileset>
+        </copy>
+    </target>
 </project>
