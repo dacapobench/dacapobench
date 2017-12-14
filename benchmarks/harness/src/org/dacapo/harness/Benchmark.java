@@ -436,7 +436,10 @@ public abstract class Benchmark {
         int refLines = config.getLines(size, file);
         int lines;
         try {
-          lines = lineCount(new File(scratch, file));
+          File tempFile = new File(scratch, file);
+          if (!tempFile.exists())
+            throw new FileNotFoundException();
+          lines = lineCount(tempFile);
         } catch (FileNotFoundException e) {
           System.err.println("File not found, " + file);
           lines = -1;
@@ -462,7 +465,10 @@ public abstract class Benchmark {
         long refBytes = config.getBytes(size, file);
         long bytes;
         try {
-          bytes = byteCount(new File(scratch, file));
+          File genSeg = new File(scratch, file);
+          if (!genSeg.exists())
+            throw new FileNotFoundException();
+          bytes = byteCount(genSeg);
         } catch (FileNotFoundException e) {
           System.err.println("File not found, " + file);
           bytes = -1;
