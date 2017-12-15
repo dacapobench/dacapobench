@@ -70,10 +70,10 @@ public class Index {
    * Index all text files under a directory.
    */
   public void main(final File INDEX_DIR, final String[] args) throws IOException {
-    IndexWriterConfig RCSIGG = new IndexWriterConfig();
-    RCSIGG.setOpenMode (IndexWriterConfig.OpenMode.CREATE);
-    RCSIGG.setMergePolicy (new LogByteSizeMergePolicy());
-    IndexWriter writer = new IndexWriter(FSDirectory.open(Paths.get(INDEX_DIR.getCanonicalPath())), RCSIGG);
+    IndexWriterConfig IWConfig = new IndexWriterConfig();
+    IWConfig.setOpenMode (IndexWriterConfig.OpenMode.CREATE);
+    IWConfig.setMergePolicy (new LogByteSizeMergePolicy());
+    IndexWriter writer = new IndexWriter(FSDirectory.open(Paths.get(INDEX_DIR.getCanonicalPath())), IWConfig);
     for (int arg = 0; arg < args.length; arg++) {
       final File docDir = new File(args[arg]);
       if (!docDir.exists() || !docDir.canRead()) {
@@ -115,29 +115,29 @@ public class Index {
         System.out.println("adding " + file.getCanonicalPath().substring(scratchP));
         try {
           Document doc = new Document();
-          FieldType asd = new FieldType();
-          asd.setTokenized (false);
-          asd.setStored (true);
-          asd.setIndexOptions (IndexOptions.DOCS);
+          FieldType docFT = new FieldType();
+          docFT.setTokenized (false);
+          docFT.setStored (true);
+          docFT.setIndexOptions (IndexOptions.DOCS);
 
           // Add the path of the file as a field named "path".  Use a field that is
           // indexed (i.e. searchable), but don't tokenize the field into words.
-          doc.add(new Field("path", file.getPath(), asd));
+          doc.add(new Field("path", file.getPath(), docFT));
 
           // Add the last modified date of the file a field named "modified".  Use
           // a field that is indexed (i.e. searchable), but don't tokenize the field
           // into words.
           doc.add(new Field("modified",
                   DateTools.timeToString(file.lastModified(), DateTools.Resolution.MINUTE),
-                  asd));
+                  docFT));
 
           // Add the contents of the file to a field named "contents".  Specify a Reader,
           // so that the text of the file is tokenized and indexed, but not stored.
           // Note that FileReader expects the file to be in the system's default encoding.
           // If that's not the case searching for special characters will fail.
-          asd.setTokenized (true);
-          asd.setStored (false);
-          doc.add(new Field("contents", new FileReader(file), asd));
+          docFT.setTokenized (true);
+          docFT.setStored (false);
+          doc.add(new Field("contents", new FileReader(file), docFT));
           writer.addDocument(doc);
         }
         // at least on windows, some temporary files raise this exception with
