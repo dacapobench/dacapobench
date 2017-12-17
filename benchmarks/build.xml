@@ -251,7 +251,7 @@ BUILDING:
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,h2,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+    <target name="compile" depends="avrora,batik,h2,eclipse,fop,jython,luindex,lusearch,lusearch-fix,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -294,6 +294,7 @@ BUILDING:
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
+        <clean.bm benchmark="lusearch-fix"/>
         <clean.bm benchmark="pmd"/>
         <clean.bm benchmark="sunflow"/>
         <clean.bm benchmark="tomcat"/>
@@ -381,6 +382,9 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
     <target name="lusearch" depends="init,harness">
         <build.bm benchmark="lusearch"/>
+    </target>
+    <target name="lusearch-fix" depends="init,harness">
+        <build.bm benchmark="lusearch-fix"/>
     </target>
     <target name="pmd" depends="init,harness">
         <build.bm benchmark="pmd"/>
