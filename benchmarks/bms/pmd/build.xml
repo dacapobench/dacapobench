@@ -19,6 +19,7 @@
     <property name="commons-io-version" value="2.4"/>
     <property name="commons-lang3-version" value="3.4"/>
     <property name="jcommander-version" value="1.48"/>
+    <property name="saxon-version" value="9.1.0.8"/>
 
     <condition property="mvn-exe" value="mvn.bat">
         <os family="windows"/>
@@ -45,11 +46,10 @@
         <exec executable="${bm-files}/mvn_toolchain_setup.sh">
             <arg line="${mvn-toolchains-xml}"/>
         </exec>
-        <!-- <copy file="/tmp/pmd/toolchains.xml" tofile="${mvn-toolchains-xml}"/> -->
 
         <!-- execute Maven in build directory -->
         <exec dir="${bm-build-top}" executable="mvn">
-            <arg line="-B --global-toolchains ${mvn-toolchains-xml} clean verify"/>
+            <arg line="-B --global-toolchains ${mvn-toolchains-xml} -Dmaven.test.skip=true clean package"/>
         </exec>
 
         <!-- unpacks produced zip file -->
@@ -58,19 +58,24 @@
     </target>
 
     <target name="jar" depends="libs">
-        <copy file="${pmd-dist-target}/lib/pmd-core-${bm-version}.jar" todir="${bm-jars}"/>
+        <copy todir="${bm-jars}">
+            <resources>
+                <file file="${pmd-dist-target}/lib/pmd-core-${bm-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/pmd-java-${bm-version}.jar"/>
+            </resources>
+        </copy>
     </target>
 
     <target name="data">
         <property name="pmd-data" value="${bm-build-top}/data/pmd"/>
         <mkdir dir="${pmd-data}"/>
         <copy todir="${pmd-data}">
-            <fileset dir="${bm-build-top}/src">
-                <include name="net/**/*.java"/>
+            <fileset dir="${bm-build-top}">
+                <include name="**/*.java"/>
             </fileset>
         </copy>
         <copy todir="${pmd-data}">
-            <fileset dir="${bm-build-top}">
+            <fileset dir="${bm-build-top}/pmd-java/src/main/resources">
                 <include name="rulesets/**/*"/>
             </fileset>
         </copy>
@@ -91,6 +96,8 @@
                 <file file="${pmd-dist-target}/lib/commons-io-${commons-io-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/commons-lang3-${commons-lang3-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/jcommander-${jcommander-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/saxon-${saxon-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/saxon-${saxon-version}-dom.jar"/>
             </resources>
         </copy>
     </target>
