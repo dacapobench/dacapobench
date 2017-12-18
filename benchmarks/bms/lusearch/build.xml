@@ -11,13 +11,14 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="lusearch"/>
+    <property name="lucene-queryparser-jar-name" value="lucene-queryparser-7.1.0-SNAPSHOT.jar"/>
 
     <import file="../common.xml"/>
 
     <target name="bm-build" depends="lucene">
         <mkdir dir="${bm-build-dir}"/>
         <javac srcdir="${bm-src-dir}" source="1.5" 
-              classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}" 
+              classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}:${lucene-jars}/${lucene-queryparser-jar-name}"
            destdir="${bm-build-dir}" 
            includes="org/dacapo/lusearch/*" debug="true" debuglevel="lines,vars,source"/>
     </target>

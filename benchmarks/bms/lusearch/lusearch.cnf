@@ -1,7 +1,7 @@
 benchmark lusearch
   class org.dacapo.harness.Lusearch
   thread-model per_cpu
-  jars "dacapo-lusearch.jar", "lucene-core-2.4.jar", "lucene-demos-2.4.jar";
+  jars "dacapo-lusearch.jar", lucene-core-7.1.0-SNAPSHOT.jar", "lucene-demo-7.1.0-SNAPSHOT.jar";
 
 size small args "-index","${SCRATCH}/lusearch/index-default",
                 "-queries","${SCRATCH}/lusearch/query", 

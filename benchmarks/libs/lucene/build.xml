@@ -38,5 +38,10 @@
                 <include name="lucene-demo-*.jar"/>
             </fileset>
         </copy>
+        <copy todir="${lib-jars}">
+            <fileset dir="${lib-build-top}/build/queryparser/">
+                <include name="lucene-queryparser-*.jar"/>
+            </fileset>
+        </copy>
     </target>
 </project>
