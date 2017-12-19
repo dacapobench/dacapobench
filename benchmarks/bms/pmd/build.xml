@@ -37,7 +37,7 @@
         <property name="mvn" location="${mvn-home}/${mvn-exe}"/>
     </target>
 
-    <target name="bm-build" depends="build.init,xerces">
+    <target name="bm-build" depends="build.init,patch,xerces">
         <!-- build JUnit -->
         <ant antfile="libs/junit/build.xml"/>
 
