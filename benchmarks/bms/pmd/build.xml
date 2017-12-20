@@ -21,10 +21,11 @@
     <property name="jcommander-version" value="1.48"/>
     <property name="saxon-version" value="9.1.0.8"/>
 
-    <condition property="mvn-exe" value="mvn.bat">
+    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+    <property name="mvn-exe" value="${mvn-home}/mvn"/>
+    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
         <os family="windows"/>
     </condition>
-    <property name="mvn-exe" value="mvn"/>
 
     <import file="../common.xml"/>
 
@@ -32,12 +33,7 @@
 
     <target name="unpack" depends="unzip, patch"/>
 
-    <target name="build.init">
-        <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
-        <property name="mvn" location="${mvn-home}/${mvn-exe}"/>
-    </target>
-
-    <target name="bm-build" depends="build.init,xerces">
+    <target name="bm-build" depends="xerces">
         <!-- build JUnit -->
         <ant antfile="libs/junit/build.xml"/>
 
@@ -48,7 +44,7 @@
         </exec>
 
         <!-- execute Maven in build directory -->
-        <exec dir="${bm-build-top}" executable="mvn">
+        <exec dir="${bm-build-top}" executable="${mvn-exe}">
             <arg line="-B --global-toolchains ${mvn-toolchains-xml} -Dmaven.test.skip=true clean package"/>
         </exec>
 
