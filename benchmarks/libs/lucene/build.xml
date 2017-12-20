@@ -23,8 +23,15 @@
   <target name="unpack" depends="untar"/>
 
     <target name="build">
-        <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
-        <ant antfile="build.xml" target="default" dir="${lib-build-top}/demo/" inheritall="false"/>
+        <ant antfile="common-build.xml" target="ivy-bootstrap" dir="${lib-build-top}" inheritall="false">
+            <property name="ivy_install_path" value="${lib-downloads}"/>
+        </ant>
+        <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false">
+            <property name="ivy_install_path" value="${lib-downloads}"/>
+        </ant>
+        <ant antfile="build.xml" target="default" dir="${lib-build-top}/demo/" inheritall="false">
+            <property name="ivy_install_path" value="${lib-downloads}"/>
+        </ant>
     </target>
 
     <target name="jar">
