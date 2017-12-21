@@ -8,11 +8,12 @@
  -->
 <project name="junit" default="all" basedir="../..">
     <description>junit library, required by pmd, hsqldb and derby</description>
+    <property name="sourceforge.dl.j.url" value="http://jaist.dl.sourceforge.net"/>
     <property file="ant/dacapo.properties"/>
 
     <property name="lib-name" value="junit"/>
     <property name="lib-version" value="4.7"/>
-    <property name="lib-url" value="${sourceforge.dl.url}/junit"/>
+    <property name="lib-url" value="${sourceforge.dl.j.url}/project/junit/junit/${lib-version}"/>
     <property name="lib-src" value="junit${lib-version}.zip"/>
 
     <import file="../common.xml"/>
