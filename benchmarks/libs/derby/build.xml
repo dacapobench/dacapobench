@@ -30,6 +30,7 @@
             </fileset>
         </copy>
         <ant antfile="build.xml" inheritall="false" dir="${lib-build-top}">
+            <property name="j16lib" value="${j16lib}"/>
             <target name="all"/>
             <target name="buildjars"/>
         </ant>

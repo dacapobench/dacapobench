@@ -12,7 +12,8 @@
 
     <property name="bm-name" value="sunflow"/>
     <property name="bm-version" value="0.07.2"/>
-    <property name="bm-url" value="${sourceforge.dl.url}/sunflow"/>
+    <property name="bm-url" value="${sourceforge.dl.url}/sunflow/sunflow-src/v${bm-version}"/>
+    <property name="bm-bin-url" value="${sourceforge.dl.url}/sunflow/sunflow-bin/v${bm-version}"/>
     <property name="bm-src" value="${bm-name}-src-v${bm-version}.zip"/>
     <property name="bm-bin" value="${bm-name}-bin-v${bm-version}.zip"/>
 
@@ -21,7 +22,7 @@
     <target name="source" depends="common.source">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${bm-url}"/>
+            <param name="target-url" value="${bm-bin-url}"/>
             <param name="target-file" value="${bm-bin}"/>
         </antcall>
     </target>

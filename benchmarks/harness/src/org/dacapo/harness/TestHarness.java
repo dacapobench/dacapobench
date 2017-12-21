@@ -256,7 +256,8 @@ public class TestHarness {
 
   {
     try {
-      JarFile jarFile = new JarFile(new File(TestHarness.class.getProtectionDomain().getCodeSource().getLocation().getFile()));
+      String url = TestHarness.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+      JarFile jarFile = new JarFile(url.replace("!/harness", "").replace("file:", ""));
 
       Manifest manifest = jarFile.getManifest();
       Attributes attributes = manifest.getMainAttributes();
