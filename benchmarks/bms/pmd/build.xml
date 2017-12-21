@@ -9,10 +9,11 @@
 <project name="pmd" default="all" basedir="../..">
     <description>DaCapo pmd benchmark</description>
     <property file="dacapo.properties"/>
+    <property name="netix.sourceforge" value="https://netix.dl.sourceforge.net/project"/>
 
     <property name="bm-name" value="pmd"/>
     <property name="bm-version" value="4.2.5"/>
-    <property name="bm-url" value="${sourceforge.dl.url}/pmd"/>
+    <property name="bm-url" value="${netix.sourceforge}/pmd/pmd/4.2.5"/>
     <property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
     <property name="jaxen-version" value="1.1.1"/>
     <property name="asm-version" value="3.1"/>
