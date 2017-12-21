@@ -10,3 +10,24 @@ diff -N -u -r tomcat.orig/apache-tomcat-6.0.20-src/build.properties.default apac
  
  # ----- Commons Logging, version 1.1 or later -----
  commons-logging-version=1.1.1
+
+--- build/apache-tomcat-6.0.20-src/build.properties.default	2017-11-24 16:45:54.563087654 +1100
++++ build.properties-new.default	2017-11-24 16:46:55.752018154 +1100
+@@ -45,7 +45,7 @@
+
+ base-commons.loc=http://archive.apache.org/dist/commons
+ base-tomcat.loc=http://archive.apache.org/dist/tomcat
+-base-sf.loc=http://softlayer.dl.sourceforge.net
++base-sf.loc=https://ncu.dl.sourceforge.net
+
+ # ----- Commons Logging, version 1.1 or later -----
+ commons-logging-version=1.1.1
+@@ -90,7 +90,7 @@
+ nsis.installoptions.dll=${nsis.home}/Plugins/InstallOptions.dll
+ nsis.nsexec.dll=${nsis.home}/Plugins/nsExec.dll
+ nsis.nsisdl.dll=${nsis.home}/Plugins/NSISdl.dll
+-nsis.loc=${base-sf.loc}/nsis/nsis-2.37.zip
++nsis.loc=${base-sf.loc}/project/nsis/NSIS%202/2.37/nsis-2.37.zip
+
+
+# ----- Commons Daemon, version 1.0-Alpha or later -----
