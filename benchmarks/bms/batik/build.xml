@@ -23,9 +23,11 @@
     <target name="unpack" depends="unzip"/>
 
     <target name="bm-build">
-        <ant antfile="build.xml" dir="${batik-top}" target="all-jar" inheritall="false">
-            <property name="debug" value="on"/>
-        </ant>
+        <exec executable="${ant.home}/bin/ant" dir="${batik-top}" failonerror="yes">
+          <arg line="all-jar"/>
+          <arg line="-Ddebug=on"/>
+          <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
     </target>
 
     <target name="jar" depends="deps">

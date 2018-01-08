@@ -267,21 +267,21 @@
 
         <!-- build required plugins -->
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${j16lib}"/> 
+          <env key="JAVA_HOME" path="${jdk16home}"/>
         </exec>
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${j16lib}"/>
+          <env key="JAVA_HOME" path="${jdk16home}"/>
         </exec>
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${j16lib}"/> 
+          <env key="JAVA_HOME" path="${jdk16home}"/>
         </exec>
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${j16lib}"/> 
+          <env key="JAVA_HOME" path="${jdk16home}"/>
         </exec>
 
         <!-- build daytrader -->
         <exec executable="${mvn}" dir="${dt-build}">
-            <env key="JAVA_HOME" path="${j16lib}"/> 
+            <env key="JAVA_HOME" path="${jdk16home}"/>
             <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin:${JAVA_HOME}/bin"/>
             <env key="GERONIMO_HOME" value="${ger-home}"/>
             <!-- <env key="PATH" path="${env.PATH}:${mvn-home}"/> -->
@@ -361,6 +361,7 @@
     <target name="start-geronimo">
         <echo message="${ger-home}/bin/${gsh-exe}"/>
         <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="true">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="geronimo/start-server"/>
@@ -374,6 +375,7 @@
     </target>
     <target name="stop-geronimo">
         <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="false">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="geronimo/stop-server -u system -w manager"/>
@@ -381,6 +383,7 @@
     </target>
     <target name="deploy">
         <exec executable="${ger-home}/bin/${gsh-exe}">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="deploy/install-plugin -u system -w manager ${deploy-subject}"/>
@@ -388,6 +391,7 @@
     </target>
     <target name="undeploy">
         <exec executable="${ger-home}/bin/${gsh-exe}">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="deploy/undeploy -u system -w manager ${deploy-subject}"/>

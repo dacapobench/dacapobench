@@ -44,7 +44,9 @@
         <copy todir="${bm-build-dir}/src/java">
             <fileset file="${bm-build-dir}/build.*"/>
         </copy>
-        <ant antfile="build.xml" dir="${bm-build-dir}" inheritall="false"/>
+        <exec executable="${ant.home}/bin/ant" dir="${bm-build-dir}" failonerror="yes">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
     </target>
 
     <target name="jar">

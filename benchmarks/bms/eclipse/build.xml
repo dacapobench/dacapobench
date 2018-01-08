@@ -62,7 +62,7 @@
                 <include name="**/${workspace-full}.zip"/>
             </fileset>
         </unzip>
-        <!-- Create two complimentary zips for default and large workspaces -->
+        <!--Create two complimentary zips for default and large workspaces-->
         <zip destfile="${bm-build-dir}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
             <patternset includesfile="${bm-files}/bundles-default.lst"/>
         </zip>
@@ -83,12 +83,16 @@
 
     <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
     <target name="plugin" depends="unpack">
-        <ant antfile="build.xml" dir="${bm-files}/plugin" inheritall="false">
-            <property name="plugin.destination" location="${bm-build-dir}/eclipse/plugins/"/>
-            <target name="clean"/>
-            <target name="build.update.jar"/>
-        </ant>
-        <!-- add our bundle to the configurator metadata -->
+        <exec executable="${ant.home}/bin/ant" dir="${bm-files}/plugin" failonerror="yes">
+            <arg line="clean"/>
+            <arg line="-Dplugin.destination=${bm-build-dir}/eclipse/plugins/"/>
+            <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
+        <exec executable="${ant.home}/bin/ant" dir="${bm-files}/plugin" failonerror="yes">
+            <arg line="build.update.jar"/>
+            <arg line="-Dplugin.destination=${bm-build-dir}/eclipse/plugins/"/>
+            <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
         <patch patchfile="${bm-files}/eclipse.patch" dir="${bm-build-dir}" strip="1"/>
     </target>
 
@@ -104,6 +108,7 @@
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </touch>
         -->
+        <unzip dest="${bm-build-dir}/" src="${bm-data}/dummyjre.zip"/>
 
         <!-- Install the test data -->
         <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
@@ -113,4 +118,5 @@
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </zip>
     </target>
+
 </project>

@@ -37,7 +37,7 @@
     </target>
 
     <target name="copy-data">
-        <delete dir="${bm-data}/lusearchFix"/>
+        <mkdir dir="${bm-data}/lusearchFix"/>
         <copy todir="${bm-data}/lusearchFix">
             <fileset dir="bms/lusearch/data/lusearch">
                 <include name="**"/>
@@ -45,8 +45,9 @@
         </copy>
     </target>
 
-    <target name="data" if="bm-data-exists" depends="copy-data">
+    <target name="data" depends="copy-data">
         <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+        <delete dir="${bm-data}"/>
     </target>
 
 </project>
