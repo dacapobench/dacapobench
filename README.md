@@ -29,13 +29,18 @@ The easiest way to obtain the benchmark suite is to download the pre-built jar f
 
 If, however, you want to build from source read on...
 
-The suite is built using ant.  You will need the following tools:
+The suite is built using ant 1.9 (1.10 and later will fail for many of the benchmarks).  You will need the following tools:
 
-* *[ant](http://ant.apache.org)* You need to install this yourself if you don't already have it.
+* *[ant 1.9](http://ant.apache.org)* You need to install this yourself if you don't already have it.
 
 * *[javacc](http://javacc.dev.java.net/)* Included in our tools directory.
 
 * *[maven](http://maven.apache.org)* Included in our tools directory.
+
+* *[cvs](http:/www.nongnu.org/cvs)
+
+* *[svn](http://subversion.apache.org)
+
 
 **NOTE**
 

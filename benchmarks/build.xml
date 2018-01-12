@@ -20,6 +20,9 @@ DEPENDENCIES:
         
    - javacc (http://javacc.dev.java.net/)
    - maven  (http://maven.apache.org/)
+   - ant1.9 (http://ant.apache.org)   # note that builds will fail if ant 1.10 or later are used
+   - csv (http:/www.nongnu.org/cvs/)
+   - svn (http://subversion.apache.org)
         
 For convinience, both are included in the tools directory:
     ${toolsdir}
@@ -27,41 +30,58 @@ For convinience, both are included in the tools directory:
         
 BUILDING:
 
-    1. Set your JAVA_HOME environment variable appropriately:
-        On Mac OS X:
-            export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home            
-        On Ubuntu 9.04:
-            export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun
-            
-    2. Set ant and maven environment variables if necessary.  In particular,
-       for some jvms it is necessary to explicitly request a larger heap size.
-       It is necessary to set the maven options because the trade benchmarks
-       are built by maven (called by ant).  As another example, you may wish
-       for ant to use a proxy when downloading (there is a lot to be
-       downloaded).   Some examples:
+        1. Set your JAVA_HOME environment variable appropriately:
+             On Mac OS X something like:
+                  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
+             On Ubuntu 16.04 something like:
+                   export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
+
+        2. Set ant and maven environment variables if necessary.  In particular,
+        for some jvms it is necessary to explicitly request a larger heap size.
+        It is necessary to set the maven options because the trade benchmarks
+        are built by maven (called by ant).  As another example, you may wish
+        for ant to use a proxy when downloading (there is a lot to be
+        downloaded).   Some examples:
             export ANT_OPTS="-Xms512M -Xmx512M"
             export MAVEN_OPTS="-Xms512M -Xmx512M"
-       or
+        or
             export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
 
-    3. Copy default.properties to local.properties and edit local.properties
-       for your environment.
+        When the Java6 runtime is invoked to build Tomcat, it may have incorrect/broken
+        cacerts, which stop files from being downloaded by ant.   This can be addressed
+        by pointing to cacerts in your 1.8 JVM:
+            export ANT_OPTS="-Djavax.net.ssl.trustStore=${JAVA-8-HOME}/jre/lib/security/cacerts"
 
-    4. Run ant:
-               ant         [builds all benchmarks]
-               ant dist    [builds all benchmarks, this is the default]
-               ant source  [builds a source distribution including benchmarks and tools]
-               ant bm      [builds a specific benchmark, bm]
+        3. Copy default.properties to local.properties and edit local.properties
+        for your environment.
 
-    5. A log of directory is created under this benchmark directory
-       for benchmark build status and build success or failure files
-       to be stored.  The directory log directory is normally of the
-       form
-           ${basedir}/log/${build.time}
-       and contains status.txt where each benchmark build status is recorded,
-       and either pass.txt if all benchmarks build, or fail.txt if one or
-       more benchmarks fail to build. Note: that either fail.txt or pass.txt
-       is created when a full build is performed.
+        4. You may need to modify your local maven settings in order to get the trade benchmarks
+        to build.   In particular, you may need to edit the file:
+        ~/.m2/repository/org/apache/geronimo/geronimo/2.1.4/geronimo-2.1.4.pom
+
+        and change the version numbers near line 2423:
+
+        from:
+        [1.5,1.6)
+        to:
+        [1.5,)
+
+        5. Run ant:
+        ant         [builds all benchmarks]
+        ant dist    [builds all benchmarks, this is the default]
+        ant source  [builds a source distribution including benchmarks and tools]
+        ant bm      [builds a specific benchmark, bm]
+
+        6. A log of each directory is created under this benchmark directory
+        for benchmark build status and build success or failure files
+        to be stored.  The directory log directory is normally of the
+        form
+        ${basedir}/log/${build.time}
+        and contains status.txt where each benchmark build status is recorded,
+        and either pass.txt if all benchmarks build, or fail.txt if one or
+        more benchmarks fail to build. Note: that either fail.txt or pass.txt
+        is created when a full build is performed.
+
 </description>
 
     <property file="local.properties"/>
@@ -136,6 +156,12 @@ BUILDING:
                 <include name="tools/*/bin/**"/>
             </zipfileset>
             <zipfileset dir="${basedir}/.." defaultexcludes="yes">
+                <!-- add readme etc -->
+               <include name="README.md"/>
+               <include name="LICENSE"/>
+               <include name="benchmarks/doc/*"/>
+               <include name="benchmarks/bms/*/doc/*"/>
+
                 <!-- add source readme indicating where this is from -->
                 <include name="benchmarks/SOURCE_VERSION.txt"/>
 
@@ -143,12 +169,11 @@ BUILDING:
                 <include name="benchmarks/*.xml"/>
                 <include name="benchmarks/dacapo.properties"/>
                 <include name="benchmarks/default.properties"/>
-                <include name="benchmarks/CHANGES.txt"/>
-                <include name="benchmarks/LICENSE-2.0.txt"/>
-                <include name="benchmarks/README.txt"/>
                 <include name="benchmarks/RELEASE_NOTES.txt"/>
 
                 <!-- benchmark harness source -->
+                <include name="benchmarks/src/**"/>
+                <include name="benchmarks/bms/*/harness/src/**"/>
                 <include name="benchmarks/harness/*.xml"/>
                 <include name="benchmarks/harness/downloads/**.MD5"/>
                 <include name="benchmarks/harness/src/**"/>
@@ -184,6 +209,10 @@ BUILDING:
                 <include name="benchmarks/bms/eclipse/bundles-default.lst"/>
                 <include name="benchmarks/bms/eclipse/bundles-required.lst"/>
                 <include name="benchmarks/bms/eclipse/bundles-stub-required.lst"/>
+
+               <!-- add daytrader plugin -->
+                <include name="benchmarks/libs/daytrader/plugins/**"/>
+                <include name="benchmarks/libs/daytrader/daytrader/**"/>
 
                 <!-- add tools -->
                 <include name="tools/**"/>
