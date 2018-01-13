@@ -58,13 +58,18 @@
 
     <property name="jstl-version" value="1.2"/>
     <property name="jstl-name" value="jstl"/>
-    <property name="jstl-url" value="${java-dev-url}/glassfish/org/glassfish/web/${jstl-name}-impl/${jstl-version}"/>
+    <property name="jstl-url" value="${maven-repo-url}/org/glassfish/web/${jstl-name}-impl/${jstl-version}"/>
     <property name="jstl-jar" value="${jstl-name}-impl-${jstl-version}.jar"/>
 
     <property name="oro-version" value="2.0.8"/>
     <property name="oro-name" value="oro"/>
     <property name="oro-url" value="${maven-repo-url}/${oro-name}/${oro-name}/${oro-version}"/>
     <property name="oro-jar" value="${oro-name}-${oro-version}.jar"/>
+
+    <property name="incubator-version" value="3.0.0"/>
+    <property name="incubator-name" value="incubator"/>
+    <property name="incubator-url" value="https://maven.atlassian.com/maven-3rdparty/org/apache/activemq/activeio-core/${incubator-version}-${incubator-name}/"/>
+    <property name="incubator-jar" value="activeio-core-${incubator-version}-${incubator-name}.jar"/>
 
     <import file="../common.xml"/>
 
@@ -129,6 +134,11 @@
             <param name="target-dir" value="${lib-downloads}"/>
             <param name="target-url" value="${jasper-el-url}"/>
             <param name="target-file" value="${jasper-el-jar}"/>
+        </antcall>
+	<antcall target="check-source">
+            <param name="target-dir" value="${lib-downloads}"/>
+            <param name="target-url" value="${incubator-url}"/>
+            <param name="target-file" value="${incubator-jar}"/>
         </antcall>
     </target>
 
@@ -242,19 +252,39 @@
             <arg value="-Dpackaging=jar"/>
             <arg value="-Dfile=${tomcat-jar-loc}"/>
         </exec>
+	
+	<!-- install incubator -->
+        <property name="incubator-jar-loc" location="${lib-downloads}/${incubator-jar}"/>
+        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
+            <arg value="install:install-file"/>
+            <arg value="-DgroupId=org.apache.activemq"/>
+            <arg value="-DartifactId=activeio-core"/>
+            <arg value="-Dversion=3.0.0-incubator"/>
+            <arg value="-Dpackaging=jar"/>
+            <arg value="-Dfile=${incubator-jar-loc}"/>
+        </exec>
 
         <!-- build required plugins -->
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes"/>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes"/>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes"/>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes"/>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes">
+          <env key="JAVA_HOME" path="${jdk16home}"/>
+        </exec>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes">
+          <env key="JAVA_HOME" path="${jdk16home}"/>
+        </exec>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes">
+          <env key="JAVA_HOME" path="${jdk16home}"/>
+        </exec>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes">
+          <env key="JAVA_HOME" path="${jdk16home}"/>
+        </exec>
 
         <!-- build daytrader -->
         <exec executable="${mvn}" dir="${dt-build}">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
+            <env key="JAVA_HOME" path="${jdk16home}"/>
+            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin:${JAVA_HOME}/bin"/>
             <env key="GERONIMO_HOME" value="${ger-home}"/>
             <!-- <env key="PATH" path="${env.PATH}:${mvn-home}"/> -->
-            <env key="JAVA_HOME" path="${java.home}"/>
             <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
             <arg value="clean"/>
             <arg value="install"/>
@@ -331,6 +361,7 @@
     <target name="start-geronimo">
         <echo message="${ger-home}/bin/${gsh-exe}"/>
         <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="true">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="geronimo/start-server"/>
@@ -344,6 +375,7 @@
     </target>
     <target name="stop-geronimo">
         <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="false">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="geronimo/stop-server -u system -w manager"/>
@@ -351,6 +383,7 @@
     </target>
     <target name="deploy">
         <exec executable="${ger-home}/bin/${gsh-exe}">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="deploy/install-plugin -u system -w manager ${deploy-subject}"/>
@@ -358,6 +391,7 @@
     </target>
     <target name="undeploy">
         <exec executable="${ger-home}/bin/${gsh-exe}">
+            <env key="JAVA_HOME" value="${jdk16home}"/>
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-c"/>
             <arg value="deploy/undeploy -u system -w manager ${deploy-subject}"/>

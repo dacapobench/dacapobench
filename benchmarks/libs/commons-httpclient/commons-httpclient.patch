@@ -1,0 +1,39 @@
+--- commons-httpclient-3.1/build.xml	2007-08-18 19:02:14.000000000 +1000
++++ ../build-new.xml	2017-12-06 13:49:28.000000000 +1100
+@@ -181,14 +181,16 @@
+            destdir     ="${build.home}/classes"
+            debug       ="${compile.debug}"
+            deprecation ="${compile.deprecation}"
+-           optimize    ="${compile.optimize}">
++           optimize    ="${compile.optimize}"
++           encoding    ="ISO8859_1">
+       <classpath refid="compile.classpath"/>
+     </javac>
+     <javac srcdir      ="${source.home}/examples"
+            destdir     ="${build.home}/examples"
+            debug       ="${compile.debug}"
+            deprecation ="${compile.deprecation}"
+-           optimize    ="${compile.optimize}">
++           optimize    ="${compile.optimize}"
++           encoding    ="ISO8859_1">
+       <classpath refid="compile.classpath"/>
+     </javac>
+   </target>
+@@ -199,7 +201,8 @@
+            destdir     ="${build.home}/tests"
+            debug       ="${compile.debug}"
+            deprecation ="${compile.deprecation}"
+-           optimize    ="${compile.optimize}">
++           optimize    ="${compile.optimize}"
++           encoding    ="ISO8859_1">
+       <classpath refid="test.classpath"/>
+     </javac>
+     <copy todir="${build.home}/tests" filtering="on">
+@@ -248,6 +251,7 @@
+              doctitle     ="&lt;h1&gt;${component.title}&lt;/h1&gt;"
+              windowtitle  ="${component.title} (Version ${component.version})"
+              bottom       ="Copyright (c) 1999-2005 - Apache Software Foundation"
++             encoding     ="ISO8859_1"
+     >
+       <classpath refid="test.classpath"/>
+       <link href="${javadoc.j2sdk.link}"/>

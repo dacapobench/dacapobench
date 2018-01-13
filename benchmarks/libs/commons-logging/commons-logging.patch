@@ -1,0 +1,19 @@
+--- commons-logging-1.1.1-src/build.xml	2007-11-22 10:27:52.000000000 +1100
++++ ../downloads/build.xml	2018-01-01 22:12:48.046871456 +1100
+@@ -221,13 +221,14 @@
+     - Running this target will download all the necessary dependencies into the "lib" subdirectory.
+     -->
+   <property name="getlibs.base" value="http://repo1.maven.org/maven"/>
++  <property name="maven.central" value="http://central.maven.org/maven2"/>
+   <target name="getlibs">
+     <mkdir dir="lib"/>
+-    <get dest="lib/junit-3.8.1.jar" src="${getlibs.base}/junit/jars/junit-3.8.1.jar"/>
++    <get dest="lib/junit-3.8.1.jar" src="${maven.central}/junit/junit/3.8.1/junit-3.8.1.jar"/>
+     <get dest="lib/logkit-1.0.1.jar" src="${getlibs.base}/logkit/jars/logkit-1.0.1.jar"/>
+     <get dest="lib/avalon-framework-4.1.3.jar" src="${getlibs.base}/avalon-framework/jars/avalon-framework-4.1.3.jar"/>
+     <get dest="lib/log4j-1.2.12.jar" src="${getlibs.base}/log4j/jars/log4j-1.2.12.jar"/>
+-    <get dest="lib/servletapi-2.3.jar" src="${getlibs.base}/servletapi/jars/servletapi-2.3.jar"/>
++    <get dest="lib/servletapi-2.3.jar" src="${maven.central}/servletapi/servletapi/2.3/servletapi-2.3.jar"/>
+   </target>
+ 
+   <target name="init"

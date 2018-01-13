@@ -1,6 +1,7 @@
-dacapo-9.12-bach  RELEASE NOTES  2009-12-23
+dacapo-9.12-bach-MR1  RELEASE NOTES  2018-01-13
 
-This is the second major release of the DaCapo benchmark suite.  
+This is a maintenance release of the second major release of the
+DaCapo benchmark suite.
 
 These notes are structured as follows:
 
@@ -31,12 +32,6 @@ consistent with the original goals of the DaCapo project, which
 include the desire for the suite to remain relevant and reflect the
 current state of deployed Java applications.
 
-Each of these benchmarks is tested for both performance and
-correctness nightly. Results are available here:
-
-    o performance:  http://dacapo.anu.edu.au/regression/perf/head.html
-    o sanity:  http://dacapo.anu.edu.au/regression/sanity/latest/
-
 
 2. Usage
 --------
@@ -46,13 +41,18 @@ correctness nightly. Results are available here:
   o Download the binary jar and/or source zip from:
       https://sourceforge.net/projects/dacapobench/files/
 
-  o Access the source from subversion via
-      svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapobench
+      Note that as of 9.12-MR1, there are two binary releases; the
+      default, and one for Java 6 JVMs.   The default is built on Java 8
+      and runs on Java 8 (with the exception of tomcat, see note
+      below).   The Java 6 jar is built on Java 6 for Java 6.
+
+  o Access the source from git via
+      https://github.com/dacapobench/dacapobench
 
 2.2 Running
 
   o It is essential that you read and observe the usage guidelines
-    that appear in README.txt
+    that appear in README.md
 
   o Run a benchmark:
       java -jar <dacapo-jar-name>.jar <benchmark>
@@ -72,6 +72,24 @@ correctness nightly. Results are available here:
 
 3. Changes
 ----------
+
+3.0. Changes introduced by 9.12-MR1 (since 9.12)
+
+     lusearch-fix is introduced as a new benchmark.   The lusearch-fix
+              and lusearch benchmarks differ by a single line of code.   This
+	      is a bug fix to lucene, which dramatically changes the performance of
+	      lusearch, reducing the amount of allocation greatly.
+	      		https://issues.apache.org/jira/browse/LUCENE-1800
+			https://dl.acm.org/citation.cfm?id=2048092
+	      We encourage you to use lusearch-fix in place of lusearch.   We
+	      retain the unpatched lusearch in this release for historical consistency.
+
+     URLs used by the build system have been systematically updated
+              so that the source distribution works correctly.
+	      
+     Other issues in the source distribution have been fixed to ensure that
+              the suite builds with Java 8 VMs.
+	      
 
 3.1. Benchmark additions since 2006-10-MR2
 
@@ -196,7 +214,7 @@ message.
 ---------------
 
 Please consult the bug tracker for a complete and up-to-date list of
-known issues (http://sourceforge.net/tracker/?group_id=172498&atid=861957).
+known issues (https://github.com/dacapobench/dacapobench/issues).
 
 DaCapo is an open source community project. We welcome all assistance
 in addressing bugs and shortcomings in the suite.
@@ -224,6 +242,11 @@ and fixes from the community.
 Tomcat remains less interesting than we would have liked. Performance
 results show that tomcat currently has a remarkably flat warm-up curve
 when compared to other benchmarks.
+
+Furthermore, the version of tomcat (6.0.20) used by dacapo 9.12 does
+not work with OpenJDK since 8u77.
+
+https://bugs.openjdk.java.net/browse/JDK-8155588
 
 
 4.3 Validation
@@ -255,7 +278,8 @@ DaCapo benchmark suite.
 -------------------------------------
 
 The generous financial support of Intel was crucial to the successful
-completion of this release.
+completion of the 9.12 release, and the generous financial support
+of Oracle led to the 9.12 MR1 release.
 
 The production of the 9.12 release was jointly led by:
 
@@ -269,9 +293,15 @@ The 9.12 release of the DaCapo suite was developed primarily by:
      Robin Garner, Australian National University
      John Zigman, Australian National University
 
+The 9.12 MR1 release was developed primarily by:
+
+     Rui Chen, Australian National University
+     John Zhang, Australian National University
+
 We receieved considerable assistance from a number of people,
 including:
 
+     Jon Bell
      Eric Bodden, Technische Universität Darmstadt
      Sam Guyer, Tufts
      Chris Kulla
