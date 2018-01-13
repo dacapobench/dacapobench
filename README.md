@@ -1,6 +1,6 @@
 # The DaCapo Benchmark Suite
 
-Last updated 2009-12-18
+Last updated 2018-01-13
 
 This benchmark suite is intend as a tool for the research community.
 It consists of a set of open source, real world applications with
