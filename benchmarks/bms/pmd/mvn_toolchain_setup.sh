@@ -2,11 +2,11 @@
 # This script sets up the $HOME/.m2/toolchains.xml if it does not already exist
 
 extract_java_version() {
-    java -version |& grep "java version" | sed -E 's/java version "[0-9]\.([0-9]+).*"/\1/g'
+    java -version 2>&1 | grep "java version" | sed -E 's/java version "[0-9]\.([0-9]+).*"/\1/g'
 }
 
 if [ ! -e $1 ]; then
-    jver=`extract_java_version`
+    jver=$(extract_java_version)
     if [ $jver -ge 8 ]; then
         cat > $1 <<- EOM
 <?xml version="1.0" encoding="UTF8"?>
