@@ -88,7 +88,7 @@ public class Pmd extends Benchmark {
 
   public void prepare(String size) {
       String [] config_args = config.getArgs(size);
-      args = new String[12];
+      args = new String[13];
 
       args[0] = "-filelist";
       args[1] = prepended_filelist(fileInScratch(config_args[0].substring(1))).getPath();
@@ -107,13 +107,15 @@ public class Pmd extends Benchmark {
       args[8] = "-failOnViolation";
       args[9] = "false";
 
-      args[10] = "-rulesets";
+      args[10] = "-shortnames";
+
+      args[11] = "-rulesets";
       List<String> rulesets = new ArrayList<String>(args.length - 2);
       for (int i = 2; i < config_args.length; i ++) {
         if (config_args[i].charAt(0) != '-')
           rulesets.add(fileInScratch(config_args[i]));
       }
-      args[11] = String.join(",", rulesets);
+      args[12] = String.join(",", rulesets);
   }
 
   public void iterate(String size) throws Exception {
