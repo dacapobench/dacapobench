@@ -37,26 +37,12 @@ The suite is built using ant 1.9 (1.10 and later will fail for many of the bench
 
 * *[maven](http://maven.apache.org)* Included in our tools directory.
 
-* *[cvs](http:/www.nongnu.org/cvs)
+* *[cvs](http:/www.nongnu.org/cvs)*
 
-* *[svn](http://subversion.apache.org)
-
-
-**NOTE**
-
-1. A number of benchmarks including trade and tomcat do not reliably _build_ under Java 6 (all run under Java 6). Therefore you must explicitly use a Java 5 VM at build time (see below).
-	
-
-**IMPORTANT:** before trying to build the suite:
-
-1. Set your `JAVA_HOME` environment variable appropriately (it must be set and be consistent with the VM that will be used to build the suite).
-
-2. Copy `default.properties` to `local.properties` and edit it for your environment.
-
-  * Specifically, you must set `java14.lib` to point to a Java 1.4 installation and `java14.compile.classpath` to correctly capture the libraries for that installation(otherwise derby will not build correctly)
+* *[svn](http://subversion.apache.org)*
 
 
-For more information, run `ant -p` in the benchmarks directory.
+** Run `ant -p` in the benchmarks directory for more information on building **.
 
 
 
