@@ -1,0 +1,85 @@
+before_script:
+  - java -version
+  - ant -version
+  - cd benchmarks
+  - echo "make=/usr/bin/make\nbuild.failonerror=true" > local.properties
+  
+avrora:
+  script:
+    - ant avrora
+    - java -jar dacapo.jar avrora
+
+batik:
+  script:
+    - ant batik
+    - java -jar dacapo.jar batik
+
+eclipse:
+  script:
+    - ant eclipse
+    - java -jar dacapo.jar eclipse
+
+fop:
+  script:
+    - ant fop
+    - java -jar dacapo.jar fop
+
+h2:
+  script:
+    - ant h2
+    - java -jar dacapo.jar h2
+
+jython:
+  script:
+    - ant jython
+    - java -jar dacapo.jar jython
+
+luindex:
+  script:
+    - ant luindex
+    - java -jar dacapo.jar luindex
+
+lusearch:
+  script:
+    - ant lusearch
+    - java -jar dacapo.jar lusearch
+
+lusearch:
+  script:
+    - ant lusearch
+    - java -jar dacapo.jar lusearch
+
+lusearch-fix:
+  script:
+    - ant lusearch-fix
+    - java -jar dacapo.jar lusearch-fix
+
+pmd:
+  script:
+    - ant pmd
+    - java -jar dacapo.jar pmd
+
+sunflow:
+  script:
+    - ant sunflow
+    - java -jar dacapo.jar sunflow
+
+tomcat:
+  script:
+    - ant tomcat
+    - java -jar dacapo.jar tomcat
+
+tradebeans:
+  script:
+    - ant tradebeans
+    - java -jar dacapo.jar tradebeans
+
+tradesoap:
+  script:
+    - ant tradesoap
+    - java -jar dacapo.jar tradesoap
+
+xalan:
+  script:
+    - ant xalan
+    - java -jar dacapo.jar xalan
