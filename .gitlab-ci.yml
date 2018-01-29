@@ -1,9 +1,10 @@
 before_script:
+  - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   - java -version
   - ant -version
   - cd benchmarks
   - echo "make=/usr/bin/make\nbuild.failonerror=true" > local.properties
-  
+
 avrora:
   script:
     - ant avrora
