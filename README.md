@@ -37,9 +37,9 @@ The suite is built using ant 1.9 (1.10 and later will fail for many of the bench
 
 * *[maven](http://maven.apache.org)* Included in our tools directory.
 
-* *[cvs](http:/www.nongnu.org/cvs)
+* *[cvs](http:/www.nongnu.org/cvs)*
 
-* *[svn](http://subversion.apache.org)
+* *[svn](http://subversion.apache.org)*
 
 
 **NOTE**
