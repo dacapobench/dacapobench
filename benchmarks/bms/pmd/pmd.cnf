@@ -3,8 +3,7 @@ benchmark pmd
   thread-model single
   jars "pmd-core-5.7.0.jar", "pmd-java-5.7.0.jar", "jaxen-1.1.6.jar", "asm-5.0.4.jar", "commons-io-2.4.jar", "commons-lang3-3.4.jar", "jcommander-1.48.jar", "saxon-9.1.0.8.jar", "saxon-9.1.0.8-dom.jar", "junit-3.8.1.jar", "xercesImpl.jar", "xml-apis.jar";
 
-size xsmall args "@pmd/small.lst","text","pmd/rulesets/java/braces.xml","-debug"
-  output
+size xsmall args "@pmd/small.lst","text","pmd/rulesets/java/braces.xml","-debug";
 
 size small args "@pmd/small.lst","text",
     "pmd/rulesets/java/basic.xml",
@@ -21,7 +20,7 @@ size small args "@pmd/small.lst","text",
 		"pmd/rulesets/java/strings.xml",
 		"pmd/rulesets/java/unusedcode.xml"
   output 
-    stdout digest 33e383fe2f079d7bfa76f564482c144fee1654;
+    stdout digest 0xfb33e383fe2f079d7bfa76f564482c144fee1654;
 
 size default args "@pmd/default.lst","text",
     "pmd/rulesets/java/basic.xml",
@@ -38,7 +37,7 @@ size default args "@pmd/default.lst","text",
 		"pmd/rulesets/java/strings.xml",
 		"pmd/rulesets/java/unusedcode.xml"
   output
-    stdout digest 4df767dd7cb928f7a8737b673826f0db2e6bf8;
+    stdout digest 0x134df767dd7cb928f7a8737b673826f0db2e6bf8;
  
 size large args "@pmd/large.lst","text",
     "pmd/rulesets/java/basic.xml",
@@ -55,7 +54,7 @@ size large args "@pmd/large.lst","text",
 		"pmd/rulesets/java/strings.xml",
 		"pmd/rulesets/java/unusedcode.xml"
   output 
-    stdout digest fbc6a2e901c82c0ecfca92eb84998db5ea51fc;
+    stdout digest 0x6ffbc6a2e901c82c0ecfca92eb84998db5ea51fc;
 
 description
   short		"A source code analyzer for Java",
