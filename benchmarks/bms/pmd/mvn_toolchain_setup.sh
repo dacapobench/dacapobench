@@ -2,7 +2,7 @@
 # This script sets up the $HOME/.m2/toolchains.xml if it does not already exist
 
 extract_java_version() {
-    java -version 2>&1 | grep "java version" | sed -E 's/java version "[0-9]\.([0-9]+).*"/\1/g'
+    java -version 2>&1 | grep "version" | sed -E 's/.* version "[0-9]\.([0-9]+).*"/\1/g'
 }
 
 if [ ! -e $1 ]; then
