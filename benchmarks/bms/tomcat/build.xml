@@ -11,9 +11,9 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="tomcat"/>
-    <property name="bm-major-version" value="6"/>
-    <property name="bm-version" value="${bm-major-version}.0.20"/>
-    <property name="bm-url" value="${apache.dl.url}/${bm-name}/${bm-name}-6/v${bm-version}/src"/>
+    <property name="bm-major-version" value="9"/>
+    <property name="bm-version" value="${bm-major-version}.0.2"/>
+    <property name="bm-url" value="${apache.dl.url}/${bm-name}/${bm-name}-9/v${bm-version}/src"/>
     <property name="bm-src-basename" value="apache-${bm-name}-${bm-version}-src"/>
     <property name="bm-src" value="${bm-src-basename}.tar.gz"/>
 
@@ -26,25 +26,20 @@
     <target name="unpack" depends="untar,patch"/>
 
     <target name="bm-build" depends="build-properties,commons-httpclient,dacapo-digest">
-        <exec executable="${ant.home}/bin/ant" dir="${bm-build-top}" failonerror="yes">
-            <env key="JAVA_HOME" value="${jdk16home}"/>
-            <arg line="download"/>
-            <arg line="-Dbase.path=${bm-downloads}"/>
-        </exec>
-        <exec executable="${ant.home}/bin/ant" dir="${bm-build-top}" failonerror="yes">
-            <env key="JAVA_HOME" value="${jdk16home}"/>
-            <arg line="deploy"/>
-            <arg line="-Dbase.path=${bm-downloads}"/>
-        </exec>
-        <ant antfile="dist.xml" inheritall="false" dir="${bm-build-top}">
+        <ant dir="${bm-build-top}" target="download-compile">
             <property name="base.path" value="${bm-downloads}"/>
-            <target name="dist-static"/>
+        </ant>
+        <ant dir="${bm-build-top}" target="deploy">
+            <property name="base.path" value="${bm-downloads}"/>
+        </ant>
+        <ant dir="${bm-build-top}" target="dist-static" inheritAll="false">
+            <property name="base.path" value="${bm-downloads}"/>
         </ant>
         <mkdir dir="${bm-build-dir}/benchmark"/>
-        <javac srcdir="${bm-src-dir}" destdir="${bm-build-dir}/benchmark" 
-                  source="1.5" target="1.5"
-                    includes="org/dacapo/tomcat/*"
-                    debug="true" debuglevel="lines,vars,source">
+        <javac srcdir="${bm-src-dir}" destdir="${bm-build-dir}/benchmark"
+               source="1.8" target="1.8"
+               includes="org/dacapo/tomcat/*"
+               debug="true" debuglevel="lines,vars,source">
             <classpath>
                 <pathelement path="${commons-httpclient-jar}"/>
                 <pathelement path="${dacapo-digest-jar}"/>
@@ -59,9 +54,9 @@
     </target>
 
     <target name="bm-data" depends="bm-build,build-properties">
-        <copy todir="${bm-build-top}/output/dist/conf" 
-            file="${bm-files}/server.xml"
-            overwrite="true">
+        <copy todir="${bm-build-top}/output/dist/conf"
+              file="${bm-files}/server.xml"
+              overwrite="true">
             <fileset file="${bm-files}/server.xml"/>
             <fileset file="${bm-files}/tomcat-users.xml"/>
         </copy>
