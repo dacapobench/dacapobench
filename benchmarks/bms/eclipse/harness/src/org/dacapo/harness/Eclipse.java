@@ -95,8 +95,6 @@ public class Eclipse extends Benchmark {
       System.setProperty("osgi.install.area", "file:" + fileInScratch("eclipse/"));
       System.setProperty("osgi.noShutdown", "true");
       System.setProperty("osgi.framework", "file:" + fileInScratch(OSGI_BOOTSTRAP_JAR));
-      String current_working_dir = System.getProperty("user.dir");
-      System.setProperty("dacapo.local.jre", current_working_dir + "/" + fileInScratch("jre/lib/rt.jar"));
       setJavaHomeIfRequired();
 
       String[] args = new String[4];
