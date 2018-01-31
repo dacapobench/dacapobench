@@ -9,9 +9,10 @@
 <project name="derby" default="all" basedir="../..">
     <description>derby library required for h2 testing</description>
     <property file="ant/dacapo.properties"/>
+    <property name="apache.mirror" value="http://apache.mirror.digitalpacific.com.au/"/>
 
     <property name="lib-name" value="derby"/>
-    <property name="lib-version" value="10.5.3.0"/>
+    <property name="lib-version" value="10.14.1.0"/>
     <property name="lib-url" value="${apache.dl.url}/db/derby/db-derby-${lib-version}"/>
     <property name="lib-src" value="db-derby-${lib-version}-src.tar.gz"/>
 
@@ -29,16 +30,8 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
-        <exec executable="${ant.home}/bin/ant" dir="${lib-build-top}" failonerror="yes">
-            <arg line="all"/>
-            <arg line="-Dj16lib=${j16lib}"/>
-            <env key="JAVA_HOME" value="${jdk16home}"/>
-        </exec>
-        <exec executable="${ant.home}/bin/ant" dir="${lib-build-top}" failonerror="yes">
-            <arg line="buildjars"/>
-            <arg line="-Dj16lib=${j16lib}"/>
-            <env key="JAVA_HOME" value="${jdk16home}"/>
-        </exec>
+        <ant dir="${lib-build-top}" target="all"/>
+        <ant dir="${lib-build-top}" target="buildjars"/>
     </target>
 
     <target name="jar">
