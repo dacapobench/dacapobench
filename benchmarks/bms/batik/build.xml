@@ -11,16 +11,22 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="batik"/>
-    <property name="batik.major.version" value="1.7"/>
-    <property name="bm-version" value="${batik.major.version}beta1"/>
+    <property name="batik.major.version" value="1.9"/>
+    <property name="bm-version" value="${batik.major.version}"/>
     <property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
-    <property name="bm-url" value="${apache.dl.url}/xmlgraphics/batik"/>
+    <property name="bm-url" value="${apache.mirror}/xmlgraphics/batik/source"/>
+
+    <!--property name="bm-name" value="batik"/>
+    <property name="batik.major.version" value="1.7"/>
+    <property name="bm-version" value="${batik.major.version}"/>
+    <property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
+    <property name="bm-url" value="${apache.dl.url}/xmlgraphics/batik"/-->
 
     <import file="../common.xml"/>
 
     <property name="batik-top" value="${bm-build-dir}/batik-${batik.major.version}"/>
 
-    <target name="unpack" depends="unzip"/>
+    <target name="unpack" depends="unzip, patch"/>
 
     <target name="bm-build">
         <exec executable="${ant.home}/bin/ant" dir="${batik-top}" failonerror="yes">
@@ -31,17 +37,19 @@
     </target>
 
     <target name="jar" depends="deps">
-        <copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all-1.9.jar" todir="${bm-jars}"/>
         <copy file="${batik-top}/lib/build/crimson-1.1.3.jar" todir="${bm-jars}"/>
-        <copy file="${batik-top}/lib/xalan-2.6.0.jar" todir="${bm-jars}"/>
-        <copy file="${batik-top}/lib/xerces_2_5_0.jar" todir="${bm-jars}"/>
-        <copy file="${batik-top}/lib/xml-apis.jar" todir="${bm-jars}"/>
-        <copy file="${batik-top}/lib/xml-apis-ext.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xalan-2.7.2.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xercesImpl-2.9.1.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xml-apis-1.3.04.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xml-apis-ext-1.3.04.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/serializer-2.7.2.jar" todir="${bm-jars}"/>
+        <copy file="${batik-top}/lib/xmlgraphics-commons-2.2.jar" todir="${bm-jars}"/>
     </target>
 
     <target name="deps">
         <copy file="${batik-top}/lib/js.jar" todir="${bm-deps-output-dir}"/>
-        <copy file="${batik-top}/lib/pdf-transcoder.jar" todir="${bm-deps-output-dir}"/>
+        <copy file="${batik-top}/lib/fop-transcoder-allinone-2.2.jar" todir="${bm-deps-output-dir}"/>
     </target>
 
 </project>
