@@ -32,7 +32,6 @@
         <exec executable="${ant.home}/bin/ant" dir="${batik-top}" failonerror="yes">
           <arg line="all-jar"/>
           <arg line="-Ddebug=on"/>
-          <env key="JAVA_HOME" value="${jdk16home}"/>
         </exec>
     </target>
 
