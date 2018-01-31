@@ -30,16 +30,8 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
-        <exec executable="${ant.home}/bin/ant" dir="${lib-build-top}" failonerror="yes">
-            <arg line="all"/>
-            <arg line="-Dj16lib=${j16lib}"/>
-            <env key="JAVA_HOME" value="${jdk16home}"/>
-        </exec>
-        <exec executable="${ant.home}/bin/ant" dir="${lib-build-top}" failonerror="yes">
-            <arg line="buildjars"/>
-            <arg line="-Dj16lib=${j16lib}"/>
-            <env key="JAVA_HOME" value="${jdk16home}"/>
-        </exec>
+        <ant dir="${lib-build-top}" target="all"/>
+        <ant dir="${lib-build-top}" target="buildjars"/>
     </target>
 
     <target name="jar">
