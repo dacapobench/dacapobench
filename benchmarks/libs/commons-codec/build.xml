@@ -20,14 +20,16 @@
 
     <property name="lib-build-top" value="${lib-build-dir}/${lib-name}-${lib-version}-src"/>
 
+    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+    <property name="mvn-exe" value="${mvn-home}/mvn"/>
+    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
+        <os family="windows"/>
+    </condition>
+
     <target name="unpack" depends="untar"/>
-    <property name="mvn" value="../tools/apache-maven-${mvn.version}/bin/mvn"/>
-    <property name="toolsdir" value="../tools"/>
 
     <target name="build">
-        <exec executable="mvn" dir="${lib-build-top}">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <env key="JAVA_HOME" path="${java.home}"/>
+        <exec executable="${mvn-exe}" dir="${lib-build-top}">
             <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
             <arg value="clean"/>
             <arg value="install"/>
