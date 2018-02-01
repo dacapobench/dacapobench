@@ -23,7 +23,7 @@ public class Eclipse extends Benchmark {
 
   static final String WKSP_DIRECTORY_RELATIVE_TO_SCRATCH = "workspace";
   static final String PLUGIN_ID = "org.dacapo.eclipse.Harness";
-  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.5.1.R35x_v20090827.jar";
+  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.12.50.v20170928-1321.jar";
 
   static String oldJavaHome = null;
   static Eclipse eclipse;
@@ -95,8 +95,6 @@ public class Eclipse extends Benchmark {
       System.setProperty("osgi.install.area", "file:" + fileInScratch("eclipse/"));
       System.setProperty("osgi.noShutdown", "true");
       System.setProperty("osgi.framework", "file:" + fileInScratch(OSGI_BOOTSTRAP_JAR));
-      String current_working_dir = System.getProperty("user.dir");
-      System.setProperty("dacapo.local.jre", current_working_dir + "/" + fileInScratch("jre/lib/rt.jar"));
       setJavaHomeIfRequired();
 
       String[] args = new String[4];
