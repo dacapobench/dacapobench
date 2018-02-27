@@ -12,32 +12,18 @@
 
     <property name="lib-name" value="janino"/>
     <property name="lib-version" value="2.5.15"/>
-    <property name="lib-url" value="http://pkgs.fedoraproject.org/repo/pkgs/janino/janino-2.5.15.zip/087b6db3eabb6175f228a58958f816aa"/>
-    <property name="lib-src" value="janino-${lib-version}.zip"/>
+    <property name="lib-url" value="http://repo1.maven.org/maven2/org/codehaus/${lib-name}/${lib-name}/${lib-version}"/>
+    <property name="lib-src" value="janino-${lib-version}.jar"/>
 
     <import file="../common.xml"/>
 
-    <property name="lib-build-top" value="${lib-build-dir}/janino-${lib-version}"/>
-
-    <target name="unpack" depends="unzip"/>
-
-    <target name="build">
-        <condition property="build.dest" value="${build}" else="${build.deps}">
-            <not>
-                <equals arg1="${externalize.deps}" arg2="true"/>
-            </not>
-        </condition>
-        <condition property="jdk.home" value="${java.home}" else="${java.home}/..">
-            <not>
-                <contains string="${java.home}" substring="/jre"/>
-            </not>
-        </condition>
-        <ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
-            <property name="jdk_1_2_2_home" value="${jdk.home}"/>
-        </ant>
+    <target name="jar" depends="janino-jar-check" unless="janino-build-done">
+        <copy file="${lib-downloads}/janino-${lib-version}.jar" tofile="${janino-jar}"/>
     </target>
 
-    <target name="jar">
-        <copy file="${lib-build-top}/lib/janino.jar" tofile="${janino-jar}"/>
+    <target name="janino-jar-check">
+        <condition property="janino-build-done">
+            <available file="${janino-jar}"/>
+        </condition>
     </target>
 </project>
