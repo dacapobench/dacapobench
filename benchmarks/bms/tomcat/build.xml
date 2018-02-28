@@ -27,7 +27,6 @@
 
     <target name="bm-build" depends="build-properties,commons-httpclient,dacapo-digest">
         <exec executable="${ant.home}/bin/ant" dir="${bm-build-top}" failonerror="yes">
-            <env key="JAVA_HOME" value="${jdk16home}"/>
             <arg line="download"/>
             <arg line="-Dbase.path=${bm-downloads}"/>
         </exec>
