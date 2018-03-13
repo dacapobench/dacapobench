@@ -8,17 +8,11 @@
  */
 package org.dacapo.daytrader;
 
-import java.io.InputStream;
-
-import org.apache.geronimo.gbean.AbstractName;
-import org.apache.geronimo.gbean.AbstractNameQuery;
-import org.apache.geronimo.kernel.Jsr77Naming;
-import org.apache.geronimo.kernel.Kernel;
-import org.apache.geronimo.kernel.KernelFactory;
-import org.apache.geronimo.kernel.config.ConfigurationUtil;
-import org.apache.geronimo.kernel.config.ConfigurationManager;
-import org.apache.geronimo.kernel.log.GeronimoLogging;
-import org.apache.geronimo.kernel.repository.Artifact;
+import java.lang.ProcessBuilder;
+import java.lang.Process;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import java.util.Set;
 import java.util.Collection;
@@ -28,25 +22,20 @@ import java.util.Collection;
  * @id $Id: DaCapoClientRunner.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DaCapoClientRunner {
-  private static Kernel kernel = null;
-  private static AbstractName bean = null;
+
+  private static String car = null;
+  private static String gero = null;
 
   public static void initialize(String carName, String size, int numThreads, boolean useBeans) {
     try {
-      GeronimoLogging.initialize(GeronimoLogging.ERROR);
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      kernel = KernelFactory.newInstance().createKernel("DaCapoClient");
-      kernel.boot();
-      InputStream in = classLoader.getResourceAsStream("META-INF/config.ser");
-      ConfigurationUtil.loadBootstrapConfiguration(kernel, in, classLoader, true);
-      Artifact configuration = Artifact.create(carName);
-      ConfigurationManager configurationManager = ConfigurationUtil.getConfigurationManager(kernel);
-      configurationManager.loadConfiguration(configuration);
-      configurationManager.startConfiguration(configuration);
-      ConfigurationUtil.releaseConfigurationManager(kernel, configurationManager);
-      bean = new Jsr77Naming().createRootName(configuration, configuration.toString(), "J2EEApplication");
-      String[] args = new String[] { "-i", "-t", numThreads + "", "-s", size, useBeans ? "-b" : "" };
-      kernel.invoke(bean, "main", new Object[] { args }, new String[] { String[].class.getName() });
+
+      car = carName;
+
+      gero = System.getProperty("org.apache.geronimo.home.dir");
+      ProcessBuilder pb = new ProcessBuilder("java", "-jar", "-Dkaraf.startLocalConsole=false",gero + "/bin/client.jar", car, "-i", "-t", numThreads + "", "-s", size, useBeans ? "-b" : "");
+      Process p = pb.start();
+      p.waitFor();
+
     } catch (Exception e) {
       System.err.print("Exception initializing client: " + e.toString());
       e.printStackTrace();
@@ -55,18 +44,22 @@ public class DaCapoClientRunner {
   }
 
   public static void runIteration(String size, int numThreads, boolean useBeans) {
-    String[] args = new String[] { "-t", numThreads + "", "-s", size, useBeans ? "-b" : "" };
+
     try {
-      kernel.invoke(bean, "main", new Object[] { args }, new String[] { String[].class.getName() });
+
+      ProcessBuilder pb = new ProcessBuilder("java", "-jar", "-Dkaraf.startLocalConsole=false", gero + "/bin/client.jar", car, "-t", numThreads + "", "-s", size, useBeans ? "-b" : "");
+      Process p = pb.start();
+      p.waitFor();
+
+      BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      while (stdInput.ready()) { //While there's something in the buffer
+        //read&print - replace with a buffered read (into an array) if the output doesn't contain CR/LF
+        System.out.println(stdInput.readLine());
+      }
+
     } catch (Exception e) {
       System.err.print("Exception running client iteration: " + e.toString());
       e.printStackTrace();
     }
-  }
-
-  public static void shutdown() {
-    bean = null;
-    kernel.shutdown();
-    kernel = null;
   }
 }
