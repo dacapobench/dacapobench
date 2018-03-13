@@ -112,7 +112,7 @@
         <untar src="${lib-downloads}/${ger-bin}" dest="${lib-build-dir}" compression="gzip"/>
         <untar src="${lib-downloads}/${ger-plugins-bin}" dest="${lib-build-dir}/plugins" compression="gzip"/>
 
-        <patch patchfile="libs/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes" failonerror="yes"/>
+        <patch patchfile="${lib-base}/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" ignorewhitespace="yes" strip="0" failonerror="yes"/>
 
         <chmod dir="${ger-home}/bin" includes="**" perm="u+x"/>
         <mkdir dir="${dt-build}"/>
@@ -133,7 +133,7 @@
             <fileset dir="libs/${lib-name}/plugins" />
         </copy>
 
-        <patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes" failonerror="yes"/>
+        <patch patchfile="${lib-base}/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" ignorewhitespace="yes" strip="0" failonerror="yes"/>
 
     </target>
 
@@ -158,7 +158,6 @@
     <target name="data" depends="build.init">
 
         <!-- build required plugins -->
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes"/>
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes"/>
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes"/>
         <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes"/>
@@ -175,9 +174,6 @@
         <!-- deploy daytrader to geronimo -->
         <antcall target="start-geronimo"/>
 
-        <antcall target="deploy">
-            <param name="deploy-subject" value="${plugins-build}/j2ee/jsr88-jar-configurer/target/jsr88-jar-configurer-${ger-version}.car"/>
-        </antcall>
         <antcall target="deploy">
             <param name="deploy-subject" value="${plugins-build}/client/client/target/client-${ger-version}.car"/>
         </antcall>
@@ -236,7 +232,7 @@
         <echo message="${ger-home}/bin/${geronimo-exe}"/>
         <exec executable="${ger-home}/bin/${geronimo-exe}" dir="${ger-home}" spawn="true">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <env key="JAVA_HOME" path="${jdk16home}"/>
+            <env key="JAVA_HOME" path="${jdk17home}"/>
             <arg value="start"/>
             <arg value="--clean"/>
         </exec>
@@ -250,6 +246,7 @@
     <target name="stop-geronimo">
         <exec executable="${ger-home}/bin/${geronimo-exe}" dir="${ger-home}" spawn="false">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
+            <env key="JAVA_HOME" path="${jdk17home}"/>
             <arg value="stop"/>
             <arg value="-u"/>
             <arg value="system"/>
@@ -267,7 +264,7 @@
     <target name="deploy">
         <exec executable="${ger-home}/bin/${deploy-exe}">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <env key="JAVA_HOME" path="${jdk16home}"/>
+            <env key="JAVA_HOME" path="${jdk17home}"/>
             <arg value="-u"/>
             <arg value="system"/>
             <arg value="-p"/>
