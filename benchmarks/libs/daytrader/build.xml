@@ -15,61 +15,39 @@
 
     <property name="lib-name" value="daytrader"/>
 
-    <property name="maven-repo-url" value="http://repo1.maven.org/maven2"/>
+    <property name="maven-central" value="http://central.maven.org/maven2"/>
     <property name="apache-svn-url" value="http://svn.apache.org/repos/asf"/>
     <property name="java-dev-url" value="http://download.java.net/maven"/>
 
     <property name="lib-svn-url" value="${apache-svn-url}/geronimo/daytrader/trunk"/>
-    <property name="lib-svn-revision" value="767347"/>
+    <property name="lib-svn-revision" value="1825949"/>
     <property name="lib-version" value="svn-${lib-svn-revision}"/>
     <property name="lib-src" value="daytrader-${lib-version}-src.tar.gz"/>
 
-    <property name="ger-version" value="2.1.4"/>
-    <property name="ger-name" value="geronimo-jetty6-minimal"/>
+    <property name="ger-version" value="3.0.1"/>
+    <property name="ger-name" value="geronimo-tomcat7-minimal"/>
     <property name="ger-url" value="${apache.dl.url}/geronimo/${ger-version}"/>
     <property name="ger-bin" value="${ger-name}-${ger-version}-bin.tar.gz"/>
 
-    <property name="ger-plugins-url" value="${apache-svn-url}/geronimo/server/tags/${ger-version}/plugins"/>
-    <property name="ger-plugins-revision" value="794961"/>
+    <property name="ger-plugins-url" value="${apache-svn-url}/geronimo/server/tags/geronimo-${ger-version}/plugins"/>
+    <property name="ger-plugins-revision" value="1822921"/>
     <property name="ger-plugins-bin" value="${ger-name}-${ger-version}-plugins.tar.gz"/>
 
-    <property name="ger-svn-repo-url" value="${apache-svn-url}/geronimo/server/tags/${ger-version}/repository"/>
+    <property name="geronimo-jms-version" value="1.1.1"/>
+    <property name="geronimo-jms-groupId" value="org/apache/geronimo/specs/geronimo-jms_1.1_spec/${geronimo-jms-version}"/>
+    <property name="geronimo-jms-url" value="${maven-central}/${geronimo-jms-groupId}"/>
+    <property name="geronimo-jms-bin" value="geronimo-jms_1.1_spec-${geronimo-jms-version}.jar"/>
 
-    <property name="amq-version" value="4.1.2-G20090207"/>
-    <property name="amq-name" value="activemq-core"/>
-    <property name="amq-url" value="${ger-svn-repo-url}/org/apache/activemq/activemq-core/4.1.2-G20090207/"/>
-    <property name="amq-jar" value="${amq-name}-${amq-version}.jar"/>
+    <property name="xbean-asm-version" value="3.11.1"/>
+    <property name="xbean-asm-groupId" value="org/apache/xbean/xbean-asm-shaded/${xbean-asm-version}"/>
+    <property name="xbean-asm-url" value="${maven-central}/${xbean-asm-groupId}"/>
+    <property name="xbean-asm-bin" value="xbean-asm-shaded-${xbean-asm-version}.jar"/>
 
-    <property name="tomcat-version" value="6.0.18-G678601"/>
-    <property name="tomcat-name" value="tomcat"/>
-    <property name="tomcat-version-name" value="catalina"/>
-    <property name="tomcat-url" value="${ger-svn-repo-url}/org/apache/${tomcat-name}/${tomcat-version-name}/${tomcat-version}/"/>
-    <property name="tomcat-jar" value="${tomcat-version-name}-${tomcat-version}.jar"/>
+    <property name="servicemix-bundles-version" value="1.6.1_2"/>
+    <property name="servicemix-bundles-groupId" value="org/apache/servicemix/bundles/org.apache.servicemix.bundles.dom4j/${servicemix-bundles-version}"/>
+    <property name="servicemix-bundles-url" value="${maven-central}/${servicemix-bundles-groupId}"/>
+    <property name="servicemix-bundles-bin" value="org.apache.servicemix.bundles.dom4j-${servicemix-bundles-version}.jar"/>
 
-    <property name="jasper-version" value="6.0.18-G678601"/>
-    <property name="jasper-name" value="jasper"/>
-    <property name="jasper-url" value="${ger-svn-repo-url}/org/apache/tomcat/${jasper-name}/${jasper-version}/"/>
-    <property name="jasper-jar" value="${jasper-name}-${jasper-version}.jar"/>
-
-    <property name="jasper-el-version" value="6.0.18-G678601"/>
-    <property name="jasper-el-name" value="jasper-el"/>
-    <property name="jasper-el-url" value="${ger-svn-repo-url}/org/apache/tomcat/${jasper-el-name}/${jasper-el-version}/"/>
-    <property name="jasper-el-jar" value="${jasper-el-name}-${jasper-el-version}.jar"/>
-
-    <property name="jstl-version" value="1.2"/>
-    <property name="jstl-name" value="jstl"/>
-    <property name="jstl-url" value="${maven-repo-url}/org/glassfish/web/${jstl-name}-impl/${jstl-version}"/>
-    <property name="jstl-jar" value="${jstl-name}-impl-${jstl-version}.jar"/>
-
-    <property name="oro-version" value="2.0.8"/>
-    <property name="oro-name" value="oro"/>
-    <property name="oro-url" value="${maven-repo-url}/${oro-name}/${oro-name}/${oro-version}"/>
-    <property name="oro-jar" value="${oro-name}-${oro-version}.jar"/>
-
-    <property name="incubator-version" value="3.0.0"/>
-    <property name="incubator-name" value="incubator"/>
-    <property name="incubator-url" value="https://maven.atlassian.com/maven-3rdparty/org/apache/activemq/activeio-core/${incubator-version}-${incubator-name}/"/>
-    <property name="incubator-jar" value="activeio-core-${incubator-version}-${incubator-name}.jar"/>
 
     <import file="../common.xml"/>
 
@@ -77,21 +55,29 @@
     <property name="plugins-build" location="${lib-build-dir}/plugins"/>
     <property name="launcher-build" location="${lib-build-dir}/launcher"/>
     <property name="ger-home" location="${lib-build-dir}/${ger-name}-${ger-version}"/>
-    <property name="ger-cli-jar" value="${ger-home}/lib/geronimo-cli-${ger-version}.jar"/>
-    <property name="ger-kernel-jar" value="${ger-home}/lib/geronimo-kernel-${ger-version}.jar"/>
+    <property name="ger-repo" location="${lib-build-dir}/${ger-name}-${ger-version}/repository"/>
+    <property name="ger-cli-jar" value="${ger-home}/repository/org/apache/geronimo/framework/geronimo-cli/${ger-version}/geronimo-cli-${ger-version}.jar"/>
+    <property name="ger-kernel-jar" value="${ger-home}/repository/org/apache/geronimo/framework/geronimo-kernel/${ger-version}/geronimo-kernel-${ger-version}.jar"/>
+    <property name="osgi-framework-util-jar" value="${ger-home}/repository/org/osgi/org.osgi.core/4.3.1/org.osgi.core-4.3.1.jar"/>
+    <property name="geronimo-main-jar" value="${ger-home}/lib/geronimo-main.jar"/>
 
     <condition property="shell-exe" value="cmd.exe">
         <os family="windows"/>
     </condition>
     <property name="shell-exe" value="sh"/>
-    <condition property="gsh-exe" value="gsh.bat">
+    <condition property="geronimo-exe" value="geronimo.bat">
         <os family="windows"/>
     </condition>
-    <property name="gsh-exe" value="gsh"/>
+    <property name="geronimo-exe" value="geronimo"/>
+    <condition property="deploy-exe" value="deploy.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="deploy-exe" value="deploy"/>
     <condition property="mvn-exe" value="mvn.bat">
         <os family="windows"/>
     </condition>
     <property name="mvn-exe" value="mvn"/>
+
 
     <target name="url-source" if="ger-url">
         <antcall target="check-source">
@@ -107,58 +93,48 @@
         </antcall>
         <antcall target="check-source">
             <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="${amq-url}"/>
-            <param name="target-file" value="${amq-jar}"/>
+            <param name="target-url" value="${geronimo-jms-url}"/>
+            <param name="target-file" value="${geronimo-jms-bin}"/>
         </antcall>
         <antcall target="check-source">
             <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="${jstl-url}"/>
-            <param name="target-file" value="${jstl-jar}"/>
+            <param name="target-url" value="${xbean-asm-url}"/>
+            <param name="target-file" value="${xbean-asm-bin}"/>
         </antcall>
         <antcall target="check-source">
             <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="${oro-url}"/>
-            <param name="target-file" value="${oro-jar}"/>
-        </antcall>
-        <antcall target="check-source">
-            <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="${tomcat-url}"/>
-            <param name="target-file" value="${tomcat-jar}"/>
-        </antcall>
-        <antcall target="check-source">
-            <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="${jasper-url}"/>
-            <param name="target-file" value="${jasper-jar}"/>
-        </antcall>
-        <antcall target="check-source">
-            <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="${jasper-el-url}"/>
-            <param name="target-file" value="${jasper-el-jar}"/>
-        </antcall>
-	<antcall target="check-source">
-            <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="${incubator-url}"/>
-            <param name="target-file" value="${incubator-jar}"/>
+            <param name="target-url" value="${servicemix-bundles-url}"/>
+            <param name="target-file" value="${servicemix-bundles-bin}"/>
         </antcall>
     </target>
 
     <target name="unpack">
         <untar src="${lib-downloads}/${ger-bin}" dest="${lib-build-dir}" compression="gzip"/>
         <untar src="${lib-downloads}/${ger-plugins-bin}" dest="${lib-build-dir}/plugins" compression="gzip"/>
-        <patch patchfile="libs/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes"/>
+
+        <patch patchfile="libs/${lib-name}/geronimo-quiet-log.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes" failonerror="yes"/>
+
         <chmod dir="${ger-home}/bin" includes="**" perm="u+x"/>
         <mkdir dir="${dt-build}"/>
         <untar src="${lib-downloads}/${lib-src}" dest="${dt-build}/" compression="gzip"/>
-        <copy file="${lib-data}/stocks.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
-        <copy file="${lib-data}/users.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
-        <copy file="${lib-data}/workload.txt" todir="${dt-build}/modules/ejb/src/main/resources/"/>
-        <patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${dt-build}" strip="0" ignorewhitespace="yes"/>
+
+        <copy file="${lib-data}/stocks.txt" todir="${dt-build}/javaee6/modules/web/src/main/resources/"/>
+        <copy file="${lib-data}/users.txt" todir="${dt-build}/javaee6/modules/web/src/main/resources/"/>
+        <copy file="${lib-data}/workload.txt" todir="${dt-build}/javaee6/modules/web/src/main/resources/"/>
+
+        <copy file="${lib-downloads}/${geronimo-jms-bin}" todir="${ger-repo}/${geronimo-jms-groupId}"/>
+        <copy file="${lib-downloads}/${xbean-asm-bin}" todir="${ger-repo}/${xbean-asm-groupId}"/>
+        <copy file="${lib-downloads}/${servicemix-bundles-bin}" todir="${ger-repo}/${servicemix-bundles-groupId}"/>
+
         <copy todir="${dt-build}">
             <fileset dir="libs/${lib-name}/${lib-name}" />
         </copy>
         <copy todir="${plugins-build}">
             <fileset dir="libs/${lib-name}/plugins" />
         </copy>
+
+        <patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" strip="0" ignorewhitespace="yes" failonerror="yes"/>
+
     </target>
 
     <target name="jar" depends="build">
@@ -171,7 +147,7 @@
 
     <target name="build" depends="build.init,data">
         <mkdir dir="${launcher-build}/"/>
-        <javac srcdir="${lib-src-dir}" destdir="${launcher-build}" classpath="${ger-cli-jar}:${ger-kernel-jar}" debug="true" debuglevel="lines,vars,source"/>
+        <javac srcdir="${lib-src-dir}" destdir="${launcher-build}" classpath="${ger-cli-jar}:${ger-kernel-jar}:${osgi-framework-util-jar}:${geronimo-main-jar}" debug="true" debuglevel="lines,vars,source"/>
     </target>
 
     <target name="build.init">
@@ -180,111 +156,17 @@
     </target>
 
     <target name="data" depends="build.init">
-        <!-- install jstl -->
-        <property name="jstl-jar-loc" location="${lib-downloads}/jstl-${jstl-version}.jar"/>
-        <copy file="${lib-downloads}/${jstl-jar}" tofile="${jstl-jar-loc}"/>
-        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <arg value="install:install-file"/>
-            <arg value="-DgroupId=jstl"/>
-            <arg value="-DartifactId=jstl"/>
-            <arg value="-Dversion=${jstl-version}"/>
-            <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${jstl-jar-loc}"/>
-        </exec>
-
-        <!-- install oro -->
-        <property name="oro-jar-loc" location="${lib-downloads}/${oro-jar}"/>
-        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <arg value="install:install-file"/>
-            <arg value="-DgroupId=oro"/>
-            <arg value="-DartifactId=oro"/>
-            <arg value="-Dversion=${oro-version}"/>
-            <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${oro-jar-loc}"/>
-        </exec>
-
-        <!-- install activemq -->
-        <property name="amq-jar-loc" location="${lib-downloads}/${amq-jar}"/>
-        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <arg value="install:install-file"/>
-            <arg value="-DgroupId=org.apache.activemq"/>
-            <arg value="-DartifactId=activemq-core"/>
-            <arg value="-Dversion=${amq-version}"/>
-            <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${amq-jar-loc}"/>
-        </exec>
-
-        <!-- install jasper -->
-        <property name="jasper-jar-loc" location="${lib-downloads}/${jasper-jar}"/>
-        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <arg value="install:install-file"/>
-            <arg value="-DgroupId=org.apache.tomcat"/>
-            <arg value="-DartifactId=${jasper-name}"/>
-            <arg value="-Dversion=${jasper-version}"/>
-            <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${jasper-jar-loc}"/>
-        </exec>
-
-        <!-- install jasper-el -->
-        <property name="jasper-el-jar-loc" location="${lib-downloads}/${jasper-el-jar}"/>
-        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <arg value="install:install-file"/>
-            <arg value="-DgroupId=org.apache.tomcat"/>
-            <arg value="-DartifactId=${jasper-el-name}"/>
-            <arg value="-Dversion=${jasper-el-version}"/>
-            <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${jasper-el-jar-loc}"/>
-        </exec>
-
-        <!-- install tomcat -->
-        <property name="tomcat-jar-loc" location="${lib-downloads}/${tomcat-jar}"/>
-        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <arg value="install:install-file"/>
-            <arg value="-DgroupId=org.apache.tomcat"/>
-            <arg value="-DartifactId=${tomcat-version-name}"/>
-            <arg value="-Dversion=${tomcat-version}"/>
-            <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${tomcat-jar-loc}"/>
-        </exec>
-	
-	<!-- install incubator -->
-        <property name="incubator-jar-loc" location="${lib-downloads}/${incubator-jar}"/>
-        <exec executable="${mvn}" dir="${dt-build}" failonerror="yes" failifexecutionfails="yes">
-            <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin"/>
-            <arg value="install:install-file"/>
-            <arg value="-DgroupId=org.apache.activemq"/>
-            <arg value="-DartifactId=activeio-core"/>
-            <arg value="-Dversion=3.0.0-incubator"/>
-            <arg value="-Dpackaging=jar"/>
-            <arg value="-Dfile=${incubator-jar-loc}"/>
-        </exec>
 
         <!-- build required plugins -->
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${jdk16home}"/>
-        </exec>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${jdk16home}"/>
-        </exec>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${jdk16home}"/>
-        </exec>
-        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes">
-          <env key="JAVA_HOME" path="${jdk16home}"/>
-        </exec>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/j2ee" failonerror="yes" failifexecutionfails="yes"/>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/client" failonerror="yes" failifexecutionfails="yes"/>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/cxf" failonerror="yes" failifexecutionfails="yes"/>
+        <exec executable="${mvn}" dir="${lib-build-dir}/plugins/axis" failonerror="yes" failifexecutionfails="yes"/>
 
         <!-- build daytrader -->
         <exec executable="${mvn}" dir="${dt-build}">
-            <env key="JAVA_HOME" path="${jdk16home}"/>
             <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin:${JAVA_HOME}/bin"/>
             <env key="GERONIMO_HOME" value="${ger-home}"/>
-            <!-- <env key="PATH" path="${env.PATH}:${mvn-home}"/> -->
             <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
             <arg value="clean"/>
             <arg value="install"/>
@@ -293,64 +175,55 @@
         <!-- deploy daytrader to geronimo -->
         <antcall target="start-geronimo"/>
 
-        <antcall target="undeploy">
-            <param name="deploy-subject" value="unavailable-client-deployer"/>
-        </antcall>
-        <antcall target="undeploy">
-            <param name="deploy-subject" value="unavailable-ejb-deployer"/>
-        </antcall>
-        <antcall target="undeploy">
-            <param name="deploy-subject" value="unavailable-webservices-deployer"/>
-        </antcall>
-
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/client/client/target/client-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/j2ee/jsr88-jar-configurer/target/jsr88-jar-configurer-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/client/client-deployer/target/client-deployer-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/client/client/target/client-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/client/client-security/target/client-security-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/client/client-deployer/target/client-deployer-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/cxf/cxf/target/cxf-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/client/client-security/target/client-security-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/cxf/cxf-deployer/target/cxf-deployer-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/cxf/cxf/target/cxf-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/cxf/cxf-ejb/target/cxf-ejb-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/cxf/cxf-deployer/target/cxf-deployer-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/cxf/cxf-ejb-deployer/target/cxf-ejb-deployer-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/cxf/cxf-ejb/target/cxf-ejb-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/axis/axis/target/axis-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/cxf/cxf-ejb-deployer/target/cxf-ejb-deployer-${ger-version}.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${lib-build-dir}/plugins/j2ee/jsr88-jar-configurer/target/jsr88-jar-configurer-${ger-version}.car"/>
+            <param name="deploy-subject" value="${plugins-build}/axis/axis/target/axis-${ger-version}.car"/>
         </antcall>
 
         <!-- daytrader -->
         <antcall target="deploy">
-            <param name="deploy-subject" value="${dt-build}/daytrader-jetty/target/daytrader-jetty-2.2-SNAPSHOT.car"/>
+            <param name="deploy-subject" value="${dt-build}/plugins/daytrader-tomcat/target/daytrader-tomcat-3.0-SNAPSHOT.car"/>
         </antcall>
         <antcall target="deploy">
-            <param name="deploy-subject" value="${dt-build}/daytrader-jetty/target/daytrader-dacapo-2.2-SNAPSHOT.car"/>
+            <param name="deploy-subject" value="${dt-build}/plugins/daytrader-tomcat/target/daytrader-dacapo-3.0-SNAPSHOT.car"/>
         </antcall>
-        <antcall target="deploy">
-            <param name="deploy-subject" value="${dt-build}/daytrader-jetty/target/daytrader-ws-client-2.2-SNAPSHOT.car"/>
-        </antcall>
+
         <antcall target="stop-geronimo"/>
+
 
         <!-- hack to get geronimo to correctly load RMIClassLoaderSpiImpl
              which it only seems to load from the jar that dacapo is contained in -->
-        <unjar src="${lib-build-dir}/${ger-name}-${ger-version}/lib/geronimo-kernel-${ger-version}.jar" dest="${bm-output-dir}">
+        <unjar src="${lib-build-dir}/${ger-name}-${ger-version}/lib/geronimo-rmi-loader.jar" dest="${bm-output-dir}">
             <patternset>
                 <include name="**org/apache/geronimo/kernel/rmi/RMIClassLoaderSpiImpl.class"/>
                 <include name="**org/apache/geronimo/kernel/rmi/RMIClassLoaderSpiImpl$ClassLoaderServerAware.class"/>
             </patternset>
         </unjar>
+
+        <copy file="${lib-data}/client.jar" todir="${ger-home}/bin"/>
 
         <!-- package the resulting geronimo install as a zip -->
         <zip destfile="${lib-dat}/${lib-name}.zip">
@@ -359,42 +232,59 @@
     </target>
 
     <target name="start-geronimo">
-        <echo message="${ger-home}/bin/${gsh-exe}"/>
-        <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="true">
-            <env key="JAVA_HOME" value="${jdk16home}"/>
+
+        <echo message="${ger-home}/bin/${geronimo-exe}"/>
+        <exec executable="${ger-home}/bin/${geronimo-exe}" dir="${ger-home}" spawn="true">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <arg value="-c"/>
-            <arg value="geronimo/start-server"/>
+            <env key="JAVA_HOME" path="${jdk16home}"/>
+            <arg value="start"/>
+            <arg value="--clean"/>
         </exec>
         <echo message="Waiting for geronimo startup..."/>
-        <waitfor maxwait="2" maxwaitunit="minute" checkevery="1000">
-            <http url="http://localhost:8080/console/login.jsp"/>
+        <waitfor maxwait="30" maxwaitunit="second" checkevery="1000">
+            <http url="http://localhost:8080"/>
         </waitfor>
         <echo message="Established connection..."/>
-        <sleep seconds="1"/>
+        <sleep seconds="5"/>
     </target>
     <target name="stop-geronimo">
-        <exec executable="${ger-home}/bin/${gsh-exe}" dir="${ger-home}" spawn="false">
-            <env key="JAVA_HOME" value="${jdk16home}"/>
+        <exec executable="${ger-home}/bin/${geronimo-exe}" dir="${ger-home}" spawn="false">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <arg value="-c"/>
-            <arg value="geronimo/stop-server -u system -w manager"/>
+            <arg value="stop"/>
+            <arg value="-u"/>
+            <arg value="system"/>
+            <arg value="-p"/>
+            <arg value="manager"/>
+            <arg value="--clean"/>
         </exec>
+        <waitfor maxwait="2" maxwaitunit="minute" checkevery="1000">
+            <not>
+                <http url="http://localhost:8080/console"/>
+            </not>
+        </waitfor>
+        <sleep seconds="5"/>
     </target>
     <target name="deploy">
-        <exec executable="${ger-home}/bin/${gsh-exe}">
-            <env key="JAVA_HOME" value="${jdk16home}"/>
+        <exec executable="${ger-home}/bin/${deploy-exe}">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <arg value="-c"/>
-            <arg value="deploy/install-plugin -u system -w manager ${deploy-subject}"/>
+            <env key="JAVA_HOME" path="${jdk16home}"/>
+            <arg value="-u"/>
+            <arg value="system"/>
+            <arg value="-p"/>
+            <arg value="manager"/>
+            <arg value="install-plugin"/>
+            <arg value="${deploy-subject}"/>
         </exec>
     </target>
     <target name="undeploy">
-        <exec executable="${ger-home}/bin/${gsh-exe}">
-            <env key="JAVA_HOME" value="${jdk16home}"/>
+        <exec executable="${ger-home}/bin/${deploy-exe}">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <arg value="-c"/>
-            <arg value="deploy/undeploy -u system -w manager ${deploy-subject}"/>
+            <arg value="-u"/>
+            <arg value="system"/>
+            <arg value="-p"/>
+            <arg value="manager"/>
+            <arg value="undeploy"/>
+            <arg value="${deploy-subject}"/>
         </exec>
     </target>
 </project>
