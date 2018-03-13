@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<!-- $Rev: 660735 $ $Date: 2008-05-28 07:54:57 +1000 (Wed, 28 May 2008) $ -->
+
+<connector xmlns="http://geronimo.apache.org/xml/ns/j2ee/connector-1.2">
+    <resourceadapter>
+        <outbound-resourceadapter>
+            <connection-definition>
+                <connectionfactory-interface>javax.sql.DataSource</connectionfactory-interface>
+                <connectiondefinition-instance>
+                    <name>jdbc/TradeDataSource</name>
+                    <config-property-setting name="Password">password</config-property-setting>
+                    <config-property-setting name="UserName">user</config-property-setting>
+                    <config-property-setting name="ConnectionURL">jdbc:h2:mem:trade;MVCC=true</config-property-setting>
+                    <connectionmanager>
+                        <xa-transaction>
+                            <transaction-caching/>
+                        </xa-transaction>
+                        <single-pool>
+                            <max-size>16</max-size>
+                            <min-size>0</min-size>
+                            <match-one/>
+                        </single-pool>
+                    </connectionmanager>
+                </connectiondefinition-instance>
+            </connection-definition>
+        </outbound-resourceadapter>
+    </resourceadapter>
+    <resourceadapter>
+        <outbound-resourceadapter>
+            <connection-definition>
+                <connectionfactory-interface>javax.sql.DataSource</connectionfactory-interface>
+                <connectiondefinition-instance>
+                    <name>jdbc/NoTxTradeDataSource</name>
+                    <config-property-setting name="Password">password</config-property-setting>
+                    <config-property-setting name="UserName">user</config-property-setting>
+                    <config-property-setting name="ConnectionURL">jdbc:h2:mem:trade;MVCC=true</config-property-setting>
+                    <connectionmanager>
+                        <no-transaction/>
+                        <single-pool>
+                            <max-size>16</max-size>
+                            <min-size>0</min-size>
+                            <match-one/>
+                        </single-pool>
+                    </connectionmanager>
+                </connectiondefinition-instance>
+            </connection-definition>
+        </outbound-resourceadapter>
+    </resourceadapter>
+</connector>
