@@ -3,7 +3,8 @@ before_script:
   - java -version
   - ant -version
   - cd benchmarks
-  - echo "make=/usr/bin/make\nbuild.failonerror=true\njdk9home=/usr/lib/jvm/java-9-openjdk-amd64" > local.properties
+  - print "make=/usr/bin/make\nbuild.failonerror=true\njdk9home=/usr/lib/jvm/java-9-openjdk-amd64" > local.properties
+  - cat local.properties
 
 avrora:
   script:
