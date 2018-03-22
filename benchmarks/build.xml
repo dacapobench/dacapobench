@@ -125,8 +125,12 @@ BUILDING:
 
     <target name="set-build-version-info" depends="get-git-revision">
         <property name="build.nickname" value="${dacapo.nickname}"/>
-        <!-- overwritable with -Dbuild.version on commandline-->
-        <property name="build.version"  value="${dacapo.version}+${git.hash}"/>
+        <!-- overwritable with -Dbuild.is-official=true on commandline-->
+        <condition property="build.version"
+                    value="${dacapo.version}"
+                    else="${dacapo.version}+${git.hash}">
+            <isset property="build.is-official"/>
+        </condition>
         <!-- set target jar name -->
         <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
     </target>
