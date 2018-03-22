@@ -158,7 +158,7 @@ BUILDING:
     <target name="source" depends="set-build-version-info">
         <echo file="SOURCE_VERSION.txt">This source distribution was built from DaCapo release ${build.version} "${build.nickname}"${line.separator}</echo>
 
-        <zip destfile="dacapo-src.zip" level="9" whenempty="create">
+        <zip destfile="dacapo-${build.version}-${build.nickname}-src.zip" level="9" whenempty="create">
             <zipfileset dir="${basedir}/.." defaultexcludes="yes" filemode="755">
                 <include name="tools/*/bin/**"/>
             </zipfileset>
