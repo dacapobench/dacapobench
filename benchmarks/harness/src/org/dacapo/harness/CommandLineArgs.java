@@ -215,7 +215,7 @@ public class CommandLineArgs {
    */
   static void printUsage() {
     HelpFormatter formatter = new HelpFormatter();
-    formatter.printHelp("DaCapo Benchmark suite", visibleOptions);
+    formatter.printHelp("DaCapo Benchmark suite " + TestHarness.getBuildVersion(), visibleOptions);
   }
 
   /**

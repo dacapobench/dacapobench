@@ -81,6 +81,7 @@ public class TestHarness {
     /* All benchmarks run headless */
     System.setProperty("java.awt.headless", "true");
 
+    setBuildInfo();  // set BuildVersion and BuildNickName.
     try {
       commandLineArgs = new CommandLineArgs(args);
 
@@ -253,8 +254,7 @@ public class TestHarness {
       return null; // not reached
     }
   }
-
-  {
+  private static void setBuildInfo() {
     try {
       String url = TestHarness.class.getProtectionDomain().getCodeSource().getLocation().getFile();
       JarFile jarFile = new JarFile(url.replace("!/harness", "").replace("file:", ""));
