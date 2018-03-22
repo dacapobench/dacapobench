@@ -7,80 +7,75 @@ before_script:
 
 avrora:
   script:
-    - ant avrora
+    - ant -Dbuild.target-jar=dacapo.jar avrora
     - java -jar dacapo.jar avrora
 
 batik:
   script:
-    - ant batik
+    - ant -Dbuild.target-jar=dacapo.jar batik
     - java -jar dacapo.jar batik
 
 eclipse:
   script:
-    - ant eclipse
+    - ant -Dbuild.target-jar=dacapo.jar eclipse
     - java -jar dacapo.jar eclipse
 
 fop:
   script:
-    - ant fop
+    - ant -Dbuild.target-jar=dacapo.jar fop
     - java -jar dacapo.jar fop
 
 h2:
   script:
-    - ant h2
+    - ant -Dbuild.target-jar=dacapo.jar h2
     - java -jar dacapo.jar h2
 
 jython:
   script:
-    - ant jython
+    - ant -Dbuild.target-jar=dacapo.jar jython
     - java -jar dacapo.jar jython
 
 luindex:
   script:
-    - ant luindex
+    - ant -Dbuild.target-jar=dacapo.jar luindex
     - java -jar dacapo.jar luindex
 
 lusearch:
   script:
-    - ant lusearch
-    - java -jar dacapo.jar lusearch
-
-lusearch:
-  script:
-    - ant lusearch
+    - ant -Dbuild.target-jar=dacapo.jar lusearch
     - java -jar dacapo.jar lusearch
 
 lusearch-fix:
   script:
-    - ant lusearch-fix
+    - ant -Dbuild.target-jar=dacapo.jar lusearch-fix
     - java -jar dacapo.jar lusearch-fix
 
 pmd:
   script:
-    - ant pmd
+    - ant -Dbuild.target-jar=dacapo.jar pmd
     - java -jar dacapo.jar pmd
 
 sunflow:
   script:
-    - ant sunflow
+    - ant -Dbuild.target-jar=dacapo.jar sunflow
     - java -jar dacapo.jar sunflow
 
 tomcat:
   script:
-    - ant tomcat
+    - ant -Dbuild.target-jar=dacapo.jar tomcat
     - java -jar dacapo.jar tomcat
 
 tradebeans:
   script:
-    - ant tradebeans
+    - ant -Dbuild.target-jar=dacapo.jar tradebeans
     - java -jar dacapo.jar tradebeans
 
 tradesoap:
   script:
-    - ant tradesoap
+    - ant -Dbuild.target-jar=dacapo.jar tradesoap
     - java -jar dacapo.jar tradesoap
 
 xalan:
   script:
-    - ant xalan
+    - ant -Dbuild.target-jar=dacapo.jar xalan
     - java -jar dacapo.jar xalan
