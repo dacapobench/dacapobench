@@ -72,8 +72,24 @@ current state of deployed Java applications.
 
 3. Changes
 ----------
+3.0. Changes introduced by 9.13
+    Benchmark updates:
+        - avrora:    20091224 -> 20131011
+        - batik:     1.7      -> 1.9
+        - eclipse:   3.5.1    -> 4.7.2
+        - fop:       0.95     -> 2.2
+        - h2:        1.5      -> 1.8
+        - jython:    2.5.2    -> 2.7.1
+        - pmd:       4.2.5    -> 5.7.0
+        - sunflow: 
+        - tomcat:    6.0.2    -> 9.0.2
+        - daytrader: 
+        - xalan:     2.7.1    -> 2.7.2
 
-3.0. Changes introduced by 9.12-MR1 (since 9.12)
+    Shipped tooling update:
+        - Maven:     2.1.0    -> 3.5.2
+
+3.1. Changes introduced by 9.12-MR1 (since 9.12)
 
      lusearch-fix is introduced as a new benchmark.   The lusearch-fix
               and lusearch benchmarks differ by a single line of code.   This
@@ -91,7 +107,7 @@ current state of deployed Java applications.
               the suite builds with Java 8 VMs.
 	      
 
-3.1. Benchmark additions since 2006-10-MR2
+3.2. Benchmark additions since 2006-10-MR2
 
       avrora: AVRORA is a set of simulation and analysis tools in a
               framework for AVR micro-controllers. The benchmark
@@ -134,7 +150,7 @@ current state of deployed Java applications.
               two systems.
 
 
-3.2. Benchmark deletions
+3.3. Benchmark deletions
 
        antlr: Antlr is single threaded and highly repetitive. The
               most recent version of jython uses antlr; so antlr
@@ -162,13 +178,13 @@ current state of deployed Java applications.
               performing database engine.
 
 
-3.3. Benchmark updates
+3.4. Benchmark updates
 
 All other benchmarks have been updated to reflect the latest release
 of the underlying application.
 
 
-3.4. Other Notable Changes
+3.5. Other Notable Changes
 
 The packaging of the DaCapo suite has been completely re-worked and
 the source code is entirely re-organized.
