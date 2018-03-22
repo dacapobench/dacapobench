@@ -175,7 +175,7 @@
 	</target>
 
 	<target name="complete">
-		<unjar src="${jar-target}" dest="${bm-output-dir}" overwrite="yes">
+		<unjar src="${build.target-jar}" dest="${bm-output-dir}" overwrite="yes">
 			<patternset>
 				<include name="doc/menu.html"/>
 			</patternset>
@@ -188,7 +188,7 @@
 		</java>
 		<copy file="${temp.file}" tofile="${bm-output-dir}/doc/menu.html"/>
 		<delete file="${temp.file}"/>
-		<jar jarfile="${jar-target}" basedir="${bm-output-dir}" update="true"/>
+		<jar jarfile="${build.target-jar}" basedir="${bm-output-dir}" update="true"/>
 	</target>
 
 </project>

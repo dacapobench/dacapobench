@@ -64,6 +64,6 @@
     </target>
     
     <target name="jar">
-        <jar jarfile="${jar-target}" basedir="${output-parent-dir}" update="true"/>
+        <jar jarfile="${build.target-jar}" basedir="${output-parent-dir}" update="true"/>
     </target>
 </project>

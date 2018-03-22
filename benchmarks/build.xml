@@ -105,7 +105,7 @@ BUILDING:
     <target name="extract-git-revision" depends="check-git-present" if="git.present">
         <exec executable="${git.exe}" failonerror="no" failifexecutionfails="no">
             <arg line="show --abbrev-commit HEAD"/>
-            <redirector outputproperty="git.revision">
+            <redirector outputproperty="git.hash">
                 <outputfilterchain>
                     <linecontainsregexp>
                         <regexp pattern="^commit [a-z0-9]+$"/>
@@ -118,14 +118,21 @@ BUILDING:
         </exec>
     </target>
 
-    <target name="get-git-revision" depends="extract-git-revision" unless="git.revision">
+    <target name="get-git-revision" depends="extract-git-revision" unless="git.hash">
         <!-- set property if not already set -->
-        <property name="git.revision" value="unknown"/>
+        <property name="git.hash" value="unknown"/>
     </target>
 
     <target name="set-build-version-info" depends="get-git-revision">
-        <property name="build.nickname" value="development"/>
-        <property name="build.version"  value="head-r${git.revision}"/>
+        <property name="build.nickname" value="${dacapo.nickname}"/>
+        <!-- overwritable with -Dbuild.is-official=true on commandline-->
+        <condition property="build.version"
+                    value="${dacapo.version}"
+                    else="${dacapo.version}+${git.hash}">
+            <isset property="build.is-official"/>
+        </condition>
+        <!-- set target jar name -->
+        <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
     </target>
 
     <target name="init" depends="set-build-version-info">
@@ -234,7 +241,7 @@ BUILDING:
          target: dist              
          ================================= -->
     <target name="dist" depends="harness,compile">
-        <move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
+        <move file="${build.target-jar}" tofile="dacapo-${DSTAMP}.jar"/>
     </target>
 
     <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation">
@@ -270,7 +277,7 @@ BUILDING:
 		</copy>
 
     	<!-- construct the base jar -->
-        <jar jarfile="${jar-target}" basedir="${dacapo.build.dir}" update="false" manifest="${dacapo.build.dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+        <jar jarfile="${build.target-jar}" basedir="${dacapo.build.dir}" update="false" manifest="${dacapo.build.dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
     </target>
 
     <target name="clean-bootstrap" depends="init">
@@ -358,6 +365,7 @@ See ${log.build.report} for a summary of benchmark build status.
                 <arg value="-Dtoolsdir=${toolsdir}"/>
                 <arg value="-Dbuild.time=${build.time}"/>
                 <arg value="-Dlog.build.dir=${log.build.dir}"/>
+                <arg value="-Dbuild.target-jar=${build.target-jar}"/>
                 <arg value="-buildfile"/>
                 <arg value="bms/@{benchmark}/build.xml"/>
                 <arg value="incremental"/>
