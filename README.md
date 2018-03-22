@@ -44,7 +44,8 @@ The suite is built using ant 1.9 (1.10 and later will fail for many of the bench
 
 **NOTE**
 
-1. A number of benchmarks including trade and tomcat do not reliably _build_ under Java 6 (all run under Java 6). Therefore you must explicitly use a Java 5 VM at build time (see below).
+1. PMD 6.1.0 requires JDK 9 for building; but it can run with JDK 7+
+2. JDK 7 is required by Geronimo 3.0.0 to run DayTrader
 	
 
 **IMPORTANT:** before trying to build the suite:
@@ -53,7 +54,7 @@ The suite is built using ant 1.9 (1.10 and later will fail for many of the bench
 
 2. Copy `default.properties` to `local.properties` and edit it for your environment.
 
-  * Specifically, you must set `java14.lib` to point to a Java 1.4 installation and `java14.compile.classpath` to correctly capture the libraries for that installation(otherwise derby will not build correctly)
+  * Specifically, you must set `jdk9home` to point to a Java 9 installation.
 
 
 For more information, run `ant -p` in the benchmarks directory.
