@@ -1,6 +1,6 @@
 diff -urNw daytrader/javaee6/assemblies/daytrader-ear/pom.xml ../daytrader-new/javaee6/assemblies/daytrader-ear/pom.xml
 --- daytrader/javaee6/assemblies/daytrader-ear/pom.xml	2018-03-12 16:45:38.000000000 +1100
-+++ ../daytrader-new/javaee6/assemblies/daytrader-ear/pom.xml	2018-03-13 21:44:56.126427948 +1100
++++ ../daytrader-new/javaee6/assemblies/daytrader-ear/pom.xml	2018-03-23 08:24:40.341617988 +1100
 @@ -20,7 +20,6 @@
              <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
              <artifactId>utils</artifactId>            
@@ -9,18 +9,13 @@ diff -urNw daytrader/javaee6/assemblies/daytrader-ear/pom.xml ../daytrader-new/j
          <dependency>
              <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
              <artifactId>entities</artifactId>
-@@ -30,6 +29,22 @@
+@@ -30,6 +29,17 @@
              <artifactId>web</artifactId>
              <type>war</type>
          </dependency>
 +      <dependency>
 +          <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
 +          <artifactId>dacapo</artifactId>
-+          <version>${project.version}</version>
-+      </dependency>
-+      <dependency>
-+          <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
-+          <artifactId>wsappclient</artifactId>
 +          <version>${project.version}</version>
 +      </dependency>
 +      <dependency>
@@ -32,7 +27,7 @@ diff -urNw daytrader/javaee6/assemblies/daytrader-ear/pom.xml ../daytrader-new/j
          </dependencies>
    <build>
          <plugins>
-@@ -58,6 +73,23 @@
+@@ -58,6 +68,18 @@
                              <contextRoot>/daytrader</contextRoot>
                              <bundleFileName>web.war</bundleFileName>
                          </webModule>                
@@ -47,11 +42,6 @@ diff -urNw daytrader/javaee6/assemblies/daytrader-ear/pom.xml ../daytrader-new/j
 +                            <artifactId>dacapo</artifactId>
 +                            <uri>dacapo.jar</uri>
 +                            <includeInApplicationXml>true</includeInApplicationXml>
-+                        </javaModule>
-+                        <javaModule>
-+                            <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
-+                            <artifactId>wsappclient</artifactId>
-+                            <uri>lib/wsappclient.jar</uri>
 +                        </javaModule>
                      </modules>
                      <!--
@@ -77,7 +67,7 @@ diff -urNw daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-IN
 \ No newline at end of file
 diff -urNw daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml ../daytrader-new/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml
 --- daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2018-03-12 16:45:42.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2018-03-13 21:44:56.574420943 +1100
++++ ../daytrader-new/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2018-03-23 08:24:03.078135278 +1100
 @@ -30,7 +30,7 @@
          <exclude-unlisted-classes>true</exclude-unlisted-classes>
          
@@ -89,33 +79,31 @@ diff -urNw daytrader/javaee6/modules/entities/src/main/resources/META-INF/persis
              <!-- <property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict"/> -->
 diff -urNw daytrader/javaee6/modules/pom.xml ../daytrader-new/javaee6/modules/pom.xml
 --- daytrader/javaee6/modules/pom.xml	2018-03-12 16:45:38.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/pom.xml	2018-03-13 21:44:56.702418942 +1100
-@@ -19,5 +19,7 @@
++++ ../daytrader-new/javaee6/modules/pom.xml	2018-03-23 08:24:21.697877230 +1100
+@@ -19,5 +19,6 @@
      <module>entities</module>   
      <module>utils</module>    
      <module>web</module>
 +    <module>dacapo</module>
-+    <module>wsappclient</module>
    </modules>
  </project>
 \ No newline at end of file
 diff -urNw daytrader/javaee6/modules/web/pom.xml ../daytrader-new/javaee6/modules/web/pom.xml
 --- daytrader/javaee6/modules/web/pom.xml	2018-03-12 16:45:41.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/pom.xml	2018-03-13 21:44:57.566405432 +1100
-@@ -28,6 +28,12 @@
-         </dependency>        
++++ ../daytrader-new/javaee6/modules/web/pom.xml	2018-03-23 09:10:58.966179815 +1100
+@@ -34,6 +34,11 @@
+                
          <dependency>
-             <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
-+            <artifactId>wsappclient</artifactId>
-+            <scope>provided</scope>
-+            <version>${project.version}</version>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
-             <artifactId>entities</artifactId>            
-              <scope>provided</scope>    
+             <groupId>org.apache.geronimo.specs</groupId>
++          <artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
++      </dependency>
++
++      <dependency>
++            <groupId>org.apache.geronimo.specs</groupId>
+             <artifactId>geronimo-jpa_2.0_spec</artifactId>
+             <scope>provided</scope>
          </dependency>
-@@ -126,6 +132,7 @@
+@@ -126,6 +131,7 @@
                              </includes>
                          </resource>
                      </webResources>
@@ -125,7 +113,7 @@ diff -urNw daytrader/javaee6/modules/web/pom.xml ../daytrader-new/javaee6/module
              </plugins> 
 diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java
 --- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java	2018-03-12 16:45:45.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java	2018-03-13 21:44:56.914415628 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java	2018-03-23 08:24:03.078135278 +1100
 @@ -281,5 +281,11 @@
       */
      public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception, RemoteException;
@@ -140,7 +128,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytr
  
 diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java
 --- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2018-03-12 16:45:40.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2018-03-13 21:44:56.950415065 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2018-03-23 08:24:03.078135278 +1100
 @@ -1930,4 +1930,26 @@
          return TradeConfig.JDBC;
      }
@@ -170,7 +158,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytr
  }
 diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java
 --- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2018-03-12 16:45:40.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2018-03-13 21:44:56.994414376 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2018-03-23 08:24:03.078135278 +1100
 @@ -1932,7 +1932,7 @@
  
      private final static String updateAccountProfileSQL =
@@ -235,7 +223,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytr
  }
 diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java
 --- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2018-03-12 16:45:46.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2018-03-13 21:44:56.962414876 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2018-03-23 08:24:03.078135278 +1100
 @@ -1038,4 +1038,26 @@
          return TradeConfig.JPA;
      }
@@ -265,7 +253,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytr
  }
 diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java
 --- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2018-03-12 16:45:40.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2018-03-13 21:44:57.042413625 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2018-03-23 08:24:03.078135278 +1100
 @@ -125,4 +125,16 @@
      public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
          return (new TradeJEEDirect(false)).resetTrade(deleteAll);
@@ -285,7 +273,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytr
  }
 diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java
 --- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2018-03-12 16:45:40.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2018-03-13 21:44:57.050413501 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2018-03-23 08:24:03.078135278 +1100
 @@ -750,4 +750,17 @@
          Log.trace("updateQuotePrices: " + TradeConfig.getUpdateQuotePrices());
          Log.trace("publishQuotePriceChange: " + TradeConfig.getPublishQuotePriceChange());
@@ -306,7 +294,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytr
  }
 diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java
 --- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2018-03-12 16:45:40.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2018-03-13 21:44:57.074413124 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2018-03-23 08:24:03.078135278 +1100
 @@ -570,4 +570,39 @@
          return runStatsData;
      }
@@ -349,7 +337,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytr
  }
 diff -urNw daytrader/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl ../daytrader-new/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl
 --- daytrader/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl	2018-03-12 16:45:46.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl	2018-03-13 21:44:57.346408872 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl	2018-03-23 08:24:03.082135223 +1100
 @@ -15,13 +15,13 @@
  
  -- Each SQL statement in this file should terminate with a semicolon (;)
@@ -373,7 +361,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/resources/dbscripts/derby/Tabl
  (ID SMALLINT NOT NULL PRIMARY KEY,
 diff -urNw daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml ../daytrader-new/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml
 --- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2018-03-12 16:45:42.000000000 +1100
-+++ ../daytrader-new/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2018-03-13 21:44:57.390408184 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2018-03-23 08:24:03.082135223 +1100
 @@ -58,10 +58,19 @@
          <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
          <load-on-startup>1</load-on-startup>
@@ -396,7 +384,7 @@ diff -urNw daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml ../dayt
          <session-timeout>30</session-timeout>
 diff -urNw daytrader/plugins/daytrader-tomcat/pom.xml ../daytrader-new/plugins/daytrader-tomcat/pom.xml
 --- daytrader/plugins/daytrader-tomcat/pom.xml	2018-03-12 16:45:42.000000000 +1100
-+++ ../daytrader-new/plugins/daytrader-tomcat/pom.xml	2018-03-13 21:52:10.011646339 +1100
++++ ../daytrader-new/plugins/daytrader-tomcat/pom.xml	2018-03-23 08:24:03.090135112 +1100
 @@ -40,7 +40,7 @@
          </dependency>
          <dependency>
@@ -452,7 +440,7 @@ diff -urNw daytrader/plugins/daytrader-tomcat/pom.xml ../daytrader-new/plugins/d
                  <groupId>org.apache.maven.plugins</groupId>
 diff -urNw daytrader/plugins/daytrader-tomcat/src/main/history/dependencies.xml ../daytrader-new/plugins/daytrader-tomcat/src/main/history/dependencies.xml
 --- daytrader/plugins/daytrader-tomcat/src/main/history/dependencies.xml	2018-03-12 16:45:49.000000000 +1100
-+++ ../daytrader-new/plugins/daytrader-tomcat/src/main/history/dependencies.xml	2018-03-13 21:44:59.950368158 +1100
++++ ../daytrader-new/plugins/daytrader-tomcat/src/main/history/dependencies.xml	2018-03-23 08:24:03.090135112 +1100
 @@ -38,7 +38,7 @@
      </dependency>-->
      <dependency>
@@ -464,7 +452,7 @@ diff -urNw daytrader/plugins/daytrader-tomcat/src/main/history/dependencies.xml 
      <dependency>
 diff -urNw daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml ../daytrader-new/plugins/daytrader-tomcat/src/main/plan/plan.xml
 --- daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml	2018-03-12 16:45:42.000000000 +1100
-+++ ../daytrader-new/plugins/daytrader-tomcat/src/main/plan/plan.xml	2018-03-13 21:44:59.954368095 +1100
++++ ../daytrader-new/plugins/daytrader-tomcat/src/main/plan/plan.xml	2018-03-23 08:24:03.090135112 +1100
 @@ -179,4 +179,26 @@
          </application-client>
      </module>-->
@@ -494,7 +482,7 @@ diff -urNw daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml ../daytrade
  </application>
 diff -urNw daytrader/plugins/pom.xml ../daytrader-new/plugins/pom.xml
 --- daytrader/plugins/pom.xml	2018-03-12 16:45:42.000000000 +1100
-+++ ../daytrader-new/plugins/pom.xml	2018-03-13 21:54:00.037927038 +1100
++++ ../daytrader-new/plugins/pom.xml	2018-03-23 08:24:03.090135112 +1100
 @@ -40,10 +40,11 @@
                  </property>
              </activation>
@@ -521,7 +509,7 @@ diff -urNw daytrader/plugins/pom.xml ../daytrader-new/plugins/pom.xml
                              <source-repository>http://repo1.maven.org/maven2/</source-repository>
 diff -urNw daytrader/pom.xml ../daytrader-new/pom.xml
 --- daytrader/pom.xml	2018-03-12 16:45:38.000000000 +1100
-+++ ../daytrader-new/pom.xml	2018-03-13 21:44:56.094428449 +1100
++++ ../daytrader-new/pom.xml	2018-03-23 08:24:03.086135168 +1100
 @@ -39,7 +39,7 @@
      </scm>
  

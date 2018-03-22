@@ -34,7 +34,7 @@ public class DaCapoServerRunner {
       boot = new Bootstrapper();
 
       final DaemonCLParser parser = new DaemonCLParser(System.out);
-      parser.parse(new String[] { "--clean", "--quite" });
+      parser.parse(new String[] { "-c", "-q" });
 
       boot.setWaitForStop(true);
       boot.setStartBundles(Arrays.asList("org.apache.geronimo.framework/j2ee-system//car"));

@@ -31,8 +31,16 @@ public class DaCapoClientRunner {
 
       car = carName;
 
+      /* Calling this function directly does not launch the client now. According to testing, it seems the getMain method of boot does not work properlly.
+         Thus these ugly codes are temporarily used fot verifing that the whole framework works
+         Will be changed once the problem is fixed
+      */
+      //ClientCLI.main(new String[] { car, "-i", "-t", numThreads + "", "-s", size, useBeans ? "-b" : "" });
+
+
       gero = System.getProperty("org.apache.geronimo.home.dir");
-      ProcessBuilder pb = new ProcessBuilder("java", "-jar", "-Dkaraf.startLocalConsole=false",gero + "/bin/client.jar", car, "-i", "-t", numThreads + "", "-s", size, useBeans ? "-b" : "");
+      String jhome= System.getProperty("java.home");
+      ProcessBuilder pb = new ProcessBuilder(jhome + "/bin/java", "-jar", "-Dkaraf.startLocalConsole=false",gero + "/bin/client.jar", car, "-i", "-t", numThreads + "", "-s", size, useBeans ? "-b" : "");
       Process p = pb.start();
       p.waitFor();
 
@@ -47,7 +55,15 @@ public class DaCapoClientRunner {
 
     try {
 
-      ProcessBuilder pb = new ProcessBuilder("java", "-jar", "-Dkaraf.startLocalConsole=false", gero + "/bin/client.jar", car, "-t", numThreads + "", "-s", size, useBeans ? "-b" : "");
+      /* Calling the function directly does not launch the client now. According to testing, it seems the getMain method of boot does not work properlly.
+         Thus these ugly codes are temporarily used for checking the whole framework
+         Will be changed once the problem is fixed
+      */
+      //ClientCLI.main(new String[] { car, "-i", "-t", numThreads + "", "-s", size, useBeans ? "-b" : "" });
+
+      String jhome= System.getProperty("java.home");
+
+      ProcessBuilder pb = new ProcessBuilder(jhome + "/bin/java", "-jar", "-Dkaraf.startLocalConsole=false", gero + "/bin/client.jar", car, "-t", numThreads + "", "-s", size, useBeans ? "-b" : "");
       Process p = pb.start();
       p.waitFor();
 
