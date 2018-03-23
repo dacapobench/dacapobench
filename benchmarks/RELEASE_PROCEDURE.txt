@@ -21,7 +21,7 @@ RELEASE PROCEDURES
 	unzip ../dacapo-${dacapo.version}-${dacapo.nickname}-src.zip
 
 5. Build the new source (using a proxy if necessary)
-	export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun
+	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home
 	export ANT_OPTS="-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128"
 	export MAVEN_OPTS="-Xmx512M"
         cd benchmarks

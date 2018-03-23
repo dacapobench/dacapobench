@@ -35,6 +35,12 @@ BUILDING:
                   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
              On Ubuntu 16.04 something like:
                    export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
+            
+            Building DaCapo requires JDK 8, 
+            certain benchmarks (ie. PMD, TradeBeans, TradeSOAP)
+            require JDK 7 and/or 9 to build.
+            Set relavent paths in local.properties file.
+            See 3 below.
 
         2. Set ant and maven environment variables if necessary.  In particular,
         for some jvms it is necessary to explicitly request a larger heap size.
