@@ -10,12 +10,13 @@ package org.dacapo.daytrader;
 
 import java.io.InputStream;
 
+
+import java.util.Arrays;
+import org.apache.geronimo.main.Bootstrapper;
+import org.apache.geronimo.main.Main;
 import org.apache.geronimo.cli.daemon.DaemonCLParser;
-import org.apache.geronimo.kernel.Kernel;
-import org.apache.geronimo.kernel.KernelFactory;
-import org.apache.geronimo.kernel.config.ConfigurationUtil;
-import org.apache.geronimo.kernel.log.GeronimoLogging;
-import org.apache.geronimo.kernel.util.Main;
+import org.apache.geronimo.cli.shutdown.ShutdownCLParser;
+import org.apache.geronimo.main.ScriptLaunchListener;
 
 /**
  * Dacapo benchmark harness for tradesoap.
@@ -24,28 +25,31 @@ import org.apache.geronimo.kernel.util.Main;
  * @id $Id: DaCapoServerRunner.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DaCapoServerRunner {
-  private static Kernel kernel = null;
   private static Thread serverThread = null;
+  private static Bootstrapper boot = null;
 
   public static void initialize() {
     try {
-      GeronimoLogging.initialize(GeronimoLogging.ERROR);
-      final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      kernel = KernelFactory.newInstance().createKernel("DaCapoServer");
-      kernel.boot();
-      InputStream in = classLoader.getResourceAsStream("META-INF/config.ser");
 
-      ConfigurationUtil.loadBootstrapConfiguration(kernel, in, classLoader, true);
+      boot = new Bootstrapper();
+
       final DaemonCLParser parser = new DaemonCLParser(System.out);
-      final Main main = (Main) kernel.getGBean(Main.class);
-      parser.parse(new String[] { "--quiet" });
-      serverThread = new Thread(new Runnable() {
-        public void run() {
-          Thread.currentThread().setContextClassLoader(main.getClass().getClassLoader());
-          main.execute(parser);
-        }
-      });
-      serverThread.start();
+      parser.parse(new String[] { "-c", "-q" });
+
+      boot.setWaitForStop(true);
+      boot.setStartBundles(Arrays.asList("org.apache.geronimo.framework/j2ee-system//car"));
+      boot.setLog4jConfigFile("var/log/server-log4j.properties");
+      boot.setCleanStorage(((DaemonCLParser)parser).isCleanCache());
+      boot.setLaunchListener(new ScriptLaunchListener("server"));
+
+      boot.init();
+      boot.launch();
+      Main geronimoMain = boot.getMain();
+
+      ClassLoader newTCCL = geronimoMain.getClass().getClassLoader();
+      Thread.currentThread().setContextClassLoader(newTCCL);
+      geronimoMain.execute(parser);
+
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
       e.printStackTrace();
@@ -53,16 +57,13 @@ public class DaCapoServerRunner {
     }
   }
 
-  public static void shutdown() {
-    while (serverThread.isAlive()) {
-      serverThread.interrupt();
-      try {
-        serverThread.join();
-      } catch (InterruptedException e) {
-      }
+  public static void shutdown(){
+    try {
+      boot.shutdown(0L);
+    } catch (Exception e) {
+      System.err.print("Exception initializing server: " + e.toString());
+      e.printStackTrace();
+      System.exit(-1);
     }
-    serverThread = null;
-    kernel.shutdown();
-    kernel = null;
   }
 }
