@@ -11,7 +11,7 @@
     <property file="ant/dacapo.properties"/>
 
     <property name="lib-name" value="commons-logging"/>
-    <property name="lib-version" value="1.1.1"/>
+    <property name="lib-version" value="1.2"/>
     <property name="lib-url" value="${apache.dl.url}/commons/logging/source/"/>
     <property name="lib-src" value="${lib-name}-${lib-version}-src.tar.gz"/>
 
@@ -34,6 +34,6 @@
     </target>
 
     <target name="jar">
-        <copy file="${lib-build-top}/target/commons-logging-api-1.1.1-SNAPSHOT.jar" tofile="${commons-logging-jar}"/>
+        <copy file="${lib-build-top}/target/commons-logging-api-1.2.jar" tofile="${commons-logging-jar}"/>
     </target>
 </project>

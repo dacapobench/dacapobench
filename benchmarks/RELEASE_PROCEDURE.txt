@@ -2,39 +2,34 @@ RELEASE PROCEDURES
 
 0. Update and commit the release notes.
 
-1. Determine a version number and optionally a nickname
-	export DACAPO_VERSION=9.12
-	export DACAPO_NICKNAME=bach
+1. Determine a version number and optionally a nickname, specify that in dacapo.properties file
+	dacapo.version=9.13
+	dacapo.nickname=uncalibrated
 	
-2. Make fresh svn checkout.
-   	mkdir svn
-	cd svn
-	svn co https://dacapobench.svn.sourceforge.net/svnroot/dacapobench/benchmarks/trunk dacapobench
+2. Make fresh git clone
+   	git clone https://github.com/dacapobench/dacapobench.git
 
 3. Produced a source build and rename it:
         cd dacapobench/benchmarks
-	ant -Dbuild.version=$DACAPO_VERSION -Dbuild.nickname=$DACAPO_NICKNAME source
-	mv dacapo-src.zip ../../../dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
-	cd ../../..
+		ant -Dbuild.is-official=true source
+		mv dacapo-${dacapo.version}-${dacapo.nickname}-src.zip ..
+		cd ..
 
 4. Create a new directory and unzip the new source
 	mkdir release
 	cd release
-	unzip ../dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME-src.zip
+	unzip ../dacapo-${dacapo.version}-${dacapo.nickname}-src.zip
 
 5. Build the new source (using a proxy if necessary)
-	export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun
+	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home
 	export ANT_OPTS="-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128"
 	export MAVEN_OPTS="-Xmx512M"
         cd benchmarks
-	ant -Dbuild.version=$DACAPO_VERSION -Dbuild.nickname=$DACAPO_NICKNAME 
+	ant -Dbuild.is-official=true
 
-6. Rename the jar
-	mv dacapo-<xxx>.jar ../../dacapo-$DACAPO_VERSION-$DACAPO_NICKNAME.jar
+6. Test the resulting jar
 
-7. Test the resulting jar
-
-8. Upload files
+7. Upload files
 	- Log into the sourceforge site as a developer
 	- Go to Develop tab
 	- Go to Project Admin -> File Manager tab
@@ -45,6 +40,6 @@ or
 	scp <filename> <sf-username>,dacapobench@frs.sourceforge.net:/home/frs/project/d/da/dacapobench/<release dir>
 	- set file properties via the file manager to identify release notes (left-click file names to set properties)
 
-9. Ensure default download is correct (use left click on file to make it default for a given platform / platforms)
+8. Ensure default download is correct (use left click on file to make it default for a given platform / platforms)
 	- https://sourceforge.net/projects/dacapobench/ (see default download here)
 	- https://sourceforge.net/projects/dacapobench/files/

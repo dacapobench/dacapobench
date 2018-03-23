@@ -1,7 +1,6 @@
-diff -ur ../fop-0.95/src/java/org/apache/fop/cli/Main.java fop-0.95/src/java/org/apache/fop/cli/Main.java
---- ../fop-0.95/src/java/org/apache/fop/cli/Main.java	2008-08-01 00:02:56.000000000 +1000
-+++ fop-0.95/src/java/org/apache/fop/cli/Main.java	2009-06-16 23:02:09.000000000 +1000
-@@ -174,9 +174,9 @@
+--- fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java	2017-04-03 21:23:57.000000000 +1000
++++ ../Main.java	2017-12-01 13:16:56.657538089 +1100
+@@ -194,9 +194,9 @@
              // System.exit(0) called to close AWT/SVG-created threads, if any.
              // AWTRenderer closes with window shutdown, so exit() should not
              // be called here

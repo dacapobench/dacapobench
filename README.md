@@ -42,7 +42,22 @@ The suite is built using ant 1.9 (1.10 and later will fail for many of the bench
 * *[svn](http://subversion.apache.org)*
 
 
-** Run `ant -p` in the benchmarks directory for more information on building **.
+**NOTE**
+
+1. PMD 6.1.0 requires JDK 9 for building; but it can run with JDK 7+
+2. JDK 7 is required by Geronimo 3.0.0 to run DayTrader
+	
+
+**IMPORTANT:** before trying to build the suite:
+
+1. Set your `JAVA_HOME` environment variable appropriately (it must be set and be consistent with the VM that will be used to build the suite).
+
+2. Copy `default.properties` to `local.properties` and edit it for your environment.
+
+  * Specifically, you must set `jdk9home` to point to a Java 9 installation.
+
+
+For more information, run `ant -p` in the benchmarks directory.
 
 
 

@@ -39,7 +39,7 @@
 
 	<property name="harness-classpath" value="harness/dist/harness"/>
 
-	<target name="all" depends="source,svn-source,cvs-source,pre-build,build,complete"/>
+	<target name="all" depends="source,svn-source,cvs-source,hg-source,pre-build,build,complete"/>
 
 	<target name="incremental">
 		<property name="incremental-build" value="true"/>
@@ -77,6 +77,19 @@
 			<param name="cvs-package" value="${bm-cvs-package}"/>
 			<param name="cvs-date" value="${bm-cvs-date}"/>
 			<param name="target-file" value="${bm-src}"/>
+		</antcall>
+	</target>
+
+	<target name="hg-source" if="bm-hg-url">
+		<condition property="fail-on-error" value="no" else="yes">
+			<isset property="bm-ignore-failure"/>
+		</condition>
+		<antcall target="check-hg-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="hg-url" value="${bm-hg-url}"/>
+			<param name="hg-revision" value="${bm-hg-revision}"/>
+			<param name="target-file" value="${bm-src}"/>
+			<param name="fail-on-error" value="${bm-fail-on-error}"/>
 		</antcall>
 	</target>
 
@@ -162,7 +175,7 @@
 	</target>
 
 	<target name="complete">
-		<unjar src="${jar-target}" dest="${bm-output-dir}" overwrite="yes">
+		<unjar src="${build.target-jar}" dest="${bm-output-dir}" overwrite="yes">
 			<patternset>
 				<include name="doc/menu.html"/>
 			</patternset>
@@ -175,7 +188,7 @@
 		</java>
 		<copy file="${temp.file}" tofile="${bm-output-dir}/doc/menu.html"/>
 		<delete file="${temp.file}"/>
-		<jar jarfile="${jar-target}" basedir="${bm-output-dir}" update="true"/>
+		<jar jarfile="${build.target-jar}" basedir="${bm-output-dir}" update="true"/>
 	</target>
 
 </project>

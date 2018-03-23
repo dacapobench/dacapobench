@@ -85,8 +85,9 @@ public class TPCCDataSource implements DataSource {
     return null;
   }
 
-  public Logger getParentLogger() throws SQLFeatureNotSupportedException{
-    throw new UnsupportedOperationException();
+  public Logger getParentLogger()
+          throws SQLFeatureNotSupportedException {
+    return null;
   }
 
   private class NullWriter extends Writer {

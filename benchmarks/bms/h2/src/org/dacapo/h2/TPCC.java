@@ -201,7 +201,7 @@ public class TPCC {
 
       org.h2.tools.Backup.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
     } else {
-      org.h2.tools.Restore.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
+      org.h2.tools.Restore.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK);
     }
   }
 

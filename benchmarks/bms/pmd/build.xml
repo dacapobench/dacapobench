@@ -11,41 +11,72 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="pmd"/>
-    <property name="bm-version" value="4.2.5"/>
-    <property name="bm-url" value="${sourceforge.dl.url}/pmd/pmd/4.2.5"/>
+    <property name="bm-version" value="6.1.0"/>
+    <property name="bm-url" value="${github.url}/pmd/pmd/releases/download/pmd_releases%2F${bm-version}"/>
     <property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
-    <property name="jaxen-version" value="1.1.1"/>
-    <property name="asm-version" value="3.1"/>
+    <property name="jaxen-version" value="1.1.6"/>
+    <property name="asm-version" value="6.0"/>
+    <property name="commons-io-version" value="2.4"/>
+    <property name="commons-lang3-version" value="3.7"/>
+    <property name="jcommander-version" value="1.48"/>
+    <property name="saxon-version" value="9.1.0.8"/>
+
+    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+    <property name="mvn-exe" value="${mvn-home}/mvn"/>
+    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
+        <os family="windows"/>
+    </condition>
 
     <import file="../common.xml"/>
 
-    <property name="bm-build-top" value="${bm-build-dir}/pmd-${bm-version}"/>
+    <property name="bm-build-top" value="${bm-build-dir}/pmd-src-${bm-version}"/>
 
     <target name="unpack" depends="unzip, patch"/>
 
     <target name="bm-build" depends="xerces">
+        <!-- build JUnit -->
         <ant antfile="libs/junit/build.xml"/>
-        <exec dir="${bm-build-top}/bin" executable="ant">
-            <arg value="jar"/>
-            <env key="CLASSPATH" value=".:${junit-jar}"/>
-            <env key="ANT_HOME" value="${ant.install}"/>
+
+        <!-- set up toolchains.xml for Maven -->
+        <property name="mvn-toolchains-xml" value="${bm-build-top}/toolchains.xml"/>
+        <exec executable="${bm-files}/mvn_toolchain_setup.sh">
+            <arg line="${mvn-toolchains-xml}"/>
         </exec>
+
+        <!-- execute Maven in build directory -->
+        <exec dir="${bm-build-top}" executable="${mvn-exe}">
+            <env key="JAVA_HOME" value="${jdk9home}"/>
+            <arg value="-B"/>
+            <arg line="--global-toolchains ${mvn-toolchains-xml}"/>
+            <arg value="-Dmaven.test.skip=true"/>
+            <arg line="-pl pmd-core,pmd-java,pmd-dist"/>
+            <arg line="clean package"/>
+        </exec>
+
+        <!-- unpacks produced zip file -->
+        <property name="pmd-dist-target" value="${bm-build-top}/pmd-dist/target/pmd-bin-${bm-version}"/>
+        <unzip src="${pmd-dist-target}.zip" dest="${bm-build-top}/pmd-dist/target"/>
     </target>
 
     <target name="jar" depends="libs">
-        <copy file="${bm-build-top}/lib/pmd-${bm-version}.jar" todir="${bm-jars}"/>
+        <copy todir="${bm-jars}">
+            <resources>
+                <file file="${pmd-dist-target}/lib/pmd-core-${bm-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/pmd-java-${bm-version}.jar"/>
+            </resources>
+        </copy>
     </target>
 
     <target name="data">
         <property name="pmd-data" value="${bm-build-top}/data/pmd"/>
         <mkdir dir="${pmd-data}"/>
         <copy todir="${pmd-data}">
-            <fileset dir="${bm-build-top}/src">
-                <include name="net/**/*.java"/>
+            <fileset dir="${bm-build-top}">
+                <include name="**/*.java"/>
             </fileset>
         </copy>
         <copy todir="${pmd-data}">
-            <fileset dir="${bm-build-top}">
+            <fileset dir="${bm-build-top}/pmd-java/src/main/resources">
                 <include name="rulesets/**/*"/>
             </fileset>
         </copy>
@@ -59,7 +90,16 @@
     </target>
 
     <target name="libs">
-        <copy file="${bm-build-top}/lib/jaxen-${jaxen-version}.jar" todir="${bm-jars}"/>
-        <copy file="${bm-build-top}/lib/asm-${asm-version}.jar" todir="${bm-jars}"/>
+        <copy todir="${bm-jars}">
+            <resources>
+                <file file="${pmd-dist-target}/lib/jaxen-${jaxen-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/asm-${asm-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/commons-io-${commons-io-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/commons-lang3-${commons-lang3-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/jcommander-${jcommander-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/saxon-${saxon-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/saxon-${saxon-version}-dom.jar"/>
+            </resources>
+        </copy>
     </target>
 </project>

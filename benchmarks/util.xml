@@ -262,6 +262,62 @@
 		</antcall>
 	</target>
 
+	<!-- get source from mercurial repository -->
+	<target name="check-hg-source" if="target-filename" depends="scm-init">
+		<antcall target="check-hg-source.checkandupdate">
+			<param name="hg-url" value="${hg-url}"/>
+			<param name="hg-revision" value="${hg-revision}"/>
+			<param name="target-filename" value="${target-filename}"/>
+			<param name="fail-on-error" value="${fail-on-error}"/>
+		</antcall>
+
+		<antcall target="check-hg-source.update">
+			<param name="hg-url" value="${hg-url}"/>
+			<param name="hg-revision" value="${hg-revision}"/>
+			<param name="target-filename" value="${target-filename}"/>
+			<param name="fail-on-error" value="${fail-on-error}"/>
+		</antcall>
+
+		<antcall target="check-source.checksum.update">
+			<param name="target-filename" value="${target-filename}"/>
+		</antcall>
+
+		<antcall target="check-source.checksum.verify">
+			<param name="target-filename" value="${target-filename}"/>
+		</antcall>
+	</target>
+
+	<!-- get the source from hg and tar up if necessary -->
+	<target name="get-hg-source" unless="target-valid-md5">
+		<property name="hg-tmp" value="hg-${build.time}"/>
+		<!-- set the input string to "p" to get around a bug where hg asks about unknown certificates -->
+		<exec executable="hg" failonerror="${fail-on-error}">
+			<arg line="clone -u ${hg-revision} ${hg-url} ${hg-tmp}"/>
+		</exec>
+		<!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->
+		<tar destfile="${target-filename}" basedir="${hg-tmp}" compression="gzip" excludes=".hg/**,**/.hg/**"/>
+		<delete dir="${hg-tmp}"/>
+	</target>
+
+	<target name="check-hg-source.checkandupdate" if="target-available-for-verify">
+		<checksum-verify file="${target-filename}" property="target-valid-md5"/>
+		<antcall target="get-hg-source">
+			<param name="hg-url" value="${hg-url}"/>
+			<param name="hg-revision" value="${hg-revision}"/>
+			<param name="target-filename" value="${target-filename}"/>
+			<param name="fail-on-error" value="${fail-on-error}"/>
+		</antcall>
+	</target>
+
+	<target name="check-hg-source.update" unless="target-available">
+		<antcall target="get-hg-source">
+			<param name="hg-url" value="${hg-url}"/>
+			<param name="hg-revision" value="${hg-revision}"/>
+			<param name="target-filename" value="${target-filename}"/>
+			<param name="fail-on-error" value="${fail-on-error}"/>
+		</antcall>
+	</target>
+
 	<!-- utility targets -->
 	<target name="check-source.checksum.update" unless="target-available-checksum">
 		<checksum-write file="${target-filename}"/>

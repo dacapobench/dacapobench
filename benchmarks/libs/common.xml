@@ -70,6 +70,6 @@
 	<target name="jar"/>
 
 	<target name="complete">
-		<jar jarfile="${jar-target}" basedir="${lib-output-dir}" update="true"/>
+		<jar jarfile="${build.target-jar}" basedir="${lib-output-dir}" update="true"/>
 	</target>
 </project>
