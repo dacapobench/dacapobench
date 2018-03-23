@@ -232,7 +232,7 @@
         <echo message="${ger-home}/bin/${geronimo-exe}"/>
         <exec executable="${ger-home}/bin/${geronimo-exe}" dir="${ger-home}" spawn="true">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <env key="JAVA_HOME" path="${jdk17home}"/>
+            <env key="JAVA_HOME" path="${jdk7home}"/>
             <arg value="start"/>
             <arg value="--clean"/>
         </exec>
@@ -246,7 +246,7 @@
     <target name="stop-geronimo">
         <exec executable="${ger-home}/bin/${geronimo-exe}" dir="${ger-home}" spawn="false">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <env key="JAVA_HOME" path="${jdk17home}"/>
+            <env key="JAVA_HOME" path="${jdk7home}"/>
             <arg value="stop"/>
             <arg value="-u"/>
             <arg value="system"/>
@@ -264,7 +264,7 @@
     <target name="deploy">
         <exec executable="${ger-home}/bin/${deploy-exe}">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
-            <env key="JAVA_HOME" path="${jdk17home}"/>
+            <env key="JAVA_HOME" path="${jdk7home}"/>
             <arg value="-u"/>
             <arg value="system"/>
             <arg value="-p"/>
