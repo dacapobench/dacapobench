@@ -23,8 +23,8 @@ DEPENDENCIES:
    - ant1.9 (http://ant.apache.org)   # note that builds will fail if ant 1.10 or later are used
    - csv (http:/www.nongnu.org/cvs/)
    - svn (http://subversion.apache.org)
-        
-For convinience, both are included in the tools directory:
+
+For convinience, javacc and maven are included in the tools directory:
     ${toolsdir}
 
         
@@ -47,32 +47,16 @@ BUILDING:
         or
             export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
 
-        When the Java6 runtime is invoked to build Tomcat, it may have incorrect/broken
-        cacerts, which stop files from being downloaded by ant.   This can be addressed
-        by pointing to cacerts in your 1.8 JVM:
-            export ANT_OPTS="-Djavax.net.ssl.trustStore=${JAVA-8-HOME}/jre/lib/security/cacerts"
-
         3. Copy default.properties to local.properties and edit local.properties
         for your environment.
 
-        4. You may need to modify your local maven settings in order to get the trade benchmarks
-        to build.   In particular, you may need to edit the file:
-        ~/.m2/repository/org/apache/geronimo/geronimo/2.1.4/geronimo-2.1.4.pom
-
-        and change the version numbers near line 2423:
-
-        from:
-        [1.5,1.6)
-        to:
-        [1.5,)
-
-        5. Run ant:
+        4. Run ant:
         ant         [builds all benchmarks]
         ant dist    [builds all benchmarks, this is the default]
         ant source  [builds a source distribution including benchmarks and tools]
         ant bm      [builds a specific benchmark, bm]
 
-        6. A log of each directory is created under this benchmark directory
+        5. A log of each directory is created under this benchmark directory
         for benchmark build status and build success or failure files
         to be stored.  The directory log directory is normally of the
         form
