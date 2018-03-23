@@ -14,15 +14,6 @@ if [ ! -e $1 ]; then
   <toolchain>
     <type>jdk</type>
     <provides>
-      <version>1.7</version>    <!-- # though the actual version might be greater, pmd requires 1.7 here. -->
-    </provides>
-    <configuration> 
-      <jdkHome>$JAVA_HOME</jdkHome>
-    </configuration>
-  </toolchain>
-  <toolchain>
-    <type>jdk</type>
-    <provides>
       <version>1.$jver</version>
     </provides>
     <configuration> 
