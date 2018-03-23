@@ -3,7 +3,7 @@ before_script:
   - java -version
   - ant -version
   - cd benchmarks
-  - echo "make=/usr/bin/make\nbuild.failonerror=true" > local.properties
+  - echo -e "make=/usr/bin/make\nbuild.failonerror=true\njdk7home=/usr/lib/jvm/java-7-openjdk-amd64" > local.properties
 
 avrora:
   script:
