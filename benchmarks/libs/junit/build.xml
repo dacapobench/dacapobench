@@ -8,29 +8,17 @@
  -->
 <project name="junit" default="all" basedir="../..">
     <description>junit library, required by pmd, hsqldb and derby</description>
-    <property name="sourceforge.dl.j.url" value="http://jaist.dl.sourceforge.net"/>
     <property file="ant/dacapo.properties"/>
 
     <property name="lib-name" value="junit"/>
-    <property name="lib-version" value="4.7"/>
-    <property name="lib-url" value="${sourceforge.dl.j.url}/project/junit/junit/${lib-version}"/>
-    <property name="lib-src" value="junit${lib-version}.zip"/>
+    <property name="lib-version" value="4.12"/>
+    <property name="lib-url" value="http://central.maven.org/maven2/junit/junit/${lib-version}"/>
+    <property name="lib-src" value="junit-${lib-version}.jar"/>
 
     <import file="../common.xml"/>
 
-    <target name="unpack" depends="unzip"/>
-
-    <target name="unzip">
-        <mkdir dir="${lib-build-dir}/"/>
-        <unzip src="${lib-downloads}/${lib-src}" dest="${lib-build-dir}/">
-            <patternset>
-                <include name="junit${lib-version}/junit-${lib-version}.jar"/>
-            </patternset>
-        </unzip>
-    </target>
-
     <target name="jar" depends="junit-jar-check" unless="junit-build-done">
-        <copy file="${lib-build-dir}/junit${lib-version}/junit-${lib-version}.jar" tofile="${junit-jar}"/>
+        <copy file="${lib-downloads}/junit-${lib-version}.jar" tofile="${junit-jar}"/>
     </target>
 
     <target name="junit-jar-check">
