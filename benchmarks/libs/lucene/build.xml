@@ -24,6 +24,7 @@
 
     <target name="build">
         <ant antfile="common-build.xml" target="ivy-bootstrap" dir="${lib-build-top}" inheritall="false"/>
+        <typedef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpath="${user.home}/.ant/lib/ivy-2.3.0.jar"/>
         <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
         <ant antfile="build.xml" target="default" dir="${lib-build-top}/demo/" inheritall="false"/>
     </target>
