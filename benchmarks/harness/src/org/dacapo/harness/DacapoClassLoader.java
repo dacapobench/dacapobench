@@ -24,8 +24,8 @@ import org.dacapo.parser.Config;
  * benchmark as a set of jar files, rather than having to mix the classes for
  * all the benchmarks into the dacapo jar file.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: DacapoClassLoader.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: DacapoClassLoader.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DacapoClassLoader extends URLClassLoader {
 

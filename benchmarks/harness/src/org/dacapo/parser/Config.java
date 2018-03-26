@@ -28,8 +28,8 @@ import java.util.Vector;
  * Container class for all options specified in a benchmark's configuration
  * file.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Config.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Config.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Config {
 

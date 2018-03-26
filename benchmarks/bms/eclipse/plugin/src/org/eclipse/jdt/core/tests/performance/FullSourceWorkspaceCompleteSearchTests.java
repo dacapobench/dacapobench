@@ -30,8 +30,8 @@ import org.eclipse.jdt.core.tests.model.AbstractJavaModelTests;
  * within eclipse-Automated-Tests-3.5.1.zip which is downloadable from the
  * eclipse web site
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: FullSourceWorkspaceCompleteSearchTests.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: FullSourceWorkspaceCompleteSearchTests.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class FullSourceWorkspaceCompleteSearchTests extends FullSourceWorkspaceSearchTests {
 
