@@ -42,7 +42,7 @@ public class Xalan extends Benchmark {
    * Create the threads, this is outside the timing loop to minimise the impact
    * of the startup. The threads will just sit waiting on the work queue.
    * 
-   * @see dacapo.Benchmark#preIteration(java.lang.String)
+   * @see org.dacapo.harness.Benchmark#preIteration(java.lang.String)
    */
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
@@ -59,7 +59,7 @@ public class Xalan extends Benchmark {
    * Run the benchmark by just pushing jobs onto the work queue and waiting for
    * the threads to finish.
    * 
-   * @see dacapo.Benchmark#iterate(java.lang.String)
+   * @see org.dacapo.harness.Benchmark#iterate(java.lang.String)
    */
   public void iterate(String size) throws Exception {
     String[] harnessArgs = config.getArgs(size);
