@@ -1,7 +1,7 @@
 benchmark pmd
   class org.dacapo.harness.Pmd
   thread-model single
-  jars "pmd-core-6.1.0.jar", "pmd-java-6.1.0.jar", "jaxen-1.1.6.jar", "asm-6.0.jar", "commons-io-2.4.jar", "commons-lang3-3.7.jar", "jcommander-1.48.jar", "saxon-9.1.0.8.jar", "saxon-9.1.0.8-dom.jar", "junit-3.8.1.jar", "xercesImpl.jar", "xml-apis.jar";
+  jars "pmd-core-6.1.0.jar", "pmd-java-6.1.0.jar", "jaxen-1.1.6.jar", "asm-6.0.jar", "commons-io-2.4.jar", "commons-lang3-3.7.jar", "jcommander-1.48.jar", "saxon-9.1.0.8.jar", "saxon-9.1.0.8-dom.jar", "junit-4.12.jar", "xercesImpl.jar", "xml-apis.jar";
 
 size xsmall args "@pmd/small.lst","text","pmd/rulesets/java/braces.xml","-debug";
 
