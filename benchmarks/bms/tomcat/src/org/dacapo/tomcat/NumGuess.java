@@ -19,8 +19,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
  * Drive the number guessing game - server thinks of a number and the client
  * tries to guess it.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: NumGuess.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: NumGuess.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class NumGuess extends HttpGet {
 

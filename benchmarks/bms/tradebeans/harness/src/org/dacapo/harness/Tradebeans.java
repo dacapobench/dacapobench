@@ -17,8 +17,8 @@ import org.dacapo.parser.Config;
 /**
  * Dacapo benchmark harness for tradebeans.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Tradebeans.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Tradebeans.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 
 public class Tradebeans extends Benchmark {

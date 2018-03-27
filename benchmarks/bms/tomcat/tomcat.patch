@@ -1,32 +1,14 @@
---- build/apache-tomcat-6.0.20-src/build.properties.default	2017-11-24 16:45:54.563087654 +1100
-+++ build.properties-new.default	2017-11-24 16:46:55.752018154 +1100
-@@ -45,7 +45,7 @@
-
- base-commons.loc=http://archive.apache.org/dist/commons
- base-tomcat.loc=http://archive.apache.org/dist/tomcat
--base-sf.loc=http://softlayer.dl.sourceforge.net
-+base-sf.loc=https://ncu.dl.sourceforge.net
+--- apache-tomcat-9.0.2-src/build.properties.default.orig	2018-03-27 11:56:29.000000000 +1100
++++ apache-tomcat-9.0.2-src/build.properties.default	2018-03-27 11:56:36.000000000 +1100
+@@ -96,9 +96,9 @@
+ base-tomcat.loc.1=${base-apache.loc.1}/tomcat
+ base-tomcat.loc.2=${base-apache.loc.2}/tomcat
  
- # ----- Commons Logging, version 1.1 or later -----
- commons-logging-version=1.1.1
-@@ -90,8 +90,8 @@
- nsis.installoptions.dll=${nsis.home}/Plugins/InstallOptions.dll
- nsis.nsexec.dll=${nsis.home}/Plugins/nsExec.dll
- nsis.nsisdl.dll=${nsis.home}/Plugins/NSISdl.dll
--nsis.loc=${base-sf.loc}/nsis/nsis-2.37.zip
-+nsis.loc=${base-sf.loc}/project/nsis/NSIS%202/2.37/nsis-2.37.zip
+-base-sf.loc=http://downloads.sourceforge.net
++base-sf.loc=https://downloads.sourceforge.net
+ # repo.maven.apache.org is the same as repo2.maven.org
+-base-maven.loc=http://repo.maven.apache.org/maven2
++base-maven.loc=https://repo.maven.apache.org/maven2
  
- # ----- Commons Daemon, version 1.0-Alpha or later -----
- commons-daemon.home=${base.path}/commons-daemon-1.0.1
- 
---- apache-tomcat-6.0.20-src/build.properties.default	2018-01-02 03:36:37.363894115 +1100
-+++ ../build.properties.default	2018-01-02 03:43:20.926628287 +1100
-@@ -59,7 +59,7 @@
- jdt.home=${base.path}/eclipse/plugins
- jdt.lib=${jdt.home}
- jdt.jar=${jdt.lib}/org.eclipse.jdt.core_3.3.1.v_780_R33x.jar
--jdt.loc=http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.3.1-200709211145/eclipse-JDT-3.3.1.zip
-+jdt.loc=http://archive.eclipse.org/eclipse/downloads/drops/R-3.3.1-200709211145/eclipse-JDT-3.3.1.zip
- 
- # ----- Tomcat native library -----
- tomcat-native.version=1.1.16
+ # Mirror, was used when there were problems with the main SF downloads site
+ # base-sf.loc=http://sunet.dl.sourceforge.net

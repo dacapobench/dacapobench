@@ -7,14 +7,23 @@ extract_java_version() {
 
 if [ ! -e $1 ]; then
     jver=$(extract_java_version)
-    if [ $jver -ge 8 ]; then
+    if [ $jver -eq 8 ]; then
         cat > $1 <<- EOM
 <?xml version="1.0" encoding="UTF8"?>
 <toolchains>
   <toolchain>
     <type>jdk</type>
     <provides>
-      <version>1.$jver</version>
+      <version>1.7</version>
+    </provides>
+    <configuration>
+      <jdkHome>$2</jdkHome>
+    </configuration>
+  </toolchain>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>1.8</version>
     </provides>
     <configuration> 
       <jdkHome>$JAVA_HOME</jdkHome>
@@ -23,7 +32,7 @@ if [ ! -e $1 ]; then
 </toolchains>
 EOM
   else
-    echo "PMD benchmark needs Java >= 1.8!" >> /dev/stderr
+    echo "Building PMD benchmark needs Java 8!" >> /dev/stderr
     exit 1
   fi
 fi

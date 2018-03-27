@@ -9,8 +9,8 @@
 package org.dacapo.harness;
 
 /**
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: DacapoException.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: DacapoException.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DacapoException extends Exception {
   public DacapoException(String text) {
