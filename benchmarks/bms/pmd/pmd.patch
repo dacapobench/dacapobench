@@ -1,6 +1,6 @@
-diff -ur orig/pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
---- orig/pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2017-05-20 20:36:32.000000000 +1000
-+++ pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2017-12-19 14:30:10.744710417 +1100
+diff -ur orig/pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
+--- orig/pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2017-05-20 20:36:32.000000000 +1000
++++ pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2017-12-19 14:30:10.744710417 +1100
 @@ -131,7 +131,7 @@
          } catch (IOException e) {
              throw new IllegalStateException(e);
@@ -10,10 +10,10 @@ diff -ur orig/pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/renderers
          }
      }
  }
-diff -ur orig/pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java
+diff -ur orig/pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java
 index a3691033f..142a10d6e 100644
---- orig/pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java
-+++ pmd-src-5.7.0/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java
+--- orig/pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java
++++ pmd-src-5.8.1/pmd-core/src/main/java/net/sourceforge/pmd/util/datasource/FileDataSource.java
 @@ -37,14 +37,19 @@ public class FileDataSource implements DataSource {
      }
  
