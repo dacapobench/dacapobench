@@ -40,12 +40,17 @@
         <!-- set up toolchains.xml for Maven -->
         <property name="mvn-toolchains-xml" value="${bm-build-top}/toolchains.xml"/>
         <exec executable="${bm-files}/mvn_toolchain_setup.sh">
-            <arg line="${mvn-toolchains-xml}"/>
+            <arg value="${mvn-toolchains-xml}"/>
+            <arg value="${jdk7home}"/>
         </exec>
 
         <!-- execute Maven in build directory -->
         <exec dir="${bm-build-top}" executable="${mvn-exe}">
-            <arg line="-B --global-toolchains ${mvn-toolchains-xml} -Dmaven.test.skip=true clean package"/>
+            <arg value="-B"/>
+            <arg line="--global-toolchains ${mvn-toolchains-xml}"/>
+            <arg value="-Dmaven.test.skip=true"/>
+            <arg line="-pl pmd-core,pmd-apex,pmd-java,pmd-dist"/>
+            <arg line="clean package"/>
         </exec>
 
         <!-- unpacks produced zip file -->
