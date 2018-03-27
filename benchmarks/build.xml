@@ -20,7 +20,7 @@ DEPENDENCIES:
         
    - javacc (http://javacc.dev.java.net/)
    - maven  (http://maven.apache.org/)
-   - ant1.9 (http://ant.apache.org)   # note that builds will fail if ant 1.10 or later are used
+   - ant (http://ant.apache.org)
    - csv (http:/www.nongnu.org/cvs/)
    - svn (http://subversion.apache.org)
 
@@ -29,18 +29,19 @@ For convinience, javacc and maven are included in the tools directory:
 
         
 BUILDING:
+        0. JDK requirement:
+            Building DaCapo requires latest JDK 8.
+            JDK 9 is currently not supported (some benchmarks will fail with error).
+            If building PMD and/or DayTrader,
+                make sure JDK 7 is also installed and
+                it's path set in local.properties file.
+                See 3 below.
 
         1. Set your JAVA_HOME environment variable appropriately:
              On Mac OS X something like:
                   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
              On Ubuntu 16.04 something like:
                    export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
-            
-            Building DaCapo requires JDK 8, 
-            certain benchmarks (ie. PMD, TradeBeans, TradeSOAP)
-            require JDK 7 and/or 9 to build.
-            Set relavent paths in local.properties file.
-            See 3 below.
 
         2. Set ant and maven environment variables if necessary.  In particular,
         for some jvms it is necessary to explicitly request a larger heap size.
