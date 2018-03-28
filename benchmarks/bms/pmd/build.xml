@@ -49,7 +49,7 @@
             <arg value="-B"/>
             <arg line="--global-toolchains ${mvn-toolchains-xml}"/>
             <arg value="-Dmaven.test.skip=true"/>
-            <arg line="-pl pmd-core,pmd-apex,pmd-java,pmd-dist"/>
+            <arg line="-pl pmd-core,pmd-java,pmd-dist"/>
             <arg line="clean package"/>
         </exec>
 

@@ -29,7 +29,7 @@ For convinience, javacc and maven are included in the tools directory:
 
         
 BUILDING:
-        0. JDK requirement:
+        0. System requirement:
             Building DaCapo requires latest JDK 8.
             JDK 9 is currently not supported (some benchmarks will fail with error).
             If building PMD and/or DayTrader,
@@ -37,11 +37,15 @@ BUILDING:
                 it's path set in local.properties file.
                 See 3 below.
 
+            Building the whole suite at once on macOS **may** have problem with max filehandle limits.
+            You may want to set it to a larger value, and launch ant with:
+                $ JAVA_OPTS="-XX:-MaxFDLimit" ant
+
         1. Set your JAVA_HOME environment variable appropriately:
              On Mac OS X something like:
-                  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
+                export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
              On Ubuntu 16.04 something like:
-                   export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
+                export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
 
         2. Set ant and maven environment variables if necessary.  In particular,
         for some jvms it is necessary to explicitly request a larger heap size.
