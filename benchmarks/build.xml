@@ -123,11 +123,11 @@ BUILDING:
         <!-- overwritable with -Dbuild.is-official=true on commandline-->
         <condition property="build.version"
                     value="${dacapo.version}"
-                    else="${dacapo.version}+${git.hash}">
+                    else="${dacapo.version}-git+${git.hash}">
             <isset property="build.is-official"/>
         </condition>
         <!-- set target jar name -->
-        <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
+        <property name="build.target-jar" value="dacapo.jar"/>
     </target>
 
     <target name="init" depends="set-build-version-info">
@@ -239,7 +239,7 @@ BUILDING:
          target: dist              
          ================================= -->
     <target name="dist" depends="harness,compile">
-        <move file="${build.target-jar}" tofile="dacapo-${DSTAMP}.jar"/>
+        <move file="${build.target-jar}" tofile="dacapo-${build.version}.jar"/>
     </target>
 
     <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation">
