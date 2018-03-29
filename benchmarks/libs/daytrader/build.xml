@@ -262,7 +262,7 @@
         <sleep seconds="5"/>
     </target>
     <target name="deploy">
-        <exec executable="${ger-home}/bin/${deploy-exe}">
+        <exec executable="${ger-home}/bin/${deploy-exe}"  failonerror="yes">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <env key="JAVA_HOME" path="${jdk7home}"/>
             <arg value="-u"/>
@@ -274,7 +274,7 @@
         </exec>
     </target>
     <target name="undeploy">
-        <exec executable="${ger-home}/bin/${deploy-exe}">
+        <exec executable="${ger-home}/bin/${deploy-exe}" failonerror="yes">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-u"/>
             <arg value="system"/>
