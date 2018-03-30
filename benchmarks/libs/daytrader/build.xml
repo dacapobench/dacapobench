@@ -166,7 +166,7 @@
         <exec executable="${mvn}" dir="${dt-build}">
             <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin:${JAVA_HOME}/bin"/>
             <env key="GERONIMO_HOME" value="${ger-home}"/>
-            <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
+            <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m -XX:MaxPermSize=128m"/>
             <arg value="clean"/>
             <arg value="install"/>
         </exec>
