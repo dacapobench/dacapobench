@@ -1,6 +1,6 @@
 # The DaCapo Benchmark Suite
 
-Last updated 2018-01-13
+Last updated 2018-04-06
 
 This benchmark suite is intend as a tool for the research community.
 It consists of a set of open source, real world applications with
@@ -29,9 +29,9 @@ The easiest way to obtain the benchmark suite is to download the pre-built jar f
 
 If, however, you want to build from source read on...
 
-The suite is built using ant 1.9 (1.10 and later will fail for many of the benchmarks).  You will need the following tools:
+The suite is built using ant 1.10.  You will need the following tools:
 
-* *[ant 1.9](http://ant.apache.org)* You need to install this yourself if you don't already have it.
+* *[ant 1.10](http://ant.apache.org)* You need to install this yourself if you don't already have it.
 
 * *[javacc](http://javacc.dev.java.net/)* Included in our tools directory.
 
@@ -41,12 +41,12 @@ The suite is built using ant 1.9 (1.10 and later will fail for many of the bench
 
 * *[svn](http://subversion.apache.org)*
 
+* *[hg](https://www.mercurial-scm.org)*
 
 **NOTE**
 
-1. PMD 6.1.0 requires JDK 9 for building; but it can run with JDK 7+
-2. JDK 7 is required by Geronimo 3.0.0 to run DayTrader
-	
+  1.JDK 8 is needed to build the whole suite.
+  2.Building DayTrader and PMD using JDK 8 also requires JDK 7 to be installed, and jdk7home properly set. (see 2 below)
 
 **IMPORTANT:** before trying to build the suite:
 
@@ -54,7 +54,7 @@ The suite is built using ant 1.9 (1.10 and later will fail for many of the bench
 
 2. Copy `default.properties` to `local.properties` and edit it for your environment.
 
-  * Specifically, you must set `jdk9home` to point to a Java 9 installation.
+  * Specifically, you must set `jdk7home` to point to a Java 7 installation.
 
 
 For more information, run `ant -p` in the benchmarks directory.
