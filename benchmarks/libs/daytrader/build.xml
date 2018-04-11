@@ -166,7 +166,7 @@
         <exec executable="${mvn}" dir="${dt-build}">
             <env key="PATH" path="${env.PATH}:${toolsdir}/apache-maven-${mvn.version}/bin:${JAVA_HOME}/bin"/>
             <env key="GERONIMO_HOME" value="${ger-home}"/>
-            <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
+            <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m -XX:MaxPermSize=128m"/>
             <arg value="clean"/>
             <arg value="install"/>
         </exec>
@@ -262,7 +262,7 @@
         <sleep seconds="5"/>
     </target>
     <target name="deploy">
-        <exec executable="${ger-home}/bin/${deploy-exe}">
+        <exec executable="${ger-home}/bin/${deploy-exe}"  failonerror="yes">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <env key="JAVA_HOME" path="${jdk7home}"/>
             <arg value="-u"/>
@@ -274,7 +274,7 @@
         </exec>
     </target>
     <target name="undeploy">
-        <exec executable="${ger-home}/bin/${deploy-exe}">
+        <exec executable="${ger-home}/bin/${deploy-exe}" failonerror="yes">
             <env key="GERONIMO_HOME" path="${ger-home}"/>
             <arg value="-u"/>
             <arg value="system"/>

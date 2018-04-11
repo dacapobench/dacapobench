@@ -17,12 +17,12 @@
             The DaCapo Benchmark Suite
 
 DEPENDENCIES:
-        
-   - javacc (http://javacc.dev.java.net/)
-   - maven  (http://maven.apache.org/)
+   - javacc(included) (http://javacc.dev.java.net/)
+   - maven(included)  (http://maven.apache.org/)
    - ant (http://ant.apache.org)
-   - csv (http:/www.nongnu.org/cvs/)
+   - cvs (http:/www.nongnu.org/cvs/)
    - svn (http://subversion.apache.org)
+   - hg (https://www.mercurial-scm.org)
 
 For convinience, javacc and maven are included in the tools directory:
     ${toolsdir}
@@ -123,11 +123,11 @@ BUILDING:
         <!-- overwritable with -Dbuild.is-official=true on commandline-->
         <condition property="build.version"
                     value="${dacapo.version}"
-                    else="${dacapo.version}+${git.hash}">
+                    else="${dacapo.version}-git+${git.hash}">
             <isset property="build.is-official"/>
         </condition>
         <!-- set target jar name -->
-        <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
+        <property name="build.target-jar" value="dacapo.jar"/>
     </target>
 
     <target name="init" depends="set-build-version-info">
@@ -239,7 +239,7 @@ BUILDING:
          target: dist              
          ================================= -->
     <target name="dist" depends="harness,compile">
-        <move file="${build.target-jar}" tofile="dacapo-${DSTAMP}.jar"/>
+        <move file="${build.target-jar}" tofile="dacapo-${build.version}.jar"/>
     </target>
 
     <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation">

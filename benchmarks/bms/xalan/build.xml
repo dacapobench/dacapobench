@@ -26,7 +26,6 @@
     <target name="bm-build" depends="xerces">
         <exec dir="${xalan-top}" executable="ant">
             <env key="CLASSPATH" value=".:${xerces-jars}/${xerces-impl-jar-name}:${xerces-jars}/${xerces-api-jar-name}"/>
-            <env key="ANT_HOME" value="${ant.install}"/>
         </exec>
         <mkdir dir="${bm-build-dir}/benchmark"/>
         <javac srcdir="${bm-src-dir}" source="1.5" classpath="${xalan-top}/build/xalan.jar" 
