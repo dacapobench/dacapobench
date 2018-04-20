@@ -23,7 +23,7 @@
 	<property name="bm-doc-dir" value="${bm-files}/doc"/>
 	<property name="bm-output-dir" value="${bm-files}/dist"/>
 	<property name="bm-output-doc-dir" value="${bm-files}/dist/doc/${bm-name}"/>
-	<property name="bm-output-harness-dir" value="${bm-files}/dist/harness"/>
+	<property name="bm-output-harness-dir" value="${bm-files}/dist"/>
 	<property name="bm-output-benchmark-dir" value="${bm-files}/dist/benchmark"/>
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
 	<property name="bm-data" value="${bm-files}/data"/>
@@ -37,7 +37,7 @@
 	<property name="bm-dat" value="${bm-output-dir}/dat"/>
 	<property name="bm-cnf" value="${bm-output-dir}/cnf"/>
 
-	<property name="harness-classpath" value="harness/dist/harness"/>
+	<property name="harness-classpath" value="harness/dist/"/>
 
 	<target name="all" depends="source,svn-source,cvs-source,hg-source,pre-build,build,complete"/>
 
