@@ -70,15 +70,15 @@ tomcat:
     - ant -Dbuild.target-jar=dacapo.jar tomcat
     - java -jar dacapo.jar tomcat
 
-# tradebeans:
-#   script:
-#     - ant -Dbuild.target-jar=dacapo.jar tradebeans
-#     - java -jar dacapo.jar tradebeans
+tradebeans:
+  script:
+    - script -q scriptfile ant -Dbuild.target-jar=dacapo.jar tradebeans
+    - script -q scriptfile java -jar dacapo.jar tradebeans
 
-# tradesoap:
-#   script:
-#     - ant -Dbuild.target-jar=dacapo.jar tradesoap
-#     - java -jar dacapo.jar tradesoap
+tradesoap:
+  script:
+    - script -q scriptfile ant -Dbuild.target-jar=dacapo.jar tradesoap
+    - script -q scriptfile java -jar dacapo.jar tradesoap
 
 xalan:
   script:
