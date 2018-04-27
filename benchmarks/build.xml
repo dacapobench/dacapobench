@@ -266,8 +266,8 @@ BUILDING:
         <copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.dir}"/>
 
     	<!-- this forms the base document section -->
-        <copy file="${basedir}/../LICENSE" todir="${dacapo.build.dir}"/>
-        <copy file="${basedir}/../README.md" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/../LICENSE" todir="${dacapo.build.doc.dir}"/>
+        <copy file="${basedir}/../README.md" todir="${dacapo.build.doc.dir}"/>
 		<copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.doc.dir}" />
 
 		<copy todir="${dacapo.build.doc.dir}">

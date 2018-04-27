@@ -20,7 +20,7 @@ public class Harness {
 
   // The DaCapo Harness is in a separate library within the dacapo.jar
   // allowing a separate class loader to be used for loading the dacapo harness
-  private static final String HARNESS_PATH = "harness/";
+  private static final String HARNESS_PATH = "org/dacapo/harness";
   private static final String HARNESS_CLASS = "org.dacapo.harness.TestHarness";
   private static final String HARNESS_METHOD = "main";
 
