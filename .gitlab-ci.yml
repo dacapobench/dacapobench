@@ -50,11 +50,6 @@ lusearch:
     - ant -Dbuild.target-jar=dacapo.jar lusearch
     - java -jar dacapo.jar lusearch
 
-lusearch-fix:
-  script:
-    - ant -Dbuild.target-jar=dacapo.jar lusearch-fix
-    - java -jar dacapo.jar lusearch-fix
-
 pmd:
   script:
     - ant -Dbuild.target-jar=dacapo.jar pmd
