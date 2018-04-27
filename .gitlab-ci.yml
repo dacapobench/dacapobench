@@ -67,13 +67,13 @@ tomcat:
 
 tradebeans:
   script:
-    - script -q scriptfile ant -Dbuild.target-jar=dacapo.jar tradebeans
-    - sleep 120 | script -q scriptfile java -jar dacapo.jar tradebeans
+    - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradebeans" script.out
+    - sleep 120 | script -q -c "java -jar dacapo.jar tradebeans" script.out
 
 tradesoap:
   script:
-    - script -q scriptfile ant -Dbuild.target-jar=dacapo.jar tradesoap
-    - sleep 120 | script -q scriptfile java -jar dacapo.jar tradesoap
+    - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradesoap" script.out
+    - sleep 120 | script -q -c "java -jar dacapo.jar tradesoap" script.out
 
 xalan:
   script:
