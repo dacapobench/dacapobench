@@ -50,11 +50,6 @@ lusearch:
     - ant -Dbuild.target-jar=dacapo.jar lusearch
     - java -jar dacapo.jar lusearch
 
-lusearch-fix:
-  script:
-    - ant -Dbuild.target-jar=dacapo.jar lusearch-fix
-    - java -jar dacapo.jar lusearch-fix
-
 pmd:
   script:
     - ant -Dbuild.target-jar=dacapo.jar pmd
@@ -72,13 +67,13 @@ tomcat:
 
 tradebeans:
   script:
-    - ant -Dbuild.target-jar=dacapo.jar tradebeans
-    - java -jar dacapo.jar tradebeans
+    - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradebeans" script.out
+    - sleep 120 | script -q -c "java -jar dacapo.jar tradebeans" script.out
 
 tradesoap:
   script:
-    - ant -Dbuild.target-jar=dacapo.jar tradesoap
-    - java -jar dacapo.jar tradesoap
+    - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradesoap" script.out
+    - sleep 120 | script -q -c "java -jar dacapo.jar tradesoap" script.out
 
 xalan:
   script:
