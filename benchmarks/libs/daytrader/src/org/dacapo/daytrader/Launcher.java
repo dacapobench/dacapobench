@@ -17,29 +17,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** 
-* @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
-* @id $Id: Launcher.java 738 2009-12-24 00:19:36Z steveb-oss $
+* date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+* id: $Id: Launcher.java 738 2009-12-24 00:19:36Z steveb-oss $
 */
 public class Launcher {
   // Geronimo configuration
-  private final static String GVERSION = "2.1.4";
+  private final static String GVERSION = "3.0.1";
   private final static String GTYPE = "minimal";
-  private final static String GDIRECTORY = "geronimo-jetty6-" + GTYPE + "-" + GVERSION;
+  private final static String GDIRECTORY = "geronimo-tomcat7-" + GTYPE + "-" + GVERSION;
 
   // The daytrader-dacapo application
-  private final static String CAR_NAME = "org.apache.geronimo.daytrader/daytrader-dacapo/2.2-SNAPSHOT/car";
-
-  // These jars hold configuration information for the client and server
-  // geronimo environments.
-  private final static String[] CLIENT_BIN_JARS = { "client.jar" };
-  private final static String[] SERVER_BIN_JARS = { "server.jar" };
+  private final static String CAR_NAME = "org.apache.geronimo.daytrader.plugins/daytrader-dacapo/3.0-SNAPSHOT/car";
 
   // This jar contains the code that knows how to create and communicate with
   // geronimo environments
   private final static String[] DACAPO_CLI_JAR = { "jar/daytrader.jar" };
-  
+
   // The following list is defined in the "Class-Path:" filed of MANIFEST.MF for the client and server jars
-  private final static String[] GERONIMO_LIB_JARS = { "geronimo-cli-"+GVERSION+".jar", "geronimo-kernel-"+GVERSION+".jar", "geronimo-transformer-"+GVERSION+".jar", "asm-3.1.jar", "asm-commons-3.1.jar", "commons-cli-1.0.jar", "commons-logging-1.0.4.jar", "cglib-nodep-2.1_3.jar", "log4j-1.2.14.jar", "xpp3-1.1.3.4.0.jar", "xstream-1.2.2.jar"};
+  private final static String[] GERONIMO_LIB_JARS = {"agent/transformer.jar", "endorsed/yoko-rmi-spec.jar"
+          , "endorsed/yoko-spec-corba.jar", "geronimo-main.jar", "geronimo-cli.jar", "commons-cli.jar"
+          , "geronimo-hook.jar", "geronimo-rmi-loader.jar", "karaf-jaas-boot.jar"};
 
   private static int numThreads = -1;
   private static String size;
@@ -87,9 +84,14 @@ public class Launcher {
 
   private static void setGeronimoProperties() {
     File geronimo = new File(scratch, GDIRECTORY);
-    System.setProperty("org.apache.geronimo.base.dir", geronimo.getPath());
+    System.setProperty("org.apache.geronimo.home.dir", geronimo.getPath());
+    System.setProperty("org.apache.geronimo.server.dir", geronimo.getPath());
+    System.setProperty("karaf.home", geronimo.getPath());
+    System.setProperty("karaf.base", geronimo.getPath());
+    System.setProperty("java.util.logging.config.file", geronimo.getPath() + "/etc/java.util.logging.properties");
     System.setProperty("java.ext.dirs", geronimo.getPath() + "/lib/ext:" + System.getProperty("java.home") + "/lib/ext");
     System.setProperty("java.io.tmpdir", geronimo.getPath() + "/var/temp");
+    System.setProperty("karaf.startRemoteShell", "true");
   }
 
   public static void performIteration() {
@@ -109,6 +111,17 @@ public class Launcher {
     }
   }
 
+  public static void shutdown(){
+    try {
+      Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
+      Method method = clazz.getMethod("shutdown", new Class[]{});
+      method.invoke(null, new Object[]{});
+    }catch (Exception e) {
+      System.err.println("Exception during iteration: " + e.toString());
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Create the classloader from within which to start the Geronimo client
    * and/or server kernels.
@@ -119,8 +132,7 @@ public class Launcher {
    */
   private static ClassLoader createGeronimoClassLoader(ClassLoader parent, boolean server) {
     File geronimo = new File(scratch, GDIRECTORY).getAbsoluteFile();
-    ClassLoader binCL = new URLClassLoader(getGeronimoBinaryJars(geronimo, server), parent);
-    ClassLoader libCL = new URLClassLoader(getGeronimoLibraryJars(geronimo, server), binCL);
+    ClassLoader libCL = new URLClassLoader(getGeronimoLibraryJars(geronimo, server), parent);
     return libCL;
   }
 
@@ -143,19 +155,6 @@ public class Launcher {
     File lib = new File(geronimo, "lib");
     addJars(jars, lib, GERONIMO_LIB_JARS);
 
-    return jars.toArray(new URL[jars.size()]);
-  }
-
-  /**
-   * Get a list of jars (if any) which should be in the binary classpath for
-   * this benchmark.
-   * 
-   * @param geronimo The base directory for the jars
-   * @return An array of URLs, one URL for each jar
-   */
-  private static URL[] getGeronimoBinaryJars(File geronimo, boolean server) {
-    List<URL> jars = new ArrayList<URL>();
-    addJars(jars, new File(geronimo, "bin"), (server ? SERVER_BIN_JARS : CLIENT_BIN_JARS));
     return jars.toArray(new URL[jars.size()]);
   }
 

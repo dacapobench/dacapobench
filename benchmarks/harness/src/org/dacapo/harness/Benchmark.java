@@ -22,8 +22,8 @@ import org.dacapo.parser.Config;
  * It defines the methods that the benchmark harness calls during the running of
  * the benchmark.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Benchmark.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Benchmark.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public abstract class Benchmark {
 
@@ -153,7 +153,6 @@ public abstract class Benchmark {
    * 
    * @param callback The user-specified timing callback
    * @param size The size (as given on the command line)
-   * @param timing Is this the timing loop ? Affects how we call the callback.
    * @return Whether the run was valid or not.
    * @throws Exception Whatever exception the target application dies with
    */
@@ -337,7 +336,7 @@ public abstract class Benchmark {
   /**
    * An actual iteration of the benchmark. This is what is timed.
    * 
-   * @param args Arguments to the benchmark
+   * @param size Argument to the benchmark iteration.
    */
   public abstract void iterate(String size) throws Exception;
 
@@ -436,7 +435,10 @@ public abstract class Benchmark {
         int refLines = config.getLines(size, file);
         int lines;
         try {
-          lines = lineCount(new File(scratch, file));
+          File tempFile = new File(scratch, file);
+          if (!tempFile.exists())
+            throw new FileNotFoundException();
+          lines = lineCount(tempFile);
         } catch (FileNotFoundException e) {
           System.err.println("File not found, " + file);
           lines = -1;
@@ -462,7 +464,10 @@ public abstract class Benchmark {
         long refBytes = config.getBytes(size, file);
         long bytes;
         try {
-          bytes = byteCount(new File(scratch, file));
+          File genSeg = new File(scratch, file);
+          if (!genSeg.exists())
+            throw new FileNotFoundException();
+          bytes = byteCount(genSeg);
         } catch (FileNotFoundException e) {
           System.err.println("File not found, " + file);
           bytes = -1;
@@ -514,7 +519,7 @@ public abstract class Benchmark {
   /**
    * Perform post-iteration cleanup.
    * 
-   * @param size
+   * @param size Argument to the benchmark iteration.
    */
   protected void postIterationCleanup(String size) {
     for (String file : config.getOutputs(size)) {

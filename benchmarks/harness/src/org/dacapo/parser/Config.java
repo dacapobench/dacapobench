@@ -28,8 +28,8 @@ import java.util.Vector;
  * Container class for all options specified in a benchmark's configuration
  * file.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Config.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Config.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Config {
 
@@ -503,7 +503,7 @@ public class Config {
    * Get the set of output files for a benchmark size
    * 
    * @param size
-   * @return Set\<String\> of file names
+   * @return set of file name strings
    */
   public Set<String> getOutputs(String size) {
     return Collections.unmodifiableSet(getSize(size).outputFiles.keySet());

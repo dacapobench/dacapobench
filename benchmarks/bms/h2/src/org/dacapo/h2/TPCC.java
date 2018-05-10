@@ -43,8 +43,8 @@ import org.h2.tools.Restore;
 import org.h2.tools.Script;
 
 /**
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: TPCC.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: TPCC.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class TPCC {
   public final static int RETRY_LIMIT = 5;
@@ -201,7 +201,7 @@ public class TPCC {
 
       org.h2.tools.Backup.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
     } else {
-      org.h2.tools.Restore.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK, true);
+      org.h2.tools.Restore.execute(new File(scratch, BACKUP_NAME).getAbsolutePath(), dbDir.getAbsolutePath(), DATABASE_NAME_DISK);
     }
   }
 

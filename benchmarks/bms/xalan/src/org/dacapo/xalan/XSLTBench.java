@@ -27,15 +27,15 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 /**
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: XSLTBench.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: XSLTBench.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class XSLTBench {
 
   final boolean verbose = false;
 
   // What version of XALAN should we have
-  private final String XALAN_VERSION = "Xalan Java 2.7.1";
+  private final String XALAN_VERSION = "Xalan Java 2.7.2";
   private final File scratch;
 
   int workers;

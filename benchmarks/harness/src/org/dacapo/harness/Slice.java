@@ -19,8 +19,8 @@ import java.io.*;
  * size of the input file b) 2 files, 2/3 of the size of the input file c) 1
  * file 3/3 of the size. and so on.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Slice.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Slice.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Slice {
 
@@ -50,7 +50,7 @@ public class Slice {
 
   /**
    * Slice a file into a number of sub files. Output in the given directory.
-   * Files are called <input-file>.<fraction>.<numerator>.<index> such that file
+   * Files are called {input-file}.{fraction}.{numerator}.{index} such that file
    * "x.4.3.1" is the first file, 3/4 of the size of the input file.
    * 
    * @param file File to slice

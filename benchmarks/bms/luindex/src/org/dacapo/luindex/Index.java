@@ -37,17 +37,26 @@ package org.dacapo.luindex;
  */
 
 import java.io.File;
+import java.nio.file.Paths;
+import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.DateTools;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.index.LogByteSizeMergePolicy;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.demo.FileDocument;
+import org.apache.lucene.index.IndexWriterConfig;
 
 /**
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Index.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Index.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Index {
 
@@ -61,7 +70,10 @@ public class Index {
    * Index all text files under a directory.
    */
   public void main(final File INDEX_DIR, final String[] args) throws IOException {
-    IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
+    IndexWriterConfig IWConfig = new IndexWriterConfig();
+    IWConfig.setOpenMode (IndexWriterConfig.OpenMode.CREATE);
+    IWConfig.setMergePolicy (new LogByteSizeMergePolicy());
+    IndexWriter writer = new IndexWriter(FSDirectory.open(Paths.get(INDEX_DIR.getCanonicalPath())), IWConfig);
     for (int arg = 0; arg < args.length; arg++) {
       final File docDir = new File(args[arg]);
       if (!docDir.exists() || !docDir.canRead()) {
@@ -71,7 +83,7 @@ public class Index {
 
       indexDocs(writer, docDir);
       System.out.println("Optimizing...");
-      writer.optimize();
+      writer.forceMerge(1);
     }
     writer.close();
   }
@@ -102,7 +114,31 @@ public class Index {
       } else {
         System.out.println("adding " + file.getCanonicalPath().substring(scratchP));
         try {
-          writer.addDocument(FileDocument.Document(file));
+          Document doc = new Document();
+          FieldType docFT = new FieldType();
+          docFT.setTokenized (false);
+          docFT.setStored (true);
+          docFT.setIndexOptions (IndexOptions.DOCS);
+
+          // Add the path of the file as a field named "path".  Use a field that is
+          // indexed (i.e. searchable), but don't tokenize the field into words.
+          doc.add(new Field("path", file.getPath(), docFT));
+
+          // Add the last modified date of the file a field named "modified".  Use
+          // a field that is indexed (i.e. searchable), but don't tokenize the field
+          // into words.
+          doc.add(new Field("modified",
+                  DateTools.timeToString(file.lastModified(), DateTools.Resolution.MINUTE),
+                  docFT));
+
+          // Add the contents of the file to a field named "contents".  Specify a Reader,
+          // so that the text of the file is tokenized and indexed, but not stored.
+          // Note that FileReader expects the file to be in the system's default encoding.
+          // If that's not the case searching for special characters will fail.
+          docFT.setTokenized (true);
+          docFT.setStored (false);
+          doc.add(new Field("contents", new FileReader(file), docFT));
+          writer.addDocument(doc);
         }
         // at least on windows, some temporary files raise this exception with
         // an "access denied" message

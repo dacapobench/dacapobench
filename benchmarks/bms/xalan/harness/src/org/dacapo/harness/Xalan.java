@@ -21,8 +21,8 @@ import org.dacapo.parser.Config;
  * typical server XSLT load which is performing XML to (X)HTML transforms as
  * part of a presentation layer.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Xalan.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Xalan.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Xalan extends Benchmark {
   Object benchmark;
@@ -42,7 +42,7 @@ public class Xalan extends Benchmark {
    * Create the threads, this is outside the timing loop to minimise the impact
    * of the startup. The threads will just sit waiting on the work queue.
    * 
-   * @see dacapo.Benchmark#preIteration(java.lang.String)
+   * @see org.dacapo.harness.Benchmark#preIteration(java.lang.String)
    */
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
@@ -59,7 +59,7 @@ public class Xalan extends Benchmark {
    * Run the benchmark by just pushing jobs onto the work queue and waiting for
    * the threads to finish.
    * 
-   * @see dacapo.Benchmark#iterate(java.lang.String)
+   * @see org.dacapo.harness.Benchmark#iterate(java.lang.String)
    */
   public void iterate(String size) throws Exception {
     String[] harnessArgs = config.getArgs(size);

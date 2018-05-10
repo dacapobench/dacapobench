@@ -1,20 +1,411 @@
-diff -urNw dt-a/daytrader-jetty/pom.xml dt-e/daytrader-jetty/pom.xml
---- daytrader-jetty/pom.xml	2009-10-13 15:17:48.000000000 +1100
-+++ daytrader-jetty/pom.xml	2009-10-22 15:20:20.000000000 +1100
+diff -urNw daytrader/javaee6/assemblies/daytrader-ear/pom.xml ../daytrader-new/javaee6/assemblies/daytrader-ear/pom.xml
+--- daytrader/javaee6/assemblies/daytrader-ear/pom.xml	2018-03-12 16:45:38.000000000 +1100
++++ ../daytrader-new/javaee6/assemblies/daytrader-ear/pom.xml	2018-03-23 08:24:40.341617988 +1100
+@@ -20,7 +20,6 @@
+             <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
+             <artifactId>utils</artifactId>            
+         </dependency>       
+-       
+         <dependency>
+             <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
+             <artifactId>entities</artifactId>
+@@ -30,6 +29,17 @@
+             <artifactId>web</artifactId>
+             <type>war</type>
+         </dependency>
++      <dependency>
++          <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
++          <artifactId>dacapo</artifactId>
++          <version>${project.version}</version>
++      </dependency>
++      <dependency>
++          <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
++          <artifactId>web</artifactId>
++          <version>${project.version}</version>
++          <classifier>classes</classifier>
++      </dependency>
+         </dependencies>
+   <build>
+         <plugins>
+@@ -58,6 +68,18 @@
+                             <contextRoot>/daytrader</contextRoot>
+                             <bundleFileName>web.war</bundleFileName>
+                         </webModule>                
++                        <javaModule>
++                            <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
++                            <artifactId>web</artifactId>
++                            <classifier>classes</classifier>
++                            <uri>web.jar</uri>
++                        </javaModule>
++                        <javaModule>
++                            <groupId>org.apache.geronimo.daytrader.javaee6</groupId>
++                            <artifactId>dacapo</artifactId>
++                            <uri>dacapo.jar</uri>
++                            <includeInApplicationXml>true</includeInApplicationXml>
++                        </javaModule>
+                     </modules>
+                     <!--
+                     HACK: Include legal muck from maven-remote-resources-plugin
+diff -urNw daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml ../daytrader-new/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml
+--- daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2018-03-12 16:45:38.000000000 +1100
++++ ../daytrader-new/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	1970-01-01 10:00:00.000000000 +1000
+@@ -1,14 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd" version="6">
+-  <application-name>daytrader</application-name>
+-  <description>DayTrader Stock Trading Performance Benchmark Sample</description>  
+-  <display-name>DayTrader EAR</display-name> 
+-  
+-  <module>
+-    <web>
+-      <web-uri>web.war</web-uri>
+-      <context-root>/daytrader</context-root>
+-    </web>
+-  </module>
+- 
+-</application>
+\ No newline at end of file
+diff -urNw daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml ../daytrader-new/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml
+--- daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2018-03-12 16:45:42.000000000 +1100
++++ ../daytrader-new/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2018-03-23 08:24:03.078135278 +1100
+@@ -30,7 +30,7 @@
+         <exclude-unlisted-classes>true</exclude-unlisted-classes>
+         
+         <properties>
+-            <property name="openjpa.jdbc.DBDictionary" value="derby" /> 
++            <property name="openjpa.jdbc.DBDictionary" value="h2" />
+             <property name="openjpa.BrokerImpl" value="non-finalizing" />
+             <!-- To enable OpenJPA to generate foreign key constraints, comment out this line -->
+             <!-- <property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict"/> -->
+diff -urNw daytrader/javaee6/modules/pom.xml ../daytrader-new/javaee6/modules/pom.xml
+--- daytrader/javaee6/modules/pom.xml	2018-03-12 16:45:38.000000000 +1100
++++ ../daytrader-new/javaee6/modules/pom.xml	2018-03-23 08:24:21.697877230 +1100
+@@ -19,5 +19,6 @@
+     <module>entities</module>   
+     <module>utils</module>    
+     <module>web</module>
++    <module>dacapo</module>
+   </modules>
+ </project>
+\ No newline at end of file
+diff -urNw daytrader/javaee6/modules/web/pom.xml ../daytrader-new/javaee6/modules/web/pom.xml
+--- daytrader/javaee6/modules/web/pom.xml	2018-03-12 16:45:41.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/pom.xml	2018-03-23 09:10:58.966179815 +1100
+@@ -34,6 +34,11 @@
+                
+         <dependency>
+             <groupId>org.apache.geronimo.specs</groupId>
++          <artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
++      </dependency>
++
++      <dependency>
++            <groupId>org.apache.geronimo.specs</groupId>
+             <artifactId>geronimo-jpa_2.0_spec</artifactId>
+             <scope>provided</scope>
+         </dependency>
+@@ -126,6 +131,7 @@
+                             </includes>
+                         </resource>
+                     </webResources>
++                    <attachClasses>true</attachClasses>
+                 </configuration>
+             </plugin>   
+             </plugins> 
+diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java	2018-03-12 16:45:45.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/api/TradeServices.java	2018-03-23 08:24:03.078135278 +1100
+@@ -281,5 +281,11 @@
+      */
+     public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception, RemoteException;
+     
++    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception, RemoteException;
++
++    public void initializeDaCapo(String size) throws Exception, RemoteException;
++
++    public boolean resetDaCapo(String size, int threads) throws Exception, RemoteException;
++    
+ }   
+ 
+diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2018-03-12 16:45:40.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2018-03-23 08:24:03.078135278 +1100
+@@ -1930,4 +1930,26 @@
+         return TradeConfig.JDBC;
+     }
+ 
++    /**
++     * @see TradeServices#resetDaCapo(String)
++     */
++    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
++        throw new UnsupportedOperationException();
++    }
++
++    /**
++     *
++     * @see TradeServices#initializeDaCapo(String)
++     */
++    public void initializeDaCapo(String size) throws Exception {
++        throw new UnsupportedOperationException();
++    }
++
++    /**
++     * @see TradeServices#resetDaCapo(String)
++     */
++    public boolean resetDaCapo(String size, int threads) throws Exception {
++        return true; }
++
++
+ }
+diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2018-03-12 16:45:40.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2018-03-23 08:24:03.078135278 +1100
+@@ -1932,7 +1932,7 @@
+ 
+     private final static String updateAccountProfileSQL =
+         "update accountprofileejb set " + "passwd = ?, fullname = ?, address = ?, email = ?, creditcard = ? "
+-            + "where userid = (select profile_userid from accountejb a " + "where a.profile_userid=?)";
++            + "where userid = ?";
+ 
+     private final static String loginSQL =
+         "update accountejb set lastLogin=?, logincount=logincount+1 " + "where profile_userid=?";
+@@ -1945,20 +1945,17 @@
+     private static final String getAccountForUpdateSQL = "select * from accountejb a where a.accountid = ? for update";
+ 
+     private final static String getAccountProfileSQL =
+-        "select * from accountprofileejb ap where ap.userid = "
+-            + "(select profile_userid from accountejb a where a.profile_userid=?)";
++        "select * from accountprofileejb ap where ap.userid = ?";
+ 
+     private final static String getAccountProfileForAccountSQL =
+         "select * from accountprofileejb ap where ap.userid = "
+             + "(select profile_userid from accountejb a where a.accountid=?)";
+ 
+     private static final String getAccountForUserSQL =
+-        "select * from accountejb a where a.profile_userid = "
+-            + "( select userid from accountprofileejb ap where ap.userid = ?)";
++        "select * from accountejb a where a.profile_userid = ?";
+ 
+     private static final String getAccountForUserForUpdateSQL =
+-        "select * from accountejb a where a.profile_userid = "
+-            + "( select userid from accountprofileejb ap where ap.userid = ?) for update";
++        "select * from accountejb a where a.profile_userid = ?";
+ 
+     private static final String getHoldingSQL = "select * from holdingejb h where h.holdingid = ?";
+ 
+@@ -2103,4 +2100,28 @@
+         this.inGlobalTxn = inGlobalTxn;
+     }
+ 
++    /**
++     * @see TradeServices#resetDaCapo(String)
++     */
++    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
++        org.apache.geronimo.daytrader.javaee6.dacapo.DaCapoRunner.runDaCapoTrade(size, threads, soap);
++    }
++
++    /**
++     *
++     * @see TradeServices#initializeDaCapo(String)
++     */
++    public void initializeDaCapo(String size) throws Exception {
++        org.apache.geronimo.daytrader.javaee6.dacapo.DaCapoDBBuilder.create(this, 1, size);
++    }
++
++    /**
++     *
++     * @see TradeServices#resetDaCapo(String)
++     */
++    public boolean resetDaCapo(String size, int threads) throws Exception {
++        return org.apache.geronimo.daytrader.javaee6.dacapo.DaCapoDBBuilder.reset(this, size, threads);
++    }
++
++
+ }
+diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2018-03-12 16:45:46.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2018-03-23 08:24:03.078135278 +1100
+@@ -1038,4 +1038,26 @@
+         return TradeConfig.JPA;
+     }
+ 
++    /**
++     * @see TradeServices#resetDaCapo(String)
++     */
++    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
++        throw new UnsupportedOperationException();
++    }
++
++    /**
++     *
++     * @see TradeServices#initializeDaCapo(String)
++     */
++    public void initializeDaCapo(String size) throws Exception {
++        throw new UnsupportedOperationException();
++    }
++
++    /**
++     * @see TradeServices#resetDaCapo(String)
++     */
++    public boolean resetDaCapo(String size, int threads) throws Exception {
++        return true; }
++
++
+ }
+diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2018-03-12 16:45:40.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2018-03-23 08:24:03.078135278 +1100
+@@ -125,4 +125,16 @@
+     public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
+         return (new TradeJEEDirect(false)).resetTrade(deleteAll);
+     }
++
++    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
++        (new TradeJEEDirect(true)).runDaCapoTrade(size, threads, soap);
++    }
++
++    public void initializeDaCapo(String size) throws Exception {
++        (new TradeJEEDirect(true)).initializeDaCapo(size);
++    }
++
++    public boolean resetDaCapo(String size, int threads) throws Exception {
++        return (new TradeJEEDirect(true)).resetDaCapo(size, threads);
++    }
+ }
+diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2018-03-12 16:45:40.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2018-03-23 08:24:03.078135278 +1100
+@@ -750,4 +750,17 @@
+         Log.trace("updateQuotePrices: " + TradeConfig.getUpdateQuotePrices());
+         Log.trace("publishQuotePriceChange: " + TradeConfig.getPublishQuotePriceChange());
+     }
++
++    public void runDaCapoTrade(String size, int threads, boolean soap) {
++        System.err.println("Hmmmmmmmmmmmmm...  haven't worked this bit out yet: "+size);
++    }
++
++    public void initializeDaCapo(String size) {
++        System.err.println("Hmmmmmmmmmmmmm...  haven't worked this bit out yet: "+size);
++    }
++
++    public boolean resetDaCapo(String size, int threads) {
++        System.err.println("Hmmmmmmmmmmmmm...  haven't worked this bit out yet: "+size);
++        return false;
++    }
+ }
+diff -urNw daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2018-03-12 16:45:40.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2018-03-23 08:24:03.078135278 +1100
+@@ -570,4 +570,39 @@
+         return runStatsData;
+     }
+     
++    /**
++     * Initialize the database for DaCapo
++     *
++     * @param size the size of the workload
++     * @param threads the number of threads participating in the reset
++     */
++    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
++        if (Log.doActionTrace())
++            Log.trace("TradeAction:runDaCapoTrade", size);
++        trade.runDaCapoTrade(size, threads, soap);
++    }
++
++    /**
++     * Initialize the database for DaCapo
++     *
++     * @param size the size of the workload
++     */
++    public void initializeDaCapo(String size) throws Exception {
++        if (Log.doActionTrace())
++            Log.trace("TradeAction:initializeDaCapo", size);
++        trade.initializeDaCapo(size);
++    }
++
++    /**
++     * Initialize the database for DaCapo
++     *
++     * @param size the size of the workload
++     * @param threads the number of threads participating in the reset
++     */
++    public boolean resetDaCapo(String size, int threads) throws Exception {
++        if (Log.doActionTrace())
++            Log.trace("TradeAction:resetDaCapo", size);
++        return trade.resetDaCapo(size, threads);
++    }
++
+ }
+diff -urNw daytrader/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl ../daytrader-new/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl
+--- daytrader/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl	2018-03-12 16:45:46.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/resources/dbscripts/derby/Table.ddl	2018-03-23 08:24:03.082135223 +1100
+@@ -15,13 +15,13 @@
+ 
+ -- Each SQL statement in this file should terminate with a semicolon (;)
+ -- Lines starting with the pound character (--) are considered as comments
+--- DROP TABLE HOLDINGEJB;
+--- DROP TABLE ACCOUNTPROFILEEJB;
+--- DROP TABLE QUOTEEJB;
+--- DROP TABLE KEYGENEJB;
+--- DROP TABLE ACCOUNTEJB;
+--- DROP TABLE ORDEREJB;
+--- DROP TABLE OPENJPASEQ;
++DROP TABLE HOLDINGEJB;
++DROP TABLE ACCOUNTPROFILEEJB;
++DROP TABLE QUOTEEJB;
++DROP TABLE KEYGENEJB;
++DROP TABLE ACCOUNTEJB;
++DROP TABLE ORDEREJB;
++DROP TABLE OPENJPASEQ;
+ 
+ create table OPENJPASEQ
+ (ID SMALLINT NOT NULL PRIMARY KEY,
+diff -urNw daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml ../daytrader-new/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2018-03-12 16:45:42.000000000 +1100
++++ ../daytrader-new/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2018-03-23 08:24:03.082135223 +1100
+@@ -58,10 +58,19 @@
+         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+         <load-on-startup>1</load-on-startup>
+         </servlet>
++    <servlet>
++        <display-name>org_apache_geronimo_samples_daytrader_TradeWSAction</display-name>
++        <servlet-name>org_apache_geronimo_samples_daytrader_TradeWSAction</servlet-name>
++        <servlet-class>org.apache.geronimo.daytrader.javaee6.soap.TradeWSAction</servlet-class>
++    </servlet>
+     <servlet-mapping>
+         <servlet-name>Faces Servlet</servlet-name>
+         <url-pattern>*.faces</url-pattern>
+     </servlet-mapping>
++    <servlet-mapping>
++        <servlet-name>org_apache_geronimo_samples_daytrader_TradeWSAction</servlet-name>
++        <url-pattern>/services/TradeWSServices</url-pattern>
++    </servlet-mapping>
+ 
+     <session-config>
+         <session-timeout>30</session-timeout>
+diff -urNw daytrader/plugins/daytrader-tomcat/pom.xml ../daytrader-new/plugins/daytrader-tomcat/pom.xml
+--- daytrader/plugins/daytrader-tomcat/pom.xml	2018-03-12 16:45:42.000000000 +1100
++++ ../daytrader-new/plugins/daytrader-tomcat/pom.xml	2018-03-23 08:24:03.090135112 +1100
 @@ -40,7 +40,7 @@
          </dependency>
          <dependency>
-             <groupId>org.apache.geronimo.daytrader</groupId>
+             <groupId>org.apache.geronimo.daytrader.plugins</groupId>
 -            <artifactId>daytrader-derby-datasource</artifactId>
 +            <artifactId>daytrader-h2-datasource</artifactId>
              <version>${version}</version>
              <type>car</type>
          </dependency>
-@@ -195,6 +195,97 @@
-                     </instance>
+@@ -157,7 +157,6 @@
+                         <deploymentConfig>${tomcatDeployer}</deploymentConfig>
+                         <deploymentConfig>${jasperDeployer}</deploymentConfig>
+                         <deploymentConfig>${openejbDeployer}</deploymentConfig>
+-                        <deploymentConfig>${jpaDeployer}</deploymentConfig>
+                         <deploymentConfig>${axisDeployer}</deploymentConfig>
+                         <deploymentConfig>${clientDeployer}</deploymentConfig>
+                     </deploymentConfigs>
+@@ -179,6 +178,35 @@
                  </configuration>
              </plugin>
-+
+ 
 +            <plugin>
 +                <groupId>org.apache.maven.plugins</groupId>
 +                <artifactId>maven-antrun-plugin</artifactId>
@@ -27,110 +418,61 @@ diff -urNw dt-a/daytrader-jetty/pom.xml dt-e/daytrader-jetty/pom.xml
 +                        </goals>
 +                        <configuration>
 +                            <tasks>
-+                                <echo>Copying manually generated geronimo-plugin.xml files for app daytrader ws client</echo>
-+                                <copy todir="${project.build.directory}/repository/org/apache/geronimo/daytrader/daytrader-ws-client/${version}/daytrader-ws-client-${version}.car/META-INF"
-+                                    failonerror="false" overwrite="true">
-+                                    <fileset dir="${basedir}/../plans/wsclient" includes="geronimo-plugin.xml"/>
-+                                </copy>
-+
 +                                <echo>Copying manually generated geronimo-plugin.xml files for daytrader dacapo ws client</echo>
-+                                <copy todir="${project.build.directory}/repository/org/apache/geronimo/daytrader/daytrader-dacapo/${version}/daytrader-dacapo-${version}.car/META-INF"
-+                                    failonerror="false" overwrite="true">
-+                                    <fileset dir="${basedir}/../plans/dacapo" includes="geronimo-plugin.xml"/>
++                                <copy todir="${project.build.directory}/repository/org/apache/geronimo/daytrader/plugins/daytrader-dacapo/${project.version}/daytrader-dacapo-${project.version}.car/META-INF"
++                                      failonerror="false" overwrite="true">
++                                    <fileset dir="${basedir}/../../plans/dacapo" includes="geronimo-plugin.xml"/>
 +                                </copy>
 +
-+                                <echo>Copying manually generated geronimo-plugin.xml files for app daytrader streamer client</echo>
-+                                <copy todir="${project.build.directory}/repository/org/apache/geronimo/daytrader/daytrader-streamer-client/${version}/daytrader-streamer-client-${version}.car/META-INF"
-+                                    failonerror="false" overwrite="true">
-+                                    <fileset dir="${basedir}/../plans/streamerclient" includes="geronimo-plugin.xml"/>
-+                                </copy>
-+
-+                                <echo>Pack the daytrader ws client car file and install onto local repo</echo>
-+                                <jar destfile="${project.build.directory}/daytrader-ws-client-${version}.car"
-+                                    basedir="${project.build.directory}/repository/org/apache/geronimo/daytrader/daytrader-ws-client/${version}/daytrader-ws-client-${version}.car"/>
-+                                
-+                                <condition property="mvn.exe" value="mvn.bat" else="mvn">
-+                                    <os family="windows"/>
-+                                </condition>
-+                                <exec executable="${mvn.exe}">
-+                                    <arg value="install:install-file"/>
-+                                    <arg value="-Dfile=${project.build.directory}/daytrader-ws-client-${version}.car"/>
-+                                    <arg value="-DgroupId=org.apache.geronimo.daytrader"/>
-+                                    <arg value="-DartifactId=daytrader-ws-client"/>
-+                                    <arg value="-Dversion=${version}"/>
-+                                    <arg value="-Dpackaging=car"/>
-+                                    <arg value="-DgeneratePom=true"/>
-+                                    <arg value="-DcreateChecksum=true"/>
-+                                </exec>
-+                                
 +                                <echo>Pack the daytrader dacapo ws client car file and install onto local repo</echo>
-+                                <jar destfile="${project.build.directory}/daytrader-dacapo-${version}.car"
-+                                    basedir="${project.build.directory}/repository/org/apache/geronimo/daytrader/daytrader-dacapo/${version}/daytrader-dacapo-${version}.car"/>
-+                                
-+                                <condition property="mvn.exe" value="mvn.bat" else="mvn">
-+                                    <os family="windows"/>
-+                                </condition>
-+                                <exec executable="${mvn.exe}">
-+                                    <arg value="install:install-file"/>
-+                                    <arg value="-Dfile=${project.build.directory}/daytrader-dacapo-${version}.car"/>
-+                                    <arg value="-DgroupId=org.apache.geronimo.daytrader"/>
-+                                    <arg value="-DartifactId=daytrader-dacapo"/>
-+                                    <arg value="-Dversion=${version}"/>
-+                                    <arg value="-Dpackaging=car"/>
-+                                    <arg value="-DgeneratePom=true"/>
-+                                    <arg value="-DcreateChecksum=true"/>
-+                                </exec>
-+                                
-+                                <echo>Pack the daytrader streamer client car file and install onto local repo</echo>
-+                                <jar destfile="${project.build.directory}/daytrader-streamer-client-${version}.car"
-+                                    basedir="${project.build.directory}/repository/org/apache/geronimo/daytrader/daytrader-streamer-client/${version}/daytrader-streamer-client-${version}.car"/>
-+                                
-+
-+                                <condition property="mvn.exe" value="mvn.bat" else="mvn">
-+                                    <os family="windows"/>
-+                                </condition>
-+                                <exec executable="${mvn.exe}">
-+                                    <arg value="install:install-file"/>
-+                                    <arg value="-Dfile=${project.build.directory}/daytrader-streamer-client-${version}.car"/>
-+                                    <arg value="-DgroupId=org.apache.geronimo.daytrader"/>
-+                                    <arg value="-DartifactId=daytrader-streamer-client"/>
-+                                    <arg value="-Dversion=${version}"/>
-+                                    <arg value="-Dpackaging=car"/>
-+                                    <arg value="-DgeneratePom=true"/>
-+                                    <arg value="-DcreateChecksum=true"/>
-+                                </exec>
++                                <jar destfile="${project.build.directory}/daytrader-dacapo-${project.version}.car"
++                                     basedir="${project.build.directory}/repository/org/apache/geronimo/daytrader/plugins/daytrader-dacapo/${project.version}/daytrader-dacapo-${project.version}.car"
++                                     manifest="${project.build.directory}/repository/org/apache/geronimo/daytrader/plugins/daytrader-dacapo/${project.version}/daytrader-dacapo-${project.version}.car/META-INF/MANIFEST.MF"/>
 +
 +                            </tasks>
 +                        </configuration>
 +                    </execution>
 +                </executions>
 +            </plugin>
-         </plugins>
-     </build>
-     <profiles>
-diff -urNw dt-a/daytrader-jetty/src/main/plan/plan.xml dt-e/daytrader-jetty/src/main/plan/plan.xml
---- daytrader-jetty/src/main/plan/plan.xml	2009-10-13 15:17:48.000000000 +1100
-+++ daytrader-jetty/src/main/plan/plan.xml	2009-10-22 15:20:20.000000000 +1100
++
+ <!--
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+diff -urNw daytrader/plugins/daytrader-tomcat/src/main/history/dependencies.xml ../daytrader-new/plugins/daytrader-tomcat/src/main/history/dependencies.xml
+--- daytrader/plugins/daytrader-tomcat/src/main/history/dependencies.xml	2018-03-12 16:45:49.000000000 +1100
++++ ../daytrader-new/plugins/daytrader-tomcat/src/main/history/dependencies.xml	2018-03-23 08:24:03.090135112 +1100
+@@ -38,7 +38,7 @@
+     </dependency>-->
+     <dependency>
+         <groupId>org.apache.geronimo.daytrader.plugins</groupId>
+-        <artifactId>daytrader-derby-datasource</artifactId>
++        <artifactId>daytrader-h2-datasource</artifactId>
+         <type>car</type>
+     </dependency>
+     <dependency>
+diff -urNw daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml ../daytrader-new/plugins/daytrader-tomcat/src/main/plan/plan.xml
+--- daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml	2018-03-12 16:45:42.000000000 +1100
++++ ../daytrader-new/plugins/daytrader-tomcat/src/main/plan/plan.xml	2018-03-23 08:24:03.090135112 +1100
 @@ -179,4 +179,26 @@
          </application-client>
-     </module>
+     </module>-->
  
 +    <module>
 +        <java>dacapo.jar</java>
 +        <application-client xmlns="http://geronimo.apache.org/xml/ns/j2ee/application-client-2.0">
 +            <client-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
 +                <moduleId>
-+                    <groupId>org.apache.geronimo.daytrader</groupId>
++                    <groupId>org.apache.geronimo.daytrader.plugins</groupId>
 +                    <artifactId>daytrader-dacapo</artifactId>
-+                    <version>2.2-SNAPSHOT</version>
++                    <version>3.0-SNAPSHOT</version>
 +                    <type>car</type>
 +                </moduleId>
 +            </client-environment>
 +            <server-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
 +                <moduleId>
-+                    <groupId>org.apache.geronimo.daytrader</groupId>
++                    <groupId>org.apache.geronimo.daytrader.plugins</groupId>
 +                    <artifactId>daytrader-dacapo-server</artifactId>
-+                    <version>2.2-SNAPSHOT</version>
++                    <version>3.0-SNAPSHOT</version>
 +                    <type>car</type>
 +                </moduleId>
 +            </server-environment>
@@ -138,1563 +480,56 @@ diff -urNw dt-a/daytrader-jetty/src/main/plan/plan.xml dt-e/daytrader-jetty/src/
 +    </module>
 +
  </application>
-diff -urNw dt-a/daytrader-tomcat/pom.xml dt-e/daytrader-tomcat/pom.xml
---- daytrader-tomcat/pom.xml	2009-10-13 15:17:40.000000000 +1100
-+++ daytrader-tomcat/pom.xml	2009-10-22 15:20:20.000000000 +1100
+diff -urNw daytrader/plugins/pom.xml ../daytrader-new/plugins/pom.xml
+--- daytrader/plugins/pom.xml	2018-03-12 16:45:42.000000000 +1100
++++ ../daytrader-new/plugins/pom.xml	2018-03-23 08:24:03.090135112 +1100
+@@ -40,10 +40,11 @@
+                 </property>
+             </activation>
+             <modules>
+-                <module>daytrader-derby-datasource</module>        	
++                <module>tranql-connector-h2</module>
++                <module>daytrader-h2-datasource</module>
+                 <module>daytrader-jms</module>
+-                <!--<module>daytrader-jetty</module>
+-                <module>daytrader-tomcat</module>-->
++                <!--<module>daytrader-jetty</module>-->
++                <module>daytrader-tomcat</module>
+             </modules>
+         </profile>
+         <!--
+@@ -125,6 +126,8 @@
+                             <geronimo-version>2.2.1-SNAPSHOT</geronimo-version>-->
+                             <jvm-version>1.5</jvm-version>
+                             <jvm-version>1.6</jvm-version>
++                            <jvm-version>1.7</jvm-version>
++                            <jvm-version>1.8</jvm-version>
+                             <source-repository>~/.m2/repository/</source-repository>
+                             <source-repository>http://repository.apache.org/snapshots/</source-repository>
+                             <source-repository>http://repo1.maven.org/maven2/</source-repository>
+diff -urNw daytrader/pom.xml ../daytrader-new/pom.xml
+--- daytrader/pom.xml	2018-03-12 16:45:38.000000000 +1100
++++ ../daytrader-new/pom.xml	2018-03-23 08:24:03.086135168 +1100
 @@ -39,7 +39,7 @@
-         </dependency>
-         <dependency>
-             <groupId>org.apache.geronimo.daytrader</groupId>
--            <artifactId>daytrader-derby-datasource</artifactId>
-+            <artifactId>daytrader-h2-datasource</artifactId>
-             <version>${version}</version>
-             <type>car</type>
-         </dependency>
-diff -urNw dt-a/modules/ear/pom.xml dt-e/modules/ear/pom.xml
---- modules/ear/pom.xml	2009-10-13 15:17:44.000000000 +1100
-+++ modules/ear/pom.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -58,6 +58,11 @@
-             <artifactId>daytrader-wsappclient</artifactId>
-             <version>${version}</version>
-         </dependency>
-+        <dependency>
-+            <groupId>org.apache.geronimo.daytrader</groupId>
-+            <artifactId>daytrader-dacapo</artifactId>
-+            <version>${version}</version>
-+        </dependency>
-     </dependencies>
-     <build>
-         <plugins>
-@@ -93,6 +98,12 @@
-                             <bundleFileName>wsappclient.jar</bundleFileName>
-                             <includeInApplicationXml>true</includeInApplicationXml>
-                         </javaModule>
-+                        <javaModule>
-+                            <groupId>org.apache.geronimo.daytrader</groupId>
-+                            <artifactId>daytrader-dacapo</artifactId>
-+                            <bundleFileName>dacapo.jar</bundleFileName>
-+                            <includeInApplicationXml>true</includeInApplicationXml>
-+                        </javaModule>
-                     </modules>
-                     <!--
-                     HACK: Include legal muck from maven-remote-resources-plugin
-diff -urNw dt-a/modules/ejb/pom.xml dt-e/modules/ejb/pom.xml
---- modules/ejb/pom.xml	2009-10-13 15:17:42.000000000 +1100
-+++ modules/ejb/pom.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -173,6 +173,17 @@
-                     </archive>
-                 </configuration>
-             </plugin>
-+            <plugin>
-+                <artifactId>maven-ejb-plugin</artifactId>
-+                <configuration>
-+                    <generateClient>true</generateClient>
-+                    <archive>
-+                        <manifestEntries>
-+                            <Class-Path>dacapo.jar</Class-Path>
-+                        </manifestEntries>
-+                    </archive>
-+                </configuration>
-+            </plugin>
-         </plugins>
-     </build>
- </project>
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/direct/TradeDirect.java	2009-10-22 15:20:20.000000000 +1100
-@@ -1975,6 +1975,27 @@
+     </scm>
  
- 	}
- 
-+	/**
-+   * @see TradeServices#resetDaCapo(String)
-+   */
-+	public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
-+		org.apache.geronimo.samples.daytrader.dacapo.DaCapoRunner.runDaCapoTrade(size, threads, soap);
-+	}
-+	
-+	/**
-+   * @see TradeServices#initializeDaCapo(String)
-+   */
-+	public void initializeDaCapo(String size) throws Exception {
-+		org.apache.geronimo.samples.daytrader.dacapo.DaCapoDBBuilder.create(this, 1, size);
-+	}
-+
-+	/**
-+   * @see TradeServices#resetDaCapo(String)
-+   */
-+	public boolean resetDaCapo(String size, int threads) throws Exception {
-+		return org.apache.geronimo.samples.daytrader.dacapo.DaCapoDBBuilder.reset(this, size, threads);
-+	}
-+	
- 	private void releaseConn(Connection conn) throws Exception {
- 		try {
- 			if (conn != null) {
-@@ -2101,8 +2122,7 @@
- 
- 	private final static String updateAccountProfileSQL = "update accountprofileejb set "
- 			+ "passwd = ?, fullname = ?, address = ?, email = ?, creditcard = ? "
--			+ "where userid = (select profile_userid from accountejb a "
--			+ "where a.profile_userid=?)";
-+			+ "where userid = ?";
- 
- 	private final static String loginSQL = "update accountejb set lastLogin=?, logincount=logincount+1 "
- 			+ "where profile_userid=?";
-@@ -2114,17 +2134,14 @@
- 
- 	private static final String getAccountForUpdateSQL = "select * from accountejb a where a.accountid = ? for update";
- 
--	private final static String getAccountProfileSQL = "select * from accountprofileejb ap where ap.userid = "
--			+ "(select profile_userid from accountejb a where a.profile_userid=?)";
-+	private final static String getAccountProfileSQL = "select * from accountprofileejb ap where ap.userid = ?";
- 
- 	private final static String getAccountProfileForAccountSQL = "select * from accountprofileejb ap where ap.userid = "
- 			+ "(select profile_userid from accountejb a where a.accountid=?)";
- 
--	private static final String getAccountForUserSQL = "select * from accountejb a where a.profile_userid = "
--			+ "( select userid from accountprofileejb ap where ap.userid = ?)";
-+	private static final String getAccountForUserSQL = "select * from accountejb a where a.profile_userid = ?";
- 
--	private static final String getAccountForUserForUpdateSQL = "select * from accountejb a where a.profile_userid = "
--			+ "( select userid from accountprofileejb ap where ap.userid = ?) for update";
-+	private static final String getAccountForUserForUpdateSQL = "select * from accountejb a where a.profile_userid = ?";
- 
- 	private static final String getHoldingSQL = "select * from holdingejb h where h.holdingid = ?";
- 
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java	2009-10-13 15:17:40.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/DirectSLSBBean.java	2009-10-22 15:20:20.000000000 +1100
-@@ -128,4 +128,16 @@
- 	public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
- 		return (new TradeDirect(false)).resetTrade(deleteAll);
- 	}
-+    
-+  public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
-+    (new TradeDirect(true)).runDaCapoTrade(size, threads, soap);  	
-+  }
-+
-+  public void initializeDaCapo(String size) throws Exception {
-+  	(new TradeDirect(true)).initializeDaCapo(size);
-+  }
-+  
-+  public boolean resetDaCapo(String size, int threads) throws Exception {
-+  	return (new TradeDirect(true)).resetDaCapo(size, threads);
-+  }
- }
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java	2009-10-13 15:17:40.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/ejb3/TradeSLSBBean.java	2009-10-22 15:20:20.000000000 +1100
-@@ -615,6 +615,19 @@
-         return new org.apache.geronimo.samples.daytrader.direct.TradeDirect(false).resetTrade(deleteAll);
-     }
- 
-+    public void runDaCapoTrade(String size, int threads, boolean soap) {
-+    	System.err.println("Hmmmmmmmmmmmmm...  haven't worked this bit out yet: "+size);
-+    }
-+    
-+    public void initializeDaCapo(String size) {
-+    	System.err.println("Hmmmmmmmmmmmmm...  haven't worked this bit out yet: "+size);
-+    }
-+    
-+    public boolean resetDaCapo(String size, int threads) {
-+    	System.err.println("Hmmmmmmmmmmmmm...  haven't worked this bit out yet: "+size);
-+    	return false;
-+    }
-+
-     private void publishQuotePriceChange(QuoteDataBean quote, BigDecimal oldPrice, BigDecimal changeFactor, double sharesTraded) {
-         if (!TradeConfig.getPublishQuotePriceChange())
-             return;
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWebSoapProxy.java	2009-10-22 15:20:20.000000000 +1100
-@@ -266,6 +266,27 @@
- 		return convertQuoteDataBean(getTrade().updateQuotePriceVolume(symbol, newPrice, sharesTraded));		
- 	}
- 
-+	/**
-+   * @see TradeServices#runDaCapoTrade(String, int, boolean)
-+   */
-+	public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
-+		getTrade().runDaCapoTrade(size, threads, soap);
-+	}
-+	
-+	/**
-+    * @see TradeServices#initializeDaCapo(String)
-+   */
-+	public void initializeDaCapo(String size) throws Exception {
-+		getTrade().initializeDaCapo(size);
-+	}
-+
-+	/**
-+  * @see TradeServices#resetDaCapo(String, int)
-+   */
-+	public boolean resetDaCapo(String size, int threads) throws Exception {
-+		return getTrade().resetDaCapo(size, threads);
-+	}
-+	
- 	private org.apache.geronimo.samples.daytrader.OrderDataBean convertOrderDataBean(org.apache.geronimo.samples.daytrader.client.ws.OrderDataBean bean) {
- 		return new org.apache.geronimo.samples.daytrader.OrderDataBean(
- 			bean.getOrderID(),
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/soap/TradeWSAction.java	2009-10-22 15:20:20.000000000 +1100
-@@ -180,9 +180,10 @@
-         }
- 	}
- 	
--	public void logout(String userID) throws RemoteException {
-+	public boolean logout(String userID) throws RemoteException {
- 		try {
-             trade.logout(userID);
-+            return true;
-         } catch (Exception e) {
-             throw new RemoteException("", e);
-         }
-@@ -204,4 +205,28 @@
-         }                
- 	}    
-     
-+	public boolean runDaCapoTrade(String size, int threads, boolean soap) throws RemoteException {
-+		try {
-+            trade.runDaCapoTrade(size, threads, soap);
-+            return true;
-+        } catch (Exception e) {
-+            throw new RemoteException("", e);
-+        }
-+	}
-+		public boolean initializeDaCapo(String size) throws RemoteException {
-+		try {
-+            trade.initializeDaCapo(size);
-+            return true;
-+        } catch (Exception e) {
-+            throw new RemoteException("", e);
-+        }
-+	}
-+	
-+	public boolean resetDaCapo(String size, int threads) throws RemoteException {
-+		try {
-+            return trade.resetDaCapo(size, threads);
-+        } catch (Exception e) {
-+            throw new RemoteException("", e);
-+        }
-+	}
- }
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeAction.java	2009-10-22 15:20:20.000000000 +1100
-@@ -531,4 +531,41 @@
-         runStatsData = trade.resetTrade(deleteAll);
- 		return runStatsData;
- 	}
-+    
-+    
-+    /**
-+     * Initialize the database for DaCapo
-+     *
-+     * @param size the size of the workload
-+     * @param threads the number of threads participating in the reset
-+     */
-+    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception {
-+    	if (Log.doActionTrace())
-+    		Log.trace("TradeAction:runDaCapoTrade", size);
-+    	trade.runDaCapoTrade(size, threads, soap);
-+    }
-+    
-+    /**
-+     * Initialize the database for DaCapo
-+     *
-+     * @param size the size of the workload
-+     */
-+    public void initializeDaCapo(String size) throws Exception {
-+    	if (Log.doActionTrace())
-+    		Log.trace("TradeAction:initializeDaCapo", size);
-+    	trade.initializeDaCapo(size);
-+    }
-+
-+    
-+    /**
-+     * Initialize the database for DaCapo
-+     *
-+     * @param size the size of the workload
-+     * @param threads the number of threads participating in the reset
-+     */
-+    public boolean resetDaCapo(String size, int threads) throws Exception {
-+    	if (Log.doActionTrace())
-+    		Log.trace("TradeAction:resetDaCapo", size);
-+    	return trade.resetDaCapo(size, threads);
-+    }
- }
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeServices.java	2009-10-22 15:20:20.000000000 +1100
-@@ -272,5 +272,11 @@
-  	 *  return statistics for this benchmark run
- 	 */
-     public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception, RemoteException;
-+    
-+    public void runDaCapoTrade(String size, int threads, boolean soap) throws Exception, RemoteException;
-+
-+    public void initializeDaCapo(String size) throws Exception, RemoteException;
-+
-+    public boolean resetDaCapo(String size, int threads) throws Exception, RemoteException;
- }   
- 
-diff -urNw dt-a/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java dt-e/modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java
---- modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-13 15:17:41.000000000 +1100
-+++ modules/ejb/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-22 15:20:20.000000000 +1100
-@@ -36,7 +36,10 @@
-     public org.apache.geronimo.samples.daytrader.AccountProfileDataBean getAccountProfileData(java.lang.String userID) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.AccountProfileDataBean updateAccountProfile(org.apache.geronimo.samples.daytrader.AccountProfileDataBean profileData) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.AccountDataBean login(java.lang.String userID, java.lang.String password) throws java.rmi.RemoteException;
--    public void logout(java.lang.String userID) throws java.rmi.RemoteException;
-+    public boolean logout(java.lang.String userID) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.AccountDataBean register(java.lang.String userID, java.lang.String password, java.lang.String fullname, java.lang.String address, java.lang.String email, java.lang.String creditcard, java.math.BigDecimal openBalance) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.RunStatsDataBean resetTrade(boolean deleteAll) throws java.rmi.RemoteException;
-+    public boolean runDaCapoTrade(java.lang.String size, int threads, boolean soap) throws java.rmi.RemoteException;
-+    public boolean initializeDaCapo(java.lang.String size) throws java.rmi.RemoteException;
-+    public boolean resetDaCapo(java.lang.String size, int threads) throws java.rmi.RemoteException;
- }
-diff -urNw dt-a/modules/ejb/src/main/resources/META-INF/persistence.xml dt-e/modules/ejb/src/main/resources/META-INF/persistence.xml
---- modules/ejb/src/main/resources/META-INF/persistence.xml	2009-10-13 15:17:42.000000000 +1100
-+++ modules/ejb/src/main/resources/META-INF/persistence.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -30,7 +30,7 @@
-         <exclude-unlisted-classes>true</exclude-unlisted-classes>
-         
-         <properties>
--            <property name="openjpa.jdbc.DBDictionary" value="derby" /> 
-+            <property name="openjpa.jdbc.DBDictionary" value="h2" /> 
-             <property name="openjpa.BrokerImpl" value="non-finalizing" />
-             <!-- To enable OpenJPA to generate foreign key constraints, comment out this line -->
-             <!-- <property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict"/> -->
-diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java dt-e/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java
---- modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServices.java	2009-10-22 15:20:20.000000000 +1100
-@@ -45,7 +45,10 @@
-     public org.apache.geronimo.samples.daytrader.AccountProfileDataBean getAccountProfileData(java.lang.String userID) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.AccountProfileDataBean updateAccountProfile(org.apache.geronimo.samples.daytrader.AccountProfileDataBean profileData) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.AccountDataBean login(java.lang.String userID, java.lang.String password) throws java.rmi.RemoteException;
--    public void logout(java.lang.String userID) throws java.rmi.RemoteException;
-+    public boolean logout(java.lang.String userID) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.AccountDataBean register(java.lang.String userID, java.lang.String password, java.lang.String fullname, java.lang.String address, java.lang.String email, java.lang.String creditcard, java.math.BigDecimal openBalance) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.RunStatsDataBean resetTrade(boolean deleteAll) throws java.rmi.RemoteException;
-+    public boolean runDaCapoTrade(java.lang.String size, int threads, boolean soap) throws java.rmi.RemoteException;
-+    public boolean initializeDaCapo(java.lang.String size) throws java.rmi.RemoteException;
-+    public boolean resetDaCapo(java.lang.String size, int threads) throws java.rmi.RemoteException;
- }
-diff -urNw dt-a/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java dt-e/modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java
---- modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/java/org/apache/geronimo/samples/daytrader/TradeWSServicesProxy.java	2009-10-22 15:20:20.000000000 +1100
-@@ -166,10 +166,10 @@
-   return __tradeWSServices.login(userID, password);
- }
- 
--public void logout(java.lang.String userID) throws java.rmi.RemoteException{
-+public boolean logout(java.lang.String userID) throws java.rmi.RemoteException{
-   if (__tradeWSServices == null)
-     _initTradeWSServicesProxy();
--  __tradeWSServices.logout(userID);
-+  return __tradeWSServices.logout(userID);
- }
- 
- public org.apache.geronimo.samples.daytrader.AccountDataBean register(java.lang.String userID, java.lang.String password, java.lang.String fullname, java.lang.String address, java.lang.String email, java.lang.String creditcard, java.math.BigDecimal openBalance) throws java.rmi.RemoteException{
-@@ -184,5 +184,21 @@
-   return __tradeWSServices.resetTrade(deleteAll);
- }
- 
-+public boolean runDaCapoTrade(java.lang.String size, int threads, boolean soap) throws java.rmi.RemoteException{
-+  if (__tradeWSServices == null)
-+    _initTradeWSServicesProxy();
-+  return __tradeWSServices.runDaCapoTrade(size, threads, soap);
-+}
-+
-+public boolean initializeDaCapo(java.lang.String size) throws java.rmi.RemoteException{
-+  if (__tradeWSServices == null)
-+    _initTradeWSServicesProxy();
-+  return __tradeWSServices.initializeDaCapo(size);
-+}
- 
-+public boolean resetDaCapo(java.lang.String size, int threads) throws java.rmi.RemoteException{
-+  if (__tradeWSServices == null)
-+    _initTradeWSServicesProxy();
-+  return __tradeWSServices.resetDaCapo(size, threads);
-+}
- }
-diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml dt-e/modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml
---- modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -737,8 +737,9 @@
-                 </wsdl-message-mapping>
-             </method-param-parts-mapping>
-             <wsdl-return-value-mapping>
--                <method-return-value>void</method-return-value>
-+                <method-return-value>boolean</method-return-value>
-                 <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:logoutResponse</wsdl-message>
-+		<wsdl-message-part-name>logoutReturn</wsdl-message-part-name>
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-         <service-endpoint-method-mapping>
-@@ -947,5 +948,89 @@
-                 <wsdl-message-part-name>completeOrderReturn</wsdl-message-part-name>
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>runDaCapoTrade</java-method-name>
-+            <wsdl-operation>runDaCapoTrade</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>2</param-position>
-+                <param-type>boolean</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>soap</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:runDaCapoTradeResponse</wsdl-message>
-+		<wsdl-message-part-name>runDaCapoTradeReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>initializeDaCapo</java-method-name>
-+            <wsdl-operation>initializeDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:initializeDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:initializeDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>initializeDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>resetDaCapo</java-method-name>
-+            <wsdl-operation>resetDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:resetDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>resetDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-     </service-endpoint-interface-mapping>
- </java-wsdl-mapping>
-diff -urNw dt-a/modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl dt-e/modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl
---- modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-13 15:17:44.000000000 +1100
-+++ modules/json-proxy/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-22 15:20:20.000000000 +1100
-@@ -378,7 +378,10 @@
-    </element>
-    <element name="logoutResponse">
-     <complexType>
--     <sequence/>
-+      <sequence>
-+	<element name="logoutReturn" nillable="true"
-+		 type="xsd:boolean" />
-+      </sequence>
-     </complexType>
-    </element>
-    <element name="register">
-@@ -431,6 +434,51 @@
-      </sequence>
-     </complexType>
-    </element>
-+   <element name="runDaCapoTrade">
-+    <complexType>
-+     <sequence>
-+      <element name="size" nillable="true" type="xsd:string"/>
-+      <element name="threads" nillable="true" type="xsd:int"/>
-+      <element name="soap" nillable="true" type="xsd:boolean"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="runDaCapoTradeResponse">
-+    <complexType>
-+     <sequence>
-+      <element name="runDaCapoTradeReturn" nillable="true" type="xsd:boolean"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="initializeDaCapo">
-+    <complexType>
-+     <sequence>
-+      <element name="size" nillable="true" type="xsd:string"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="initializeDaCapoResponse">
-+    <complexType>
-+     <sequence>
-+      <element name="initializeDaCapoReturn" nillable="true" type="xsd:boolean"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="resetDaCapo">
-+    <complexType>
-+     <sequence>
-+      <element name="size" nillable="true" type="xsd:string"/>
-+      <element name="threads" nillable="true" type="xsd:int"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="resetDaCapoResponse">
-+    <complexType>
-+     <sequence>
-+      <element name="resetDaCapoReturn" nillable="true" type="xsd:boolean"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-   </schema>
-  </wsdl:types>
- 
-@@ -536,6 +584,24 @@
- 
-    </wsdl:message>
- 
-+   <wsdl:message name="runDaCapoTradeRequest">
-+
-+      <wsdl:part element="impl:runDaCapoTrade" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="initializeDaCapoRequest">
-+
-+      <wsdl:part element="impl:initializeDaCapo" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="resetDaCapoRequest">
-+
-+      <wsdl:part element="impl:resetDaCapo" name="parameters"/>
-+
-+   </wsdl:message>
-+
-    <wsdl:message name="getAllQuotesResponse">
- 
-       <wsdl:part element="impl:getAllQuotesResponse" name="parameters"/>
-@@ -668,6 +734,24 @@
- 
-    </wsdl:message>
- 
-+   <wsdl:message name="runDaCapoTradeResponse">
-+
-+      <wsdl:part element="impl:runDaCapoTradeResponse" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="initializeDaCapoResponse">
-+
-+      <wsdl:part element="impl:initializeDaCapoResponse" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="resetDaCapoResponse">
-+
-+      <wsdl:part element="impl:resetDaCapoResponse" name="parameters"/>
-+
-+   </wsdl:message>
-+
-    <wsdl:message name="getAllQuotesRequest">
- 
-       <wsdl:part element="impl:getAllQuotes" name="parameters"/>
-@@ -876,6 +960,30 @@
- 
-       </wsdl:operation>
- 
-+      <wsdl:operation name="runDaCapoTrade">
-+
-+         <wsdl:input message="impl:runDaCapoTradeRequest" name="runDaCapoTradeRequest"/>
-+
-+         <wsdl:output message="impl:runDaCapoTradeResponse" name="runDaCapoTradeResponse"/>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="initializeDaCapo">
-+
-+         <wsdl:input message="impl:initializeDaCapoRequest" name="initializeDaCapoRequest"/>
-+
-+         <wsdl:output message="impl:initializeDaCapoResponse" name="initializeDaCapoResponse"/>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="resetDaCapo">
-+
-+         <wsdl:input message="impl:resetDaCapoRequest" name="resetDaCapoRequest"/>
-+
-+         <wsdl:output message="impl:resetDaCapoResponse" name="resetDaCapoResponse"/>
-+
-+      </wsdl:operation>
-+
-    </wsdl:portType>
- 
-    <wsdl:binding name="TradeWSServicesSoapBinding" type="impl:TradeWSServices">
-@@ -1278,6 +1386,59 @@
- 
-       </wsdl:operation>
- 
-+      <wsdl:operation name="runDaCapoTrade">
-+
-+         <wsdlsoap:operation soapAction=""/>
-+
-+         <wsdl:input name="runDaCapoTradeRequest">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:input>
-+
-+         <wsdl:output name="runDaCapoTradeResponse">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:output>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="initializeDaCapo">
-+
-+         <wsdlsoap:operation soapAction=""/>
-+
-+         <wsdl:input name="initializeDaCapoRequest">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:input>
-+
-+         <wsdl:output name="initializeDaCapoResponse">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:output>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="resetDaCapo">
-+
-+         <wsdlsoap:operation soapAction=""/>
-+
-+         <wsdl:input name="resetDaCapoRequest">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:input>
-+
-+         <wsdl:output name="resetDaCapoResponse">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:output>
-+
-+      </wsdl:operation>
-    </wsdl:binding>
- 
-    <wsdl:service name="Trade">
-diff -urNw dt-a/modules/web/pom.xml dt-e/modules/web/pom.xml
---- modules/web/pom.xml	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/pom.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -122,7 +122,7 @@
-                     </filters>
-                     <archive>
-                         <manifestEntries>
--                            <Class-Path>dt-ejb.jar streamer.jar wsappclient.jar</Class-Path>
-+                            <Class-Path>dt-ejb.jar streamer.jar wsappclient.jar dacapo.jar</Class-Path>
-                         </manifestEntries>
-                     </archive>
-                     <resources>
-diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml dt-e/modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml
---- modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/src/main/webapp/WEB-INF/TradeServicesClient_mapping.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -737,8 +737,9 @@
-                 </wsdl-message-mapping>
-             </method-param-parts-mapping>
-             <wsdl-return-value-mapping>
--                <method-return-value>void</method-return-value>
-+                <method-return-value>boolean</method-return-value>
-                 <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:logoutResponse</wsdl-message>
-+		<wsdl-message-part-name>logoutReturn</wsdl-message-part-name>
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-         <service-endpoint-method-mapping>
-@@ -761,6 +762,90 @@
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-         <service-endpoint-method-mapping>
-+            <java-method-name>runDaCapoTrade</java-method-name>
-+            <wsdl-operation>runDaCapoTrade</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>2</param-position>
-+                <param-type>boolean</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>soap</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:runDaCapoTradeResponse</wsdl-message>
-+		<wsdl-message-part-name>runDaCapoTradeReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>initializeDaCapo</java-method-name>
-+            <wsdl-operation>initializeDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:initializeDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:initializeDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>initializeDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>resetDaCapo</java-method-name>
-+            <wsdl-operation>resetDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:resetDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>resetDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-             <java-method-name>createQuote</java-method-name>
-             <wsdl-operation>createQuote</wsdl-operation>
-             <wrapped-element/>
-diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml dt-e/modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml
---- modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/src/main/webapp/WEB-INF/TradeServices_mapping.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -737,8 +737,9 @@
-                 </wsdl-message-mapping>
-             </method-param-parts-mapping>
-             <wsdl-return-value-mapping>
--                <method-return-value>void</method-return-value>
-+                <method-return-value>boolean</method-return-value>
-                 <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:logoutResponse</wsdl-message>
-+		<wsdl-message-part-name>logoutReturn</wsdl-message-part-name>
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-         <service-endpoint-method-mapping>
-@@ -761,6 +762,90 @@
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-         <service-endpoint-method-mapping>
-+            <java-method-name>runDaCapoTrade</java-method-name>
-+            <wsdl-operation>runDaCapoTrade</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>2</param-position>
-+                <param-type>boolean</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>soap</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:runDaCapoTradeResponse</wsdl-message>
-+		<wsdl-message-part-name>runDaCapoTradeReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>initializeDaCapo</java-method-name>
-+            <wsdl-operation>initializeDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:initializeDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:initializeDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>initializeDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>resetDaCapo</java-method-name>
-+            <wsdl-operation>resetDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:resetDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>resetDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-             <java-method-name>createQuote</java-method-name>
-             <wsdl-operation>createQuote</wsdl-operation>
-             <wrapped-element/>
-diff -urNw dt-a/modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl dt-e/modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl
---- modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-13 15:17:48.000000000 +1100
-+++ modules/web/src/main/webapp/WEB-INF/wsdl/TradeServices.wsdl	2009-10-22 15:20:20.000000000 +1100
-@@ -390,7 +390,10 @@
-    </element>
-    <element name="logoutResponse">
-     <complexType>
--     <sequence/>
-+      <sequence>
-+	<element name="logoutReturn" nillable="true"
-+		 type="xsd:boolean" />
-+      </sequence>
-     </complexType>
-    </element>
-    <element name="register">
-@@ -443,6 +446,54 @@
-      </sequence>
-     </complexType>
-    </element>
-+   <element name="runDaCapoTrade">
-+    <complexType>
-+     <sequence>
-+      <element name="size" nillable="true" type="xsd:string"/>
-+      <element name="threads" nillable="true" type="xsd:int"/>
-+      <element name="soap" nillable="true" type="xsd:boolean"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="runDaCapoTradeResponse">
-+    <complexType>
-+       <sequence>
-+	 <element name="runDaCapoTradeReturn" nillable="true"
-+		  type="xsd:boolean" />
-+       </sequence>
-+    </complexType>
-+   </element>
-+   <element name="initializeDaCapo">
-+    <complexType>
-+     <sequence>
-+      <element name="size" nillable="true" type="xsd:string"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="initializeDaCapoResponse">
-+    <complexType>
-+       <sequence>
-+	 <element name="initializeDaCapoReturn" nillable="true"
-+		  type="xsd:boolean" />
-+       </sequence>
-+    </complexType>
-+   </element>
-+   <element name="resetDaCapo">
-+    <complexType>
-+     <sequence>
-+      <element name="size" nillable="true" type="xsd:string"/>
-+      <element name="threads" nillable="true" type="xsd:int"/>
-+     </sequence>
-+    </complexType>
-+   </element>
-+   <element name="resetDaCapoResponse">
-+     <complexType>
-+       <sequence>
-+	 <element name="resetDaCapoReturn" nillable="true"
-+		  type="xsd:boolean" />
-+       </sequence>
-+     </complexType>
-+   </element>
-   </schema>
-  </wsdl:types>
- 
-@@ -548,6 +599,24 @@
- 
-    </wsdl:message>
- 
-+   <wsdl:message name="runDaCapoTradeRequest">
-+
-+      <wsdl:part element="impl:runDaCapoTrade" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="initializeDaCapoRequest">
-+
-+      <wsdl:part element="impl:initializeDaCapo" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="resetDaCapoRequest">
-+
-+      <wsdl:part element="impl:resetDaCapo" name="parameters"/>
-+
-+   </wsdl:message>
-+
-    <wsdl:message name="getAllQuotesResponse">
- 
-       <wsdl:part element="impl:getAllQuotesResponse" name="parameters"/>
-@@ -680,6 +749,24 @@
- 
-    </wsdl:message>
- 
-+   <wsdl:message name="runDaCapoTradeResponse">
-+
-+      <wsdl:part element="impl:runDaCapoTradeResponse" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="initializeDaCapoResponse">
-+
-+      <wsdl:part element="impl:initializeDaCapoResponse" name="parameters"/>
-+
-+   </wsdl:message>
-+
-+   <wsdl:message name="resetDaCapoResponse">
-+
-+     <wsdl:part element="impl:resetDaCapoResponse" name="parameters" />
-+     
-+   </wsdl:message>
-+
-    <wsdl:message name="getAllQuotesRequest">
- 
-       <wsdl:part element="impl:getAllQuotes" name="parameters"/>
-@@ -888,6 +975,29 @@
- 
-       </wsdl:operation>
- 
-+      <wsdl:operation name="runDaCapoTrade">
-+
-+         <wsdl:input message="impl:runDaCapoTradeRequest" name="runDaCapoTradeRequest"/>
-+
-+         <wsdl:output message="impl:runDaCapoTradeResponse" name="runDaCapoTradeResponse"/>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="initializeDaCapo">
-+
-+         <wsdl:input message="impl:initializeDaCapoRequest" name="initializeDaCapoRequest"/>
-+
-+         <wsdl:output message="impl:initializeDaCapoResponse" name="initializeDaCapoResponse"/>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="resetDaCapo">
-+	
-+	<wsdl:input message="impl:resetDaCapoRequest" name="resetDaCapoRequest" />
-+
-+	<wsdl:output message="impl:resetDaCapoResponse"	name="resetDaCapoResponse" />
-+
-+      </wsdl:operation>
-    </wsdl:portType>
- 
-    <wsdl:binding name="TradeWSServicesSoapBinding" type="impl:TradeWSServices">
-@@ -1290,6 +1400,59 @@
- 
-       </wsdl:operation>
- 
-+      <wsdl:operation name="runDaCapoTrade">
-+
-+         <wsdlsoap:operation soapAction=""/>
-+
-+         <wsdl:input name="runDaCapoTradeRequest">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:input>
-+
-+         <wsdl:output name="runDaCapoTradeResponse">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:output>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="initializeDaCapo">
-+
-+         <wsdlsoap:operation soapAction=""/>
-+
-+         <wsdl:input name="initializeDaCapoRequest">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:input>
-+
-+         <wsdl:output name="initializeDaCapoResponse">
-+
-+            <wsdlsoap:body use="literal"/>
-+
-+         </wsdl:output>
-+
-+      </wsdl:operation>
-+
-+      <wsdl:operation name="resetDaCapo">
-+
-+	<wsdlsoap:operation soapAction="" />
-+
-+	<wsdl:input name="resetDaCapoRequest">
-+	  
-+	  <wsdlsoap:body use="literal" />
-+	  
-+	</wsdl:input>
-+	
-+	<wsdl:output name="resetDaCapoResponse">
-+	  
-+	  <wsdlsoap:body use="literal" />
-+	  
-+	</wsdl:output>
-+	
-+      </wsdl:operation>
-    </wsdl:binding>
- 
-    <wsdl:service name="Trade">
-diff -urNw dt-a/modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java dt-e/modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java
---- modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java	2009-10-13 15:17:45.000000000 +1100
-+++ modules/wsappclient/src/main/java/org/apache/geronimo/samples/daytrader/client/ws/TradeWSServices.java	2009-10-22 15:20:20.000000000 +1100
-@@ -36,7 +36,10 @@
-     public org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean getAccountProfileData(java.lang.String userID) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean updateAccountProfile(org.apache.geronimo.samples.daytrader.client.ws.AccountProfileDataBean profileData) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.client.ws.AccountDataBean login(java.lang.String userID, java.lang.String password) throws java.rmi.RemoteException;
--    public void logout(java.lang.String userID) throws java.rmi.RemoteException;
-+    public boolean logout(java.lang.String userID) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.client.ws.AccountDataBean register(java.lang.String userID, java.lang.String password, java.lang.String fullname, java.lang.String address, java.lang.String email, java.lang.String creditcard, java.math.BigDecimal openBalance) throws java.rmi.RemoteException;
-     public org.apache.geronimo.samples.daytrader.client.ws.RunStatsDataBean resetTrade(boolean deleteAll) throws java.rmi.RemoteException;
-+    public boolean runDaCapoTrade(java.lang.String size, int threads, boolean soap) throws java.rmi.RemoteException;
-+    public boolean initializeDaCapo(java.lang.String size) throws java.rmi.RemoteException;
-+    public boolean resetDaCapo(java.lang.String size, int threads) throws java.rmi.RemoteException;
- }
-diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml dt-e/modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml
---- modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml	2009-10-13 15:17:45.000000000 +1100
-+++ modules/wsappclient/src/main/resources/META-INF/TradeServices_mapping.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -737,8 +737,9 @@
-                 </wsdl-message-mapping>
-             </method-param-parts-mapping>
-             <wsdl-return-value-mapping>
--                <method-return-value>void</method-return-value>
-+                <method-return-value>boolean</method-return-value>
-                 <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:logoutResponse</wsdl-message>
-+		<wsdl-message-part-name>logoutReturn</wsdl-message-part-name>
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-         <service-endpoint-method-mapping>
-@@ -947,5 +948,89 @@
-                 <wsdl-message-part-name>completeOrderReturn</wsdl-message-part-name>
-             </wsdl-return-value-mapping>
-         </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>runDaCapoTrade</java-method-name>
-+            <wsdl-operation>runDaCapoTrade</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>2</param-position>
-+                <param-type>boolean</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:runDaCapoTradeRequest</wsdl-message>
-+                    <wsdl-message-part-name>soap</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+             <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:runDaCapoTradeResponse</wsdl-message>
-+		<wsdl-message-part-name>runDaCapoTradeReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>initializeDaCapo</java-method-name>
-+            <wsdl-operation>initializeDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:initializeDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:initializeDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>initializeDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-+        <service-endpoint-method-mapping>
-+            <java-method-name>resetDaCapo</java-method-name>
-+            <wsdl-operation>resetDaCapo</wsdl-operation>
-+            <wrapped-element/>
-+            <method-param-parts-mapping>
-+                <param-position>0</param-position>
-+                <param-type>java.lang.String</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>size</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <method-param-parts-mapping>
-+                <param-position>1</param-position>
-+                <param-type>int</param-type>
-+                <wsdl-message-mapping>
-+                    <wsdl-message xmlns:mppm="http://daytrader.samples.geronimo.apache.org">mppm:resetDaCapoRequest</wsdl-message>
-+                    <wsdl-message-part-name>threads</wsdl-message-part-name>
-+                    <parameter-mode>IN</parameter-mode>
-+                </wsdl-message-mapping>
-+            </method-param-parts-mapping>
-+            <wsdl-return-value-mapping>
-+                <method-return-value>boolean</method-return-value>
-+                <wsdl-message xmlns:wrvm="http://daytrader.samples.geronimo.apache.org">wrvm:resetDaCapoResponse</wsdl-message>
-+		<wsdl-message-part-name>resetDaCapoReturn</wsdl-message-part-name>
-+            </wsdl-return-value-mapping>
-+        </service-endpoint-method-mapping>
-     </service-endpoint-interface-mapping>
- </java-wsdl-mapping>
-diff -urNw dt-a/modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl dt-e/modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl
---- modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl	2009-10-13 15:17:45.000000000 +1100
-+++ modules/wsappclient/src/main/resources/META-INF/wsdl/TradeServices.wsdl	2009-10-22 15:20:20.000000000 +1100
-@@ -472,7 +472,10 @@
- 			</element>
- 			<element name="logoutResponse">
- 				<complexType>
--					<sequence />
-+				  <sequence>
-+				    <element name="logoutReturn" nillable="true"
-+					     type="xsd:boolean" />
-+				  </sequence>
- 				</complexType>
- 			</element>
- 			<element name="register">
-@@ -534,6 +537,61 @@
- 					</sequence>
- 				</complexType>
- 			</element>
-+			<element name="runDaCapoTrade">
-+				<complexType>
-+					<sequence>
-+						<element name="size" nillable="true"
-+							type="xsd:string" />
-+						<element name="threads" nillable="true"
-+							type="xsd:int" />
-+						<element name="soap" nillable="true"
-+							type="xsd:boolean" />
-+					</sequence>
-+				</complexType>
-+			</element>
-+			<element name="runDaCapoTradeResponse">
-+				<complexType>
-+					<sequence>
-+						<element name="runDaCapoTradeReturn" nillable="true"
-+							type="xsd:boolean" />
-+					</sequence>
-+				</complexType>
-+			</element>
-+			<element name="initializeDaCapo">
-+				<complexType>
-+					<sequence>
-+						<element name="size" nillable="true"
-+							type="xsd:string" />
-+					</sequence>
-+				</complexType>
-+			</element>
-+			<element name="initializeDaCapoResponse">
-+				<complexType>
-+					<sequence>
-+						<element name="initializeDaCapoReturn" nillable="true"
-+							type="xsd:boolean" />
-+					</sequence>
-+				</complexType>
-+			</element>
-+			<element name="resetDaCapo">
-+				<complexType>
-+					<sequence>
-+						<element name="size" nillable="true"
-+							type="xsd:string" />
-+						<element name="threads" nillable="true"
-+							type="xsd:int" />
-+					</sequence>
-+				</complexType>
-+			</element>
-+			<element name="resetDaCapoResponse">
-+				<complexType>
-+					<sequence>
-+						<element name="resetDaCapoReturn" nillable="true"
-+							type="xsd:boolean" />
-+					</sequence>
-+				</complexType>
-+			</element>
-+			
- 		</schema>
- 	</wsdl:types>
- 
-@@ -642,6 +700,24 @@
- 
- 	</wsdl:message>
- 
-+	<wsdl:message name="runDaCapoTradeRequest">
-+
-+		<wsdl:part element="impl:runDaCapoTrade" name="parameters" />
-+
-+	</wsdl:message>
-+	
-+	<wsdl:message name="initializeDaCapoRequest">
-+
-+		<wsdl:part element="impl:initializeDaCapo" name="parameters" />
-+
-+	</wsdl:message>
-+	
-+	<wsdl:message name="resetDaCapoRequest">
-+
-+		<wsdl:part element="impl:resetDaCapo" name="parameters" />
-+
-+	</wsdl:message>
-+
- 	<wsdl:message name="getAllQuotesResponse">
- 
- 		<wsdl:part element="impl:getAllQuotesResponse"
-@@ -781,6 +857,24 @@
- 
- 	</wsdl:message>
- 
-+	<wsdl:message name="runDaCapoTradeResponse">
-+
-+		<wsdl:part element="impl:runDaCapoTradeResponse" name="parameters" />
-+
-+	</wsdl:message>
-+
-+	<wsdl:message name="initializeDaCapoResponse">
-+
-+		<wsdl:part element="impl:initializeDaCapoResponse" name="parameters" />
-+
-+	</wsdl:message>
-+
-+	<wsdl:message name="resetDaCapoResponse">
-+
-+		<wsdl:part element="impl:resetDaCapoResponse" name="parameters" />
-+
-+	</wsdl:message>
-+
- 	<wsdl:message name="getAllQuotesRequest">
- 
- 		<wsdl:part element="impl:getAllQuotes" name="parameters" />
-@@ -1031,6 +1125,36 @@
- 
- 		</wsdl:operation>
- 
-+		<wsdl:operation name="runDaCapoTrade">
-+
-+			<wsdl:input message="impl:runDaCapoTradeRequest"
-+				name="runDaCapoTradeRequest" />
-+
-+			<wsdl:output message="impl:runDaCapoTradeResponse"
-+				name="runDaCapoTradeResponse" />
-+
-+		</wsdl:operation>
-+
-+		<wsdl:operation name="initializeDaCapo">
-+
-+			<wsdl:input message="impl:initializeDaCapoRequest"
-+				name="initializeDaCapoRequest" />
-+
-+			<wsdl:output message="impl:initializeDaCapoResponse"
-+				name="initializeDaCapoResponse" />
-+
-+		</wsdl:operation>
-+
-+		<wsdl:operation name="resetDaCapo">
-+
-+			<wsdl:input message="impl:resetDaCapoRequest"
-+				name="resetDaCapoRequest" />
-+
-+			<wsdl:output message="impl:resetDaCapoResponse"
-+				name="resetDaCapoResponse" />
-+
-+		</wsdl:operation>
-+		
- 	</wsdl:portType>
- 
- 	<wsdl:binding name="TradeWSServicesSoapBinding"
-@@ -1435,6 +1559,59 @@
- 
- 		</wsdl:operation>
- 
-+		<wsdl:operation name="runDaCapoTrade">
-+
-+			<wsdlsoap:operation soapAction="" />
-+
-+			<wsdl:input name="runDaCapoTradeRequest">
-+
-+				<wsdlsoap:body use="literal" />
-+
-+			</wsdl:input>
-+
-+			<wsdl:output name="runDaCapoTradeResponse">
-+
-+				<wsdlsoap:body use="literal" />
-+
-+			</wsdl:output>
-+
-+		</wsdl:operation>
-+
-+		<wsdl:operation name="initializeDaCapo">
-+
-+			<wsdlsoap:operation soapAction="" />
-+
-+			<wsdl:input name="initializeDaCapoRequest">
-+
-+				<wsdlsoap:body use="literal" />
-+
-+			</wsdl:input>
-+
-+			<wsdl:output name="initializeDaCapoResponse">
-+
-+				<wsdlsoap:body use="literal" />
-+
-+			</wsdl:output>
-+
-+		</wsdl:operation>
-+
-+		<wsdl:operation name="resetDaCapo">
-+
-+			<wsdlsoap:operation soapAction="" />
-+
-+			<wsdl:input name="resetDaCapoRequest">
-+
-+				<wsdlsoap:body use="literal" />
-+
-+			</wsdl:input>
-+
-+			<wsdl:output name="resetDaCapoResponse">
-+
-+				<wsdlsoap:body use="literal" />
-+
-+			</wsdl:output>
-+
-+		</wsdl:operation>
- 	</wsdl:binding>
- 
- 	<wsdl:service name="Trade">
-diff -urNw dt-a/plans/dayTrader-derby-plan.xml dt-e/plans/dayTrader-derby-plan.xml
---- plans/dayTrader-derby-plan.xml	2009-10-13 15:17:48.000000000 +1100
-+++ plans/dayTrader-derby-plan.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -212,6 +212,28 @@
-         </application-client>
-     </module>
- 
-+    <module>
-+        <java>dacapo.jar</java>
-+        <application-client xmlns="http://geronimo.apache.org/xml/ns/j2ee/application-client-2.0">
-+            <client-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
-+                <moduleId>
-+                    <groupId>org.apache.geronimo.daytrader</groupId>
-+                    <artifactId>daytrader-dacapo</artifactId>
-+                    <version>2.2-SNAPSHOT</version>
-+                    <type>car</type>
-+                </moduleId>
-+            </client-environment>
-+            <server-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
-+                <moduleId>
-+                    <groupId>org.apache.geronimo.daytrader</groupId>
-+                    <artifactId>daytrader-dacapo-server</artifactId>
-+                    <version>2.2-SNAPSHOT</version>
-+                    <type>car</type>
-+                </moduleId>
-+            </server-environment>
-+        </application-client>
-+    </module>
-+
-     <ext-module>
-         <connector>TradeDataSource</connector>
-         <external-path xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.2">
-diff -urNw dt-a/plans/streamerclient/geronimo-plugin.xml dt-e/plans/streamerclient/geronimo-plugin.xml
---- plans/streamerclient/geronimo-plugin.xml	2009-10-13 15:17:48.000000000 +1100
-+++ plans/streamerclient/geronimo-plugin.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -32,7 +32,7 @@
-             <version>2.2-SNAPSHOT</version>
-             <type>car</type>
-         </module-id>
--        <geronimo-version>2.2-SNAPSHOT</geronimo-version>
-+        <geronimo-version>2.1.4</geronimo-version>
-         <jvm-version>1.5</jvm-version>
-         <jvm-version>1.6</jvm-version>
-         <dependency start="false">
-diff -urNw dt-a/plans/wsclient/geronimo-plugin.xml dt-e/plans/wsclient/geronimo-plugin.xml
---- plans/wsclient/geronimo-plugin.xml	2009-10-13 15:17:48.000000000 +1100
-+++ plans/wsclient/geronimo-plugin.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -32,7 +32,7 @@
-             <version>2.2-SNAPSHOT</version>
-             <type>car</type>
-         </module-id>
--        <geronimo-version>2.2-SNAPSHOT</geronimo-version>
-+        <geronimo-version>2.1.4</geronimo-version>
-         <jvm-version>1.5</jvm-version>
-         <jvm-version>1.6</jvm-version>
-         <dependency start="true">
-diff -urNw dt-a/pom.xml dt-e/pom.xml
---- pom.xml	2009-10-13 15:17:48.000000000 +1100
-+++ pom.xml	2009-10-22 15:20:20.000000000 +1100
-@@ -34,7 +34,7 @@
- 
-     <properties>
-         <!-- This property is required by the car:package mojo -->
--        <geronimoVersion>2.2-SNAPSHOT</geronimoVersion>
-+        <geronimoVersion>2.1.4</geronimoVersion>
- 
+     <properties>        
+-        <geronimoVersion>3.0.1-SNAPSHOT</geronimoVersion>
++        <geronimoVersion>3.0.1</geronimoVersion>
          <!-- set siteId to artifactId for any "top level" project rooting a website -->
          <siteId>daytrader</siteId>
-@@ -146,18 +146,21 @@
-         <module>modules/web</module>
-         <module>modules/streamer</module>
-         <module>modules/wsappclient</module>
-+        <module>modules/dacapo</module>
-         <module>modules/ear</module>
-         <module>modules/json-proxy</module>
-         <module>modules/dojo-ui-web</module>
-         <module>modules/dojo-ui-ear</module>
-         <!-- c-m-p built plugins -->
--        <module>daytrader-derby-datasource</module>
-+        <!--<module>daytrader-derby-datasource</module>-->
-+        <module>tranql-connector-h2</module>
-+        <module>daytrader-h2-datasource</module>
-         <!-- see profiles -->
-         <!--<module>daytrader-db2-datasource</module>-->
-         <!--<module>daytrader-oracle-datasource</module>-->
-         <module>daytrader-jms</module>
-         <module>daytrader-jetty</module>
--        <module>daytrader-tomcat</module>
-+        <!--<module>daytrader-tomcat</module>-->
-     </modules>
- 
-     <dependencyManagement>
+         <openjpaVersion>2.1.0</openjpaVersion>
+@@ -146,6 +146,13 @@
+     </contributors>
+     <dependencies/>
+     
++    <repositories>
++        <repository>
++            <id>codehaus.snapshots</id>
++            <url>http://central.maven.org/maven2/</url>
++        </repository>
++    </repositories>
++    
+     <organization>
+         <name>Apache Software Foundation</name>
+         <url>http://www.apache.org/</url>

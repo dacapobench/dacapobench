@@ -45,8 +45,8 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
  *  
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: FullSourceWorkspaceTests.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: FullSourceWorkspaceTests.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public abstract class FullSourceWorkspaceTests {
 
@@ -347,29 +347,23 @@ public abstract class FullSourceWorkspaceTests {
       }
     }
 
-
     // Create lib entries for the JDKs
     String jreLibPath = JavaCore.getClasspathVariable("JRE_LIB").toOSString();
-    String tempPath = System.getProperty("dacapo.local.jre");
     String[] jdkLibs = Util.getJavaClassLibs();
     int jdkLibsLength = jdkLibs.length;
-    IClasspathEntry[] jdkEntries = new IClasspathEntry[jdkLibsLength + 1];
+    IClasspathEntry[] jdkEntries = new IClasspathEntry[jdkLibsLength];
     int jdkEntriesCount = 0;
-
     for (int i = 0; i < jdkLibsLength; i++) {
       if (!jdkLibs[i].equals(jreLibPath)) { // do not include JRE_LIB in
         // additional JDK entries
-
         jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(jdkLibs[i]), null, null);
       }
     }
-    jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(tempPath), null, null);
 
     // Set classpaths (workaround bug 73253 Project references not set on
     // project open)
     ALL_PROJECTS = JavaCore.create(workspaceRoot).getJavaProjects();
     int projectsLength = ALL_PROJECTS.length;
-
     for (int i = 0; i < projectsLength; i++) {
       String projectName = ALL_PROJECTS[i].getElementName();
       if (BIG_PROJECT_NAME.equals(projectName))
@@ -390,7 +384,6 @@ public abstract class FullSourceWorkspaceTests {
       } catch (CoreException jme) {
         // skip name collision as it means that JRE lib were already set on the
         // classpath
-        System.out.println("errors in here");
         if (jme.getStatus().getCode() != IJavaModelStatusConstants.NAME_COLLISION) {
           throw jme;
         }

@@ -25,8 +25,8 @@ import javax.sql.DataSource;
  * Simple DataSource for providing a wrapped connection for the Derby TPC-C to
  * populate the database.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: TPCCDataSource.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: TPCCDataSource.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class TPCCDataSource implements DataSource {
 
@@ -85,8 +85,9 @@ public class TPCCDataSource implements DataSource {
     return null;
   }
 
-  public Logger getParentLogger() throws SQLFeatureNotSupportedException{
-    throw new UnsupportedOperationException();
+  public Logger getParentLogger()
+          throws SQLFeatureNotSupportedException {
+    return null;
   }
 
   private class NullWriter extends Writer {

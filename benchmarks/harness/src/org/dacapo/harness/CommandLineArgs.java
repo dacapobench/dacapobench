@@ -37,8 +37,8 @@ import org.dacapo.parser.Config;
  * 
  * Encapsulated in an object so that it can be passed to user-written callbacks.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: CommandLineArgs.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: CommandLineArgs.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class CommandLineArgs {
 
@@ -215,7 +215,7 @@ public class CommandLineArgs {
    */
   static void printUsage() {
     HelpFormatter formatter = new HelpFormatter();
-    formatter.printHelp("DaCapo Benchmark suite", visibleOptions);
+    formatter.printHelp("DaCapo Benchmark suite " + TestHarness.getBuildVersion(), visibleOptions);
   }
 
   /**

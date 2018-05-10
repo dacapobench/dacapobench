@@ -1,8 +1,8 @@
 <project name="pybench" default="pybench" basedir="..">
     <description>pybench benchmark, used by jython</description>
         
-    <property name="py-version" value="2.5.4"/>
-    <property name="py-url" value="http://www.python.org/ftp/python/${py-version}"/>
+    <property name="py-version" value="2.7"/>
+    <property name="py-url" value="https://www.python.org/ftp/python/${py-version}"/>
     <property name="py-src" value="Python-${py-version}.tgz"/>
         
     <target name="py-source">

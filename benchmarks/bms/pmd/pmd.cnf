@@ -1,77 +1,60 @@
 benchmark pmd
   class org.dacapo.harness.Pmd
   thread-model single
-  jars "pmd-4.2.5.jar", "jaxen-1.1.1.jar", "asm-3.1.jar", "junit-3.8.1.jar", "xercesImpl.jar", "xml-apis.jar";
+  jars "pmd-core-5.8.1.jar", "pmd-java-5.8.1.jar", "jaxen-1.1.6.jar", "asm-5.0.4.jar", "commons-io-2.4.jar", "commons-lang3-3.4.jar", "jcommander-1.48.jar", "saxon-9.1.0.8.jar", "saxon-9.1.0.8-dom.jar", "junit-4.12.jar", "xercesImpl.jar", "xml-apis.jar";
 
-size xsmall args "@pmd/small.lst","xml","pmd/rulesets/imports.xml","-debug"
-  output 
-    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+size xsmall args "@pmd/small.lst","text","pmd/rulesets/java/braces.xml","-debug";
 
 size small args "@pmd/small.lst","text",
-        "pmd/rulesets/basic.xml",
-         "pmd/rulesets/braces.xml",
-		"pmd/rulesets/codesize.xml",
-		"pmd/rulesets/controversial.xml",
-		"pmd/rulesets/coupling.xml",
-		"pmd/rulesets/design.xml",
-		"pmd/rulesets/favorites.xml",
-		"pmd/rulesets/finalizers.xml",
-		"pmd/rulesets/imports.xml",
-		"pmd/rulesets/javabeans.xml",
-		"pmd/rulesets/junit.xml",
-		"pmd/rulesets/naming.xml",
-		"pmd/rulesets/newrules.xml",
-		"pmd/rulesets/rulesets.properties",
-		"pmd/rulesets/scratchpad.xml",
-		"pmd/rulesets/strictexception.xml",
-		"pmd/rulesets/strings.xml",
-		"pmd/rulesets/unusedcode.xml"
+    "pmd/rulesets/java/basic.xml",
+    "pmd/rulesets/java/braces.xml",
+		"pmd/rulesets/java/codesize.xml",
+		"pmd/rulesets/java/controversial.xml",
+		"pmd/rulesets/java/design.xml",
+		"pmd/rulesets/java/finalizers.xml",
+		"pmd/rulesets/java/imports.xml",
+		"pmd/rulesets/java/javabeans.xml",
+		"pmd/rulesets/java/junit.xml",
+		"pmd/rulesets/java/naming.xml",
+		"pmd/rulesets/java/strictexception.xml",
+		"pmd/rulesets/java/strings.xml",
+		"pmd/rulesets/java/unusedcode.xml"
   output 
-    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
- 
+    stdout digest 0x475d6a8a284d22088d52b77e44806c0aac252efd;
+
 size default args "@pmd/default.lst","text",
-        "pmd/rulesets/basic.xml",
-         "pmd/rulesets/braces.xml",
-		"pmd/rulesets/codesize.xml",
-		"pmd/rulesets/controversial.xml",
-		"pmd/rulesets/coupling.xml",
-		"pmd/rulesets/design.xml",
-		"pmd/rulesets/favorites.xml",
-		"pmd/rulesets/finalizers.xml",
-		"pmd/rulesets/imports.xml",
-		"pmd/rulesets/javabeans.xml",
-		"pmd/rulesets/junit.xml",
-		"pmd/rulesets/naming.xml",
-		"pmd/rulesets/newrules.xml",
-		"pmd/rulesets/rulesets.properties",
-		"pmd/rulesets/scratchpad.xml",
-		"pmd/rulesets/strictexception.xml",
-		"pmd/rulesets/strings.xml",
-		"pmd/rulesets/unusedcode.xml"
+    "pmd/rulesets/java/basic.xml",
+    "pmd/rulesets/java/braces.xml",
+		"pmd/rulesets/java/codesize.xml",
+		"pmd/rulesets/java/controversial.xml",
+		"pmd/rulesets/java/design.xml",
+		"pmd/rulesets/java/finalizers.xml",
+		"pmd/rulesets/java/imports.xml",
+		"pmd/rulesets/java/javabeans.xml",
+		"pmd/rulesets/java/junit.xml",
+		"pmd/rulesets/java/naming.xml",
+		"pmd/rulesets/java/strictexception.xml",
+		"pmd/rulesets/java/strings.xml",
+		"pmd/rulesets/java/unusedcode.xml"
   output
-    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+    stdout digest 0x489b9c137c05ceb8b96e64486e4a534399cbf51f;
  
 size large args "@pmd/large.lst","text",
-        "pmd/rulesets/basic.xml",
-        "pmd/rulesets/braces.xml",
-		"pmd/rulesets/codesize.xml",
-		"pmd/rulesets/controversial.xml",
-		"pmd/rulesets/coupling.xml",
-		"pmd/rulesets/design.xml",
-		"pmd/rulesets/favorites.xml",
-		"pmd/rulesets/finalizers.xml",
-		"pmd/rulesets/imports.xml",
-		"pmd/rulesets/javabeans.xml",
-		"pmd/rulesets/junit.xml",
-		"pmd/rulesets/naming.xml",
-		"pmd/rulesets/newrules.xml",
-		"pmd/rulesets/rulesets.properties",
-		"pmd/rulesets/scratchpad.xml",
-		"pmd/rulesets/strictexception.xml",
-		"pmd/rulesets/strings.xml",
-		"pmd/rulesets/unusedcode.xml"
+    "pmd/rulesets/java/basic.xml",
+    "pmd/rulesets/java/braces.xml",
+		"pmd/rulesets/java/codesize.xml",
+		"pmd/rulesets/java/controversial.xml",
+		"pmd/rulesets/java/design.xml",
+		"pmd/rulesets/java/finalizers.xml",
+		"pmd/rulesets/java/imports.xml",
+		"pmd/rulesets/java/javabeans.xml",
+		"pmd/rulesets/java/junit.xml",
+		"pmd/rulesets/java/naming.xml",
+		"pmd/rulesets/java/strictexception.xml",
+		"pmd/rulesets/java/strings.xml",
+		"pmd/rulesets/java/unusedcode.xml"
   output 
-    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+    stdout digest 0x93b4bf7043d2a6131c6e7f86a5a39466fa3872f5;
 
 description
   short		"A source code analyzer for Java",
@@ -79,7 +62,7 @@ description
   copyright	"Copyright (c) 2003, InfoEther, LLC",
   author	"Tom Copeland",
   license	"BSD-style",
-  url		"http://pmd.sourceforge.net/",
-  version	"4.2.5",
+  url		"https://pmd.github.io",
+  version	"5.8.1",
   threads	"Externally single-threaded.  Internally multi-threaded; creating workers according to number of available processors.",
   repeats	"Single iteration checks numerous sources file against 18 coding rules";

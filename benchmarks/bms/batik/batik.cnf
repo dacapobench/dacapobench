@@ -1,7 +1,7 @@
 benchmark batik
   class org.dacapo.harness.Batik
   thread-model single
-  jars "batik-all.jar", "xml-apis-ext.jar","xml-apis.jar", "crimson-1.1.3.jar", "xerces_2_5_0.jar", "xalan-2.6.0.jar";
+  jars "batik-all-1.9.jar", "xml-apis-ext-1.3.04.jar","xml-apis-1.3.04.jar", "crimson-1.1.3.jar", "xercesImpl-2.9.1.jar", "xalan-2.7.2.jar", "serializer-2.7.2.jar", "xmlgraphics-commons-2.2.jar";
 
 /*
  * Validation currently limited to checking existence of output file
@@ -40,6 +40,6 @@ description
   copyright  "Copyright (C) 2000 The Apache Software Foundation",
   license    "Apache License, Version 2.0",
   url        "http://xml.apache.org/batik/",
-  version    "1.7",
+  version    "1.9",
   threads    "Externally single-threaded.  Internally multi-threaded.";
 

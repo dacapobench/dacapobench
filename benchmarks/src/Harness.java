@@ -5,8 +5,8 @@
  * You may obtain the license at
  * 
  *    http://www.opensource.org/licenses/apache2.0.php
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Harness.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date: $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Harness.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 import java.io.File;
 import java.lang.reflect.Method;
@@ -20,7 +20,7 @@ public class Harness {
 
   // The DaCapo Harness is in a separate library within the dacapo.jar
   // allowing a separate class loader to be used for loading the dacapo harness
-  private static final String HARNESS_PATH = "harness/";
+  private static final String HARNESS_PATH = "org/dacapo/harness";
   private static final String HARNESS_CLASS = "org.dacapo.harness.TestHarness";
   private static final String HARNESS_METHOD = "main";
 

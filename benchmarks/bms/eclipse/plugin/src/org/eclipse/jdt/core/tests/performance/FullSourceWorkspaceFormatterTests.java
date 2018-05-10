@@ -26,8 +26,8 @@ import org.eclipse.jdt.internal.formatter.DefaultCodeFormatter;
  *    eclipse-Automated-Tests-3.5.1.zip
  *  which can be downloaded from the eclipse web site
  *  
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: FullSourceWorkspaceFormatterTests.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: FullSourceWorkspaceFormatterTests.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class FullSourceWorkspaceFormatterTests extends FullSourceWorkspaceTests {
 

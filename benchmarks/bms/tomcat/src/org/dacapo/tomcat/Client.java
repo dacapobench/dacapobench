@@ -21,8 +21,8 @@ import java.util.List;
  * Each client iterates through a list of queries for a given number of
  * iterations, using a single session context.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Client.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Client.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Client implements Runnable {
 
@@ -37,27 +37,27 @@ public class Client implements Runnable {
    * The pages to iterate through
    */
   private final List<Page> pages = Arrays.asList(
-      new HttpGet("/examples/jsp/jsp2/el/basic-arithmetic.jsp","396eaab04e83090b4d4b259eeca17a5990b7fd73"),
-      new HttpGet("/examples/jsp/jsp2/el/basic-comparisons.jsp","2b8b76a06d5b9d3be2ed4c80efcab2adaaad880c"),
-      new HttpGet("/examples/jsp/jsp2/el/implicit-objects.jsp?foo=bar","e799ace810ab35a0b56627ddd276e4ad35dbaff4"),
-      new HttpGet("/examples/jsp/jsp2/el/functions.jsp?foo=JSP+2.0","c30b0bc98277ad4c2ce48388b3017873f9ca6c9b"),
-      new HttpGet("/examples/jsp/jsp2/simpletag/hello.jsp","b741884a658f677c7223296c6138089043030024"),
-      new HttpGet("/examples/jsp/jsp2/simpletag/repeat.jsp","a171bec81dbabd3ad22f4694e54c79d82c5286b9"),
-      new HttpGet("/examples/jsp/jsp2/simpletag/book.jsp","56044c60aa6744e100033ac7ee1d7e8a11f7d803"),
-      new HttpGet("/examples/jsp/jsp2/tagfiles/hello.jsp","5117780dcff2717856acf34424a37bea277e6d48"),
-      new HttpGet("/examples/jsp/jsp2/tagfiles/panel.jsp","dc67adddb6a2b1f97f0d0991034a88bec8a02009"),
-      new HttpGet("/examples/jsp/jsp2/tagfiles/products.jsp","96d0f521b94868a2450735a453de19753ce4df6e"),
+      new HttpGet("/examples/jsp/jsp2/el/basic-arithmetic.jsp","dc3db1fb460a427ad6aef0b71d42319213a81f67"),
+      new HttpGet("/examples/jsp/jsp2/el/basic-comparisons.jsp","7ea08cc03fe9ff5d3cdd7cec7ae5dc1badc2da60"),
+      new HttpGet("/examples/jsp/jsp2/el/implicit-objects.jsp?foo=bar","fe7fb232248ecc93f5991cfc1b71c55f99ca4d2e"),
+      new HttpGet("/examples/jsp/jsp2/el/functions.jsp?foo=JSP+2.0","880dab5554db41d30c52c86ad016b3e7b4fc25ff"),
+      new HttpGet("/examples/jsp/jsp2/simpletag/hello.jsp","fa2cc0fd8bf403beb0e2b55b282b2a9c1e1d8f01"),
+      new HttpGet("/examples/jsp/jsp2/simpletag/repeat.jsp","5f7c6a02f0307f082015d35ed03cf6ff55bc88e3"),
+      new HttpGet("/examples/jsp/jsp2/simpletag/book.jsp","070c930c7c21b2a9ebd56c4e2eb529859e58f0bb"),
+      new HttpGet("/examples/jsp/jsp2/tagfiles/hello.jsp","997ebe20a346b21ce59550d05220ef90dd7d892e"),
+      new HttpGet("/examples/jsp/jsp2/tagfiles/panel.jsp","cd34787cd5ee0f8c526a65f51851b6441ab8b3d3"),
+      new HttpGet("/examples/jsp/jsp2/tagfiles/products.jsp","fb9cf67a579e2af4b6b10065102936f64ce86859"),
 
       // Prints the date - don't validate
       new HttpGet("/examples/jsp/jsp2/jspx/basic.jspx",200),
-      new HttpGet("/examples/jsp/jsp2/jspx/svgexample.html",200,"2cc0bde1f9dcdbfdbd2a26ccd7addfce5c332a45"),
+      new HttpGet("/examples/jsp/jsp2/jspx/svgexample.html",200,"c32e91590a3e031b94cd992fd6fd458960ffb191"),
       new HttpGet("/examples/jsp/jsp2/jspx/textRotate.jspx?name=JSPX",200,"62d28df98503af07933c280c991d2742edc5f9f9"),
-      new HttpGet("/examples/jsp/jsp2/jspattribute/jspattribute.jsp","deafbfc6b6d74013c8684af4ff6caf0f713fcb82"),
+      new HttpGet("/examples/jsp/jsp2/jspattribute/jspattribute.jsp","b04951dbbbaef1976f0d0bb31bee982c03a2c212"),
 
       // Shuffle is by definition dynamic
       new HttpGet("/examples/jsp/jsp2/jspattribute/shuffle.jsp",200),
-      new HttpGet("/examples/jsp/jsp2/misc/dynamicattrs.jsp","30d42a712e2d336fb6ea84e550d592a38879dde2"),
-      new HttpGet("/examples/jsp/jsp2/misc/config.jsp","549154d36f75580e2ab018d6b67113a39cd67788"),
+      new HttpGet("/examples/jsp/jsp2/misc/dynamicattrs.jsp","84097bf8eb796a6c6b4c7c0f9ba755955ee1d459"),
+      new HttpGet("/examples/jsp/jsp2/misc/config.jsp","9c09e106a8d1d737c4ebdcebbecc0b0e55440238"),
 
       // Number guessing game
       new NumGuess(),
@@ -69,8 +69,8 @@ public class Client implements Runnable {
       new HttpGet("/examples/jsp/snp/snoop.jsp",200),
 
       new HttpGet("/examples/jsp/error/error.html",200,"7a4eee413a6d4ebc66baca65c1fcf4c2dd1e9904"),
-      new HttpGet("/examples/jsp/error/err.jsp?name=audi&submit=Submit",500,"7f207b1e98367e0ee43056f5a242421a46d82eb9"),
-      new HttpGet("/examples/jsp/error/err.jsp?name=integra&submit=Submit",200,"13fd4b057c42253a761c0a6499b89d314c09b2c2"),
+      new HttpGet("/examples/jsp/error/err.jsp?name=audi&submit=Submit",500,"4b5b51a41a2720387c089e6f830684578bc40393"),
+      new HttpGet("/examples/jsp/error/err.jsp?name=integra&submit=Submit",200,"520431c6f0c3a42c33eff68cf4cf89ceda9c074c"),
 
       /*
        * The following group of methods form a  adding items to a shopping cart
@@ -78,13 +78,13 @@ public class Client implements Runnable {
        * session across several iterations through this list, we should leave the session
        * as we find it.
        */
-      new HttpGet("/examples/jsp/sessions/carts.html",200,"3754d762eca41dc2eb001f98a4707ea38f2c5433"),
-      new HttpPost("/examples/jsp/sessions/carts.jsp?item=NIN+CD&submit=add",200,"3f78ce05a2e8f07aa4f94f19538c28971695d86d"),
-      new HttpPost("/examples/jsp/sessions/carts.jsp?item=JSP+Book&submit=add",200,"7ccdb3cec3da190897151937bf3b9c74967d48db"),
-      new HttpPost("/examples/jsp/sessions/carts.jsp?item=Love+life&submit=add",200,"5f3ab0d1a3beea9335efe9145f833f9d2c394bdd"),
-      new HttpPost("/examples/jsp/sessions/carts.jsp?item=NIN+CD&submit=remove",200,"37eebdc94502e7e68c4dba3ad92ebcea1854a8a5"),
-      new HttpPost("/examples/jsp/sessions/carts.jsp?item=JSP+Book&submit=remove",200,"e0ff09f114b563e50348dae09ae51af519318741"),
-      new HttpPost("/examples/jsp/sessions/carts.jsp?item=Love+life&submit=remove",200,"3b21b228c817c58439223e190f780704f20798f1"),
+      new HttpGet("/examples/jsp/sessions/carts.html",200,"91ec746482c18aa26f6b155ceedc584c917c6f01"),
+      new HttpPost("/examples/jsp/sessions/carts.jsp?item=NIN+CD&submit=add",200,"a21a3e287b1237e7007e6e53d9ec0093b23f1780"),
+      new HttpPost("/examples/jsp/sessions/carts.jsp?item=JSP+Book&submit=add",200,"bad7c7ec9be65562d3f07c395deee01951bba130"),
+      new HttpPost("/examples/jsp/sessions/carts.jsp?item=Love+life&submit=add",200,"9750717cae0d8efd6367867e9d5aa37ddfed0d14"),
+      new HttpPost("/examples/jsp/sessions/carts.jsp?item=NIN+CD&submit=remove",200,"487e47c9090a39298dd1bdd40b8f2cfc1e40890c"),
+      new HttpPost("/examples/jsp/sessions/carts.jsp?item=JSP+Book&submit=remove",200,"8ab2bc0c1a2470b5c4a7fb29e4312117e1336e7b"),
+      new HttpPost("/examples/jsp/sessions/carts.jsp?item=Love+life&submit=remove",200,"572d089d7d6d2e209e4f82f0297737cefd88ea13"),
 
       /*
        * The validation here is exhibiting weirdness - TODO fix before release
@@ -92,8 +92,8 @@ public class Client implements Runnable {
        * Looks so far like a bug in tomcat :-/
        */
       new HttpGet("/examples/jsp/checkbox/check.html",200,"7a8cff196197a6ed7562a45c7844ac6bf99b02a7"),
-      new HttpGet("/examples/jsp/colors/colors.html","9d87b22161bf2849821d81e5e36eb4be18025719"),
-      new HttpGet("/examples/jsp/cal/login.html","326bcc06b3ffd9343b9651fcba5f83aaa0866c4d"),
+      new HttpGet("/examples/jsp/colors/colors.html","3f78993d965d6ce5c46663a44771f97d3eeea16a"),
+      new HttpGet("/examples/jsp/cal/login.html","b1de3498ea083c6df65baf2b76ab8e911594c6d8"),
 
       // Shows the current time, so can't be digested
       new HttpGet("/examples/jsp/include/include.jsp",200),
@@ -102,14 +102,14 @@ public class Client implements Runnable {
       new HttpGet("/examples/jsp/forward/forward.jsp",200),
 
       // Just shows the "plugin not accepted' response
-      new HttpGet("/examples/jsp/plugin/plugin.jsp",200,"6f4fb4e4b400200b1a457d6450009ad1ba2c7c4d"),
-      new HttpGet("/examples/jsp/jsptoserv/jsptoservlet.jsp",200,"721d04e5831b5e8a4889d08026b6ed101603b74f"),
+      new HttpGet("/examples/jsp/plugin/plugin.jsp",200,"032d12a8e82f26b1495ff0c7a26876b951b78d3f"),
+      new HttpGet("/examples/jsp/jsptoserv/jsptoservlet.jsp",200,"e3546b90c41561db4f0fca4ca7115112a11d0506"),
 
       // Writes the date
       new HttpGet("/examples/jsp/xml/xml.jsp",200),
-      new HttpGet("/examples/jsp/tagplugin/if.jsp",200,"ca82f131bbb4a0ce4eb4f56260b0e11644a1a467"),
-      new HttpGet("/examples/jsp/tagplugin/foreach.jsp",200,"3f4c255def31a491097fcc3047c86fc65cea03e8"),
-      new HttpGet("/examples/jsp/tagplugin/choose.jsp",200,"6199be21e61e279106a59479f93221d414f2b689")
+      new HttpGet("/examples/jsp/tagplugin/if.jsp",200,"c35432566834ada8b9362af6307093ae4c2dd185"),
+      new HttpGet("/examples/jsp/tagplugin/foreach.jsp",200,"7380ee5da006fe29df4baca0e38b6f754cc5303f"),
+      new HttpGet("/examples/jsp/tagplugin/choose.jsp",200,"e4a24b5eb600085105a532105f104cf0b8cad48d")
   );
 
   /**

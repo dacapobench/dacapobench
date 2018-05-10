@@ -17,13 +17,14 @@ import org.dacapo.parser.Config;
 /**
  * Dacapo benchmark harness for tradebeans.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Tradebeans.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Tradebeans.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 
 public class Tradebeans extends Benchmark {
 
   private Method initializeMethod;
+  private Method shutdownMethod;
 
   public Tradebeans(Config config, File scratch) throws Exception {
     super(config, scratch, false);
@@ -32,6 +33,7 @@ public class Tradebeans extends Benchmark {
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
     this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, Integer.TYPE, String.class, Boolean.TYPE });
     this.method = clazz.getMethod("performIteration", new Class[] {});
+    this.shutdownMethod = clazz.getMethod("shutdown", new Class[] {});
   }
 
   @Override
@@ -50,10 +52,15 @@ public class Tradebeans extends Benchmark {
   }
 
   public void cleanup() {
+    try {
+      shutdownMethod.invoke(null);
+    }catch (Exception e) {
+      e.printStackTrace();
+    }
     System.out.println("Shutting down Geronimo...");
     if (!getPreserve()) {
       deleteTree(new File(scratch, "tradebeans"));
-      deleteTree(new File(scratch, "geronimo-jetty6-minimal-2.1.4"));
+      deleteTree(new File(scratch, "geronimo-tomcat7-minimal-3.0.1"));
     }
   }
 

@@ -26,24 +26,28 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
+
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.FilterIndexReader;
+//import org.apache.lucene.index.FilterIndexReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Searcher;
-import org.apache.lucene.search.TopDocCollector;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.search.TopDocsCollector;
+import org.apache.lucene.search.TopScoreDocCollector;
 
 /**
  * Simple command-line based search demo.
  * 
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Search.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Search.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Search {
 
@@ -57,7 +61,7 @@ public class Search {
    * memory. If all of the fields contain only a single token, then the norms
    * are all identical, then single norm vector may be shared.
    */
-  private static class OneNormsReader extends FilterIndexReader {
+  /*private static class OneNormsReader extends FilterIndexReader {
     private String field;
 
     public OneNormsReader(IndexReader in, String field) {
@@ -68,14 +72,15 @@ public class Search {
     public byte[] norms(String field) throws IOException {
       return in.norms(this.field);
     }
-  }
+  }*/
 
   public Search() {
   }
 
   /** Simple command-line based search demo. */
   public void main(String[] args) throws Exception {
-    String usage = "Usage:\tjava org.dacapo.lusearch.Search [-index dir] [-field f] [-repeat n] [-queries file] [-raw] [-norms field] [-paging hitsPerPage]";
+    String usage = "Usage:\tjava org.dacapo.lusearch.Search [-ind" +
+            "ex dir] [-field f] [-repeat n] [-queries file] [-raw] [-norms field] [-paging hitsPerPage]";
     usage += "\n\tSpecify 'false' for hitsPerPage to use streaming instead of paging search.";
     if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
       System.out.println(usage);
@@ -192,8 +197,8 @@ public class Search {
     int hitsPerPage;
     boolean raw;
 
-    IndexReader reader;
-    Searcher searcher;
+    DirectoryReader reader;
+    IndexSearcher searcher;
     BufferedReader in;
     PrintWriter out;
 
@@ -204,9 +209,9 @@ public class Search {
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
       try {
-        reader = IndexReader.open(index);
-        if (normsField != null)
-          reader = new OneNormsReader(reader, normsField);
+        reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
+        /*if (normsField != null)
+          reader = new OneNormsReader(reader, normsField);*/
         searcher = new IndexSearcher(reader);
 
         String query = queryBase + (id < 10 ? "00" : (id < 100 ? "0" : "")) + id + ".txt";
@@ -238,7 +243,7 @@ public class Search {
         } catch (Exception e) {
           e.printStackTrace();
         }
-        searcher.search(query, null, 10);
+        searcher.search(query, 10);
 
         doPagingSearch(query);
       }
@@ -269,7 +274,7 @@ public class Search {
     public void doPagingSearch(Query query) throws IOException {
 
       // Collect enough docs to show 5 pages
-      TopDocCollector collector = new TopDocCollector(MAX_DOCS_TO_COLLECT);
+      TopDocsCollector<ScoreDoc> collector =  TopScoreDocCollector.create(MAX_DOCS_TO_COLLECT);
       searcher.search(query, collector);
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
 

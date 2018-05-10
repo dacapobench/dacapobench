@@ -8,9 +8,14 @@
  */
 package org.dacapo.harness;
 
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,8 +25,8 @@ import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
 /**
- * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * @id $Id: Pmd.java 738 2009-12-24 00:19:36Z steveb-oss $
+ * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
+ * id: $Id: Pmd.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Pmd extends Benchmark {
 
@@ -42,48 +47,78 @@ public class Pmd extends Benchmark {
      * set.
      */
     System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+
+    // Set System property so that PMD won't call System.exit() after run.
+    Class pmdcli = Class.forName("net.sourceforge.pmd.cli.PMDCommandLineInterface", true, loader);
+    System.setProperty((String)pmdcli.getField("NO_EXIT_AFTER_RUN").get(null), "true");
+  }
+
+  /**
+   * Generate a new file list that has the scrath directory path
+   * prepended to each file in the list
+   */
+  private File prepended_filelist(String filelist_path) {
+    try {
+      File fl = new File(filelist_path);
+      BufferedReader reader = new BufferedReader(new FileReader(fl));
+      List<String> lst = new ArrayList<String>();
+      for (String l = reader.readLine(); l != null; l = reader.readLine())
+        lst.add(fileInScratch(l));
+      reader.close();
+
+
+      fl.renameTo(new File(fl.getParentFile(), fl.getName() + ".orig"));
+
+      File newfl = new File(filelist_path);
+      newfl.createNewFile();
+      BufferedWriter writer = new BufferedWriter(new FileWriter(newfl));
+
+      for (Iterator<String> iter = lst.iterator(); iter.hasNext();)
+        writer.write(iter.next() + "\n");
+      writer.close();
+
+      return newfl;
+
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException("File " + filelist_path + " error: " + e);
+    } catch (IOException e) {
+      throw new RuntimeException("File " + filelist_path + " error: " + e);
+    }
   }
 
   public void prepare(String size) {
-    args = config.getArgs(size);
-    if (args[0].charAt(0) == '@')
-      args[0] = collectFilesFromFile(fileInScratch(args[0].substring(1)));
-    for (int i = 2; i < args.length; i++) {
-      if (args[i].charAt(0) != '-')
-        args[i] = fileInScratch(args[i]);
-    }
+      String [] config_args = config.getArgs(size);
+      args = new String[13];
+
+      args[0] = "-filelist";
+      args[1] = prepended_filelist(fileInScratch(config_args[0].substring(1))).getPath();
+
+      args[2] = "-format";
+      args[3] = "text";
+
+      // Java 1.6
+      args[4] = "-language";
+      args[5] = "java";
+      args[6] = "-version";
+      args[7] = "1.6";
+
+      // if this is set to true, PMD will exit with status 4 on finding rule violations.
+      // however we don't care about rule violations for benchmarking
+      args[8] = "-failOnViolation";
+      args[9] = "false";
+
+      args[10] = "-shortnames";
+
+      args[11] = "-rulesets";
+      List<String> rulesets = new ArrayList<String>(args.length - 2);
+      for (int i = 2; i < config_args.length; i ++) {
+        if (config_args[i].charAt(0) != '-')
+          rulesets.add(fileInScratch(config_args[i]));
+      }
+      args[12] = String.join(",", rulesets);
   }
 
   public void iterate(String size) throws Exception {
     method.invoke(null, (Object) args);
-  }
-
-  private String collectFilesFromFile(String inputFileName) {
-    try {
-      java.io.BufferedReader reader = new java.io.BufferedReader(new InputStreamReader(new FileInputStream(inputFileName)));
-
-      List<File> files = new ArrayList<File>();
-
-      for (String l = reader.readLine(); l != null; l = reader.readLine()) {
-        files.add(new File(scratch, l));
-      }
-      return commaSeparate(files);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException("File " + inputFileName + " error: " + e);
-    } catch (java.io.IOException e) {
-      throw new RuntimeException("File " + inputFileName + " error: " + e);
-    }
-
-  }
-
-  private static String commaSeparate(List<File> list) {
-    String result = "";
-    for (Iterator<File> i = list.iterator(); i.hasNext();) {
-      String s = i.next().getPath();
-      result += s;
-      if (i.hasNext())
-        result += ",";
-    }
-    return result;
   }
 }

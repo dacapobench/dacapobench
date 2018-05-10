@@ -9,9 +9,8 @@
     
     <property name="base-dir" value="harness"/>
     <property name="src" value="${base-dir}/src"/>
-    <property name="output-parent-dir" value="${base-dir}/dist"/>
-    <property name="output-dir" value="${output-parent-dir}/harness"/>
-    <property name="output-doc-dir" value="${output-parent-dir}/doc/harness"/>
+    <property name="output-dir" value="${base-dir}/dist"/>
+    <property name="output-doc-dir" value="${output-dir}/doc/harness"/>
     <property name="build-dir" value="${base-dir}/build"/>
     
     <property name="harness-downloads" value="${base-dir}/downloads"/>
@@ -25,7 +24,7 @@
     <target name="all" depends="clean,init,harness,jar"/>
     
     <target name="clean">
-        <delete dir="${output-parent-dir}"/>
+        <delete dir="${output-dir}"/>
         <delete dir="${build-dir}"/>
     </target>
     
@@ -60,10 +59,11 @@
         <!-- include digest --> 
         <unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
-        <javadoc sourcepath="${src}" destdir="${output-doc-dir}" />
+        <javadoc sourcepath="${src}" destdir="${output-doc-dir}" classpath="${output-dir}"
+                additionalparam="-Xdoclint:none"/>
     </target>
     
     <target name="jar">
-        <jar jarfile="${jar-target}" basedir="${output-parent-dir}" update="true"/>
+        <jar jarfile="${build.target-jar}" basedir="${output-dir}" update="true"/>
     </target>
 </project>

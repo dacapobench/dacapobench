@@ -78,13 +78,13 @@
     </target>
 
     <!-- junit -->
-    <property name="junit-jar" value="${lib-base}/junit/dist/jar/junit-3.8.1.jar"/>
+    <property name="junit-jar" value="${lib-base}/junit/dist/jar/junit-4.12.jar"/>
     <target name="junit">
         <ant antfile="${lib-base}/junit/build.xml"/>
     </target>
 
     <!-- h2-->
-    <property name="h2-version" value="1.2.121"/>
+    <property name="h2-version" value="1.4.196"/>
     <property name="h2-jar" value="${lib-base}/h2/dist/jar/h2-${h2-version}.jar"/>
     <target name="h2">
         <ant antfile="${lib-base}/h2/build.xml"/>
@@ -92,8 +92,9 @@
 
     <!-- lucene -->
     <property name="lucene-jars" value="${lib-base}/lucene/dist/jar"/>
-    <property name="lucene-core-jar-name" value="lucene-core-2.4.jar"/>
-    <property name="lucene-demos-jar-name" value="lucene-demos-2.4.jar"/>
+    <property name="lucene-core-jar-name" value="lucene-core-7.1.0-SNAPSHOT.jar"/>
+    <property name="lucene-demos-jar-name" value="lucene-demo-7.1.0-SNAPSHOT.jar"/>
+    <property name="lucene-queryparser-jar-name" value="lucene-queryparser-7.1.0-SNAPSHOT.jar"/>
     <target name="lucene">
         <ant antfile="${lib-base}/lucene/build.xml"/>
     </target>
