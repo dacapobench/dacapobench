@@ -59,14 +59,21 @@ The suite is built using ant 1.10.  You will need the following tools:
 
 For more information, run `ant -p` in the benchmarks directory.
 
+## Customization
 
+It is possible to use callbacks to run code before a benchmark starts, when it stops, and when the run has completed.
+To do so, extend the class `Callback` (see the file `harness/src/MyCallback.java` for an example).
+
+To run a benchmark with your callback, run:
+
+    java -jar dacapo.jar -c <callback> <benchmark>
 
 ## Source Code Structure
 
 ### `harness` (The benchmark harness)
 
 This directory includes all of the source code for the DaCapo harness, which is used to invoke the benchmarks, validate output, etc.
-	
+
 	
 ### `bms` (The benchmarks)
 
