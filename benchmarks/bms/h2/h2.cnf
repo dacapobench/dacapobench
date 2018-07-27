@@ -13,21 +13,21 @@ size small args
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
 size default args
-		"--total-transactions","4000",
+		"--total-transactions","16000",
 		"--scale","8",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
-  thread-limit 4000
-  output stdout digest 0x479c676628ca31f3364af094d392f86183bbf8cd,
+  thread-limit 16000
+  output stdout digest 0xe9602dc4b04b80354dd93f2f958fc0af9c6ce121,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args 
-		"--total-transactions","32000",
-		"--scale","8",
+		"--total-transactions","64000",
+		"--scale","16",
 		"--cleanup-in-iteration",
 		"--create-suffix", ";MVCC=true"
   thread-limit 64000
-  output stdout digest 0xe095f0c0da08af9e7419a7c1e30db59a0e11cb15,
+  output stdout digest 0x0d72a7e0103ffe0f37c76b5dee6c4c7f2adbee59,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args 
@@ -47,6 +47,6 @@ description
   author	"TPC-C like workload authored by The Apache Software Foundation, and Database authored by H2",
   license	"Apache License, Version 2.0 covering TPC-C like workload, and Eclipse Public License Version 1.0 covering H2",
   url		"http://db.apache.org/derby/ and http://www.h2database.com",
-  version	"1.8",
+  version	"10.14.1.0 and 1.4.196",
   repeats	"<totalTransactions> evenly divided among the hardware threads.",
   threads   "One client thread per hardware thread, the queries processes exhibit some contention between threads.";
