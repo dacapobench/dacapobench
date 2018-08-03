@@ -434,6 +434,7 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="tradesoap" depends="init,harness">
         <build.bm benchmark="tradesoap"/>
     </target>
+    <target name="daytrader" depends="tradebeans, tradesoap"/>
     <target name="xalan" depends="init,harness">
         <build.bm benchmark="xalan"/>
     </target>
