@@ -10,16 +10,9 @@ size small args "10"
     stdout digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "100"
+size default args "3200"
   threads 1
-  thread-limit 100
-  output
-    stdout digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
-    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-
-size large args "1000"
-  threads 1
-  thread-limit 1000
+  thread-limit 3200
   output
     stdout digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
