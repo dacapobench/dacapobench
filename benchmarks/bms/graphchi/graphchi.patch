@@ -1,0 +1,60 @@
+diff --git orig/pom.xml ./pom.xml
+index 52d0b86..1a7857a 100644
+--- orig/pom.xml
++++ ./pom.xml
+@@ -47,7 +47,7 @@
+     <dependency>
+       <groupId>org.scala-lang</groupId>
+       <artifactId>scala-library</artifactId>
+-      <version>2.9.0-1</version>
++      <version>2.11.2</version>
+     </dependency>
+     <dependency>
+       <groupId>mysql</groupId>
+@@ -73,11 +73,6 @@
+       <artifactId>hadoop-core</artifactId>
+       <version>0.20.2</version>
+     </dependency>
+-    <dependency>
+-      <groupId>org.apache.commons</groupId>
+-      <artifactId>commons-math</artifactId>
+-      <version>2.0</version>
+-    </dependency>
+     <dependency>
+       <groupId>org.apache.commons</groupId>
+       <artifactId>commons-math</artifactId>
+diff --git orig/src/main/java/edu/cmu/graphchi/ChiLogger.java ./src/main/java/edu/cmu/graphchi/ChiLogger.java
+index fd67754..0c7ac42 100644
+--- orig/src/main/java/edu/cmu/graphchi/ChiLogger.java
++++ ./src/main/java/edu/cmu/graphchi/ChiLogger.java
+@@ -63,18 +63,18 @@ public class ChiLogger {
+             StringBuilder sb = new StringBuilder();
+ 
+             // Minimize memory allocations here.
+-            dat.setTime(record.getMillis());
+-            args[0] = dat;
+-
+-
+-            // Date and time
+-            StringBuffer text = new StringBuffer();
+-            if (formatter == null) {
+-                formatter = new MessageFormat(format);
+-            }
+-            formatter.format(args, text, null);
+-            sb.append(text);
+-            sb.append(" ");
++            // dat.setTime(record.getMillis());
++            // args[0] = dat;
++
++
++            // // Date and time
++            // StringBuffer text = new StringBuffer();
++            // if (formatter == null) {
++            //     formatter = new MessageFormat(format);
++            // }
++            // formatter.format(args, text, null);
++            // sb.append(text);
++            // sb.append(" ");
+ 
+ 
+             // Logger name

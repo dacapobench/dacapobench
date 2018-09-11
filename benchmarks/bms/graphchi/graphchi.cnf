@@ -1,0 +1,18 @@
+benchmark graphchi
+  class org.dacapo.harness.GraphChi
+  thread-model per_cpu
+  jars "graphchi-0.2.2.jar";
+
+// TODO: calibrate & validate
+size netflix args "ALSMatrixFactorization", "${SCRATCH}/graphchi/netflix_mm", "10";
+size livejournal args "Pagerank", "${SCRATCH}/graphchi/soc-LiveJournal1.txt", "10", "edgelist";
+
+description
+  short	     "A disk-based graph computation engine.",
+  long       "A disk-based system for computing efficiently on graphs with billions of edges, by using parallel sliding windows method on smaller shards of graphs.",
+  copyright  "??",  // TBC
+  license    "??",  // TBC
+  url        "https://github.com/GraphChi/graphchi-java",
+  version    "0.2.2",
+  threads    "Explicitly multi-threaded, scaled to available processors.";
+
