@@ -10,8 +10,8 @@ size livejournal args "Pagerank", "${SCRATCH}/graphchi/soc-LiveJournal1.txt", "1
 description
   short	     "A disk-based graph computation engine.",
   long       "A disk-based system for computing efficiently on graphs with billions of edges, by using parallel sliding windows method on smaller shards of graphs.",
-  copyright  "??",  // TBC
-  license    "??",  // TBC
+  copyright  "Copyright 2012 Aapo Kyrola, Guy Blelloch, Carlos Guestrin / Carnegie Mellon University",
+  license    "Apache License, Version 2.0",
   url        "https://github.com/GraphChi/graphchi-java",
   version    "0.2.2",
   threads    "Explicitly multi-threaded, scaled to available processors.";
