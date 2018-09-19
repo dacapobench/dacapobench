@@ -1,0 +1,86 @@
+<!--
+ * Copyright (c) 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+ <project name="cassandra" default="all" basedir="../..">
+    <description>DaCapo Cassandra Benchmark</description>
+    <property file="dacapo.properties"/>
+
+    <property name="bm-name" value="cassandra"/>
+    <property name="bm-version" value="3.11.3"/>
+    <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
+    <property name="bm-git-url" value="http://git-wip-us.apache.org/repos/asf/cassandra.git"/>
+    <property name="bm-git-commit" value="cassandra-${bm-version}"/>
+
+    <import file="../common.xml"/>
+
+    <property name="ycsb-version" value="0.15.0"/>
+    <property name="ycsb-url" value="https://github.com/brianfrankcooper/YCSB/releases/download/${ycsb-version}"/>
+    <property name="ycsb-tgz" value="ycsb-${ycsb-version}.tar.gz"/>
+
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${ycsb-url}"/>
+            <param name="target-file" value="${ycsb-tgz}"/>
+        </antcall>
+    </target>
+
+    <property name="cassandra-build-top" value="${bm-build-dir}/cassandra-${bm-version}"/>
+
+    <target name="cassandra-build">    
+        <mkdir dir="${cassandra-build-top}"/>
+        <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
+        <exec executable="ant" dir="${cassandra-build-top}"/>
+    </target>
+
+    <target name="bm-build" depends="cassandra-build"/>
+
+    <property name="slf4j-version" value="1.7.25"/>
+    <property name="slf4j-url" value="https://www.slf4j.org/dist"/>
+    <property name="slf4j-tgz" value="slf4j-${slf4j-version}.tar.gz"/>
+
+    <target name="get-slf4j-simple-jar">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${slf4j-url}"/>
+            <param name="target-file" value="${slf4j-tgz}"/>
+        </antcall>
+        <untar src="${bm-downloads}/${slf4j-tgz}" dest="${bm-build-dir}" compression="gzip"/>
+        <property name="slf4j-dir" value="${bm-build-dir}/slf4j-${slf4j-version}"/>
+        <property name="slf4j-simple-jar" value="${slf4j-dir}/slf4j-simple-${slf4j-version}.jar"/>
+    </target>
+
+    <target name="ycsb" depends="get-slf4j-simple-jar">
+        <untar src="${bm-downloads}/${ycsb-tgz}" dest="${bm-build-dir}" compression="gzip"/>
+        <property name="ycsb-dir" value="${bm-build-dir}/ycsb-${ycsb-version}"/>
+    </target>
+
+    <target name="libs" depends="ycsb">
+        <!-- cassandra libs -->
+        <mkdir dir="${bm-jars}/cassandra"/>
+        <copy todir="${bm-jars}/cassandra">
+            <fileset dir="${cassandra-build-top}/build/lib/jars" includes="*.jar"/>
+        </copy>
+        <!-- ycsb libs -->
+        <mkdir dir="${bm-jars}/ycsb"/>
+        <echo message="ycsb-dir = ${ycsb-dir}"/>
+        <copy file="${slf4j-simple-jar}" todir="${bm-jars}/ycsb"/>
+        <copy todir="${bm-jars}/ycsb">
+            <fileset dir="${ycsb-dir}/lib" includes="*.jar"/>
+        </copy>
+        <copy todir="${bm-jars}/ycsb">
+            <fileset dir="${ycsb-dir}/cassandra-binding/lib" includes="*.jar"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="libs">
+        <copy file="${cassandra-build-top}/build/apache-cassandra-${bm-version}-SNAPSHOT.jar"
+            tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
+    </target>
+
+ </project>
