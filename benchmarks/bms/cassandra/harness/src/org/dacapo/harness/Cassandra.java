@@ -27,14 +27,6 @@ import org.dacapo.parser.Config;
 import org.apache.cassandra.service.EmbeddedCassandraService;
 
 public class Cassandra extends Benchmark {
-
-    private ClassLoader clCassandra;
-    private ClassLoader clYCSB;
-    private ClassLoader clOriginal;
-
-    private Class<?> clsCassandraDaemon;
-    private Method mtdCDStop;
-
     private String [] CASSANDRA_JARS = {
         "cassandra-3.11.3.jar",
         "cassandra-thrift-3.11.3.jar",
@@ -110,6 +102,19 @@ public class Cassandra extends Benchmark {
         "jackson-mapper-asl-1.9.4.jar"
     };
 
+    private ClassLoader clCassandra;
+    private ClassLoader clYCSB;
+    private ClassLoader clOriginal;
+
+    private File dirScratchJar;
+    private File dirLibSigar;
+    private File dirCassandraConf;
+    private File dirCassandraStorage;
+    private File dirCassandraLog;
+    private File ymlConf;
+    private File xmlLogback;
+    private EmbeddedCassandraService cassandra;
+
     public Cassandra(Config config, File scratch) throws Exception {
         super(config, scratch, false);
     }
@@ -134,16 +139,16 @@ public class Cassandra extends Benchmark {
         }
     }
 
-    private void startCassandra() {
+    private void setupCassandra() {
         clOriginal = Thread.currentThread().getContextClassLoader();
-        File dirScratchJar = new File(scratch, "jar");
-        File dirLibSigar = new File(scratch, "libsigar");
-        File dirCassandraConf = new File(scratch, "cassandra-conf");
-        File dirCassandraStorage = new File(scratch, "cassandra-storage");
-        File dirCassandraLog = new File(scratch, "cassandra-log");
+        dirScratchJar = new File(scratch, "jar");
+        dirLibSigar = new File(scratch, "libsigar");
+        dirCassandraConf = new File(scratch, "cassandra-conf");
+        dirCassandraStorage = new File(scratch, "cassandra-storage");
+        dirCassandraLog = new File(scratch, "cassandra-log");
 
-        File ymlConf = new File(dirCassandraConf, "cassandra.yaml");
-        File xmlLogback = new File(dirCassandraConf, "logback.xml");
+        ymlConf = new File(dirCassandraConf, "cassandra.yaml");
+        xmlLogback = new File(dirCassandraConf, "logback.xml");
 
         dirLibSigar.mkdir();
         dirCassandraConf.mkdir();
@@ -162,17 +167,11 @@ public class Cassandra extends Benchmark {
             System.setProperty("cassandra.config", ymlConf.toURI().toString());
             System.setProperty("cassandra.logback.configurationFile", xmlLogback.toString());
             System.setProperty("cassandra-foreground", "yes");
-            EmbeddedCassandraService cassandra = new EmbeddedCassandraService();
-            cassandra.start();
-
-            System.out.println("------------------------------ DaCapo ------------------------------");
-            System.out.println("Cassandra Daemon started.");
+            cassandra = new EmbeddedCassandraService();
         } catch (Exception e) {
             System.err.println("Exception during initialization: " + e.toString());
             e.printStackTrace();
             System.exit(-1);
-        } finally {
-            Thread.currentThread().setContextClassLoader(clOriginal);
         }
     }
 
@@ -181,7 +180,8 @@ public class Cassandra extends Benchmark {
         super.prepare(size);
 //        String[] cassandraArgs = config.getArgs(size);
 
-        startCassandra();
+        setupCassandra();
+        cassandra.start();
     }
 
     public void iterate(String size) throws Exception {
