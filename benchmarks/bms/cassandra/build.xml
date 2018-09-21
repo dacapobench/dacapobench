@@ -18,16 +18,34 @@
 
     <import file="../common.xml"/>
 
+    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+    <property name="mvn-exe" value="${mvn-home}/mvn"/>
+    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
+        <os family="windows"/>
+    </condition>
+
     <property name="ycsb-version" value="0.15.0"/>
-    <property name="ycsb-url" value="https://github.com/brianfrankcooper/YCSB/releases/download/${ycsb-version}"/>
+    <property name="ycsb-git-url" value="https://github.com/brianfrankcooper/YCSB.git"/>
+    <property name="ycsb-git-commit" value="${ycsb-version}"/>
     <property name="ycsb-tgz" value="ycsb-${ycsb-version}.tar.gz"/>
+
+    <property name="datastax-driver-version" value="3.6.0"/>
+    <property name="datastax-driver-url" value="https://repo1.maven.org/maven2/com/datastax/cassandra/cassandra-driver-core/${datastax-driver-version}"/>
+    <property name="datastax-driver-jar" value="cassandra-driver-core-${datastax-driver-version}.jar"/>
 
     <target name="source">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${ycsb-url}"/>
-            <param name="target-file" value="${ycsb-tgz}"/>
+            <param name="target-url" value="${datastax-driver-url}"/>
+            <param name="target-file" value="${datastax-driver-jar}"/>
         </antcall>
+        <antcall target="check-git-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="git-url" value="${ycsb-git-url}"/>
+			<param name="git-commit" value="${ycsb-git-commit}"/>
+			<param name="target-file" value="${ycsb-tgz}"/>
+			<param name="fail-on-error" value="true"/>
+		</antcall>
     </target>
 
     <property name="cassandra-build-top" value="${bm-build-dir}/cassandra-${bm-version}"/>
@@ -38,8 +56,18 @@
         <exec executable="ant" dir="${cassandra-build-top}"/>
     </target>
 
-    <target name="bm-build" depends="cassandra-build">
-        <property name="bm-harness-classpath" value="${cassandra-build-top}/build/classes/main"/>
+    <target name="ycsb-build" depends="get-slf4j-simple-jar">
+        <property name="ycsb-dir" value="${bm-build-dir}/ycsb-${ycsb-version}"/>
+        <mkdir dir="${ycsb-dir}"/>
+        <untar src="${bm-downloads}/${ycsb-tgz}" dest="${ycsb-dir}" compression="gzip"/>
+        <patch patchfile="${bm-files}/ycsb.patch" dir="${ycsb-dir}" strip="0" ignorewhitespace="yes"/>
+        <exec executable="${mvn-exe}" dir="${ycsb-dir}">
+            <arg line="-pl com.yahoo.ycsb:cassandra-binding dependency:copy-dependencies -am package -DskipTests"/>
+        </exec>
+    </target>
+
+    <target name="bm-build" depends="cassandra-build, ycsb-build">
+        <property name="bm-harness-classpath" value="${cassandra-build-top}/build/classes/main:${bm-downloads}/${datastax-driver-jar}"/>
     </target>
 
     <property name="slf4j-version" value="1.7.25"/>
@@ -57,29 +85,32 @@
         <property name="slf4j-simple-jar" value="${slf4j-dir}/slf4j-simple-${slf4j-version}.jar"/>
     </target>
 
-    <target name="ycsb" depends="get-slf4j-simple-jar">
-        <untar src="${bm-downloads}/${ycsb-tgz}" dest="${bm-build-dir}" compression="gzip"/>
-        <property name="ycsb-dir" value="${bm-build-dir}/ycsb-${ycsb-version}"/>
-    </target>
-
-    <target name="libs" depends="ycsb">
-        <!-- cassandra libs -->
+    <target name="libs">
         <copy todir="${bm-jars}">
-            <fileset dir="${cassandra-build-top}/lib" includes="*.jar"/>
+            <resources>
+                <!-- cassandra libs -->
+                <fileset dir="${cassandra-build-top}/lib" includes="*.jar"/>
+                <!-- datastax cassandra driver -->
+                <file file="${bm-downloads}/${datastax-driver-jar}"/>
+                <!-- ycsb libs -->
+                <file file="${slf4j-simple-jar}"/>
+                <file file="${ycsb-dir}/cassandra/target/cassandra-binding-${ycsb-version}.jar"/>
+                <fileset dir="${ycsb-dir}/cassandra/target/dependency" includes="*.jar"/>
+                <file file="${ycsb-dir}/core/target/core-${ycsb-version}.jar"/>
+                <fileset dir="${ycsb-dir}/core/target/dependency">
+                    <filename name="HdrHistogram-2.1.4.jar"/>
+                    <filename name="htrace-core4-4.1.0-incubating.jar"/>
+                    <filename name="jackson-core-asl-1.9.4.jar"/>
+                    <filename name="jackson-mapper-asl-1.9.4.jar"/>
+                </fileset>
+            </resources>
         </copy>
         <!-- cassandra libsigar dependency -->
         <zip destfile="${bm-dat}/libsigar.zip" basedir="${cassandra-build-top}/lib/sigar-bin"/>
         <!-- cassandra config (XXX: maybe put it in another target/directory) -->
         <zip destfile="${bm-dat}/cassandra-conf.zip" basedir="${cassandra-build-top}/conf"/>
-        <!-- ycsb libs -->
-        <echo message="ycsb-dir = ${ycsb-dir}"/>
-        <copy file="${slf4j-simple-jar}" todir="${bm-jars}"/>
-        <copy todir="${bm-jars}">
-            <fileset dir="${ycsb-dir}/lib" includes="*.jar"/>
-        </copy>
-        <copy todir="${bm-jars}">
-            <fileset dir="${ycsb-dir}/cassandra-binding/lib" includes="*.jar"/>
-        </copy>
+        <!-- ycsb workloads -->
+        <zip destfile="${bm-dat}/ycsb-workloads.zip" basedir="${ycsb-dir}/workloads"/>
     </target>
 
     <target name="jar" depends="libs">

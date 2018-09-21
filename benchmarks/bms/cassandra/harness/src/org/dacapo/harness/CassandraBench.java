@@ -9,7 +9,6 @@
 package org.dacapo.harness;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,12 +20,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.dacapo.harness.Benchmark;
+import org.apache.cassandra.config.DatabaseDescriptor;
 import org.dacapo.parser.Config;
 
 import org.apache.cassandra.service.EmbeddedCassandraService;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
 
-public class Cassandra extends Benchmark {
+public class CassandraBench extends Benchmark {
     private String [] CASSANDRA_JARS = {
         "cassandra-3.11.3.jar",
         "cassandra-thrift-3.11.3.jar",
@@ -81,6 +82,7 @@ public class Cassandra extends Benchmark {
         "snowball-stemmer-1.3.0.581.1.jar",
         "stream-2.5.2.jar",
         "thrift-server-0.3.7.jar",
+        "cassandra-driver-core-3.6.0.jar"
     };
 
     private String[] YCSB_JARS = {
@@ -111,11 +113,16 @@ public class Cassandra extends Benchmark {
     private File dirCassandraConf;
     private File dirCassandraStorage;
     private File dirCassandraLog;
+    private File dirYCSBWorkloads;
     private File ymlConf;
     private File xmlLogback;
     private EmbeddedCassandraService cassandra;
+    private String[] ycsbWorkloadArgs;
 
-    public Cassandra(Config config, File scratch) throws Exception {
+    Class<?> clsYCSBClient;
+    Method mtdYCSBClientMain;
+
+    public CassandraBench(Config config, File scratch) throws Exception {
         super(config, scratch, false);
     }
 
@@ -138,14 +145,13 @@ public class Cassandra extends Benchmark {
             throw e;
         }
     }
-
-    private void setupCassandra() {
-        clOriginal = Thread.currentThread().getContextClassLoader();
+    private void setupScratch() {
         dirScratchJar = new File(scratch, "jar");
         dirLibSigar = new File(scratch, "libsigar");
         dirCassandraConf = new File(scratch, "cassandra-conf");
         dirCassandraStorage = new File(scratch, "cassandra-storage");
         dirCassandraLog = new File(scratch, "cassandra-log");
+        dirYCSBWorkloads = new File(scratch, "ycsb-workloads");
 
         ymlConf = new File(dirCassandraConf, "cassandra.yaml");
         xmlLogback = new File(dirCassandraConf, "logback.xml");
@@ -154,10 +160,18 @@ public class Cassandra extends Benchmark {
         dirCassandraConf.mkdir();
         dirCassandraStorage.mkdir();
         dirCassandraLog.mkdir();
+        dirYCSBWorkloads.mkdir();
         try {
             Benchmark.unpackZipFileResource("dat/libsigar.zip", dirLibSigar);
             Benchmark.unpackZipFileResource("dat/cassandra-conf.zip", dirCassandraConf);
-
+            Benchmark.unpackZipFileResource("dat/ycsb-workloads.zip", dirYCSBWorkloads);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+    private void setupCassandra() {
+        try {
             // XXX: requires Java <= 1.8 to work; for later versions, use reflection API.
             addToSystemClassLoader(findJars(dirScratchJar, Arrays.asList(CASSANDRA_JARS)));
 
@@ -179,13 +193,67 @@ public class Cassandra extends Benchmark {
     protected void prepare(String size) throws Exception {
         super.prepare(size);
 //        String[] cassandraArgs = config.getArgs(size);
+        clOriginal = Thread.currentThread().getContextClassLoader();
+
+        setupScratch();
 
         setupCassandra();
         cassandra.start();
+
+        clYCSB = new URLClassLoader(findJars(dirScratchJar, Arrays.asList(YCSB_JARS))
+                                        .toArray(new URL[0]), clOriginal);
+        clsYCSBClient = clYCSB.loadClass("com.yahoo.ycsb.Client");
+        mtdYCSBClientMain = clsYCSBClient.getMethod("main", String[].class);
+        prepareYCSBArgs(size);
+        prepareYCSBCQL();
+    }
+
+    private void prepareYCSBCQL() {
+        Cluster cluster = Cluster.builder()
+                .addContactPoint("localhost")
+                .withPort(DatabaseDescriptor.getNativeTransportPort())
+                .build();
+        Session session = cluster.connect();
+        session.execute("CREATE KEYSPACE ycsb WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};");
+        session.execute("USE ycsb;");
+        session.execute("CREATE TABLE usertable (" +
+                            "y_id varchar primary key," +
+                            "field0 varchar," +
+                            "field1 varchar," +
+                            "field2 varchar," +
+                            "field3 varchar," +
+                            "field4 varchar," +
+                            "field5 varchar," +
+                            "field6 varchar," +
+                            "field7 varchar," +
+                            "field8 varchar," +
+                            "field9 varchar);");
+        session.close();
+    }
+
+    private void prepareYCSBArgs(String size) {
+        ArrayList<String> baseArgs = new ArrayList<String>(Arrays.asList(
+            "-db", "com.yahoo.ycsb.db.CassandraCQLClient",
+            "-p", "hosts=localhost"));
+        List<String> sizeArgs = Arrays.asList(config.getArgs(size));
+        File workload = new File(dirYCSBWorkloads, sizeArgs.get(0));
+        baseArgs.addAll(Arrays.asList("-P", workload.toString()));
+        baseArgs.addAll(sizeArgs.subList(1, sizeArgs.size()));
+        baseArgs.add(baseArgs.size(), "-t");
+        ycsbWorkloadArgs = baseArgs.toArray(new String[0]);
     }
 
     public void iterate(String size) throws Exception {
+        Thread.currentThread().setContextClassLoader(clYCSB);
 
+        // load workload
+        ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-load";
+        mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
+        
+        // run transactions
+        ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-t";
+        mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
+        System.out.println("DaCapo: finished iteration");
     }
 
     private static List<URL> findJars(File dir, List<String> jarNames) {
