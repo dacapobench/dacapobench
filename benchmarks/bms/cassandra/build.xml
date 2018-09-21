@@ -38,7 +38,9 @@
         <exec executable="ant" dir="${cassandra-build-top}"/>
     </target>
 
-    <target name="bm-build" depends="cassandra-build"/>
+    <target name="bm-build" depends="cassandra-build">
+        <property name="bm-harness-classpath" value="${cassandra-build-top}/build/classes/main"/>
+    </target>
 
     <property name="slf4j-version" value="1.7.25"/>
     <property name="slf4j-url" value="https://www.slf4j.org/dist"/>
@@ -62,18 +64,20 @@
 
     <target name="libs" depends="ycsb">
         <!-- cassandra libs -->
-        <mkdir dir="${bm-jars}/cassandra"/>
-        <copy todir="${bm-jars}/cassandra">
-            <fileset dir="${cassandra-build-top}/build/lib/jars" includes="*.jar"/>
+        <copy todir="${bm-jars}">
+            <fileset dir="${cassandra-build-top}/lib" includes="*.jar"/>
         </copy>
+        <!-- cassandra libsigar dependency -->
+        <zip destfile="${bm-dat}/libsigar.zip" basedir="${cassandra-build-top}/lib/sigar-bin"/>
+        <!-- cassandra config (XXX: maybe put it in another target/directory) -->
+        <zip destfile="${bm-dat}/cassandra-conf.zip" basedir="${cassandra-build-top}/conf"/>
         <!-- ycsb libs -->
-        <mkdir dir="${bm-jars}/ycsb"/>
         <echo message="ycsb-dir = ${ycsb-dir}"/>
-        <copy file="${slf4j-simple-jar}" todir="${bm-jars}/ycsb"/>
-        <copy todir="${bm-jars}/ycsb">
+        <copy file="${slf4j-simple-jar}" todir="${bm-jars}"/>
+        <copy todir="${bm-jars}">
             <fileset dir="${ycsb-dir}/lib" includes="*.jar"/>
         </copy>
-        <copy todir="${bm-jars}/ycsb">
+        <copy todir="${bm-jars}">
             <fileset dir="${ycsb-dir}/cassandra-binding/lib" includes="*.jar"/>
         </copy>
     </target>
@@ -81,6 +85,8 @@
     <target name="jar" depends="libs">
         <copy file="${cassandra-build-top}/build/apache-cassandra-${bm-version}-SNAPSHOT.jar"
             tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
+        <copy file="${cassandra-build-top}/build/apache-cassandra-thrift-${bm-version}-SNAPSHOT.jar"
+            tofile="${bm-jars}/cassandra-thrift-${bm-version}.jar"/>
     </target>
 
  </project>
