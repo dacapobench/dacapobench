@@ -20,6 +20,8 @@
  */
 package org.dacapo.luindex;
 
+import java.io.BufferedReader;
+
 /**
 
  *
@@ -37,6 +39,7 @@ package org.dacapo.luindex;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Paths;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
@@ -69,7 +72,7 @@ public class Index {
   /**
    * Index all text files under a directory.
    */
-  public void main(final File INDEX_DIR, final String[] args) throws IOException {
+  public void indexDir(final File INDEX_DIR, final String[] args) throws IOException {
     IndexWriterConfig IWConfig = new IndexWriterConfig();
     IWConfig.setOpenMode (IndexWriterConfig.OpenMode.CREATE);
     IWConfig.setMergePolicy (new LogByteSizeMergePolicy());
@@ -86,6 +89,72 @@ public class Index {
       writer.forceMerge(1);
     }
     writer.close();
+  }
+  /**
+   * Takes in a merged one-document-per-line text file from Lucene Wikipedia output,
+   * and index documents there.
+   */
+  public void indexLineDoc(final File INDEX_DIR, final String[] args) throws IOException {
+    IndexWriterConfig IWConfig = new IndexWriterConfig();
+    IWConfig.setOpenMode (IndexWriterConfig.OpenMode.CREATE);
+    IWConfig.setMergePolicy (new LogByteSizeMergePolicy());
+    IndexWriter writer = new IndexWriter(FSDirectory.open(Paths.get(INDEX_DIR.getCanonicalPath())), IWConfig);
+
+    File txtFile = new File(args[0]);
+
+    if (!txtFile.exists() || !txtFile.canRead()) {
+      System.out.println("Document directory '" + txtFile.getAbsolutePath() + "' does not exist or is not readable, please check the path");
+      throw new IOException("Cannot read from document directory");
+    }
+
+    BufferedReader reader = new BufferedReader(new FileReader(txtFile));
+    reader.readLine();  // skip header line
+    int nLines = (args.length > 1) ? Integer.parseInt(args[1]) : Integer.MAX_VALUE;
+    String line = reader.readLine();
+    int n = 0;
+    while (line != null && n < nLines) {
+      System.out.println("adding " + line.substring(0, line.indexOf(SEP)));
+      writer.addDocument(getLuceneDocFromLine(line));
+      line = reader.readLine();
+      n ++;
+    }
+
+    System.out.println("Optimizing...");
+    writer.forceMerge(1);
+    writer.close();
+  }
+
+  private final char SEP = '\t';
+
+  Document getLuceneDocFromLine(String line) {
+    Document doc = new Document();
+    FieldType defaultFT = new FieldType();
+    defaultFT.setTokenized (false);
+    defaultFT.setStored (true);
+    defaultFT.setIndexOptions (IndexOptions.DOCS);
+
+    int spot = line.indexOf(SEP);
+    int spot2 = line.indexOf(SEP, 1 + spot);
+    int spot3 = line.indexOf(SEP, 1 + spot2);
+    if (spot3 == -1) {
+      spot3 = line.length();
+    }
+
+    // Add title as a field. Use a field that is
+    // indexed (i.e. searchable), but don't tokenize the field into words.
+    doc.add(new Field("title", line.substring(0, spot), defaultFT));
+
+    // Add date as a field. Indexed, but not tokenized.
+    doc.add(new Field("date", line.substring(1+spot, spot2), defaultFT));
+
+    // Add body as a field. Tokenized and indexed, but not stored.
+    FieldType bodyFT = new FieldType();
+    bodyFT.setTokenized(true);
+    bodyFT.setStored(false);
+    bodyFT.setIndexOptions(IndexOptions.DOCS);
+    doc.add(new Field("body", line.substring(1 + spot2, spot3), bodyFT));
+
+    return doc;
   }
 
   /**
