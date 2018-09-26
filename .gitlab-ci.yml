@@ -38,7 +38,7 @@ eclipse:
 fop:
   script:
     - ant -Dbuild.target-jar=dacapo.jar fop
-    - java -jar dacapo.jar fop -s small
+    - java -jar dacapo.jar fop
   after_script:
     - git clean -df -e "downloads"
 

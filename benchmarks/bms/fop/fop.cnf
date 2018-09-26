@@ -7,11 +7,7 @@ benchmark fop
  * 'small' uses debug mode ("-d"), which puts current stats in the output,
  * so we don't use stdout to validate small.
  */
-size small args "-q", "${SCRATCH}/fop/readme.fo", "-pdf", "${SCRATCH}/readme.pdf"
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-
-size default args "-q", "${SCRATCH}/fop/test.fo", "-ps", "${SCRATCH}/test.ps"
+size default args "${SCRATCH}/fop", "-pdf"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 

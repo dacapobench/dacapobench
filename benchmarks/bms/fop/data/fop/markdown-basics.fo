@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+  <fo:layout-master-set>
+  
+    <fo:simple-page-master 
+        master-name="default"
+        page-height="29.7cm"
+        page-width="21cm"
+        margin-top="1cm"
+        margin-bottom="1cm"
+        margin-left="2.5cm"
+        margin-right="2.5cm">
+      <fo:region-body margin-top="2cm" margin-bottom="2cm"/>
+      <fo:region-before extent="3cm"/>
+      <fo:region-after extent="1cm"/>
+    </fo:simple-page-master>
+    
+  </fo:layout-master-set>
+
+  
+
+  <fo:page-sequence master-reference="default">
+
+    <fo:static-content flow-name="xsl-region-before">
+      <fo:block border-bottom-width="1pt" border-bottom-style="solid" 
+          font-weight="bold" font-size="9pt" text-align="center">
+        <fo:retrieve-marker 
+            retrieve-class-name="chapter"
+            retrieve-position="first-including-carryover"
+        />
+      </fo:block>
+    </fo:static-content>
+    
+    <fo:static-content flow-name="xsl-region-after">
+      <fo:block height="100%" font-weight="bold" font-size="10pt" text-align="center">
+        <fo:page-number/>
+      </fo:block>
+    </fo:static-content>
+      
+    <fo:flow flow-name="xsl-region-body">
+
+      <fo:marker marker-class-name="chapter"><fo:block>Markdown: Basics</fo:block></fo:marker>
+      <fo:block id="_markdown-basics_markdown-basics" font-family="sans-serif" font-size="16pt" font-weight="bold" keep-with-next="always" space-after="7mm" space-before="12mm">Markdown: Basics</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">&lt;ul id=&quot;ProjectSubmenu&quot;&gt;
+          &lt;li&gt;&lt;a href=&quot;/projects/markdown/&quot; title=&quot;Markdown Project Page&quot;&gt;Main&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class=&quot;selected&quot; title=&quot;Markdown Basics&quot;&gt;Basics&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;/projects/markdown/syntax&quot; title=&quot;Markdown Syntax Documentation&quot;&gt;Syntax&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;/projects/markdown/license&quot; title=&quot;Pricing and License Information&quot;&gt;License&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;/projects/markdown/dingus&quot; title=&quot;Online Markdown Web Form&quot;&gt;Dingus&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;</fo:block>
+      
+      <fo:block id="_markdown-basics_getting-the-gist-of-markdown-s-formatting-syntax" font-family="sans-serif" font-size="14pt" font-weight="bold" keep-with-next="always" space-after="5mm" space-before="9mm">Getting the Gist of Markdown&#39;s Formatting Syntax</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">This page offers a brief overview of what it&#39;s like to use Markdown.
+      The <fo:basic-link color="#3956ac" external-destination="/projects/markdown/syntax">syntax page</fo:basic-link> provides complete, detailed documentation for
+      every feature, but Markdown should be very easy to pick up simply by
+      looking at a few examples of it in action. The examples on this page
+      are written in a before/after style, showing example syntax and the
+      HTML output produced by Markdown.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">It&#39;s also helpful to simply try Markdown out; the <fo:basic-link color="#3956ac" external-destination="/projects/markdown/dingus">Dingus</fo:basic-link> is a
+      web application that allows you type your own Markdown-formatted text
+      and translate it to XHTML.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm"><fo:inline font-weight="bold">Note:</fo:inline> This document is itself written using Markdown; you
+      can <fo:basic-link color="#3956ac" external-destination="/projects/markdown/basics.text">see the source for it by adding &#39;.text&#39; to the URL</fo:basic-link>.</fo:block>
+      
+      <fo:block id="_markdown-basics_paragraphs-headers-blockquotes" font-family="sans-serif" font-size="14pt" font-weight="bold" keep-with-next="always" space-after="5mm" space-before="9mm">Paragraphs, Headers, Blockquotes</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">A paragraph is simply one or more consecutive lines of text, separated
+      by one or more blank lines. (A blank line is any line that looks like a
+      blank line -- a line containing nothing spaces or tabs is considered
+      blank.) Normal paragraphs should not be intended with spaces or tabs.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Markdown offers two styles of headers: <fo:inline font-style="italic">Setext</fo:inline> and <fo:inline font-style="italic">atx</fo:inline>.
+      Setext-style headers for <fo:inline font-family="monospace">&lt;h1&gt;</fo:inline> and <fo:inline font-family="monospace">&lt;h2&gt;</fo:inline> are created by
+      &quot;underlining&quot; with equal signs (<fo:inline font-family="monospace">=</fo:inline>) and hyphens (<fo:inline font-family="monospace">-</fo:inline>), respectively.
+      To create an atx-style header, you put 1-6 hash marks (<fo:inline font-family="monospace">#</fo:inline>) at the
+      beginning of the line -- the number of hashes equals the resulting
+      HTML header level.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Blockquotes are indicated using email-style &#39;<fo:inline font-family="monospace">&gt;</fo:inline>&#39; angle brackets.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Markdown:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">A First Level Header
+====================
+
+A Second Level Header
+---------------------
+
+Now is the time for all good men to come to
+the aid of their country. This is just a
+regular paragraph.
+
+The quick brown fox jumped over the lazy
+dog&#39;s back.
+
+### Header 3
+
+&gt; This is a blockquote.
+&gt; 
+&gt; This is the second paragraph in the blockquote.
+&gt;
+&gt; ## This is an H2 in a blockquote</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;h1&gt;A First Level Header&lt;/h1&gt;
+
+&lt;h2&gt;A Second Level Header&lt;/h2&gt;
+
+&lt;p&gt;Now is the time for all good men to come to
+the aid of their country. This is just a
+regular paragraph.&lt;/p&gt;
+
+&lt;p&gt;The quick brown fox jumped over the lazy
+dog&#39;s back.&lt;/p&gt;
+
+&lt;h3&gt;Header 3&lt;/h3&gt;
+
+&lt;blockquote&gt;
+    &lt;p&gt;This is a blockquote.&lt;/p&gt;
+    
+    &lt;p&gt;This is the second paragraph in the blockquote.&lt;/p&gt;
+    
+    &lt;h2&gt;This is an H2 in a blockquote&lt;/h2&gt;
+&lt;/blockquote&gt;</fo:block>
+      
+      <fo:block id="_markdown-basics_phrase-emphasis" font-family="sans-serif" font-size="12pt" font-weight="bold" keep-with-next="always" space-after="5mm" space-before="9mm">Phrase Emphasis</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Markdown uses asterisks and underscores to indicate spans of emphasis.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Markdown:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">Some of these words *are emphasized*.
+Some of these words _are emphasized also_.
+
+Use two asterisks for **strong emphasis**.
+Or, if you prefer, __use two underscores instead__.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;p&gt;Some of these words &lt;em&gt;are emphasized&lt;/em&gt;.
+Some of these words &lt;em&gt;are emphasized also&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Use two asterisks for &lt;strong&gt;strong emphasis&lt;/strong&gt;.
+Or, if you prefer, &lt;strong&gt;use two underscores instead&lt;/strong&gt;.&lt;/p&gt;</fo:block>
+      
+      <fo:block id="_markdown-basics_lists" font-family="sans-serif" font-size="14pt" font-weight="bold" keep-with-next="always" space-after="5mm" space-before="9mm">Lists</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Unordered (bulleted) lists use asterisks, pluses, and hyphens (<fo:inline font-family="monospace">*</fo:inline>,
+      <fo:inline font-family="monospace">+</fo:inline>, and <fo:inline font-family="monospace">-</fo:inline>) as list markers. These three markers are
+      interchangable; this:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">*   Candy.
+*   Gum.
+*   Booze.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">this:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">+   Candy.
++   Gum.
++   Booze.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">and this:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">-   Candy.
+-   Gum.
+-   Booze.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">all produce the same output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;ul&gt;
+&lt;li&gt;Candy.&lt;/li&gt;
+&lt;li&gt;Gum.&lt;/li&gt;
+&lt;li&gt;Booze.&lt;/li&gt;
+&lt;/ul&gt;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Ordered (numbered) lists use regular numbers, followed by periods, as
+      list markers:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">1.  Red
+2.  Green
+3.  Blue</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;ol&gt;
+&lt;li&gt;Red&lt;/li&gt;
+&lt;li&gt;Green&lt;/li&gt;
+&lt;li&gt;Blue&lt;/li&gt;
+&lt;/ol&gt;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">If you put blank lines between items, you&#39;ll get <fo:inline font-family="monospace">&lt;p&gt;</fo:inline> tags for the
+      list item text. You can create multi-paragraph list items by indenting
+      the paragraphs by 4 spaces or 1 tab:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">*   A list item.
+
+    With multiple paragraphs.
+
+*   Another item in the list.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;A list item.&lt;/p&gt;
+&lt;p&gt;With multiple paragraphs.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Another item in the list.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</fo:block>
+      
+      <fo:block id="_markdown-basics_links" font-family="sans-serif" font-size="12pt" font-weight="bold" keep-with-next="always" space-after="5mm" space-before="9mm">Links</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Markdown supports two styles for creating links: <fo:inline font-style="italic">inline</fo:inline> and
+      <fo:inline font-style="italic">reference</fo:inline>. With both styles, you use square brackets to delimit the
+      text you want to turn into a link.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Inline-style links use parentheses immediately after the link text.
+      For example:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">This is an [example link](http://example.com/).</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;p&gt;This is an &lt;a href=&quot;http://example.com/&quot;&gt;
+example link&lt;/a&gt;.&lt;/p&gt;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Optionally, you may include a title attribute in the parentheses:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">This is an [example link](http://example.com/ &quot;With a Title&quot;).</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;p&gt;This is an &lt;a href=&quot;http://example.com/&quot; title=&quot;With a Title&quot;&gt;
+example link&lt;/a&gt;.&lt;/p&gt;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Reference-style links allow you to refer to your links by names, which
+      you define elsewhere in your document:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">I get 10 times more traffic from [Google][1] than from
+[Yahoo][2] or [MSN][3].
+
+[1]: http://google.com/        &quot;Google&quot;
+[2]: http://search.yahoo.com/  &quot;Yahoo Search&quot;
+[3]: http://search.msn.com/    &quot;MSN Search&quot;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;p&gt;I get 10 times more traffic from &lt;a href=&quot;http://google.com/&quot;
+title=&quot;Google&quot;&gt;Google&lt;/a&gt; than from &lt;a href=&quot;http://search.yahoo.com/&quot;
+title=&quot;Yahoo Search&quot;&gt;Yahoo&lt;/a&gt; or &lt;a href=&quot;http://search.msn.com/&quot;
+title=&quot;MSN Search&quot;&gt;MSN&lt;/a&gt;.&lt;/p&gt;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">The title attribute is optional. Link names may contain letters,
+      numbers and spaces, but are <fo:inline font-style="italic">not</fo:inline> case sensitive:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">I start my morning with a cup of coffee and
+[The New York Times][NY Times].
+
+[ny times]: http://www.nytimes.com/</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;p&gt;I start my morning with a cup of coffee and
+&lt;a href=&quot;http://www.nytimes.com/&quot;&gt;The New York Times&lt;/a&gt;.&lt;/p&gt;</fo:block>
+      
+      <fo:block id="_markdown-basics_images" font-family="sans-serif" font-size="12pt" font-weight="bold" keep-with-next="always" space-after="5mm" space-before="9mm">Images</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Image syntax is very much like link syntax.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Inline (titles are optional):</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">![alt text](/path/to/img.jpg &quot;Title&quot;)</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Reference-style:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">![alt text][id]
+
+[id]: /path/to/img.jpg &quot;Title&quot;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Both of the above examples produce the same output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;img src=&quot;/path/to/img.jpg&quot; alt=&quot;alt text&quot; title=&quot;Title&quot; /&gt;</fo:block>
+      
+      <fo:block id="_markdown-basics_code" font-family="sans-serif" font-size="12pt" font-weight="bold" keep-with-next="always" space-after="5mm" space-before="9mm">Code</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">In a regular paragraph, you can create code span by wrapping text in
+      backtick quotes. Any ampersands (<fo:inline font-family="monospace">&amp;</fo:inline>) and angle brackets (<fo:inline font-family="monospace">&lt;</fo:inline> or
+      <fo:inline font-family="monospace">&gt;</fo:inline>) will automatically be translated into HTML entities. This makes
+      it easy to use Markdown to write about HTML example code:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">I strongly recommend against using any `&lt;blink&gt;` tags.
+
+I wish SmartyPants used named entities like `&amp;mdash;`
+instead of decimal-encoded entites like `&amp;#8212;`.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;p&gt;I strongly recommend against using any
+&lt;code&gt;&amp;lt;blink&amp;gt;&lt;/code&gt; tags.&lt;/p&gt;
+
+&lt;p&gt;I wish SmartyPants used named entities like
+&lt;code&gt;&amp;amp;mdash;&lt;/code&gt; instead of decimal-encoded
+entites like &lt;code&gt;&amp;amp;#8212;&lt;/code&gt;.&lt;/p&gt;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">To specify an entire block of pre-formatted code, indent every line of
+      the block by 4 spaces or 1 tab. Just like with code spans, <fo:inline font-family="monospace">&amp;</fo:inline>, <fo:inline font-family="monospace">&lt;</fo:inline>,
+      and <fo:inline font-family="monospace">&gt;</fo:inline> characters will be escaped automatically.</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Markdown:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">If you want your page to validate under XHTML 1.0 Strict,
+you&#39;ve got to put paragraph tags in your blockquotes:
+
+    &lt;blockquote&gt;
+        &lt;p&gt;For example.&lt;/p&gt;
+    &lt;/blockquote&gt;</fo:block>
+      <fo:block font-family="serif" font-size="10pt" space-after="3mm">Output:</fo:block>
+      <fo:block font-family="monospace" font-size="10pt" linefeed-treatment="preserve" margin-left="6mm" margin-right="6mm" space-after="6mm">&lt;p&gt;If you want your page to validate under XHTML 1.0 Strict,
+you&#39;ve got to put paragraph tags in your blockquotes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;blockquote&amp;gt;
+    &amp;lt;p&amp;gt;For example.&amp;lt;/p&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;</fo:block>
+
+    </fo:flow>
+    
+  </fo:page-sequence>
+  
+</fo:root>
