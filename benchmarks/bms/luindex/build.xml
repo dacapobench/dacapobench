@@ -43,17 +43,37 @@
     </target>
 
 
-    <target name="data">
+    <target name="data" depends="lucene-enwiki-bench-data">
         <mkdir dir="${bm-data}/luindex"/>
-        <mkdir dir="${bm-data}/luindex/william"/>
-        <untar src="${bm-downloads}/shakespeare.tgz" dest="${bm-data}/luindex/william" compression="gzip"/>
+
         <mkdir dir="${bm-data}/luindex/kjv"/>
         <unzip src="${bm-downloads}/kjv.zip" dest="${bm-data}/luindex/kjv"/>
+        <mkdir dir="${bm-data}/luindex/shakespeare"/>
+        <untar src="${bm-downloads}/shakespeare.tgz" dest="${bm-data}/luindex/shakespeare" compression="gzip"/>
+
         <zip destfile="${bm-dat}/luindex.zip">
             <fileset dir="${bm-data}/" includes="luindex/kjv/**/*"/>
-            <fileset dir="${bm-data}/" includes="luindex/william/**/*"/>
+            <fileset dir="${bm-data}/" includes="luindex/shakespeare/**/*"/>
         </zip>
-        <delete dir="${bm-data}/luindex"/>
+    </target>
+
+    <target name="lucene-enwiki-bench-data-check">
+        <available property="lucene-enwiki-bench-data-exists" file="${bm-data}/luindex/enwiki/enwiki.txt"/>
+        <condition property="lucene-enwiki-bench-data-valid-md5">
+            <and>
+                <isset property="lucene-enwiki-bench-data-exists"/>
+                <checksum file="${bm-data}/luindex/enwiki/enwiki.txt" fileext=".MD5" algorithm="MD5"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="lucene-enwiki-bench-data" depends="lucene-enwiki-bench-data-check" unless="lucene-enwiki-bench-data-valid-md5">
+        <mkdir dir="${lucene-build-dir}/benchmark/work"/>
+        <exec executable="ant" dir="${lucene-build-dir}/benchmark">
+            <arg value="enwiki"/>
+        </exec>
+        <mkdir dir="${bm-data}/luindex/enwiki"/>
+        <move file="${lucene-build-dir}/benchmark/work/enwiki.txt" todir="${bm-data}/luindex/enwiki"/>
     </target>
 
 </project>
