@@ -18,7 +18,7 @@
 	<property name="lib-src-dir" location="libs/${lib-name}/src"/>
 	<property name="lib-data" location="libs/${lib-name}/data"/>
 
-	<target name="all" depends="url-source, svn-source, pre-build, build, jar, complete"/>
+	<target name="all" depends="url-source, svn-source, hg-source, git-source, pre-build, build, jar, complete"/>
 
 	<target name="url-source" if="lib-url">
 		<antcall target="check-source">
@@ -33,6 +33,24 @@
 			<param name="target-dir" value="${lib-downloads}"/>
 			<param name="svn-url" value="${lib-svn-url}"/>
 			<param name="svn-revision" value="${lib-svn-revision}"/>
+			<param name="target-file" value="${lib-src}"/>
+		</antcall>
+	</target>
+
+	<target name="hg-source" if="lib-hg-url">
+		<antcall target="check-hg-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="hg-url" value="${lib-hg-url}"/>
+			<param name="hg-revision" value="${lib-hg-revision}"/>
+			<param name="target-file" value="${lib-src}"/>
+		</antcall>
+	</target>
+
+	<target name="git-source" if="lib-git-url">
+		<antcall target="check-git-source">
+			<param name="target-dir" value="${lib-downloads}"/>
+			<param name="git-url" value="${lib-git-url}"/>
+			<param name="git-commit" value="${lib-git-commit}"/>
 			<param name="target-file" value="${lib-src}"/>
 		</antcall>
 	</target>

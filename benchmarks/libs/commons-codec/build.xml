@@ -30,7 +30,6 @@
 
     <target name="build">
         <exec executable="${mvn-exe}" dir="${lib-build-top}">
-            <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m"/>
             <arg value="clean"/>
             <arg value="install"/>
         </exec>

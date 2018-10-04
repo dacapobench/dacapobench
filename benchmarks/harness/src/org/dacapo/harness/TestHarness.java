@@ -82,6 +82,9 @@ public class TestHarness {
     System.setProperty("java.awt.headless", "true");
 
     setBuildInfo();  // set BuildVersion and BuildNickName.
+    if (BuildVersion.contains("git")) {
+      System.err.println("Warning: your dacapo build is not a release build, please do not reference the results in your publication.");
+    }
     try {
       commandLineArgs = new CommandLineArgs(args);
 
