@@ -21,7 +21,8 @@
 #          M = 18 => 256K words
 #
 
-$wordlist = "words.txt.gz";               # source of words we're using (gleaned from kjv & shakespeare)
+# $wordlist = "words.txt.gz";               # source of words we're using (gleaned from kjv & shakespeare)
+$wordlist = shift(@ARGV);
 $baseoutname = "query";                   # basename of generated files
 
 $listorder = shift(@ARGV);                # log_2 of the number of output files

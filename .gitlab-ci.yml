@@ -61,7 +61,7 @@ luindex:
     - ant -Dbuild.target-jar=dacapo.jar luindex
     - java -jar dacapo.jar luindex -s small
   after_script:
-    - git clean -df -e "downloads"
+    - git clean -df -e "downloads" -e "enwiki.txt"
 
 lusearch:
   script:
