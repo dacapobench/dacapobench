@@ -3,18 +3,18 @@ benchmark sunflow
   thread-model per_cpu
   jars "sunflow-0.07.2.jar", "janino-2.5.15.jar";
 
-size small args "32"
+size small args "32", "6"
   thread-limit 32
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "256"
-  thread-limit 256
+size default args "1024", "30"
+  thread-limit 1024
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "512"
-  thread-limit 512
+size large args "4096", "80"
+  thread-limit 4096
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 

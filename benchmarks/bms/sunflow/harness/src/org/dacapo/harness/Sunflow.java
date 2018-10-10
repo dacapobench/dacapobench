@@ -31,7 +31,7 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
     this.method = clazz.getMethod("kernelMain");
     this.beginMethod = clazz.getMethod("kernelBegin");
     this.endMethod = clazz.getMethod("kernelEnd");
-    this.constructor = clazz.getConstructor(int.class, boolean.class, boolean.class, boolean.class, int.class);
+    this.constructor = clazz.getConstructor(int.class, boolean.class, boolean.class, boolean.class, int.class, int.class);
   }
 
   /** Do one-time prep such as unziping data. In our case, do nothing. */
@@ -49,7 +49,10 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
     String[] args = config.preprocessArgs(size, scratch);
     useBenchmarkClassLoader();
     try {
-      sunflow = constructor.newInstance(Integer.parseInt(args[0]), false, false, false, config.getThreadCount(size));
+      sunflow = constructor.newInstance(Integer.parseInt(args[0]),
+                                        false, false, false,
+                                        config.getThreadCount(size),
+                                        Integer.parseInt(args[1]));
       beginMethod.invoke(sunflow);
     } finally {
       revertClassLoader();

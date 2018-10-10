@@ -1,0 +1,34 @@
+diff -ru sunflow-orig/src/org/sunflow/Benchmark.java sunflow/src/org/sunflow/Benchmark.java
+--- sunflow-orig/src/org/sunflow/Benchmark.java	2007-01-28 01:10:58.000000000 +1100
++++ sunflow/src/org/sunflow/Benchmark.java	2018-08-02 16:36:39.000000000 +1000
+@@ -41,16 +41,11 @@
+     public static void main(String[] args) {
+         if (args.length == 0) {
+             System.out.println("Benchmark options:");
+-            System.out.println("  -regen                        Regenerate reference images for a variety of sizes");
++            System.out.println("  -regen [resolution]           Regenerate reference images for a variety of sizes");
+             System.out.println("  -bench [threads] [resolution] Run a single iteration of the benchmark using the specified thread count and image resolution");
+             System.out.println("                                Default: threads=0 (auto-detect cpus), resolution=256");
+         } else if (args[0].equals("-regen")) {
+-            int[] sizes = { 32, 64, 96, 128, 256, 384, 512 };
+-            for (int s : sizes) {
+-                // run a single iteration to generate the reference image
+-                Benchmark b = new Benchmark(s, true, false, true);
+-                b.kernelMain();
+-            }
++            new Benchmark(Integer.parseInt(args[1]), true, false, true).kernelMain();
+         } else if (args[0].equals("-bench")) {
+             int threads = 0, resolution = 256;
+             if (args.length > 1)
+@@ -100,6 +95,11 @@
+         }
+     }
+ 
++    public Benchmark(int resolution, boolean showOutput, boolean showBenchmarkOutput, boolean saveOutput, int threads, int errorThreshold) {
++        this(resolution, showOutput, showBenchmarkOutput, saveOutput, threads);
++        this.errorThreshold = errorThreshold;
++    }
++
+     public void execute() {
+         // 10 iterations maximum - 10 minute time limit
+         BenchmarkFramework framework = new BenchmarkFramework(10, 600);
