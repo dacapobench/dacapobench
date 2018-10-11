@@ -7,11 +7,7 @@ size small args "${SCRATCH}/jython/sieve.py","50"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "${SCRATCH}/jython/pybench/pybench.py", "--with-gc", "--debug", "-n", "1", "-C", "0", "-w", "20"
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-
-size large args "${SCRATCH}/jython/pybench/pybench.py", "--with-gc", "--debug", "-n", "4", "-C", "0", "-w", "10"
+size default args "${SCRATCH}/jython/pybench/pybench.py", "--with-gc", "--debug", "-n", "4", "-C", "0", "-w", "20"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 

@@ -31,6 +31,7 @@ public class Jython extends Benchmark {
     System.setProperty("python.home", fileInScratch("jython"));
     System.setProperty("python.cachedir", fileInScratch("cachedir"));
     System.setProperty("python.verbose", "warning");
+    System.setProperty("python.console", "org.python.core.PlainConsole");
     useBenchmarkClassLoader();
     try {
       method.invoke(null, (Object) new String[] { fileInScratch("jython/noop.py") });
