@@ -29,6 +29,10 @@
         </exec>
     </target>
 
+    <target name="data">
+        <copy file="${bm-data}/batik.zip" todir="${bm-dat}"/>
+    </target>
+
     <target name="jar" depends="deps">
         <copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all-1.9.jar" todir="${bm-jars}"/>
         <copy file="${batik-top}/lib/build/crimson-1.1.3.jar" todir="${bm-jars}"/>
