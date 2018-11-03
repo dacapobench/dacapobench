@@ -23,8 +23,8 @@ public class Batik extends Benchmark {
   private String[] args;
   private final Constructor<?> constructor;
 
-  public Batik(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public Batik(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.apache.batik.apps.rasterizer.Main", true, loader);
     this.method = clazz.getMethod("execute");
     this.constructor = clazz.getConstructor(String[].class);
@@ -33,7 +33,7 @@ public class Batik extends Benchmark {
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
-    args = config.preprocessArgs(size, scratch);
+    args = config.preprocessArgs(size, scratch, data);
   }
 
   public void iterate(String size) throws Exception {

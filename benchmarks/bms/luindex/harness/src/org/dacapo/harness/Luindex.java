@@ -25,13 +25,13 @@ public class Luindex extends Benchmark {
   private final Object benchmark;
   private final Class<?> clazz;
 
-  public Luindex(Config config, File scratch) throws Exception {
-    super(config, scratch);
+  public Luindex(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
     this.clazz = Class.forName("org.dacapo.luindex.Index", true, loader);
-    Constructor<?> cons = clazz.getConstructor(File.class);
+    Constructor<?> cons = clazz.getConstructor(File.class, File.class);
     useBenchmarkClassLoader();
     try {
-      benchmark = cons.newInstance(scratch);
+      benchmark = cons.newInstance(scratch, data);
     } finally {
       revertClassLoader();
     }
@@ -55,7 +55,7 @@ public class Luindex extends Benchmark {
   public void iterate(String size) throws Exception {
     if (getVerbose())
       System.out.println("luindex benchmark starting");
-    String[] args = config.preprocessArgs(size, scratch);
+    String[] args = config.preprocessArgs(size, scratch, data);
 
     final File INDEX_DIR = new File(scratch, "index");
 

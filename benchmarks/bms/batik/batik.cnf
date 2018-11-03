@@ -27,21 +27,19 @@ size large args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/simplex
           "mapVASR.png" digest 0x3086b028662d865e0913602823c0b339dc599b0b,
           "bavaria.png" digest 0xf9e58383e2418b8a065e895cbef8132d9099a599;
 
-/** NOTE: huge size not runnable.
- * requires later huge data refactoring changes
- */
-size huge args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/usMetro.svg", "${SCRATCH}/batik/mapVASR.svg",
-                      "${SCRATCH}/batik/bavaria.svg",
-                      "${SCRATCH}/batik/lakeTauca.svg", "${SCRATCH}/batik/river.svg", "${SCRATCH}/batik/tenerife.svg",
-                      "${SCRATCH}/batik/france.svg", "${SCRATCH}/batik/nrwpTopography.svg",
-                      "${SCRATCH}/batik/velhop.svg", "${SCRATCH}/batik/polytopeCube.svg", "${SCRATCH}/batik/ukRef.svg",
-                      "${SCRATCH}/batik/btw.svg", "${SCRATCH}/batik/lyon.svg", "${SCRATCH}/batik/ohridTopographic.svg",
-                      "${SCRATCH}/batik/dcStreet.svg", "${SCRATCH}/batik/chicoutimi.svg",
-                      "${SCRATCH}/batik/usElection.svg", "${SCRATCH}/batik/moldova.svg", "${SCRATCH}/batik/mapPolitical.svg",
-                      "${SCRATCH}/batik/hague.svg", "${SCRATCH}/batik/locGermany.svg",
-                      "${SCRATCH}/batik/mowbrayOSM.svg", "${SCRATCH}/batik/mapWorld.svg", "${SCRATCH}/batik/sierpinski.svg",
-                      "${SCRATCH}/batik/phi.svg", "${SCRATCH}/batik/simplex.svg", "${SCRATCH}/batik/mapLakes.svg",
-                      "${SCRATCH}/batik/Tettstedskart.svg", "${SCRATCH}/batik/mapSanFran.svg", "${SCRATCH}/batik/serbia.svg"
+
+size huge args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/usMetro.svg", "${DATA}/batik/mapVASR.svg",
+                      "${DATA}/batik/bavaria.svg",
+                      "${DATA}/batik/lakeTauca.svg", "${DATA}/batik/river.svg", "${DATA}/batik/tenerife.svg",
+                      "${DATA}/batik/france.svg", "${DATA}/batik/nrwpTopography.svg",
+                      "${DATA}/batik/velhop.svg", "${DATA}/batik/polytopeCube.svg", "${DATA}/batik/ukRef.svg",
+                      "${DATA}/batik/btw.svg", "${DATA}/batik/lyon.svg", "${DATA}/batik/ohridTopographic.svg",
+                      "${DATA}/batik/dcStreet.svg", "${DATA}/batik/chicoutimi.svg",
+                      "${DATA}/batik/usElection.svg", "${DATA}/batik/moldova.svg", "${DATA}/batik/mapPolitical.svg",
+                      "${DATA}/batik/hague.svg", "${DATA}/batik/locGermany.svg",
+                      "${DATA}/batik/mowbrayOSM.svg", "${DATA}/batik/mapWorld.svg", "${DATA}/batik/sierpinski.svg",
+                      "${DATA}/batik/phi.svg", "${DATA}/batik/simplex.svg", "${DATA}/batik/mapLakes.svg",
+                      "${DATA}/batik/Tettstedskart.svg", "${DATA}/batik/mapSanFran.svg", "${DATA}/batik/serbia.svg"
   output stdout         digest 0x3ebb7954cd8d418aad42f3ad6d71a1b512892178,
     	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
         "usMetro.png"           digest 0xc8c2e79878cbce8ef4ea2e4b617096a9a53b5fe7,

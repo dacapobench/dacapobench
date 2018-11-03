@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.dacapo.harness.ExternData;
+
 /**
  * Container class for all options specified in a benchmark's configuration
  * file.
@@ -750,17 +752,25 @@ public class Config {
    * <ul>
    * <li>${SCRATCH} - replaced with the absolute path name of the scratch
    * directory
+   * <li>${DATA} - replaced with the absolute path name of the big data directory
    * <li>${THREADS} - replaced with the specified thread count for the benchmark
    * size
    * </ul>
    */
-  public String[] preprocessArgs(String size, File scratch) {
+  public String[] preprocessArgs(String size, File scratch, File extdata) throws FileNotFoundException {
     String[] raw = getArgs(size);
     String[] cooked = new String[raw.length];
+    String dataPath = new File(extdata, "dat").getAbsolutePath();
     for (int i = 0; i < raw.length; i++) {
       String tmp = raw[i];
       tmp = tmp.replace("${SCRATCH}", scratch.getAbsolutePath());
       tmp = tmp.replace("${THREADS}", Integer.toString(getThreadCount(size)));
+      if (tmp.contains("${DATA}")) {
+        tmp = tmp.replace("${DATA}", dataPath);
+        File argFile = new File(tmp);
+        if (!argFile.exists())
+          ExternData.failExtDataNotFound(size, extdata);
+      }
       cooked[i] = tmp;
     }
     return cooked;

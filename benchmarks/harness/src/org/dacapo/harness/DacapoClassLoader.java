@@ -35,14 +35,15 @@ public class DacapoClassLoader extends URLClassLoader {
    * 
    * @param config The config file, which contains information about the jars
    * this benchmark depends on
-   * @param scratch The scratch directory (in which the jars will be located)
+   * @param scratch The scratch directory (in which some of the jars may be located)
+   * @param extdata The external data directory (in which externally packaged jars will be located)
    * @return The class loader in which this benchmark's iterations should
    * execute.
    */
-  public static DacapoClassLoader create(Config config, File scratch) {
+  public static DacapoClassLoader create(Config config, File scratch, File extdata) {
     DacapoClassLoader rtn = null;
     try {
-      URL[] urls = getJars(config, scratch);
+      URL[] urls = getJars(config, scratch, extdata);
       if (Benchmark.getVerbose()) {
         System.out.println("Benchmark classpath:");
         for (URL url : urls) {
@@ -87,17 +88,26 @@ public class DacapoClassLoader extends URLClassLoader {
    * benchmark
    * 
    * @param config The config file for this benchmark, which lists the jars
-   * @param scratch The scratch directory, in which the jars will be located
+   * @param scratch The scratch directory (in which some of the jars may be located)
+   * @param extdata The external data directory (in which externally packaged jars will be located)
    * @return An array of URLs, one URL for each jar
    * @throws MalformedURLException
    */
-  private static URL[] getJars(Config config, File scratch) throws MalformedURLException {
+  private static URL[] getJars(Config config, File scratch, File extdata) throws MalformedURLException {
     List<URL> jars = new ArrayList<URL>();
-    File jardir = new File(scratch, "jar");
+    File jardirScratch = new File(scratch, "jar");
+    File jardirExtData = new File(extdata, "jar");
+
     if (config.jars != null) {
       for (int i = 0; i < config.jars.length; i++) {
-        File jar = new File(jardir, config.jars[i]);
-        jars.add(jar.toURL());
+        // first try external data directory, then try scratch if not found.
+        File jar = new File(jardirExtData, config.jars[i]);
+        if (!jar.exists()) {
+          jar = new File(jardirScratch, config.jars[i]);
+          if (!jar.exists())
+            ExternData.failExtJarNotFound(jar, extdata);
+        }
+        jars.add(jar.toURI().toURL());  // first convert to URI to avoid deprecation
       }
     }
     return jars.toArray(new URL[jars.size()]);

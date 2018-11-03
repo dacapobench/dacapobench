@@ -127,7 +127,7 @@ BUILDING:
             <isset property="build.is-official"/>
         </condition>
         <!-- set target jar name -->
-        <property name="build.target-jar" value="dacapo.jar"/>
+        <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
     </target>
 
     <target name="init" depends="set-build-version-info">
@@ -238,14 +238,9 @@ BUILDING:
     <!-- ================================= 
          target: dist              
          ================================= -->
-    <target name="dist" depends="harness,compile">
-        <move file="${build.target-jar}" tofile="dacapo-${build.version}.jar"/>
-    </target>
+    <target name="dist" depends="harness,compile,update-externdata-info"/>
 
-    <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation">
-    	
-    	<jar /> 
-    </target>
+    <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation"/>
 
 	
     <!-- =================================
@@ -392,6 +387,7 @@ See ${log.build.report} for a summary of benchmark build status.
                     </and>
                 </condition>
             </fail>
+            <!-- <antcall target="update-externdata-md5"/> -->
         </sequential>
     </macrodef>
 
@@ -437,5 +433,21 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="daytrader" depends="tradebeans, tradesoap"/>
     <target name="xalan" depends="init,harness">
         <build.bm benchmark="xalan"/>
+    </target>
+
+    <target name="update-externdata-info" depends="set-build-version-info">
+        <get src="${dacapo-dl.url.raw}/${dacapo-dl.commit}/META-INF/huge-data-md5s.list" dest="${dacapo.build.dir}"/>
+        <get src="${dacapo-dl.url.raw}/${dacapo-dl.commit}/META-INF/dlfiles.list" dest="${dacapo.build.dir}"/>
+        <echo message="setting DaCapo-DL-URL-RAW and DaCapo-DL-Commit in manifest"/>
+        <jar destfile="${build.target-jar}" update="true">
+            <manifest>
+                <attribute name="DaCapo-DL-URL-RAW" value="${dacapo-dl.url.raw}"/>
+                <attribute name="DaCapo-DL-Commit" value="${dacapo-dl.commit}"/>
+            </manifest>
+            <metainf dir="${dacapo.build.dir}">
+				<include name="huge-data-md5s.list"/>
+                <include name="dlfiles.list"/>
+			</metainf>
+        </jar>
     </target>
 </project>

@@ -13,10 +13,7 @@ size default args "--dirwalk", "${SCRATCH}/luindex/shakespeare","${SCRATCH}/luin
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/segments_1"  bytes 136;
 
-/* NOTE: not including enwiki.txt in the dacapo.jar
- * When the mechanism for dealing with large dataset is in place,
- * this should be modified. */
-size huge args "--linedoc", "${SCRATCH}/../bms/luindex/data/luindex/enwiki/enwiki.txt"
+size huge args "--linedoc", "${DATA}/luindex/enwiki/enwiki-1.txt", "${DATA}/luindex/enwiki/enwiki-2.txt"
   output stdout  digest 0x3067fa0a00d9311e95cf963dab1dfea1fca4e993,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/segments_1"  bytes 137;

@@ -33,8 +33,8 @@ public class Eclipse extends Benchmark {
   private final Method run;
   private final Method shutdown;
 
-  public Eclipse(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public Eclipse(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
     this.method = clazz.getMethod("startup", String[].class, Runnable.class);
     this.isRunning = clazz.getMethod("isRunning");

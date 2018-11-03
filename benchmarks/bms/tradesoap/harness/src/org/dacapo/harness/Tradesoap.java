@@ -24,8 +24,8 @@ public class Tradesoap extends Benchmark {
   private Method initializeMethod;
   private Method shutdownMethod;
 
-  public Tradesoap(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public Tradesoap(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
     this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, Integer.TYPE, String.class, Boolean.TYPE });
     this.method = clazz.getMethod("performIteration", new Class[] {});
@@ -39,7 +39,7 @@ public class Tradesoap extends Benchmark {
 
   @Override
   protected void prepare(String size) throws Exception {
-    String[] args = config.preprocessArgs(size, scratch);
+    String[] args = config.preprocessArgs(size, scratch, data);
     String dtSize = "medium";
     if (args.length == 1)
       dtSize = args[0];

@@ -43,7 +43,7 @@
     </target>
 
 
-    <target name="data" depends="lucene-enwiki-bench-data">
+    <target name="data">
         <mkdir dir="${bm-data}/luindex"/>
 
         <mkdir dir="${bm-data}/luindex/kjv"/>
@@ -57,7 +57,7 @@
         </zip>
     </target>
 
-    <target name="lucene-enwiki-bench-data-check">
+    <!-- <target name="lucene-enwiki-bench-data-check">
         <available property="lucene-enwiki-bench-data-exists" file="${bm-data}/luindex/enwiki/enwiki.txt"/>
         <condition property="lucene-enwiki-bench-data-valid-md5">
             <and>
@@ -74,6 +74,6 @@
         </exec>
         <mkdir dir="${bm-data}/luindex/enwiki"/>
         <move file="${lucene-build-dir}/benchmark/work/enwiki.txt" todir="${bm-data}/luindex/enwiki"/>
-    </target>
+    </target> -->
 
 </project>

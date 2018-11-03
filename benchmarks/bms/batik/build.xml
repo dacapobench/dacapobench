@@ -30,7 +30,7 @@
     </target>
 
     <target name="data">
-        <copy file="${bm-data}/batik.zip" todir="${bm-dat}"/>
+        <copy file="${bm-data}/${bm-name}.zip" todir="${bm-dat}"/>
     </target>
 
     <target name="jar" depends="deps">

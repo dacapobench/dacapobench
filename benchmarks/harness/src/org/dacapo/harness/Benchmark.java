@@ -111,6 +111,11 @@ public abstract class Benchmark {
   protected final File scratch;
 
   /**
+   * The data directory
+   */
+  protected final File data;
+
+  /**
    * Parsed version of the configuration file for this benchmark
    */
   protected final Config config;
@@ -204,14 +209,15 @@ public abstract class Benchmark {
    * 
    * @param scratch Scratch directory
    */
-  public Benchmark(Config config, File scratch) throws Exception {
-    this(config, scratch, true);
+  public Benchmark(Config config, File scratch, File data) throws Exception {
+    this(config, scratch, data, true);
   }
 
-  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
+  public Benchmark(Config config, File scratch, File data, boolean silent) throws Exception {
     // TODO this is very ugly
     Benchmark.silent = silent;
     this.scratch = scratch;
+    this.data = data;
     this.config = config;
     initialize();
   }
@@ -233,7 +239,7 @@ public abstract class Benchmark {
       }
     }
     prepareJars();
-    loader = DacapoClassLoader.create(config, scratch);
+    loader = DacapoClassLoader.create(config, scratch, data);
     prepare();
   }
 
@@ -248,7 +254,11 @@ public abstract class Benchmark {
       file.mkdir();
     if (config.jars != null) {
       for (int i = 0; i < config.jars.length; i++) {
-        extractFileResource("jar/" + config.jars[i], scratch);
+        try {
+          extractFileResource("jar/" + config.jars[i], scratch);
+        } catch (DacapoException e) {
+          // ignore
+        }
       }
     }
   }
@@ -258,7 +268,12 @@ public abstract class Benchmark {
    * <code>data/<i>name</i>.zip</code> into the scratch directory.
    */
   protected void prepare() throws Exception {
-    unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+    // the data zip may not exist, if data is packaged externally
+    try {
+      unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+    } catch (DacapoException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -281,7 +296,7 @@ public abstract class Benchmark {
    */
   public void preIteration(String size) throws Exception {
     if (verbose) {
-      String[] args = config.preprocessArgs(size, scratch);
+      String[] args = config.preprocessArgs(size, scratch, data);
       System.out.print("Benchmark parameters: ");
       for (int i = 0; i < args.length; i++)
         System.out.print(args[i] + " ");
@@ -602,7 +617,7 @@ public abstract class Benchmark {
    * @param destination
    * @throws IOException
    */
-  private static void unpackZipStream(BufferedInputStream inputStream, File destination) throws IOException {
+  public static void unpackZipStream(BufferedInputStream inputStream, File destination) throws IOException {
     ZipInputStream input = new ZipInputStream(inputStream);
     ZipEntry entry;
     while ((entry = input.getNextEntry()) != null) {

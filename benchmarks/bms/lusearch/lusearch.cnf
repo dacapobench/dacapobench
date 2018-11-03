@@ -4,7 +4,7 @@ benchmark lusearch
   jars "dacapo-lusearch.jar", "lucene-core-7.1.0-SNAPSHOT.jar", "lucene-demo-7.1.0-SNAPSHOT.jar", "lucene-queryparser-7.1.0-SNAPSHOT.jar";
 
 size small args "-index","${SCRATCH}/lusearch/index-default",
-                "-queries","${SCRATCH}/lusearch/queries-default/query",
+                "-queries","${SCRATCH}/lusearch/queries-default/",
                 "-output", "${SCRATCH}/lusearch.out",
                 "-totalqueries", "8",
                 "-threads", "${THREADS}"
@@ -23,7 +23,7 @@ size small args "-index","${SCRATCH}/lusearch/index-default",
     "lusearch.out7" digest(text) 0xa4ab2577aa78ead6fec346ee1d8ad1edcec0a55d;
 
 size default args "-index","${SCRATCH}/lusearch/index-default",
-                "-queries", "${SCRATCH}/lusearch/queries-default/query",
+                "-queries", "${SCRATCH}/lusearch/queries-default/",
                 "-output", "${SCRATCH}/lusearch.out",
                 "-totalqueries", "128",
                 "-threads", "${THREADS}"
@@ -161,9 +161,9 @@ size default args "-index","${SCRATCH}/lusearch/index-default",
     "lusearch.out126" digest(text) 0x22e7c16878292805cae3579bf735b6a6acac0c3b,
     "lusearch.out127" digest(text) 0x90b1433771874e342bb28ed9cc68b5b738197c66;
  
-size huge args "-index","${SCRATCH}/lusearch/index-enwiki",
+size huge args "-index","${DATA}/lusearch/index-enwiki",
                 "-field", "body",
-                "-queries", "${SCRATCH}/lusearch/queries-enwiki/query",
+                "-queries", "${DATA}/lusearch/queries-enwiki/",
                 "-output", "${SCRATCH}/lusearch.out",
                 "-totalqueries", "2048",
                 "-threads", "${THREADS}"

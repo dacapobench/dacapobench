@@ -24,8 +24,8 @@ public class Fop extends Benchmark {
   private String[] inputs;
   private String[] outputs;
 
-  public Fop(Config config, File scratch) throws Exception {
-    super(config, scratch);
+  public Fop(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data);
     Class<?> clazz = Class.forName("org.apache.fop.cli.Main", true, loader);
     this.method = clazz.getMethod("startFOP", new Class[] { String[].class });
   }
@@ -33,7 +33,7 @@ public class Fop extends Benchmark {
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
-    args = config.preprocessArgs(size, scratch);
+    args = config.preprocessArgs(size, scratch, data);
     collectInputs();
   }
 
