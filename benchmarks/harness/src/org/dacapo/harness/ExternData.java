@@ -41,6 +41,7 @@ public class ExternData {
    */
   public static final Path DEFAULT_LOCAL_DACAPO_CONFIG = Paths.get(System.getProperty("user.home"), ".dacapo-config.properties");
   public static final String CONFIG_KEY_EXTERN_DATA_LOC = "Extern-Data-Location";
+  public static final String DACAPO_DL_URL_LFS = "DaCapo-DL-URL-LFS";
   public static final String DACAPO_DL_URL_RAW = "DaCapo-DL-URL-RAW";
   public static final String DACAPO_DL_COMMIT = "DaCapo-DL-Commit";
 
@@ -147,13 +148,14 @@ public class ExternData {
         path.mkdirs();
 
       // download
-      URL urlDLRawRoot = appendURL(new URL(TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW)),
-              TestHarness.getManifestAttribute(DACAPO_DL_COMMIT));
+      String dlurlRaw = TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW);
+      String dlurlLFS = TestHarness.getManifestAttribute(DACAPO_DL_URL_LFS);
+      String commit = TestHarness.getManifestAttribute(DACAPO_DL_COMMIT);
       BufferedReader dllistReader = new BufferedReader(new InputStreamReader(
               ClassLoader.getSystemResourceAsStream("META-INF/dlfiles.list")));
       dllistReader.lines().forEach(s -> {
         try {
-          downloadAndExtractItem(s, urlDLRawRoot, path);
+          downloadAndExtractItem(s, dlurlRaw, dlurlLFS, commit, path);
         } catch (Exception e) {
           System.err.println("Download external data failed.");
           System.err.println("Please try again.");
@@ -168,12 +170,9 @@ public class ExternData {
     }
   }
 
-  private static URL appendURL(URL url, String relPath) throws MalformedURLException{
-    return new URL(url.toString() + "/" + relPath);
-  }
-
-  private static void downloadAndExtractItem(String itemRelPath, URL urlDLRawRoot, File localDataPath) throws Exception {
-    URL urlItem = appendURL(urlDLRawRoot, itemRelPath);
+  private static void downloadAndExtractItem(String itemRelPath, String dlurlRaw, String dlurlLFS, String commit, File localDataPath) throws Exception {
+    URL urlItem = new URL(String.join("/", dlurlLFS, commit, itemRelPath));
+    URL urlMD5 = new URL(String.join("/", dlurlRaw, commit, itemRelPath + ".MD5"));
     File fileLocalItem = new File(localDataPath, itemRelPath);
 
     if (!fileLocalItem.getParentFile().exists())
@@ -188,7 +187,7 @@ public class ExternData {
       System.out.println("Done.");
 
       System.out.printf("Checking %s MD5...", fileLocalItem.toString());
-      ReadableByteChannel rbcMD5 = Channels.newChannel(appendURL(urlDLRawRoot, itemRelPath + ".MD5").openStream());
+      ReadableByteChannel rbcMD5 = Channels.newChannel(urlMD5.openStream());
       ByteBuffer buf = ByteBuffer.allocate(32); // MD5 is always 32 characters long
       rbcMD5.read(buf);
       String md5Expect = new String(buf.array(), Charset.forName("ASCII")).toLowerCase();
