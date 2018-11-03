@@ -156,9 +156,11 @@ public class ExternData {
       dllistReader.lines().forEach(s -> {
         try {
           downloadAndExtractItem(s, dlurlRaw, dlurlLFS, commit, path);
-        } catch (Exception e) {
+        } catch (IOException e) {
           System.err.println("Download external data failed.");
-          System.err.println("Please try again.");
+          System.err.printf("You may want to manually download %s to %s\n", e.getMessage(), path);
+        } catch(Exception e) {
+          e.printStackTrace();
           System.exit(-1);
         }
       });
@@ -170,6 +172,39 @@ public class ExternData {
     }
   }
 
+  private static ReadableByteChannel tryOpenDownloadChannel(URL url) throws IOException{
+      // Try open download channel
+      // NOTE: it seems that GitHub server doesn't like downloading huge data in quick succession,
+      // in which case it responds with 503 error code.
+      // If that happends, wait 5 secs and try again.
+      // Also set a maximum retry limit to 5. When exceeded, fail with exception.
+      int maxRetry = 5;
+      ReadableByteChannel rbc = null;
+      while (rbc == null && maxRetry > 0) {
+        try {
+          rbc = Channels.newChannel(url.openStream());
+        } catch(IOException e) {
+          System.out.println("Failed!");
+          System.err.println(e.getMessage());
+          if (maxRetry > 0) {
+            System.out.println("Will retry after 5s.");
+            try {
+              Thread.sleep(5000);
+            } catch(InterruptedException ie) {
+              System.err.println("Interrupted");
+            }
+            maxRetry --;
+            System.out.println("Retrying...");
+          }
+        }
+      }
+      if (rbc == null && maxRetry == 0) {
+        System.err.println("Exceeded maximum retry count. Failed!");
+        throw new IOException(url.toString());
+      }
+      return rbc;
+  }
+
   private static void downloadAndExtractItem(String itemRelPath, String dlurlRaw, String dlurlLFS, String commit, File localDataPath) throws Exception {
     URL urlItem = new URL(String.join("/", dlurlLFS, commit, itemRelPath));
     URL urlMD5 = new URL(String.join("/", dlurlRaw, commit, itemRelPath + ".MD5"));
@@ -179,36 +214,31 @@ public class ExternData {
       fileLocalItem.getParentFile().mkdirs();
 
     System.out.printf("Downloading %s to %s...", urlItem.toString(), fileLocalItem.toString());
-    try {
-      ReadableByteChannel rbc = Channels.newChannel(urlItem.openStream());
-      FileOutputStream fos = new FileOutputStream(fileLocalItem);
-      fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-      fos.close();
-      System.out.println("Done.");
+    ReadableByteChannel rbc = tryOpenDownloadChannel(urlItem);
 
-      System.out.printf("Checking %s MD5...", fileLocalItem.toString());
-      ReadableByteChannel rbcMD5 = Channels.newChannel(urlMD5.openStream());
-      ByteBuffer buf = ByteBuffer.allocate(32); // MD5 is always 32 characters long
-      rbcMD5.read(buf);
-      String md5Expect = new String(buf.array(), Charset.forName("ASCII")).toLowerCase();
-      String md5Actual = getMD5(fileLocalItem).toLowerCase();
-      if (!md5Expect.equals(md5Actual)) {
-        System.out.println("Failed!");
-        System.err.printf("MD5 checking of %s failed: expect %s, got %s\n", fileLocalItem.toString(),
-                md5Expect, md5Actual);
-        System.exit(-1);
-      }
-      System.out.println("Done.");
-      if (fileLocalItem.getName().endsWith(".zip")) {
-        System.out.printf("Extracting %s...", fileLocalItem.toString());
-        Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
-                fileLocalItem.getParentFile());
-        System.out.println("Done.");
-      }
-    } catch (Exception e) {
+    FileOutputStream fos = new FileOutputStream(fileLocalItem);
+    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+    fos.close();
+    System.out.println("Done.");
+
+    System.out.printf("Checking %s MD5...", fileLocalItem.toString());
+    ReadableByteChannel rbcMD5 = tryOpenDownloadChannel(urlMD5);
+    ByteBuffer buf = ByteBuffer.allocate(32); // MD5 is always 32 characters long
+    rbcMD5.read(buf);
+    String md5Expect = new String(buf.array(), Charset.forName("ASCII")).toLowerCase();
+    String md5Actual = getMD5(fileLocalItem).toLowerCase();
+    if (!md5Expect.equals(md5Actual)) {
       System.out.println("Failed!");
-      e.printStackTrace();
-      throw e;
+      System.err.printf("MD5 checking of %s failed: expect %s, got %s\n", fileLocalItem.toString(),
+              md5Expect, md5Actual);
+      System.exit(-1);
+    }
+    System.out.println("Done.");
+    if (fileLocalItem.getName().endsWith(".zip")) {
+      System.out.printf("Extracting %s...", fileLocalItem.toString());
+      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
+              fileLocalItem.getParentFile());
+      System.out.println("Done.");
     }
   }
 
