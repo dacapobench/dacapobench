@@ -91,10 +91,14 @@
     </target>
 
     <!-- lucene -->
+    <property name="lucene-version" value="7.1.0"/>
+    <property name="lucene-version-snapshot" value="${lucene-version}-SNAPSHOT"/>
+    <property name="lucene-build-dir" value="${lib-base}/lucene/build/lucene-${lucene-version}"/>
     <property name="lucene-jars" value="${lib-base}/lucene/dist/jar"/>
-    <property name="lucene-core-jar-name" value="lucene-core-7.1.0-SNAPSHOT.jar"/>
-    <property name="lucene-demos-jar-name" value="lucene-demo-7.1.0-SNAPSHOT.jar"/>
-    <property name="lucene-queryparser-jar-name" value="lucene-queryparser-7.1.0-SNAPSHOT.jar"/>
+    <property name="lucene-data" value="${lib-base}/lucene/dist/dat"/>
+    <property name="lucene-core-jar-name" value="lucene-core-${lucene-version-snapshot}.jar"/>
+    <property name="lucene-demos-jar-name" value="lucene-demo-${lucene-version-snapshot}.jar"/>
+    <property name="lucene-queryparser-jar-name" value="lucene-queryparser-${lucene-version-snapshot}.jar"/>
     <target name="lucene">
         <ant antfile="${lib-base}/lucene/build.xml"/>
     </target>

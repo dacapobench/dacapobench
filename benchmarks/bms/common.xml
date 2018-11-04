@@ -39,7 +39,7 @@
 
 	<property name="harness-classpath" value="harness/dist/"/>
 
-	<target name="all" depends="source,svn-source,cvs-source,hg-source,pre-build,build,complete"/>
+	<target name="all" depends="source,svn-source,cvs-source,hg-source,git-source,pre-build,build,complete"/>
 
 	<target name="incremental">
 		<property name="incremental-build" value="true"/>
@@ -88,6 +88,19 @@
 			<param name="target-dir" value="${bm-downloads}"/>
 			<param name="hg-url" value="${bm-hg-url}"/>
 			<param name="hg-revision" value="${bm-hg-revision}"/>
+			<param name="target-file" value="${bm-src}"/>
+			<param name="fail-on-error" value="${bm-fail-on-error}"/>
+		</antcall>
+	</target>
+
+	<target name="git-source" if="bm-git-url">
+		<condition property="fail-on-error" value="no" else="yes">
+			<isset property="bm-ignore-failure"/>
+		</condition>
+		<antcall target="check-git-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="git-url" value="${bm-git-url}"/>
+			<param name="git-commit" value="${bm-git-commit}"/>
 			<param name="target-file" value="${bm-src}"/>
 			<param name="fail-on-error" value="${bm-fail-on-error}"/>
 		</antcall>
@@ -190,5 +203,4 @@
 		<delete file="${temp.file}"/>
 		<jar jarfile="${build.target-jar}" basedir="${bm-output-dir}" update="true"/>
 	</target>
-
 </project>

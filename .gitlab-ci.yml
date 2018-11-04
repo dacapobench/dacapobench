@@ -10,72 +10,107 @@ before_script:
   - echo "jdk9home=/usr/lib/jvm/java-9-openjdk-amd64" >> local.properties
   - cat local.properties
 
+cache:
+  key: anu-gitlab-local
+  untracked: true
+
 avrora:
   script:
     - ant -Dbuild.target-jar=dacapo.jar avrora
-    - java -jar dacapo.jar avrora
+    - java -jar dacapo.jar avrora -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 batik:
   script:
     - ant -Dbuild.target-jar=dacapo.jar batik
-    - java -jar dacapo.jar batik
+    - java -jar dacapo.jar batik -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 eclipse:
   script:
     - ant -Dbuild.target-jar=dacapo.jar eclipse
-    - java -jar dacapo.jar eclipse
+    - java -jar dacapo.jar eclipse -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 fop:
   script:
     - ant -Dbuild.target-jar=dacapo.jar fop
     - java -jar dacapo.jar fop
+  after_script:
+    - git clean -df -e "downloads"
 
 h2:
   script:
     - ant -Dbuild.target-jar=dacapo.jar h2
-    - java -jar dacapo.jar h2
+    - java -jar dacapo.jar h2 -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 jython:
   script:
     - ant -Dbuild.target-jar=dacapo.jar jython
-    - java -jar dacapo.jar jython
+    - java -jar dacapo.jar jython -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 luindex:
   script:
     - ant -Dbuild.target-jar=dacapo.jar luindex
-    - java -jar dacapo.jar luindex
+    - java -jar dacapo.jar luindex -s small
+  after_script:
+    - git clean -df -e "downloads" -e "enwiki.txt"
 
 lusearch:
   script:
     - ant -Dbuild.target-jar=dacapo.jar lusearch
-    - java -jar dacapo.jar lusearch
+    - java -jar dacapo.jar lusearch -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 pmd:
   script:
     - ant -Dbuild.target-jar=dacapo.jar pmd
-    - java -jar dacapo.jar pmd
+    - java -jar dacapo.jar pmd -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 sunflow:
   script:
     - ant -Dbuild.target-jar=dacapo.jar sunflow
-    - java -jar dacapo.jar sunflow
+    - java -jar dacapo.jar sunflow -s small
+  after_script:
+    - git clean -df -e "downloads"
 
 tomcat:
   script:
     - ant -Dbuild.target-jar=dacapo.jar tomcat
-    - java -jar dacapo.jar tomcat
+    - java -jar dacapo.jar tomcat -s small
+  after_script:
+    - git clean -df -e "downloads"
+    - git clean -df -e "downloads"
 
 tradebeans:
   script:
     - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradebeans" script.out
-    - sleep 120 | script -q -c "java -jar dacapo.jar tradebeans" script.out
+    - sleep 120 | script -q -c "java -jar dacapo.jar tradebeans -s small" script.out
+  after_script:
+    - git clean -df -e "downloads"
+    - git clean -df -e "downloads"
 
 tradesoap:
   script:
     - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradesoap" script.out
-    - sleep 120 | script -q -c "java -jar dacapo.jar tradesoap" script.out
+    - sleep 120 | script -q -c "java -jar dacapo.jar tradesoap -s small" script.out
+  after_script:
+    - git clean -df -e "downloads"
+    - git clean -df -e "downloads"
 
 xalan:
   script:
     - ant -Dbuild.target-jar=dacapo.jar xalan
-    - java -jar dacapo.jar xalan
+    - java -jar dacapo.jar xalan -s small
+  after_script:
+    - git clean -df -e "downloads"

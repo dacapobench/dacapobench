@@ -20,6 +20,8 @@
  */
 package org.dacapo.luindex;
 
+import java.io.BufferedReader;
+
 /**
 
  *
@@ -37,6 +39,7 @@ package org.dacapo.luindex;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Paths;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
@@ -61,15 +64,17 @@ import org.apache.lucene.index.IndexWriterConfig;
 public class Index {
 
   private final File scratch;
+  private final File data;
 
-  public Index(File scratch) {
+  public Index(File scratch, File data) {
     this.scratch = scratch;
+    this.data = data;
   }
 
   /**
    * Index all text files under a directory.
    */
-  public void main(final File INDEX_DIR, final String[] args) throws IOException {
+  public void indexDir(final File INDEX_DIR, final String[] args) throws IOException {
     IndexWriterConfig IWConfig = new IndexWriterConfig();
     IWConfig.setOpenMode (IndexWriterConfig.OpenMode.CREATE);
     IWConfig.setMergePolicy (new LogByteSizeMergePolicy());
@@ -80,12 +85,79 @@ public class Index {
         System.out.println("Document directory '" + docDir.getAbsolutePath() + "' does not exist or is not readable, please check the path");
         throw new IOException("Cannot read from document directory");
       }
-
-      indexDocs(writer, docDir);
+      File prefix = docDir.getAbsolutePath().contains(scratch.getAbsolutePath()) ? scratch : data;
+      indexDocs(writer, docDir, prefix);
       System.out.println("Optimizing...");
       writer.forceMerge(1);
     }
     writer.close();
+  }
+  /**
+   * Takes in a merged one-document-per-line text file from Lucene Wikipedia output,
+   * and index documents there.
+   */
+  public void indexLineDoc(final File INDEX_DIR, final String[] args) throws IOException {
+    IndexWriterConfig IWConfig = new IndexWriterConfig();
+    IWConfig.setOpenMode (IndexWriterConfig.OpenMode.CREATE);
+    IWConfig.setMergePolicy (new LogByteSizeMergePolicy());
+    IndexWriter writer = new IndexWriter(FSDirectory.open(Paths.get(INDEX_DIR.getCanonicalPath())), IWConfig);
+
+    for (int idx = 0; idx < args.length; idx ++) {
+      File txtFile = new File(args[idx]);
+
+      if (!txtFile.exists() || !txtFile.canRead()) {
+        System.out.println("Document directory '" + txtFile.getAbsolutePath() + "' does not exist or is not readable, please check the path");
+        throw new IOException("Cannot read from document directory");
+      }
+
+      BufferedReader reader = new BufferedReader(new FileReader(txtFile));
+      reader.readLine();  // skip header line
+      String line = reader.readLine();
+      int n = 0;
+      while (line != null) {
+        System.out.println("adding " + line.substring(0, line.indexOf(SEP)));
+        writer.addDocument(getLuceneDocFromLine(line));
+        line = reader.readLine();
+        n ++;
+      }
+    }
+
+    System.out.println("Optimizing...");
+    writer.forceMerge(1);
+    writer.close();
+  }
+
+  private final char SEP = '\t';
+
+  Document getLuceneDocFromLine(String line) {
+    Document doc = new Document();
+    FieldType defaultFT = new FieldType();
+    defaultFT.setTokenized (false);
+    defaultFT.setStored (true);
+    defaultFT.setIndexOptions (IndexOptions.DOCS);
+
+    int spot = line.indexOf(SEP);
+    int spot2 = line.indexOf(SEP, 1 + spot);
+    int spot3 = line.indexOf(SEP, 1 + spot2);
+    if (spot3 == -1) {
+      spot3 = line.length();
+    }
+
+    // Add title as a field. Use a field that is
+    // indexed (i.e. searchable), but don't tokenize the field into words.
+    doc.add(new Field("title", line.substring(0, spot), defaultFT));
+
+    // Add date as a field. Indexed, but not tokenized.
+    doc.add(new Field("date", line.substring(1+spot, spot2), defaultFT));
+
+    // Add body as a field. Tokenized and indexed, but not stored.
+    FieldType bodyFT = new FieldType();
+    bodyFT.setTokenized(true);
+    bodyFT.setStored(false);
+    bodyFT.setIndexOptions(IndexOptions.DOCS);
+    doc.add(new Field("body", line.substring(1 + spot2, spot3), bodyFT));
+
+    return doc;
   }
 
   /**
@@ -95,10 +167,10 @@ public class Index {
    * @param file
    * @throws IOException
    */
-  void indexDocs(IndexWriter writer, File file) throws IOException {
+  void indexDocs(IndexWriter writer, File file, File prefix) throws IOException {
 
     /* Strip the absolute part of the path name from file name output */
-    int scratchP = scratch.getCanonicalPath().length() + 1;
+    int prefixIdx = prefix.getCanonicalPath().length() + 1;
 
     /* do not try to index files that cannot be read */
     if (file.canRead()) {
@@ -108,11 +180,11 @@ public class Index {
         if (files != null) {
           Arrays.sort(files);
           for (int i = 0; i < files.length; i++) {
-            indexDocs(writer, new File(file, files[i]));
+            indexDocs(writer, new File(file, files[i]), prefix);
           }
         }
       } else {
-        System.out.println("adding " + file.getCanonicalPath().substring(scratchP));
+        System.out.println("adding " + file.getCanonicalPath().substring(prefixIdx));
         try {
           Document doc = new Document();
           FieldType docFT = new FieldType();

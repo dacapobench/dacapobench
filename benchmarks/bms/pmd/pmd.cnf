@@ -3,58 +3,22 @@ benchmark pmd
   thread-model single
   jars "pmd-core-5.8.1.jar", "pmd-java-5.8.1.jar", "jaxen-1.1.6.jar", "asm-5.0.4.jar", "commons-io-2.4.jar", "commons-lang3-3.4.jar", "jcommander-1.48.jar", "saxon-9.1.0.8.jar", "saxon-9.1.0.8-dom.jar", "junit-4.12.jar", "xercesImpl.jar", "xml-apis.jar";
 
-size xsmall args "@pmd/small.lst","text","pmd/rulesets/java/braces.xml","-debug";
-
-size small args "@pmd/small.lst","text",
-    "pmd/rulesets/java/basic.xml",
-    "pmd/rulesets/java/braces.xml",
-		"pmd/rulesets/java/codesize.xml",
-		"pmd/rulesets/java/controversial.xml",
-		"pmd/rulesets/java/design.xml",
-		"pmd/rulesets/java/finalizers.xml",
-		"pmd/rulesets/java/imports.xml",
-		"pmd/rulesets/java/javabeans.xml",
-		"pmd/rulesets/java/junit.xml",
-		"pmd/rulesets/java/naming.xml",
-		"pmd/rulesets/java/strictexception.xml",
-		"pmd/rulesets/java/strings.xml",
-		"pmd/rulesets/java/unusedcode.xml"
+size small args "-d", "${SCRATCH}/pmd/small", "-f", "text", "-language", "java",
+								"-shortnames", "-failOnViolation", "false", "-rulesets", "java-comments"
   output 
-    stdout digest 0x475d6a8a284d22088d52b77e44806c0aac252efd;
+    stdout digest 0x4a58faf37aebc2138d4bc1da7746e26ba9177cb6;
 
-size default args "@pmd/default.lst","text",
-    "pmd/rulesets/java/basic.xml",
-    "pmd/rulesets/java/braces.xml",
-		"pmd/rulesets/java/codesize.xml",
-		"pmd/rulesets/java/controversial.xml",
-		"pmd/rulesets/java/design.xml",
-		"pmd/rulesets/java/finalizers.xml",
-		"pmd/rulesets/java/imports.xml",
-		"pmd/rulesets/java/javabeans.xml",
-		"pmd/rulesets/java/junit.xml",
-		"pmd/rulesets/java/naming.xml",
-		"pmd/rulesets/java/strictexception.xml",
-		"pmd/rulesets/java/strings.xml",
-		"pmd/rulesets/java/unusedcode.xml"
-  output
-    stdout digest 0x489b9c137c05ceb8b96e64486e4a534399cbf51f;
- 
-size large args "@pmd/large.lst","text",
-    "pmd/rulesets/java/basic.xml",
-    "pmd/rulesets/java/braces.xml",
-		"pmd/rulesets/java/codesize.xml",
-		"pmd/rulesets/java/controversial.xml",
-		"pmd/rulesets/java/design.xml",
-		"pmd/rulesets/java/finalizers.xml",
-		"pmd/rulesets/java/imports.xml",
-		"pmd/rulesets/java/javabeans.xml",
-		"pmd/rulesets/java/junit.xml",
-		"pmd/rulesets/java/naming.xml",
-		"pmd/rulesets/java/strictexception.xml",
-		"pmd/rulesets/java/strings.xml",
-		"pmd/rulesets/java/unusedcode.xml"
+size default args "-d", "${SCRATCH}/pmd/default", "-f", "text", "-language", "java",
+								"-shortnames", "-failOnViolation", "false", "-rulesets",
+								"java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations"
   output 
-    stdout digest 0x93b4bf7043d2a6131c6e7f86a5a39466fa3872f5;
+    stdout digest 0x02794bd962ae65aabb0978ee7aeaae79559b87ad;
+
+size large args "-d", "${SCRATCH}/pmd/large", "-f", "text", "-language", "java",
+								"-shortnames", "-failOnViolation", "false", "-rulesets",
+                "java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations"
+  output 
+    stdout digest 0x3539e8eba8378ea7b2e969b32c9535834cf2857e;
 
 description
   short		"A source code analyzer for Java",

@@ -6,25 +6,25 @@ benchmark tradebeans
 size small args "tiny" 
   threads 1      // per available processor
   thread-limit 32
-  output stdout  digest 0x5a30ffed74076fdbb2d5dab15f9a817749d9a1cc,
+  output stdout  digest 0x3c7bdc67bde327e6077ba4b85b8060106d0f269d,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "medium"
-  threads 1      // per available processor
-  thread-limit 512
-  output stdout  digest 0x97218b209c8cff8abb73e196e1d0b5336c48070b,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
-
-size large args "large"
+size default args "default-bean"
   threads 1      // per available processor
   thread-limit 2048
-  output stdout  digest 0xdff3d827b054ce54df6bbc3f1484797875a36e1d,
+  output stdout  digest 0x573bab09932ed32193e0f4d6c4adc829a2554857,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size huge args "huge"
+size large args "large-bean"
   threads 1      // per available processor
   thread-limit 8192
-  output stdout  digest 0x8e4068f7372432f2b68a227d67d7a11476abf63b,
+  output stdout  digest 0xbaf7b415c0fef17f44cd0d13c45ab76b644a90b7,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size huge args "huge-bean"
+  threads 1      // per available processor
+  thread-limit 32768
+  output stdout  digest 0x7d549bb05c16933d2d640c35d4d77d6d2f74afc1,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

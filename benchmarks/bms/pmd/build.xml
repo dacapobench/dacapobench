@@ -68,25 +68,7 @@
     </target>
 
     <target name="data">
-        <property name="pmd-data" value="${bm-build-top}/data/pmd"/>
-        <mkdir dir="${pmd-data}"/>
-        <copy todir="${pmd-data}">
-            <fileset dir="${bm-build-top}">
-                <include name="**/*.java"/>
-            </fileset>
-        </copy>
-        <copy todir="${pmd-data}">
-            <fileset dir="${bm-build-top}/pmd-java/src/main/resources">
-                <include name="rulesets/**/*"/>
-            </fileset>
-        </copy>
-        <copy todir="${pmd-data}" >
-            <fileset dir="${bm-data}/pmd">
-                <include name="*.lst"/>
-            </fileset>
-        </copy>
-        <zip basedir="${bm-build-top}/data" includes="pmd/**" destfile="${bm-dat}/pmd.zip"/>
-        <delete dir="${bm-build-top}/data"/>
+        <zip destfile="${bm-dat}/pmd.zip" basedir="${bm-data}" includes="pmd/**/*"/>
     </target>
 
     <target name="libs">

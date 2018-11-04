@@ -15,19 +15,10 @@
     <property name="bm-url" value="${sourceforge.dl.url}/sunflow/sunflow-src/v${bm-version}"/>
     <property name="bm-bin-url" value="${sourceforge.dl.url}/sunflow/sunflow-bin/v${bm-version}"/>
     <property name="bm-src" value="${bm-name}-src-v${bm-version}.zip"/>
-    <property name="bm-bin" value="${bm-name}-bin-v${bm-version}.zip"/>
 
     <import file="../common.xml"/>
 
-    <target name="source" depends="common.source">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${bm-bin-url}"/>
-            <param name="target-file" value="${bm-bin}"/>
-        </antcall>
-    </target>
-
-    <target name="unpack" depends="unzip"/>
+    <target name="unpack" depends="unzip, patch"/>
 
     <target name="bm-build" depends="janino">
         <mkdir dir="${bm-build-dir}/build"/>
@@ -35,22 +26,13 @@
             classpath="${janino-jar}" destdir="${bm-build-dir}/build"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
-    
-    <target name="bm-data">
-        <unzip src="${bm-downloads}/${bm-bin}" dest="${bm-build-dir}"/>
-        <unjar src="${bm-build-dir}/${bm-name}/${bm-name}.jar" dest="${bm-build-dir}">
-            <patternset>
-                <include name="resources/golden_*.png"/>
-            </patternset>
-        </unjar>
-    </target>
 
-    <target name="jar" depends="bm-data">
+    <target name="jar">
         <jar destfile="${bm-jars}/${bm-name}-${bm-version}.jar">
             <fileset dir="${bm-build-dir}/build">
                 <include name="**/*.class"/>
             </fileset>
-            <fileset dir="${bm-build-dir}">
+            <fileset dir="${bm-data}">
                 <include name="resources/golden_*.png"/>
             </fileset>
         </jar>

@@ -26,8 +26,8 @@ public class Tradebeans extends Benchmark {
   private Method initializeMethod;
   private Method shutdownMethod;
 
-  public Tradebeans(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public Tradebeans(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
 
     // Find the launcher
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
@@ -43,7 +43,7 @@ public class Tradebeans extends Benchmark {
 
   @Override
   protected void prepare(String size) throws Exception {
-    String[] args = config.preprocessArgs(size, scratch);
+    String[] args = config.preprocessArgs(size, scratch, data);
     String dtSize = "medium";
     if (args.length == 1)
       dtSize = args[0];

@@ -214,7 +214,7 @@ public class Search {
           reader = new OneNormsReader(reader, normsField);*/
         searcher = new IndexSearcher(reader);
 
-        String query = queryBase + (id < 10 ? "00" : (id < 100 ? "0" : "")) + id + ".txt";
+        String query = queryBase + "query" + (id < 10 ? "00" : (id < 100 ? "0" : "")) + id + ".txt";
         in = new BufferedReader(new FileReader(query));
         out = new PrintWriter(new BufferedWriter(new FileWriter(outBase + id)));
 

@@ -20,8 +20,8 @@ import org.dacapo.parser.Config;
 public class Lusearch extends org.dacapo.harness.Benchmark {
   private final Object benchmark;
 
-  public Lusearch(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public Lusearch(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.dacapo.lusearch.Search", true, loader);
     this.method = clazz.getMethod("main", String[].class);
     Constructor<?> cons = clazz.getConstructor();
@@ -35,6 +35,6 @@ public class Lusearch extends org.dacapo.harness.Benchmark {
 
   @Override
   public void iterate(String size) throws Exception {
-    method.invoke(benchmark, (Object) (config.preprocessArgs(size, scratch)));
+    method.invoke(benchmark, (Object) (config.preprocessArgs(size, scratch, data)));
   }
 }

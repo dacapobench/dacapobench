@@ -22,8 +22,8 @@ public class Jython extends Benchmark {
 
   private Method pySetArgsMethod;
 
-  public Jython(Config config, File scratch) throws Exception {
-    super(config, scratch);
+  public Jython(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data);
     Class<?> clazz = Class.forName("org.python.util.jython", true, loader);
     this.method = clazz.getMethod("main", String[].class);
     Class<?> pyClass = Class.forName("org.python.core.PySystemState", true, loader);
@@ -31,6 +31,7 @@ public class Jython extends Benchmark {
     System.setProperty("python.home", fileInScratch("jython"));
     System.setProperty("python.cachedir", fileInScratch("cachedir"));
     System.setProperty("python.verbose", "warning");
+    System.setProperty("python.console", "org.python.core.PlainConsole");
     useBenchmarkClassLoader();
     try {
       method.invoke(null, (Object) new String[] { fileInScratch("jython/noop.py") });
@@ -45,7 +46,7 @@ public class Jython extends Benchmark {
    * script sees. Hence the Py.setArgv call, followed by the jython.main call.
    */
   public void iterate(String size) throws Exception {
-    String[] args = config.preprocessArgs(size, scratch);
+    String[] args = config.preprocessArgs(size, scratch, data);
     pySetArgsMethod.invoke(null, (Object) args);
     method.invoke(null, (Object) args);
   }

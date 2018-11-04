@@ -32,8 +32,8 @@ public class Pmd extends Benchmark {
 
   String[] args;
 
-  public Pmd(Config config, File scratch) throws Exception {
-    super(config, scratch);
+  public Pmd(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data);
     Class<?> clazz = Class.forName("net.sourceforge.pmd.PMD", true, loader);
     this.method = clazz.getMethod("main", String[].class);
 
@@ -53,69 +53,10 @@ public class Pmd extends Benchmark {
     System.setProperty((String)pmdcli.getField("NO_EXIT_AFTER_RUN").get(null), "true");
   }
 
-  /**
-   * Generate a new file list that has the scrath directory path
-   * prepended to each file in the list
-   */
-  private File prepended_filelist(String filelist_path) {
-    try {
-      File fl = new File(filelist_path);
-      BufferedReader reader = new BufferedReader(new FileReader(fl));
-      List<String> lst = new ArrayList<String>();
-      for (String l = reader.readLine(); l != null; l = reader.readLine())
-        lst.add(fileInScratch(l));
-      reader.close();
-
-
-      fl.renameTo(new File(fl.getParentFile(), fl.getName() + ".orig"));
-
-      File newfl = new File(filelist_path);
-      newfl.createNewFile();
-      BufferedWriter writer = new BufferedWriter(new FileWriter(newfl));
-
-      for (Iterator<String> iter = lst.iterator(); iter.hasNext();)
-        writer.write(iter.next() + "\n");
-      writer.close();
-
-      return newfl;
-
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException("File " + filelist_path + " error: " + e);
-    } catch (IOException e) {
-      throw new RuntimeException("File " + filelist_path + " error: " + e);
-    }
-  }
-
-  public void prepare(String size) {
-      String [] config_args = config.getArgs(size);
-      args = new String[13];
-
-      args[0] = "-filelist";
-      args[1] = prepended_filelist(fileInScratch(config_args[0].substring(1))).getPath();
-
-      args[2] = "-format";
-      args[3] = "text";
-
-      // Java 1.6
-      args[4] = "-language";
-      args[5] = "java";
-      args[6] = "-version";
-      args[7] = "1.6";
-
-      // if this is set to true, PMD will exit with status 4 on finding rule violations.
-      // however we don't care about rule violations for benchmarking
-      args[8] = "-failOnViolation";
-      args[9] = "false";
-
-      args[10] = "-shortnames";
-
-      args[11] = "-rulesets";
-      List<String> rulesets = new ArrayList<String>(args.length - 2);
-      for (int i = 2; i < config_args.length; i ++) {
-        if (config_args[i].charAt(0) != '-')
-          rulesets.add(fileInScratch(config_args[i]));
-      }
-      args[12] = String.join(",", rulesets);
+  protected void prepare(String size) throws Exception {
+    super.prepare(size);
+    args = config.preprocessArgs(size, scratch, data);
+    
   }
 
   public void iterate(String size) throws Exception {

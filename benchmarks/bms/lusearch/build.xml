@@ -26,11 +26,8 @@
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}"/>
     </target>
 
-    <target name="bm-data">
-        <zip destfile="${bm-dat}/lusearch.zip">
-            <fileset dir="${bm-data}" includes="lusearch/query*" />
-            <fileset dir="${bm-data}" includes="lusearch/index-default/**" />
-        </zip>
+    <target name="data">
+        <copy file="${bm-data}/lusearch.zip" todir="${bm-dat}"/>
     </target>
 
 </project>

@@ -35,8 +35,8 @@ public class H2 extends Benchmark {
   private Method iterationTPCC;
   private Method postIterationTPCC;
   
-  public H2(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public H2(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
   }
   
   @Override
@@ -54,7 +54,7 @@ public class H2 extends Benchmark {
       TreeMap<String,String> threadMap = new TreeMap<String,String>(); 
       TreeMap<String,String[]>  argMap = new TreeMap<String,String[]>();
       for(String size: config.getSizes()) {
-          String[] args = config.preprocessArgs(size, scratch);
+          String[] args = config.preprocessArgs(size, scratch, data);
 
           argMap.put(size,args);
           threadMap.put(size, Integer.toString(config.getThreadCount(size)));

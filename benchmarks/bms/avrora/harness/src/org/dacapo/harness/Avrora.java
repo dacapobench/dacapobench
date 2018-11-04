@@ -22,8 +22,8 @@ public class Avrora extends Benchmark {
 
   String[] args;
 
-  public Avrora(Config config, File scratch) throws Exception {
-    super(config, scratch);
+  public Avrora(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data);
     Class<?> clazz = Class.forName("avrora.Main", true, loader);
     this.method = clazz.getMethod("main", String[].class);
   }
@@ -31,7 +31,7 @@ public class Avrora extends Benchmark {
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
-    args = config.preprocessArgs(size, scratch);
+    args = config.preprocessArgs(size, scratch, data);
   }
 
   @Override

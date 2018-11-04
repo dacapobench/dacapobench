@@ -11,6 +11,7 @@ package org.dacapo.harness;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -82,11 +83,21 @@ public class TestHarness {
     System.setProperty("java.awt.headless", "true");
 
     setBuildInfo();  // set BuildVersion and BuildNickName.
+    if (BuildVersion.contains("git")) {
+      System.err.println(
+        "----------------------------------------------------------------\n" +
+        "WARNING: This is NOT a release build of the DaCapo suite.\n" +
+        "It has not been calibrated and must be used with great care.\n" +
+        "If you do use this build, be sure to cite the relevant git hash.\n" +
+        "----------------------------------------------------------------\n"
+      );
+    }
     try {
       commandLineArgs = new CommandLineArgs(args);
 
       File scratch = new File(commandLineArgs.getScratchDir());
       makeCleanScratch(scratch);
+      File data = new File(ExternData.getLocation());
 
       // this is not right
       Benchmark.setCommandLineOptions(commandLineArgs);
@@ -150,7 +161,16 @@ public class TestHarness {
           }
 
           harness.dump(commandLineArgs.getVerbose());
-          runBenchmark(scratch, bm, harness);
+          try {
+            runBenchmark(scratch, data, bm, harness);
+          } catch (FileNotFoundException e) {
+            System.err.printf("ERROR: The following file used by size '%s' could not be found: %s\n", size, e.getMessage());
+            System.err.printf("Please check that you have downloaded the required data for this size, " +
+                              "and have installed it correctly under %s/%s\n", data.getAbsolutePath(), bm);
+            System.err.printf("Note: the directory for big data is currently set to: %s\n", data.getAbsolutePath());
+            System.err.printf("To change this path, please run `java -jar %s -i <new_data_dir>`.\n", args[0]);
+            System.exit(-1);
+          }
         }
       }
     } catch (Exception e) {
@@ -175,6 +195,7 @@ public class TestHarness {
 
   /**
    * @param scratch
+   * @param data
    * @param bm
    * @param harness
    * @param c
@@ -184,13 +205,13 @@ public class TestHarness {
    * @throws InvocationTargetException
    * @throws Exception
    */
-  private static void runBenchmark(File scratch, String bm, TestHarness harness) throws NoSuchMethodException, InstantiationException, IllegalAccessException,
+  private static void runBenchmark(File scratch, File data, String bm, TestHarness harness) throws NoSuchMethodException, InstantiationException, IllegalAccessException,
       InvocationTargetException, Exception {
     harness.config.printThreadModel(System.out, commandLineArgs.getSize(), commandLineArgs.getVerbose());
 
-    Constructor<?> cons = harness.findClass().getConstructor(new Class[] { Config.class, File.class });
+    Constructor<?> cons = harness.findClass().getConstructor(new Class[] { Config.class, File.class, File.class });
 
-    Benchmark b = (Benchmark) cons.newInstance(new Object[] { harness.config, scratch });
+    Benchmark b = (Benchmark) cons.newInstance(new Object[] { harness.config, scratch, data });
 
     boolean valid = true;
     Callback callback = commandLineArgs.getCallback();
@@ -254,16 +275,19 @@ public class TestHarness {
       return null; // not reached
     }
   }
+
+  public static String getManifestAttribute(String key) throws IOException {
+    String url = TestHarness.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+    JarFile jarFile = new JarFile(url.replace("!/harness", "").replace("file:", ""));
+    Manifest manifest = jarFile.getManifest();
+    Attributes attributes = manifest.getMainAttributes();
+    return attributes.get(new Attributes.Name(key)).toString();
+  }
+
   private static void setBuildInfo() {
     try {
-      String url = TestHarness.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-      JarFile jarFile = new JarFile(url.replace("!/harness", "").replace("file:", ""));
-
-      Manifest manifest = jarFile.getManifest();
-      Attributes attributes = manifest.getMainAttributes();
-
-      String nickname = attributes.get(new Attributes.Name(BUILD_NICKNAME)).toString();
-      String version = attributes.get(new Attributes.Name(BUILD_VERSION)).toString();
+      String nickname = getManifestAttribute(BUILD_NICKNAME);
+      String version = getManifestAttribute(BUILD_VERSION);
 
       BuildNickName = nickname;
       BuildVersion = version;

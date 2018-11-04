@@ -10,29 +10,68 @@ benchmark batik
  */
 
 size small args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg"
-  output stdout           digest 0xa8f2208c90a7e2223ff376e873fd7ddb0ece3db7,
-    	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "mapWaadt.png"   /* digest 0xa0617ca6035d7eaeb6ea02f949759c48d869f15b */;
+  output  stdout           digest 0xa8f2208c90a7e2223ff376e873fd7ddb0ece3db7,
+    	    stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+          "mapWaadt.png"   digest 0x80b60361977b9732c2df8e0d4313037b372e0cb5;
 
-size default args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg","${SCRATCH}/batik/mapSpain.svg","${SCRATCH}/batik/sydney.svg"
-  output stdout           digest 0xc0ab3d5a06a755bdf7f758f1c656acbbc5aafc74,
-    	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "mapWaadt.png"   /* digest 0xa0617ca6035d7eaeb6ea02f949759c48d869f15b */,
-         "mapSpain.png"   /* digest 0x74fb77a00cf405ad334528cb15266da8d8660257 */,
-         "sydney.png"     /* digest 0x3deba206f9a89a6798bf39af029e22c3f13efe00 */;
+/* The following few test-* sizes are candidates for the default size */
+size default args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/simplex.svg"
+  output  stdout  digest  0x71ba0906238b17c6c544be91b55b4ea4f93adbcd,
+          stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+          "simplex.png" digest 0x5b47353992e6eefcb5d48792cc26f943d841b095;
 
-size large args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg","${SCRATCH}/batik/mapSpain.svg","${SCRATCH}/batik/sydney.svg",
-                "${SCRATCH}/batik/asf-logo.svg","${SCRATCH}/batik/moonPhases.svg","${SCRATCH}/batik/batik3D.svg",
-		"${SCRATCH}/batik/strokeFont.svg"
-  output stdout           digest 0x7b9a5d41084750e997c9899ef6ad3fa7a9c6d267,
+size large args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/simplex.svg","${SCRATCH}/batik/mapVASR.svg","${SCRATCH}/batik/bavaria.svg"
+  output  stdout  digest  0x0b050f6a8339a871eafab0015048cd897dfcb8de,
+          stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+          "simplex.png" digest 0x5b47353992e6eefcb5d48792cc26f943d841b095,
+          "mapVASR.png" digest 0x3086b028662d865e0913602823c0b339dc599b0b,
+          "bavaria.png" digest 0xf9e58383e2418b8a065e895cbef8132d9099a599;
+
+
+size huge args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/usMetro.svg", "${DATA}/batik/mapVASR.svg",
+                      "${DATA}/batik/bavaria.svg",
+                      "${DATA}/batik/lakeTauca.svg", "${DATA}/batik/river.svg", "${DATA}/batik/tenerife.svg",
+                      "${DATA}/batik/france.svg", "${DATA}/batik/nrwpTopography.svg",
+                      "${DATA}/batik/velhop.svg", "${DATA}/batik/polytopeCube.svg", "${DATA}/batik/ukRef.svg",
+                      "${DATA}/batik/btw.svg", "${DATA}/batik/lyon.svg", "${DATA}/batik/ohridTopographic.svg",
+                      "${DATA}/batik/dcStreet.svg", "${DATA}/batik/chicoutimi.svg",
+                      "${DATA}/batik/usElection.svg", "${DATA}/batik/moldova.svg", "${DATA}/batik/mapPolitical.svg",
+                      "${DATA}/batik/hague.svg", "${DATA}/batik/locGermany.svg",
+                      "${DATA}/batik/mowbrayOSM.svg", "${DATA}/batik/mapWorld.svg", "${DATA}/batik/sierpinski.svg",
+                      "${DATA}/batik/phi.svg", "${DATA}/batik/simplex.svg", "${DATA}/batik/mapLakes.svg",
+                      "${DATA}/batik/Tettstedskart.svg", "${DATA}/batik/mapSanFran.svg", "${DATA}/batik/serbia.svg"
+  output stdout         digest 0x3ebb7954cd8d418aad42f3ad6d71a1b512892178,
     	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "mapWaadt.png"   /* digest 0xa0617ca6035d7eaeb6ea02f949759c48d869f15b */,
-         "mapSpain.png"   /* digest 0x74fb77a00cf405ad334528cb15266da8d8660257 */,
-         "sydney.png"     /* digest 0x3deba206f9a89a6798bf39af029e22c3f13efe00 */,
-         "asf-logo.png"   /* digest 0xdde925a141917a1f98e3d148446b26edb6c7b6f8 */,
-         "moonPhases.png" /* digest 0xcfb6c0ca6947ab521664e34c892d63494aa67e29 */,
-         "batik3D.png"    /* digest 0x92785df36d779bcf741953ac6eaaa073782b5e96 */,
-         "strokeFont.png" /* digest 0x34f26f15673bbcf91162562bf3dc6375ac8eff1d */;
+        "usMetro.png"           digest 0xc8c2e79878cbce8ef4ea2e4b617096a9a53b5fe7,
+        "mapVASR.png"           digest 0x3086b028662d865e0913602823c0b339dc599b0b,
+        "bavaria.png"           digest 0xf9e58383e2418b8a065e895cbef8132d9099a599,
+        "lakeTauca.png"         digest 0xd8669db43ff28daf4e47cd5a6c240c2221445a0b,
+        "river.png"             digest 0xf73e4d82634f6241034e0c98fd6fa77498f3834c,
+        "tenerife.png"          digest 0x16914bc7c244d07ec2f1cd37a28b7938cf261ebc,
+        "france.png"            digest 0x0cb10e924d19eb8eb810cb5a5923190ed1608faa,
+        "nrwpTopography.png"    digest 0x11c543240c116fff3f175c00e3526c5eaf912d34,
+        "velhop.png"            digest 0xadc1d84736e76ba3432566b1be1bd026f3dad72d,
+        "polytopeCube.png"      digest 0xb0efc3858ce28057850761c31cde4c8824d74f9a,
+        "ukRef.png"             digest 0xb03484caf547263f0de0b5500f568cfbc3d21bfe,
+        "btw.png"               digest 0x1863cb44edf7f5267b01a9a6e857a8ba23639efc,
+        "lyon.png"              digest 0x474fa5d56baca7245f51c20f439913ceba099927,
+        "ohridTopographic.png"  digest 0x77cc1ccfa93a820354a6702bbd00893856636ce2,
+        "dcStreet.png"          digest 0xec4ca7b3d6393c0c6d4df7d3e883e836666eca1f,
+        "chicoutimi.png"        digest 0x5131d6c204d5fffec74919ddba9cdb7b722058bb,
+        "usElection.png"        digest 0x9fa22b8ef6455948fddd1e1b6edf3fecde25038a,
+        "moldova.png"           digest 0x97027e0f9d1f0e06a67e0442e53ac0d8a05820cd,
+        "mapPolitical.png"      digest 0x7680881cd645916fb2909b8817fbb2d4cd64be42,
+        "hague.png"             digest 0x16778e32cc629ad6df8ddbf2e7aa76337d3dc63f,
+        "locGermany.png"        digest 0x2965fe66467a816ff192ed6c4fda657e23110c9c,
+        "mowbrayOSM.png"        digest 0x2ca508d1f6a262666e673fedd1f97f43a7f3fa61,
+        "mapWorld.png"          digest 0xf6eec530c4c7ebada9cd7fc67fbc61be59179e47,
+        "sierpinski.png"        digest 0x3225d70ede7568a9a1f114ac02ecfc5e554bbc58,
+        "phi.png"               digest 0x4c9d62e9e8f587cb591e4c8149e14b11e9778409,
+        "simplex.png"           digest 0x5b47353992e6eefcb5d48792cc26f943d841b095,
+        "mapLakes.png"          digest 0x6eea69dabb66629a33ade05e86b370559acbba7f,
+        "Tettstedskart.png"     digest 0xc1e21c2eaed079b4a6ab0aa9dbbd6118f87b22d7,
+        "mapSanFran.png"        digest 0x871378f647282ea9fc6bbfd256e0368a7660ce41,
+        "serbia.png"            digest 0xe4cbf8e0d95dca14c6a8cdda9ec3912aeff41584;
 
 description
   short	     "A Scalable Vector Graphics (SVG) toolkit",

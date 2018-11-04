@@ -74,6 +74,8 @@ public class CommandLineArgs {
   private static final String OPT_SIZE = "size";
   private static final String OPT_SIZES = "sizes";
   private static final String OPT_SCRATCH_DIRECTORY = "scratch-directory";
+  private static final String OPT_EXTDATA_INSTALL = "extdata-install";
+  private static final String OPT_EXTDATA_SETLOC = "extdata-set-location";
   private static final String OPT_CONVERGE = "converge";
   private static final String OPT_MAX_ITERATIONS = "max-iterations";
   private static final String OPT_VARIANCE = "variance";
@@ -111,7 +113,9 @@ public class CommandLineArgs {
     makeOption("t",  OPT_THREAD_COUNT,        "Set the thread count to drive the workload (mutually exclusive -k)", "thread_count"),
     makeOption("k",  OPT_THREAD_FACTOR,       "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
     makeOption("f",  OPT_TIMEOUT_DIALATION,   "Set the time dialation of the timeouts in the benchmark by the given integer factor.", "timeout_dialation"),
-    makeOption("v",  OPT_VERBOSE,             "Verbose output", null)
+    makeOption("v",  OPT_VERBOSE,             "Verbose output", null),
+    makeOption(null, OPT_EXTDATA_INSTALL,     "Download and install external data.", "intall_path"),
+    makeOption(null, OPT_EXTDATA_SETLOC,      "Path to external data location. Note: this directory should contain \"data\" and \"jar\" sub-directories.", "ext_data_loc")
   };
 
   private static CommandLineParser parser = new PosixParser();
@@ -150,6 +154,18 @@ public class CommandLineArgs {
       }
       if (line.hasOption(OPT_HELP)) {
         printUsage();
+        reportAndExitOk = true;
+      }
+      if (line.hasOption(OPT_EXTDATA_INSTALL)) {
+        String impver = TestHarness.getManifestAttribute("Implementation-Version");
+        File pathVersioned = new File(line.getOptionValue(OPT_EXTDATA_INSTALL), impver);
+        ExternData.downloadAndInstall(pathVersioned);
+        reportAndExitOk = true;
+      }
+      if (line.hasOption(OPT_EXTDATA_SETLOC)) {
+        String impver = TestHarness.getManifestAttribute("Implementation-Version");
+        File pathVersioned = new File(line.getOptionValue(OPT_EXTDATA_SETLOC), impver);
+        ExternData.setLocation(pathVersioned, true);
         reportAndExitOk = true;
       }
       if (line.hasOption(OPT_THREAD_FACTOR) && line.hasOption(OPT_THREAD_COUNT)) {

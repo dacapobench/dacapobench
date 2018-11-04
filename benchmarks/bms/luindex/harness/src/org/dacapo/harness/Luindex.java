@@ -10,6 +10,7 @@ package org.dacapo.harness;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 
 import org.dacapo.harness.Benchmark;
 import org.dacapo.harness.DacapoException;
@@ -22,15 +23,15 @@ import org.dacapo.parser.Config;
 public class Luindex extends Benchmark {
 
   private final Object benchmark;
+  private final Class<?> clazz;
 
-  public Luindex(Config config, File scratch) throws Exception {
-    super(config, scratch);
-    Class<?> clazz = Class.forName("org.dacapo.luindex.Index", true, loader);
-    this.method = clazz.getMethod("main", File.class, String[].class);
-    Constructor<?> cons = clazz.getConstructor(File.class);
+  public Luindex(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
+    this.clazz = Class.forName("org.dacapo.luindex.Index", true, loader);
+    Constructor<?> cons = clazz.getConstructor(File.class, File.class);
     useBenchmarkClassLoader();
     try {
-      benchmark = cons.newInstance(scratch);
+      benchmark = cons.newInstance(scratch, data);
     } finally {
       revertClassLoader();
     }
@@ -54,7 +55,7 @@ public class Luindex extends Benchmark {
   public void iterate(String size) throws Exception {
     if (getVerbose())
       System.out.println("luindex benchmark starting");
-    String[] args = config.preprocessArgs(size, scratch);
+    String[] args = config.preprocessArgs(size, scratch, data);
 
     final File INDEX_DIR = new File(scratch, "index");
 
@@ -63,7 +64,11 @@ public class Luindex extends Benchmark {
       throw new DacapoException("Cannot write to index directory");
     }
 
-    method.invoke(benchmark, INDEX_DIR, args);
+    if (args[0].equals("--dirwalk"))
+      this.method = this.clazz.getMethod("indexDir", File.class, String[].class);
+    else if (args[0].equals("--linedoc"))
+      this.method = this.clazz.getMethod("indexLineDoc", File.class, String[].class);
+    method.invoke(benchmark, INDEX_DIR, Arrays.copyOfRange(args, 1, args.length));
   }
 
   public void postIteration(String size) {

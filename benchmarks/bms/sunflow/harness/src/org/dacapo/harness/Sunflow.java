@@ -25,13 +25,13 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
   private final Method beginMethod;
   private final Method endMethod;
 
-  public Sunflow(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public Sunflow(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.sunflow.Benchmark", true, loader);
     this.method = clazz.getMethod("kernelMain");
     this.beginMethod = clazz.getMethod("kernelBegin");
     this.endMethod = clazz.getMethod("kernelEnd");
-    this.constructor = clazz.getConstructor(int.class, boolean.class, boolean.class, boolean.class, int.class);
+    this.constructor = clazz.getConstructor(int.class, boolean.class, boolean.class, boolean.class, int.class, int.class);
   }
 
   /** Do one-time prep such as unziping data. In our case, do nothing. */
@@ -46,10 +46,13 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
    * @param size The "size" of the iteration (small, default, large)
    */
   public void preIteration(String size) throws Exception {
-    String[] args = config.preprocessArgs(size, scratch);
+    String[] args = config.preprocessArgs(size, scratch, data);
     useBenchmarkClassLoader();
     try {
-      sunflow = constructor.newInstance(Integer.parseInt(args[0]), false, false, false, config.getThreadCount(size));
+      sunflow = constructor.newInstance(Integer.parseInt(args[0]),
+                                        false, false, false,
+                                        config.getThreadCount(size),
+                                        Integer.parseInt(args[1]));
       beginMethod.invoke(sunflow);
     } finally {
       revertClassLoader();
