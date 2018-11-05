@@ -19,15 +19,15 @@ public class GraphChi extends Benchmark {
   private String[] args;
   private Class<?> cls;
 
-  public GraphChi(Config config, File scratch) throws Exception {
-    super(config, scratch, false);
+  public GraphChi(Config config, File scratch, File data) throws Exception {
+    super(config, scratch, data, false);
   }
 
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
 
-    String[] config_args = config.preprocessArgs(size, scratch);
+    String[] config_args = config.preprocessArgs(size, scratch, data);
     String strAppClsName = config_args[0];
     args = Arrays.copyOfRange(config_args, 1, config_args.length);
     

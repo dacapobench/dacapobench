@@ -4,8 +4,8 @@ benchmark graphchi
   jars "graphchi-0.2.2.jar";
 
 // TODO: calibrate & validate
-size netflix args "ALSMatrixFactorization", "${SCRATCH}/graphchi/netflix_mm", "10";
-size livejournal args "Pagerank", "${SCRATCH}/graphchi/soc-LiveJournal1.txt", "10", "edgelist";
+size netflix args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm", "10";
+size livejournal args "Pagerank", "${DATA}/graphchi/soc-LiveJournal1.txt", "10", "edgelist";
 
 description
   short	     "A disk-based graph computation engine.",

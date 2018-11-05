@@ -29,19 +29,6 @@
         <os family="windows"/>
     </condition>
 
-    <target name="source">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${netflix-mm-url}"/>
-            <param name="target-file" value="${netflix-mm-dl}"/>
-        </antcall>
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${livejournal-url}"/>
-            <param name="target-file" value="${livejournal-dl}"/>
-        </antcall>
-    </target>
-
     <target name="unpack" depends="untar, patch"/>
 
     <target name="bm-build">
@@ -51,15 +38,7 @@
         </exec>
     </target>
     
-    <target name="data">
-        <mkdir dir="${bm-data}/${bm-name}"/>
-        <gunzip src="${bm-downloads}/${netflix-mm-dl}" dest="${bm-data}/${bm-name}"/>
-        <gunzip src="${bm-downloads}/${livejournal-dl}" dest="${bm-data}/${bm-name}"/>
-        <zip destfile="${bm-dat}/${bm-name}.zip">
-            <fileset dir="${bm-data}/" includes="${bm-name}/**"/>
-        </zip>
-        <delete dir="${bm-data}/${bm-name}"/>
-    </target>
+    <target name="data"/>
 
     <target name="jar">
         <copy file="${bm-build-dir}/target/${bm-name}-java-${bm-version}-jar-with-dependencies.jar"
