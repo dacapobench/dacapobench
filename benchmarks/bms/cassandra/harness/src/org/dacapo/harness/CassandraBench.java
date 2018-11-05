@@ -122,8 +122,8 @@ public class CassandraBench extends Benchmark {
     Class<?> clsYCSBClient;
     Method mtdYCSBClientMain;
 
-    public CassandraBench(Config config, File scratch) throws Exception {
-        super(config, scratch, false);
+    public CassandraBench(Config config, File scratch, File data) throws Exception {
+        super(config, scratch, data, false);
     }
 
     private static void addToSystemClassLoader(List<URL> urls) throws Exception {
