@@ -42,6 +42,13 @@ fop:
   after_script:
     - git clean -df -e "downloads"
 
+graphchi:
+  script:
+    - ant -Dbuild.target-jar=dacapo.jar graphchi
+    - java -jar dacapo.jar graphchi -s livejournal
+  after_script:
+    - git clean -df -e "downloads"
+
 h2:
   script:
     - ant -Dbuild.target-jar=dacapo.jar h2

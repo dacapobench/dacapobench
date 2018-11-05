@@ -406,6 +406,9 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="fop" depends="init,harness">
         <build.bm benchmark="fop"/>
     </target>
+    <target name="graphchi" depends="init,harness">
+        <build.bm benchmark="graphchi"/>
+    </target>
     <target name="jython" depends="init,harness">
         <build.bm benchmark="jython"/>
     </target>
