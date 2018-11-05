@@ -1,0 +1,29 @@
+diff --git orig/core/src/main/java/com/yahoo/ycsb/Client.java core/src/main/java/com/yahoo/ycsb/Client.java
+index 00b1e378..9b55a30f 100644
+--- orig/core/src/main/java/com/yahoo/ycsb/Client.java
++++ core/src/main/java/com/yahoo/ycsb/Client.java
+@@ -715,9 +715,10 @@ public final class Client {
+ 
+       Measurements.getMeasurements().exportMeasurements(exporter);
+     } finally {
+-      if (exporter != null) {
+-        exporter.close();
+-      }
++      // DaCapo XXX: closing the exporter will also close the DaCapo TeePrintStream
++      // if (exporter != null) {
++      //   exporter.close();
++      // }
+     }
+   }
+ 
+@@ -844,8 +845,8 @@ public final class Client {
+       e.printStackTrace();
+       System.exit(-1);
+     }
+-
+-    System.exit(0);
++    // DaCapo: don't bomb the system/process when finish
++    // System.exit(0);
+   }
+ 
+   private static List<ClientThread> initDb(String dbname, Properties props, int threadcount,

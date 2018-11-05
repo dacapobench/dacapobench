@@ -28,6 +28,13 @@ batik:
   after_script:
     - git clean -df -e "downloads"
 
+batik:
+  script:
+    - ant -Dbuild.target-jar=dacapo.jar cassandra
+    - java -jar dacapo.jar cassandra -s test
+  after_script:
+    - git clean -df -e "downloads"
+
 eclipse:
   script:
     - ant -Dbuild.target-jar=dacapo.jar eclipse

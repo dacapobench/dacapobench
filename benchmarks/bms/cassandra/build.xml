@@ -1,0 +1,123 @@
+<!--
+ * Copyright (c) 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+ <project name="cassandra" default="all" basedir="../..">
+    <description>DaCapo Cassandra Benchmark</description>
+    <property file="dacapo.properties"/>
+
+    <property name="bm-name" value="cassandra"/>
+    <property name="bm-version" value="3.11.3"/>
+    <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
+    <property name="bm-git-url" value="http://git-wip-us.apache.org/repos/asf/cassandra.git"/>
+    <property name="bm-git-commit" value="cassandra-${bm-version}"/>
+
+    <import file="../common.xml"/>
+
+    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+    <property name="mvn-exe" value="${mvn-home}/mvn"/>
+    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
+        <os family="windows"/>
+    </condition>
+
+    <property name="ycsb-version" value="0.15.0"/>
+    <property name="ycsb-git-url" value="https://github.com/brianfrankcooper/YCSB.git"/>
+    <property name="ycsb-git-commit" value="${ycsb-version}"/>
+    <property name="ycsb-tgz" value="ycsb-${ycsb-version}.tar.gz"/>
+
+    <property name="datastax-driver-version" value="3.6.0"/>
+    <property name="datastax-driver-url" value="https://repo1.maven.org/maven2/com/datastax/cassandra/cassandra-driver-core/${datastax-driver-version}"/>
+    <property name="datastax-driver-jar" value="cassandra-driver-core-${datastax-driver-version}.jar"/>
+
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${datastax-driver-url}"/>
+            <param name="target-file" value="${datastax-driver-jar}"/>
+        </antcall>
+        <antcall target="check-git-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="git-url" value="${ycsb-git-url}"/>
+			<param name="git-commit" value="${ycsb-git-commit}"/>
+			<param name="target-file" value="${ycsb-tgz}"/>
+			<param name="fail-on-error" value="true"/>
+		</antcall>
+    </target>
+
+    <property name="cassandra-build-top" value="${bm-build-dir}/cassandra-${bm-version}"/>
+
+    <target name="cassandra-build">    
+        <mkdir dir="${cassandra-build-top}"/>
+        <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
+        <exec executable="ant" dir="${cassandra-build-top}"/>
+    </target>
+
+    <target name="ycsb-build" depends="get-slf4j-simple-jar">
+        <property name="ycsb-dir" value="${bm-build-dir}/ycsb-${ycsb-version}"/>
+        <mkdir dir="${ycsb-dir}"/>
+        <untar src="${bm-downloads}/${ycsb-tgz}" dest="${ycsb-dir}" compression="gzip"/>
+        <patch patchfile="${bm-files}/ycsb.patch" dir="${ycsb-dir}" strip="0" ignorewhitespace="yes"/>
+        <exec executable="${mvn-exe}" dir="${ycsb-dir}">
+            <arg line="-pl com.yahoo.ycsb:cassandra-binding dependency:copy-dependencies -am package -DskipTests"/>
+        </exec>
+    </target>
+
+    <target name="bm-build" depends="cassandra-build, ycsb-build">
+        <property name="bm-harness-classpath" value="${cassandra-build-top}/build/classes/main:${bm-downloads}/${datastax-driver-jar}"/>
+    </target>
+
+    <property name="slf4j-version" value="1.7.25"/>
+    <property name="slf4j-url" value="https://www.slf4j.org/dist"/>
+    <property name="slf4j-tgz" value="slf4j-${slf4j-version}.tar.gz"/>
+
+    <target name="get-slf4j-simple-jar">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${slf4j-url}"/>
+            <param name="target-file" value="${slf4j-tgz}"/>
+        </antcall>
+        <untar src="${bm-downloads}/${slf4j-tgz}" dest="${bm-build-dir}" compression="gzip"/>
+        <property name="slf4j-dir" value="${bm-build-dir}/slf4j-${slf4j-version}"/>
+        <property name="slf4j-simple-jar" value="${slf4j-dir}/slf4j-simple-${slf4j-version}.jar"/>
+    </target>
+
+    <target name="libs">
+        <copy todir="${bm-jars}">
+            <resources>
+                <!-- cassandra libs -->
+                <fileset dir="${cassandra-build-top}/lib" includes="*.jar"/>
+                <!-- datastax cassandra driver -->
+                <file file="${bm-downloads}/${datastax-driver-jar}"/>
+                <!-- ycsb libs -->
+                <file file="${slf4j-simple-jar}"/>
+                <file file="${ycsb-dir}/cassandra/target/cassandra-binding-${ycsb-version}.jar"/>
+                <fileset dir="${ycsb-dir}/cassandra/target/dependency" includes="*.jar"/>
+                <file file="${ycsb-dir}/core/target/core-${ycsb-version}.jar"/>
+                <fileset dir="${ycsb-dir}/core/target/dependency">
+                    <filename name="HdrHistogram-2.1.4.jar"/>
+                    <filename name="htrace-core4-4.1.0-incubating.jar"/>
+                    <filename name="jackson-core-asl-1.9.4.jar"/>
+                    <filename name="jackson-mapper-asl-1.9.4.jar"/>
+                </fileset>
+            </resources>
+        </copy>
+        <!-- cassandra libsigar dependency -->
+        <zip destfile="${bm-dat}/libsigar.zip" basedir="${cassandra-build-top}/lib/sigar-bin"/>
+        <!-- cassandra config (XXX: maybe put it in another target/directory) -->
+        <zip destfile="${bm-dat}/cassandra-conf.zip" basedir="${cassandra-build-top}/conf"/>
+        <!-- ycsb workloads -->
+        <zip destfile="${bm-dat}/ycsb-workloads.zip" basedir="${ycsb-dir}/workloads"/>
+    </target>
+
+    <target name="jar" depends="libs">
+        <copy file="${cassandra-build-top}/build/apache-cassandra-${bm-version}-SNAPSHOT.jar"
+            tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
+        <copy file="${cassandra-build-top}/build/apache-cassandra-thrift-${bm-version}-SNAPSHOT.jar"
+            tofile="${bm-jars}/cassandra-thrift-${bm-version}.jar"/>
+    </target>
+
+ </project>

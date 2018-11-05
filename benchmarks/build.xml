@@ -397,6 +397,9 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="batik" depends="init,harness">
         <build.bm benchmark="batik"/>
     </target>
+    <target name="cassandra" depends="init,harness">
+        <build.bm benchmark="cassandra"/>
+    </target>
     <target name="h2" depends="init,harness">
         <build.bm benchmark="h2"/>
     </target>
