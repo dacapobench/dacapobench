@@ -331,6 +331,7 @@ BUILDING:
         <clean.bm benchmark="tradebeans"/>
         <clean.bm benchmark="tradesoap"/>
         <clean.bm benchmark="xalan"/>
+        <clean.bm benchmark="zxing"/>
     </target>
 
     <target name="clean" depends="clean-benchmarks,clean-harness,clean-bootstrap"/>
@@ -439,6 +440,9 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="daytrader" depends="tradebeans, tradesoap"/>
     <target name="xalan" depends="init,harness">
         <build.bm benchmark="xalan"/>
+    </target>
+    <target name="zxing" depends="init,harness">
+        <build.bm benchmark="zxing"/>
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">
