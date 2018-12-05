@@ -20,8 +20,6 @@
 
     <import file="../common.xml"/>
 
-    <target name="all" depends="complete"/>
-
     <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
     <property name="mvn-exe" value="${mvn-home}/mvn"/>
     <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
