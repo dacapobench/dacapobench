@@ -20,6 +20,8 @@
 
     <import file="../common.xml"/>
 
+    <target name="all" depends="complete"/>
+
     <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
     <property name="mvn-exe" value="${mvn-home}/mvn"/>
     <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
@@ -27,4 +29,37 @@
     </condition>
 
     <target name="unpack" depends="untar"/>
+
+    <target name="bm-build" depends="unpack">
+        <exec executable="${mvn-exe}" dir="${bm-files}/build">
+            <arg value="install"/>
+        </exec>
+
+        <exec executable="${mvn-exe}" dir="${bm-files}/build/javase">
+            <arg value="-DskipTests"/>
+            <arg value="package"/>
+            <arg value="assembly:single"/>
+        </exec>
+    </target>
+
+    <target name="jar">
+        <copy file="${bm-build-dir}/javase/target/javase-${bm-version}-jar-with-dependencies.jar"
+              todir="${bm-jars}"/>
+    </target>
+
+    <target name="data">
+        <property name="resources-base" value="${bm-build-dir}/core/src/test"/>
+        <property name="resources" value="${resources-base}/resources"/>
+        <property name="zxing" value="${resources-base}/${bm-name}"/>
+
+        <mkdir dir="${zxing}"/>
+        <copy todir="${zxing}" flatten="true">
+            <fileset dir="${resources}" includes="**/*.png **/*.jpg"/>
+        </copy>
+
+        <zip basedir="${resources-base}" includes="${bm-name}/**" destfile="${bm-dat}/${bm-name}.zip"/>
+
+        <delete dir="${zxing}"/>
+    </target>
+
 </project>

@@ -1,0 +1,8 @@
+benchmark zxing
+  class org.dacapo.harness.Zxing
+  thread-model per_cpu
+  jars "javase-3.3.3-jar-with-dependencies.jar";
+
+size default args "${SCRATCH}/zxing/"
+  output
+    stdout digest 0x3b0bb83af461692e46dcfa421b95a91c5fb894dc;
