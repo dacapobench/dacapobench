@@ -42,6 +42,8 @@ public class Zxing extends Benchmark{
       String zxingBarcorePath = args[0];
       File f = new File(zxingBarcorePath);
       String[] barCodeFileNames = f.list();
+      // sorting as barCodeFileNames might have different orders for each OS
+      Arrays.sort(barCodeFileNames, (String a, String b) -> a.compareTo(b));
 
       assert barCodeFileNames != null;
       // Complete the path of each barcode
