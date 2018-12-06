@@ -30,6 +30,7 @@
 
     <target name="bm-build" depends="unpack">
         <exec executable="${mvn-exe}" dir="${bm-files}/build">
+            <arg value="clean"/>
             <arg value="install"/>
         </exec>
 
