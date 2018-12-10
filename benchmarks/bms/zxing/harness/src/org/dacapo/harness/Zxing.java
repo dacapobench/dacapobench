@@ -41,6 +41,8 @@ public class Zxing extends Benchmark{
     try {
       String zxingBarcorePath = args[0];
       File f = new File(zxingBarcorePath);
+
+      // This part could be changed later. Current data set is from Zxing.
       String[] barCodeFileNames = f.list();
       // sorting as barCodeFileNames might have different orders for each OS
       Arrays.sort(barCodeFileNames, (String a, String b) -> a.compareTo(b));

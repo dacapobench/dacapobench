@@ -11,7 +11,6 @@
     <description>Dacapo zxing benchmark</description>
     <property file="dacapo.properties"/>
 
-
     <property name="bm-name" value="zxing"/>
     <property name="bm-version" value="3.3.3"/>
     <property name="bm-src" value="${bm-name}-${bm-name}-${bm-version}.tar.gz"/>
@@ -56,6 +55,7 @@
             <fileset dir="${resources}" includes="**/*.png **/*.jpg"/>
         </copy>
 
+        <!--totally 1225 barcode, all from zxing-->
         <zip basedir="${resources-base}" includes="${bm-name}/**" destfile="${bm-dat}/${bm-name}.zip"/>
 
         <delete dir="${zxing}"/>
