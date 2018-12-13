@@ -318,13 +318,15 @@ BUILDING:
     <target name="clean-benchmarks" depends="init">
         <clean.bm benchmark="avrora"/>
         <clean.bm benchmark="batik"/>
-        <clean.bm benchmark="h2"/>
+        <clean.bm benchmark="cassandra"/>
         <clean.bm benchmark="eclipse"/>
         <clean.bm benchmark="fop"/>
+        <clean.bm benchmark="graphchi"/>
+        <clean.bm benchmark="h2"/>
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
-        <clean.bm benchmark="lusearch-fix"/>
+        <!--<clean.bm benchmark="lusearch-fix"/>-->
         <clean.bm benchmark="pmd"/>
         <clean.bm benchmark="sunflow"/>
         <clean.bm benchmark="tomcat"/>
