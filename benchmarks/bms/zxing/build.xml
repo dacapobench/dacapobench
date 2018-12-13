@@ -48,17 +48,17 @@
     <target name="data">
         <property name="resources-base" value="${bm-build-dir}/core/src/test"/>
         <property name="resources" value="${resources-base}/resources"/>
-        <property name="zxing" value="${resources-base}/${bm-name}"/>
+        <property name="data" value="${resources-base}/dat"/>
 
-        <mkdir dir="${zxing}"/>
-        <copy todir="${zxing}" flatten="true">
+        <mkdir dir="${data}"/>
+        <copy todir="${data}" flatten="true">
             <fileset dir="${resources}" includes="**/*.png **/*.jpg"/>
         </copy>
 
         <!--totally 1225 barcode, all from zxing-->
-        <zip basedir="${resources-base}" includes="${bm-name}/**" destfile="${bm-dat}/${bm-name}.zip"/>
+        <zip basedir="${resources-base}" includes="dat/**" destfile="${bm-dat}/${bm-name}.zip"/>
 
-        <delete dir="${zxing}"/>
+        <delete dir="${data}"/>
     </target>
 
 </project>

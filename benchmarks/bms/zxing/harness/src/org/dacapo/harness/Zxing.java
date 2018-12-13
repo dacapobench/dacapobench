@@ -24,16 +24,16 @@ public class Zxing extends Benchmark{
 
   String[] args;
 
-  public Zxing(Config config, File scratch) throws Exception {
-    super(config, scratch);
-    Class<?> clazz = Class.forName("com.google.zxing.client.j2se.CommandLineRunner", true, loader);
-    this.method = clazz.getMethod("main", String[].class);
+  public Zxing(Config config, File scratch, File data) throws Exception {
+      super(config, scratch, data);
+      Class<?> clazz = Class.forName("com.google.zxing.client.j2se.CommandLineRunner", true, loader);
+      this.method = clazz.getMethod("main", String[].class);
   }
 
   @Override
   protected void prepare(String size) throws Exception {
     super.prepare(size);
-    args = config.preprocessArgs(size, scratch);
+    args = config.preprocessArgs(size, scratch, data);
   }
 
   @Override
@@ -45,9 +45,9 @@ public class Zxing extends Benchmark{
       // This part could be changed later. Current data set is from Zxing.
       String[] barCodeFileNames = f.list();
       // sorting as barCodeFileNames might have different orders for each OS
-      Arrays.sort(barCodeFileNames, (String a, String b) -> a.compareTo(b));
-
       assert barCodeFileNames != null;
+      Arrays.sort(barCodeFileNames);
+
       // Complete the path of each barcode
       for (String barcode : barCodeFileNames)
         this.method.invoke(null, (Object) new String[] {zxingBarcorePath + barcode});
