@@ -35,7 +35,7 @@
     <target name="data"/>
 
     <target name="jar">
-        <copy file="${bm-build-dir}/target/${bm-name}-java-${bm-version}-jar-with-dependencies.jar"
+        <copy file="${bm-build-dir}/biojava-aa-prop/target/AAProperties-jar-with-dependencies.jar"
               tofile="${bm-jars}/${bm-name}-${bm-version}.jar"/>
     </target>
 </project>
