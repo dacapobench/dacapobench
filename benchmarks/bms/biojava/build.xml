@@ -32,12 +32,13 @@
 
     <target name="bm-build">
         <exec executable="${mvn-exe}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="clean"/>
             <arg value="install"/>
         </exec>
     </target>
 
     <target name="jar">
         <copy file="${bm-build-dir}/biojava-aa-prop/target/AAProperties-jar-with-dependencies.jar"
-              tofile="${bm-jars}/${bm-name}-${bm-version}.jar"/>
+              todir="${bm-jars}"/>
     </target>
 </project>

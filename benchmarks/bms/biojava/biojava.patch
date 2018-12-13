@@ -1,6 +1,6 @@
 diff -Nur build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java tempbuild/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
 --- build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2018-12-11 13:56:09.000000000 +0800
-+++ tempbuild/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2018-12-13 17:08:05.000000000 +0800
++++ tempbuild/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2018-12-13 19:01:29.000000000 +0800
 @@ -88,7 +88,7 @@
  			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList,
  					decimalPlace);
@@ -10,3 +10,31 @@ diff -Nur build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Comm
  	}
  
  	public static void run(String[] args) throws Exception{
+diff -Nur build/pom.xml tempbuild/pom.xml
+--- build/pom.xml	2018-12-11 13:56:11.000000000 +0800
++++ tempbuild/pom.xml	2018-12-13 19:03:33.000000000 +0800
+@@ -664,16 +664,16 @@
+ 		<module>biojava-core</module>
+ 		<module>biojava-alignment</module>
+ 		<module>biojava-structure</module>
+-		<module>biojava-structure-gui</module>
+-		<module>biojava-genome</module>
+-		<module>biojava-modfinder</module>
+-		<module>biojava-ws</module>
+-		<module>biojava-protein-disorder</module>
++		<!--<module>biojava-structure-gui</module>-->
++		<!--<module>biojava-genome</module>-->
++		<!--<module>biojava-modfinder</module>-->
++		<!--<module>biojava-ws</module>-->
++		<!--<module>biojava-protein-disorder</module>-->
+ 		<module>biojava-aa-prop</module>
+-		<module>biojava-survival</module>
+-		<module>biojava-ontology</module>
++		<!--<module>biojava-survival</module>-->
++		<!--<module>biojava-ontology</module>-->
+ 		<!-- Keep integration tests last  -->
+-		<module>biojava-integrationtest</module>
++		<!--<module>biojava-integrationtest</module>-->
+ 	</modules>
+ 	<inceptionYear>2000</inceptionYear>
+ 	<issueManagement>
