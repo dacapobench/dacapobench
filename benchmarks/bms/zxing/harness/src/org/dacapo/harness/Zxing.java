@@ -39,19 +39,9 @@ public class Zxing extends Benchmark{
   @Override
   public void iterate(String size){
     try {
-      String zxingBarcorePath = args[0];
-      File f = new File(zxingBarcorePath);
-
-      // This part could be changed later. Current data set is from Zxing.
-      String[] barCodeFileNames = f.list();
-      // sorting as barCodeFileNames might have different orders for each OS
-      assert barCodeFileNames != null;
-      Arrays.sort(barCodeFileNames);
-
+      String barcode = args[0];
       // Complete the path of each barcode
-      for (String barcode : barCodeFileNames)
-        this.method.invoke(null, (Object) new String[] {zxingBarcorePath + barcode});
-
+      this.method.invoke(null, (Object) new String[] {"--recursive", barcode});
     } catch (Exception e){
       e.printStackTrace();
     }
