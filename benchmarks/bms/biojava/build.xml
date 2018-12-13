@@ -24,15 +24,17 @@
         <os family="windows"/>
     </condition>
 
-    <target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar, patch"/>
+
+    <target name="patch">
+        <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-files}" strip="0" ignorewhitespace="yes"/>
+    </target>
 
     <target name="bm-build">
         <exec executable="${mvn-exe}" dir="${bm-build-dir}" failonerror="yes">
             <arg value="install"/>
         </exec>
     </target>
-
-    <target name="data"/>
 
     <target name="jar">
         <copy file="${bm-build-dir}/biojava-aa-prop/target/AAProperties-jar-with-dependencies.jar"

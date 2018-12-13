@@ -1,0 +1,12 @@
+diff -Nur build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java tempbuild/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
+--- build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2018-12-11 13:56:09.000000000 +0800
++++ tempbuild/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2018-12-13 17:08:05.000000000 +0800
+@@ -88,7 +88,7 @@
+ 			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList,
+ 					decimalPlace);
+ 		}
+-		output.close();
++//		output.close();
+ 	}
+ 
+ 	public static void run(String[] args) throws Exception{

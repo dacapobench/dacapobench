@@ -1,0 +1,9 @@
+benchmark biojava
+  class org.dacapo.harness.BioJava
+  thread-model per_cpu
+  jars "AAProperties-jar-with-dependencies.jar";
+
+size default args "${SCRATCH}/dat/test.fasta"
+  output
+    stdout digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
