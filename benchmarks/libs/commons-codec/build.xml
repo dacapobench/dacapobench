@@ -26,7 +26,7 @@
         <os family="windows"/>
     </condition>
 
-    <target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar, patch"/>
 
     <target name="build">
         <exec executable="${mvn-exe}" dir="${lib-build-top}">
