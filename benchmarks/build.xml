@@ -318,9 +318,10 @@ BUILDING:
     <target name="clean-benchmarks" depends="init">
         <clean.bm benchmark="avrora"/>
         <clean.bm benchmark="batik"/>
-        <clean.bm benchmark="h2"/>
+        <clean.bm benchmark="biojava"/>
         <clean.bm benchmark="eclipse"/>
         <clean.bm benchmark="fop"/>
+        <clean.bm benchmark="h2"/>
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
@@ -331,7 +332,6 @@ BUILDING:
         <clean.bm benchmark="tradebeans"/>
         <clean.bm benchmark="tradesoap"/>
         <clean.bm benchmark="xalan"/>
-        <clean.bm benchmark="biojava"/>
     </target>
 
     <target name="clean" depends="clean-benchmarks,clean-harness,clean-bootstrap"/>
