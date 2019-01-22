@@ -1,0 +1,8 @@
+benchmark biojava
+  class org.dacapo.harness.BioJava
+  thread-model per_cpu
+  jars "AAProperties-jar-with-dependencies.jar";
+
+size default args "${SCRATCH}/dat/core_set_aligned.fasta"
+  output
+    stdout digest 0x039481f64d66930f41e2beb9f87131e08b9c2553;

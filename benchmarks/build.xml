@@ -318,6 +318,7 @@ BUILDING:
     <target name="clean-benchmarks" depends="init">
         <clean.bm benchmark="avrora"/>
         <clean.bm benchmark="batik"/>
+        <clean.bm benchmark="biojava"/>
         <clean.bm benchmark="cassandra"/>
         <clean.bm benchmark="eclipse"/>
         <clean.bm benchmark="fop"/>
@@ -442,6 +443,9 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="daytrader" depends="tradebeans, tradesoap"/>
     <target name="xalan" depends="init,harness">
         <build.bm benchmark="xalan"/>
+    </target>
+    <target name="biojava" depends="init,harness">
+        <build.bm benchmark="biojava"/>
     </target>
     <target name="zxing" depends="init,harness">
         <build.bm benchmark="zxing"/>

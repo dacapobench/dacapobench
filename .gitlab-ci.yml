@@ -14,6 +14,13 @@ cache:
   key: anu-gitlab-local
   untracked: true
 
+biojava:
+  script:
+    - ant -Dbuild.target-jar=dacapo.jar biojava
+    - java -jar dacapo.jar biojava
+  after_script:
+    - git clean -df -e "downloads"
+
 avrora:
   script:
     - ant -Dbuild.target-jar=dacapo.jar avrora
