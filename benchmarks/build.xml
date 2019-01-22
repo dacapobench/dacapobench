@@ -319,19 +319,22 @@ BUILDING:
         <clean.bm benchmark="avrora"/>
         <clean.bm benchmark="batik"/>
         <clean.bm benchmark="biojava"/>
+        <clean.bm benchmark="cassandra"/>
         <clean.bm benchmark="eclipse"/>
         <clean.bm benchmark="fop"/>
+        <clean.bm benchmark="graphchi"/>
         <clean.bm benchmark="h2"/>
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
-        <clean.bm benchmark="lusearch-fix"/>
+        <!--<clean.bm benchmark="lusearch-fix"/>-->
         <clean.bm benchmark="pmd"/>
         <clean.bm benchmark="sunflow"/>
         <clean.bm benchmark="tomcat"/>
         <clean.bm benchmark="tradebeans"/>
         <clean.bm benchmark="tradesoap"/>
         <clean.bm benchmark="xalan"/>
+        <clean.bm benchmark="zxing"/>
     </target>
 
     <target name="clean" depends="clean-benchmarks,clean-harness,clean-bootstrap"/>
@@ -443,6 +446,9 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
     <target name="biojava" depends="init,harness">
         <build.bm benchmark="biojava"/>
+    </target>
+    <target name="zxing" depends="init,harness">
+        <build.bm benchmark="zxing"/>
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">

@@ -135,3 +135,10 @@ xalan:
     - java -jar dacapo.jar xalan -s small
   after_script:
     - git clean -df -e "downloads"
+
+zxing:
+  script:
+    - ant -Dbuild.target-jar=dacapo.jar zxing
+    - java -jar dacapo.jar zxing
+  after_script:
+    - git clean -df -e "downloads"
