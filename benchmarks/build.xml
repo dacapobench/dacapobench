@@ -324,6 +324,7 @@ BUILDING:
         <clean.bm benchmark="fop"/>
         <clean.bm benchmark="graphchi"/>
         <clean.bm benchmark="h2"/>
+        <clean.bm benchmark="h2o"/>
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
@@ -449,6 +450,9 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
     <target name="zxing" depends="init,harness">
         <build.bm benchmark="zxing"/>
+    </target>
+    <target name="h2o" depends="init,harness">
+        <build.bm benchmark="h2o"/>
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">
