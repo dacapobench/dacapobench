@@ -22,4 +22,27 @@
 
     <import file="../common.xml"/>
 
+    <target name="unpack" depends="untar"/>
+
+    <condition property="gradle-exe" value="gradlew.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="gradle-exe" value="gradlew"/>
+
+    <target name="bm-build">
+        <property name="build-script" value="${bm-build-dir}/${gradle-exe}"/>
+
+        <!-- gradlew should be make executable after untar -->
+        <antcall target="make-executable">
+            <param name="target-filename" value="${build-script}"/>
+        </antcall>
+
+        <!-- build h2o -->
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="build"/>
+            <arg value="-x"/>
+            <arg value="test"/>
+        </exec>
+    </target>
+
 </project>
