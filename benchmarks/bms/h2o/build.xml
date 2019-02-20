@@ -22,15 +22,15 @@
 
     <import file="../common.xml"/>
 
-    <target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar, idea, eclipse"/>
 
     <condition property="gradle-exe" value="gradlew.bat">
         <os family="windows"/>
     </condition>
     <property name="gradle-exe" value="gradlew"/>
+    <property name="build-script" value="${bm-build-dir}/${gradle-exe}"/>
 
     <target name="bm-build">
-        <property name="build-script" value="${bm-build-dir}/${gradle-exe}"/>
 
         <!-- gradlew should be make executable after untar -->
         <antcall target="make-executable">
@@ -39,9 +39,23 @@
 
         <!-- build h2o -->
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="clean"/>
             <arg value="build"/>
             <arg value="-x"/>
             <arg value="test"/>
+        </exec>
+    </target>
+
+    <!-- generate idea iml file for h2o-->
+    <target name="idea" if="idea-project">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="idea"/>
+        </exec>
+    </target>
+
+    <target name="eclipse" if="eclipse-project">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="idea"/>
         </exec>
     </target>
 
