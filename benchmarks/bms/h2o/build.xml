@@ -31,18 +31,44 @@
     <property name="build-script" value="${bm-build-dir}/${gradle-exe}"/>
 
     <target name="bm-build">
-
         <!-- gradlew should be make executable after untar -->
         <antcall target="make-executable">
             <param name="target-filename" value="${build-script}"/>
         </antcall>
 
         <!-- build h2o -->
+        <antcall target="build-h2o"/>
+    </target>
+
+    <target name="build-h2o">
+        <!-- build h2o with testing-->
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="clean"/>
+            <arg value="build"/>
+        </exec>
+    </target>
+
+    <target name="build-without-test">
+        <!-- build h2o without testing-->
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
             <arg value="clean"/>
             <arg value="build"/>
             <arg value="-x"/>
             <arg value="test"/>
+        </exec>
+    </target>
+
+    <!-- downloading small datasets-->
+    <target name="h2o-syncSmalldata">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="syncSmalldata"/>
+        </exec>
+    </target>
+
+    <!-- This is for R building of H2O, do not call this task unless you know that you are doing-->
+    <target name="h2o-syncRpackages">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="syncRpackages"/>
         </exec>
     </target>
 
