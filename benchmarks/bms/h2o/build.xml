@@ -22,7 +22,7 @@
 
     <import file="../common.xml"/>
 
-    <target name="unpack" depends="untar, idea, eclipse"/>
+    <target name="unpack" depends="untar, patch, idea, eclipse"/>
 
     <condition property="gradle-exe" value="gradlew.bat">
         <os family="windows"/>
@@ -36,8 +36,10 @@
             <param name="target-filename" value="${build-script}"/>
         </antcall>
 
-        <!-- build h2o -->
-        <antcall target="build-h2o"/>
+        <!--Uncomment it for customized downloading <antcall target="npm-install"/>-->
+        <!-- Build h2o without testing -->
+        <antcall target="build-h2o-without-test"/>
+
     </target>
 
     <target name="build-h2o">
@@ -48,13 +50,29 @@
         </exec>
     </target>
 
-    <target name="build-without-test">
+    <target name="build-h2o-without-test">
         <!-- build h2o without testing-->
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
             <arg value="clean"/>
             <arg value="build"/>
             <arg value="-x"/>
             <arg value="test"/>
+        </exec>
+    </target>
+
+    <target name="npm-install">
+        <!-- otherwise failures while building-->
+        <description>
+            If you have problems with 'npm install' while building h2o, you can change the mirror here.
+            Let's say that downloading of PUPPETEER fail, setting the 'PUPPETEER_DOWNLOAD_HOST' might help you to solve the problem.
+            For example:
+                env key="PUPPETEER_DOWNLOAD_HOST" value="https://npm.taobao.org/mirrors"
+            You should set the URL based on your location.
+        </description>
+
+        <exec executable="npm" dir="${bm-build-dir}/h2o-web" failonerror="yes">
+            <env key="e" value="https://npm.taobao.org/mirrors"/>
+            <arg value="install"/>
         </exec>
     </target>
 
