@@ -1,0 +1,10 @@
+benchmark h2o
+  class org.dacapo.harness.H2O
+  thread-model per_cpu
+  jars "main.jar";
+
+size default args "tiny"
+  threads 1      // per available processor
+  thread-limit 32
+  output stdout  digest 0x3c7bdc67bde327e6077ba4b85b8060106d0f269d,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;

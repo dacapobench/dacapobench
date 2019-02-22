@@ -39,7 +39,11 @@
         <!--Uncomment it for customized downloading <antcall target="npm-install"/>-->
         <!-- Build h2o without testing -->
         <antcall target="build-h2o-without-test"/>
+    </target>
 
+    <target name="jar">
+        <copy file="${bm-build-dir}/h2o-assemblies/main/build/libs/main.jar"
+              todir="${bm-jars}"/>
     </target>
 
     <target name="build-h2o">
