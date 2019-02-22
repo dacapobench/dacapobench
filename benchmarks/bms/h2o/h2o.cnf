@@ -1,7 +1,7 @@
 benchmark h2o
   class org.dacapo.harness.H2O
   thread-model per_cpu
-  jars "main.jar";
+  jars "main.jar" "json-lib-2.4-jdk15.jar";
 
 size default args "tiny"
   threads 1      // per available processor
