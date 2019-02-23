@@ -119,8 +119,13 @@
       <ant antfile="${lib-base}/asm/build.xml"/>
     </target>
 
+    <!-- json -->
     <target name="json">
         <ant antfile="${lib-base}/json/build.xml"/>
     </target>
 
+    <!-- commons-lang -->
+    <target name="commons-lang">
+        <ant antfile="${lib-base}/commons-lang/build.xml"/>
+    </target>
 </project>
