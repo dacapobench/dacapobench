@@ -301,6 +301,20 @@ BUILDING:
     <!--                            Clean                                            -->
     <!-- *************************************************************************** -->
 
+    <macrodef name="clean.lib">
+        <attribute name="library"/>
+        <sequential>
+            <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="clean-@{library}-status">
+                <arg value="-Dtoolsdir=${toolsdir}"/>
+                <arg value="-Dbuild.time=${build.time}"/>
+                <arg value="-Dlog.build.dir=${log.build.dir}"/>
+                <arg value="-buildfile"/>
+                <arg value="libs/@{library}/build.xml"/>
+                <arg value="clean"/>
+            </exec>
+        </sequential>
+    </macrodef>
+
     <macrodef name="clean.bm">
         <attribute name="benchmark"/>
         <sequential>
@@ -314,7 +328,27 @@ BUILDING:
             </exec>
         </sequential>
     </macrodef>
- 
+
+    <target name="clean-libs" depends="init">
+        <clean.lib library="asm"/>
+        <clean.lib library="bcel"/>
+        <clean.lib library="commons-beanutils"/>
+        <clean.lib library="commons-codec"/>
+        <clean.lib library="commons-collections"/>
+        <clean.lib library="commons-httpclient"/>
+        <clean.lib library="commons-lang"/>
+        <clean.lib library="commons-logging"/>
+        <clean.lib library="dacapo-digest"/>
+        <clean.lib library="daytrader"/>
+        <clean.lib library="derby"/>
+        <clean.lib library="h2"/>
+        <clean.lib library="janino"/>
+        <clean.lib library="json"/>
+        <clean.lib library="junit"/>
+        <clean.lib library="lucene"/>
+        <clean.lib library="xerces"/>
+    </target>
+
     <target name="clean-benchmarks" depends="init">
         <clean.bm benchmark="avrora"/>
         <clean.bm benchmark="batik"/>
@@ -338,7 +372,7 @@ BUILDING:
         <clean.bm benchmark="zxing"/>
     </target>
 
-    <target name="clean" depends="clean-benchmarks,clean-harness,clean-bootstrap"/>
+    <target name="clean" depends="clean-benchmarks,clean-libs,clean-harness,clean-bootstrap"/>
   
     <!-- *************************************************************************** -->
     <!--                            Build                                            -->
