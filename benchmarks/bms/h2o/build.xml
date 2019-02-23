@@ -30,7 +30,7 @@
     <property name="gradle-exe" value="gradlew"/>
     <property name="build-script" value="${bm-build-dir}/${gradle-exe}"/>
 
-    <target name="bm-build" depends="json, commons-logging">
+    <target name="bm-build" depends="json, commons-logging, commons-lang">
         <!-- gradlew should be make executable after untar -->
         <antcall target="make-executable">
             <param name="target-filename" value="${build-script}"/>
