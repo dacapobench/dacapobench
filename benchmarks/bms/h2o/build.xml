@@ -36,7 +36,7 @@
             <param name="target-filename" value="${build-script}"/>
         </antcall>
 
-        <!--Uncomment it for customized downloading <antcall target="npm-install"/>-->
+        <!--Uncomment it for customized npm downloading <antcall target="npm-install"/>-->
         <!-- Build h2o without testing -->
         <antcall target="build-h2o-without-test"/>
     </target>
