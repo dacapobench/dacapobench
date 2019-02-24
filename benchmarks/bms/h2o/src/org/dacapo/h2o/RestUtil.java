@@ -1,4 +1,4 @@
-package water;
+package org.dacapo.h2o;
 
 import net.sf.json.JSONObject;
 

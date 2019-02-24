@@ -1,4 +1,4 @@
-package water;
+package org.dacapo.h2o;
 
 import sun.security.provider.MD5;
 
