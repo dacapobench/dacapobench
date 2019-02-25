@@ -1,10 +1,12 @@
 package org.dacapo.h2o;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -129,4 +131,16 @@ public class RestUtil {
         }
         return labelValue;
     }
+
+    static List<JSONObject> getIndexFromJsonArray(String jl) {
+        JSONArray jsonA = JSONArray.fromObject(jl);
+        List<JSONObject> l = new LinkedList<>();
+        for (int i = 0; i < jsonA.size(); i++){
+            l.add(JSONObject.fromObject(jsonA.getString(i)));
+        }
+        return l;
+    }
+
+
+
 }

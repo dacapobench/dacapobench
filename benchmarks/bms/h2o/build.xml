@@ -37,13 +37,25 @@
         </antcall>
 
         <!--Uncomment it for customized npm downloading <antcall target="npm-install"/>-->
+        <antcall target="npm-install"/>
         <!-- Build h2o without testing -->
         <antcall target="build-h2o-without-test"/>
+    </target>
+
+    <target name="data" if="bm-data-exists" depends="get-data">
+        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+    </target>
+
+    <target name="get-data">
+        <copy file="${bm-build-dir}/h2o-py/h2o/h2o_data/iris.csv" todir="${bm-data}"/>
     </target>
 
     <target name="jar">
         <copy file="${bm-build-dir}/h2o-assemblies/main/build/libs/main.jar"
               todir="${bm-jars}"/>
+        <javac srcdir="${bm-src-dir}" classpath="${lib-base}/json/dist/jar/json-lib-2.4-jdk15.jar" destdir="${bm-output-dir}"
+               includes="org/dacapo/h2o/**"
+               debug="true" debuglevel="lines,vars,source"/>
     </target>
 
     <target name="build-h2o">
@@ -75,7 +87,7 @@
         </description>
 
         <exec executable="npm" dir="${bm-build-dir}/h2o-web" failonerror="yes">
-            <env key="e" value="https://npm.taobao.org/mirrors"/>
+            <env key="PUPPETEER_DOWNLOAD_HOST" value="https://npm.taobao.org/mirrors"/>
             <arg value="install"/>
         </exec>
     </target>

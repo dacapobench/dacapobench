@@ -1,6 +1,6 @@
 package org.dacapo.h2o;
 
-import sun.security.provider.MD5;
+import net.sf.json.JSONObject;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
@@ -67,10 +67,12 @@ public class DacapoH2OFacade {
     private final String MODEL_TRAIN = "3/ModelBuilders/" + MODEL_MACRO;
     //Validate a set of PCA model builder parameters.
     private final String MODEL_PARAMETERS_VALIDATE = "3/ModelBuilders/" + MODEL_MACRO + "/parameters";
+    //Get the job list
+    private final String JOB_LIST = "3/Jobs";
 
 
     //
-    private DacapoH2OFacade(String h2O_URL) {
+    DacapoH2OFacade(String h2O_URL) {
         h2o_rest = new RestUtil(h2O_URL);
     }
 
@@ -97,7 +99,7 @@ public class DacapoH2OFacade {
      * @param path a complete path
      * @return a boolean indicate if importing succeed or not
      */
-    private boolean importFiles(String path){
+    boolean importFiles(String path){
         try {
             h2o_rest.getMethod(IMPORT_FILE + "?path=" + path);
         } catch (IOException e) {
@@ -174,7 +176,7 @@ public class DacapoH2OFacade {
      *
      * @param sourceFormat
      */
-    private void parse(String sourceFormat){
+    void parse(String sourceFormat){
         if (!sourceFormat.startsWith("nfs:/"))
             sourceFormat = "nfs:/" + sourceFormat;
         Map<String, String> kv = getParseSetup(sourceFormat);
@@ -277,4 +279,33 @@ public class DacapoH2OFacade {
         para = para + "&model_id=" + "drf-dacapo-" + train_frame;
         train_drf(para);
     }
+
+    private String getJobs(){
+        try {
+            h2o_rest.getMethod(JOB_LIST);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return h2o_rest.getFromResponse("jobs").get("jobs");
+    }
+
+    private boolean jobsAllDone(){
+        String jl = getJobs();
+        List<JSONObject> list = RestUtil.getIndexFromJsonArray(jl);
+        for (JSONObject jo : list){
+            if (!jo.getString("status").equals("DONE")) return false;
+        }
+        return true;
+    }
+
+    public void waitForAllJobsToFinish(){
+        while (jobsAllDone()){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
