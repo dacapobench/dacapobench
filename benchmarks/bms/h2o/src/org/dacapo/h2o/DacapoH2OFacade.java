@@ -51,7 +51,7 @@ public class DacapoH2OFacade {
             "xgboost"
     );
 
-    private final String DEFAULT_DRF_PARAMETER = "ignore_const_cols=true&ntrees=50&max_depth=20&min_rows=1&nbins=20&seed=-1&mtries=-1&sample_rate=0.6320000290870667&score_each_iteration=false&score_tree_interval=0&fold_assignment=AUTO&balance_classes=false&max_confusion_matrix_size=20&max_hit_ratio_k=0&nbins_top_level=1024&nbins_cats=1024&r2_stopping=1.7976931348623157e%2B308&stopping_rounds=0&stopping_metric=AUTO&stopping_tolerance=0.001&max_runtime_secs=0&checkpoint=&col_sample_rate_per_tree=1&min_split_improvement=0.00001&histogram_type=AUTO&categorical_encoding=AUTO&distribution=AUTO&custom_metric_func=&export_checkpoints_dir=&keep_cross_validation_models=true&keep_cross_validation_predictions=false&keep_cross_validation_fold_assignment=false&class_sampling_factors=&max_after_balance_size=5&build_tree_one_node=false&sample_rate_per_class=&binomial_double_trees=false&col_sample_rate_change_per_level=1&calibrate_model=false";
+    private final String DEFAULT_DRF_PARAMETER = "ignore_const_cols=true&ntrees=50&max_depth=20&min_rows=1&nbins=20&seed=-1&mtries=-1&sample_rate=0.6320000290870667&score_each_iteration=false&score_tree_interval=0&fold_assignment=AUTO&balance_classes=false&max_confusion_matrix_size=20&max_hit_ratio_k=0&nbins_top_level=1024&nbins_cats=1024&r2_stopping=1.7976931348623157e%2B308&stopping_rounds=0&stopping_metric=AUTO&stopping_tolerance=0.001&max_runtime_secs=0&checkpoint=&col_sample_rate_per_tree=1&min_split_improvement=0.00001&histogram_type=AUTO&categorical_encoding=AUTO&distribution=AUTO&custom_metric_func=&export_checkpoints_dir=&keep_cross_validation_models=false&keep_cross_validation_predictions=false&keep_cross_validation_fold_assignment=false&class_sampling_factors=&max_after_balance_size=5&build_tree_one_node=false&sample_rate_per_class=&binomial_double_trees=false&col_sample_rate_change_per_level=1&calibrate_model=false";
     private final String MODEL_MACRO = "${model}";
     // APIs
 
@@ -299,7 +299,7 @@ public class DacapoH2OFacade {
     }
 
     public void waitForAllJobsToFinish(){
-        while (jobsAllDone()){
+        while (!jobsAllDone()){
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

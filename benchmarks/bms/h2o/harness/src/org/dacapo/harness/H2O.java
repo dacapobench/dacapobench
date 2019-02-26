@@ -39,7 +39,7 @@ public class H2O extends Benchmark{
     private String[] args;
 
     public H2O(Config config, File scratch, File data) throws Exception {
-        super(config, scratch, data);
+        super(config, scratch, data, false);
         Class<?> clazz = Class.forName("water.H2OApp", true, loader);
         this.method = clazz.getMethod("main", String[].class);
     }
