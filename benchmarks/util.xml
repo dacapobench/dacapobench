@@ -387,4 +387,9 @@
 		<fail unless="target-verify-md5">Checksum verify for ${target-filename} failed.</fail>
 	</target>
 
+	<!-- make the script executable -->
+	<target name="make-executable">
+		<chmod file="${target-filename}" perm="+x"/>
+	</target>
+
 </project>

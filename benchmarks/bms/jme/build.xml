@@ -1,0 +1,53 @@
+<!--
+ * Copyright (c) 2019 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ *
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+
+<project name="jme" default="all" basedir="../..">
+    <description>Dacapo jme benchmark</description>
+    <property file="dacapo.properties"/>
+
+    <property name="bm-name" value="jme"/>
+    <property name="bm-version" value="3.2.2-stable"/>
+    <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
+
+    <property name="git-group" value="jMonkeyEngine"/>
+    <property name="git-project" value="jmonkeyengine"/>
+    <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
+    <property name="bm-git-commit" value="ea23b6ad55b0c43d73696edf24f0df455a774078"/>
+
+    <import file="../common.xml"/>
+
+     <target name="unpack" depends="untar, patch"/>
+
+    <condition property="gradle-exe" value="gradlew.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="gradle-exe" value="gradlew"/>
+    <property name="build-script" value="${bm-build-dir}/${gradle-exe}"/>
+
+    <target name="bm-build">
+        <!-- gradlew should be make executable after untar -->
+        <antcall target="make-executable">
+            <param name="target-filename" value="${build-script}"/>
+        </antcall>
+
+        <!-- Build h2o without testing -->
+        <exec executable="${build-script}" dir="${bm-build-dir}/jme3-examples" failonerror="yes">
+            <arg value="clean"/>
+            <arg value="dist"/>
+        </exec>
+    </target>
+
+    <target name="jar">
+        <copy file="${bm-build-dir}/dist/jMonkeyEngine3.jar" todir="${bm-jars}"/>
+        <copy todir="${bm-jars}">
+            <fileset dir="${bm-build-dir}/dist/lib" includes="*.jar"/>
+        </copy>
+    </target>
+
+</project>

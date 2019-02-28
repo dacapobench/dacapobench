@@ -281,7 +281,7 @@ BUILDING:
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,h2,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+    <target name="compile" depends="avrora,batik,h2,eclipse,fop,jme,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -324,6 +324,7 @@ BUILDING:
         <clean.bm benchmark="fop"/>
         <clean.bm benchmark="graphchi"/>
         <clean.bm benchmark="h2"/>
+        <clean.bm benchmark="jme"/>
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
@@ -450,6 +451,10 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="zxing" depends="init,harness">
         <build.bm benchmark="zxing"/>
     </target>
+    <target name="jme" depends="init,harness">
+        <build.bm benchmark="jme"/>
+    </target>
+
 
     <target name="update-externdata-info" depends="set-build-version-info">
         <get src="${dacapo-dl.url.raw}/${dacapo-dl.commit}/META-INF/huge-data-md5s.list" dest="${dacapo.build.dir}"/>
