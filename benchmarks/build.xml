@@ -362,6 +362,7 @@ BUILDING:
         <clean.bm benchmark="jme"/>
         <clean.bm benchmark="h2o"/>
         <clean.bm benchmark="jython"/>
+        <clean.bm benchmark="kafka"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
         <!--<clean.bm benchmark="lusearch-fix"/>-->
@@ -492,6 +493,9 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
     <target name="h2o" depends="init,harness">
         <build.bm benchmark="h2o"/>
+    </target>
+    <target name="kafka" depends="init,harness">
+        <build.bm benchmark="kafka"/>
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">
