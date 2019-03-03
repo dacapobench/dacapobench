@@ -20,4 +20,19 @@
     <import file="../common.xml"/>
 
     <target name="unpack" depends="untar"/>
+
+    <target name="bm-build" depends="gradlew">
+        <exec command="${bm-build-dir}/${gradle-exe}">
+            <arg value="jar"/>
+        </exec>
+    </target>
+
+    <condition property="gradle-exe" value="gradlew.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="gradle-exe" value="gradlew"/>
+
+    <target name="gradlew">
+        <copy todir="${bm-build-dir}" file="${bm-src}/resources/${gradle-exe}"/>
+    </target>
 </project>
