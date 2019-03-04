@@ -21,8 +21,8 @@
 
     <target name="unpack" depends="untar"/>
 
-    <target name="bm-build" depends="gradlew">
-        <exec command="${bm-build-dir}/${gradle-exe}">
+    <target name="bm-build" depends="gradlew, make-exe">
+        <exec executable="${bm-build-dir}/${gradle-exe}" dir="${bm-build-dir}">
             <arg value="jar"/>
         </exec>
     </target>
@@ -33,6 +33,15 @@
     <property name="gradle-exe" value="gradlew"/>
 
     <target name="gradlew">
-        <copy todir="${bm-build-dir}" file="${bm-src}/resources/${gradle-exe}"/>
+        <copy todir="${bm-build-dir}">
+            <fileset dir="${bm-src-dir}/resources"/>
+        </copy>
     </target>
+
+    <target name="make-exe">
+        <antcall target="make-executable">
+            <param name="target-filename" value="${bm-build-dir}/${gradle-exe}"/>
+        </antcall>
+    </target>
+
 </project>
