@@ -1,0 +1,10 @@
+benchmark h2o
+  class org.dacapo.harness.H2O
+  thread-model per_cpu
+  jars "main.jar", "json-lib-2.4-jdk15.jar", "commons-beanutils-1.9.3.jar", "commons-collections-3.2.2.jar", "commons-lang-2.6.jar", "commons-logging.jar", "ezmorph-1.0.6.jar";
+
+size default args "-dacapo", "${SCRATCH}", "drf", "CitiBike2014.csv", "tripduration"
+  threads 1      // per available processor
+  thread-limit 32
+  output stdout digest 0x76b61116bad96e19eea6f3b5e76481ed29b90c6a,
+         stderr digest 0xa180b3c4dd63d50194fe901358ffafe2b53c5165;
