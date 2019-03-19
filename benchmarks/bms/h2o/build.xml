@@ -1,0 +1,121 @@
+<!--
+ * Copyright (c) 2019 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ *
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+
+<project name="h2o" default="all" basedir="../..">
+    <description>Dacapo h2o benchmark</description>
+    <property file="dacapo.properties"/>
+
+    <property name="bm-name" value="h2o"/>
+    <property name="bm-version" value="3-jenkins-master-4559"/>
+    <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
+
+    <property name="git-group" value="h2oai"/>
+    <property name="git-project" value="h2o-3"/>
+    <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
+    <property name="bm-git-commit" value="a64543f07a28e965d4e1c0fe55b3935a6d1069c1"/>
+
+    <import file="../common.xml"/>
+
+    <target name="unpack" depends="untar, patch, idea, eclipse"/>
+
+    <condition property="gradle-exe" value="gradlew.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="gradle-exe" value="gradlew"/>
+    <property name="build-script" value="${bm-build-dir}/${gradle-exe}"/>
+
+    <target name="bm-build" depends="json, commons-logging, commons-lang, commons-beanutils, commons-collections, ezmorph">
+        <!-- gradlew should be make executable after untar -->
+        <antcall target="make-executable">
+            <param name="target-filename" value="${build-script}"/>
+        </antcall>
+
+        <!--Uncomment it for customized npm downloading <antcall target="npm-install"/>-->
+        <!-- Build h2o without testing -->
+        <antcall target="build-h2o-without-test"/>
+    </target>
+
+    <target name="data" if="bm-data-exists" depends="get-data">
+        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+    </target>
+
+    <target name="get-data">
+        <copy file="${bm-build-dir}/h2o-py/h2o/h2o_data/iris.csv" todir="${bm-data}"/>
+    </target>
+
+    <target name="jar">
+        <copy file="${bm-build-dir}/h2o-assemblies/main/build/libs/main.jar"
+              todir="${bm-jars}"/>
+        <javac srcdir="${bm-src-dir}" classpath="${lib-base}/json/dist/jar/json-lib-2.4-jdk15.jar" destdir="${bm-output-dir}"
+               includes="org/dacapo/h2o/**"
+               debug="true" debuglevel="lines,vars,source"/>
+    </target>
+
+    <target name="build-h2o">
+        <!-- build h2o with testing-->
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="clean"/>
+            <arg value="build"/>
+        </exec>
+    </target>
+
+    <target name="build-h2o-without-test">
+        <!-- build h2o without testing-->
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="clean"/>
+            <arg value="build"/>
+            <arg value="-x"/>
+            <arg value="test"/>
+        </exec>
+    </target>
+
+    <target name="npm-install">
+        <!-- otherwise failures while building-->
+        <description>
+            If you have problems with 'npm install' while building h2o, you can change the mirror here.
+            Let's say that downloading of PUPPETEER fail, setting the 'PUPPETEER_DOWNLOAD_HOST' might help you to solve the problem.
+            For example:
+                env key="PUPPETEER_DOWNLOAD_HOST" value="https://npm.taobao.org/mirrors"
+            You should set the URL based on your location.
+        </description>
+
+        <exec executable="npm" dir="${bm-build-dir}/h2o-web" failonerror="yes">
+            <env key="PUPPETEER_DOWNLOAD_HOST" value="https://npm.taobao.org/mirrors"/>
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <!-- downloading small datasets-->
+    <target name="h2o-syncSmalldata">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="syncSmalldata"/>
+        </exec>
+    </target>
+
+    <!-- This is for R building of H2O, do not call this task unless you know that you are doing-->
+    <target name="h2o-syncRpackages">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="syncRpackages"/>
+        </exec>
+    </target>
+
+    <!-- generate idea iml file for h2o-->
+    <target name="idea" if="idea-project">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="idea"/>
+        </exec>
+    </target>
+
+    <target name="eclipse" if="eclipse-project">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <arg value="idea"/>
+        </exec>
+    </target>
+
+</project>

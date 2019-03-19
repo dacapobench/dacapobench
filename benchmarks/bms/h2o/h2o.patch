@@ -1,0 +1,211 @@
+--- settings.gradle	2019-02-15 16:33:07.000000000 +1100
++++ ../build-src/settings.gradle	2019-02-20 20:12:38.000000000 +1100
+@@ -4,8 +4,8 @@
+ include 'h2o-algos'
+ include 'h2o-web'
+ include 'h2o-app'
+-include 'h2o-r'
+-include 'h2o-py'
++//include 'h2o-r'
++//include 'h2o-py'
+ include 'h2o-assemblies:main'
+ include 'h2o-assemblies:genmodel'
+ include 'h2o-persist-gcs'
+@@ -43,12 +43,12 @@
+ // Reconfigure scala projects to support cross compilation
+ // The following code will create two projects for each included item:
+ //   For example: h2o-scala_2.10, h2o-scala_2.11
+-apply plugin: 'scala-cross-build'
+-
+-scalaCrossCompile {
+-  targetVersions "2.10.4", "2.11.7"
+-  include 'h2o-scala'
+-}
++//apply plugin: 'scala-cross-build'
++//
++//scalaCrossCompile {
++//  targetVersions "2.10.4", "2.11.7"
++//  include 'h2o-scala'
++//}
+ 
+ // Make structure flat and avoid annoying dummy modules
+ rootProject.children.each { project ->
+--- build.gradle	2019-02-15 16:33:05.000000000 +1100
++++ ../build-src/build.gradle	2019-02-20 20:18:27.000000000 +1100
+@@ -59,8 +59,8 @@
+       project(':h2o-algos'),
+       project(':h2o-web'),
+       project(':h2o-app'),
+-      project(':h2o-scala_2.10'),
+-      project(':h2o-scala_2.11'),
++//      project(':h2o-scala_2.10'),
++//      project(':h2o-scala_2.11'),
+       project(':h2o-persist-gcs'),
+       project(':h2o-persist-hdfs'),
+       project(':h2o-persist-s3'),
+@@ -111,18 +111,18 @@
+       project(':h2o-ext-jython-cfunc'),
+     ]
+ 
+-    scalaProjects = [
+-      project(':h2o-scala_2.10'),
+-      project(':h2o-scala_2.11'),
+-    ]
+-
+-    rProjects = [
+-      project(':h2o-r')
+-    ]
+-
+-    pythonProjects = [
+-      project(':h2o-py')
+-    ]
++//    scalaProjects = [
++//      project(':h2o-scala_2.10'),
++//      project(':h2o-scala_2.11'),
++//    ]
++//
++//    rProjects = [
++//      project(':h2o-r')
++//    ]
++//
++//    pythonProjects = [
++//      project(':h2o-py')
++//    ]
+ 
+     // The project which need to be run under CI only
+     testNeedsCiProject = [
+@@ -225,9 +225,9 @@
+ 
+     // Publish artifacts - we should filter subproject in future but now apply publisher plugin
+     // to all projects
+-    if (project in publishedProjects) {
+-      apply from: "$rootDir/gradle/publish.gradle"
+-    }
++//    if (project in publishedProjects) {
++//      apply from: "$rootDir/gradle/publish.gradle"
++//    }
+ 
+     // Note: this is deprecated and will be removed in the future
+     apply from: "$rootDir/gradle/makeSupport.gradle"
+@@ -260,28 +260,28 @@
+     }
+ 
+     // Configure Scala projects
+-    if (project in scalaProjects) {
+-        apply from: "$rootDir/gradle/scala.gradle"
+-        apply from: "$rootDir/gradle/cp.gradle"
+-        if (testNeedsCiProject.contains(project)) {
+-            logger.warn("The project $project needs CI for running tests! You can pass `-PdoCI=true` to force CI behaviour.")
+-            project.testMultiNode.enabled = project.ext.isCi
+-        }
+-    }
+-
+-    if (project in rProjects) {
+-        apply from: "$rootDir/gradle/r.gradle"
+-    }
+-
+-    if (project in pythonProjects) {
+-        apply from: "$rootDir/gradle/r.gradle"   // same plugins
+-    }
+-
+-    if (project in ubenchProjects) {
+-        if (project.hasProperty("doUBench") && project.doUBench == "true") {
+-            apply from: "$rootDir/gradle/ubench.gradle"
+-        }
+-    }
++//    if (project in scalaProjects) {
++//        apply from: "$rootDir/gradle/scala.gradle"
++//        apply from: "$rootDir/gradle/cp.gradle"
++//        if (testNeedsCiProject.contains(project)) {
++//            logger.warn("The project $project needs CI for running tests! You can pass `-PdoCI=true` to force CI behaviour.")
++//            project.testMultiNode.enabled = project.ext.isCi
++//        }
++//    }
++//
++//    if (project in rProjects) {
++//        apply from: "$rootDir/gradle/r.gradle"
++//    }
++//
++//    if (project in pythonProjects) {
++//        apply from: "$rootDir/gradle/r.gradle"   // same plugins
++//    }
++
++//    if (project in ubenchProjects) {
++//        if (project.hasProperty("doUBench") && project.doUBench == "true") {
++//            apply from: "$rootDir/gradle/ubench.gradle"
++//        }
++//    }
+ }
+ 
+ //
+--- h2o-assemblies/main/build.gradle	2019-02-15 16:33:05.000000000 +1100
++++ ../build-src/h2o-assemblies/main/build.gradle	2019-02-20 20:18:27.000000000 +1100
+@@ -146,6 +146,6 @@
+ // Include licences
+ shadowJar.dependsOn(licenseReport)
+ // Execute always copyJar
+-shadowJar.finalizedBy copyJar
++//shadowJar.finalizedBy copyJar
+ // Run shadowJar as part of build
+ jar.finalizedBy shadowJar
+--- h2o-core/src/main/java/water/H2OStarter.java	2019-02-15 16:33:05.000000000 +1100
++++ ../build-src/h2o-core/src/main/java/water/H2OStarter.java	2019-02-27 01:35:42.000000000 +1100
+@@ -3,7 +3,10 @@
+ import water.init.NetworkInit;
+ import water.util.Log;
+ 
+-import java.io.File;
++import java.io.*;
++import java.lang.reflect.InvocationTargetException;
++import java.lang.reflect.Method;
++import java.util.SortedSet;
+ 
+ /**
+  * H2O starter which manages start and registration of application extensions.
+@@ -19,8 +22,20 @@
+   public static void start(String[] args, String relativeResourcePath, boolean finalizeRestRegistration) {
+     long time0 = System.currentTimeMillis();
+     // Fire up the H2O Cluster
+-    H2O.main(args);
+ 
++    PrintStream stdout = System.out;
++    
++    if (args.length > 1 && args[0].equals("-dacapo")) {
++      System.setOut(new PrintStream(new OutputStream() {
++        @Override
++        public void write(int b) throws IOException {
++          // Doing nothing
++        }
++      }));
++      H2O.main(new String[]{});
++    }else
++      H2O.main(args);
++    
+     H2O.registerResourceRoot(new File(relativeResourcePath + File.separator + "h2o-web/src/main/resources/www"));
+     H2O.registerResourceRoot(new File(relativeResourcePath + File.separator + "h2o-core/src/main/resources/www"));
+     ExtensionManager.getInstance().registerRestApiExtensions();
+@@ -37,6 +52,24 @@
+       Log.info("Open H2O Flow in your web browser: " + H2O.getURL(NetworkInit.h2oHttpView.getScheme()));
+       Log.info("");
+     }
++
++    if (args.length > 1 && args[0].equals("-dacapo")) {
++      String data_dir = args[1];
++      String algo = args[2];
++      String source_file = args[3];
++      String response = args[4];
++      
++      try {
++        ClassLoader cl = Thread.currentThread().getContextClassLoader();
++        Class<?> clazz = Class.forName("org.dacapo.h2o.ClientRunner", true, cl);
++        Method runningMethod = clazz.getMethod("running", String.class, String.class, String.class, String.class, String.class, PrintStream.class);
++        runningMethod.invoke(null, H2O.getURL(NetworkInit.h2oHttpView.getScheme()), data_dir, source_file, algo, response, stdout);
++        System.err.println("H2O benchmark finished without any error......");
++      } catch (Exception e) {
++        e.printStackTrace();
++      }
++      System.setOut(stdout);
++    }
+   }
+ 
+   public static void start(String[] args, String relativeResourcePath) {

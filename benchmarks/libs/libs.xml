@@ -119,4 +119,28 @@
       <ant antfile="${lib-base}/asm/build.xml"/>
     </target>
 
+    <!-- json -->
+    <target name="json">
+        <ant antfile="${lib-base}/json/build.xml"/>
+    </target>
+
+    <!-- commons-lang -->
+    <target name="commons-lang">
+        <ant antfile="${lib-base}/commons-lang/build.xml"/>
+    </target>
+
+    <!-- commons-beanutils -->
+    <target name="commons-beanutils">
+        <ant antfile="${lib-base}/commons-beanutils/build.xml"/>
+    </target>
+
+    <!-- commons-collections-->
+    <target name="commons-collections">
+        <ant antfile="${lib-base}/commons-collections/build.xml"/>
+    </target>
+
+    <!-- ezmorph-->
+    <target name="ezmorph">
+        <ant antfile="${lib-base}/ezmorph/build.xml"/>
+    </target>
 </project>
