@@ -1,0 +1,422 @@
+--- gradle/wrapper/gradle-wrapper.properties	2019-02-27 03:48:07.000000000 +1100
++++ ../build-src/gradle/wrapper/gradle-wrapper.properties	2019-02-28 02:42:41.000000000 +1100
+@@ -2,4 +2,4 @@
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-4.10-bin.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-4.10.1-all.zip
+--- jme3-examples/src/main/java/jme3test/TestChooser.java	2019-02-27 03:48:08.000000000 +1100
++++ ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-02-28 12:43:14.000000000 +1100
+@@ -48,26 +48,21 @@
+ import java.net.URL;
+ import java.net.URLConnection;
+ import java.net.URLDecoder;
+-import java.util.Collection;
+-import java.util.Enumeration;
+-import java.util.Vector;
++import java.util.*;
+ import java.util.jar.JarFile;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+ import java.util.zip.ZipEntry;
+ import javax.swing.*;
+-import javax.swing.border.EmptyBorder;
+ import javax.swing.event.DocumentEvent;
+ import javax.swing.event.DocumentListener;
+-import javax.swing.event.ListSelectionEvent;
+-import javax.swing.event.ListSelectionListener;
+ 
+ 
+ /**
+  * Class with a main method that displays a dialog to choose any jME demo to be
+  * started.
+  */
+-public class TestChooser extends JDialog {
++public class TestChooser{
+     private static final Logger logger = Logger.getLogger(TestChooser.class
+             .getName());
+ 
+@@ -77,17 +72,18 @@
+      * Only accessed from EDT
+      */
+     private java.util.List selectedClass = null;
+-    private boolean showSetting = true;
++    private static boolean showSetting = false;
+ 
+     /**
+      * Constructs a new TestChooser that is initially invisible.
+      */
+     public TestChooser() throws HeadlessException {
+-        super((JFrame) null, "TestChooser");
++        // We do not need this for headless mode testing
++        //        super((JFrame) null, "TestChooser");
+         /** This listener ends application when window is closed (x button on top right corner of test chooser).
+          * @see issue#85 https://github.com/jMonkeyEngine/jmonkeyengine/issues/85
+          */
+-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
++        //        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+     }
+ 
+     /**
+@@ -106,7 +102,6 @@
+             name = "/" + name;
+         }
+         name = name.replace('.', '/');
+-
+         // Get a File object for the package
+         // URL url = UPBClassLoader.get().getResource(name);
+         url = this.getClass().getResource(name);
+@@ -248,137 +243,144 @@
+ 
+     private void startApp(final java.util.List appClass){
+         if (appClass == null){
+-            JOptionPane.showMessageDialog(rootPane,
+-                                          "Please select a test from the list",
+-                                          "Error", 
+-                                          JOptionPane.ERROR_MESSAGE);
++            System.err.println("Error: Please select a test from the list");
+             return;
+         }
+ 
+-            new Thread(new Runnable(){
+-                public void run(){
+-                    for (int i = 0; i < appClass.size(); i++) {
+-                	    Class<?> clazz = (Class)appClass.get(i);
+-                		try {
+-                			if (LegacyApplication.class.isAssignableFrom(clazz)) {
+-                    			Object app = clazz.newInstance();
+-                			    if (app instanceof SimpleApplication) {
+-                			        final Method settingMethod = clazz.getMethod("setShowSettings", boolean.class);
+-                			        settingMethod.invoke(app, showSetting);
+-                			    }
+-                			    final Method mainMethod = clazz.getMethod("start");
+-                			    mainMethod.invoke(app);
+-                			    Field contextField = LegacyApplication.class.getDeclaredField("context");
+-                			    contextField.setAccessible(true);
+-                			    JmeContext context = null; 
+-                			    while (context == null) {
+-                			        context = (JmeContext) contextField.get(app);
+-                			        Thread.sleep(100);
+-                			    }
+-                			    while (!context.isCreated()) {
+-                			        Thread.sleep(100);
+-                			    }
+-                			    while (context.isCreated()) {
+-                			        Thread.sleep(100);
+-                			    }
+-                			} else {
+-                                final Method mainMethod = clazz.getMethod("main", (new String[0]).getClass());
+-                                mainMethod.invoke(clazz, new Object[]{new String[0]});
+-                			}
+-                			// wait for destroy
+-                			System.gc();
+-                		} catch (IllegalAccessException ex) {
+-                			logger.log(Level.SEVERE, "Cannot access constructor: "+clazz.getName(), ex);
+-                		} catch (IllegalArgumentException ex) {
+-                			logger.log(Level.SEVERE, "main() had illegal argument: "+clazz.getName(), ex);
+-                		} catch (InvocationTargetException ex) {
+-                			logger.log(Level.SEVERE, "main() method had exception: "+clazz.getName(), ex);
+-                		} catch (InstantiationException ex) {
+-                			logger.log(Level.SEVERE, "Failed to create app: "+clazz.getName(), ex);
+-                		} catch (NoSuchMethodException ex){
+-                			logger.log(Level.SEVERE, "Test class doesn't have main method: "+clazz.getName(), ex);
+-                		} catch (Exception ex) {
+-                		    logger.log(Level.SEVERE, "Cannot start test: "+clazz.getName(), ex);
+-                            ex.printStackTrace();
++        Thread t = new Thread(new Runnable(){
++            public void run(){
++                for (int i = 0; i < appClass.size(); i++) {
++                    Class<?> clazz = (Class)appClass.get(i);
++                    try {
++                        if (LegacyApplication.class.isAssignableFrom(clazz) && !clazz.getName().equals("TestMultiplesFilters")) {
++                            Object app = clazz.newInstance();
++                            if (app instanceof SimpleApplication) {
++                                final Method settingMethod = clazz.getMethod("setShowSettings", boolean.class);
++                                settingMethod.invoke(app, showSetting);
++                            }
++                            final Method mainMethod = clazz.getMethod("start", JmeContext.Type.class);
++                            mainMethod.invoke(app, JmeContext.Type.Headless);
++                            Field contextField = LegacyApplication.class.getDeclaredField("context");
++                            contextField.setAccessible(true);
++                            JmeContext context = null;
++                            while (context == null) {
++                                context = (JmeContext) contextField.get(app);
++                                Thread.sleep(100);
++                            }
++                            while (!context.isCreated()) {
++                                Thread.sleep(100);
++                                System.out.println(1);
++                            }
++                            while (context.isCreated()) {
++                                final Method stopMethod = clazz.getMethod("stop");
++                                stopMethod.invoke(app);
++                                Thread.sleep(100);
++                            }
++                        } else {
++                            final Method mainMethod = clazz.getMethod("main", (new String[0]).getClass());
++                            mainMethod.invoke(clazz, new Object[]{new String[0]});
+                         }
+-                	}
+-                }
+-            }).start();
+-    }
+-
+-    /**
+-     * Code to create components and action listeners.
+-     *
+-     * @param classes
+-     *            what Classes to show in the list box
+-     */
+-    private void setup(Vector<Class> classes) {
+-        final JPanel mainPanel = new JPanel();
+-        mainPanel.setLayout(new BorderLayout());
+-        getContentPane().setLayout(new BorderLayout());
+-        getContentPane().add(mainPanel, BorderLayout.CENTER);
+-        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+-
+-        final FilteredJList list = new FilteredJList();
+-        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+-        DefaultListModel model = new DefaultListModel();
+-        for (Class c : classes) {
+-            model.addElement(c);
+-        }
+-        list.setModel(model);
+-
+-        mainPanel.add(createSearchPanel(list), BorderLayout.NORTH);
+-        mainPanel.add(new JScrollPane(list), BorderLayout.CENTER);
+-
+-        list.getSelectionModel().addListSelectionListener(
+-                new ListSelectionListener() {
+-                    public void valueChanged(ListSelectionEvent e) {
+-                        selectedClass = list.getSelectedValuesList();
++                        // wait for destroy
++                        System.gc();
++                    } catch (IllegalAccessException ex) {
++                        logger.log(Level.SEVERE, "Cannot access constructor: "+clazz.getName(), ex);
++                    } catch (IllegalArgumentException ex) {
++                        logger.log(Level.SEVERE, "main() had illegal argument: "+clazz.getName(), ex);
++                    } catch (InvocationTargetException ex) {
++                        logger.log(Level.SEVERE, "main() method had exception: "+clazz.getName(), ex);
++                    } catch (InstantiationException ex) {
++                        logger.log(Level.SEVERE, "Failed to create app: "+clazz.getName(), ex);
++                    } catch (NoSuchMethodException ex){
++                        logger.log(Level.SEVERE, "Test class doesn't have main method: "+clazz.getName(), ex);
++                    } catch (Exception ex) {
++                        logger.log(Level.SEVERE, "Cannot start test: "+clazz.getName(), ex);
++                        ex.printStackTrace();
+                     }
+-                });
+-        list.addMouseListener(new MouseAdapter() {
+-            public void mouseClicked(MouseEvent e) {
+-                if (e.getClickCount() == 2 && selectedClass != null) {
+-                    startApp(selectedClass);
+                 }
+             }
+         });
+-        list.addKeyListener(new KeyAdapter() {
+-            @Override
+-            public void keyTyped(KeyEvent e) {
+-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+-                    startApp(selectedClass);
+-                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+-                    dispose();
+-                }
+-            }
+-        });
+-
+-        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+-        mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
+ 
+-        final JButton okButton = new JButton("Ok");
+-        okButton.setMnemonic('O');
+-        buttonPanel.add(okButton);
+-        getRootPane().setDefaultButton(okButton);
+-        okButton.addActionListener(new ActionListener() {
+-            public void actionPerformed(ActionEvent e) {
+-                startApp(selectedClass);
+-            }
+-        });
+-
+-        final JButton cancelButton = new JButton("Cancel");
+-        cancelButton.setMnemonic('C');
+-        buttonPanel.add(cancelButton);
+-        cancelButton.addActionListener(new ActionListener() {
+-            public void actionPerformed(ActionEvent e) {
+-                dispose();
+-            }
+-        });
+-
+-        pack();
+-        center();
+-    }
++        t.start();
++        try {
++            t.join();
++        } catch (InterruptedException e) {
++            e.printStackTrace();
++        }
++    }
++
++//    /**
++//     * Code to create components and action listeners.
++//     *
++//     * @param classes
++//     *            what Classes to show in the list box
++//     */
++//    private void setup(Vector<Class> classes) {
++//        final JPanel mainPanel = new JPanel();
++//        mainPanel.setLayout(new BorderLayout());
++//        getContentPane().setLayout(new BorderLayout());
++//        getContentPane().add(mainPanel, BorderLayout.CENTER);
++//        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
++//
++//        final FilteredJList list = new FilteredJList();
++//        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
++//        DefaultListModel model = new DefaultListModel();
++//        for (Class c : classes) {
++//            model.addElement(c);
++//        }
++//        list.setModel(model);
++//
++//        mainPanel.add(createSearchPanel(list), BorderLayout.NORTH);
++//        mainPanel.add(new JScrollPane(list), BorderLayout.CENTER);
++//
++//        list.getSelectionModel().addListSelectionListener(
++//                new ListSelectionListener() {
++//                    public void valueChanged(ListSelectionEvent e) {
++//                        selectedClass = list.getSelectedValuesList();
++//                    }
++//                });
++//        list.addMouseListener(new MouseAdapter() {
++//            public void mouseClicked(MouseEvent e) {
++//                if (e.getClickCount() == 2 && selectedClass != null) {
++//                    startApp(selectedClass);
++//                }
++//            }
++//        });
++//        list.addKeyListener(new KeyAdapter() {
++//            @Override
++//            public void keyTyped(KeyEvent e) {
++//                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
++//                    startApp(selectedClass);
++//                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
++//                    dispose();
++//                }
++//            }
++//        });
++//
++//        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
++//        mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
++//
++//        final JButton okButton = new JButton("Ok");
++//        okButton.setMnemonic('O');
++//        buttonPanel.add(okButton);
++//        getRootPane().setDefaultButton(okButton);
++//        okButton.addActionListener(new ActionListener() {
++//            public void actionPerformed(ActionEvent e) {
++//                startApp(selectedClass);
++//            }
++//        });
++//
++//        final JButton cancelButton = new JButton("Cancel");
++//        cancelButton.setMnemonic('C');
++//        buttonPanel.add(cancelButton);
++//        cancelButton.addActionListener(new ActionListener() {
++//            public void actionPerformed(ActionEvent e) {
++//                dispose();
++//            }
++//        });
++//
++//        pack();
++//        center();
++//    }
+ 
+     private class FilteredJList extends JList {
+         private static final long serialVersionUID = 1L;
+@@ -424,18 +426,18 @@
+     /**
+      * center the frame.
+      */
+-    private void center() {
+-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+-        Dimension frameSize = this.getSize();
+-        if (frameSize.height > screenSize.height) {
+-            frameSize.height = screenSize.height;
+-        }
+-        if (frameSize.width > screenSize.width) {
+-            frameSize.width = screenSize.width;
+-        }
+-        this.setLocation((screenSize.width - frameSize.width) / 2,
+-                (screenSize.height - frameSize.height) / 2);
+-    }
++//    private void center() {
++//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
++//        Dimension frameSize = this.getSize();
++//        if (frameSize.height > screenSize.height) {
++//            frameSize.height = screenSize.height;
++//        }
++//        if (frameSize.width > screenSize.width) {
++//            frameSize.width = screenSize.width;
++//        }
++//        this.setLocation((screenSize.width - frameSize.width) / 2,
++//                (screenSize.height - frameSize.height) / 2);
++//    }
+ 
+     /**
+      * Start the chooser.
+@@ -448,18 +450,45 @@
+             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+         } catch (Exception e) {
+         }
+-        new TestChooser().start(args);
+-    }
+ 
+-    protected void start(String[] args) {
+-        final Vector<Class> classes = new Vector<Class>();
+-        logger.fine("Composing Test list...");
+-        addDisplayedClasses(classes);
+-        setup(classes);
+-        Class<?> cls;
+-        setVisible(true);
++        Vector<Class> classes = new Vector<>();
++        TestChooser tc = new TestChooser();
++        tc.addDisplayedClasses(classes);
++
++        Iterator<Class> i = classes.iterator();
++        while (i.hasNext()){
++            String name = i.next().getName();
++            if (!contains(args, name))
++                i.remove();
++        }
++        tc.startApp(classes);
++//        for (String clazz : args){
++//            try {
++//                classes.add(Class.forName(clazz));
++//            } catch (ClassNotFoundException e) {
++//                e.printStackTrace();
++//            }
++//        }
++
+     }
+ 
++    private static boolean contains(String[] args, String name){
++        for (String packageName : args){
++            if (name.contains(packageName))
++                return true;
++        }
++        return false;
++    }
++
++//    protected void start(String[] args) {
++//        final Vector<Class> classes = new Vector<Class>();
++//        logger.fine("Composing Test list...");
++//        addDisplayedClasses(classes);
++//        setup(classes);
++//        Class<?> cls;
++//        setVisible(true);
++//    }
++
+     protected void addDisplayedClasses(Vector<Class> classes) {
+         find("jme3test", true, classes);
+     }
