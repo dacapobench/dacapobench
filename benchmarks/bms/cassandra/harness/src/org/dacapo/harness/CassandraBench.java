@@ -9,6 +9,8 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -119,6 +121,10 @@ public class CassandraBench extends Benchmark {
     private EmbeddedCassandraService cassandra;
     private String[] ycsbWorkloadArgs;
 
+    private PrintStream outStream;
+    private final PrintStream logStream = new PrintStream(new FileOutputStream(new File(scratch.toPath() + File.separator + "stdout.log")));
+    private final PrintStream errStream = new PrintStream(new FileOutputStream(new File(scratch.toPath() + File.separator + "stderr.log")));
+
     Class<?> clsYCSBClient;
     Method mtdYCSBClientMain;
 
@@ -198,6 +204,12 @@ public class CassandraBench extends Benchmark {
         setupScratch();
 
         setupCassandra();
+
+        // Avoiding the long information of cassandra starting process
+        outStream = System.out;
+        System.setOut(logStream);
+
+        outStream.println("Cassandra starting...");
         cassandra.start();
 
         clYCSB = new URLClassLoader(findJars(dirScratchJar, Arrays.asList(YCSB_JARS))
@@ -209,6 +221,7 @@ public class CassandraBench extends Benchmark {
     }
 
     private void prepareYCSBCQL() {
+        outStream.println("YCSB starting...");
         Cluster cluster = Cluster.builder()
                 .addContactPoint("localhost")
                 .withPort(DatabaseDescriptor.getNativeTransportPort())
@@ -244,6 +257,8 @@ public class CassandraBench extends Benchmark {
     }
 
     public void iterate(String size) throws Exception {
+        System.setOut(logStream);
+        outStream.println("DaCapo: start iteration");
         Thread.currentThread().setContextClassLoader(clYCSB);
 
         // load workload
@@ -253,7 +268,15 @@ public class CassandraBench extends Benchmark {
         // run transactions
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-t";
         mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
-        System.out.println("DaCapo: finished iteration");
+        outStream.println("DaCapo: finished iteration");
+    }
+
+    @Override
+    public void postIteration(String size) throws Exception {
+        super.postIteration(size);
+        //Preventing the long stopping log information from cassandra
+        System.setErr(errStream);
+        System.setOut(logStream);
     }
 
     private static List<URL> findJars(File dir, List<String> jarNames) {

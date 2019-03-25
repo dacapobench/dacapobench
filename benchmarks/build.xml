@@ -281,7 +281,7 @@ BUILDING:
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,h2,eclipse,fop,jme,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+    <target name="compile" depends="avrora,batik,h2,h2o,eclipse,fop,zxing,biojava,jme,graphchi,cassandra,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
