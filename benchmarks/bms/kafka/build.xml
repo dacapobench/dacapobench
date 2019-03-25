@@ -22,6 +22,7 @@
     <target name="unpack" depends="untar"/>
 
     <target name="bm-build" depends="gradlew, make-exe">
+
         <exec executable="${bm-build-dir}/${gradle-exe}" dir="${bm-build-dir}">
             <arg value="jar"/>
         </exec>
@@ -44,4 +45,29 @@
         </antcall>
     </target>
 
+    <target name="data">
+        <copy todir="${bm-data}">
+            <fileset dir="${bm-build-dir}/config" includes="*"/>
+            <fileset dir="${bm-build-dir}/tests/spec" includes="*"/>
+        </copy>
+        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+    </target>
+
+    <target name="jar">
+
+        <copy todir="${bm-jars}" flatten="true">
+            <fileset dir="${bm-build-dir}/" includes="**/*.jar"/>
+        </copy>
+
+        <javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"
+               sourcepath="${bm-src-dir}"
+               source="1.8">
+        </javac>
+        <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" update="true">
+            <fileset dir="${bm-build-dir}">
+                <include name="org/dacapo/kafka/**"/>
+            </fileset>
+        </jar>
+
+    </target>
 </project>

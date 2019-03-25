@@ -9,8 +9,8 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-
 import org.dacapo.parser.Config;
 
 /**
@@ -18,13 +18,19 @@ import org.dacapo.parser.Config;
  * id: $Id: Jython.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Kafka extends Benchmark {
+    Constructor lc;
+    Method launching;
 
     public Kafka(Config config, File scratch, File data) throws Exception {
-        super(config, scratch, data);
+        super(config, scratch, data, false);
+        Class launcher = Class.forName("org.dacapo.kafka.Launcher", true, this.loader);
+        lc = launcher.getConstructor(File.class);
+        launching = launcher.getMethod("launching");
     }
 
     @Override
     public void iterate(String size) throws Exception {
-
+        launching.invoke(lc.newInstance(this.scratch));
     }
+
 }

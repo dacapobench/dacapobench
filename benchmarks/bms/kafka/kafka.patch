@@ -1,0 +1,14 @@
++++ tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
+--- CoordinatorClient.java	2019-03-19 13:35:47.000000000 +1100
+@@ -356,7 +356,10 @@
+                 TaskRequest req = new TaskRequest(taskId);
+                 TaskState taskState = null;
+                 try {
+-                    taskState = client.task(req);
++                    do {
++                        taskState = client.task(req);
++                        Thread.sleep(100);
++                    } while(taskState.stateType() != TaskStateType.DONE);
+                 } catch (NotFoundException e) {
+                     System.out.printf("Task %s was not found.%n", taskId);
+                     Exit.exit(1);
