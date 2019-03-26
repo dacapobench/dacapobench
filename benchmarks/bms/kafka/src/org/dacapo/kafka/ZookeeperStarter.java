@@ -1,27 +1,35 @@
 package org.dacapo.kafka;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
 
 public class ZookeeperStarter extends Initializer{
 
-    /**
-     * @param configZookeeper Path to the configuration file of zookeeper
-     * @throws Exception
-     */
-    public void initialize(String configZookeeper) throws Exception{
+    Thread thread;
+
+    public ZookeeperStarter(String configZookeeper) throws Exception{
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         Class zookeeper = Class.forName("org.apache.zookeeper.server.ZooKeeperServerMain", true, loader);
         Method starterZookeeper = zookeeper.getMethod("main", String[].class);
 
-        System.out.println("Starting Zookeeper...");
-        starterZookeeper.invoke(null, (Object) new String[]{configZookeeper});
-        System.out.println("Shutdown Zookeeper...");
-
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    starterZookeeper.invoke(null, (Object) new String[]{configZookeeper});
+                    System.out.println("Shutdown Zookeeper...");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-//    protected static void shutdown() throws Exception{
-//        shutdownZookeeper.invoke(null);
-//    }
-
+    @Override
+    public void initialize() throws Exception {
+        System.out.println("Starting Zookeeper...");
+        thread.start();
+    }
 }

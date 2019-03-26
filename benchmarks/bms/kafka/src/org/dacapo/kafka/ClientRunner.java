@@ -24,25 +24,12 @@ public class ClientRunner{
      */
     protected void runClient(String produceBench) throws Exception{
         // Running the benchmark
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    clientStarter.invoke(null, (Object) new String[]{"createTask", "-t", "localhost:8889", "-i", "produce0", "--spec", produceBench});
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-        System.out.println("Client is Running...");
-
-        Thread.sleep(5000);
+        clientStarter.invoke(null, (Object) new String[]{"createTask", "-t", "localhost:8889", "-i", "produce1", "--spec", produceBench});
 
         // Return the information about the benchmark
-        while (true) {
-            clientStarter.invoke(null, (Object) new String[]{"showTask", "-t", "localhost:8889", "-i", "produce0"});
-            Thread.sleep(500);
+        while (!System.getProperty("TaskState").equals("DONE")) {
+            clientStarter.invoke(null, (Object) new String[]{"showTask", "-t", "localhost:8889", "-i", "produce1"});
+            Thread.sleep(100);
         }
     }
 }

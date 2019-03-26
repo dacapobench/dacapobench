@@ -1,14 +1,14 @@
 +++ tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
---- CoordinatorClient.java	2019-03-19 13:35:47.000000000 +1100
-@@ -356,7 +356,10 @@
-                 TaskRequest req = new TaskRequest(taskId);
-                 TaskState taskState = null;
-                 try {
--                    taskState = client.task(req);
-+                    do {
-+                        taskState = client.task(req);
-+                        Thread.sleep(100);
-+                    } while(taskState.stateType() != TaskStateType.DONE);
-                 } catch (NotFoundException e) {
-                     System.out.printf("Task %s was not found.%n", taskId);
-                     Exit.exit(1);
+--- CoordinatorClient.java	2019-03-26 12:13:09.000000000 +1100
+@@ -364,10 +364,8 @@
+                 if (res.getBoolean("json")) {
+                     System.out.println(JsonUtil.toJsonString(taskState));
+                 } else {
+-                    System.out.printf("Task %s of type %s is %s. %s%n", taskId,
+-                        taskState.spec().getClass().getCanonicalName(),
+-                        taskState.stateType(), prettyPrintTaskInfo(taskState, localOffset));
+                     if (taskState instanceof TaskDone) {
++                        System.setProperty("TaskState", "DONE");
+                         TaskDone taskDone = (TaskDone) taskState;
+                         if ((taskDone.error() != null) && (!taskDone.error().isEmpty())) {
+                             System.out.printf("Error: %s%n", taskDone.error());
