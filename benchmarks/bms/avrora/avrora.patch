@@ -1,0 +1,57 @@
+diff -urN avrora/src/avrora/sim/mcu/ATMegaClassic.java ../src-new/avrora/sim/mcu/ATMegaClassic.java
+--- avrora/src/avrora/sim/mcu/ATMegaClassic.java	2013-02-05 05:31:15.000000000 +1100
++++ ../src-new/avrora/sim/mcu/ATMegaClassic.java	2019-03-28 14:22:55.000000000 +1100
+@@ -64,7 +64,7 @@
+ 
+             AtmelMicrocontroller.Pin pin = (AtmelMicrocontroller.Pin) m.getPin("OC" + timerNumber);
+             int interrupt = m.properties.getInterrupt(acfName);
+-            addComparator(Comparator._, new OutputCompareUnit(n, m, Comparator._, interrupt, pin));
++            addComparator(Comparator.fix, new OutputCompareUnit(n, m, Comparator.fix, interrupt, pin));
+ 
+             String ocfn = "OCF" + n;
+             String ocrn = "OCR" + n;
+@@ -133,7 +133,7 @@
+             m.installIOReg("TCNT" + n + "L", TCNTnL_reg);
+ 
+ 
+-            addComparator(Comparator.I, new InputCompareUnit(n, m, Comparator._, m.properties.getInterrupt(cfn[0]), (Pin) m.getPin("IC" + timerNumber)));
++            addComparator(Comparator.I, new InputCompareUnit(n, m, Comparator.fix, m.properties.getInterrupt(cfn[0]), (Pin) m.getPin("IC" + timerNumber)));
+             addComparator(Comparator.A, new OutputCompareUnit(n, m, Comparator.A, m.properties.getInterrupt(cfn[1]), (Pin) m.getPin("OC" + timerNumber + "A")));
+             addComparator(Comparator.B, new OutputCompareUnit(n, m, Comparator.B, m.properties.getInterrupt(cfn[2]), (Pin) m.getPin("OC" + timerNumber + "B")));
+             addComparator(Comparator.C, new OutputCompareUnit(n, m, Comparator.C, m.properties.getInterrupt(cfn[3]), (Pin) m.getPin("OC" + timerNumber + "C")));
+diff -urN avrora/src/avrora/sim/mcu/ATMegaTimer.java ../src-new/avrora/sim/mcu/ATMegaTimer.java
+--- avrora/src/avrora/sim/mcu/ATMegaTimer.java	2013-02-05 05:31:15.000000000 +1100
++++ ../src-new/avrora/sim/mcu/ATMegaTimer.java	2019-03-28 14:22:55.000000000 +1100
+@@ -511,7 +511,7 @@
+      */
+     abstract class Comparator {
+ 
+-        public static final String _ = "";
++        public static final String fix = "";
+         public static final String A = "A";
+         public static final String B = "B";
+         public static final String C = "C";
+diff -urN avrora/src/avrora/syntax/atmel/AtmelParser.java ../src-new/avrora/syntax/atmel/AtmelParser.java
+--- avrora/src/avrora/syntax/atmel/AtmelParser.java	2013-02-05 05:31:16.000000000 +1100
++++ ../src-new/avrora/syntax/atmel/AtmelParser.java	2019-03-28 14:22:55.000000000 +1100
+@@ -10,7 +10,7 @@
+ 
+ public class AtmelParser extends AbstractParser implements AtmelParserConstants {
+ 
+-    public AtmelParser(InputStream stream, Module m, String fname) {
++    public AtmelParser(InputStream stream, avrora.syntax.Module m, String fname) {
+         this(new FileMarkingTokenManager(new SimpleCharStream(stream, 1, 1), fname));
+ 
+         module = m;
+diff -urN avrora/src/cck/test/TestEngine.java ../src-new/cck/test/TestEngine.java
+--- avrora/src/cck/test/TestEngine.java	2013-02-05 05:31:18.000000000 +1100
++++ ../src-new/cck/test/TestEngine.java	2019-03-28 14:22:54.000000000 +1100
+@@ -191,7 +191,7 @@
+                     WorkThread thread = threads[cntr];
+                     if ( thread.intest && (now - thread.test_began) > MAXIMUM_TEST_MS) {
+                         thread.interrupt();
+-                        thread.stop(new NonTermination(now - thread.test_began));
++                        thread.stop();
+                     }
+                 }
+                 synchronized(this) {
