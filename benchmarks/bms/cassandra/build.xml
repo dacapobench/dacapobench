@@ -53,7 +53,9 @@
     <target name="cassandra-build">    
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
-        <exec executable="ant" dir="${cassandra-build-top}"/>
+        <exec executable="ant" dir="${cassandra-build-top}">
+            <env key="JAVA_HOME" value="${jdk8home}"/>
+        </exec>
     </target>
 
     <target name="ycsb-build" depends="get-slf4j-simple-jar">
