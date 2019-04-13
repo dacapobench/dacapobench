@@ -1,7 +1,7 @@
 benchmark batik
   class org.dacapo.harness.Batik
   thread-model single
-  jars "batik-all-1.11.jar", "crimson-1.1.3.jar", "serializer-2.7.2.jar", "xalan-2.7.2.jar", "xercesImpl-2.9.1.jar", "xml-apis-1.3.04.jar", "xml-apis-ext-1.3.04.jar", "xmlgraphics-commons-2.3.jar";
+  jars "batik-all-1.11.jar", "serializer-2.7.2.jar", "xalan-2.7.2.jar", "xercesImpl-2.9.1.jar", "xml-apis-ext-1.3.04.jar", "xmlgraphics-commons-2.3.jar";
 
 /*
  * Validation currently limited to checking existence of output file
@@ -11,22 +11,21 @@ benchmark batik
 
 size small args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg"
   output  stdout           digest 0xa8f2208c90a7e2223ff376e873fd7ddb0ece3db7,
-    	    stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-          "mapWaadt.png"   digest 0x80b60361977b9732c2df8e0d4313037b372e0cb5;
+    	  stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+          "mapWaadt.png"   digest 0xdb610409cf57fbfbe19c6f3a80ad255bcdb170ac;
 
 /* The following few test-* sizes are candidates for the default size */
 size default args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/simplex.svg"
   output  stdout  digest  0x71ba0906238b17c6c544be91b55b4ea4f93adbcd,
           stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-          "simplex.png" digest 0x5b47353992e6eefcb5d48792cc26f943d841b095;
+          "simplex.png" digest 0xb355b591cbb5e26605e2858a4417973ddb7b2ba8;
 
 size large args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/simplex.svg","${SCRATCH}/batik/mapVASR.svg","${SCRATCH}/batik/bavaria.svg"
   output  stdout  digest  0x0b050f6a8339a871eafab0015048cd897dfcb8de,
           stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-          "simplex.png" digest 0x5b47353992e6eefcb5d48792cc26f943d841b095,
-          "mapVASR.png" digest 0x3086b028662d865e0913602823c0b339dc599b0b,
-          "bavaria.png" digest 0xf9e58383e2418b8a065e895cbef8132d9099a599;
-
+          "simplex.png" digest 0xb355b591cbb5e26605e2858a4417973ddb7b2ba8,
+          "mapVASR.png" digest 0xe658162c0581dffc76230f44835e9415b7dd14f7,
+          "bavaria.png" digest 0xe0ea424b845063e33055ee66fb7b1be66d368284;
 
 size huge args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/usMetro.svg", "${DATA}/batik/mapVASR.svg",
                       "${DATA}/batik/bavaria.svg",

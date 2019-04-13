@@ -35,10 +35,8 @@
 
     <target name="jar" depends="deps">
         <copy file="${batik-top}/batik-${batik.major.version}/lib/batik-all-${batik.major.version}.jar" todir="${bm-jars}"/>
-        <copy file="${batik-top}/lib/build/crimson-1.1.3.jar" todir="${bm-jars}"/>
         <copy file="${batik-top}/lib/xalan-2.7.2.jar" todir="${bm-jars}"/>
         <copy file="${batik-top}/lib/xercesImpl-2.9.1.jar" todir="${bm-jars}"/>
-        <copy file="${batik-top}/lib/xml-apis-1.3.04.jar" todir="${bm-jars}"/>
         <copy file="${batik-top}/lib/xml-apis-ext-1.3.04.jar" todir="${bm-jars}"/>
         <copy file="${batik-top}/lib/serializer-2.7.2.jar" todir="${bm-jars}"/>
         <copy file="${batik-top}/lib/xmlgraphics-commons-2.3.jar" todir="${bm-jars}"/>
