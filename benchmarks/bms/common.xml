@@ -166,7 +166,7 @@
 	</target>
 
 	<target name="patch">
-		<patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes"/>
+		<patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-build-dir}" strip="0" ignorewhitespace="yes" failonerror="yes"/>
 	</target>
 
 	<target name="untar" depends="build-init">

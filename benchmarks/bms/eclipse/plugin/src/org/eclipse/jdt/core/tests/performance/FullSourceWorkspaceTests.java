@@ -14,6 +14,7 @@ package org.eclipse.jdt.core.tests.performance;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.security.AlgorithmConstraints;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -350,8 +351,9 @@ public abstract class FullSourceWorkspaceTests {
     // Create lib entries for the JDKs
     String jreLibPath = JavaCore.getClasspathVariable("JRE_LIB").toOSString();
     String[] jdkLibs = Util.getJavaClassLibs();
+    String dacapoJre = System.getProperty("dacapo.local.jre");
     int jdkLibsLength = jdkLibs.length;
-    IClasspathEntry[] jdkEntries = new IClasspathEntry[jdkLibsLength];
+    IClasspathEntry[] jdkEntries = new IClasspathEntry[jdkLibsLength + 1];
     int jdkEntriesCount = 0;
     for (int i = 0; i < jdkLibsLength; i++) {
       if (!jdkLibs[i].equals(jreLibPath)) { // do not include JRE_LIB in
@@ -359,6 +361,7 @@ public abstract class FullSourceWorkspaceTests {
         jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(jdkLibs[i]), null, null);
       }
     }
+    jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(dacapoJre), null, null);
 
     // Set classpaths (workaround bug 73253 Project references not set on
     // project open)
@@ -378,8 +381,8 @@ public abstract class FullSourceWorkspaceTests {
       IClasspathEntry[] entries = ALL_PROJECTS[i].getRawClasspath();
       int entriesLength = entries.length;
       try {
-        System.arraycopy(entries, 0, entries = new IClasspathEntry[jdkEntriesCount + entriesLength], 0, entriesLength);
-        System.arraycopy(jdkEntries, 0, entries, entriesLength, jdkEntriesCount);
+        System.arraycopy(entries, 0, entries = new IClasspathEntry[jdkEntriesCount + entriesLength], jdkEntriesCount, entriesLength);
+        System.arraycopy(jdkEntries, 0, entries, 0, jdkEntriesCount);
         ALL_PROJECTS[i].setRawClasspath(entries, null);
       } catch (CoreException jme) {
         // skip name collision as it means that JRE lib were already set on the

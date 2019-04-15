@@ -11,11 +11,11 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="eclipse"/>
-    <property name="bm-version" value="4.7.2"/>
-    <property name="bm-drop" value="201711300510"/>
+    <property name="bm-version" value="4.9"/>
+    <property name="bm-drop" value="201809060745"/>
     <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops4/R-${bm-version}-${bm-drop}"/>
     <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa-x86_64.tar.gz"/>
-    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.12.50.v20170928-1321.jar"/>
+    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.13.100.v20180827-1536.jar"/>
 
     <import file="../common.xml"/>
     <property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
@@ -37,28 +37,25 @@
         </antcall>
     </target>
 
-    <target name="moveEclipse">
+    <target name="move-eclipse">
         <copy todir="${bm-build-dir}/eclipse/">
             <fileset dir="${bm-build-dir}/Eclipse.app/Contents/Eclipse"/>
         </copy>
         <delete dir="${bm-build-dir}/Eclipse.app"/>
     </target>
 
-    <target name="unpack" depends="untar, moveEclipse"/>
-
-    <target name="bm-build">
-    </target>
+    <target name="unpack" depends="untar,move-eclipse,patch"/>
 
     <target name="workspace-zips">
         <!-- Unravel the source zip -->
         <unzip src="${bm-downloads}/${bm-src-at}" dest="${bm-build-dir}">
             <patternset>
-                <include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
+                <include name="eclipse-testing/eclipse-junit-tests-*.zip"/>
             </patternset>
         </unzip>
         <unzip dest="${bm-build-dir}/eclipse-testing/eclipse">
             <fileset dir="${bm-build-dir}/eclipse-testing">
-                <include name="eclipse-junit-tests-M*.zip"/>
+                <include name="eclipse-junit-tests-*.zip"/>
             </fileset>
             <patternset>
                 <include name="plugins/org.eclipse.jdt.core.tests.binaries*"/>
@@ -98,23 +95,19 @@
             <target name="clean"/>
             <target name="build.update.jar"/>
         </ant>
-        <!-- add our bundle to the configurator metadata -->
-        <patch patchfile="${bm-files}/eclipse.patch" dir="${bm-build-dir}" strip="0"/>
-
     </target>
 
     <!-- Create the eclipse data file -->
     <target name="data" depends="plugin, workspace-zips">
+        <!-- include the dummy jre into the data zip file-->
+        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
 
-        <!-- where possible, replace jars with empty stubs -->
-        <!-- remove this optimization for now; it fails with ant 1.7.0 (but not 1.7.1) sigh.
         <delete>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </delete>
         <touch>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </touch>
-        -->
 
         <!-- Install the test data -->
         <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
@@ -122,6 +115,7 @@
             <!-- using an empirically derived list of what we really need.  -->
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
+            <fileset dir="${bm-data}" includes="**"/>
         </zip>
     </target>
 
