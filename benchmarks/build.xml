@@ -281,7 +281,7 @@ BUILDING:
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,h2,h2o,eclipse,fop,zxing,biojava,jme,graphchi,cassandra,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+    <target name="compile" depends="avrora,batik,h2,h2o,eclipse,fop,zxing,biojava,jme,graphchi,cassandra,kafka,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -494,7 +494,7 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="h2o" depends="init,harness,update-externdata-info">
         <build.bm benchmark="h2o"/>
     </target>
-    <target name="kafka" depends="init,harness,update-externdata-info">
+    <target name="kafka" depends="init,harness">
         <build.bm benchmark="kafka"/>
     </target>
 

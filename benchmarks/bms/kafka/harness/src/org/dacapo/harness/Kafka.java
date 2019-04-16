@@ -10,7 +10,8 @@ package org.dacapo.harness;
 
 import java.io.File;
 import java.lang.reflect.Method;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import org.dacapo.parser.Config;
 
 /**
@@ -19,12 +20,25 @@ import org.dacapo.parser.Config;
  */
 public class Kafka extends Benchmark {
 
+    Constructor lc;
+    Method launching;
+    private String[] args;
+
     public Kafka(Config config, File scratch, File data) throws Exception {
-        super(config, scratch, data);
+        super(config, scratch, data, false, true);
+        Class launcher = Class.forName("org.dacapo.kafka.Launcher", true, this.loader);
+        lc = launcher.getConstructor(File.class, String[].class);
+        launching = launcher.getMethod("launching");
+    }
+
+    @Override
+    protected void prepare(String size) throws Exception {
+        super.prepare(size);
+        args = config.preprocessArgs(size, scratch, data);
     }
 
     @Override
     public void iterate(String size) throws Exception {
-
+        launching.invoke(lc.newInstance(this.scratch, args));
     }
 }

@@ -15,7 +15,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
 public class Harness {
 
   // The DaCapo Harness is in a separate library within the dacapo.jar

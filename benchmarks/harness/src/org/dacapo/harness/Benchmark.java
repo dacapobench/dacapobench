@@ -38,8 +38,8 @@ public abstract class Benchmark {
   /**
    * Timeout Dialation property.
    */
-  private static final String TIMEOUT_DIALATION_PROPERTY = "dacapo.timeout.dialation"; 
-  
+  private static final String TIMEOUT_DIALATION_PROPERTY = "dacapo.timeout.dialation";
+
   /*
    * Class variables
    */
@@ -49,10 +49,16 @@ public abstract class Benchmark {
    */
   private static boolean verbose = false;
 
+
   /**
-   * Display output from the benchmark ?
+   * Display stdout from the benchmark ?
    */
-  private static boolean silent = true;
+  private static boolean silentOut = true;
+
+  /**
+   * Display stderr from the benchmark ?
+   */
+  private static boolean silentErr = true;
 
   /**
    * Perform digest operations on standard output and standard error
@@ -222,8 +228,12 @@ public abstract class Benchmark {
   }
 
   public Benchmark(Config config, File scratch, File data, boolean silent) throws Exception {
-    // TODO this is very ugly
-    Benchmark.silent = silent;
+    this(config, scratch, data, silent, silent);
+  }
+
+  public Benchmark(Config config, File scratch, File data, boolean silentOut, boolean silentErr) throws Exception {
+    Benchmark.silentOut = silentOut;
+    Benchmark.silentErr = silentErr;
     this.scratch = scratch;
     this.data = data;
     this.config = config;
@@ -237,13 +247,14 @@ public abstract class Benchmark {
     synchronized (System.out) {
       if (out == null) {
         out = new TeePrintStream(System.out, new File(scratch, "stdout.log"));
-        out.enableOutput(!silent);
+
+        out.enableOutput(!silentOut);
       }
     }
     synchronized (System.err) {
       if (err == null) {
         err = new TeePrintStream(System.err, new File(scratch, "stderr.log"));
-        err.enableOutput(!silent);
+        err.enableOutput(!silentErr);
       }
     }
     prepareJars();
@@ -689,7 +700,8 @@ public abstract class Benchmark {
   }
 
   public static void setCommandLineOptions(CommandLineArgs line) {
-    silent = line.getSilent();
+    silentOut = line.getSilent();
+    silentErr = line.getSilent();
     preserve = line.getPreserve();
     validate = line.getValidate();
     validateOutput = line.getValidateOutput();
@@ -731,8 +743,12 @@ public abstract class Benchmark {
     return iteration;
   }
 
-  public static boolean getSilent() {
-    return silent;
+  public static boolean getSilentOut() {
+    return silentOut;
+  }
+
+  public static boolean getSilentErr() {
+    return silentErr;
   }
 
 }
