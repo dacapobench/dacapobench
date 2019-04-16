@@ -17,3 +17,18 @@
    </target>
  
    <target name="init"
+--- commons-logging-1.2-src/build.xml	2019-04-16 15:50:00.000000000 +1000
++++ build.xml	2019-04-16 15:49:46.000000000 +1000
+@@ -130,10 +130,10 @@
+ <!-- ========== Compiler Defaults ========================================= -->
+ 
+   <!-- Version of java class files to generate. -->
+-  <property name="target.version" value="1.2"/>
++  <property name="target.version" value="1.6"/>
+ 
+   <!-- Version of java source to accept -->
+-  <property name="source.version" value="1.2"/>
++  <property name="source.version" value="1.6"/>
+ 
+   <!-- Should Java compilations set the 'debug' compiler option? -->
+   <property name="compile.debug"           value="true"/>

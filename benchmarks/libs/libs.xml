@@ -120,6 +120,7 @@
     </target>
 
     <!-- json -->
+    <property name="json-jar" value="${lib-base}/json/dist/jar/json-lib-2.4-jdk15.jar"/>
     <target name="json">
         <ant antfile="${lib-base}/json/build.xml"/>
     </target>

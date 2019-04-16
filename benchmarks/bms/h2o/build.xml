@@ -52,7 +52,7 @@
     <target name="jar">
         <copy file="${bm-build-dir}/h2o-assemblies/main/build/libs/main.jar"
               todir="${bm-jars}"/>
-        <javac srcdir="${bm-src-dir}" classpath="${lib-base}/json/dist/jar/json-lib-2.4-jdk15.jar" destdir="${bm-output-dir}"
+        <javac srcdir="${bm-src-dir}" classpath="${json-jar}" destdir="${bm-output-dir}"
                includes="org/dacapo/h2o/**"
                debug="true" debuglevel="lines,vars,source"/>
     </target>
