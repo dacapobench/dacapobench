@@ -38,8 +38,6 @@
           <env key="JAVA_HOME" value="${jdk8home}"/>
         </exec>
     </target>
-    
-    <target name="data"/>
 
     <target name="jar">
         <copy file="${bm-build-dir}/target/${bm-name}-java-${bm-version}-jar-with-dependencies.jar"
