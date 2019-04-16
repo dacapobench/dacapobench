@@ -433,68 +433,68 @@ See ${log.build.report} for a summary of benchmark build status.
         </sequential>
     </macrodef>
 
-    <target name="avrora" depends="init,harness">
+    <target name="avrora" depends="init,harness,update-externdata-info">
         <build.bm benchmark="avrora"/>
     </target>
-    <target name="batik" depends="init,harness">
+    <target name="batik" depends="init,harness,update-externdata-info">
         <build.bm benchmark="batik"/>
     </target>
-    <target name="cassandra" depends="init,harness">
+    <target name="cassandra" depends="init,harness,update-externdata-info">
         <build.bm benchmark="cassandra"/>
     </target>
-    <target name="h2" depends="init,harness">
+    <target name="h2" depends="init,harness,update-externdata-info">
         <build.bm benchmark="h2"/>
     </target>
-    <target name="eclipse" depends="init,harness">
+    <target name="eclipse" depends="init,harness,update-externdata-info">
         <build.bm benchmark="eclipse"/>
     </target>
-    <target name="fop" depends="init,harness">
+    <target name="fop" depends="init,harness,update-externdata-info">
         <build.bm benchmark="fop"/>
     </target>
-    <target name="graphchi" depends="init,harness">
+    <target name="graphchi" depends="init,harness,update-externdata-info">
         <build.bm benchmark="graphchi"/>
     </target>
-    <target name="jython" depends="init,harness">
+    <target name="jython" depends="init,harness,update-externdata-info">
         <build.bm benchmark="jython"/>
     </target>
-    <target name="luindex" depends="init,harness">
+    <target name="luindex" depends="init,harness,update-externdata-info">
         <build.bm benchmark="luindex"/>
     </target>
-    <target name="lusearch" depends="init,harness">
+    <target name="lusearch" depends="init,harness,update-externdata-info">
         <build.bm benchmark="lusearch"/>
     </target>
-    <target name="pmd" depends="init,harness">
+    <target name="pmd" depends="init,harness,update-externdata-info">
         <build.bm benchmark="pmd"/>
     </target>
-    <target name="sunflow" depends="init,harness">
+    <target name="sunflow" depends="init,harness,update-externdata-info">
         <build.bm benchmark="sunflow"/>
     </target>
-    <target name="tomcat" depends="init,harness">
+    <target name="tomcat" depends="init,harness,update-externdata-info">
         <build.bm benchmark="tomcat"/>
     </target>
-    <target name="tradebeans" depends="init,harness">
+    <target name="tradebeans" depends="init,harness,update-externdata-info">
         <build.bm benchmark="tradebeans"/>
     </target>
-    <target name="tradesoap" depends="init,harness">
+    <target name="tradesoap" depends="init,harness,update-externdata-info">
         <build.bm benchmark="tradesoap"/>
     </target>
     <target name="daytrader" depends="tradebeans, tradesoap"/>
-    <target name="xalan" depends="init,harness">
+    <target name="xalan" depends="init,harness,update-externdata-info">
         <build.bm benchmark="xalan"/>
     </target>
-    <target name="biojava" depends="init,harness">
+    <target name="biojava" depends="init,harness,update-externdata-info">
         <build.bm benchmark="biojava"/>
     </target>
-    <target name="zxing" depends="init,harness">
+    <target name="zxing" depends="init,harness,update-externdata-info">
         <build.bm benchmark="zxing"/>
     </target>
-    <target name="jme" depends="init,harness">
+    <target name="jme" depends="init,harness,update-externdata-info">
         <build.bm benchmark="jme"/>
     </target>
-    <target name="h2o" depends="init,harness">
+    <target name="h2o" depends="init,harness,update-externdata-info">
         <build.bm benchmark="h2o"/>
     </target>
-    <target name="kafka" depends="init,harness">
+    <target name="kafka" depends="init,harness,update-externdata-info">
         <build.bm benchmark="kafka"/>
     </target>
 
