@@ -32,6 +32,7 @@
         <exec executable="${mvn-exe}" dir="${lib-build-top}">
             <arg value="clean"/>
             <arg value="install"/>
+            <arg value="-Dmaven.test.skip=true"/>
         </exec>
     </target>
 
