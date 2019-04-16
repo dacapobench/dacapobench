@@ -1,13 +1,15 @@
---- gradle/wrapper/gradle-wrapper.properties	2019-02-27 03:48:07.000000000 +1100
-+++ ../build-src/gradle/wrapper/gradle-wrapper.properties	2019-02-28 02:42:41.000000000 +1100
+diff -urN ./gradle/wrapper/gradle-wrapper.properties ../build-src/gradle/wrapper/gradle-wrapper.properties
+--- ./gradle/wrapper/gradle-wrapper.properties	2019-02-27 03:48:07.000000000 +1100
++++ ../build-src/gradle/wrapper/gradle-wrapper.properties	2019-04-17 01:16:31.000000000 +1000
 @@ -2,4 +2,4 @@
  distributionPath=wrapper/dists
  zipStoreBase=GRADLE_USER_HOME
  zipStorePath=wrapper/dists
 -distributionUrl=https\://services.gradle.org/distributions/gradle-4.10-bin.zip
 +distributionUrl=https\://services.gradle.org/distributions/gradle-4.10.1-all.zip
---- jme3-examples/src/main/java/jme3test/TestChooser.java	2019-02-27 03:48:08.000000000 +1100
-+++ ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-02-28 12:43:14.000000000 +1100
+diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java
+--- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2019-02-27 03:48:08.000000000 +1100
++++ ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-04-17 01:16:03.000000000 +1000
 @@ -48,26 +48,21 @@
  import java.net.URL;
  import java.net.URLConnection;
