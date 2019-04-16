@@ -22,7 +22,7 @@
 
     <target name="bm-build" depends="janino">
         <mkdir dir="${bm-build-dir}/build"/>
-        <javac srcdir="${bm-build-dir}/${bm-name}/src" source="1.5" 
+        <javac srcdir="${bm-build-dir}/${bm-name}/src"
             classpath="${janino-jar}" destdir="${bm-build-dir}/build"
             debug="true" debuglevel="lines,vars,source"/>
     </target>
