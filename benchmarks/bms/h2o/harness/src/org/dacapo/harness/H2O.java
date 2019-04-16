@@ -48,7 +48,6 @@ public class H2O extends Benchmark{
     protected void prepare(String size) throws Exception {
         super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
-        setupH2O();
     }
 
     private void setupH2O() {

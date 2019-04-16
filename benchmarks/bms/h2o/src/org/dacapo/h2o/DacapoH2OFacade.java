@@ -1,8 +1,7 @@
 package org.dacapo.h2o;
 
-import net.sf.json.JSONObject;
-
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -70,10 +69,18 @@ public class DacapoH2OFacade {
     //Get the job list
     private final String JOB_LIST = "3/Jobs";
 
+    private Method getStringOb;
 
     //
     DacapoH2OFacade(String h2O_URL) {
         h2o_rest = new RestUtil(h2O_URL);
+        Class<?> jsonObj = null;
+        try {
+            jsonObj = Class.forName("net.sf.json.JSONObject", true, Thread.currentThread().getContextClassLoader());
+            getStringOb = jsonObj.getDeclaredMethod("getString", String.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -291,9 +298,13 @@ public class DacapoH2OFacade {
 
     private boolean jobsAllDone(){
         String jl = getJobs();
-        List<JSONObject> list = RestUtil.getIndexFromJsonArray(jl);
-        for (JSONObject jo : list){
-            if (!jo.getString("status").equals("DONE")) return false;
+        List list = h2o_rest.getIndexFromJsonArray(jl);
+        for (Object jo : list){
+            try {
+                if (!getStringOb.invoke(jo,(Object) "status").equals("DONE")) return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }

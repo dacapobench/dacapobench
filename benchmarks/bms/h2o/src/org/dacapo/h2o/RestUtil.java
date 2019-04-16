@@ -1,9 +1,7 @@
 package org.dacapo.h2o;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,11 +10,31 @@ import java.util.Map;
 
 public class RestUtil {
 
+    private Method fromObjectOb;
+    private Method getStringOb;
+    private Method getOb;
+    private Method fromObjectAr;
+    private Method getStringAr;
+    private Method getSizeAr;
+
     private String url;
     private String response;
 
-    public RestUtil(String url) {
+    RestUtil(String url) {
         this.url = url;
+        try {
+            Class<?> jsonObj = Class.forName("net.sf.json.JSONObject", true, Thread.currentThread().getContextClassLoader());
+            fromObjectOb = jsonObj.getMethod("fromObject", Object.class);
+            getStringOb = jsonObj.getMethod("getString", String.class);
+            getOb = jsonObj.getMethod("get", String.class);
+
+            Class<?> jsonArr = Class.forName("net.sf.json.JSONArray", true, Thread.currentThread().getContextClassLoader());
+            fromObjectAr = jsonArr.getMethod("fromObject", Object.class);
+            getStringAr = jsonArr.getMethod("getString", int.class);
+            getSizeAr = jsonArr.getMethod("size");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -103,12 +121,16 @@ public class RestUtil {
      */
     public Map<String, String> getFromResponse(String... labels) {
         Map<String, String> labelValue = new HashMap<>();
-        JSONObject obj = JSONObject.fromObject(response);
-        for (String label : labels){
-            // Todo: validate the labels
-            // the json responsed from h2o is well-design. The details is in 
-            // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
-            labelValue.put(label, obj.getString(label));
+        try {
+            Object obj = fromObjectOb.invoke(null, (Object) response);
+            for (String label : labels){
+                // Todo: validate the labels
+                // the json responsed from h2o is well-design. The details is in
+                // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
+                labelValue.put(label, (String) getStringOb.invoke(obj, (Object) label));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return labelValue;
     }
@@ -122,21 +144,29 @@ public class RestUtil {
      */
     Map<String, List> getListFromResponse(String... labels) {
         Map<String, List> labelValue = new HashMap<>();
-        JSONObject obj = JSONObject.fromObject(response);
-        for (String label : labels){
-            // Todo: validate the labels
-            // the json responsed from h2o is well-design. The details is in
-            // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
-            labelValue.put(label, (List) obj.get(label));
+        try {
+            Object obj  = fromObjectOb.invoke(null, (Object) response);
+            for (String label : labels){
+                // Todo: validate the labels
+                // the json responsed from h2o is well-design. The details is in
+                // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
+                labelValue.put(label, (List) getOb.invoke(obj, (Object) label));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return labelValue;
     }
 
-    static List<JSONObject> getIndexFromJsonArray(String jl) {
-        JSONArray jsonA = JSONArray.fromObject(jl);
-        List<JSONObject> l = new LinkedList<>();
-        for (int i = 0; i < jsonA.size(); i++){
-            l.add(JSONObject.fromObject(jsonA.getString(i)));
+    List getIndexFromJsonArray(String jl) {
+        List l = new LinkedList<>();
+        try {
+            Object jsonA = fromObjectAr.invoke(null, (Object) jl);
+            for (int i = 0; i < (Integer) getSizeAr.invoke(jsonA); i++){
+                l.add(fromObjectOb.invoke(null, getStringAr.invoke(jsonA, (Object) i)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return l;
     }
