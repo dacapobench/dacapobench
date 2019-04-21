@@ -26,9 +26,10 @@
     <target name="bm-build" depends="xerces">
         <exec dir="${xalan-top}" executable="ant">
             <env key="CLASSPATH" value=".:${xerces-jars}/${xerces-impl-jar-name}:${xerces-jars}/${xerces-api-jar-name}"/>
+            <env key="JAVA_HOME" value="${jdk8home}"/>
         </exec>
         <mkdir dir="${bm-build-dir}/benchmark"/>
-        <javac srcdir="${bm-src-dir}" source="1.5" classpath="${xalan-top}/build/xalan.jar" 
+        <javac srcdir="${bm-src-dir}" source="1.8" classpath="${xalan-top}/build/xalan.jar"
             destdir="${bm-build-dir}/benchmark/" 
             includes="org/dacapo/xalan/*"
             debug="true" debuglevel="lines,vars,source"/>
