@@ -1,15 +1,47 @@
-diff -urN ./gradle/wrapper/gradle-wrapper.properties ../build-src/gradle/wrapper/gradle-wrapper.properties
---- ./gradle/wrapper/gradle-wrapper.properties	2019-02-27 03:48:07.000000000 +1100
-+++ ../build-src/gradle/wrapper/gradle-wrapper.properties	2019-04-17 01:16:31.000000000 +1000
-@@ -2,4 +2,4 @@
- distributionPath=wrapper/dists
- zipStoreBase=GRADLE_USER_HOME
- zipStorePath=wrapper/dists
--distributionUrl=https\://services.gradle.org/distributions/gradle-4.10-bin.zip
-+distributionUrl=https\://services.gradle.org/distributions/gradle-4.10.1-all.zip
+diff -urN ./build.gradle ../build-src/build.gradle
+--- ./build.gradle	2019-04-22 04:57:14.000000000 +1000
++++ ../build-src/build.gradle	2019-04-22 05:01:08.000000000 +1000
+@@ -82,36 +82,10 @@
+     into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
+ }
+ 
+-task dist(dependsOn: [':jme3-examples:dist', 'mergedJavadoc']){
++task dist(dependsOn: [':jme3-examples:dist']){
+     description 'Creates a jME3 examples distribution with all jme3 binaries, sources, javadoc and external libraries under ./dist'
+ }
+ 
+-task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
+-    title = 'jMonkeyEngine3'
+-    destinationDir = mkdir("dist/javadoc")
+-
+-    options.encoding = 'UTF-8'
+-
+-    // Allows Javadoc to be generated on Java 8 despite doclint errors.
+-    if (JavaVersion.current().isJava8Compatible()) {
+-        options.addStringOption('Xdoclint:none', '-quiet')
+-    }
+-
+-    options.overview = file("javadoc-overview.html")
+-    // Note: The closures below are executed lazily.
+-    source subprojects.collect {project ->
+-        project.sourceSets*.allJava
+-    }
+-//    classpath = files(subprojects.collect {project ->
+-//            project.sourceSets*.compileClasspath})
+-    //    source {
+-    //        subprojects*.sourceSets*.main*.allSource
+-    //    }
+-    classpath.from {
+-        subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
+-    }
+-}
+-
+ task mergedSource(type: Copy){
+ 
+ }
 diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java
---- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2019-02-27 03:48:08.000000000 +1100
-+++ ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-04-17 01:16:03.000000000 +1000
+--- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2019-04-22 04:57:15.000000000 +1000
++++ ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-04-22 04:59:45.000000000 +1000
 @@ -48,26 +48,21 @@
  import java.net.URL;
  import java.net.URLConnection;
@@ -422,3 +454,24 @@ diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/j
      protected void addDisplayedClasses(Vector<Class> classes) {
          find("jme3test", true, classes);
      }
+diff -urN ./jme3-networking/build.gradle ../build-src/jme3-networking/build.gradle
+--- ./jme3-networking/build.gradle	2019-04-22 04:57:16.000000000 +1000
++++ ../build-src/jme3-networking/build.gradle	2019-04-22 05:10:21.000000000 +1000
+@@ -4,4 +4,5 @@
+ 
+ dependencies {
+     compile project(':jme3-core')
++    compile 'com.sun.xml.ws:jaxws-ri:2.3.2'
+ }
+diff -urN ./jme3-plugins/build.gradle ../build-src/jme3-plugins/build.gradle
+--- ./jme3-plugins/build.gradle	2019-04-22 04:57:16.000000000 +1000
++++ ../build-src/jme3-plugins/build.gradle	2019-04-22 05:07:31.000000000 +1000
+@@ -17,4 +17,8 @@
+     compile project(':jme3-core')
+     compile 'com.google.code.gson:gson:2.8.1'
+     testCompile project(':jme3-desktop')
++    compile 'javax.xml.bind:jaxb-api:2.3.0'
++    compile 'javax.xml.bind:jaxb-api:2.3.0'
++    compile 'com.sun.xml.bind:jaxb-core:2.3.0'
++    compile 'com.sun.xml.bind:jaxb-impl:2.3.0'
+ }
