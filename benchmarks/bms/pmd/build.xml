@@ -11,46 +11,34 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="pmd"/>
-    <property name="bm-version" value="5.8.1"/>
-    <property name="bm-url" value="${github.url}/pmd/pmd/releases/download/pmd_releases%2F${bm-version}"/>
-    <property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
-    <property name="jaxen-version" value="1.1.6"/>
-    <property name="asm-version" value="5.0.4"/>
-    <property name="commons-io-version" value="2.4"/>
-    <property name="commons-lang3-version" value="3.4"/>
-    <property name="jcommander-version" value="1.48"/>
-    <property name="saxon-version" value="9.1.0.8"/>
-
-    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
-    <property name="mvn-exe" value="${mvn-home}/mvn"/>
-    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
-        <os family="windows"/>
-    </condition>
+    <property name="bm-version" value="6.13.0"/>
+    <property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
+    <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
+    <property name="bm-git-commit" value="4ed549f0b2925ead2c52897cc6ee093d624acd0f"/>
 
     <import file="../common.xml"/>
 
-    <property name="bm-build-top" value="${bm-build-dir}/pmd-src-${bm-version}"/>
+    <property name="bm-build-top" value="${bm-build-dir}"/>
 
-    <target name="unpack" depends="unzip, patch"/>
+    <condition property="mvn-exe" value="${bm-build-top}/mvnw.cmd">
+        <os family="windows"/>
+    </condition>
+    <property name="mvn-exe" value="${bm-build-top}/mvnw"/>
+
+    <target name="unpack" depends="untar, patch"/>
 
     <target name="bm-build" depends="xerces">
         <!-- build JUnit -->
         <ant antfile="libs/junit/build.xml"/>
 
-        <!-- set up toolchains.xml for Maven -->
-        <property name="mvn-toolchains-xml" value="${bm-build-top}/toolchains.xml"/>
-        <exec executable="${bm-files}/mvn_toolchain_setup.sh">
-            <arg value="${mvn-toolchains-xml}"/>
-            <arg value="${jdk7home}"/>
-        </exec>
+        <antcall target="make-executable">
+            <param name="target-filename" value="${mvn-exe}"/>
+        </antcall>
 
-        <!-- execute Maven in build directory -->
-        <exec dir="${bm-build-top}" executable="${mvn-exe}">
-            <arg value="-B"/>
-            <arg line="--global-toolchains ${mvn-toolchains-xml}"/>
-            <arg value="-Dmaven.test.skip=true"/>
-            <!-- <arg line="-pl pmd-core,pmd-java,pmd-dist"/> -->
-            <arg line="clean package"/>
+        <exec executable="${mvn-exe}" dir="${bm-build-top}">
+            <arg value="clean"/>
+            <arg value="verify"/>
+            <arg value="-DskipTests"/>
         </exec>
 
         <!-- unpacks produced zip file -->
@@ -71,10 +59,15 @@
         <zip destfile="${bm-dat}/pmd.zip" basedir="${bm-data}" includes="pmd/**/*"/>
     </target>
 
+    <property name="asm-version" value="7.1"/>
+    <property name="commons-io-version" value="2.6"/>
+    <property name="commons-lang3-version" value="3.8.1"/>
+    <property name="jcommander-version" value="1.72"/>
+    <property name="saxon-version" value="9.1.0.8"/>
+
     <target name="libs">
         <copy todir="${bm-jars}">
             <resources>
-                <file file="${pmd-dist-target}/lib/jaxen-${jaxen-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/asm-${asm-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/commons-io-${commons-io-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/commons-lang3-${commons-lang3-version}.jar"/>

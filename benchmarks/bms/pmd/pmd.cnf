@@ -1,24 +1,24 @@
 benchmark pmd
   class org.dacapo.harness.Pmd
   thread-model single
-  jars "pmd-core-5.8.1.jar", "pmd-java-5.8.1.jar", "jaxen-1.1.6.jar", "asm-5.0.4.jar", "commons-io-2.4.jar", "commons-lang3-3.4.jar", "jcommander-1.48.jar", "saxon-9.1.0.8.jar", "saxon-9.1.0.8-dom.jar", "junit-4.12.jar", "xercesImpl.jar", "xml-apis.jar";
+  jars "asm-7.1.jar", "commons-io-2.6.jar", "commons-lang3-3.8.1.jar", "jcommander-1.72.jar", "pmd-core-6.13.0.jar", "pmd-java-6.13.0.jar", "saxon-9.1.0.8-dom.jar", "saxon-9.1.0.8.jar", "xercesImpl.jar", "xml-apis.jar";
 
 size small args "-d", "${SCRATCH}/pmd/small", "-f", "text", "-language", "java",
 								"-shortnames", "-failOnViolation", "false", "-rulesets", "java-comments"
   output 
-    stdout digest 0x4a58faf37aebc2138d4bc1da7746e26ba9177cb6;
+    stdout digest 0xecf6b0113a62863c1e0cca21fa7d3a99c590cbca;
 
 size default args "-d", "${SCRATCH}/pmd/default", "-f", "text", "-language", "java",
 								"-shortnames", "-failOnViolation", "false", "-rulesets",
 								"java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations"
   output 
-    stdout digest 0x02794bd962ae65aabb0978ee7aeaae79559b87ad;
+    stdout digest 0x633a19f4746def805fcc15451658145752c06920;
 
 size large args "-d", "${SCRATCH}/pmd/large", "-f", "text", "-language", "java",
 								"-shortnames", "-failOnViolation", "false", "-rulesets",
                 "java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations"
   output 
-    stdout digest 0x3539e8eba8378ea7b2e969b32c9535834cf2857e;
+    stdout digest 0x509d3ffe737f7208fd69c8421506aad94c01746f;
 
 description
   short		"A source code analyzer for Java",
