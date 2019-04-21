@@ -50,12 +50,13 @@
         <antcall target="patch"/>
     </target>
 
-
     <target name="bm-build">
         <copy todir="${bm-build-dir}/src/java">
             <fileset file="${bm-build-dir}/build.*"/>
         </copy>
-        <ant dir="${bm-build-dir}"/>
+        <exec executable="ant" dir="${bm-build-dir}">
+            <env key="JAVA_HOME" value="${jdk8home}"/>
+        </exec>
     </target>
 
     <target name="jar">
