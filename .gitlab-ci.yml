@@ -59,6 +59,7 @@ fop:
 graphchi:
   script:
     - ant -Dbuild.target-jar=dacapo.jar graphchi
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar --extdata-install downloads
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar graphchi
   after_script:
     - git clean -df -e "downloads"
