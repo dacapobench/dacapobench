@@ -6,8 +6,7 @@ before_script:
   - touch local.properties
   - echo "make=/usr/bin/make" >> local.properties
   - echo "build.failonerror=true" >> local.properties
-  - echo "jdk7home=/usr/lib/jvm/java-7-openjdk-amd64" >> local.properties
-  - echo "jdk9home=/usr/lib/jvm/java-9-openjdk-amd64" >> local.properties
+  - echo "jdk8home=/usr/lib/jvm/java-8-openjdk-amd64" >> local.properties
   - cat local.properties
 
 cache:
@@ -24,28 +23,28 @@ biojava:
 avrora:
   script:
     - ant -Dbuild.target-jar=dacapo.jar avrora
-    - java -jar dacapo.jar avrora -s small
+    - java -jar dacapo.jar avrora
   after_script:
     - git clean -df -e "downloads"
 
 batik:
   script:
     - ant -Dbuild.target-jar=dacapo.jar batik
-    - java -jar dacapo.jar batik -s small
+    - java -jar dacapo.jar batik
   after_script:
     - git clean -df -e "downloads"
 
-batik:
+cassandra:
   script:
     - ant -Dbuild.target-jar=dacapo.jar cassandra
-    - java -jar dacapo.jar cassandra -s test
+    - java -jar dacapo.jar cassandra
   after_script:
     - git clean -df -e "downloads"
 
 eclipse:
   script:
     - ant -Dbuild.target-jar=dacapo.jar eclipse
-    - java -jar dacapo.jar eclipse -s small
+    - java -jar dacapo.jar eclipse
   after_script:
     - git clean -df -e "downloads"
 
@@ -59,56 +58,56 @@ fop:
 graphchi:
   script:
     - ant -Dbuild.target-jar=dacapo.jar graphchi
-    - java -jar dacapo.jar graphchi -s livejournal
+    - java -jar dacapo.jar graphchi
   after_script:
     - git clean -df -e "downloads"
 
 h2:
   script:
     - ant -Dbuild.target-jar=dacapo.jar h2
-    - java -jar dacapo.jar h2 -s small
+    - java -jar dacapo.jar h2
   after_script:
     - git clean -df -e "downloads"
 
 jython:
   script:
     - ant -Dbuild.target-jar=dacapo.jar jython
-    - java -jar dacapo.jar jython -s small
+    - java -jar dacapo.jar jython
   after_script:
     - git clean -df -e "downloads"
 
 luindex:
   script:
     - ant -Dbuild.target-jar=dacapo.jar luindex
-    - java -jar dacapo.jar luindex -s small
+    - java -jar dacapo.jar luindex
   after_script:
     - git clean -df -e "downloads" -e "enwiki.txt"
 
 lusearch:
   script:
     - ant -Dbuild.target-jar=dacapo.jar lusearch
-    - java -jar dacapo.jar lusearch -s small
+    - java -jar dacapo.jar lusearch
   after_script:
     - git clean -df -e "downloads"
 
 pmd:
   script:
     - ant -Dbuild.target-jar=dacapo.jar pmd
-    - java -jar dacapo.jar pmd -s small
+    - java -jar dacapo.jar pmd
   after_script:
     - git clean -df -e "downloads"
 
 sunflow:
   script:
     - ant -Dbuild.target-jar=dacapo.jar sunflow
-    - java -jar dacapo.jar sunflow -s small
+    - java -jar dacapo.jar sunflow
   after_script:
     - git clean -df -e "downloads"
 
 tomcat:
   script:
     - ant -Dbuild.target-jar=dacapo.jar tomcat
-    - java -jar dacapo.jar tomcat -s small
+    - java -jar dacapo.jar tomcat
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
@@ -132,7 +131,7 @@ tradesoap:
 xalan:
   script:
     - ant -Dbuild.target-jar=dacapo.jar xalan
-    - java -jar dacapo.jar xalan -s small
+    - java -jar dacapo.jar xalan
   after_script:
     - git clean -df -e "downloads"
 
@@ -140,5 +139,19 @@ zxing:
   script:
     - ant -Dbuild.target-jar=dacapo.jar zxing
     - java -jar dacapo.jar zxing
+  after_script:
+    - git clean -df -e "downloads"
+
+kafka:
+  script:
+    - ant -Dbuild.target-jar=dacapo.jar kafka
+    - java -jar dacapo.jar kafka
+  after_script:
+    - git clean -df -e "downloads"
+
+jme:
+  script:
+    - ant -Dbuild.target-jar=dacapo.jar jme
+    - java -jar dacapo.jar jme
   after_script:
     - git clean -df -e "downloads"
