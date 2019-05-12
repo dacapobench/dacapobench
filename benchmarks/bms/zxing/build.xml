@@ -30,12 +30,14 @@
     <target name="bm-build" depends="unpack">
         <exec executable="${mvn-exe}" dir="${bm-files}/build">
             <arg value="-DskipTests"/>
+  	    <arg value="-Dmaven.javadoc.skip=true"/>
             <arg value="clean"/>
             <arg value="install"/>
         </exec>
 
         <exec executable="${mvn-exe}" dir="${bm-files}/build/javase">
             <arg value="-DskipTests"/>
+  	    <arg value="-Dmaven.javadoc.skip=true"/>
             <arg value="package"/>
             <arg value="assembly:single"/>
         </exec>
