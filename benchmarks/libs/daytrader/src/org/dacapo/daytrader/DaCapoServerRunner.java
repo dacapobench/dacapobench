@@ -23,7 +23,6 @@ import java.net.URL;
  */
 public class DaCapoServerRunner {
   private static Process process;
-  private static Thread serverThread;
 
   /**
    * Start the server and deploy DayTrader ejb application
@@ -78,21 +77,20 @@ public class DaCapoServerRunner {
   /**
    * Print the output from the process
    */
-  static void printOutputs(){
-    serverThread = new Thread(new Runnable() {
+  private static void printOutputs(){
+    Thread serverThread = new Thread(new Runnable() {
       @Override
       public void run() {
         try {
           BufferedReader reader =
                   new BufferedReader(new InputStreamReader(process.getInputStream()));
           String line;
-          while (!serverThread.isInterrupted() && (line = reader.readLine()) != null) {
-            if (line.contains("DaCapoMarker")){
+          while ((line = reader.readLine()) != null) {
+            if (line.contains("DaCapoMarker")) {
               System.out.println(line.substring(line.indexOf("DaCapoMarker") + "DaCapoMarker".length()));
             }
           }
-        } catch (IOException e) {
-          e.printStackTrace();
+        } catch (IOException ignored) {
         }
       }
     }
@@ -105,7 +103,6 @@ public class DaCapoServerRunner {
    */
   public static void shutdown(){
     try {
-      serverThread.interrupt();
       process.destroy();
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
