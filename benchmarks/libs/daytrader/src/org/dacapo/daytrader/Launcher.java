@@ -22,57 +22,47 @@ import java.util.List;
 */
 public class Launcher {
   // Geronimo configuration
-  private final static String GVERSION = "3.0.1";
-  private final static String GTYPE = "minimal";
-  private final static String GDIRECTORY = "geronimo-tomcat7-" + GTYPE + "-" + GVERSION;
-
-  // The daytrader-dacapo application
-  private final static String CAR_NAME = "org.apache.geronimo.daytrader.plugins/daytrader-dacapo/3.0-SNAPSHOT/car";
+  private final static String VERSION = "16.0.0";
+  private final static String TYPE = "Final";
+  private final static String DIRECTORY = "wildfly-" + VERSION + "." + TYPE;
 
   // This jar contains the code that knows how to create and communicate with
   // geronimo environments
   private final static String[] DACAPO_CLI_JAR = { "jar/daytrader.jar" };
 
   // The following list is defined in the "Class-Path:" filed of MANIFEST.MF for the client and server jars
-  private final static String[] GERONIMO_LIB_JARS = {"agent/transformer.jar", "endorsed/yoko-rmi-spec.jar"
-          , "endorsed/yoko-spec-corba.jar", "geronimo-main.jar", "geronimo-cli.jar", "commons-cli.jar"
-          , "geronimo-hook.jar", "geronimo-rmi-loader.jar", "karaf-jaas-boot.jar"};
+  private final static String[] WILDFLY_SERVER_JARS = {"jboss-modules.jar"};
 
   private static int numThreads = -1;
   private static String size;
   private static boolean useBeans = true;
 
   private static ClassLoader serverCLoader = null;
-  private static ClassLoader clientCLoader = null;
   private static Method clientMethod = null;
   private static File scratch = null;
-
-  private static final String TRADEBEANS_LOG_FILE_NAME = "tradebeans.log";
-  private static final String TRADESOAP_LOG_FILE_NAME = "tradesoap.log";
 
   public static void initialize(File scratchdir, int threads, String dtSize, boolean beans) {
     numThreads = threads;
     size = dtSize;
     useBeans = beans;
     scratch = new File(scratchdir.getAbsolutePath());
-    setGeronimoProperties();
+    setWildflyProperties();
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
 
     try {
       // Create a server environment
-      serverCLoader = createGeronimoClassLoader(originalCLoader, true);
+      serverCLoader = createWildflyClassLoader(originalCLoader, true);
       Thread.currentThread().setContextClassLoader(serverCLoader);
       Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
-      Method method = clazz.getMethod("initialize", new Class[] {});
-      method.invoke(null, new Object[] {});
+      Method method = clazz.getMethod("initialize");
+      method.invoke(null);
 
       // Create a client environment
-      clientCLoader = createGeronimoClassLoader(originalCLoader, false);
-      Thread.currentThread().setContextClassLoader(clientCLoader);
-      clazz = clientCLoader.loadClass("org.dacapo.daytrader.DaCapoClientRunner");
-      method = clazz.getMethod("initialize", new Class[] { String.class, String.class, int.class, boolean.class });
-      method.invoke(null, new Object[] { CAR_NAME, size, numThreads, useBeans });
-      clientMethod = clazz.getMethod("runIteration", new Class[] { String.class, int.class, boolean.class });
+      clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoClientRunner");
+      method = clazz.getMethod("initialize", String.class, int.class, boolean.class);
+      method.invoke(null, size, numThreads, useBeans);
+      clientMethod = clazz.getMethod("runIteration", String.class, int.class, boolean.class);
+
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
@@ -82,16 +72,9 @@ public class Launcher {
     }
   }
 
-  private static void setGeronimoProperties() {
-    File geronimo = new File(scratch, GDIRECTORY);
-    System.setProperty("org.apache.geronimo.home.dir", geronimo.getPath());
-    System.setProperty("org.apache.geronimo.server.dir", geronimo.getPath());
-    System.setProperty("karaf.home", geronimo.getPath());
-    System.setProperty("karaf.base", geronimo.getPath());
-    System.setProperty("java.util.logging.config.file", geronimo.getPath() + "/etc/java.util.logging.properties");
-    System.setProperty("java.ext.dirs", geronimo.getPath() + "/lib/ext:" + System.getProperty("java.home") + "/lib/ext");
-    System.setProperty("java.io.tmpdir", geronimo.getPath() + "/var/temp");
-    System.setProperty("karaf.startRemoteShell", "true");
+  private static void setWildflyProperties() {
+    System.setProperty("jboss.home.dir", new File(scratch, DIRECTORY).getPath());
+    System.setProperty("module.path", new File(scratch, DIRECTORY + File.separator + "modules").getPath());
   }
 
   public static void performIteration() {
@@ -101,8 +84,8 @@ public class Launcher {
     }
     ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
     try {
-      Thread.currentThread().setContextClassLoader(clientCLoader);
-      clientMethod.invoke(null, new Object[] { size, numThreads, useBeans });
+      Thread.currentThread().setContextClassLoader(serverCLoader);
+      clientMethod.invoke(null, size, numThreads, useBeans);
     } catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();
@@ -114,8 +97,8 @@ public class Launcher {
   public static void shutdown(){
     try {
       Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
-      Method method = clazz.getMethod("shutdown", new Class[]{});
-      method.invoke(null, new Object[]{});
+      Method method = clazz.getMethod("shutdown");
+      method.invoke(null);
     }catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();
@@ -130,30 +113,26 @@ public class Launcher {
    * @return The classloader
    * @throws Exception
    */
-  private static ClassLoader createGeronimoClassLoader(ClassLoader parent, boolean server) {
-    File geronimo = new File(scratch, GDIRECTORY).getAbsoluteFile();
-    ClassLoader libCL = new URLClassLoader(getGeronimoLibraryJars(geronimo, server), parent);
-    return libCL;
+  private static ClassLoader createWildflyClassLoader(ClassLoader parent, boolean server) {
+    File wildfly = new File(scratch, DIRECTORY).getAbsoluteFile();
+    return new URLClassLoader(getWildflyLibraryJars(wildfly, server), parent);
   }
 
   /**
    * Get a list of jars (if any) which should be in the library classpath for
    * this benchmark
    * 
-   * @param geronimo The base directory for the jars
+   * @param wildfly The base directory for the jars
    * @return An array of URLs, one URL for each jar
    */
-  private static URL[] getGeronimoLibraryJars(File geronimo, boolean server) {
+  private static URL[] getWildflyLibraryJars(File wildfly, boolean server) {
     List<URL> jars = new ArrayList<URL>();
 
     if (server) {
-      File endorsed = new File(geronimo, "lib/endorsed");
-      addJars(jars, endorsed, endorsed.list());
+      addJars(jars, wildfly, WILDFLY_SERVER_JARS);
     }
-    addJars(jars, scratch, DACAPO_CLI_JAR);
 
-    File lib = new File(geronimo, "lib");
-    addJars(jars, lib, GERONIMO_LIB_JARS);
+    addJars(jars, scratch, DACAPO_CLI_JAR);
 
     return jars.toArray(new URL[jars.size()]);
   }
@@ -161,8 +140,9 @@ public class Launcher {
   /**
    * Compile a list of paths to jars from a base directory and relative paths.
    * 
-   * @param config The config file for this benchmark, which lists the jars
-   * @param scratch The scratch directory, in which the jars will be located
+   * @param jars The url contain URL to jar files
+   * @param directory The scratch directory, in which the jars will be located
+   * @param jarNames The name of jar files to be added
    * @return An array of URLs, one URL for each jar
    */
   private static void addJars(List<URL> jars, File directory, String[] jarNames) {

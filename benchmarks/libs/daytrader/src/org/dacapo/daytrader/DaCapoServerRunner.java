@@ -8,15 +8,12 @@
  */
 package org.dacapo.daytrader;
 
-import java.io.InputStream;
-
-
-import java.util.Arrays;
-import org.apache.geronimo.main.Bootstrapper;
-import org.apache.geronimo.main.Main;
-import org.apache.geronimo.cli.daemon.DaemonCLParser;
-import org.apache.geronimo.cli.shutdown.ShutdownCLParser;
-import org.apache.geronimo.main.ScriptLaunchListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Dacapo benchmark harness for tradesoap.
@@ -25,30 +22,51 @@ import org.apache.geronimo.main.ScriptLaunchListener;
  * id: $Id: DaCapoServerRunner.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DaCapoServerRunner {
-  private static Thread serverThread = null;
-  private static Bootstrapper boot = null;
+  private static Process process;
+  private static Thread serverThread;
 
+  /**
+   * Start the server and deploy DayTrader ejb application
+   */
   public static void initialize() {
     try {
+      // Start the wildfly servers
+      ProcessBuilder processBuilder =
+              new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java",
+                      "--add-modules=java.se", "-jar", System.getProperty("jboss.home.dir") + File.separator + "jboss-modules.jar",
+                      "-mp", System.getProperty("module.path"),
+                      "org.jboss.as.standalone",
+                      "-Djboss.home.dir=" + System.getProperty("jboss.home.dir"));
 
-      boot = new Bootstrapper();
+      // Start the process builder
+      process = processBuilder.start();
 
-      final DaemonCLParser parser = new DaemonCLParser(System.out);
-      parser.parse(new String[] { "-c", "-q" });
+      URL url = new URL("http://localhost:8080/daytrader");
 
-      boot.setWaitForStop(true);
-      boot.setStartBundles(Arrays.asList("org.apache.geronimo.framework/j2ee-system//car"));
-      boot.setLog4jConfigFile("var/log/server-log4j.properties");
-      boot.setCleanStorage(((DaemonCLParser)parser).isCleanCache());
-      boot.setLaunchListener(new ScriptLaunchListener("server"));
+      Thread mt = new Thread(new Runnable() {
+        @Override
+        public void run() {
+          while (true) {
+            try {
+              Thread.sleep(100);
+              HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+              if (connection.getResponseCode() != 200) throw new RuntimeException();
+            } catch (IOException e) {
+              continue;
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            }
+            break;
+          }
+        }
+      });
 
-      boot.init();
-      boot.launch();
-      Main geronimoMain = boot.getMain();
+      System.out.println("Launching the server");
+      mt.start();
+      mt.join();
 
-      ClassLoader newTCCL = geronimoMain.getClass().getClassLoader();
-      Thread.currentThread().setContextClassLoader(newTCCL);
-      geronimoMain.execute(parser);
+      // Print all outputs at the same time
+      printOutputs();
 
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
@@ -57,9 +75,38 @@ public class DaCapoServerRunner {
     }
   }
 
+  /**
+   * Print the output from the process
+   */
+  static void printOutputs(){
+    serverThread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          BufferedReader reader =
+                  new BufferedReader(new InputStreamReader(process.getInputStream()));
+          String line;
+          while (!serverThread.isInterrupted() && (line = reader.readLine()) != null) {
+            if (line.contains("DaCapoMarker")){
+              System.out.println(line.substring(line.indexOf("DaCapoMarker") + "DaCapoMarker".length()));
+            }
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    );
+    serverThread.start();
+  }
+
+  /**
+   * Shutdown the server
+   */
   public static void shutdown(){
     try {
-      boot.shutdown(0L);
+      serverThread.interrupt();
+      process.destroy();
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
       e.printStackTrace();

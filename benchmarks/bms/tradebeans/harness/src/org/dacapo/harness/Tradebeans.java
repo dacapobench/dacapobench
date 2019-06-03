@@ -57,10 +57,10 @@ public class Tradebeans extends Benchmark {
     }catch (Exception e) {
       e.printStackTrace();
     }
-    System.out.println("Shutting down Geronimo...");
+    System.out.println("Shutting down Wildfly...");
     if (!getPreserve()) {
-      deleteTree(new File(scratch, "tradebeans"));
-      deleteTree(new File(scratch, "geronimo-tomcat7-minimal-3.0.1"));
+      deleteTree(new File(scratch, "wildfly-16.0.0.Final"));
+      deleteTree(new File(scratch, "jar"));
     }
   }
 
