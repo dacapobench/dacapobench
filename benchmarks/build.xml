@@ -14,38 +14,45 @@
         <format property="build.time" pattern="yyyyMMdd-hhmm"/>
     </tstamp>
     <description>
-            The DaCapo Benchmark Suite
+        The DaCapo Benchmark Suite
 
-DEPENDENCIES:
-   - javacc(included) (http://javacc.dev.java.net/)
-   - maven(included)  (http://maven.apache.org/)
-   - ant (http://ant.apache.org)
-   - cvs (http:/www.nongnu.org/cvs/)
-   - svn (http://subversion.apache.org)
-   - hg (https://www.mercurial-scm.org)
+        DEPENDENCIES:
+        - javacc(included) (http://javacc.dev.java.net/)
+        - maven(included)  (http://maven.apache.org/)
+        - ant (http://ant.apache.org)
+        - cvs (http:/www.nongnu.org/cvs/)
+        - svn (http://subversion.apache.org)
+        - hg (https://www.mercurial-scm.org)
+        - npm (https://www.npmjs.com/get-npm)
+        - node.js (https://nodejs.org/en/)
+        - python (https://www.python.org/)
+        python libraries:
+        - grip (https://pypi.org/project/grip/)
+        - colorama (https://pypi.org/project/colorama/)
+        - future (https://pypi.org/project/future/)
+        - tabulate (https://pypi.org/project/tabulate/)
+        - requests (https://pypi.org/project/requests/)
+        - wheel (https://pypi.org/project/wheel/)
+        For convinience, javacc and maven are included in the tools directory:
+        ${toolsdir}
 
-For convinience, javacc and maven are included in the tools directory:
-    ${toolsdir}
 
-        
-BUILDING:
+        BUILDING:
         0. System requirement:
-            Building DaCapo requires latest JDK 8.
-            JDK 9 is currently not supported (some benchmarks will fail with error).
-            If building PMD and/or DayTrader,
-                make sure JDK 7 is also installed and
-                it's path set in local.properties file.
-                See 3 below.
+        Building DaCapo requires latest JDK 11.
+        If building cassandra, graphchi, jython, and/or xalan,
+        make sure JDK 8 is also installed and
+        it's path set in default.properties file.
 
-            Building the whole suite at once on macOS **may** have problem with max filehandle limits.
-            You may want to set it to a larger value, and launch ant with:
-                $ JAVA_OPTS="-XX:-MaxFDLimit" ant
+        Building the whole suite at once on macOS **may** have problem with max filehandle limits.
+        You may want to set it to a larger value, and launch ant with:
+        $ JAVA_OPTS="-XX:-MaxFDLimit" ant
 
         1. Set your JAVA_HOME environment variable appropriately:
-             On Mac OS X something like:
-                export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
-             On Ubuntu 16.04 something like:
-                export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
+        On Mac OS X something like:
+        export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.11.0.jdk/Contents/Home/
+        On Ubuntu 16.04 something like:
+        export JAVA_HOME=/usr/lib/jvm/jdk1.11.0/
 
         2. Set ant and maven environment variables if necessary.  In particular,
         for some jvms it is necessary to explicitly request a larger heap size.
@@ -53,21 +60,18 @@ BUILDING:
         are built by maven (called by ant).  As another example, you may wish
         for ant to use a proxy when downloading (there is a lot to be
         downloaded).   Some examples:
-            export ANT_OPTS="-Xms512M -Xmx512M"
-            export MAVEN_OPTS="-Xms512M -Xmx512M"
+        export ANT_OPTS="-Xms512M -Xmx512M"
+        export MAVEN_OPTS="-Xms512M -Xmx512M"
         or
-            export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
+        export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
 
-        3. Copy default.properties to local.properties and edit local.properties
-        for your environment.
-
-        4. Run ant:
+        3. Run ant:
         ant         [builds all benchmarks]
         ant dist    [builds all benchmarks, this is the default]
         ant source  [builds a source distribution including benchmarks and tools]
         ant bm      [builds a specific benchmark, bm]
 
-        5. A log of each directory is created under this benchmark directory
+        4. A log of each directory is created under this benchmark directory
         for benchmark build status and build success or failure files
         to be stored.  The directory log directory is normally of the
         form
