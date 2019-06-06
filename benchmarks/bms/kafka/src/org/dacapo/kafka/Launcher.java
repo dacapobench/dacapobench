@@ -38,11 +38,11 @@ public class Launcher {
         CoordinatorStarter cs = new CoordinatorStarter(agentConfig.getPath());
         cs.initialize();
         while (!hostUsed("127.0.0.1", 8889)) Thread.sleep(100);
+    }
 
+    public void performIteration() throws Exception {
         ClientRunner cli = new ClientRunner();
         cli.runClient(produceBench.getPath());
-
-        System.out.println("Wait for finishing");
     }
 
     private boolean hostUsed(String host, int port){

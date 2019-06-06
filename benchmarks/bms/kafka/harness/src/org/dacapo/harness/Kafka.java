@@ -11,7 +11,7 @@ package org.dacapo.harness;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+
 import org.dacapo.parser.Config;
 
 /**
@@ -22,6 +22,8 @@ public class Kafka extends Benchmark {
 
     Constructor lc;
     Method launching;
+    Method performIteration;
+    Object launcherInstance;
     private String[] args;
 
     public Kafka(Config config, File scratch, File data) throws Exception {
@@ -29,16 +31,20 @@ public class Kafka extends Benchmark {
         Class launcher = Class.forName("org.dacapo.kafka.Launcher", true, this.loader);
         lc = launcher.getConstructor(File.class, String[].class);
         launching = launcher.getMethod("launching");
+        performIteration = launcher.getMethod("performIteration");
     }
 
     @Override
     protected void prepare(String size) throws Exception {
         super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
+        launcherInstance = lc.newInstance(this.scratch, args);
+        Thread.currentThread().setContextClassLoader(loader);
+        launching.invoke(launcherInstance);
     }
 
     @Override
     public void iterate(String size) throws Exception {
-        launching.invoke(lc.newInstance(this.scratch, args));
+        performIteration.invoke(launcherInstance);
     }
 }
