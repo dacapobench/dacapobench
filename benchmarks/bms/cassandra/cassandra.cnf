@@ -4,3 +4,13 @@ benchmark cassandra
   jars "cassandra-3.11.3.jar", "cassandra-thrift-3.11.3.jar", "cassandra-driver-core-3.6.0.jar", "ST4-4.0.8.jar", "airline-0.6.jar", "antlr-runtime-3.5.2.jar", "asm-5.0.4.jar", "caffeine-2.2.6.jar", "cassandra-driver-core-3.0.1-shaded.jar", "commons-cli-1.1.jar", "commons-codec-1.9.jar", "commons-lang3-3.1.jar", "commons-math3-3.2.jar", "compress-lzf-0.8.4.jar", "concurrent-trees-2.4.0.jar", "concurrentlinkedhashmap-lru-1.4.jar", "disruptor-3.0.1.jar", "ecj-4.4.2.jar", "guava-18.0.jar", "high-scale-lib-1.1.4.jar", "hppc-0.5.4.jar", "jackson-core-asl-1.9.13.jar", "jackson-mapper-asl-1.9.13.jar", "jamm-0.3.0.jar", "javax.inject.jar", "jbcrypt-0.3m.jar", "jcl-over-slf4j-1.7.7.jar", "jctools-core-1.2.1.jar", "jflex-1.6.0.jar", "jna-4.2.2.jar", "joda-time-2.4.jar", "json-simple-1.1.jar", "jstackjunit-0.0.1.jar", "libthrift-0.9.2.jar", "log4j-over-slf4j-1.7.7.jar", "logback-classic-1.1.3.jar", "logback-core-1.1.3.jar", "lz4-1.3.0.jar", "metrics-core-3.1.5.jar", "metrics-jvm-3.1.5.jar", "metrics-logback-3.1.5.jar", "netty-all-4.0.44.Final.jar", "ohc-core-0.4.4.jar", "ohc-core-j8-0.4.4.jar", "reporter-config-base-3.0.3.jar", "reporter-config3-3.0.3.jar", "sigar-1.6.4.jar", "slf4j-api-1.7.7.jar", "snakeyaml-1.11.jar", "snappy-java-1.1.1.7.jar", "snowball-stemmer-1.3.0.581.1.jar", "stream-2.5.2.jar", "thrift-server-0.3.7.jar", "cassandra-binding-0.15.0.jar", "cassandra-driver-core-3.0.0.jar", "core-0.15.0.jar", "guava-16.0.1.jar", "metrics-core-3.1.2.jar", "netty-buffer-4.0.33.Final.jar", "netty-codec-4.0.33.Final.jar", "netty-common-4.0.33.Final.jar", "netty-handler-4.0.33.Final.jar", "netty-transport-4.0.33.Final.jar", "slf4j-api-1.7.25.jar", "slf4j-simple-1.7.25.jar", "HdrHistogram-2.1.4.jar", "htrace-core4-4.1.0-incubating.jar", "jackson-core-asl-1.9.4.jar", "jackson-mapper-asl-1.9.4.jar";
 
 size default args "workloada";
+
+description
+  short	     "Apache Cassandra is a highly-scalable partitioned row store.",
+  long       "Apache Cassandra is a free and open-source, distributed, wide column store, NoSQL database management system designed to handle large amounts of data across many commodity servers.",
+  copyright	"Copyright (c) Apache Software Foundation",
+  author	"Apache Software Foundation",
+  license    "Apache License, Version 2.0",
+  url        "https://github.com/apache/cassandra",
+  version    "3.11.3",
+  threads    "Explicitly multi-threaded, scaled to available processors.";

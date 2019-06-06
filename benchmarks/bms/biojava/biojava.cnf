@@ -6,3 +6,12 @@ benchmark biojava
 size default args "${SCRATCH}/dat/core_set_aligned.fasta"
   output
     stdout digest 0x039481f64d66930f41e2beb9f87131e08b9c2553;
+
+description
+  short	     "BioJava is an open-source software project dedicated to provide Java tools to process biological data.",
+  long       "BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures.",
+  copyright	 "Copyright (C) 2019 TODO<name of author>",
+  license    "GNU Lesser General Public License v2.1",
+  url        "https://biojava.org/",
+  version    "5.1.1",
+  threads    "Explicitly multi-threaded, scaled to available processors.";

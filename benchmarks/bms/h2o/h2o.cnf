@@ -8,3 +8,12 @@ size default args "-dacapo", "${SCRATCH}", "drf", "CitiBike2014.csv", "tripdurat
   thread-limit 32
   output stdout digest 0x76b61116bad96e19eea6f3b5e76481ed29b90c6a,
          stderr digest 0xa180b3c4dd63d50194fe901358ffafe2b53c5165;
+
+description
+  short	     "Open Source Fast Scalable Machine Learning Platform.",
+  long       "H2O is an in-memory platform for distributed, scalable machine learning.",
+  copyright	 "Copyright (c) H2O.ai. All rights reserved",
+  license    "Apache License, Version 2.0",
+  url        "https://github.com/h2oai/h2o-3",
+  version    "3-jenkins-master-4559",
+  threads    "Explicitly multi-threaded, scaled to available processors.";
