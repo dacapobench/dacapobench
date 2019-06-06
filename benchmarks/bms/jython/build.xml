@@ -11,11 +11,10 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="jython"/>
-    <property name="bm-hg-url" value="https://bitbucket.org/jython/jython"/>
-    <property name="bm-hg-revision" value="v2.7.1"/>
-    <property name="bm-version" value="hg-${bm-hg-revision}"/>
-    <property name="bm-ignore-failure" value="no" />
+    <property name="bm-version" value="hg-v2.7.1"/>
     <property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
+    <property name="bm-git-url" value="${github.url}/jythontools/${bm-name}"/>
+    <property name="bm-git-commit" value="ccbe449d7608e8f984d9717298c5fb760d538493"/>
     <!-- grab the jython from the jython release and benchmarks from the Python release
 
         http://dinsdale.python.org/ftp/python/2.5.4/Python-2.5.4.tgz

@@ -3,9 +3,11 @@ benchmark graphchi
   thread-model per_cpu
   jars "graphchi-0.2.2.jar";
 
-size default args "Pagerank", "${DATA}/graphchi/soc-LiveJournal1.txt", "10", "edgelist";
+size default args "Pagerank", "${SCRATCH}/soc-Slashdot0811.txt", "10", "edgelist";
 
-size large args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm", "10";
+size large args "Pagerank", "${DATA}/graphchi/soc-LiveJournal1.txt", "10", "edgelist";
+
+size huge args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm", "10";
 
 description
   short	     "A disk-based graph computation engine.",
