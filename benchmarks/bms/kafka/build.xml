@@ -1,0 +1,73 @@
+<!--
+ * Copyright (c) 2019 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ *
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+
+<project name="kafka" default="all" basedir="../..">
+    <description>Dacapo kafka benchmark</description>
+    <property file="dacapo.properties"/>
+
+    <property name="bm-name" value="kafka"/>
+    <property name="bm-version" value="2.2.0-rc0"/>
+    <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
+    <property name="bm-git-url" value="${github.url}/apache/${bm-name}"/>
+    <property name="bm-git-commit" value="7f6b4b16eef05e5f885666ef9afeadc9b9e99bd1"/>
+
+    <import file="../common.xml"/>
+
+    <target name="unpack" depends="untar, patch"/>
+
+    <target name="bm-build" depends="gradlew, make-exe">
+
+        <exec executable="${bm-build-dir}/${gradle-exe}" dir="${bm-build-dir}">
+            <arg value="jar"/>
+        </exec>
+    </target>
+
+    <condition property="gradle-exe" value="gradlew.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="gradle-exe" value="gradlew"/>
+
+    <target name="gradlew">
+        <copy todir="${bm-build-dir}">
+            <fileset dir="${bm-src-dir}/resources"/>
+        </copy>
+    </target>
+
+    <target name="make-exe">
+        <antcall target="make-executable">
+            <param name="target-filename" value="${bm-build-dir}/${gradle-exe}"/>
+        </antcall>
+    </target>
+
+    <target name="data">
+        <copy todir="${bm-data}">
+            <fileset dir="${bm-build-dir}/config" includes="*"/>
+            <fileset dir="${bm-build-dir}/tests/spec" includes="*"/>
+        </copy>
+        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+    </target>
+
+    <target name="jar">
+
+        <copy todir="${bm-jars}" flatten="true">
+            <fileset dir="${bm-build-dir}/" includes="**/*.jar"/>
+        </copy>
+
+        <javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"
+               sourcepath="${bm-src-dir}"
+               source="1.8">
+        </javac>
+        <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" update="true">
+            <fileset dir="${bm-build-dir}">
+                <include name="org/dacapo/kafka/**"/>
+            </fileset>
+        </jar>
+
+    </target>
+</project>
