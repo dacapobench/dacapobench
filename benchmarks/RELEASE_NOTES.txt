@@ -1,7 +1,13 @@
-dacapo-9.12-bach-MR1  RELEASE NOTES  2018-01-13
+dacapo-19.07-chopin-ER  PRE-RELEASE NOTES  2019-06
 
-This is a maintenance release of the second major release of the
-DaCapo benchmark suite.
+This is a EVALUATION RELEASE (ie a pre-release for evaluation purposes
+only) of the third major release of the DaCapo benchmark suite.
+
+IMPORTANT: This evaluation release is provided ONLY for the purposes
+of gathering community feedback on the upcoming 19.07 release.  The
+suite has not been finalized, and has not been calibrated.  It may
+contain bugs.  This evaluation release should not be used in any
+performance evaluation or analysis exercise.
 
 These notes are structured as follows:
 
@@ -15,22 +21,23 @@ These notes are structured as follows:
 1. Overview
 -----------
 
-The DaCapo benchmark suite is slated to be updated every few years.
-The 9.12 release is the first major update of the suite, and is
-strictly incompatible with previous releases: new benchmarks have been
-added, old benchmarks have been removed, all other benchmarks have
-been substantially updated and the inputs have changed for every
-program. It is for this reason that in any published use of the suite,
-the version of the suite must be explicitly stated.
+The 19.07 release is the second major update of the suite and the
+first in ten years.  It is strictly incompatible with previous
+releases: new benchmarks have been added, old benchmarks have been
+removed, all other benchmarks have been substantially updated and the
+inputs have changed for every program. It is for this reason that in
+any published use of the suite, the version of the suite must be
+explicitly stated.
 
-The release sees the retirement of a number of single-threaded
-benchmarks (antlr, bloat and chart), the replacement of hsqldb by
-h2, the addition of six completely new benchmarks, and the upgrade
-of all other benchmarks to reflect the current release state of the
-applications from which the benchmarks were derived. These changes are
-consistent with the original goals of the DaCapo project, which
-include the desire for the suite to remain relevant and reflect the
-current state of deployed Java applications.
+The release sees the retirement of a number of benchmarks (TODO), the
+move from Geronimo to JBoss Wildfly for the trade benchmarks, the
+addition of seven completely new benchmarks: biojava, cassandra,
+graphchi, h2o, jme, kafka, and zxing, and the upgrade of all other
+benchmarks to reflect the current release state of the applications
+from which the benchmarks were derived. These changes are consistent
+with the original goals of the DaCapo project, which include the
+desire for the suite to remain relevant and reflect the current state
+of deployed Java applications.
 
 
 2. Usage
@@ -72,8 +79,89 @@ current state of deployed Java applications.
 
 3. Changes
 ----------
-3.0. Changes introduced by 9.13
-    Benchmark updates:
+
+3.1 Changes introduced by 19.07
+
+3.1.1 Version changes introduced by 19.07
+
+    All benchmarks updatred to reflect recent versions:
+        - avrora:    20091224 -> 20131011
+        - batik:     1.7      -> 1.9
+        - eclipse:   3.5.1    -> 4.7.2
+        - fop:       0.95     -> 2.2
+        - h2:        1.5      -> 1.8
+        - jython:    2.5.2    -> 2.7.1
+        - pmd:       4.2.5    -> 6.1.0
+        - tomcat:    6.0.2    -> 9.0.2
+        - daytrader: 2.4.1    -> 3.0-SNAPSHOT
+            - Apache Geronimo: 2.4.1 -> 3.0.1
+        - xalan:     2.7.1    -> 2.7.2
+        - lucene:    2.4.1    -> 7.1
+
+    Shipped tooling update:
+        - Maven:     2.1.0    -> 3.5.2
+	
+3.1.2 Benchmark additions due to 19.07
+
+      biojava: BioJava is an open-source project dedicated to
+            providing a Java framework for processing biological data.
+	    It provides analytical and statistical routines, parsers
+            for common file formats, reference implementations of
+            popular algorithms, and allows the manipulation of
+            sequences and 3D structures.
+      
+      cassandra: Apache Cassandra is a free and open-source,
+            distributed, wide column store, NoSQL database management
+            system designed to handle large amounts of data across many
+            commodity servers.
+	   
+      graphchi: GraphChi is a disk-based system for computing
+            efficiently on graphs with billions of edges, by using
+            parallel sliding windows method on smaller shards of
+            graphs.
+
+      h2o: H2O is an in-memory platform for distributed, scalable
+            machine learning.
+
+      jme: jMonkeyEngine is a 3D game engine for adventurous Java
+            developers. It’s open-source, cross-platform, and
+            cutting-edge.
+	          
+      kafka: Apache Kafka aims to provide a unified, high-throughput,
+            low-latency platform for handling real-time data feeds.
+
+      zxing: Zxing is a multi-format 1D/2D barcode image processing library
+
+3.1.3. Benchmark deletions due to 19.07
+
+       TODO
+       
+3.1.4. Other Notable Changes due to 19.07
+
+
+3.2 Changes introduced by 9.12-MR1
+
+     lusearch-fix is introduced as a new benchmark.   The lusearch-fix
+              and lusearch benchmarks differ by a single line of code.   This
+	      is a bug fix to lucene, which dramatically changes the performance of
+	      lusearch, reducing the amount of allocation greatly.
+	      		https://issues.apache.org/jira/browse/LUCENE-1800
+			https://dl.acm.org/citation.cfm?id=2048092
+	      We encourage you to use lusearch-fix in place of lusearch.   We
+	      retain the unpatched lusearch in this release for historical consistency.
+
+      URLs used by the build system have been systematically updated
+              so that the source distribution works correctly.
+	      
+     Other issues in the source distribution have been fixed to ensure that
+              the suite builds with Java 8 VMs.
+	      
+
+3.3 Changes introduced by 9.12
+
+3.3.1 Version changes introduced by 9.12
+
+    All benchmark versions were updated:
         - avrora:    20091224 -> 20131011
         - batik:     1.7      -> 1.9
         - eclipse:   3.5.1    -> 4.7.2
@@ -90,25 +178,7 @@ current state of deployed Java applications.
     Shipped tooling update:
         - Maven:     2.1.0    -> 3.5.2
 
-3.1. Changes introduced by 9.12-MR1 (since 9.12)
-
-     lusearch-fix is introduced as a new benchmark.   The lusearch-fix
-              and lusearch benchmarks differ by a single line of code.   This
-	      is a bug fix to lucene, which dramatically changes the performance of
-	      lusearch, reducing the amount of allocation greatly.
-	      		https://issues.apache.org/jira/browse/LUCENE-1800
-			https://dl.acm.org/citation.cfm?id=2048092
-	      We encourage you to use lusearch-fix in place of lusearch.   We
-	      retain the unpatched lusearch in this release for historical consistency.
-
-     URLs used by the build system have been systematically updated
-              so that the source distribution works correctly.
-	      
-     Other issues in the source distribution have been fixed to ensure that
-              the suite builds with Java 8 VMs.
-	      
-
-3.2. Benchmark additions since 2006-10-MR2
+3.3.2 Benchmark additions due to 9.12
 
       avrora: AVRORA is a set of simulation and analysis tools in a
               framework for AVR micro-controllers. The benchmark
@@ -150,8 +220,7 @@ current state of deployed Java applications.
               "large", allowing researchers to directly compare the
               two systems.
 
-
-3.3. Benchmark deletions
+3.3.3 Benchmark deletions due to 9.12
 
        antlr: Antlr is single threaded and highly repetitive. The
               most recent version of jython uses antlr; so antlr
@@ -178,17 +247,10 @@ current state of deployed Java applications.
               richer workload and uses a more widely used and higher
               performing database engine.
 
+3.3.4 Other Notable Changes due to 9.12
 
-3.4. Benchmark updates
-
-All other benchmarks have been updated to reflect the latest release
-of the underlying application.
-
-
-3.5. Other Notable Changes
-
-The packaging of the DaCapo suite has been completely re-worked and
-the source code is entirely re-organized.
+The packaging of the DaCapo suite was been completely re-worked and
+the source code is entirely re-organized for 9.12.
 
 We've changed the naming scheme for the releases.  Rather than
 "dacapo-YYYY-MM", we've moved to "dacapo-Y.M-TAG", where TAG is a
@@ -294,9 +356,9 @@ DaCapo benchmark suite.
 5. Contributions and Acknowledgements
 -------------------------------------
 
-The generous financial support of Intel was crucial to the successful
-completion of the 9.12 release, and the generous financial support
-of Oracle led to the 9.12 MR1 release.
+The generous financial support of Oracle was crucial to the successful
+completeion of the 19.07 and 9.12-MR1 releases, and Intel was crucial
+to the successful completion of the 9.12 release.
 
 The production of the 9.12 release was jointly led by:
 
@@ -314,6 +376,12 @@ The 9.12 MR1 release was developed primarily by:
 
      Rui Chen, Australian National University
      John Zhang, Australian National University
+
+The 19.07 release was developed primarily by:
+
+     Rui Chen, Australian National University
+     John Zhang, Australian National University
+     Sichao Li, Australian National University
 
 We receieved considerable assistance from a number of people,
 including:
