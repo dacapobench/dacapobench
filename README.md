@@ -59,17 +59,18 @@ The suite is built using ant 1.10.  You will need the following tools:
 ##### System requirement:
 
 Building DaCapo requires latest JDK 11.
+
 If building __cassandra__, __graphchi__, __jython__, and/or __xalan__,
 make sure JDK 8 is also installed and
-it's path set in default.properties file.
+its path set in local.properties file.
 
 Building the whole suite at once on macOS **may** have problem with max filehandle limits.
 You may want to set it to a larger value, and launch ant with:
-`$ JAVA_OPTS="-XX:-MaxFDLimit" ant`
+`export JAVA_OPTS="-XX:-MaxFDLimit"`
 
 Set your JAVA_HOME environment variable appropriately:
 On Mac OS X something like:
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.11.0.jdk/Contents/Home/
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.3.jdk/Contents/Home/
 On Ubuntu 16.04 something like:
 `export JAVA_HOME=/usr/lib/jvm/jdk1.11.0/`
 
