@@ -90,6 +90,10 @@ public class TestHarness {
         "Since it is not an official release of the DaCapo suite, care must be taken when\n" +
         "using the suite, and any use of the build must be sure to note that it is not an\n" +
         "offical release, and should note the relevant git hash.\n" +
+        "\n" +
+        "Feedback is greatly appreciated.   The preferred mode of feedback is via github.\n"+
+	"Please use our github page to create an issue or a pull request.\n"+
+	"    https://github.com/dacapobench/dacapobench.\n"+
         "--------------------------------------------------------------------------------\n"
       );
     }
