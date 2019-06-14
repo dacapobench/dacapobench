@@ -1,6 +1,6 @@
 <project name="xerces" default="all" basedir="../..">
     <description>xerces library, required by xalan</description>
-    <property file="ant/dacapo.properties"/>
+    <property file="dacapo.properties"/>
     
     <property name="lib-name" value="xerces"/>
     <property name="lib-version" value="2.8.0"/>
@@ -29,8 +29,8 @@
     </target>
          
     <target name="lib-deps" if="externalize.deps">
-        <copy src="${xerces-jar}" tofile="${lib-jars}/${xerces-impl-jar-name}"/>
-        <copy src="${xercesxml-jar}" tofile="${lib-jars}/${xerces-api-jar-name}"/>
+        <copy file="${xerces-jar}" tofile="${lib-jars}/${xerces-impl-jar-name}"/>
+        <copy file="${xercesxml-jar}" tofile="${lib-jars}/${xerces-api-jar-name}"/>
     </target>
     
     <target name="xerces-done-check">

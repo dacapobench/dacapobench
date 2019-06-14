@@ -1,5 +1,20 @@
+diff -urN fop-2.2/fop/build.xml ../build-new/fop-2.2/fop/build.xml
+--- fop-2.2/fop/build.xml	2017-04-03 21:23:57.000000000 +1000
++++ ../build-new/fop-2.2/fop/build.xml	2019-06-10 22:23:06.000000000 +1000
+@@ -160,8 +160,8 @@
+   <property name="javac.debug" value="on"/>
+   <property name="javac.optimize" value="off"/>
+   <property name="javac.deprecation" value="on"/>
+-  <property name="javac.source" value="1.6"/>
+-  <property name="javac.target" value="1.6"/>
++  <property name="javac.source" value="1.7"/>
++  <property name="javac.target" value="1.7"/>
+   <property name="javac.fork" value="no"/>
+   <property name="junit.fork" value="yes"/>
+   <property name="junit.haltonfailure" value="off"/>
+diff -urN fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java ../build-new/fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java
 --- fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java	2017-04-03 21:23:57.000000000 +1000
-+++ ../Main.java	2017-12-01 13:16:56.657538089 +1100
++++ ../build-new/fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java	2019-06-10 22:21:41.000000000 +1000
 @@ -194,9 +194,9 @@
              // System.exit(0) called to close AWT/SVG-created threads, if any.
              // AWTRenderer closes with window shutdown, so exit() should not

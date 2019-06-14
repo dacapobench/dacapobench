@@ -34,6 +34,7 @@
         <exec executable="${mvn-exe}" dir="${bm-build-dir}" failonerror="yes">
             <arg value="clean"/>
             <arg value="install"/>
+            <arg value="-Dmaven.test.skip=true"/>
         </exec>
     </target>
 

@@ -63,7 +63,9 @@ public class Util {
         return new String[] {};
       }
       if (osName.startsWith("Mac")) {
-        return new String[] { toNativePath(jreDir + "/../Classes/classes.jar") };
+        if (new File(toNativePath(jreDir + "/lib/rt.jar")).exists())
+          return new String[] { toNativePath(jreDir + "/lib/rt.jar") };
+        return new String[] {};
       }
       final String vmName = System.getProperty("java.vm.name");
       if ("J9".equals(vmName)) {

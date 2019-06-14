@@ -85,11 +85,16 @@ public class TestHarness {
     setBuildInfo();  // set BuildVersion and BuildNickName.
     if (BuildVersion.contains("git")) {
       System.err.println(
-        "----------------------------------------------------------------\n" +
-        "WARNING: This is NOT a release build of the DaCapo suite.\n" +
-        "It has not been calibrated and must be used with great care.\n" +
-        "If you do use this build, be sure to cite the relevant git hash.\n" +
-        "----------------------------------------------------------------\n"
+        "--------------------------------------------------------------------------------\n" +
+        "IMPORTANT NOTICE:  This is NOT a release build of the DaCapo suite.\n" +
+        "Since it is not an official release of the DaCapo suite, care must be taken when\n" +
+        "using the suite, and any use of the build must be sure to note that it is not an\n" +
+        "offical release, and should note the relevant git hash.\n" +
+        "\n" +
+        "Feedback is greatly appreciated.   The preferred mode of feedback is via github.\n"+
+	"Please use our github page to create an issue or a pull request.\n"+
+	"    https://github.com/dacapobench/dacapobench.\n"+
+        "--------------------------------------------------------------------------------\n"
       );
     }
     try {
@@ -198,7 +203,6 @@ public class TestHarness {
    * @param data
    * @param bm
    * @param harness
-   * @param c
    * @throws NoSuchMethodException
    * @throws InstantiationException
    * @throws IllegalAccessException

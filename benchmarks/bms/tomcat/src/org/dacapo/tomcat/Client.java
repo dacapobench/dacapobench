@@ -43,7 +43,7 @@ public class Client implements Runnable {
       new HttpGet("/examples/jsp/jsp2/el/functions.jsp?foo=JSP+2.0","880dab5554db41d30c52c86ad016b3e7b4fc25ff"),
       new HttpGet("/examples/jsp/jsp2/simpletag/hello.jsp","fa2cc0fd8bf403beb0e2b55b282b2a9c1e1d8f01"),
       new HttpGet("/examples/jsp/jsp2/simpletag/repeat.jsp","5f7c6a02f0307f082015d35ed03cf6ff55bc88e3"),
-      new HttpGet("/examples/jsp/jsp2/simpletag/book.jsp","070c930c7c21b2a9ebd56c4e2eb529859e58f0bb"),
+      new HttpGet("/examples/jsp/jsp2/simpletag/book.jsp","3b97d860d81304cd02b530b0da073861c7e97f10"),
       new HttpGet("/examples/jsp/jsp2/tagfiles/hello.jsp","997ebe20a346b21ce59550d05220ef90dd7d892e"),
       new HttpGet("/examples/jsp/jsp2/tagfiles/panel.jsp","cd34787cd5ee0f8c526a65f51851b6441ab8b3d3"),
       new HttpGet("/examples/jsp/jsp2/tagfiles/products.jsp","fb9cf67a579e2af4b6b10065102936f64ce86859"),

@@ -9,10 +9,11 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -20,70 +21,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.cassandra.config.DatabaseDescriptor;
 import org.dacapo.parser.Config;
 
-import org.apache.cassandra.service.EmbeddedCassandraService;
+import org.apache.cassandra.config.DatabaseDescriptor;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 
 public class CassandraBench extends Benchmark {
-    private String [] CASSANDRA_JARS = {
-        "cassandra-3.11.3.jar",
-        "cassandra-thrift-3.11.3.jar",
-        "HdrHistogram-2.1.9.jar",
-        "ST4-4.0.8.jar",
-        "airline-0.6.jar",
-        "antlr-runtime-3.5.2.jar",
-        "asm-5.0.4.jar",
-        "caffeine-2.2.6.jar",
-        "cassandra-driver-core-3.0.1-shaded.jar",
-        "commons-cli-1.1.jar",
-        "commons-codec-1.9.jar",
-        "commons-lang3-3.1.jar",
-        "commons-math3-3.2.jar",
-        "compress-lzf-0.8.4.jar",
-        "concurrent-trees-2.4.0.jar",
-        "concurrentlinkedhashmap-lru-1.4.jar",
-        "disruptor-3.0.1.jar",
-        "ecj-4.4.2.jar",
-        "guava-18.0.jar",
-        "high-scale-lib-1.0.6.jar",
-        "hppc-0.5.4.jar",
-        "jackson-core-asl-1.9.13.jar",
-        "jackson-mapper-asl-1.9.13.jar",
-        "jamm-0.3.0.jar",
-        "javax.inject.jar",
-        "jbcrypt-0.3m.jar",
-        "jcl-over-slf4j-1.7.7.jar",
-        "jctools-core-1.2.1.jar",
-        "jflex-1.6.0.jar",
-        "jna-4.2.2.jar",
-        "joda-time-2.4.jar",
-        "json-simple-1.1.jar",
-        "jstackjunit-0.0.1.jar",
-        "libthrift-0.9.2.jar",
-        "log4j-over-slf4j-1.7.7.jar",
-        "logback-classic-1.1.3.jar",
-        "logback-core-1.1.3.jar",
-        "lz4-1.3.0.jar",
-        "metrics-core-3.1.5.jar",
-        "metrics-jvm-3.1.5.jar",
-        "metrics-logback-3.1.5.jar",
-        "netty-all-4.0.44.Final.jar",
-        "ohc-core-0.4.4.jar",
-        "ohc-core-j8-0.4.4.jar",
-        "reporter-config-base-3.0.3.jar",
-        "reporter-config3-3.0.3.jar",
-        "sigar-1.6.4.jar",
-        "slf4j-api-1.7.7.jar",
-        "snakeyaml-1.11.jar",
-        "snappy-java-1.1.1.7.jar",
-        "snowball-stemmer-1.3.0.581.1.jar",
-        "stream-2.5.2.jar",
-        "thrift-server-0.3.7.jar",
-        "cassandra-driver-core-3.6.0.jar"
-    };
 
     private String[] YCSB_JARS = {
         "cassandra-binding-0.15.0.jar",
@@ -116,8 +60,13 @@ public class CassandraBench extends Benchmark {
     private File dirYCSBWorkloads;
     private File ymlConf;
     private File xmlLogback;
-    private EmbeddedCassandraService cassandra;
+    private Object cassandra;
+    private Class<?> EmbeddedCassandraServiceClass;
     private String[] ycsbWorkloadArgs;
+
+    private PrintStream outStream;
+    private final PrintStream logStream = new PrintStream(new FileOutputStream(new File(scratch.toPath() + File.separator + "stdout.log")));
+    private final PrintStream errStream = new PrintStream(new FileOutputStream(new File(scratch.toPath() + File.separator + "stderr.log")));
 
     Class<?> clsYCSBClient;
     Method mtdYCSBClientMain;
@@ -126,25 +75,6 @@ public class CassandraBench extends Benchmark {
         super(config, scratch, data, false);
     }
 
-    private static void addToSystemClassLoader(List<URL> urls) throws Exception {
-        if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader)) {
-            throw new RuntimeException("Currently cassandra benchmark requires Java version <= 1.8, you have " + System.getProperty("java.version"));
-        }
-
-        try {
-            URLClassLoader sysCL = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class });
-            addURL.setAccessible(true);
-            for (URL url : urls) {
-                addURL.invoke(sysCL, url);
-            }
-        } catch (NoSuchMethodException | IllegalAccessException e) {
-            e.printStackTrace();
-            System.err.println("This version of Java (" + System.getProperty("java.version") + 
-                    ") does not support the SystemClassLoader hack.");
-            throw e;
-        }
-    }
     private void setupScratch() {
         dirScratchJar = new File(scratch, "jar");
         dirLibSigar = new File(scratch, "libsigar");
@@ -172,16 +102,15 @@ public class CassandraBench extends Benchmark {
     }
     private void setupCassandra() {
         try {
-            // XXX: requires Java <= 1.8 to work; for later versions, use reflection API.
-            addToSystemClassLoader(findJars(dirScratchJar, Arrays.asList(CASSANDRA_JARS)));
-
             System.setProperty("java.library.path", dirLibSigar.getPath());
             System.setProperty("cassandra.storagedir", dirCassandraStorage.toString());
             System.setProperty("cassandra.logdir", dirCassandraLog.toString());
             System.setProperty("cassandra.config", ymlConf.toURI().toString());
             System.setProperty("cassandra.logback.configurationFile", xmlLogback.toString());
             System.setProperty("cassandra-foreground", "yes");
-            cassandra = new EmbeddedCassandraService();
+
+            EmbeddedCassandraServiceClass = Class.forName("org.apache.cassandra.service.EmbeddedCassandraService", true, loader);
+            cassandra = EmbeddedCassandraServiceClass.getConstructor().newInstance();
         } catch (Exception e) {
             System.err.println("Exception during initialization: " + e.toString());
             e.printStackTrace();
@@ -198,37 +127,94 @@ public class CassandraBench extends Benchmark {
         setupScratch();
 
         setupCassandra();
-        cassandra.start();
 
-        clYCSB = new URLClassLoader(findJars(dirScratchJar, Arrays.asList(YCSB_JARS))
-                                        .toArray(new URL[0]), clOriginal);
-        clsYCSBClient = clYCSB.loadClass("com.yahoo.ycsb.Client");
+        // Avoiding the long output of cassandra starting process
+        outStream = System.out;
+        System.setOut(logStream);
+
+        outStream.println("Cassandra starting...");
+        Method startMethod = EmbeddedCassandraServiceClass.getMethod("start");
+        startMethod.invoke(cassandra);
+
+        clsYCSBClient = loader.loadClass("com.yahoo.ycsb.Client");
         mtdYCSBClientMain = clsYCSBClient.getMethod("main", String[].class);
         prepareYCSBArgs(size);
+
         prepareYCSBCQL();
     }
 
     private void prepareYCSBCQL() {
-        Cluster cluster = Cluster.builder()
-                .addContactPoint("localhost")
-                .withPort(DatabaseDescriptor.getNativeTransportPort())
-                .build();
-        Session session = cluster.connect();
-        session.execute("CREATE KEYSPACE ycsb WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};");
-        session.execute("USE ycsb;");
-        session.execute("CREATE TABLE usertable (" +
-                            "y_id varchar primary key," +
-                            "field0 varchar," +
-                            "field1 varchar," +
-                            "field2 varchar," +
-                            "field3 varchar," +
-                            "field4 varchar," +
-                            "field5 varchar," +
-                            "field6 varchar," +
-                            "field7 varchar," +
-                            "field8 varchar," +
-                            "field9 varchar);");
-        session.close();
+        outStream.println("YCSB starting...");
+
+        try {
+            Object sess;
+
+            // Get the classes by reflection
+            Class<?> cluster = Class.forName("com.datastax.driver.core.Cluster", true, loader);
+            Class<?> clusterBuilder = Class.forName("com.datastax.driver.core.Cluster$Builder", true, loader);
+            Class<?> DatabaseDescriptor = Class.forName("org.apache.cassandra.config.DatabaseDescriptor", true, loader);
+            Class<?> session = Class.forName("com.datastax.driver.core.Session", true, loader);
+
+            // Get the methods by reflection
+            Method getNativeTransportPort = DatabaseDescriptor.getMethod("getNativeTransportPort");
+            Method builder = cluster.getMethod("builder");
+            Method connect = cluster.getDeclaredMethod("connect");
+
+            Method withPort = clusterBuilder.getDeclaredMethod("withPort", int.class);
+            Method build = clusterBuilder.getDeclaredMethod("build");
+            Method addContactPoint = clusterBuilder.getDeclaredMethod("addContactPoint", String.class);
+
+            Method execute =  session.getDeclaredMethod("execute", String.class);
+            Method close =  session.getDeclaredMethod("close");
+
+            // Get the mid level result
+            Object tr = builder.invoke(null);
+
+            // Obtain the non-static method by reflection
+            tr = addContactPoint.invoke(tr, "localhost");
+
+            // Get the port number
+            tr = withPort.invoke(tr, (Object) getNativeTransportPort.invoke(null));
+            // Get the session
+            sess = connect.invoke(build.invoke(tr));
+
+            execute.invoke(sess, (Object) "CREATE KEYSPACE ycsb WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};");
+            execute.invoke(sess, (Object) "USE ycsb;");
+            execute.invoke(sess, (Object) "CREATE TABLE usertable (" +
+                                                 "y_id varchar primary key," +
+                                                 "field0 varchar," +
+                                                 "field1 varchar," +
+                                                 "field2 varchar," +
+                                                 "field3 varchar," +
+                                                 "field4 varchar," +
+                                                 "field5 varchar," +
+                                                 "field6 varchar," +
+                                                 "field7 varchar," +
+                                                 "field8 varchar," +
+                                                 "field9 varchar);");
+            // Close the session
+            close.invoke(sess);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        Session session = cluster.connect();
+//        session.execute("CREATE KEYSPACE ycsb WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};");
+//        session.execute("USE ycsb;");
+//        session.execute("CREATE TABLE usertable (" +
+//                            "y_id varchar primary key," +
+//                            "field0 varchar," +
+//                            "field1 varchar," +
+//                            "field2 varchar," +
+//                            "field3 varchar," +
+//                            "field4 varchar," +
+//                            "field5 varchar," +
+//                            "field6 varchar," +
+//                            "field7 varchar," +
+//                            "field8 varchar," +
+//                            "field9 varchar);");
+//        session.close();
     }
 
     private void prepareYCSBArgs(String size) {
@@ -244,6 +230,8 @@ public class CassandraBench extends Benchmark {
     }
 
     public void iterate(String size) throws Exception {
+        System.setOut(logStream);
+        outStream.println("DaCapo: start iteration");
         Thread.currentThread().setContextClassLoader(clYCSB);
 
         // load workload
@@ -253,7 +241,15 @@ public class CassandraBench extends Benchmark {
         // run transactions
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-t";
         mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
-        System.out.println("DaCapo: finished iteration");
+        outStream.println("DaCapo: finished iteration");
+    }
+
+    @Override
+    public void postIteration(String size) throws Exception {
+        super.postIteration(size);
+        //Preventing the long stopping log information from cassandra
+        System.setErr(errStream);
+        System.setOut(logStream);
     }
 
     private static List<URL> findJars(File dir, List<String> jarNames) {

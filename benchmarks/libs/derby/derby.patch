@@ -1,7 +1,6 @@
-diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java
---- derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-03-24 01:49:58.000000000 +1100
-
-+++ derby-a/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-12-02 15:56:26.040402810 +1100
+diff -urN db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java
+--- db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java	2019-01-07 07:50:25.000000000 +1100
++++ ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java	2019-04-16 12:40:55.000000000 +1000
 @@ -44,11 +44,11 @@
       * 
       * see section 1.2.1 of TPC-C specification
@@ -17,85 +16,127 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
  
      public static final int NEWORDERS_COUNT_W = (CUSTOMER_COUNT_W * 9) / 30;
  
-diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java
---- derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2009-03-24 01:49:57.000000000 +1100
-+++ derby-a/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2009-12-02 15:56:26.040402810 +1100
-@@ -24,6 +24,7 @@
+diff -urN db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java
+--- db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java	2019-01-07 07:50:25.000000000 +1100
++++ ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java	2019-04-16 12:40:55.000000000 +1000
+@@ -84,7 +84,25 @@
+      * arrays with run information.
+      */
+     public static final int NEW_ORDER_ROLLBACK = 7;
+-    
++
++    /**
++     * Cumulative probability distribution (out of 1000) derived from mixType
++     * (4%, 2.4%, 1.6%,     25.8%, 17.2%, 4%, 44.5% .5%)
++     */
++    public static final int[] TX_CUM_PROB = { 40, 64, 80, 338, 510, 550, 995, 1000 };
++
++    /**
++     * Names for each transaction type
++     */
++    public static final String[] TX_NAME = { "Stock level",
++            "Order status by name",
++            "Order status by ID",
++            "Payment by name",
++            "Payment by ID",
++            "Delivery schedule",
++            "New order",
++            "New order rollback" };
++
+     /**
+      * Display to write the output to.
+      */
+@@ -108,7 +126,7 @@
+     /**
+      * Record of how many transactions are implemented.
+      */
+-    private final int[] transactionCount;
++    public final int[] transactionCount;
+     
+     /**
+      * Generate a new random number generator
+diff -urN db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java
+--- db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java	2019-01-07 07:50:25.000000000 +1100
++++ ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java	2019-04-16 12:40:55.000000000 +1000
+@@ -23,6 +23,7 @@
+ import java.sql.Connection;
  import java.sql.PreparedStatement;
  import java.sql.ResultSet;
- import java.sql.SQLException;
 +import java.sql.Timestamp;
+ import java.sql.SQLException;
  import java.sql.Types;
  import java.util.ArrayList;
- import java.util.List;
-@@ -35,6 +36,7 @@
+@@ -35,7 +36,7 @@
  import org.apache.derbyTesting.system.oe.model.Order;
  import org.apache.derbyTesting.system.oe.model.OrderLine;
  import org.apache.derbyTesting.system.oe.model.Warehouse;
+-
 +import org.apache.derbyTesting.system.oe.routines.Data;
- 
  /**
   * Implement the transactions following the TPC-C specification
-@@ -403,7 +405,7 @@
+  * using client side prepared statements. Thus all the logic
+@@ -403,7 +404,7 @@
      }
      
      private void paymentById(Display display, Object displayData, short w, short d,
 -            short cw, short cd, int c, final String amount) throws Exception {
-+          short cw, short cd, int c, final String s_amount) throws Exception {
++                             short cw, short cd, int c, final String s_amount) throws Exception {
  
          PreparedStatement pyCustomerPayment = prepareStatement(
                  "UPDATE CUSTOMER SET C_BALANCE = C_BALANCE - ?, " +
-@@ -414,13 +416,18 @@
+@@ -414,13 +415,17 @@
          PreparedStatement pyCustomerInfoId = prepareStatement(
                  "SELECT C_FIRST, C_MIDDLE, C_LAST, C_BALANCE, " +
                  "C_STREET_1, C_STREET_2, C_CITY, C_STATE, C_ZIP, " +
 -                "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM, C_DISCOUNT " +
-+              "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM, C_DISCOUNT, C_DATA " +
++                "C_PHONE, C_SINCE, C_CREDIT, C_CREDIT_LIM, C_DISCOUNT, C_DATA " +
                  "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
-         
-+      // This is removed as the call out to java from the SQL engine did not work
-+      // from H2, this value can be calculated externally and set so this callback
-+      // is somewhat redundant.
+-        
++        // This is removed as the call out to java from the SQL engine did not work
++        // from H2, this value can be calculated externally and set so this callback
++        // is somewhat redundant.
          PreparedStatement pyCustomerUpdateBadCredit = prepareStatement(
 -                "UPDATE CUSTOMER SET C_DATA = " +
 -                " BAD_CREDIT_DATA(C_DATA, ?, ?, C_W_ID, C_W_ID, C_ID, ?) " +
-+    		  // "UPDATE CUSTOMER SET C_DATA = " +
-+              // " BAD_CREDIT_DATA(C_DATA, ?, ?, C_W_ID, C_W_ID, C_ID, ?) " +
-+    		  "UPDATE CUSTOMER SET C_DATA = ? " +
++//                "UPDATE CUSTOMER SET C_DATA = " +
++//                " BAD_CREDIT_DATA(C_DATA, ?, ?, C_W_ID, C_W_ID, C_ID, ?) " +
++                "UPDATE CUSTOMER SET C_DATA = ? " +
                  "WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
-+      
++
          PreparedStatement pyCustomerGetData = prepareStatement(
                  "SELECT SUBSTR(C_DATA, 1, 200) AS C_DATA_200 " +
                  "FROM CUSTOMER WHERE C_W_ID = ? AND C_D_ID = ? AND C_ID = ?");
-@@ -437,17 +444,19 @@
+@@ -437,17 +442,19 @@
              
          PreparedStatement pyHistory = prepareStatement(
                  "INSERT INTO HISTORY(H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, " +
 -                "H_DATE, H_AMOUNT, H_DATA) " +
 -                "VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, ?, ?)");
-+              "H_AMOUNT, H_DATA, H_DATE, H_INITIAL) " +
-+              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSe)");
-         
+-        
++                "H_AMOUNT, H_DATA, H_DATE, H_INITIAL) " +
++                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSe)");
++
          Customer customer = new Customer();
          customer.setWarehouse(cw);
          customer.setDistrict(cd);
          customer.setId(c);
-         
-+      double d_amount = Double.parseDouble(s_amount);
-+      
+-        
++
++        double d_amount = Double.parseDouble(s_amount);
++
          // Update the customer assuming that they have good credit
 -        pyCustomerPayment.setString(1, amount);
 -        pyCustomerPayment.setString(2, amount);
-+      pyCustomerPayment.setDouble(1, d_amount);
-+      pyCustomerPayment.setDouble(2, d_amount);
++        pyCustomerPayment.setDouble(1, d_amount);
++        pyCustomerPayment.setDouble(2, d_amount);
          pyCustomerPayment.setShort(3, cw);
          pyCustomerPayment.setShort(4, cd);
          pyCustomerPayment.setInt(5, c);
-@@ -472,17 +481,18 @@
+@@ -472,17 +479,18 @@
          customer.setCredit(rs.getString("C_CREDIT"));
          customer.setCredit_lim(rs.getString("C_CREDIT_LIM"));
          customer.setDiscount(rs.getString("C_DISCOUNT"));
-+      customer.setData(rs.getString("C_DATA"));
++        customer.setData(rs.getString("C_DATA"));
          reset(pyCustomerInfoId);
          
          // additional work for bad credit customers.
@@ -107,39 +148,41 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
 -            pyCustomerUpdateBadCredit.setShort(4, cw);
 -            pyCustomerUpdateBadCredit.setShort(5, cd);
 -            pyCustomerUpdateBadCredit.setInt(6, c);         
-+    	  // The following line is added (and indexes changed) as the field can be 
-+    	  // calculated externally and the callback mechanism is not usable under H2.
-+          pyCustomerUpdateBadCredit.setString(1, Data.dataForBadCredit(customer.getData(), w, d, cw, cd, c, new BigDecimal(s_amount)));
-+          pyCustomerUpdateBadCredit.setShort(2, cw);
-+          pyCustomerUpdateBadCredit.setShort(3, cd);
-+          pyCustomerUpdateBadCredit.setInt(4, c);
++            // The following line is added (and indexes changed) as the field can be
++            // calculated externally and the callback mechanism is not usable under H2.
++            pyCustomerUpdateBadCredit.setString(1, Data.dataForBadCredit(customer.getData(), w, d, cw, cd, c, new BigDecimal(s_amount)));
++            pyCustomerUpdateBadCredit.setShort(2, cw);
++            pyCustomerUpdateBadCredit.setShort(3, cd);
++            pyCustomerUpdateBadCredit.setInt(4, c);
              pyCustomerUpdateBadCredit.executeUpdate();
              reset(pyCustomerUpdateBadCredit);
              
-@@ -503,7 +513,7 @@
+@@ -503,7 +511,7 @@
          district.setId(d);
  
          // Update DISTRICT
 -        pyDistrictUpdate.setString(1, amount);
-+      pyDistrictUpdate.setDouble(1, d_amount);
++        pyDistrictUpdate.setDouble(1, d_amount);
          pyDistrictUpdate.setShort(2, w);
          pyDistrictUpdate.setShort(3, d);
          pyDistrictUpdate.executeUpdate();
-@@ -522,7 +532,7 @@
+@@ -522,7 +530,7 @@
          warehouse.setId(w);
          
          // Update WAREHOUSE
 -        pyWarehouseUpdate.setString(1, amount);
-+      pyWarehouseUpdate.setDouble(1, d_amount);
++        pyWarehouseUpdate.setDouble(1, d_amount);
          pyWarehouseUpdate.setShort(2, w);
          pyWarehouseUpdate.executeUpdate();
          reset(pyWarehouseUpdate);
-@@ -535,18 +545,21 @@
+@@ -534,19 +542,22 @@
+         warehouse.setName(rs.getString("W_NAME"));
          warehouse.setAddress(getAddress(rs, "W_STREET_1"));
          reset(pyWarehouseInfo);
-          
-+      Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-+      
+-         
++
++        Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
++        
          // Insert HISTORY row
          pyHistory.setInt(1, c);
          pyHistory.setShort(2, cd);
@@ -147,17 +190,17 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
          pyHistory.setShort(4, d);
          pyHistory.setShort(5, w);
 -        pyHistory.setString(6, amount);
-+      pyHistory.setDouble(6, d_amount);
++        pyHistory.setDouble(6, d_amount);
          StringBuffer hData = new StringBuffer(24);
          hData.append(warehouse.getName());
          hData.append("    ");
          hData.append(district.getName());
          pyHistory.setString(7, hData.toString());
-+      pyHistory.setTimestamp(8, currentTimeStamp);
++        pyHistory.setTimestamp(8, currentTimeStamp);
          pyHistory.executeUpdate();
          reset(pyHistory);
          
-@@ -633,7 +646,7 @@
+@@ -633,7 +644,7 @@
              }
              
              PreparedStatement psOrder = prepareStatement(
@@ -166,45 +209,44 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
              psOrder.setInt(1, orderNumber);
              psOrder.setShort(2, d);
              psOrder.setShort(3, w);
-@@ -644,7 +657,7 @@
+@@ -644,7 +655,7 @@
              reset(psOrder);
  
              PreparedStatement psNewOrder = prepareStatement(
 -                "INSERT INTO NEWORDERS VALUES(?, ?, ?)"); 
-+                "INSERT INTO NEWORDERS VALUES(?, ?, ?, FALSE, TRUE)"); 
++                "INSERT INTO NEWORDERS VALUES(?, ?, ?, FALSE, TRUE)");
              psNewOrder.setInt(1, orderNumber);
              psNewOrder.setShort(2, d);
              psNewOrder.setShort(3, w);
-@@ -657,8 +670,8 @@
+@@ -657,9 +668,9 @@
              PreparedStatement psOrderLine = prepareStatement(
                  "INSERT INTO ORDERLINE(OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER, " +
                  "OL_I_ID, OL_SUPPLY_W_ID, OL_QUANTITY, OL_AMOUNT, OL_DIST_INFO, " +
 -                "OL_DELIVERY_D) VALUES (?, ?, ?, ?, ?, ?, ?, " +
 -                "CAST (? AS DECIMAL(5,2)) * CAST (? AS SMALLINT), ?, NULL)");
+-            
 +                "OL_DELIVERY_D, OL_DELIVERY_D_INITIAL, OL_INITIAL) VALUES (?, ?, ?, ?, ?, ?, ?, " +
 +                "CAST (? AS DECIMAL(5,2)) * CAST (? AS SMALLINT), ?, NULL, NULL, FALSE)");
-             
++
              // These are constant across the order items
              psOrderLine.setShort(1, w);
-@@ -792,10 +805,13 @@
+             psOrderLine.setShort(2, d);
+@@ -792,10 +803,10 @@
              
              PreparedStatement dlFindOrderToDeliver = prepareStatement(
                  "SELECT MIN(NO_O_ID) AS ORDER_TO_DELIVER FROM NEWORDERS " +
 -                "WHERE NO_W_ID = ? AND NO_D_ID = ?");
 +                "WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_LIVE");
-+            
-+//            PreparedStatement dlDeleteNewOrder = prepareStatement(
-+//                "DELETE FROM NEWORDERS WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_O_ID = ?");
              
              PreparedStatement dlDeleteNewOrder = prepareStatement(
 -                "DELETE FROM NEWORDERS WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_O_ID = ?");
-+            "UPDATE NEWORDERS SET NO_LIVE = FALSE WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_O_ID = ?");
++                "UPDATE NEWORDERS SET NO_LIVE = FALSE WHERE NO_W_ID = ? AND NO_D_ID = ? AND NO_O_ID = ?");
              
              PreparedStatement dlSetOrderCarrier = prepareStatement(
                  "UPDATE ORDERS SET O_CARRIER_ID = ? " +
-diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java
---- derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2009-03-24 01:49:46.000000000 +1100
-+++ derby-a/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2009-12-02 15:56:26.040402810 +1100
+diff -urN db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java
+--- db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2019-01-07 07:50:25.000000000 +1100
++++ ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2019-04-16 12:40:55.000000000 +1000
 @@ -228,14 +228,16 @@
                  + "(S_I_ID, S_W_ID, S_QUANTITY,S_DIST_01, S_DIST_02,"
                  + " S_DIST_03,S_DIST_04,S_DIST_05,"
@@ -219,7 +261,7 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
          for (int i = itemStart; i <= itemEnd; i++) {
              ps.setInt(1, i);
 -            ps.setInt(3, random.randomInt(10, 100));
-+        	int quantity = random.randomInt(10, 100); 
++            int quantity = random.randomInt(10, 100);
 +            ps.setInt(3, quantity);
 +            ps.setInt(15, quantity); // s_quantity_initial
              ps.setString(4, random.randomAString24());
@@ -275,10 +317,10 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
 -                psO.setShort(6, (short) random.randomInt(1, 10));
 -            else
 +            if (o_id <= Load.NEWORDERS_BREAKPOINT) {
-+            	short o_carrier_id = (short)random.randomInt(1, 10);
++                short o_carrier_id = (short) random.randomInt(1, 10);
 +                psO.setShort(6, o_carrier_id);
 +                psO.setShort(8, o_carrier_id);
-+            } else {
++            }else {
                  psO.setNull(6, Types.SMALLINT);
 +                psO.setNull(8, Types.SMALLINT);
 +            }
@@ -297,9 +339,9 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
                      psOL.setString(9, random.randomDecimalString(1, 999999, 2));
                  }
                  psOL.setInt(8, 5);
-diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql
---- derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2009-03-24 01:49:50.000000000 +1100
-+++ derby-a/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2009-12-02 15:56:26.040402810 +1100
+diff -urN db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql
+--- db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql	2019-01-07 07:50:26.000000000 +1100
++++ ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql	2019-04-16 12:40:55.000000000 +1000
 @@ -71,7 +71,8 @@
   C_YTD_PAYMENT  DECIMAL(12,2) NOT NULL,
   C_PAYMENT_CNT  INTEGER       NOT NULL,
@@ -360,53 +402,26 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
 + S_QUANTITY_INITIAL   INTEGER     NOT NULL
  );
 \ No newline at end of file
-diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java
---- derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java	2009-03-24 01:49:58.000000000 +1100
-+++ derby-a/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java	2009-12-02 15:59:13.086957464 +1100
-@@ -70,6 +70,10 @@
-         this(last, System.currentTimeMillis());
+diff -urN db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java
+--- db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java	2019-01-07 07:50:25.000000000 +1100
++++ ../db-derby-10.15.1.3-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java	2019-04-16 14:36:06.000000000 +1000
+@@ -32,7 +32,7 @@
+  */
+ public class OERandom {
+ 
+-    final Random rand;
++    Random rand;
+ 
+     protected final int Clast;
+ 
+@@ -66,6 +66,10 @@
+         initAStrings();
      }
  
-+    public void setSeed(long seed) {
-+        rand.setSeed(seed);
++    public void setSeed(long seed){
++        rand = new Random(seed);
 +    }
-+    
-     private static int[] RESCALE = { 0, 10, 100, 1000, 10000, 100000, 1000000 };
- 
-     private StringBuffer decimalString = new StringBuffer(12);
---- derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java-orig	2009-12-19 13:18:42.000000000 +1100
-+++ derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java	2009-12-19 13:55:33.000000000 +1100
-@@ -85,6 +85,24 @@
-     public static final int NEW_ORDER_ROLLBACK = 7;
-
-     /**
-+     * Cumulative probability distribution (out of 1000) derived from mixType
-+     * (4%, 2.4%, 1.6%, 25.8%, 17.2%, 4%, 44.5% .5%)
-+     */
-+    public static final int[] TX_CUM_PROB = { 40, 64, 80, 338, 510, 550, 995, 1000 };
 +
-+    /**
-+     * Names for each transaction type
-+     */
-+    public static final String[] TX_NAME = { "Stock level",
-+					     "Order status by name",
-+					     "Order status by ID",
-+					     "Payment by name",
-+					     "Payment by ID",
-+					     "Delivery schedule",
-+					     "New order",
-+					     "New order rollback" };
-+
-+    /**
-      * Display to write the output to.
-      */
-     private final Display display;
-@@ -125,7 +143,7 @@
-     /**
-      * Record of how many transactions are implemented.
-      */
--    private final int[] transactionCount;
-+    public final int[] transactionCount;
-
-     /**
-* Generate a new random number generator
+     public OERandom(int last) {
+         this(last, System.currentTimeMillis());
+     }

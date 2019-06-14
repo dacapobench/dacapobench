@@ -4,8 +4,8 @@
     <import file="../util.xml"/>
     <import file="../libs/libs.xml"/>
     
-    <property file="ant/local.properties"/>
-    <property file="ant/dacapo.properties"/>
+    <property file="default.properties"/>
+    <property file="dacapo.properties"/>
     
     <property name="base-dir" value="harness"/>
     <property name="src" value="${base-dir}/src"/>
@@ -20,7 +20,18 @@
     <property name="cli-url" value="${apache.dl.url}/commons/cli/binaries"/>
     <property name="cli-basename" value="${cli}-${cli-version}"/>
     <property name="cli-name" value="${cli-basename}-bin.tar.gz"/>
-    
+
+
+    <property name="jaxb-version" value="2.3.0"/>
+    <property name="jaxb-url" value="${maven.centre}/javax/xml/bind/jaxb-api/${jaxb-version}"/>
+    <property name="jaxb-name" value="jaxb-api-${jaxb-version}.jar"/>
+
+    <property name="jaxb-core-url" value="${maven.centre}/com/sun/xml/bind/jaxb-core/${jaxb-version}"/>
+    <property name="jaxb-core-name" value="jaxb-core-${jaxb-version}.jar"/>
+
+    <property name="jaxb-impl-url" value="${maven.centre}/com/sun/xml/bind/jaxb-impl/${jaxb-version}"/>
+    <property name="jaxb-impl-name" value="jaxb-impl-${jaxb-version}.jar"/>
+
     <target name="all" depends="clean,init,harness,jar"/>
     
     <target name="clean">
@@ -38,12 +49,30 @@
         <javacc javacchome="${javacchome}" target="${src}/org/dacapo/parser/ConfigFile.jj"/>
     </target>
 
-    <target name="cli">
+    <target name="dependency">
         <!-- get commons-cli from apache -->
         <antcall target="check-source">
             <param name="target-dir" value="${harness-downloads}"/>
             <param name="target-url" value="${cli-url}"/>
             <param name="target-file" value="${cli-name}"/>
+        </antcall>
+
+        <antcall target="check-source">
+            <param name="target-dir" value="${harness-downloads}"/>
+            <param name="target-url" value="${jaxb-url}"/>
+            <param name="target-file" value="${jaxb-name}"/>
+        </antcall>
+
+        <antcall target="check-source">
+            <param name="target-dir" value="${harness-downloads}"/>
+            <param name="target-url" value="${jaxb-core-url}"/>
+            <param name="target-file" value="${jaxb-core-name}"/>
+        </antcall>
+
+        <antcall target="check-source">
+            <param name="target-dir" value="${harness-downloads}"/>
+            <param name="target-url" value="${jaxb-impl-url}"/>
+            <param name="target-file" value="${jaxb-impl-name}"/>
         </antcall>
 
         <!-- untar it into build -->
@@ -53,12 +82,23 @@
         <unjar src="${build-dir}/${cli-basename}/${cli-basename}.jar" dest="${output-dir}">
             <fileset dir="/" includes="org/apache/commons/**" />
         </unjar>
+
+        <!-- unjar from jaxb-api-<version>.jar into ${output-dir} -->
+        <unjar src="${harness-downloads}/${jaxb-name}" dest="${output-dir}"/>
+
+        <!-- unjar from jaxb-core-<version>.jar into ${output-dir} -->
+        <unjar src="${harness-downloads}/${jaxb-core-name}" dest="${output-dir}"/>
+
+        <!-- unjar from jaxb-core-<version>.jar into ${output-dir} -->
+        <unjar src="${harness-downloads}/${jaxb-impl-name}" dest="${output-dir}"/>
+
+        <delete file="${output-dir}/module-info.class"/>
     </target>
     
-    <target name="harness" depends="init,dacapo-digest,cli,parser">
+    <target name="harness" depends="init,dacapo-digest,dependency,parser">
         <!-- include digest --> 
         <unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
-        <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
+        <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source" classpath="${output-dir}"/>
         <javadoc sourcepath="${src}" destdir="${output-doc-dir}" classpath="${output-dir}"
                 additionalparam="-Xdoclint:none"/>
     </target>

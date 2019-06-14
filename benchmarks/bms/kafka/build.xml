@@ -22,7 +22,6 @@
     <target name="unpack" depends="untar, patch"/>
 
     <target name="bm-build" depends="gradlew, make-exe">
-
         <exec executable="${bm-build-dir}/${gradle-exe}" dir="${bm-build-dir}">
             <arg value="jar"/>
         </exec>
@@ -54,7 +53,6 @@
     </target>
 
     <target name="jar">
-
         <copy todir="${bm-jars}" flatten="true">
             <fileset dir="${bm-build-dir}/" includes="**/*.jar"/>
         </copy>
@@ -68,6 +66,5 @@
                 <include name="org/dacapo/kafka/**"/>
             </fileset>
         </jar>
-
     </target>
 </project>

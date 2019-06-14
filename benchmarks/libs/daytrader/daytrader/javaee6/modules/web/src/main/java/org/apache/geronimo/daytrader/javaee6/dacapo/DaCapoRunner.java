@@ -16,8 +16,6 @@
  */
 package org.apache.geronimo.daytrader.javaee6.dacapo;
 
-import org.apache.geronimo.daytrader.javaee6.dacapo.DaCapoTrader;
-
 public class DaCapoRunner {
 	
   private static final boolean VERBOSE = false;
@@ -45,10 +43,12 @@ public class DaCapoRunner {
 				System.err.println("Caught exception!: "+e.toString());
 			}
 		}
+		System.out.println(tradeSessions);
 		if (tradeSessions > 0) {
 			completed[0] = 0;
-			for (int i = 0; i < numThreads; i++)
+			for (int i = 0; i < numThreads; i++) {
 				traders[i].start();
+			}
 		}
 	}
 

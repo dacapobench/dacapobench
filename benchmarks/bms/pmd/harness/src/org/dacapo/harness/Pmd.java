@@ -56,7 +56,6 @@ public class Pmd extends Benchmark {
   protected void prepare(String size) throws Exception {
     super.prepare(size);
     args = config.preprocessArgs(size, scratch, data);
-    
   }
 
   public void iterate(String size) throws Exception {

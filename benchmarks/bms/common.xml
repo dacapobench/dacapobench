@@ -15,14 +15,12 @@
 	</tstamp>
 
 	<property file="dacapo.properties"/>
-	<property file="local.properties"/>
 	<property file="default.properties"/>
 
 	<property name="bm-files" value="${basedir}/bms/${bm-name}"/>
 	<property name="bm-build-dir" value="${bm-files}/build"/>
-	<property name="bm-doc-dir" value="${bm-files}/doc"/>
 	<property name="bm-output-dir" value="${bm-files}/dist"/>
-	<property name="bm-output-doc-dir" value="${bm-files}/dist/doc/${bm-name}"/>
+	<property name="bm-output-doc-dir" value="${bm-output-dir}/doc"/>
 	<property name="bm-output-harness-dir" value="${bm-files}/dist"/>
 	<property name="bm-output-benchmark-dir" value="${bm-files}/dist/benchmark"/>
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
@@ -141,11 +139,6 @@
 		<javac srcdir="${bm-src-harness-dir}" classpath="${harness-classpath}" destdir="${bm-output-harness-dir}"
 			includes="org/dacapo/harness/**"
 			debug="true" debuglevel="lines,vars,source"/>
-		<copy todir="${bm-output-doc-dir}">
-			<fileset dir="${bm-doc-dir}">
-				<include name="**"/>
-			</fileset>
-		</copy>
 		<javadoc sourcepath="${bm-src-harness-dir}" classpath="${harness-classpath}" destdir="${bm-output-doc-dir}"/>
 	</target>
 
@@ -153,11 +146,6 @@
 		<javac srcdir="${bm-src-harness-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-harness-dir}"
 			includes="org/dacapo/harness/**"
 			debug="true" debuglevel="lines,vars,source"/>
-		<copy todir="${bm-output-doc-dir}">
-			<fileset dir="${bm-doc-dir}">
-				<include name="**"/>
-			</fileset>
-		</copy>
 		<javadoc sourcepath="${bm-src-harness-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-doc-dir}"/>
 	</target>
 

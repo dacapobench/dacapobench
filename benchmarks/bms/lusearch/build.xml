@@ -16,7 +16,7 @@
 
     <target name="bm-build" depends="lucene">
         <mkdir dir="${bm-build-dir}"/>
-        <javac srcdir="${bm-src-dir}" source="1.5" 
+        <javac srcdir="${bm-src-dir}"
               classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}:${lucene-jars}/${lucene-queryparser-jar-name}"
            destdir="${bm-build-dir}" 
            includes="org/dacapo/lusearch/*" debug="true" debuglevel="lines,vars,source"/>

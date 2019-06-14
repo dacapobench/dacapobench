@@ -14,38 +14,45 @@
         <format property="build.time" pattern="yyyyMMdd-hhmm"/>
     </tstamp>
     <description>
-            The DaCapo Benchmark Suite
+        The DaCapo Benchmark Suite
 
-DEPENDENCIES:
-   - javacc(included) (http://javacc.dev.java.net/)
-   - maven(included)  (http://maven.apache.org/)
-   - ant (http://ant.apache.org)
-   - cvs (http:/www.nongnu.org/cvs/)
-   - svn (http://subversion.apache.org)
-   - hg (https://www.mercurial-scm.org)
+        DEPENDENCIES:
+        - javacc(included) (http://javacc.dev.java.net/)
+        - maven(included)  (http://maven.apache.org/)
+        - ant (http://ant.apache.org)
+        - cvs (http:/www.nongnu.org/cvs/)
+        - svn (http://subversion.apache.org)
+        - hg (https://www.mercurial-scm.org)
+        - npm (https://www.npmjs.com/get-npm)
+        - node.js (https://nodejs.org/en/)
+        - python (https://www.python.org/)
+        python libraries:
+        - grip (https://pypi.org/project/grip/)
+        - colorama (https://pypi.org/project/colorama/)
+        - future (https://pypi.org/project/future/)
+        - tabulate (https://pypi.org/project/tabulate/)
+        - requests (https://pypi.org/project/requests/)
+        - wheel (https://pypi.org/project/wheel/)
+        For convinience, javacc and maven are included in the tools directory:
+        ${toolsdir}
 
-For convinience, javacc and maven are included in the tools directory:
-    ${toolsdir}
 
-        
-BUILDING:
+        BUILDING:
         0. System requirement:
-            Building DaCapo requires latest JDK 8.
-            JDK 9 is currently not supported (some benchmarks will fail with error).
-            If building PMD and/or DayTrader,
-                make sure JDK 7 is also installed and
-                it's path set in local.properties file.
-                See 3 below.
+        Building DaCapo requires latest JDK 11.
+        If building cassandra, graphchi, jython, and/or xalan,
+        make sure JDK 8 is also installed and
+        it's path set in default.properties file.
 
-            Building the whole suite at once on macOS **may** have problem with max filehandle limits.
-            You may want to set it to a larger value, and launch ant with:
-                $ JAVA_OPTS="-XX:-MaxFDLimit" ant
+        Building the whole suite at once on macOS **may** have problem with max filehandle limits.
+        You may want to set it to a larger value, and launch ant with:
+        $ JAVA_OPTS="-XX:-MaxFDLimit" ant
 
         1. Set your JAVA_HOME environment variable appropriately:
-             On Mac OS X something like:
-                export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
-             On Ubuntu 16.04 something like:
-                export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
+        On Mac OS X something like:
+        export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.3.jdk/Contents/Home
+        On Ubuntu 16.04 something like:
+        export JAVA_HOME=/usr/lib/jvm/jdk1.11.0/
 
         2. Set ant and maven environment variables if necessary.  In particular,
         for some jvms it is necessary to explicitly request a larger heap size.
@@ -53,21 +60,18 @@ BUILDING:
         are built by maven (called by ant).  As another example, you may wish
         for ant to use a proxy when downloading (there is a lot to be
         downloaded).   Some examples:
-            export ANT_OPTS="-Xms512M -Xmx512M"
-            export MAVEN_OPTS="-Xms512M -Xmx512M"
+        export ANT_OPTS="-Xms512M -Xmx512M"
+        export MAVEN_OPTS="-Xms512M -Xmx512M"
         or
-            export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
+        export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
 
-        3. Copy default.properties to local.properties and edit local.properties
-        for your environment.
-
-        4. Run ant:
+        3. Run ant:
         ant         [builds all benchmarks]
         ant dist    [builds all benchmarks, this is the default]
         ant source  [builds a source distribution including benchmarks and tools]
         ant bm      [builds a specific benchmark, bm]
 
-        5. A log of each directory is created under this benchmark directory
+        4. A log of each directory is created under this benchmark directory
         for benchmark build status and build success or failure files
         to be stored.  The directory log directory is normally of the
         form
@@ -79,9 +83,9 @@ BUILDING:
 
 </description>
 
-    <property file="local.properties"/>
     <property file="default.properties"/>
     <property file="dacapo.properties"/>
+    <property file="local.properties"/>
     <property name="log.build.dir" value="${log.dir}/${build.time}"/>
     <property name="log.build.report" value="${log.dir}/${build.time}/status.txt"/>
     <property name="log.build.pass" value="${log.dir}/${build.time}/pass.txt"/>
@@ -216,7 +220,6 @@ BUILDING:
                 <include name="benchmarks/bms/eclipse/bundles-stub-required.lst"/>
 
                <!-- add daytrader plugin -->
-                <include name="benchmarks/libs/daytrader/plugins/**"/>
                 <include name="benchmarks/libs/daytrader/daytrader/**"/>
 
                 <!-- add tools -->
@@ -281,7 +284,7 @@ BUILDING:
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,jme,jython,kafka,luindex,lusearch,pmd,sunflow,tomcat,tradebeans,tradesoap,xalan,zxing">
+    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,kafka,jython,luindex,lusearch,pmd,sunflow,tomcat,tradebeans,tradesoap,xalan,zxing">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -359,13 +362,12 @@ BUILDING:
         <clean.bm benchmark="fop"/>
         <clean.bm benchmark="graphchi"/>
         <clean.bm benchmark="h2"/>
-        <clean.bm benchmark="jme"/>
         <clean.bm benchmark="h2o"/>
+        <clean.bm benchmark="jme"/>
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="kafka"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
-        <!--<clean.bm benchmark="lusearch-fix"/>-->
         <clean.bm benchmark="pmd"/>
         <clean.bm benchmark="sunflow"/>
         <clean.bm benchmark="tomcat"/>
@@ -433,69 +435,69 @@ See ${log.build.report} for a summary of benchmark build status.
         </sequential>
     </macrodef>
 
-    <target name="avrora" depends="init,harness">
+    <target name="avrora" depends="init,harness,update-externdata-info">
         <build.bm benchmark="avrora"/>
     </target>
-    <target name="batik" depends="init,harness">
+    <target name="batik" depends="init,harness,update-externdata-info">
         <build.bm benchmark="batik"/>
     </target>
-    <target name="cassandra" depends="init,harness">
-        <build.bm benchmark="cassandra"/>
-    </target>
-    <target name="h2" depends="init,harness">
-        <build.bm benchmark="h2"/>
-    </target>
-    <target name="eclipse" depends="init,harness">
-        <build.bm benchmark="eclipse"/>
-    </target>
-    <target name="fop" depends="init,harness">
-        <build.bm benchmark="fop"/>
-    </target>
-    <target name="graphchi" depends="init,harness">
-        <build.bm benchmark="graphchi"/>
-    </target>
-    <target name="jython" depends="init,harness">
-        <build.bm benchmark="jython"/>
-    </target>
-    <target name="luindex" depends="init,harness">
-        <build.bm benchmark="luindex"/>
-    </target>
-    <target name="lusearch" depends="init,harness">
-        <build.bm benchmark="lusearch"/>
-    </target>
-    <target name="pmd" depends="init,harness">
-        <build.bm benchmark="pmd"/>
-    </target>
-    <target name="sunflow" depends="init,harness">
-        <build.bm benchmark="sunflow"/>
-    </target>
-    <target name="tomcat" depends="init,harness">
-        <build.bm benchmark="tomcat"/>
-    </target>
-    <target name="tradebeans" depends="init,harness">
-        <build.bm benchmark="tradebeans"/>
-    </target>
-    <target name="tradesoap" depends="init,harness">
-        <build.bm benchmark="tradesoap"/>
-    </target>
-    <target name="daytrader" depends="tradebeans, tradesoap"/>
-    <target name="xalan" depends="init,harness">
-        <build.bm benchmark="xalan"/>
-    </target>
-    <target name="biojava" depends="init,harness">
+    <target name="biojava" depends="init,harness,update-externdata-info">
         <build.bm benchmark="biojava"/>
     </target>
-    <target name="zxing" depends="init,harness">
-        <build.bm benchmark="zxing"/>
+    <target name="cassandra" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="cassandra"/>
     </target>
-    <target name="jme" depends="init,harness">
-        <build.bm benchmark="jme"/>
+    <target name="daytrader" depends="tradebeans, tradesoap"/>
+    <target name="eclipse" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="eclipse"/>
     </target>
-    <target name="h2o" depends="init,harness">
+    <target name="fop" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="fop"/>
+    </target>
+    <target name="graphchi" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="graphchi"/>
+    </target>
+    <target name="h2" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="h2"/>
+    </target>
+    <target name="h2o" depends="init,harness,update-externdata-info">
         <build.bm benchmark="h2o"/>
     </target>
-    <target name="kafka" depends="init,harness">
+    <target name="jme" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="jme"/>
+    </target>
+    <target name="jython" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="jython"/>
+    </target>
+     <target name="kafka" depends="init,harness">
         <build.bm benchmark="kafka"/>
+    </target>
+   <target name="luindex" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="luindex"/>
+    </target>
+    <target name="lusearch" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="lusearch"/>
+    </target>
+    <target name="pmd" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="pmd"/>
+    </target>
+    <target name="sunflow" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="sunflow"/>
+    </target>
+    <target name="tomcat" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="tomcat"/>
+    </target>
+    <target name="tradebeans" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="tradebeans"/>
+    </target>
+    <target name="tradesoap" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="tradesoap"/>
+    </target>
+    <target name="xalan" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="xalan"/>
+    </target>
+    <target name="zxing" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="zxing"/>
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">

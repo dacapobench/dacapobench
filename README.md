@@ -1,6 +1,6 @@
 # The DaCapo Benchmark Suite
 
-Last updated 2018-04-06
+Last updated 2019-06-06
 
 This benchmark suite is intend as a tool for the research community.
 It consists of a set of open source, real world applications with
@@ -29,6 +29,8 @@ The easiest way to obtain the benchmark suite is to download the pre-built jar f
 
 If, however, you want to build from source read on...
 
+##### Dependencies:
+
 The suite is built using ant 1.10.  You will need the following tools:
 
 * *[ant 1.10](http://ant.apache.org)* You need to install this yourself if you don't already have it.
@@ -41,20 +43,74 @@ The suite is built using ant 1.10.  You will need the following tools:
 
 * *[svn](http://subversion.apache.org)*
 
-* *[hg](https://www.mercurial-scm.org)*
+* *[python](https://www.python.org/) (with following libraries)*
+
+    * *[grip](https://pypi.org/project/grip/)*
+    * *[colorama](https://pypi.org/project/colorama/)*
+    * *[future](https://pypi.org/project/future/)*
+    * *[tabulate](https://pypi.org/project/tabulate/)*
+    * *[requests](https://pypi.org/project/requests/)*
+    * *[wheel](https://pypi.org/project/wheel/)*
+
+* *[node.js](https://nodejs.org/en/)*
+
+* *[npm](https://www.npmjs.com/get-npm)*
+
+##### System requirement:
+
+Building DaCapo requires latest JDK 11.
+
+If building __cassandra__, __graphchi__, __jython__, and/or __xalan__,
+make sure JDK 8 is also installed and
+its path set in local.properties file.
+
+Building the whole suite at once on macOS **may** have problem with max filehandle limits.
+You may want to set it to a larger value, and launch ant with:
+`export JAVA_OPTS="-XX:-MaxFDLimit"`
+
+Set your JAVA_HOME environment variable appropriately:
+On Mac OS X something like:
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.3.jdk/Contents/Home/
+On Ubuntu 16.04 something like:
+`export JAVA_HOME=/usr/lib/jvm/jdk1.11.0/`
+
+Set __ant__ and __maven__ environment variables if necessary.  In particular,
+for some jvms it is necessary to explicitly request a larger heap size.
+It is necessary to set the maven options because the trade benchmarks
+are built by maven (called by ant).  As another example, you may wish
+for ant to use a proxy when downloading (there is a lot to be
+downloaded).   Some examples:
+`export ANT_OPTS="-Xms512M -Xmx512M"`
+`export MAVEN_OPTS="-Xms512M -Xmx512M"`
+or
+`export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"`
+
+##### Run ant:
+`ant`         [builds all benchmarks]
+
+`ant dist`    [builds all benchmarks, this is the default]
+
+`ant source`  [builds a source distribution including benchmarks and tools]
+
+`ant bm`      [builds a specific benchmark, bm]
 
 **NOTE**
 
-  1.JDK 8 is needed to build the whole suite.
-  2.Building DayTrader and PMD using JDK 8 also requires JDK 7 to be installed, and jdk7home properly set. (see 2 below)
+A log of each directory is created under this benchmark directory
+for benchmark build status and build success or failure files
+to be stored.  The directory log directory is normally of the
+form
+`${basedir}/log/${build.time}`
+and contains status.txt where each benchmark build status is recorded,
+and either pass.txt if all benchmarks build, or fail.txt if one or
+more benchmarks fail to build. Note: that either fail.txt or pass.txt
+is created when a full build is performed.
 
 **IMPORTANT:** before trying to build the suite:
 
 1. Set your `JAVA_HOME` environment variable appropriately (it must be set and be consistent with the VM that will be used to build the suite).
 
-2. Copy `default.properties` to `local.properties` and edit it for your environment.
-
-  * Specifically, you must set `jdk7home` to point to a Java 7 installation.
+2. You must set `jdk8home`, in the `default.properties`, to point to a Java s installation.
 
 
 For more information, run `ant -p` in the benchmarks directory.

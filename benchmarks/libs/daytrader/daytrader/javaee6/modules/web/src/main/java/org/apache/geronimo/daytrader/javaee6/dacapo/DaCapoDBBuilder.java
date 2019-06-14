@@ -1,3 +1,19 @@
+/**
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package org.apache.geronimo.daytrader.javaee6.dacapo;
 
 import java.io.InputStreamReader;
@@ -6,12 +22,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.apache.geronimo.daytrader.javaee6.utils.TradeConfig;
-import org.apache.geronimo.daytrader.javaee6.utils.Log;
+import org.apache.geronimo.daytrader.javaee6.core.api.*;
+import org.apache.geronimo.daytrader.javaee6.core.direct.*;
 import org.apache.geronimo.daytrader.javaee6.entities.*;
-import org.apache.geronimo.daytrader.javaee6.core.direct.TradeJEEDirect;
+import org.apache.geronimo.daytrader.javaee6.utils.*;
 
 public class DaCapoDBBuilder extends Thread {
+
+	static final String maker = "DaCapoMarker";
 
 	static final boolean VERBOSE = false;
 	
@@ -24,20 +42,23 @@ public class DaCapoDBBuilder extends Thread {
 
 	int units;
 	int ordinal;
-	TradeJEEDirect trade;
+	TradeServices trade;
+
+	static {
+
+	}
 	
 	public static void create(TradeJEEDirect trade, int numThreads, String size) {
 		try	{
+			trade.resetTrade(true);
 			createDB(trade);
-			users = readStrings("users.txt", size);
-			stocks = readStrings("stocks.txt", size);
 		} catch (Exception e) {
 			System.err.println("Could not create database: "+e.toString());
 			e.printStackTrace();
 		}
 	}
 	
-	private static void resetDataBase(TradeJEEDirect trade) {
+	private static void resetDataBase(TradeServices trade) {
 		try	{
 			trade.resetTrade(true);
 		} catch (Exception e) {
@@ -46,21 +67,32 @@ public class DaCapoDBBuilder extends Thread {
 		}
 	}
 
-	synchronized private static int getOrdinal(TradeJEEDirect trade) {
-		int ordinal = threadCount++;
-		if (VERBOSE) System.err.println("Thread "+ordinal+" resetting!");
-		if (ordinal == 0) {
-			System.out.println("Resetting database and populating with "+stocks.length+" stocks...");
-			resetDataBase(trade);
-			populateStocks(trade);
-			System.out.println("Populating database with "+users.length+" users...");
-			if (VERBOSE) System.err.println("done with global reset!");
+	synchronized private static int getOrdinal(TradeServices trade) {
+		try {
+			int ordinal = threadCount++;
+			if (VERBOSE) System.err.println("Thread " + ordinal + " resetting!");
+			if (ordinal == 0) {
+				System.out.println(maker + "Resetting database and populating with " + stocks.length + " stocks...");
+				resetDataBase(trade);
+				populateStocks(trade);
+				System.out.println(maker + "Populating database with " + users.length + " users...");
+				if (VERBOSE) System.err.println("done with global reset!");
+			}
+			return ordinal;
+		}catch (Exception e){
+			System.out.println("It failed");
+			System.exit(-1);
 		}
-		return ordinal;
+		return 1;
 	}
 
 	
-	public static boolean reset(TradeJEEDirect trade, String size, int threads) {
+	public static boolean reset(TradeServices trade, String size, int threads) {
+		// Initialize the data set
+		if (users == null || stocks == null) {
+			users = readStrings("users.txt", size);
+			stocks = readStrings("stocks.txt", size);
+		}
 		int ordinal = getOrdinal(trade);
 		populateUsers(trade, ordinal, threads);
 		if (ordinal == threads - 1) {
@@ -70,7 +102,7 @@ public class DaCapoDBBuilder extends Thread {
 		return true;
 	}
 	
-	private static void populateStocks(TradeJEEDirect trade) {
+	private static void populateStocks(TradeServices trade) {
 		for (int i = 0; i < stocks.length; i++) {
 			String s = stocks[i];
 			s = s.trim();
@@ -81,7 +113,7 @@ public class DaCapoDBBuilder extends Thread {
 				java.math.BigDecimal quote = new java.math.BigDecimal(str[2]);
 				for (int j = 0; j < MAX_TX_ATTEMPTS; j++) {
 					try {
-						QuoteDataBean quoteData =	trade.createQuote(symbol, company, quote);
+						QuoteDataBean quoteData = trade.createQuote(symbol, company, quote);
 						break;
 					} catch (Exception e) {
 						if (j == MAX_TX_ATTEMPTS - 1) {
@@ -99,7 +131,7 @@ public class DaCapoDBBuilder extends Thread {
 		if (VERBOSE) System.err.println("Hooray, added "+stocks.length+" stocks.");
 	}
 
-	private static void populateUsers(TradeJEEDirect trade, int ordinal, int threads) {
+	private static void populateUsers(TradeServices trade, int ordinal, int threads) {
 		String user;
 		while ((user = getNextUser(users, ordinal, threads)) != null) {
 			addUser(trade, user);
@@ -180,7 +212,7 @@ public class DaCapoDBBuilder extends Thread {
 	}	
 	
 	
-	private static void addUser(TradeJEEDirect trade, String userString) {
+	private static void addUser(TradeServices trade, String userString) {
 		String[] str = userString.split("\t");
 		String userid = str[0];
 		java.math.BigDecimal balance = new java.math.BigDecimal(str[1]);
@@ -244,7 +276,7 @@ public class DaCapoDBBuilder extends Thread {
 		URL ddlFile = null;
 		Object[] sqlBuffer = null;
 		try {
-			String name = "dbscripts/derby/Table.ddl";
+			String name = "dbscripts/other/Table.ddl";
 			ddlFile = getURL(name);
 			if (ddlFile == null) {
 				String msg = "DaCapoDBBuilder: DDL file doesnt exist at path "+ name +" , please provide the file and retry";
@@ -259,7 +291,7 @@ public class DaCapoDBBuilder extends Thread {
 			}
 			try {
 				if (trade.recreateDBTables(sqlBuffer, null)) {
-					System.err.println("Successfully created tables");
+					System.out.println(maker + "Successfully created tables");
 				}
 			} catch (Exception e) {
 				String msg = "Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing";

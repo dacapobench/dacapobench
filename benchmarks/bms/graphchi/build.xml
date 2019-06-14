@@ -35,10 +35,9 @@
         <mkdir dir="${bm-build-dir}"/>
         <exec executable="${mvn-exe}" dir="${bm-build-dir}" failonerror="yes">
           <arg line="assembly:assembly -DdescriptorId=jar-with-dependencies"/>
+          <env key="JAVA_HOME" value="${jdk8home}"/>
         </exec>
     </target>
-    
-    <target name="data"/>
 
     <target name="jar">
         <copy file="${bm-build-dir}/target/${bm-name}-java-${bm-version}-jar-with-dependencies.jar"

@@ -157,7 +157,6 @@ public abstract class Benchmark {
   protected int iteration = 0;
 
   protected Method method;
-  private boolean noData;
 
   /**
    * Run a benchmark. This is final because individual benchmarks should not
@@ -220,6 +219,14 @@ public abstract class Benchmark {
     this(config, scratch, data, true);
   }
 
+  public Benchmark(Config config, File scratch) throws Exception {
+    this(config, scratch, true);
+  }
+
+  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
+    this(config, scratch, null, silent);
+  }
+
   public Benchmark(Config config, File scratch, File data, boolean silent) throws Exception {
     this(config, scratch, data, silent, silent);
   }
@@ -227,24 +234,10 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch, File data, boolean silentOut, boolean silentErr) throws Exception {
     Benchmark.silentOut = silentOut;
     Benchmark.silentErr = silentErr;
+
     this.scratch = scratch;
     this.data = data;
     this.config = config;
-    initialize();
-  }
-
-  public Benchmark(Config config, File scratch) throws Exception {
-    this(config, scratch, true);
-  }
-
-  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
-    // TODO this is very ugly
-    Benchmark.silentOut = silent;
-    Benchmark.silentErr = silent;
-    this.scratch = scratch;
-    this.config = config;
-    this.noData = true;
-    this.data = null;
     initialize();
   }
 
@@ -297,8 +290,8 @@ public abstract class Benchmark {
   protected void prepare() throws Exception {
     // the data zip may not exist, if data is packaged externally
     try {
-      if (!noData)
-      unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+      if (getURL("dat/" + config.name + ".zip") != null)
+        unpackZipFileResource("dat/" + config.name + ".zip", scratch);
     } catch (DacapoException e) {
       e.printStackTrace();
     }

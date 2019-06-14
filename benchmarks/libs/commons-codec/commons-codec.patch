@@ -1,10 +1,11 @@
+diff -urN commons-codec-1.11-src/pom.xml ../commons-codec-1.11-src/pom.xml
 --- commons-codec-1.11-src/pom.xml	2017-10-18 01:51:44.000000000 +1100
-+++ commons-codec-1.11-src/pom.xml.orig	2018-12-16 00:51:22.170692461 +1100
++++ ../commons-codec-1.11-src/pom.xml	2019-04-17 02:30:46.000000000 +1000
 @@ -281,6 +281,7 @@
        <plugin>
          <groupId>org.apache.maven.plugins</groupId>
          <artifactId>maven-surefire-plugin</artifactId>
-+        <version>3.0.0-M2</version>
++        <version>3.0.0-M3</version>
          <configuration>
            <excludes>
              <exclude>**/*AbstractTest.java</exclude>
