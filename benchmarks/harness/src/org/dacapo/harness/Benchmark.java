@@ -234,6 +234,7 @@ public abstract class Benchmark {
   public Benchmark(Config config, File scratch, File data, boolean silentOut, boolean silentErr) throws Exception {
     Benchmark.silentOut = silentOut;
     Benchmark.silentErr = silentErr;
+
     this.scratch = scratch;
     this.data = data;
     this.config = config;
