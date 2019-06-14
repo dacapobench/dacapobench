@@ -284,7 +284,7 @@
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,h2,h2o,eclipse,fop,zxing,biojava,jme,graphchi,cassandra,kafka,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,kafka,jython,luindex,lusearch,pmd,sunflow,tomcat,tradebeans,tradesoap,xalan,zxing">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -362,13 +362,12 @@
         <clean.bm benchmark="fop"/>
         <clean.bm benchmark="graphchi"/>
         <clean.bm benchmark="h2"/>
-        <clean.bm benchmark="jme"/>
         <clean.bm benchmark="h2o"/>
+        <clean.bm benchmark="jme"/>
         <clean.bm benchmark="jython"/>
         <clean.bm benchmark="kafka"/>
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
-        <!--<clean.bm benchmark="lusearch-fix"/>-->
         <clean.bm benchmark="pmd"/>
         <clean.bm benchmark="sunflow"/>
         <clean.bm benchmark="tomcat"/>
@@ -442,12 +441,13 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="batik" depends="init,harness,update-externdata-info">
         <build.bm benchmark="batik"/>
     </target>
+    <target name="biojava" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="biojava"/>
+    </target>
     <target name="cassandra" depends="init,harness,update-externdata-info">
         <build.bm benchmark="cassandra"/>
     </target>
-    <target name="h2" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="h2"/>
-    </target>
+    <target name="daytrader" depends="tradebeans, tradesoap"/>
     <target name="eclipse" depends="init,harness,update-externdata-info">
         <build.bm benchmark="eclipse"/>
     </target>
@@ -457,10 +457,22 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="graphchi" depends="init,harness,update-externdata-info">
         <build.bm benchmark="graphchi"/>
     </target>
+    <target name="h2" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="h2"/>
+    </target>
+    <target name="h2o" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="h2o"/>
+    </target>
+    <target name="jme" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="jme"/>
+    </target>
     <target name="jython" depends="init,harness,update-externdata-info">
         <build.bm benchmark="jython"/>
     </target>
-    <target name="luindex" depends="init,harness,update-externdata-info">
+     <target name="kafka" depends="init,harness">
+        <build.bm benchmark="kafka"/>
+    </target>
+   <target name="luindex" depends="init,harness,update-externdata-info">
         <build.bm benchmark="luindex"/>
     </target>
     <target name="lusearch" depends="init,harness,update-externdata-info">
@@ -481,24 +493,11 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="tradesoap" depends="init,harness,update-externdata-info">
         <build.bm benchmark="tradesoap"/>
     </target>
-    <target name="daytrader" depends="tradebeans, tradesoap"/>
     <target name="xalan" depends="init,harness,update-externdata-info">
         <build.bm benchmark="xalan"/>
     </target>
-    <target name="biojava" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="biojava"/>
-    </target>
     <target name="zxing" depends="init,harness,update-externdata-info">
         <build.bm benchmark="zxing"/>
-    </target>
-    <target name="jme" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="jme"/>
-    </target>
-    <target name="h2o" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="h2o"/>
-    </target>
-    <target name="kafka" depends="init,harness">
-        <build.bm benchmark="kafka"/>
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">
