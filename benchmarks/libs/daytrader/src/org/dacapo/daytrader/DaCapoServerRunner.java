@@ -29,17 +29,21 @@ public class DaCapoServerRunner {
    */
   public static void initialize() {
     try {
+      String scriptPath;
+
+      if (System.getProperty("os.name").toLowerCase().contains("win"))
+        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "standalone.bat";
+      else{
+        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "standalone.sh";
+
+        // Make the script executable
+        makeExecutable(scriptPath);
+      }
+
       // Start the wildfly servers
-      ProcessBuilder processBuilder =
-              new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java",
-                      "--add-modules=java.se", "-jar", System.getProperty("jboss.home.dir") + File.separator + "jboss-modules.jar",
-                      "-mp", System.getProperty("module.path"),
-                      "org.jboss.as.standalone",
-                      "-Djboss.home.dir=" + System.getProperty("jboss.home.dir"));
+      process = Runtime.getRuntime().exec(scriptPath);
 
-      // Start the process builder
-      process = processBuilder.start();
-
+      // Checking if server started
       URL url = new URL("http://localhost:8080/daytrader");
 
       Thread mt = new Thread(new Runnable() {
@@ -98,12 +102,35 @@ public class DaCapoServerRunner {
     serverThread.start();
   }
 
+  private static void makeExecutable(String scriptPath){
+    try {
+      // Give the script
+      ProcessBuilder builder = new ProcessBuilder("/bin/chmod", "755",scriptPath);
+      builder.start().waitFor();
+    } catch (InterruptedException | IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Shutdown the server
    */
   public static void shutdown(){
     try {
-      process.destroy();
+      String scriptPath;
+
+      if (System.getProperty("os.name").toLowerCase().contains("win"))
+        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "jboss-cli.bat";
+      else{
+        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "jboss-cli.sh";
+
+        // Make the script executable
+        makeExecutable(scriptPath);
+      }
+
+      // Start the wildfly servers
+      new ProcessBuilder(scriptPath,"--connect","command=:shutdown").start().waitFor();
+
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
       e.printStackTrace();
