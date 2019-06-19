@@ -9,15 +9,12 @@
 
 package org.dacapo.harness;
 
+import org.dacapo.h2o.ClientRunner;
 import org.dacapo.parser.Config;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 /**
  * Dacapo benchmark harness for H2O
@@ -28,6 +25,9 @@ import java.util.List;
 public class H2O extends Benchmark{
 
     private String[] args;
+    PrintStream savedOut;
+    private String ip = "127.0.0.1";
+    private String port = "54321";
 
     public H2O(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
@@ -37,14 +37,33 @@ public class H2O extends Benchmark{
 
     @Override
     protected void prepare(String size) throws Exception {
-        super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
+        emptyOutput();
+
+        // Launch the h2o server
+        useBenchmarkClassLoader();
+        this.method.invoke(null,  (Object) new String[] {"-ip", ip, "-port", port});
     }
 
     @Override
     public void iterate(String size) throws Exception {
-        this.method.invoke(null,  (Object) new String[] {"-ip", "127.0.0.1", "-port", "54321"});
-        System.out.println("Testing");
-        Thread.sleep(20000);
+
+        PrintStream savedOut = System.out;
+        // Store the standard output
+        emptyOutput();
+
+        ClientRunner.running("http://" + ip + ":" + port, args[0], args[1], args[2], args[3], savedOut);
+
+        System.setOut(savedOut);
+    }
+
+    private void emptyOutput(){
+        // Store the standard output
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                // Doing nothing
+            }
+        }));
     }
 }

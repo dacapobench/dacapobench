@@ -1,6 +1,7 @@
 package org.dacapo.h2o;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -68,6 +69,8 @@ public class DacapoH2OFacade {
     private final String MODEL_PARAMETERS_VALIDATE = "3/ModelBuilders/" + MODEL_MACRO + "/parameters";
     //Get the job list
     private final String JOB_LIST = "3/Jobs";
+    //all frames
+    private final String frames = "3/Frames";
 
     private Method getStringOb;
 
@@ -113,6 +116,14 @@ public class DacapoH2OFacade {
             System.err.println("Failed to import the file: " + path);
         }
         return h2o_rest.getFromResponse("fails").get("fail") == null;
+    }
+
+    void deleteFrames(String path){
+        try {
+            h2o_rest.deleteMethod(frames + "/" + path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

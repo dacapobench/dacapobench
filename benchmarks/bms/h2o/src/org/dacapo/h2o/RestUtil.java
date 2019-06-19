@@ -44,7 +44,7 @@ public class RestUtil {
      * @throws IOException
      */
     public void getMethod(String api) throws IOException {
-        URL restURL = new URL(this.url + File.separator + api);
+        URL restURL = new URL(this.url + "/" + api);
 
         // Open the connection
         HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
@@ -59,6 +59,18 @@ public class RestUtil {
         br.close();
     }
 
+    public void deleteMethod(String api) throws IOException {
+        URL restURL = new URL(this.url + "/" + api);
+
+        // Open the connection
+        HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestProperty(
+                "Content-Type", "application/x-www-form-urlencoded" );
+        conn.setRequestMethod("DELETE");
+        conn.connect();
+    }
+
     /**
      * 
      * @param api
@@ -67,7 +79,7 @@ public class RestUtil {
      * @throws IOException
      */
     public void postMethod(String api, String query) throws IOException {
-        URL restURL = new URL(this.url + File.separator + api);
+        URL restURL = new URL(this.url + "/" + api);
 
         // Open the connection
         HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
