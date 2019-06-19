@@ -27,15 +27,6 @@ import java.util.List;
 
 public class H2O extends Benchmark{
 
-    private String [] H2O_JARS= {
-            "commons-beanutils-1.9.3.jar",
-            "commons-collections-3.2.2.jar",
-            "commons-lang-2.6.jar",
-            "commons-logging.jar",
-            "ezmorph-1.0.6.jar",
-            "json-lib-2.4-jdk15.jar"
-    };
-
     private String[] args;
 
     public H2O(Config config, File scratch, File data) throws Exception {
@@ -50,48 +41,10 @@ public class H2O extends Benchmark{
         args = config.preprocessArgs(size, scratch, data);
     }
 
-    private void setupH2O() {
-        File dirScratchJar = new File(scratch, "jar");
-        addToSystemClassLoader(findJars(dirScratchJar, H2O_JARS));
-    }
-
-    private void addToSystemClassLoader(List<URL> urls){
-        if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader)) {
-            throw new RuntimeException("Currently cassandra benchmark requires Java version <= 1.8, you have " + System.getProperty("java.version"));
-        }
-
-        try {
-            URLClassLoader sysCL = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class });
-            addURL.setAccessible(true);
-            for (URL url : urls) {
-                addURL.invoke(sysCL, url);
-            }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            System.err.println("This version of Java (" + System.getProperty("java.version") +
-                    ") does not support the SystemClassLoader hack.");
-        }
-    }
-
-    private List<URL> findJars(File dir, String[] jarNames) {
-        List<URL> jars = new ArrayList<>();
-        for (String jarName : jarNames) {
-            File jar = new File(dir, jarName);
-            try {
-                URL url = jar.toURI().toURL();
-                jars.add(url);
-            } catch (MalformedURLException e) {
-                System.err.println("Unable to create URL for jar: " + jarName);
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        }
-        return jars;
-    }
-
     @Override
     public void iterate(String size) throws Exception {
-        this.method.invoke(null,  (Object) args);
+        this.method.invoke(null,  (Object) new String[] {"-ip", "127.0.0.1", "-port", "54321"});
+        System.out.println("Testing");
+        Thread.sleep(20000);
     }
 }
