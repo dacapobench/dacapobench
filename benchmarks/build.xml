@@ -273,7 +273,12 @@
 		</copy>
 
     	<!-- construct the base jar -->
-        <jar jarfile="${build.target-jar}" basedir="${dacapo.build.dir}" update="false" manifest="${dacapo.build.dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+        <condition property="update-value" value="true" else="false">
+            <isset property="update-jar"/>
+        </condition>
+
+        <jar jarfile="${build.target-jar}" basedir="${dacapo.build.dir}" update="${update-value}" manifest="${dacapo.build.dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+
     </target>
 
     <target name="clean-bootstrap" depends="init">
