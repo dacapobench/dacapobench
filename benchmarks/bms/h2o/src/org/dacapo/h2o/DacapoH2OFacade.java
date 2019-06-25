@@ -1,5 +1,6 @@
 package org.dacapo.h2o;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
@@ -195,8 +196,8 @@ public class DacapoH2OFacade {
      * @param sourceFormat
      */
     void parse(String sourceFormat){
-        if (!sourceFormat.startsWith("nfs:/"))
-            sourceFormat = "nfs:/" + sourceFormat;
+        if (!sourceFormat.startsWith("nfs:"))
+            sourceFormat = "nfs:" + File.separator + sourceFormat;
         Map<String, String> kv = getParseSetup(sourceFormat);
         kv.put("source_frames", sourceFormat);
         kv.put("delete_on_done", "true");
