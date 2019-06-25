@@ -96,6 +96,16 @@
 	<property name="dacapo.doc.dir" value="${basedir}/doc"/>
 	<property name="dacapo.src.dir" value="${basedir}/src"/>
 
+    <target name="check-dependencies">
+        <available property="compile9" classname="java.sql.ShardingKey"/>
+        <antcall target="check-java-runtime"/>
+    </target>
+
+    <target name="check-java-runtime" if="compile9">
+        <available property="jdk-exist" file="${jdk8home}/bin/javac"/>
+        <fail unless="jdk-exist" message="Jdk 8 could not be found"/>
+    </target>
+
     <target name="check-git-present">
         <available property="git.present" file="../.git" type="dir"/>
         <property name="git.exe" value="git"/>
@@ -297,7 +307,7 @@
     <!-- ================================= 
          target: harness           
          ================================= -->
-    <target name="harness" depends="init,bootstrap" description="compile the source ">
+    <target name="harness" depends="check-dependencies,init,bootstrap" description="compile the source ">
         <ant antfile="harness/build.xml"/>
     </target>
 	

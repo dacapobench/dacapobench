@@ -24,10 +24,11 @@
     <target name="unpack" depends="untar"/>
     
     <target name="bm-build" depends="xerces">
-        <exec dir="${xalan-top}" executable="ant">
-            <env key="CLASSPATH" value=".:${xerces-jars}/${xerces-impl-jar-name}:${xerces-jars}/${xerces-api-jar-name}"/>
-            <env key="JAVA_HOME" value="${jdk8home}"/>
-        </exec>
+
+        <available property="compile9" classname="java.sql.ShardingKey"/>
+        <antcall target="j8-compile"/>
+        <antcall target="j9-compile"/>
+
         <mkdir dir="${bm-build-dir}/benchmark"/>
         <javac srcdir="${bm-src-dir}" source="1.8" classpath="${xalan-top}/build/xalan.jar"
             destdir="${bm-build-dir}/benchmark/" 
@@ -35,7 +36,20 @@
             debug="true" debuglevel="lines,vars,source"/>
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}/benchmark"/>
     </target>
-    
+
+    <target name="j9-compile" if="compile9">
+        <exec dir="${xalan-top}" executable="ant">
+            <env key="CLASSPATH" value=".:${xerces-jars}/${xerces-impl-jar-name}:${xerces-jars}/${xerces-api-jar-name}"/>
+            <env key="JAVA_HOME" value="${jdk8home}"/>
+        </exec>
+    </target>
+
+    <target name="j8-compile" unless="compile9">
+        <exec dir="${xalan-top}" executable="ant">
+            <env key="CLASSPATH" value=".:${xerces-jars}/${xerces-impl-jar-name}:${xerces-jars}/${xerces-api-jar-name}"/>
+        </exec>
+    </target>
+
     <target name="jar">
         <copy file="${xalan-top}/build/xalan.jar" todir="${bm-jars}"/>
         <copy file="${xalan-top}/build/serializer.jar" todir="${bm-jars}"/>

@@ -53,9 +53,20 @@
     <target name="cassandra-build">    
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
+
+        <available property="compile9" classname="java.sql.ShardingKey"/>
+        <antcall target="j8-compile"/>
+        <antcall target="j9-compile"/>
+    </target>
+
+    <target name="j9-compile" if="compile9">
         <exec executable="ant" dir="${cassandra-build-top}">
             <env key="JAVA_HOME" value="${jdk8home}"/>
         </exec>
+    </target>
+
+    <target name="j8-compile" unless="compile9">
+        <exec executable="ant" dir="${cassandra-build-top}"/>
     </target>
 
     <target name="ycsb-build" depends="get-slf4j-simple-jar">

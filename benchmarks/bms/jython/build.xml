@@ -53,9 +53,20 @@
         <copy todir="${bm-build-dir}/src/java">
             <fileset file="${bm-build-dir}/build.*"/>
         </copy>
+
+        <available property="compile9" classname="java.sql.ShardingKey"/>
+        <antcall target="j8-compile"/>
+        <antcall target="j9-compile"/>
+    </target>
+
+    <target name="j9-compile" if="compile9">
         <exec executable="ant" dir="${bm-build-dir}">
             <env key="JAVA_HOME" value="${jdk8home}"/>
         </exec>
+    </target>
+
+    <target name="j8-compile" unless="compile9">
+        <exec executable="ant" dir="${bm-build-dir}"/>
     </target>
 
     <target name="jar">
