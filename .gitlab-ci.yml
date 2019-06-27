@@ -1,6 +1,6 @@
 before_script:
   - export ANT_HOME=/opt/apache-ant-1.10.5
-  - export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
   - export PATH=${JAVA_HOME}/bin:${ANT_HOME}/bin:${PATH}
   - java -version
   - ant -version
@@ -8,7 +8,7 @@ before_script:
   - touch local.properties
   - echo "make=/usr/bin/make" >> local.properties
   - echo "build.failonerror=true" >> local.properties
-  - echo "jdk8home=/usr/lib/jvm/java-8-openjdk-amd64" >> local.properties
+  - echo "jdk8home=/usr/lib/jvm/java-1.8.0-openjdk-amd64" >> local.properties
   - cat local.properties
 
 cache:
