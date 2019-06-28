@@ -25,16 +25,6 @@ import org.jboss.modules.Main;
 public class DaCapoServerRunner {
   private static Process process;
 
-  public static void main(String[] args) {
-    try {
-      System.setProperty("jboss.home.dir", "/Users/chenrui/Projects/IdeaProjects/Work_ANU/dacapobench/benchmarks/scratch/wildfly-16.0.0.Final");
-      System.setProperty("module.path", "/Users/chenrui/Projects/IdeaProjects/Work_ANU/dacapobench/benchmarks/scratch/wildfly-16.0.0.Final/modules");
-      Main.main(new String[] {"org.jboss.as.standalone"});
-    } catch (Throwable throwable) {
-      throwable.printStackTrace();
-    }
-  }
-
   /**
    * Start the server and deploy DayTrader ejb application
    */
