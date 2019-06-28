@@ -11,9 +11,6 @@ before_script:
   - echo "jdk8home=/usr/lib/jvm/java-1.8.0-openjdk-amd64" >> local.properties
   - cat local.properties
 
-after_script:
-  - rm local.properties
-
 cache:
   key: anu-gitlab-local
   untracked: true
@@ -24,6 +21,7 @@ biojava:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar biojava -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 avrora:
   script:
@@ -32,6 +30,7 @@ avrora:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar avrora -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 batik:
   script:
@@ -39,6 +38,7 @@ batik:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar batik -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 cassandra:
   script:
@@ -46,6 +46,7 @@ cassandra:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar cassandra -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 eclipse:
   script:
@@ -53,6 +54,7 @@ eclipse:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar eclipse -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 fop:
   script:
@@ -60,6 +62,7 @@ fop:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar fop -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 graphchi:
   script:
@@ -67,6 +70,7 @@ graphchi:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar graphchi -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 h2:
   script:
@@ -74,6 +78,7 @@ h2:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2 -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 jython:
   script:
@@ -81,6 +86,7 @@ jython:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jython -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 luindex:
   script:
@@ -88,6 +94,7 @@ luindex:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar luindex -n 3
   after_script:
     - git clean -df -e "downloads" -e "enwiki.txt"
+    - rm local.properties
 
 lusearch:
   script:
@@ -95,6 +102,7 @@ lusearch:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar lusearch -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 pmd:
   script:
@@ -102,6 +110,7 @@ pmd:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar pmd -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 sunflow:
   script:
@@ -109,6 +118,7 @@ sunflow:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar sunflow -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 tomcat:
   script:
@@ -117,6 +127,7 @@ tomcat:
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
+    - rm local.properties
 
 tradebeans:
   script:
@@ -125,6 +136,7 @@ tradebeans:
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
+    - rm local.properties
 
 tradesoap:
   script:
@@ -133,6 +145,7 @@ tradesoap:
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
+    - rm local.properties
 
 xalan:
   script:
@@ -140,6 +153,7 @@ xalan:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar xalan -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 zxing:
   script:
@@ -147,6 +161,7 @@ zxing:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar zxing -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 kafka:
   script:
@@ -154,6 +169,7 @@ kafka:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar kafka -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
 
 jme:
   script:
@@ -161,3 +177,4 @@ jme:
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jme -n 3
   after_script:
     - git clean -df -e "downloads"
+    - rm local.properties
