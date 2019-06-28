@@ -11,6 +11,9 @@ before_script:
   - echo "jdk8home=/usr/lib/jvm/java-1.8.0-openjdk-amd64" >> local.properties
   - cat local.properties
 
+after_script:
+  - rm local.properties
+
 cache:
   key: anu-gitlab-local
   untracked: true
