@@ -9,6 +9,7 @@
 
 <project name="h2o" default="all" basedir="../..">
     <description>Dacapo h2o benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="h2o"/>

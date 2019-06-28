@@ -8,7 +8,8 @@
  -->
 <project name="avrora" default="all" basedir="../..">
     <description>DaCapo avrora benchmark</description>
-    <property file="dacapo.properties" />
+    <property file="local.properties"/>
+    <property file="dacapo.properties"/>
 
     <property name="bm-name" value="avrora" />
     <!--property name="bm-version" value="1.7.117" />

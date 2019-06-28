@@ -8,6 +8,7 @@
  -->
 <project name="tradebeans" default="all" basedir="../..">
     <description>DaCapo tradebeans benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="tradebeans"/>
