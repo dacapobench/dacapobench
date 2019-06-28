@@ -9,6 +9,9 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 
 import org.dacapo.harness.Benchmark;
@@ -48,7 +51,15 @@ public class Tradebeans extends Benchmark {
     if (args.length == 1)
       dtSize = args[0];
 
+    System.out.println("Launching the server");
+    PrintStream stdout = System.out;
+    // Hide server starting messages
+    emptyOutput();
+
     initializeMethod.invoke(null, scratch, config.getThreadCount(size), dtSize, true);
+
+    // stdout for iterate
+    System.setOut(stdout);
   }
 
   public void cleanup() {
@@ -68,5 +79,15 @@ public class Tradebeans extends Benchmark {
     if (getVerbose())
       System.out.println("tradebeans benchmark starting");
     method.invoke(null);
+  }
+
+  private void emptyOutput(){
+    // Store the standard output
+    System.setOut(new PrintStream(new OutputStream() {
+      @Override
+      public void write(int b) throws IOException {
+        // Doing nothing
+      }
+    }));
   }
 }

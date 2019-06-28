@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.jboss.modules.Main;
 
 /**
  * Dacapo benchmark harness for tradesoap.
@@ -24,57 +25,43 @@ import java.net.URL;
 public class DaCapoServerRunner {
   private static Process process;
 
+  public static void main(String[] args) {
+    try {
+      System.setProperty("jboss.home.dir", "/Users/chenrui/Projects/IdeaProjects/Work_ANU/dacapobench/benchmarks/scratch/wildfly-16.0.0.Final");
+      System.setProperty("module.path", "/Users/chenrui/Projects/IdeaProjects/Work_ANU/dacapobench/benchmarks/scratch/wildfly-16.0.0.Final/modules");
+      Main.main(new String[] {"org.jboss.as.standalone"});
+    } catch (Throwable throwable) {
+      throwable.printStackTrace();
+    }
+  }
+
   /**
    * Start the server and deploy DayTrader ejb application
    */
   public static void initialize() {
     try {
-      String scriptPath;
-
-      if (System.getProperty("os.name").toLowerCase().contains("win"))
-        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "standalone.bat";
-      else{
-        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "standalone.sh";
-
-        // Make the script executable
-        makeExecutable(scriptPath);
-      }
-
-      // Start the wildfly servers
-      process = Runtime.getRuntime().exec(scriptPath);
+      Main.main(new String[] {"org.jboss.as.standalone"});
 
       // Checking if server started
       URL url = new URL("http://localhost:8080/daytrader");
 
-      Thread mt = new Thread(new Runnable() {
-        @Override
-        public void run() {
-          while (true) {
-            try {
-              Thread.sleep(100);
-              HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-              if (connection.getResponseCode() != 200) throw new RuntimeException();
-            } catch (IOException e) {
-              continue;
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            }
-            break;
-          }
+      while (true) {
+        try {
+          Thread.sleep(100);
+          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+          if (connection.getResponseCode() != 200) throw new RuntimeException();
+        } catch (IOException e) {
+          continue;
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-      });
-
-      System.out.println("Launching the server");
-      mt.start();
-      mt.join();
-
-      // Print all outputs at the same time
-      printOutputs();
+        break;
+      }
 
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
-      e.printStackTrace();
-      System.exit(-1);
+    } catch (Throwable throwable) {
+      throwable.printStackTrace();
     }
   }
 
