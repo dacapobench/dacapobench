@@ -144,7 +144,7 @@
         <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
     </target>
 
-    <target name="init" depends="set-build-version-info">
+    <target name="init" depends="check-dependencies, set-build-version-info">
         <!-- Create the time stamp -->
         <tstamp/>
         <delete dir="${log.build.dir}" />
@@ -307,7 +307,7 @@
     <!-- ================================= 
          target: harness           
          ================================= -->
-    <target name="harness" depends="check-dependencies,init,bootstrap" description="compile the source ">
+    <target name="harness" depends="init,bootstrap" description="compile the source ">
         <ant antfile="harness/build.xml"/>
     </target>
 	
