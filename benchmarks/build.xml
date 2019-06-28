@@ -103,7 +103,7 @@
 
     <target name="check-java-runtime" if="compile9">
         <available property="jdk-exist" file="${jdk8home}/bin/javac"/>
-        <fail unless="jdk-exist" message="Jdk 8 could not be found"/>
+        <fail unless="jdk-exist" message="Jdk 8 could not be found in ${jdk8home}/bin"/>
     </target>
 
     <target name="check-git-present">
