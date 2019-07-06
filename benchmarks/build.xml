@@ -99,12 +99,27 @@
     <target name="check-dependencies">
         <available property="compile9" classname="java.sql.ShardingKey"/>
         <antcall target="check-java-runtime"/>
+
+        <check.dependency command="git"/>
+        <check.dependency command="cvs"/>
+        <check.dependency command="svn"/>
+        <check.dependency command="python"/>
+        <check.dependency command="node"/>
+        <check.dependency command="npm"/>
     </target>
 
     <target name="check-java-runtime" if="compile9">
         <available property="jdk-exist" file="${jdk8home}/bin/javac"/>
         <fail unless="jdk-exist" message="Jdk 8 could not be found in ${jdk8home}/bin"/>
     </target>
+
+    <macrodef name="check.dependency">
+        <attribute name="command"/>
+        <sequential>
+            <available file="@{command}" filepath="${env.PATH}" type="file" property="@{command}.exist"/>
+            <fail unless="@{command}.exist" message="!!! The dependency @{command} could not be found, please re-check !!!"/>
+        </sequential>
+    </macrodef>
 
     <target name="check-git-present">
         <available property="git.present" file="../.git" type="dir"/>
