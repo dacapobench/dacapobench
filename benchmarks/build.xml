@@ -27,7 +27,6 @@
         - node.js (https://nodejs.org/en/)
         - python (https://www.python.org/)
         python libraries:
-        - grip (https://pypi.org/project/grip/)
         - colorama (https://pypi.org/project/colorama/)
         - future (https://pypi.org/project/future/)
         - tabulate (https://pypi.org/project/tabulate/)
@@ -100,12 +99,15 @@
         <available property="compile9" classname="java.sql.ShardingKey"/>
         <antcall target="check-java-runtime"/>
 
+        <!-- Checking the availability of all dependencies -->
         <check.dependency command="git"/>
         <check.dependency command="cvs"/>
         <check.dependency command="svn"/>
         <check.dependency command="python"/>
         <check.dependency command="node"/>
         <check.dependency command="npm"/>
+
+        <antcall target="check-python-modules"/>
     </target>
 
     <target name="check-java-runtime" if="compile9">
@@ -120,6 +122,23 @@
             <fail unless="@{command}.exist" message="!!! The dependency @{command} could not be found, please re-check !!!"/>
         </sequential>
     </macrodef>
+
+    <target name="check-python-modules">
+        <property name="file-name" value="dependency-check.py"/>
+
+        <!-- python script for checking dependencies -->
+        <touch file="${file-name}"/>
+        <echo message="import colorama${line.separator}import future${line.separator}import tabulate${line.separator}import requests${line.separator}import wheel"
+              file="${file-name}"/>
+
+        <!-- checking python modules -->
+        <exec executable="python" failonerror="yes">
+            <arg value="${file-name}"/>
+        </exec>
+
+        <!-- delete the test.py -->
+        <delete file="${file-name}"/>
+    </target>
 
     <target name="check-git-present">
         <available property="git.present" file="../.git" type="dir"/>
