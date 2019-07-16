@@ -8,12 +8,11 @@
  */
 package org.dacapo.daytrader;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import org.jboss.modules.Main;
 
 /**
@@ -23,7 +22,6 @@ import org.jboss.modules.Main;
  * id: $Id: DaCapoServerRunner.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DaCapoServerRunner {
-  private static Process process;
 
   /**
    * Start the server and deploy DayTrader ejb application
@@ -53,30 +51,6 @@ public class DaCapoServerRunner {
     } catch (Throwable throwable) {
       throwable.printStackTrace();
     }
-  }
-
-  /**
-   * Print the output from the process
-   */
-  private static void printOutputs(){
-    Thread serverThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          BufferedReader reader =
-                  new BufferedReader(new InputStreamReader(process.getInputStream()));
-          String line;
-          while ((line = reader.readLine()) != null) {
-            if (line.contains("DaCapoMarker")) {
-              System.out.println(line.substring(line.indexOf("DaCapoMarker") + "DaCapoMarker".length()));
-            }
-          }
-        } catch (IOException ignored) {
-        }
-      }
-    }
-    );
-    serverThread.start();
   }
 
   private static void makeExecutable(String scriptPath){
