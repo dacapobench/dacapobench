@@ -122,7 +122,7 @@ tomcat:
 tradebeans:
   script:
     - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradebeans" script.out
-    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java --add-modules=java.se -jar dacapo.jar tradebeans" script.out
+    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tradebeans -n 3" script.out
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
@@ -130,7 +130,7 @@ tradebeans:
 tradesoap:
   script:
     - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradesoap" script.out
-    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java --add-modules=java.se -jar dacapo.jar tradesoap" script.out
+    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tradesoap -n 3" script.out
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
