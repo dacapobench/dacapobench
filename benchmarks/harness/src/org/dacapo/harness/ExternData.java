@@ -8,16 +8,7 @@
  */
 package org.dacapo.harness;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -39,11 +30,13 @@ public class ExternData {
    * Using a "data installation directory" to keep
    * large data sets.
    */
+  public static final String WORKING_DIRE = Paths.get("").toAbsolutePath().toString();
   public static final Path DEFAULT_LOCAL_DACAPO_CONFIG = Paths.get(System.getProperty("user.home"), ".dacapo-config.properties");
   public static final String CONFIG_KEY_EXTERN_DATA_LOC = "Extern-Data-Location";
   public static final String DACAPO_DL_URL_LFS = "DaCapo-DL-URL-LFS";
   public static final String DACAPO_DL_URL_RAW = "DaCapo-DL-URL-RAW";
   public static final String DACAPO_DL_COMMIT = "DaCapo-DL-Commit";
+  public static final String DACAPO_CHECKSUM_RE_PATH = "META-INF" + File.separator + "huge-data-md5s.list";
 
   private static String getDefaultLocation() {
     try {
@@ -92,6 +85,7 @@ public class ExternData {
 
   public static void setLocation(File path, boolean md5Check) {
     if (md5Check) {
+      downloadChecksum();
       // MD5 check
       System.out.printf("Checking MD5 at %s...", path.toString());
       if (!checkExtDataDirMD5(path)) {
@@ -118,8 +112,25 @@ public class ExternData {
     }
   }
 
-  private static boolean checkExtDataDirMD5(File dir) {
+  private static boolean downloadChecksum() {
+    try {
+      downloadAndExtractItemFromDaCapoDl("META-INF/huge-data-md5s.list", new File(WORKING_DIRE));
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean checkExtDataDirMD5(File dir){
+    File checksum = new File(WORKING_DIRE, DACAPO_CHECKSUM_RE_PATH);
     InputStream in = ClassLoader.getSystemResourceAsStream("META-INF/huge-data-md5s.list");
+    if(!checksum.exists()) {
+      try {
+        in = new FileInputStream(checksum);
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
     File datDir = new File(dir, "dat");
     return reader.lines().map(l -> {
@@ -203,6 +214,16 @@ public class ExternData {
         throw new IOException(url.toString());
       }
       return rbc;
+  }
+
+  private static void downloadAndExtractItemFromDaCapoDl(String itemRelPath, File path) throws Exception {
+    // Create the directory
+    path.mkdir();
+    // download
+    String dlurlRaw = TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW);
+    String dlurlLFS = TestHarness.getManifestAttribute(DACAPO_DL_URL_LFS);
+    String commit = TestHarness.getManifestAttribute(DACAPO_DL_COMMIT);
+    downloadAndExtractItem(itemRelPath, dlurlRaw, dlurlRaw, commit, path);
   }
 
   private static void downloadAndExtractItem(String itemRelPath, String dlurlRaw, String dlurlLFS, String commit, File localDataPath) throws Exception {
