@@ -139,6 +139,9 @@ public class CommandLineArgs {
   private List<String> benchmarks = new ArrayList<String>();
 
   CommandLineArgs(String[] args) throws Exception {
+    String bench = "";
+    if (args.length != 0 && !args[0].startsWith("-"))
+      bench = args[0];
     try {
       boolean reportAndExitOk = false;
       line = parser.parse(options, args);
@@ -159,7 +162,7 @@ public class CommandLineArgs {
       if (line.hasOption(OPT_EXTDATA_INSTALL)) {
         String impver = TestHarness.getManifestAttribute("Implementation-Version");
         File pathVersioned = new File(line.getOptionValue(OPT_EXTDATA_INSTALL), impver);
-        ExternData.downloadAndInstall(pathVersioned);
+        ExternData.downloadAndInstall(pathVersioned, bench);
         reportAndExitOk = true;
       }
       if (line.hasOption(OPT_EXTDATA_SETLOC)) {

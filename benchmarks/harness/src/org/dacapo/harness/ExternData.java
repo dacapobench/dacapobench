@@ -152,7 +152,7 @@ public class ExternData {
   /**
    * Download and install external data
    */
-  public static void downloadAndInstall(File path) {
+  public static void downloadAndInstall(File path, String bench) {
     try {
       // create directory if not exist already
       if (!path.exists())
@@ -164,9 +164,11 @@ public class ExternData {
       String commit = TestHarness.getManifestAttribute(DACAPO_DL_COMMIT);
       BufferedReader dllistReader = new BufferedReader(new InputStreamReader(
               ClassLoader.getSystemResourceAsStream("META-INF/dlfiles.list")));
+
       dllistReader.lines().forEach(s -> {
         try {
-          downloadAndExtractItem(s, dlurlRaw, dlurlLFS, commit, path);
+          if(s.startsWith("dat/" + bench))
+            downloadAndExtractItem(s, dlurlRaw, dlurlLFS, commit, path);
         } catch (IOException e) {
           System.err.println("Download external data failed.");
           System.err.printf("You may want to manually download %s to %s\n", e.getMessage(), path);
@@ -255,12 +257,12 @@ public class ExternData {
       System.exit(-1);
     }
     System.out.println("Done.");
-    if (fileLocalItem.getName().endsWith(".zip")) {
-      System.out.printf("Extracting %s...", fileLocalItem.toString());
-      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
-              fileLocalItem.getParentFile());
-      System.out.println("Done.");
-    }
+//    if (fileLocalItem.getName().endsWith(".zip")) {
+//      System.out.printf("Extracting %s...", fileLocalItem.toString());
+//      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
+//              fileLocalItem.getParentFile());
+//      System.out.println("Done.");
+//    }
   }
 
   private static String getMD5(File file) throws Exception{

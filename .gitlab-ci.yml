@@ -30,6 +30,7 @@ avrora:
   script:
     - ant -Dbuild.target-jar=dacapo.jar avrora
     - java -version
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar avrora --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar avrora -n 3
   after_script:
     - git clean -df -e "downloads"

@@ -290,8 +290,12 @@ public abstract class Benchmark {
   protected void prepare() throws Exception {
     // the data zip may not exist, if data is packaged externally
     try {
-      if (getURL("dat/" + config.name + ".zip") != null)
+      File fileLocalItem;
+      if ((fileLocalItem = new File(ExternData.getLocation() + "/" + "dat/" + config.name + ".zip")).exists())
+        unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
+      else if (getURL("dat/" + config.name + ".zip") != null) {
         unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+      }
     } catch (DacapoException e) {
       e.printStackTrace();
     }
