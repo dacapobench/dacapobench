@@ -127,6 +127,11 @@ public abstract class Benchmark {
   protected final Config config;
 
   /**
+   * if this benchmark require a data set
+   */
+  private final boolean dataSet;
+
+  /**
    * Classloader used to run the benchmark
    */
   protected ClassLoader loader;
@@ -232,12 +237,17 @@ public abstract class Benchmark {
   }
 
   public Benchmark(Config config, File scratch, File data, boolean silentOut, boolean silentErr) throws Exception {
+    this(config, scratch, data, silentOut, silentErr, true);
+  }
+
+  public Benchmark(Config config, File scratch, File data, boolean silentOut, boolean silentErr, boolean dataSet) throws Exception {
     Benchmark.silentOut = silentOut;
     Benchmark.silentErr = silentErr;
 
     this.scratch = scratch;
     this.data = data;
     this.config = config;
+    this.dataSet = dataSet;
     initialize();
   }
 
@@ -290,12 +300,9 @@ public abstract class Benchmark {
   protected void prepare() throws Exception {
     // the data zip may not exist, if data is packaged externally
     try {
-      File fileLocalItem;
-      if ((fileLocalItem = new File(ExternData.getLocation() + "/" + "dat/" + config.name + ".zip")).exists())
-        unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
-      else if (getURL("dat/" + config.name + ".zip") != null) {
+      if (getURL("dat/" + config.name + ".zip") != null)
         unpackZipFileResource("dat/" + config.name + ".zip", scratch);
-      }
+
     } catch (DacapoException e) {
       e.printStackTrace();
     }
@@ -309,6 +316,14 @@ public abstract class Benchmark {
    * @param size The size (as defined in the per-benchmark configuration file).
    */
   protected void prepare(String size) throws Exception {
+    File fileLocalItem = new File(ExternData.getLocation() + "/" + "dat/" + config.name + ".zip");
+
+    if (fileLocalItem.exists())
+      unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
+    else if(dataSet){
+      System.setErr(savedErr);
+      ExternData.failExtDataNotFound(size, fileLocalItem);
+    }
   }
 
   /**
