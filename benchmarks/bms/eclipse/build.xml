@@ -98,26 +98,4 @@
         </ant>
     </target>
 
-    <!-- Create the eclipse data file -->
-    <target name="data" depends="plugin, workspace-zips">
-        <!-- include the dummy jre into the data zip file-->
-        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
-
-        <delete>
-            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
-        </delete>
-        <touch>
-            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
-        </touch>
-
-        <!-- Install the test data -->
-        <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
-            <!-- The eclipse runtime.  We just include as little as we can, -->
-            <!-- using an empirically derived list of what we really need.  -->
-            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
-            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
-            <fileset dir="${bm-data}" includes="**"/>
-        </zip>
-    </target>
-
 </project>

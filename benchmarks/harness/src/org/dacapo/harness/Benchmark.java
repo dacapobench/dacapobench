@@ -300,9 +300,17 @@ public abstract class Benchmark {
   protected void prepare() throws Exception {
     // the data zip may not exist, if data is packaged externally
     try {
-      if (getURL("dat/" + config.name + ".zip") != null)
+      File fileLocalItem = new File(ExternData.getLocation() + "/" + "dat/" + config.name + ".zip");
+      if (fileLocalItem.exists())
+        unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
+      else if (getURL("dat/" + config.name + ".zip") != null)
         unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+      else if(dataSet){
+        System.setErr(savedErr);
+        ExternData.failExtDataNotFound("", fileLocalItem);
+        System.exit(-1);
 
+      }
     } catch (DacapoException e) {
       e.printStackTrace();
     }
@@ -316,14 +324,6 @@ public abstract class Benchmark {
    * @param size The size (as defined in the per-benchmark configuration file).
    */
   protected void prepare(String size) throws Exception {
-    File fileLocalItem = new File(ExternData.getLocation() + "/" + "dat/" + config.name + ".zip");
-
-    if (fileLocalItem.exists())
-      unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
-    else if(dataSet){
-      System.setErr(savedErr);
-      ExternData.failExtDataNotFound(size, fileLocalItem);
-    }
   }
 
   /**
