@@ -54,20 +54,7 @@
         </javac>
     </target>
 
-    <target name="bm-data" depends="bm-build,build-properties">
-        <copy todir="${bm-build-top}/output/dist/conf"
-              file="${bm-files}/server.xml"
-              overwrite="true">
-            <fileset file="${bm-files}/server.xml"/>
-            <fileset file="${bm-files}/tomcat-users.xml"/>
-        </copy>
-        <zip destfile="${bm-dat}/tomcat.zip">
-            <fileset dir="${bm-build-top}/output/dist"/>
-            <fileset file="${bm-files}/catalina.properties"/>
-        </zip>
-    </target>
-
-    <target name="jar" depends="bm-data,build-properties">
+    <target name="jar" depends="build-properties">
         <copy todir="${bm-jars}">
             <fileset dir="${bm-build-top}/output/dist/bin" includes="*.jar"/>
             <fileset file="${commons-httpclient-jar}"/>
