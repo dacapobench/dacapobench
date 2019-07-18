@@ -119,12 +119,6 @@
                 </fileset>
             </resources>
         </copy>
-        <!-- cassandra libsigar dependency -->
-        <zip destfile="${bm-dat}/libsigar.zip" basedir="${cassandra-build-top}/lib/sigar-bin"/>
-        <!-- cassandra config (XXX: maybe put it in another target/directory) -->
-        <zip destfile="${bm-dat}/cassandra-conf.zip" basedir="${cassandra-build-top}/conf"/>
-        <!-- ycsb workloads -->
-        <zip destfile="${bm-dat}/ycsb-workloads.zip" basedir="${ycsb-dir}/workloads"/>
     </target>
 
     <target name="jar" depends="libs">

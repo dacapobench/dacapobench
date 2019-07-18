@@ -55,9 +55,9 @@ public class CassandraBench extends Benchmark {
         dirCassandraLog.mkdir();
         dirYCSBWorkloads.mkdir();
         try {
-            Benchmark.unpackZipFileResource("dat/libsigar.zip", dirLibSigar);
-            Benchmark.unpackZipFileResource("dat/cassandra-conf.zip", dirCassandraConf);
-            Benchmark.unpackZipFileResource("dat/ycsb-workloads.zip", dirYCSBWorkloads);
+            unpackZipStream(new BufferedInputStream(new FileInputStream(ExternData.getLocation() + "/dat/cassandra-libsigar.zip")), dirLibSigar);
+            unpackZipStream(new BufferedInputStream(new FileInputStream(ExternData.getLocation() + "/dat/cassandra-conf.zip")), dirCassandraConf);
+            unpackZipStream(new BufferedInputStream(new FileInputStream(ExternData.getLocation() + "/dat/cassandra-ycsb-workloads.zip")), dirYCSBWorkloads);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
