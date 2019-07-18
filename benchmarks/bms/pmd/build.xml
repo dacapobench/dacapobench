@@ -56,10 +56,6 @@
         </copy>
     </target>
 
-    <target name="data">
-        <zip destfile="${bm-dat}/pmd.zip" basedir="${bm-data}" includes="pmd/**/*"/>
-    </target>
-
     <property name="asm-version" value="7.1"/>
     <property name="commons-io-version" value="2.6"/>
     <property name="commons-lang3-version" value="3.8.1"/>
