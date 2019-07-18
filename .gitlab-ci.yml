@@ -22,6 +22,7 @@ cache:
 biojava:
   script:
     - ant -Dbuild.target-jar=dacapo.jar biojava
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar biojava --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar biojava -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -38,6 +39,7 @@ avrora:
 batik:
   script:
     - ant -Dbuild.target-jar=dacapo.jar batik
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar batik --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar batik -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -45,6 +47,7 @@ batik:
 cassandra:
   script:
     - ant -Dbuild.target-jar=dacapo.jar cassandra
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar cassandra --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar cassandra -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -52,6 +55,7 @@ cassandra:
 eclipse:
   script:
     - ant -Dbuild.target-jar=dacapo.jar eclipse
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar eclipse --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar eclipse -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -59,6 +63,7 @@ eclipse:
 fop:
   script:
     - ant -Dbuild.target-jar=dacapo.jar fop
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar fop --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar fop -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -66,6 +71,7 @@ fop:
 graphchi:
   script:
     - ant -Dbuild.target-jar=dacapo.jar graphchi
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar graphchi --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar graphchi -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -73,6 +79,7 @@ graphchi:
 h2:
   script:
     - ant -Dbuild.target-jar=dacapo.jar h2
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2 --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2 -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -80,6 +87,7 @@ h2:
 jython:
   script:
     - ant -Dbuild.target-jar=dacapo.jar jython
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jython --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jython -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -87,6 +95,7 @@ jython:
 luindex:
   script:
     - ant -Dbuild.target-jar=dacapo.jar luindex
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar luindex --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar luindex -n 3
   after_script:
     - git clean -df -e "downloads" -e "enwiki.txt"
@@ -94,6 +103,7 @@ luindex:
 lusearch:
   script:
     - ant -Dbuild.target-jar=dacapo.jar lusearch
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar lusearch --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar lusearch -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -101,6 +111,7 @@ lusearch:
 pmd:
   script:
     - ant -Dbuild.target-jar=dacapo.jar pmd
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar pmd --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar pmd -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -108,6 +119,7 @@ pmd:
 sunflow:
   script:
     - ant -Dbuild.target-jar=dacapo.jar sunflow
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar sunflow --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar sunflow -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -115,6 +127,7 @@ sunflow:
 tomcat:
   script:
     - ant -Dbuild.target-jar=dacapo.jar tomcat
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tomcat --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tomcat -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -139,6 +152,7 @@ tradesoap:
 xalan:
   script:
     - ant -Dbuild.target-jar=dacapo.jar xalan
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar xalan --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar xalan -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -146,6 +160,7 @@ xalan:
 zxing:
   script:
     - ant -Dbuild.target-jar=dacapo.jar zxing
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar zxing --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar zxing -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -153,6 +168,7 @@ zxing:
 kafka:
   script:
     - ant -Dbuild.target-jar=dacapo.jar kafka
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar kafka --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar kafka -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -160,6 +176,7 @@ kafka:
 jme:
   script:
     - ant -Dbuild.target-jar=dacapo.jar jme
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jme --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jme -n 3
   after_script:
     - git clean -df -e "downloads"
@@ -167,6 +184,7 @@ jme:
 h2o:
   script:
     - ant -Dbuild.target-jar=dacapo.jar h2o
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2o --extdata-install data
     - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2o -n 3
   after_script:
     - git clean -df -e "downloads"
