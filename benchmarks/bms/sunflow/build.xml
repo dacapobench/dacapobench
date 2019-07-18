@@ -28,6 +28,9 @@
             debug="true" debuglevel="lines,vars,source"/>
     </target>
 
+    <!-- Doing nothing   -->
+    <target name="data"/>
+
     <target name="jar">
         <jar destfile="${bm-jars}/${bm-name}-${bm-version}.jar">
             <fileset dir="${bm-build-dir}/build">
