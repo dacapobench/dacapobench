@@ -102,17 +102,4 @@
 
         <copy file="${bm-build-dir}/dist/javalib/jline-${jline-version}.jar" todir="${bm-jars}"/>
     </target>
-
-    <target name="data" depends="pybench">
-        <mkdir dir="${bm-build-dir}/dist/jython"/>
-        <copy todir="${bm-build-dir}/dist/jython">
-            <fileset dir="${bm-build-dir}/dist" includes="Lib/**"/>
-        </copy>
-        <zip destfile="${bm-dat}/jython.zip">
-            <fileset dir="${bm-data}/" includes="jython/noop.py"/>
-            <fileset dir="${bm-data}/" includes="jython/sieve.py"/>
-            <fileset dir="${bm-build-dir}/" includes="jython/pybench/**"/>
-            <fileset dir="${bm-build-dir}/dist/" includes="jython/Lib/**"/>
-        </zip>
-    </target>
 </project>

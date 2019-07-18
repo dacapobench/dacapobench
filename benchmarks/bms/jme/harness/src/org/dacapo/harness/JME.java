@@ -17,7 +17,7 @@ public class JME extends Benchmark{
     private String[] args;
 
     public JME(Config config, File scratch, File data) throws Exception {
-        super(config, scratch);
+        super(config, scratch, null, true, true, false);
         Class<?> clazz = Class.forName("jme3test.TestChooser", true, loader);
         this.method = clazz.getMethod("main", String[].class);
     }
