@@ -303,15 +303,15 @@ public abstract class Benchmark {
       File fileLocalItem = new File(ExternData.getLocation() + "/" + "dat/" + config.name + ".zip");
       if (fileLocalItem.exists())
         unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
-//      else if (getURL("dat/" + config.name + ".zip") != null)
-//        unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+      else if (getURL("dat/" + config.name + ".zip") != null)
+        unpackZipFileResource("dat/" + config.name + ".zip", scratch);
       else if(dataSet){
         System.setErr(savedErr);
         ExternData.failExtDataNotFound("", fileLocalItem);
         System.exit(-1);
 
       }
-    } catch (Exception e) {
+    } catch (DacapoException e) {
       e.printStackTrace();
     }
   }

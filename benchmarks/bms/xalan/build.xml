@@ -56,15 +56,4 @@
         <copy file="${xalan-top}/build/serializer.jar" todir="${bm-jars}"/>
     </target>
     
-    <target name="data">
-        <mkdir dir="${bm-data}/xalan"/>
-        <unzip src="${bm-downloads}/${bm-dat-file}" dest="${bm-data}/xalan">
-            <patternset>
-                <include name="*.xml"/>
-                <include name="xmlspec.xsl"/>
-            </patternset>
-        </unzip>
-        <zip basedir="${bm-data}" includes="xalan/**" destfile="${bm-dat}/xalan.zip"/>
-        <delete dir="${bm-data}"/>
-    </target>
 </project>
