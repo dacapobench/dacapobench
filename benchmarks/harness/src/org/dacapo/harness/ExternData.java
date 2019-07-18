@@ -257,12 +257,12 @@ public class ExternData {
       System.exit(-1);
     }
     System.out.println("Done.");
-//    if (fileLocalItem.getName().endsWith(".zip")) {
-//      System.out.printf("Extracting %s...", fileLocalItem.toString());
-//      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
-//              fileLocalItem.getParentFile());
-//      System.out.println("Done.");
-//    }
+    if (fileLocalItem.getName().contains("huge")) {
+      System.out.printf("Extracting %s...", fileLocalItem.toString());
+      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
+              fileLocalItem.getParentFile());
+      System.out.println("Done.");
+    }
   }
 
   private static String getMD5(File file) throws Exception{
