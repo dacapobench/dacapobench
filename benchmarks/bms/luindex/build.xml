@@ -43,21 +43,6 @@
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}"/>
     </target>
 
-
-    <target name="data">
-        <mkdir dir="${bm-data}/luindex"/>
-
-        <mkdir dir="${bm-data}/luindex/kjv"/>
-        <unzip src="${bm-downloads}/kjv.zip" dest="${bm-data}/luindex/kjv"/>
-        <mkdir dir="${bm-data}/luindex/shakespeare"/>
-        <untar src="${bm-downloads}/shakespeare.tgz" dest="${bm-data}/luindex/shakespeare" compression="gzip"/>
-
-        <zip destfile="${bm-dat}/luindex.zip">
-            <fileset dir="${bm-data}/" includes="luindex/kjv/**/*"/>
-            <fileset dir="${bm-data}/" includes="luindex/shakespeare/**/*"/>
-        </zip>
-    </target>
-
     <!-- <target name="lucene-enwiki-bench-data-check">
         <available property="lucene-enwiki-bench-data-exists" file="${bm-data}/luindex/enwiki/enwiki.txt"/>
         <condition property="lucene-enwiki-bench-data-valid-md5">
