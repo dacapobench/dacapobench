@@ -9,7 +9,6 @@
 package org.dacapo.harness;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -35,7 +34,6 @@ public class ExternData {
   public static final String CONFIG_KEY_EXTERN_DATA_LOC = "Extern-Data-Location";
   public static final String DACAPO_DL_URL_LFS = "DaCapo-DL-URL-LFS";
   public static final String DACAPO_DL_URL_RAW = "DaCapo-DL-URL-RAW";
-  public static final String DACAPO_DL_COMMIT = "DaCapo-DL-Commit";
   public static final String DACAPO_CHECKSUM_RE_PATH = "META-INF" + File.separator + "huge-data-md5s.list";
 
   private static String getDefaultLocation() {
@@ -161,14 +159,13 @@ public class ExternData {
       // download
       String dlurlRaw = TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW);
       String dlurlLFS = TestHarness.getManifestAttribute(DACAPO_DL_URL_LFS);
-      String commit = TestHarness.getManifestAttribute(DACAPO_DL_COMMIT);
       BufferedReader dllistReader = new BufferedReader(new InputStreamReader(
               ClassLoader.getSystemResourceAsStream("META-INF/dlfiles.list")));
 
       dllistReader.lines().forEach(s -> {
         try {
           if(s.startsWith("dat/" + bench))
-            downloadAndExtractItem(s, dlurlRaw, dlurlLFS, commit, path);
+            downloadAndExtractItem(s, dlurlRaw, dlurlLFS, path);
         } catch (IOException e) {
           System.err.println("Download external data failed.");
           System.err.printf("You may want to manually download %s to %s\n", e.getMessage(), path);
@@ -224,13 +221,12 @@ public class ExternData {
     // download
     String dlurlRaw = TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW);
     String dlurlLFS = TestHarness.getManifestAttribute(DACAPO_DL_URL_LFS);
-    String commit = TestHarness.getManifestAttribute(DACAPO_DL_COMMIT);
-    downloadAndExtractItem(itemRelPath, dlurlRaw, dlurlRaw, commit, path);
+    downloadAndExtractItem(itemRelPath, dlurlRaw, dlurlRaw, path);
   }
 
-  private static void downloadAndExtractItem(String itemRelPath, String dlurlRaw, String dlurlLFS, String commit, File localDataPath) throws Exception {
-    URL urlItem = new URL(String.join("/", dlurlLFS, commit, itemRelPath));
-    URL urlMD5 = new URL(String.join("/", dlurlRaw, commit, itemRelPath + ".MD5"));
+  private static void downloadAndExtractItem(String itemRelPath, String dlurlRaw, String dlurlLFS, File localDataPath) throws Exception {
+    URL urlItem = new URL(String.join("/", dlurlLFS, itemRelPath));
+    URL urlMD5 = new URL(String.join("/", dlurlRaw, itemRelPath + ".MD5"));
     File fileLocalItem = new File(localDataPath, itemRelPath);
 
     if (!fileLocalItem.getParentFile().exists())
