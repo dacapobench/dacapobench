@@ -12,7 +12,7 @@ size default args "-d", "${SCRATCH}/pmd/default", "-f", "text", "-language", "ja
 								"-shortnames", "-failOnViolation", "false", "-rulesets",
 								"java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations"
   output 
-    stdout digest 0x633a19f4746def805fcc15451658145752c06920;
+    stdout digest 0xb5496d7803880f79016c1549688a69def3288ed3;
 
 size large args "-d", "${SCRATCH}/pmd/large", "-f", "text", "-language", "java",
 								"-shortnames", "-failOnViolation", "false", "-rulesets",

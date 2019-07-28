@@ -8,6 +8,7 @@
  -->
 <project name="pmd" default="all" basedir="../..">
     <description>DaCapo pmd benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="pmd"/>

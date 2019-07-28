@@ -29,7 +29,7 @@ import org.apache.geronimo.daytrader.javaee6.utils.*;
 
 public class DaCapoDBBuilder extends Thread {
 
-	static final String maker = "DaCapoMarker";
+	static final String maker = "";
 
 	static final boolean VERBOSE = false;
 	

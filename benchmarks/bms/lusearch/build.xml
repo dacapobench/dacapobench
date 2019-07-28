@@ -8,6 +8,7 @@
  -->
 <project name="lusearch" default="all" basedir="../..">
     <description>DaCapo lusearch benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="lusearch"/>

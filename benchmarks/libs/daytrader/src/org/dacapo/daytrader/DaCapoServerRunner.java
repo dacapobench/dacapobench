@@ -8,12 +8,12 @@
  */
 package org.dacapo.daytrader;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import org.jboss.modules.Main;
 
 /**
  * Dacapo benchmark harness for tradesoap.
@@ -22,80 +22,45 @@ import java.net.URL;
  * id: $Id: DaCapoServerRunner.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DaCapoServerRunner {
-  private static Process process;
 
   /**
    * Start the server and deploy DayTrader ejb application
    */
   public static void initialize() {
     try {
-      // Start the wildfly servers
-      ProcessBuilder processBuilder =
-              new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java",
-                      "--add-modules=java.se", "-jar", System.getProperty("jboss.home.dir") + File.separator + "jboss-modules.jar",
-                      "-mp", System.getProperty("module.path"),
-                      "org.jboss.as.standalone",
-                      "-Djboss.home.dir=" + System.getProperty("jboss.home.dir"));
+      Main.main(new String[] {"org.jboss.as.standalone"});
 
-      // Start the process builder
-      process = processBuilder.start();
-
+      // Checking if server started
       URL url = new URL("http://localhost:8080/daytrader");
 
-      Thread mt = new Thread(new Runnable() {
-        @Override
-        public void run() {
-          while (true) {
-            try {
-              Thread.sleep(100);
-              HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-              if (connection.getResponseCode() != 200) throw new RuntimeException();
-            } catch (IOException e) {
-              continue;
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            }
-            break;
-          }
+      while (true) {
+        try {
+          Thread.sleep(100);
+          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+          if (connection.getResponseCode() != 200) throw new RuntimeException();
+        } catch (IOException e) {
+          continue;
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-      });
-
-      System.out.println("Launching the server");
-      mt.start();
-      mt.join();
-
-      // Print all outputs at the same time
-      printOutputs();
+        break;
+      }
 
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
-      e.printStackTrace();
-      System.exit(-1);
+    } catch (Throwable throwable) {
+      throwable.printStackTrace();
     }
   }
 
-  /**
-   * Print the output from the process
-   */
-  private static void printOutputs(){
-    Thread serverThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          BufferedReader reader =
-                  new BufferedReader(new InputStreamReader(process.getInputStream()));
-          String line;
-          while ((line = reader.readLine()) != null) {
-            if (line.contains("DaCapoMarker")) {
-              System.out.println(line.substring(line.indexOf("DaCapoMarker") + "DaCapoMarker".length()));
-            }
-          }
-        } catch (IOException ignored) {
-        }
-      }
+  private static void makeExecutable(String scriptPath){
+    try {
+      // Give the script
+      ProcessBuilder builder = new ProcessBuilder("/bin/chmod", "755",scriptPath);
+      builder.start().waitFor();
+    } catch (InterruptedException | IOException e) {
+      e.printStackTrace();
     }
-    );
-    serverThread.start();
   }
 
   /**
@@ -103,7 +68,20 @@ public class DaCapoServerRunner {
    */
   public static void shutdown(){
     try {
-      process.destroy();
+      String scriptPath;
+
+      if (System.getProperty("os.name").toLowerCase().contains("win"))
+        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "jboss-cli.bat";
+      else{
+        scriptPath = System.getProperty("jboss.home.dir") + File.separator + "bin" + File.separator + "jboss-cli.sh";
+
+        // Make the script executable
+        makeExecutable(scriptPath);
+      }
+
+      // Start the wildfly servers
+      new ProcessBuilder(scriptPath,"--connect","command=:shutdown").start().waitFor();
+
     } catch (Exception e) {
       System.err.print("Exception initializing server: " + e.toString());
       e.printStackTrace();

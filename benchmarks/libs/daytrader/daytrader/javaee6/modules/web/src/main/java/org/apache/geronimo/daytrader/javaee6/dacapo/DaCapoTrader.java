@@ -193,7 +193,7 @@ public class DaCapoTrader extends Thread {
     System.out.println(DaCapoDBBuilder.maker + "Completed " + tradeSessions.length + " trade sessions comprising " + (total - nested) + " trader actions");
     for (int i = 0; i < OP_NAMES.length; i++) {
       if (i != OP_NQ)
-        System.out.println(DaCapoDBBuilder.maker + "\t" + OP_NAMES[i] + " " + dots.substring(OP_NAMES[i].length()) + " " + String.format("%5d", opCount[i]) + " " + String.format("(%4.1f%%)%n",  100 * ((float) opCount[i] / (total - nested)) ));
+        System.out.print(DaCapoDBBuilder.maker + "\t" + OP_NAMES[i] + " " + dots.substring(OP_NAMES[i].length()) + " " + String.format("%5d", opCount[i]) + " " + String.format("(%4.1f%%)%n",  100 * ((float) opCount[i] / (total - nested))));
     }
 //    System.out.flush();
   }

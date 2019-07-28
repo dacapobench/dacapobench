@@ -8,6 +8,7 @@
  -->
 <project name="luindex" default="all" basedir="../..">
     <description>DaCapo luindex benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="luindex"/>

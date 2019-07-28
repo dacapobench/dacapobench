@@ -8,51 +8,16 @@
  */
 package org.dacapo.harness;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.dacapo.parser.Config;
 
-import org.apache.cassandra.config.DatabaseDescriptor;
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
-
 public class CassandraBench extends Benchmark {
 
-    private String[] YCSB_JARS = {
-        "cassandra-binding-0.15.0.jar",
-        "cassandra-driver-core-3.0.0.jar",
-        "guava-16.0.1.jar",
-        "metrics-core-3.1.2.jar",
-        "netty-buffer-4.0.33.Final.jar",
-        "netty-codec-4.0.33.Final.jar",
-        "netty-common-4.0.33.Final.jar",
-        "netty-handler-4.0.33.Final.jar",
-        "netty-transport-4.0.33.Final.jar",
-        "slf4j-api-1.7.25.jar",
-        "slf4j-simple-1.7.25.jar",
-        "core-0.15.0.jar",
-        "HdrHistogram-2.1.4.jar",
-        "htrace-core4-4.1.0-incubating.jar",
-        "jackson-core-asl-1.9.4.jar",
-        "jackson-mapper-asl-1.9.4.jar"
-    };
-
-    private ClassLoader clCassandra;
-    private ClassLoader clYCSB;
-    private ClassLoader clOriginal;
-
-    private File dirScratchJar;
     private File dirLibSigar;
     private File dirCassandraConf;
     private File dirCassandraStorage;
@@ -64,19 +29,17 @@ public class CassandraBench extends Benchmark {
     private Class<?> EmbeddedCassandraServiceClass;
     private String[] ycsbWorkloadArgs;
 
-    private PrintStream outStream;
-    private final PrintStream logStream = new PrintStream(new FileOutputStream(new File(scratch.toPath() + File.separator + "stdout.log")));
-    private final PrintStream errStream = new PrintStream(new FileOutputStream(new File(scratch.toPath() + File.separator + "stderr.log")));
+    private PrintStream outStream = System.out;
+    private final PrintStream logStream = new PrintStream(new OutputStream() { @Override public void write(int b) throws IOException {/* Doing nothing */ } } );
 
-    Class<?> clsYCSBClient;
-    Method mtdYCSBClientMain;
+    private Class<?> clsYCSBClient;
+    private Method mtdYCSBClientMain;
 
     public CassandraBench(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
     }
 
     private void setupScratch() {
-        dirScratchJar = new File(scratch, "jar");
         dirLibSigar = new File(scratch, "libsigar");
         dirCassandraConf = new File(scratch, "cassandra-conf");
         dirCassandraStorage = new File(scratch, "cassandra-storage");
@@ -121,15 +84,12 @@ public class CassandraBench extends Benchmark {
     @Override
     protected void prepare(String size) throws Exception {
         super.prepare(size);
-//        String[] cassandraArgs = config.getArgs(size);
-        clOriginal = Thread.currentThread().getContextClassLoader();
 
         setupScratch();
 
         setupCassandra();
 
         // Avoiding the long output of cassandra starting process
-        outStream = System.out;
         System.setOut(logStream);
 
         outStream.println("Cassandra starting...");
@@ -198,23 +158,6 @@ public class CassandraBench extends Benchmark {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        Session session = cluster.connect();
-//        session.execute("CREATE KEYSPACE ycsb WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};");
-//        session.execute("USE ycsb;");
-//        session.execute("CREATE TABLE usertable (" +
-//                            "y_id varchar primary key," +
-//                            "field0 varchar," +
-//                            "field1 varchar," +
-//                            "field2 varchar," +
-//                            "field3 varchar," +
-//                            "field4 varchar," +
-//                            "field5 varchar," +
-//                            "field6 varchar," +
-//                            "field7 varchar," +
-//                            "field8 varchar," +
-//                            "field9 varchar);");
-//        session.close();
     }
 
     private void prepareYCSBArgs(String size) {
@@ -231,8 +174,7 @@ public class CassandraBench extends Benchmark {
 
     public void iterate(String size) throws Exception {
         System.setOut(logStream);
-        outStream.println("DaCapo: start iteration");
-        Thread.currentThread().setContextClassLoader(clYCSB);
+        outStream.println("Iteration Started...");
 
         // load workload
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-load";
@@ -241,34 +183,25 @@ public class CassandraBench extends Benchmark {
         // run transactions
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-t";
         mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
-        outStream.println("DaCapo: finished iteration");
+
+        outStream.println("Iteration Finished...");
     }
 
     @Override
     public void postIteration(String size) throws Exception {
         super.postIteration(size);
         //Preventing the long stopping log information from cassandra
-        System.setErr(errStream);
         System.setOut(logStream);
     }
 
-    private static List<URL> findJars(File dir, List<String> jarNames) {
-        try {
-            return Files.walk(dir.toPath())
-                    .filter(p -> p.endsWith(".jar") ||
-                            (jarNames != null && jarNames.contains(p.getFileName().toString())))
-                    .map(Path::toUri).map(uri -> {
-                        try {
-                            return uri.toURL();
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    })
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    public void cleanup() {
+        // Clean the scratch up
+        if (!getPreserve()) {
+            deleteTree(dirLibSigar);
+            deleteTree(dirCassandraConf);
+            deleteTree(dirCassandraStorage);
+            deleteTree(dirCassandraLog);
+            deleteTree(dirYCSBWorkloads);
         }
     }
 }

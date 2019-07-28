@@ -1,14 +1,18 @@
 before_script:
+  - pip install requests
+  - pip install future
+  - pip install tabulate
+  - pip install wheel
   - export ANT_HOME=/opt/apache-ant-1.10.5
-  - export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
+  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
   - export PATH=${JAVA_HOME}/bin:${ANT_HOME}/bin:${PATH}
   - java -version
   - ant -version
   - cd benchmarks
   - touch local.properties
-  - echo "make=/usr/bin/make" >> local.properties
+  - echo "make=/usr/bin/make" > local.properties
   - echo "build.failonerror=true" >> local.properties
-  - echo "jdk8home=/usr/lib/jvm/java-8-openjdk-amd64" >> local.properties
+  - echo "jdk8home=/usr/lib/jvm/java-1.8.0-openjdk-amd64" >> local.properties
   - cat local.properties
 
 cache:
@@ -18,7 +22,7 @@ cache:
 biojava:
   script:
     - ant -Dbuild.target-jar=dacapo.jar biojava
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar biojava
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar biojava -n 3
   after_script:
     - git clean -df -e "downloads"
 
@@ -26,91 +30,91 @@ avrora:
   script:
     - ant -Dbuild.target-jar=dacapo.jar avrora
     - java -version
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar avrora
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar avrora -n 3
   after_script:
     - git clean -df -e "downloads"
 
 batik:
   script:
     - ant -Dbuild.target-jar=dacapo.jar batik
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar batik
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar batik -n 3
   after_script:
     - git clean -df -e "downloads"
 
 cassandra:
   script:
     - ant -Dbuild.target-jar=dacapo.jar cassandra
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar cassandra
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar cassandra -n 3
   after_script:
     - git clean -df -e "downloads"
 
 eclipse:
   script:
     - ant -Dbuild.target-jar=dacapo.jar eclipse
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar eclipse
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar eclipse -n 3
   after_script:
     - git clean -df -e "downloads"
 
 fop:
   script:
     - ant -Dbuild.target-jar=dacapo.jar fop
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar fop
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar fop -n 3
   after_script:
     - git clean -df -e "downloads"
 
 graphchi:
   script:
     - ant -Dbuild.target-jar=dacapo.jar graphchi
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar graphchi
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar graphchi -n 3
   after_script:
     - git clean -df -e "downloads"
 
 h2:
   script:
     - ant -Dbuild.target-jar=dacapo.jar h2
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2 -n 3
   after_script:
     - git clean -df -e "downloads"
 
 jython:
   script:
     - ant -Dbuild.target-jar=dacapo.jar jython
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jython
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jython -n 3
   after_script:
     - git clean -df -e "downloads"
 
 luindex:
   script:
     - ant -Dbuild.target-jar=dacapo.jar luindex
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar luindex
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar luindex -n 3
   after_script:
     - git clean -df -e "downloads" -e "enwiki.txt"
 
 lusearch:
   script:
     - ant -Dbuild.target-jar=dacapo.jar lusearch
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar lusearch
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar lusearch -n 3
   after_script:
     - git clean -df -e "downloads"
 
 pmd:
   script:
     - ant -Dbuild.target-jar=dacapo.jar pmd
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar pmd
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar pmd -n 3
   after_script:
     - git clean -df -e "downloads"
 
 sunflow:
   script:
     - ant -Dbuild.target-jar=dacapo.jar sunflow
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar sunflow
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar sunflow -n 3
   after_script:
     - git clean -df -e "downloads"
 
 tomcat:
   script:
     - ant -Dbuild.target-jar=dacapo.jar tomcat
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tomcat
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tomcat -n 3
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
@@ -118,7 +122,7 @@ tomcat:
 tradebeans:
   script:
     - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradebeans" script.out
-    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tradebeans" script.out
+    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tradebeans -n 3" script.out
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
@@ -126,7 +130,7 @@ tradebeans:
 tradesoap:
   script:
     - script -q -c "ant -Dbuild.target-jar=dacapo.jar tradesoap" script.out
-    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tradesoap" script.out
+    - sleep 120 | script -q -c "/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar tradesoap -n 3" script.out
   after_script:
     - git clean -df -e "downloads"
     - git clean -df -e "downloads"
@@ -134,27 +138,34 @@ tradesoap:
 xalan:
   script:
     - ant -Dbuild.target-jar=dacapo.jar xalan
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar xalan
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar xalan -n 3
   after_script:
     - git clean -df -e "downloads"
 
 zxing:
   script:
     - ant -Dbuild.target-jar=dacapo.jar zxing
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar zxing
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar zxing -n 3
   after_script:
     - git clean -df -e "downloads"
 
 kafka:
   script:
     - ant -Dbuild.target-jar=dacapo.jar kafka
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar kafka
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar kafka -n 3
   after_script:
     - git clean -df -e "downloads"
 
 jme:
   script:
     - ant -Dbuild.target-jar=dacapo.jar jme
-    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jme
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar jme -n 3
+  after_script:
+    - git clean -df -e "downloads"
+
+h2o:
+  script:
+    - ant -Dbuild.target-jar=dacapo.jar h2o
+    - /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -jar dacapo.jar h2o -n 3
   after_script:
     - git clean -df -e "downloads"

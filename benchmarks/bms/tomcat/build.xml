@@ -8,6 +8,7 @@
  -->
 <project name="tomcat" default="all" basedir="../..">
     <description>DaCapo Tomcat benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="tomcat"/>

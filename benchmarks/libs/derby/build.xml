@@ -8,11 +8,10 @@
  -->
 <project name="derby" default="all" basedir="../..">
     <description>derby library required for h2 testing</description>
-    <property file="ant/dacapo.properties"/>
-    <property name="apache.mirror" value="http://apache.mirror.digitalpacific.com.au/"/>
+    <property file="dacapo.properties"/>
 
     <property name="lib-name" value="derby"/>
-    <property name="lib-version" value="10.15.1.3"/>
+    <property name="lib-version" value="10.14.2.0"/>
     <property name="lib-url" value="${apache.dl.url}/db/derby/db-derby-${lib-version}"/>
     <property name="lib-src" value="db-derby-${lib-version}-src.tar.gz"/>
 
@@ -30,8 +29,30 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
-        <ant dir="${lib-build-top}" target="all"/>
-        <ant dir="${lib-build-top}" target="buildjars"/>
+
+        <available property="compile9" classname="java.sql.ShardingKey"/>
+        <antcall target="j8-compile"/>
+        <antcall target="j9-compile"/>
+    </target>
+
+    <target name="j9-compile" if="compile9">
+        <exec executable="ant" dir="${lib-build-top}">
+            <env key="JAVA_HOME" value="${jdk8home}"/>
+            <arg value="all"/>
+        </exec>
+        <exec executable="ant" dir="${lib-build-top}">
+            <env key="JAVA_HOME" value="${jdk8home}"/>
+            <arg value="buildjars"/>
+        </exec>
+    </target>
+
+    <target name="j8-compile" unless="compile9">
+        <exec executable="ant" dir="${lib-build-top}">
+            <arg value="all"/>
+        </exec>
+        <exec executable="ant" dir="${lib-build-top}">
+            <arg value="buildjars"/>
+        </exec>
     </target>
 
     <target name="jar">

@@ -45,7 +45,6 @@ The suite is built using ant 1.10.  You will need the following tools:
 
 * *[python](https://www.python.org/) (with following libraries)*
 
-    * *[grip](https://pypi.org/project/grip/)*
     * *[colorama](https://pypi.org/project/colorama/)*
     * *[future](https://pypi.org/project/future/)*
     * *[tabulate](https://pypi.org/project/tabulate/)*

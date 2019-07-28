@@ -1,6 +1,7 @@
 package org.dacapo.h2o;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 
 public class ClientRunner{
@@ -26,5 +27,9 @@ public class ClientRunner{
         //Wait for completion
         dhf.waitForAllJobsToFinish();
         stdout.println("Model built successfully");
+
+        // Delete all frames
+        dhf.deleteFrames(source);
+        stdout.println("Frames deleted");
     }
 }
