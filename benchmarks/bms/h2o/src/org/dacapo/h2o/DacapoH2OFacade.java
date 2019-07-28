@@ -1,6 +1,8 @@
 package org.dacapo.h2o;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -68,6 +70,8 @@ public class DacapoH2OFacade {
     private final String MODEL_PARAMETERS_VALIDATE = "3/ModelBuilders/" + MODEL_MACRO + "/parameters";
     //Get the job list
     private final String JOB_LIST = "3/Jobs";
+    //all frames
+    private final String frames = "3/Frames";
 
     private Method getStringOb;
 
@@ -113,6 +117,14 @@ public class DacapoH2OFacade {
             System.err.println("Failed to import the file: " + path);
         }
         return h2o_rest.getFromResponse("fails").get("fail") == null;
+    }
+
+    void deleteFrames(String path){
+        try {
+            h2o_rest.deleteMethod(frames + "/" + path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -184,8 +196,8 @@ public class DacapoH2OFacade {
      * @param sourceFormat
      */
     void parse(String sourceFormat){
-        if (!sourceFormat.startsWith("nfs:/"))
-            sourceFormat = "nfs:/" + sourceFormat;
+        if (!sourceFormat.startsWith("nfs:"))
+            sourceFormat = "nfs:" + File.separator + sourceFormat;
         Map<String, String> kv = getParseSetup(sourceFormat);
         kv.put("source_frames", sourceFormat);
         kv.put("delete_on_done", "true");

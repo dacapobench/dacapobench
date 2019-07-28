@@ -1,5 +1,6 @@
-+++ tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
---- CoordinatorClient.java	2019-03-26 12:13:09.000000000 +1100
+diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
+--- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
++++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-06-19 17:13:25.000000000 +1000
 @@ -364,10 +364,8 @@
                  if (res.getBoolean("json")) {
                      System.out.println(JsonUtil.toJsonString(taskState));
@@ -12,3 +13,12 @@
                          TaskDone taskDone = (TaskDone) taskState;
                          if ((taskDone.error() != null) && (!taskDone.error().isEmpty())) {
                              System.out.printf("Error: %s%n", taskDone.error());
+@@ -427,7 +425,7 @@
+                     objectFromCommandLineArgument(res.getString("taskSpec"), TaskSpec.class);
+                 CreateTaskRequest req = new CreateTaskRequest(taskId, taskSpec);
+                 client.createTask(req);
+-                System.out.printf("Sent CreateTaskRequest for task %s.%n", req.id());
++//                System.out.printf("Sent CreateTaskRequest for task %s.%n", req.id());
+                 break;
+             }
+             case "stopTask": {

@@ -8,6 +8,7 @@
  -->
 <project name="tradesoap" default="all" basedir="../..">
     <description>DaCapo tradesoap benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="tradesoap"/>

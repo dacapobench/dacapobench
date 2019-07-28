@@ -45,6 +45,7 @@ public class Kafka extends Benchmark {
 
     @Override
     public void iterate(String size) throws Exception {
+        System.setProperty("TaskState", "Waiting");
         performIteration.invoke(launcherInstance);
     }
 }

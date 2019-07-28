@@ -9,15 +9,12 @@
 
 package org.dacapo.harness;
 
+import org.dacapo.h2o.ClientRunner;
 import org.dacapo.parser.Config;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 /**
  * Dacapo benchmark harness for H2O
@@ -27,16 +24,10 @@ import java.util.List;
 
 public class H2O extends Benchmark{
 
-    private String [] H2O_JARS= {
-            "commons-beanutils-1.9.3.jar",
-            "commons-collections-3.2.2.jar",
-            "commons-lang-2.6.jar",
-            "commons-logging.jar",
-            "ezmorph-1.0.6.jar",
-            "json-lib-2.4-jdk15.jar"
-    };
-
     private String[] args;
+    PrintStream savedOut;
+    private String ip = "127.0.0.1";
+    private String port = "54321";
 
     public H2O(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
@@ -46,52 +37,33 @@ public class H2O extends Benchmark{
 
     @Override
     protected void prepare(String size) throws Exception {
-        super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
-    }
+        emptyOutput();
 
-    private void setupH2O() {
-        File dirScratchJar = new File(scratch, "jar");
-        addToSystemClassLoader(findJars(dirScratchJar, H2O_JARS));
-    }
-
-    private void addToSystemClassLoader(List<URL> urls){
-        if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader)) {
-            throw new RuntimeException("Currently cassandra benchmark requires Java version <= 1.8, you have " + System.getProperty("java.version"));
-        }
-
-        try {
-            URLClassLoader sysCL = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class });
-            addURL.setAccessible(true);
-            for (URL url : urls) {
-                addURL.invoke(sysCL, url);
-            }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            System.err.println("This version of Java (" + System.getProperty("java.version") +
-                    ") does not support the SystemClassLoader hack.");
-        }
-    }
-
-    private List<URL> findJars(File dir, String[] jarNames) {
-        List<URL> jars = new ArrayList<>();
-        for (String jarName : jarNames) {
-            File jar = new File(dir, jarName);
-            try {
-                URL url = jar.toURI().toURL();
-                jars.add(url);
-            } catch (MalformedURLException e) {
-                System.err.println("Unable to create URL for jar: " + jarName);
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        }
-        return jars;
+        // Launch the h2o server
+        useBenchmarkClassLoader();
+        this.method.invoke(null,  (Object) new String[] {"-ip", ip, "-port", port});
     }
 
     @Override
     public void iterate(String size) throws Exception {
-        this.method.invoke(null,  (Object) args);
+
+        PrintStream savedOut = System.out;
+        // Store the standard output
+        emptyOutput();
+
+        ClientRunner.running("http://" + ip + ":" + port, args[0], args[1], args[2], args[3], savedOut);
+
+        System.setOut(savedOut);
+    }
+
+    private void emptyOutput(){
+        // Store the standard output
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                // Doing nothing
+            }
+        }));
     }
 }

@@ -17,11 +17,6 @@ import java.net.URL;
  */
 public class DaCapoClientRunner {
 
-  public static void main(String[] args) {
-    initialize("default-bean", 1, true);
-    runIteration("default-bean", 1, true);
-  }
-
   public static void initialize(String size, int numThreads, boolean useBeans) {
     try {
 

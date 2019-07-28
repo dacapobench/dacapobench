@@ -43,7 +43,6 @@ public class DaCapoRunner {
 				System.err.println("Caught exception!: "+e.toString());
 			}
 		}
-		System.out.println(tradeSessions);
 		if (tradeSessions > 0) {
 			completed[0] = 0;
 			for (int i = 0; i < numThreads; i++) {

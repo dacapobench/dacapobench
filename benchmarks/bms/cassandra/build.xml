@@ -8,7 +8,8 @@
  -->
  <project name="cassandra" default="all" basedir="../..">
     <description>DaCapo Cassandra Benchmark</description>
-    <property file="dacapo.properties"/>
+    <property file="local.properties"/>
+     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="cassandra"/>
     <property name="bm-version" value="3.11.3"/>
@@ -53,9 +54,20 @@
     <target name="cassandra-build">    
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
+
+        <available property="compile9" classname="java.sql.ShardingKey"/>
+        <antcall target="j8-compile"/>
+        <antcall target="j9-compile"/>
+    </target>
+
+    <target name="j9-compile" if="compile9">
         <exec executable="ant" dir="${cassandra-build-top}">
             <env key="JAVA_HOME" value="${jdk8home}"/>
         </exec>
+    </target>
+
+    <target name="j8-compile" unless="compile9">
+        <exec executable="ant" dir="${cassandra-build-top}"/>
     </target>
 
     <target name="ycsb-build" depends="get-slf4j-simple-jar">
@@ -123,10 +135,4 @@
         <get src="http://central.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-jars}"/>
     </target>
-
-     <target name="temp">
-         <get src="http://central.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
-              dest="${bm-jars}"/>
-     </target>
-
  </project>
