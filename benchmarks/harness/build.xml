@@ -104,6 +104,7 @@
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source" classpath="${output-dir}"/>
         <javadoc sourcepath="${src}" destdir="${output-doc-dir}" classpath="${output-dir}"
                 additionalparam="-Xdoclint:none"/>
+        <delete file="${bm-out-jar}"/>
     </target>
     
     <target name="jar">

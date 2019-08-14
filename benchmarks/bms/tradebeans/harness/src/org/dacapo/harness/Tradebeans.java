@@ -40,11 +40,6 @@ public class Tradebeans extends Benchmark {
   }
 
   @Override
-  protected void prepare() throws Exception {
-    unpackZipFileResource("dat/daytrader.zip", scratch);
-  }
-
-  @Override
   protected void prepare(String size) throws Exception {
     String[] args = config.preprocessArgs(size, scratch, data);
     String dtSize = "medium";
