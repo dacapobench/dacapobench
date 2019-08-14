@@ -55,7 +55,7 @@
     </target>
 
     <target name="jar" depends="build-properties">
-        <copy todir="${bm-jars}">
+        <copy todir="${bm-out-jar}">
             <fileset dir="${bm-build-top}/output/dist/bin" includes="*.jar"/>
             <fileset file="${commons-httpclient-jar}"/>
             <fileset file="${commons-logging-jar}"/>
@@ -65,6 +65,8 @@
         <jar destfile="${bm-jars}/dacapo-tomcat.jar">
             <fileset dir="${bm-build-dir}/benchmark" includes="**/*.class"/>
         </jar>
+
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>
