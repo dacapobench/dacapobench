@@ -41,6 +41,7 @@
 
     <target name="jar">
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}"/>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
     <!-- <target name="lucene-enwiki-bench-data-check">
