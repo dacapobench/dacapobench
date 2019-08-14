@@ -54,7 +54,7 @@
     </target>
 
     <target name="jar">
-        <copy todir="${bm-jars}" flatten="true">
+        <copy todir="${bm-out-jar}" flatten="true">
             <fileset dir="${bm-build-dir}/" includes="**/*.jar"/>
         </copy>
 
@@ -67,5 +67,6 @@
                 <include name="org/dacapo/kafka/**"/>
             </fileset>
         </jar>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 </project>
