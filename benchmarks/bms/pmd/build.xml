@@ -63,7 +63,7 @@
     <property name="saxon-version" value="9.1.0.8"/>
 
     <target name="libs">
-        <copy todir="${bm-jars}">
+        <copy todir="${bm-out-jar}">
             <resources>
                 <file file="${pmd-dist-target}/lib/asm-${asm-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/commons-io-${commons-io-version}.jar"/>
@@ -73,5 +73,6 @@
                 <file file="${pmd-dist-target}/lib/saxon-${saxon-version}-dom.jar"/>
             </resources>
         </copy>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 </project>
