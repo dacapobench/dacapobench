@@ -46,9 +46,10 @@
 
     <target name="jar">
         <copy file="${bm-build-dir}/dist/jMonkeyEngine3.jar" todir="${bm-jars}"/>
-        <copy todir="${bm-jars}">
+        <copy todir="${bm-out-jar}">
             <fileset dir="${bm-build-dir}/dist/lib" includes="*.jar"/>
         </copy>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>
