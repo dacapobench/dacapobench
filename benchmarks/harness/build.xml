@@ -32,11 +32,14 @@
     <property name="jaxb-impl-url" value="${maven.centre}/com/sun/xml/bind/jaxb-impl/${jaxb-version}"/>
     <property name="jaxb-impl-name" value="jaxb-impl-${jaxb-version}.jar"/>
 
+    <property name="bm-out-jar" value="${base-dir}/tmp"/>
+
     <target name="all" depends="clean,init,harness,jar"/>
     
     <target name="clean">
         <delete dir="${output-dir}"/>
         <delete dir="${build-dir}"/>
+        <delete dir="${bm-out-jar}"/>
     </target>
     
     <target name="init">

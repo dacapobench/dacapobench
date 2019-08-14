@@ -88,6 +88,8 @@
 	<target name="jar"/>
 
 	<target name="complete">
-		<jar jarfile="${build.target-jar}" basedir="${lib-output-dir}" update="true"/>
+		<copy todir="${bm-out-jar}">
+			<fileset dir="${lib-output-dir}/jar" includes="*.jar"/>
+		</copy>
 	</target>
 </project>
