@@ -68,16 +68,16 @@ public class ExternData {
     System.err.printf("ERROR: failed to find external data for size '%s'.\n", size);
     System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata.getAbsolutePath());
     System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the large data, run DaCapo with --extdata-install <dir-name>");
-    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location to correctly identify the location of the external data.");
+    System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
+    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
     System.exit(-1);
   }
   public static void failExtJarNotFound(File extjar, File extdata) {
     System.err.printf("ERROR: failed to find jar: %s.\n", extjar.getName());
-    System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata.getAbsolutePath());
+    System.err.printf("Please check that you have installed the external jar package properly (current: %s)\n", extdata.getAbsolutePath());
     System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the large data, run DaCapo with --extdata-install");
-    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location to correctly identify the location of the external data.");
+    System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
+    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
     System.exit(-1);
   }
 
@@ -164,7 +164,7 @@ public class ExternData {
 
       dllistReader.lines().forEach(s -> {
         try {
-          if(s.startsWith("dat/" + bench))
+          if(s.startsWith("dat/" + bench) || s.startsWith("jar/" + bench))
             downloadAndExtractItem(s, dlurlRaw, dlurlLFS, path);
         } catch (IOException e) {
           System.err.println("Download external data failed.");

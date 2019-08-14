@@ -283,6 +283,12 @@ public abstract class Benchmark {
     if (!file.exists())
       file.mkdir();
     if (config.jars != null) {
+      // unzip external jar into scratch
+      File fileLocation = new File(ExternData.getLocation()+"/jar/"+config.name+".zip");
+      if (fileLocation.exists())
+        unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocation)), file);
+
+      // extract jar lib from dacapo.jar
       for (int i = 0; i < config.jars.length; i++) {
         try {
           extractFileResource("jar/" + config.jars[i], scratch);
@@ -309,7 +315,6 @@ public abstract class Benchmark {
         System.setErr(savedErr);
         ExternData.failExtDataNotFound("", fileLocalItem);
         System.exit(-1);
-
       }
     } catch (DacapoException e) {
       e.printStackTrace();

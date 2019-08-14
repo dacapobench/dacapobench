@@ -326,8 +326,9 @@
     </target>
 
     <target name="clean-bootstrap" depends="init">
-        <delete dir="${dacpao.build.doc.dir}"/>
-        <delete dir="${dacpao.build.dir}"/>
+        <delete dir="${dacapao.build.doc.dir}"/>
+        <delete dir="${dacapao.build.dir}"/>
+        <delete dir="${dacapao.out.jar.dir}"/>
     </target>
 
     <!-- ================================= 

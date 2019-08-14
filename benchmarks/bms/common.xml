@@ -30,6 +30,7 @@
 	<property name="bm-src-harness-dir" value="${bm-files}/harness/src"/>
 	<property name="bm-src-benchmark-dir" value="${bm-files}/benchmark"/>
 	<property name="bm-downloads" value="${bm-files}/downloads"/>
+	<property name="bm-out-jar" value="${bm-files}/outjar"/>
 
 	<property name="bm-jars" value="${bm-output-dir}/jar"/>
 	<property name="bm-dat" value="${bm-output-dir}/dat"/>
@@ -110,6 +111,7 @@
 		<delete dir="${bm-output-dir}"/>
 		<delete dir="${bm-build-dir}"/>
 		<delete dir="${bm-deps-output-dir}"/>
+		<delete dir="${bm-out-jar}"/>
 	</target>
 
 	<target name="init" depends="clean">
