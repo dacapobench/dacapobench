@@ -40,6 +40,7 @@
                 <include name="resources/golden_*.png"/>
             </fileset>
         </jar>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>
