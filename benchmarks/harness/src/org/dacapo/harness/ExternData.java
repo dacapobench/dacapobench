@@ -172,7 +172,7 @@ public class ExternData {
 
       dllistReader.lines().forEach(s -> {
         try {
-          if(s.startsWith("dat/"+bench+".") || s.startsWith("dat/"+bench+"-") || s.startsWith("jar/"+bench+"."))
+          if(bench.length() == 0 || s.startsWith("dat/"+bench+".") || s.startsWith("dat/"+bench+"-") || s.startsWith("jar/"+bench+"."))
             downloadAndExtractItem(s, dlurlRaw, dlurlLFS, path);
         } catch (IOException e) {
           System.err.println("Download external data failed.");
