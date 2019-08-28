@@ -92,8 +92,8 @@ public class TestHarness {
         "offical release, and should note the relevant git hash.\n" +
         "\n" +
         "Feedback is greatly appreciated.   The preferred mode of feedback is via github.\n"+
-	"Please use our github page to create an issue or a pull request.\n"+
-	"    https://github.com/dacapobench/dacapobench.\n"+
+	    "Please use our github page to create an issue or a pull request.\n"+
+	    "    https://github.com/dacapobench/dacapobench.\n"+
         "--------------------------------------------------------------------------------\n"
       );
     }
