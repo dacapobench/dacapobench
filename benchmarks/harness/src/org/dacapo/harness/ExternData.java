@@ -74,7 +74,7 @@ public class ExternData {
    */
   public static void failExtDataNotFound(String size, File extdata) {
     System.err.printf("ERROR: failed to find external data for size '%s'.\n", size);
-    System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata.getAbsolutePath());
+    System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata == null ? "null" : extdata.getAbsolutePath());
     System.err.println("Please do one of the following:");
     System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
     System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
@@ -82,7 +82,7 @@ public class ExternData {
   }
   public static void failExtJarNotFound(File extjar, File extdata) {
     System.err.printf("ERROR: failed to find jar: %s.\n", extjar.getName());
-    System.err.printf("Please check that you have installed the external jar package properly (current: %s)\n", extdata.getAbsolutePath());
+    System.err.printf("Please check that you have installed the external jar package properly (current: %s)\n", extdata == null ? "null" : extdata.getAbsolutePath());
     System.err.println("Please do one of the following:");
     System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
     System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
