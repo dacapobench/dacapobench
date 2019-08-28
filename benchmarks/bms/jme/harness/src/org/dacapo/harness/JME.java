@@ -17,7 +17,7 @@ public class JME extends Benchmark{
     private String[] args;
 
     public JME(Config config, File scratch, File data) throws Exception {
-        super(config, scratch, null, true, true, false);
+        super(config, scratch, null, false, false, false);
         Class<?> clazz = Class.forName("jme3test.TestChooser", true, loader);
         this.method = clazz.getMethod("main", String[].class);
     }
@@ -30,6 +30,8 @@ public class JME extends Benchmark{
 
     @Override
     public void iterate(String size) throws Exception {
+        // in case of memory corruption
+        System.setProperty("java.awt.headless", "false");
         this.method.invoke(null, (Object) args);
     }
 }

@@ -23,7 +23,12 @@
 
     <import file="../common.xml"/>
 
-     <target name="unpack" depends="untar, patch"/>
+    <target name="unpack" depends="untar, patch"/>
+
+    <target name="patch">
+        <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-files}" strip="0" ignorewhitespace="yes"/>
+    </target>
+
 
     <condition property="gradle-exe" value="gradlew.bat">
         <os family="windows"/>
