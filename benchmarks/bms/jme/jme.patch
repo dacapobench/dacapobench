@@ -85,7 +85,7 @@ diff -urN build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java buil
      public abstract void simpleInitApp();
  
 +    private void simpleUpdate(float tpf, int frameCount) {
-+        if (frameCount > 300){
++        if (frameCount > Integer.parseInt(System.getProperty("frameThreshold"))){
 +            synchronized (context){
 +                System.out.println(this.settings.toString());
 +                System.out.println(this.getClass().getName() + " finished...");
