@@ -1,24 +1,222 @@
+diff -urN ./tests/spec/simple_produce_bench.json ../build-new/tests/spec/simple_produce_bench.json
+--- ./tests/spec/simple_produce_bench.json	2019-03-02 02:41:07.000000000 +1100
++++ ../build-new/tests/spec/simple_produce_bench.json	2019-09-05 16:25:47.000000000 +1000
+@@ -23,8 +23,8 @@
+   "durationMs": 10000000,
+   "producerNode": "node0",
+   "bootstrapServers": "localhost:9092",
+-  "targetMessagesPerSec": 10000,
+-  "maxMessages": 50000,
++  "targetMessagesPerSec": 200000,
++  "maxMessages": 1000000,
+   "activeTopics": {
+     "foo[1-3]": {
+       "numPartitions": 10,
+diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
+--- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2019-03-02 02:41:07.000000000 +1100
++++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2019-09-05 15:35:31.000000000 +1000
+@@ -129,6 +129,10 @@
+         taskManager.waitForShutdown();
+     }
+ 
++    public TaskState waitForFinishing(TaskRequest request) throws Exception {
++        return taskManager.waitForFinishing(request);
++    }
++
+     public static void main(String[] args) throws Exception {
+         ArgumentParser parser = ArgumentParsers
+             .newArgumentParser("trogdor-coordinator")
 diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
 --- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
-+++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-06-19 17:13:25.000000000 +1000
-@@ -364,10 +364,8 @@
-                 if (res.getBoolean("json")) {
-                     System.out.println(JsonUtil.toJsonString(taskState));
-                 } else {
--                    System.out.printf("Task %s of type %s is %s. %s%n", taskId,
--                        taskState.spec().getClass().getCanonicalName(),
--                        taskState.stateType(), prettyPrintTaskInfo(taskState, localOffset));
-                     if (taskState instanceof TaskDone) {
-+                        System.setProperty("TaskState", "DONE");
-                         TaskDone taskDone = (TaskDone) taskState;
-                         if ((taskDone.error() != null) && (!taskDone.error().isEmpty())) {
-                             System.out.printf("Error: %s%n", taskDone.error());
-@@ -427,7 +425,7 @@
-                     objectFromCommandLineArgument(res.getString("taskSpec"), TaskSpec.class);
-                 CreateTaskRequest req = new CreateTaskRequest(taskId, taskSpec);
-                 client.createTask(req);
--                System.out.printf("Sent CreateTaskRequest for task %s.%n", req.id());
-+//                System.out.printf("Sent CreateTaskRequest for task %s.%n", req.id());
++++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-09-05 15:20:35.000000000 +1000
+@@ -194,6 +194,15 @@
+         return resp.body();
+     }
+ 
++    private TaskState waitFinish(TaskRequest request) throws Exception{
++        String uri = UriBuilder.fromPath(url("/coordinator/wait/{taskId}")).build(request.taskId()).toString();
++        HttpResponse<TaskState> resp = JsonRestServer.httpRequest(log, uri, "GET",
++        null, new TypeReference<TaskState>() { }, maxTries);
++        return resp.body();
++    }
++
++
++
+     public void shutdown() throws Exception {
+         HttpResponse<Empty> resp =
+             JsonRestServer.httpRequest(log, url("/coordinator/shutdown"), "PUT",
+@@ -237,6 +246,20 @@
+             .help("Show a coordinator task.");
+         addTargetArgument(showTaskParser);
+         addJsonArgument(showTaskParser);
++
++
++        Subparser waitTaskParser = subParsers.addParser("waitTask")
++                .help("Show a coordinator task.");
++        addTargetArgument(waitTaskParser);
++        waitTaskParser.addArgument("--id", "-i")
++                .action(store())
++                .required(true)
++                .type(String.class)
++                .dest("taskId")
++                .metavar("TASK_ID")
++                .help("The task ID to wait.");
++
++
+         showTaskParser.addArgument("--id", "-i")
+             .action(store())
+             .required(true)
+@@ -381,8 +404,17 @@
+                     }
+                 }
                  break;
+-            }
+-            case "showTasks": {
++            }case "waitTask": {
++                String taskId = res.getString("taskId");
++                TaskRequest req = new TaskRequest(taskId);
++                try {
++                    client.waitFinish(req);
++                } catch (NotFoundException e) {
++                    System.out.printf("Task %s was not found.%n", taskId);
++                    Exit.exit(1);
++                }
++                break;
++            }case "showTasks": {
+                 TaskStateType taskStateType = res.<TaskStateType>get("taskStateType");
+                 List<String> taskIds = new ArrayList<>();
+                 Pattern taskIdPattern = null;
+diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
+--- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2019-03-02 02:41:07.000000000 +1100
++++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2019-09-05 15:20:58.000000000 +1000
+@@ -137,6 +137,13 @@
+         return response;
+     }
+ 
++    @GET
++    @Path("/wait/{taskId}")
++    public TaskState wait(@PathParam("taskId") String taskId) throws Throwable {
++        return coordinator().waitForFinishing(new TaskRequest(taskId));
++    }
++
++
+     @PUT
+     @Path("/shutdown")
+     public Empty beginShutdown(CoordinatorShutdownRequest request) throws Throwable {
+diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
+--- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2019-03-02 02:41:07.000000000 +1100
++++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2019-09-05 15:27:02.000000000 +1000
+@@ -49,6 +49,8 @@
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
++import java.util.concurrent.locks.Condition;
++import java.util.concurrent.locks.ReentrantLock;
+ import java.util.HashMap;
+ import java.util.Map;
+ import java.util.Set;
+@@ -203,6 +205,12 @@
+          */
+         private String error = "";
+ 
++        /**
++         * For managing the task state, blocking if is not finished
++         */
++        ReentrantLock rl;
++        Condition done;
++
+         ManagedTask(String id, TaskSpec originalSpec, TaskSpec spec,
+                     TaskController controller, TaskStateType state) {
+             this.id = id;
+@@ -210,6 +218,8 @@
+             this.spec = spec;
+             this.controller = controller;
+             this.state = state;
++            rl = new ReentrantLock();
++            done = rl.newCondition();
+         }
+ 
+         void clearStartFuture() {
+@@ -295,6 +305,19 @@
              }
-             case "stopTask": {
+             return activeWorkerIds;
+         }
++
++
++        void waitForFinish() {
++            try {
++                rl.lock();
++                for(;this.state != TaskStateType.DONE; )
++                    done.await();
++            } catch (InterruptedException e) {
++                e.printStackTrace();
++            } finally {
++                rl.unlock();
++            }
++        }
+     }
+ 
+     /**
+@@ -393,7 +416,10 @@
+             } catch (Exception e) {
+                 log.error("Unable to find nodes for task {}", task.id, e);
+                 task.doneMs = time.milliseconds();
++                task.rl.lock();
+                 task.state = TaskStateType.DONE;
++                task.done.signal();
++                task.rl.unlock();
+                 task.maybeSetError("Unable to find nodes for task: " + e.getMessage());
+                 return null;
+             }
+@@ -449,7 +475,10 @@
+                     task.cancelled = true;
+                     task.clearStartFuture();
+                     task.doneMs = time.milliseconds();
++                    task.rl.lock();
+                     task.state = TaskStateType.DONE;
++                    task.done.signal();
++                    task.rl.unlock();
+                     log.info("Stopped pending task {}.", id);
+                     break;
+                 case RUNNING:
+@@ -462,7 +491,10 @@
+                             log.info("Task {} is now complete with error: {}", id, task.error);
+                         }
+                         task.doneMs = time.milliseconds();
++                        task.rl.lock();
+                         task.state = TaskStateType.DONE;
++                        task.done.signal();
++                        task.rl.unlock();
+                     } else {
+                         for (Map.Entry<String, Long> entry : activeWorkerIds.entrySet()) {
+                             nodeManagers.get(entry.getKey()).stopWorker(entry.getValue());
+@@ -594,7 +626,10 @@
+         TreeMap<String, Long> activeWorkerIds = task.activeWorkerIds();
+         if (activeWorkerIds.isEmpty()) {
+             task.doneMs = time.milliseconds();
++            task.rl.lock();
+             task.state = TaskStateType.DONE;
++            task.done.signal();
++            task.rl.unlock();
+             log.info("{}: Task {} is now complete on {} with error: {}",
+                 nodeName, task.id, Utils.join(task.workerIds.keySet(), ", "),
+                 task.error.isEmpty() ? "(none)" : task.error);
+@@ -638,6 +673,18 @@
+     }
+ 
+     /**
++     * Blocking current thread until the current task state become DONE
++      * @param request
++     * @return which are supposed DONE, if it is not DONE, an exception should be throw
++     */
++    public TaskState waitForFinishing(TaskRequest request) throws Exception {
++        ManagedTask managedTask = tasks.get(request.taskId());
++        managedTask.waitForFinish();
++        if (managedTask.state != TaskStateType.DONE) throw new Exception();
++        return managedTask.taskState();
++    }
++
++    /**
+      * Get information about a single task being managed.
+      *
+      * Returns #{@code null} if the task does not exist

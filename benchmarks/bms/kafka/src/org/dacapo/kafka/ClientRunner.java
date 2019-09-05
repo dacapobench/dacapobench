@@ -6,9 +6,11 @@ import java.util.Random;
 
 public class ClientRunner{
 
-    Method clientStarter;
+    private Method clientStarter;
+    private String pID = "producer";
 
-    public ClientRunner() throws Exception{
+
+    ClientRunner() throws Exception{
         initialize();
     }
 
@@ -23,18 +25,17 @@ public class ClientRunner{
      *
      * @param produceBench information about the benchmark
      */
-    protected void runClient(String produceBench) throws Exception{
-        Random rand = new Random();
+    void runClient(String produceBench) throws Exception{
         // Running the benchmark
-        String pID = "producer" + rand.nextDouble();
         System.out.println("Trogdor is running the benchmark....");
         clientStarter.invoke(null, (Object) new String[]{"createTask", "-t", "localhost:8889", "-i", pID, "--spec", produceBench});
 
-        // Return the information about the benchmark
-        while (!System.getProperty("TaskState").equals("DONE")) {
-            clientStarter.invoke(null, (Object) new String[]{"showTask", "-t", "localhost:8889", "-i", pID});
-            Thread.sleep(100);
-        }
+        // waiting for finishing
+        clientStarter.invoke(null, (Object) new String[]{"waitTask", "-t", "localhost:8889", "-i", pID});
         System.out.println("Finished");
+    }
+
+    void finishUp() throws Exception{
+        clientStarter.invoke(null, (Object) new String[]{"destroyTask", "-t", "localhost:8889", "-i", pID});
     }
 }
