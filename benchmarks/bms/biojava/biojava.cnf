@@ -3,7 +3,15 @@ benchmark biojava
   thread-model per_cpu
   jars "AAProperties-jar-with-dependencies.jar";
 
-size default args "${SCRATCH}/dat/core_set_aligned.fasta"
+size small args "${SCRATCH}/dat/PF00104_small.fasta"
+  output
+    stdout digest 0x1330c6773c114760d81e633da213064786bb41c8;
+
+size default args "${SCRATCH}/dat/uniprot_sprot_varsplic.fasta"
+  output
+    stdout digest 0xffd9aab70ebde6315d2c64a9fdcaf93dfe59febf;
+
+size large args "${SCRATCH}/dat/core_set_aligned.fasta"
   output
     stdout digest 0x039481f64d66930f41e2beb9f87131e08b9c2553;
 
