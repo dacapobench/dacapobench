@@ -11,8 +11,8 @@ size small args "4"
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "client.0.log" exists;     // Actually one for each client thread
 
-size default args "1024"
-  thread-limit 1024
+size default args "512"
+  thread-limit 512
   output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "client.0.log" exists;     // Actually one for each client thread
