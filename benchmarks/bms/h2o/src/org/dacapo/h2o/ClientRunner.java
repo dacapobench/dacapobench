@@ -6,6 +6,11 @@ import java.io.PrintStream;
 
 public class ClientRunner{
 
+    public static void main(String[] args) {
+        running("http://127.0.0.1:54321", "/Users/chenrui/Projects/IdeaProjects/Work_ANU/dacapobench/benchmarks/scratch/dat"
+                , "slice_localization_data.csv", "drf" , "reference", System.out);
+    }
+
     public static void running(String URL, String data, String source, String algo, String response, PrintStream stdout) {
         DacapoH2OFacade dhf = new DacapoH2OFacade(URL);
         // Import and parse the data set
