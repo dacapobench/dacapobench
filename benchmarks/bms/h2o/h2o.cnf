@@ -6,13 +6,13 @@ benchmark h2o
 size default args "${SCRATCH}/dat", "slice_localization_data.csv", "drf" , "reference"
   threads 1      // per available processor
   thread-limit 32
-  output stdout digest 0xa9e808d64b9be612e37f5e973a3da20caa0a5d85;
+  output stdout digest 0x3f997d59ea1f71601b40870a959bf8b8d3262aab;
 
 
 size large args "${SCRATCH}/dat", "CitiBike2014.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 32
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout digest 0xcae20123ccf6c587480902d0b3f1f831f1d59ed7;
 
 description
   short	     "Open Source Fast Scalable Machine Learning Platform.",
