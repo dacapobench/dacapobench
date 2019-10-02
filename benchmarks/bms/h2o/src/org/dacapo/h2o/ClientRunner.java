@@ -3,15 +3,11 @@ package org.dacapo.h2o;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 
 public class ClientRunner{
 
-    public static void main(String[] args) {
-        running("http://127.0.0.1:54321", "/Users/chenrui/Projects/IdeaProjects/Work_ANU/dacapobench/benchmarks/scratch/dat"
-                , "slice_localization_data.csv", "drf" , "reference", System.out);
-    }
-
-    public static void running(String URL, String data, String source, String algo, String response, PrintStream stdout) {
+    public static void running(String URL, String data, String source, String algo, String response, PrintStream stdout) throws NoSuchMethodException, ClassNotFoundException, IOException, IllegalAccessException, InterruptedException, InvocationTargetException {
         DacapoH2OFacade dhf = new DacapoH2OFacade(URL);
         // Import and parse the data set
         stdout.println("Importing file: " + source + "......");

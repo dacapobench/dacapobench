@@ -26,18 +26,23 @@ public class Harness {
   //
   private static final String CALLBACK_CLASSPATH_PROPERTY = "dacapo.callback.classpath";
 
-  public static void main(String[] args) throws Exception {
-    ClassLoader harnessClassLoader = makeHarnessClassLoader();
+  public static void main(String[] args){
+    try {
+      ClassLoader harnessClassLoader = makeHarnessClassLoader();
 
-    Thread.currentThread().setContextClassLoader(harnessClassLoader);
+      Thread.currentThread().setContextClassLoader(harnessClassLoader);
 
-    Class dacapoHarnessClass = harnessClassLoader.loadClass(HARNESS_CLASS);
+      Class dacapoHarnessClass = harnessClassLoader.loadClass(HARNESS_CLASS);
 
-    Method harnessMain = dacapoHarnessClass.getDeclaredMethod(HARNESS_METHOD, String[].class);
+      Method harnessMain = dacapoHarnessClass.getDeclaredMethod(HARNESS_METHOD, String[].class);
 
-    harnessMain.invoke(null, new Object[] { args });
+      harnessMain.invoke(null, new Object[]{args});
 
-    System.exit(0);
+      System.exit(0);
+    }catch (Exception e){
+      e.printStackTrace();
+      System.exit(-1);
+    }
   }
 
   private static ClassLoader makeHarnessClassLoader() throws MalformedURLException, URISyntaxException {
