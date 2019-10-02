@@ -53,6 +53,7 @@ public class DaCapoClientRunner {
     } catch (Exception e) {
       System.err.print("Exception running client iteration: " + e.toString());
       e.printStackTrace();
+      System.exit(-1);
     }
   }
 }
