@@ -49,6 +49,7 @@
                includes="org/dacapo/h2o/**"
                debug="true" debuglevel="lines,vars,source"/>
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
     <target name="build-h2o">

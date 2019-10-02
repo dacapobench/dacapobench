@@ -38,6 +38,7 @@
         <copy file="${batik-top}/lib/serializer-2.7.2.jar" todir="${bm-out-jar}"/>
         <copy file="${batik-top}/lib/xmlgraphics-commons-2.3.jar" todir="${bm-out-jar}"/>
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
     <target name="deps">

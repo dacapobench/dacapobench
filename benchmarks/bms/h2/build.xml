@@ -34,6 +34,7 @@
 
     <target name="jar">
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>

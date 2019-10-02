@@ -44,5 +44,6 @@
         <copy file="${bm-build-top}/lib/xml-apis-ext-1.3.04.jar" todir="${bm-out-jar}" />
         <copy file="${bm-build-top}/lib/xmlgraphics-commons-2.2.jar" todir="${bm-out-jar}" />
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 </project>

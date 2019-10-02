@@ -122,6 +122,7 @@
         <get src="http://central.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-out-jar}"/>
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
     <target name="jar" depends="libs">
