@@ -97,6 +97,12 @@
 
     <target name="check-dependencies">
         <available property="compile9" classname="java.sql.ShardingKey"/>
+
+        <condition property="java12">
+            <equals arg1="${ant.java.version}" arg2="12"/>
+        </condition>
+
+        <fail if="java12" message="the JDK version should be 11, JDK 12 is not supported at this moment"/>
         <antcall target="check-java-runtime"/>
 
         <!-- Checking the availability of all dependencies -->
@@ -126,18 +132,11 @@
     <target name="check-python-modules">
         <property name="file-name" value="dependency-check.py"/>
 
-        <!-- python script for checking dependencies -->
-        <touch file="${file-name}"/>
-        <echo message="import colorama${line.separator}import future${line.separator}import tabulate${line.separator}import requests${line.separator}import wheel"
-              file="${file-name}"/>
-
         <!-- checking python modules -->
         <exec executable="python" failonerror="yes">
-            <arg value="${file-name}"/>
+            <arg value="-c"/>
+            <arg value="import colorama${line.separator}import future${line.separator}import tabulate${line.separator}import requests${line.separator}import wheel"/>
         </exec>
-
-        <!-- delete the test.py -->
-        <delete file="${file-name}"/>
     </target>
 
     <target name="check-git-present">
