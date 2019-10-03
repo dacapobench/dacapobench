@@ -49,10 +49,11 @@ public class H2O extends Benchmark{
     public void iterate(String size) throws Exception {
 
         PrintStream savedOut = System.out;
+        PrintStream savedErr= System.err;
         // Store the standard output
         emptyOutput();
 
-        ClientRunner.running("http://" + ip + ":" + port, args[0], args[1], args[2], args[3], savedOut);
+        ClientRunner.running("http://" + ip + ":" + port, args[0], args[1], args[2], args[3], savedOut, savedErr);
 
         System.setOut(savedOut);
     }

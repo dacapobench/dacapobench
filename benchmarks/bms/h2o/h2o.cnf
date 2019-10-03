@@ -6,7 +6,8 @@ benchmark h2o
 size default args "${SCRATCH}/dat", "slice_localization_data.csv", "drf" , "reference"
   threads 1      // per available processor
   thread-limit 32
-  output stdout digest 0x3f997d59ea1f71601b40870a959bf8b8d3262aab;
+  output stdout digest 0x3f997d59ea1f71601b40870a959bf8b8d3262aab,
+         stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
 
 
 size large args "${SCRATCH}/dat", "CitiBike2014.csv", "drf" , "tripduration"
