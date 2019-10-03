@@ -41,6 +41,7 @@ public class DaCapoRunner {
 				}
 			} catch (Exception e) {
 				System.err.println("Caught exception!: "+e.toString());
+				System.exit(-1);
 			}
 		}
 		if (tradeSessions > 0) {
@@ -55,10 +56,11 @@ public class DaCapoRunner {
 		synchronized(completed) {
 			while (completed[0] != (tradeSessions+numTraders)) {
 				try {
-					completed.wait();
+					completed.wait(2000);
 					if (VERBOSE) System.err.println("Completed: "+completed[0]+"/"+tradeSessions);
 				} catch (InterruptedException e) {
-					System.out.println("Caught exception while waiting "+ e.toString());					
+					System.out.println("Caught exception while waiting "+ e.toString());
+					System.exit(-1);
 				}
 			}
 		}
