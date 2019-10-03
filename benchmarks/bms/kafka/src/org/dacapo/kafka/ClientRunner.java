@@ -32,7 +32,7 @@ public class ClientRunner{
 
         // waiting for finishing
         clientStarter.invoke(null, (Object) new String[]{"waitTask", "-t", "localhost:8889", "-i", pID});
-        System.out.println("Finished");
+        System.err.println("Finished");
     }
 
     void finishUp() throws Exception{
