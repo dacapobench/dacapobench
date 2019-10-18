@@ -30,8 +30,6 @@ public class JME extends Benchmark{
 
     @Override
     public void iterate(String size) throws Exception {
-        // in case of memory corruption
-        System.setProperty("java.awt.headless", "false");
         // getting the number of frame needed to be rendered
         System.setProperty("frameThreshold", args[1]);
 

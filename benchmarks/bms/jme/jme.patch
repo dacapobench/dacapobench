@@ -269,7 +269,7 @@ diff -urN build/jme3-examples/src/main/java/jme3test/TestChooser.java build-new/
 +                            Object app = clazz.getConstructor().newInstance();
 +
 +                            final Method mainMethod = clazz.getMethod("start", JmeContext.Type.class);
-+                            mainMethod.invoke(app, JmeContext.Type.OffscreenSurface);
++                            mainMethod.invoke(app, JmeContext.Type.Headless);
 +                            Field contextField = LegacyApplication.class.getDeclaredField("context");
 +                            contextField.setAccessible(true);
 +                            JmeContext context = (JmeContext) contextField.get(app);
