@@ -60,6 +60,7 @@
 
         <javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"
                sourcepath="${bm-src-dir}"
+               classpath="${harness-classpath}"
                source="1.8">
         </javac>
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" update="true">

@@ -1,14 +1,16 @@
 package org.dacapo.kafka;
 
+import org.dacapo.harness.Benchmark;
+
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
 
 public class CoordinatorStarter extends Initializer{
 
     Thread thread;
 
-    public CoordinatorStarter(String coordinatorConfig) throws Exception {
+    public CoordinatorStarter(String coordinatorConfig, File scratch) throws Exception {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         Class trogdorCoordinator = Class.forName("org.apache.kafka.trogdor.coordinator.Coordinator", true, loader);
@@ -20,9 +22,13 @@ public class CoordinatorStarter extends Initializer{
                 try {
                     coordinatorStarter.invoke(null, (Object) new String[]{"-c", coordinatorConfig, "-n", "node0"});
                     System.out.println("Shutdown Coordinator...");
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+
+                    // no need for unnecessary messages. Benchmarking is already finished
+                    System.setOut(null);
+                    System.setErr(null);
+                    Benchmark.deleteTree(new File(scratch, "zookeeper"));
+                    Benchmark.deleteTree(new File(scratch, "kafka-logs"));
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }

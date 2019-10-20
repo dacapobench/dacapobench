@@ -4,6 +4,8 @@ package org.dacapo.kafka;
 import java.io.File;
 import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Launcher {
 
@@ -36,7 +38,7 @@ public class Launcher {
         agent.initialize();
         while (!hostUsed("127.0.0.1", 8888)) Thread.sleep(100);
 
-        CoordinatorStarter cs = new CoordinatorStarter(agentConfig.getPath());
+        CoordinatorStarter cs = new CoordinatorStarter(agentConfig.getPath(), scratch);
         cs.initialize();
         while (!hostUsed("127.0.0.1", 8889)) Thread.sleep(100);
     }

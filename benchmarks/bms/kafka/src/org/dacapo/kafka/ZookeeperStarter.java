@@ -1,8 +1,6 @@
 package org.dacapo.kafka;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
 
 public class ZookeeperStarter extends Initializer{
 
@@ -19,7 +17,6 @@ public class ZookeeperStarter extends Initializer{
             public void run() {
                 try {
                     starterZookeeper.invoke(null, (Object) new String[]{configZookeeper});
-                    System.out.println("Shutdown Zookeeper...");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -1,7 +1,6 @@
 package org.dacapo.kafka;
 
 import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
 
 public class ServerStarter extends Initializer{
 
@@ -19,7 +18,6 @@ public class ServerStarter extends Initializer{
             public void run() {
                 try {
                     kafkaServerStarter.invoke(null, (Object) new String[]{serverKafka});
-                    System.out.println("Shutdown Kafka Server...");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
