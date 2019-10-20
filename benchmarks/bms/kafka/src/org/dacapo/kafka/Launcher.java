@@ -38,7 +38,7 @@ public class Launcher {
         agent.initialize();
         while (!hostUsed("127.0.0.1", 8888)) Thread.sleep(100);
 
-        CoordinatorStarter cs = new CoordinatorStarter(agentConfig.getPath(), scratch);
+        CoordinatorStarter cs = new CoordinatorStarter(agentConfig.getPath());
         cs.initialize();
         while (!hostUsed("127.0.0.1", 8889)) Thread.sleep(100);
     }

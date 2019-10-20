@@ -1,5 +1,6 @@
 package org.dacapo.kafka;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 
 public class ServerStarter extends Initializer{
