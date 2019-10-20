@@ -51,6 +51,7 @@
             <fileset dir="${bm-build-dir}/tests/spec" includes="*"/>
         </copy>
         <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+        <checksum file="${bm-dat}/${bm-name}.zip"/>
     </target>
 
     <target name="jar">
