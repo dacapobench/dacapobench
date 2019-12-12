@@ -550,8 +550,8 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">
-        <get src="${dacapo-dl.url.raw}/META-INF/huge-data-md5s.list" dest="${dacapo.build.dir}"/>
-        <get src="${dacapo-dl.url.raw}/META-INF/dlfiles.list" dest="${dacapo.build.dir}"/>
+        <copy file="${basedir}/resources/huge-data-md5s.list" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/resources/dlfiles.list" todir="${dacapo.build.dir}"/>
         <echo message="setting DaCapo-DL-URL-LFS, DaCapo-DL-URL-RAW DaCapo-DL-Commit in manifest"/>
         <jar destfile="${build.target-jar}" update="true">
             <manifest>

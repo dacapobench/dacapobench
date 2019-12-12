@@ -3,19 +3,17 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.Charset;
 import java.nio.channels.Channels;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +24,10 @@ import javax.net.ssl.*;
 import javax.xml.bind.DatatypeConverter;
 
 import java.security.MessageDigest;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ExternData {
   /**
@@ -165,24 +167,29 @@ public class ExternData {
         path.mkdirs();
 
       // download
-      String dlurlRaw = TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW);
-      String dlurlLFS = TestHarness.getManifestAttribute(DACAPO_DL_URL_LFS);
       BufferedReader dllistReader = new BufferedReader(new InputStreamReader(
               ClassLoader.getSystemResourceAsStream("META-INF/dlfiles.list")));
 
+      ExecutorService executor = Executors.newCachedThreadPool();
       dllistReader.lines().forEach(s -> {
         try {
-          if(bench.length() == 0 || s.startsWith("dat/"+bench+".") || s.startsWith("dat/"+bench+"-") || s.startsWith("jar/"+bench+"."))
-            downloadAndExtractItem(s, dlurlRaw, dlurlLFS, path);
-        } catch (IOException e) {
-          System.err.println("Download external data failed.");
-          System.err.printf("You may want to manually download %s to %s\n", e.getMessage(), path);
+          if(bench.length() == 0 || s.startsWith("dat/"+bench+".") || s.startsWith("jar/"+bench+".")) {
+            executor.submit(() -> {
+              if (s.startsWith("jar")) {
+                RunWasabiDownload.JarDownload(s.split("/")[1], path.getAbsolutePath());
+              }
+              if (s.startsWith("dat")) {
+                RunWasabiDownload.DataDownload(s.split("/")[1], path.getAbsolutePath());
+              }
+            });
+          }
         } catch(Exception e) {
           e.printStackTrace();
           System.exit(-1);
         }
       });
 
+      executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
       setLocation(path, false);
     } catch (Exception e) {
       e.printStackTrace();
@@ -190,83 +197,11 @@ public class ExternData {
     }
   }
 
-  private static ReadableByteChannel tryOpenDownloadChannel(URL url) throws IOException{
-      // Try open download channel
-      // NOTE: it seems that GitHub server doesn't like downloading huge data in quick succession,
-      // in which case it responds with 503 error code.
-      // If that happends, wait 5 secs and try again.
-      // Also set a maximum retry limit to 5. When exceeded, fail with exception.
-      int maxRetry = 5;
-      ReadableByteChannel rbc = null;
-      while (rbc == null && maxRetry > 0) {
-        try {
-          rbc = Channels.newChannel(url.openStream());
-        } catch(IOException e) {
-          System.out.println("Failed!");
-          System.err.println(e.getMessage());
-          if (maxRetry > 0) {
-            System.out.println("Will retry after 5s.");
-            try {
-              Thread.sleep(5000);
-            } catch(InterruptedException ie) {
-              System.err.println("Interrupted");
-            }
-            maxRetry --;
-            System.out.println("Retrying...");
-          }
-        }
-      }
-      if (rbc == null && maxRetry == 0) {
-        System.err.println("Exceeded maximum retry count. Failed!");
-        throw new IOException(url.toString());
-      }
-      return rbc;
-  }
-
   private static void downloadAndExtractItemFromDaCapoDl(String itemRelPath, File path) throws Exception {
     // Create the directory
     path.mkdir();
     // download
-    String dlurlRaw = TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW);
-    String dlurlLFS = TestHarness.getManifestAttribute(DACAPO_DL_URL_LFS);
-    downloadAndExtractItem(itemRelPath, dlurlRaw, dlurlRaw, path);
-  }
-
-  private static void downloadAndExtractItem(String itemRelPath, String dlurlRaw, String dlurlLFS, File localDataPath) throws Exception {
-    URL urlItem = new URL(String.join("/", dlurlLFS, itemRelPath));
-    URL urlMD5 = new URL(String.join("/", dlurlRaw, itemRelPath + ".MD5"));
-    File fileLocalItem = new File(localDataPath, itemRelPath);
-
-    if (!fileLocalItem.getParentFile().exists())
-      fileLocalItem.getParentFile().mkdirs();
-
-    System.out.printf("Downloading %s to %s...", urlItem.toString(), fileLocalItem.toString());
-    ReadableByteChannel rbc = tryOpenDownloadChannel(urlItem);
-
-    FileOutputStream fos = new FileOutputStream(fileLocalItem);
-    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-    fos.close();
-    System.out.println("Done.");
-
-    System.out.printf("Checking %s MD5...", fileLocalItem.toString());
-    ReadableByteChannel rbcMD5 = tryOpenDownloadChannel(urlMD5);
-    ByteBuffer buf = ByteBuffer.allocate(32); // MD5 is always 32 characters long
-    rbcMD5.read(buf);
-    String md5Expect = new String(buf.array(), Charset.forName("ASCII")).toLowerCase();
-    String md5Actual = getMD5(fileLocalItem).toLowerCase();
-    if (!md5Expect.equals(md5Actual)) {
-      System.out.println("Failed!");
-      System.err.printf("MD5 checking of %s failed: expect %s, got %s\n", fileLocalItem.toString(),
-              md5Expect, md5Actual);
-      System.exit(-1);
-    }
-    System.out.println("Done.");
-    if (fileLocalItem.getName().contains("huge")) {
-      System.out.printf("Extracting %s...", fileLocalItem.toString());
-      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
-              fileLocalItem.getParentFile());
-      System.out.println("Done.");
-    }
+    RunWasabiDownload.Download(itemRelPath, path.getAbsolutePath());
   }
 
   private static String getMD5(File file) throws Exception{
