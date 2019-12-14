@@ -173,7 +173,7 @@ public class ExternData {
       ExecutorService executor = Executors.newCachedThreadPool();
       dllistReader.lines().forEach(s -> {
         try {
-          if(bench.length() == 0 || s.startsWith("dat/"+bench+".") || s.startsWith("jar/"+bench+".")) {
+          if(bench.length() == 0 || s.startsWith("dat/"+bench) || s.startsWith("jar/"+bench)) {
             executor.submit(() -> {
               if (s.startsWith("jar")) {
                 RunWasabiDownload.JarDownload(s.split("/")[1], path.getAbsolutePath());
@@ -181,6 +181,7 @@ public class ExternData {
               if (s.startsWith("dat")) {
                 RunWasabiDownload.DataDownload(s.split("/")[1], path.getAbsolutePath());
               }
+              executor.shutdown();
             });
           }
         } catch(Exception e) {
