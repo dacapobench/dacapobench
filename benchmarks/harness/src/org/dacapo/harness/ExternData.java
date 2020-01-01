@@ -181,6 +181,20 @@ public class ExternData {
               if (s.startsWith("dat")) {
                 RunWasabiDownload.DataDownload(s.split("/")[1], path.getAbsolutePath());
               }
+
+              File fileLocalItem = new File(path, s.split("/")[1]);
+              if (fileLocalItem.getName().contains("huge")) {
+                  System.out.printf("Extracting %s...", fileLocalItem.toString());
+                  try {
+                      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
+                              fileLocalItem.getParentFile());
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                      System.exit(-1);
+                  }
+                  System.out.println("Done.");
+              }
+
               executor.shutdown();
             });
           }
