@@ -182,7 +182,7 @@ public class ExternData {
                 RunWasabiDownload.DataDownload(s.split("/")[1], path.getAbsolutePath());
               }
 
-              File fileLocalItem = new File(path, s.split("/")[1]);
+              File fileLocalItem = new File(path, s);
               if (fileLocalItem.getName().contains("huge")) {
                   System.out.printf("Extracting %s...", fileLocalItem.toString());
                   try {
