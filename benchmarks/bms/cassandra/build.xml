@@ -85,18 +85,16 @@
     </target>
 
     <property name="slf4j-version" value="1.7.25"/>
-    <property name="slf4j-url" value="https://www.slf4j.org/dist"/>
-    <property name="slf4j-tgz" value="slf4j-${slf4j-version}.tar.gz"/>
+    <property name="slf4j-url" value="org/slf4j/slf4j-simple/${slf4j-version}"/>
+    <property name="slf4j-tgz" value="slf4j-simple-${slf4j-version}.jar"/>
 
     <target name="get-slf4j-simple-jar">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${slf4j-url}"/>
+            <param name="target-url" value="${maven.centre}/${slf4j-url}"/>
             <param name="target-file" value="${slf4j-tgz}"/>
         </antcall>
-        <untar src="${bm-downloads}/${slf4j-tgz}" dest="${bm-build-dir}" compression="gzip"/>
-        <property name="slf4j-dir" value="${bm-build-dir}/slf4j-${slf4j-version}"/>
-        <property name="slf4j-simple-jar" value="${slf4j-dir}/slf4j-simple-${slf4j-version}.jar"/>
+        <property name="slf4j-simple-jar" value="${bm-downloads}/${slf4j-tgz}"/>
     </target>
 
     <target name="libs">
@@ -119,7 +117,7 @@
                 </fileset>
             </resources>
         </copy>
-        <get src="http://central.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
+        <get src="https://repo1.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-out-jar}"/>
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
         <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
