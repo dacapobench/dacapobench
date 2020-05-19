@@ -132,7 +132,7 @@
             tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
         <copy file="${cassandra-build-top}/build/apache-cassandra-thrift-${bm-version}-SNAPSHOT.jar"
             tofile="${bm-jars}/cassandra-thrift-${bm-version}.jar"/>
-        <get src="http://central.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
+        <get src="https://repo.maven.apache.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-jars}"/>
     </target>
  </project>
