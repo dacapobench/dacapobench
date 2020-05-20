@@ -1,0 +1,23 @@
+--- lucene-7.1.0/common-build.xml	2017-10-14 03:14:40.000000000 +1100
++++ tmp/common-build.xml	2020-05-20 16:20:18.191197728 +1000
+@@ -165,7 +165,7 @@
+   <property name="javac.args" value="-Xlint -Xlint:-deprecation -Xlint:-serial"/>
+   <property name="javac.profile.args" value="-profile compact2"/>
+   <property name="javadoc.link" value="https://docs.oracle.com/javase/8/docs/api/"/>
+-  <property name="javadoc.link.junit" value="http://junit.sourceforge.net/javadoc/"/>
++  <property name="javadoc.link.junit" value="https://junit.sourceforge.net/javadoc/"/>
+   <property name="javadoc.packagelist.dir" location="${common.dir}/tools/javadoc"/>
+   <available file="${javadoc.packagelist.dir}/java8/package-list" property="javadoc.java8.packagelist.exists"/>
+   <property name="javadoc.access" value="protected"/>
+@@ -410,9 +410,9 @@
+   </target>
+ 
+   <property name="ivy_install_path" location="${user.home}/.ant/lib" />
+-  <property name="ivy_bootstrap_url1" value="http://repo1.maven.org/maven2"/>
++  <property name="ivy_bootstrap_url1" value="https://repo1.maven.org/maven2"/>
+   <!-- you might need to tweak this from china so it works -->
+-  <property name="ivy_bootstrap_url2" value="http://uk.maven.org/maven2"/>
++  <property name="ivy_bootstrap_url2" value="https://uk.maven.org/maven2"/>
+   <property name="ivy_checksum_sha1" value="c5ebf1c253ad4959a29f4acfe696ee48cdd9f473"/>
+ 
+   <target name="ivy-availability-check" unless="ivy.available">
