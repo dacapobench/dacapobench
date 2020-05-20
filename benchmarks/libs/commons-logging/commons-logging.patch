@@ -1,9 +1,10 @@
 --- commons-logging-1.2-src/build.xml	2014-07-06 04:11:36.000000000 +1000
 +++ ../build-new.xml	2017-12-11 15:05:02.519781973 +1100
-@@ -224,13 +224,14 @@
+@@ -223,14 +223,14 @@
+   <!--
      - Running this target will download all the necessary dependencies into the "lib" subdirectory.
      -->
-   <property name="getlibs.base" value="http://repo1.maven.org/maven"/>
+-  <property name="getlibs.base" value="http://repo1.maven.org/maven"/>
 +  <property name="getlibs.base" value="https://repo.maven.apache.org/maven2"/>
    <target name="getlibs">
      <mkdir dir="lib"/>
