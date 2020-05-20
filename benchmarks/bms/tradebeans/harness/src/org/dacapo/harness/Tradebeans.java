@@ -40,11 +40,6 @@ public class Tradebeans extends Benchmark {
   }
 
   @Override
-  protected void prepare() throws Exception {
-    unpackZipFileResource("dat/daytrader.zip", scratch);
-  }
-
-  @Override
   protected void prepare(String size) throws Exception {
     String[] args = config.preprocessArgs(size, scratch, data);
     String dtSize = "medium";
@@ -70,7 +65,7 @@ public class Tradebeans extends Benchmark {
     }
     System.out.println("Shutting down Wildfly...");
     if (!getPreserve()) {
-      deleteTree(new File(scratch, "wildfly-16.0.0.Final"));
+      deleteTree(new File(scratch, "wildfly-17.0.0.Final"));
       deleteTree(new File(scratch, "jar"));
     }
   }

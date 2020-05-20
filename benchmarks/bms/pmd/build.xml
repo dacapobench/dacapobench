@@ -56,10 +56,6 @@
         </copy>
     </target>
 
-    <target name="data">
-        <zip destfile="${bm-dat}/pmd.zip" basedir="${bm-data}" includes="pmd/**/*"/>
-    </target>
-
     <property name="asm-version" value="7.1"/>
     <property name="commons-io-version" value="2.6"/>
     <property name="commons-lang3-version" value="3.8.1"/>
@@ -67,7 +63,7 @@
     <property name="saxon-version" value="9.1.0.8"/>
 
     <target name="libs">
-        <copy todir="${bm-jars}">
+        <copy todir="${bm-out-jar}">
             <resources>
                 <file file="${pmd-dist-target}/lib/asm-${asm-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/commons-io-${commons-io-version}.jar"/>
@@ -77,5 +73,7 @@
                 <file file="${pmd-dist-target}/lib/saxon-${saxon-version}-dom.jar"/>
             </resources>
         </copy>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 </project>

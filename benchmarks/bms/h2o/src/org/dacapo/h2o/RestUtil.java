@@ -1,6 +1,7 @@
 package org.dacapo.h2o;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
 import java.util.HashMap;
@@ -20,21 +21,17 @@ public class RestUtil {
     private String url;
     private String response;
 
-    RestUtil(String url) {
+    RestUtil(String url) throws ClassNotFoundException, NoSuchMethodException {
         this.url = url;
-        try {
-            Class<?> jsonObj = Class.forName("net.sf.json.JSONObject", true, Thread.currentThread().getContextClassLoader());
-            fromObjectOb = jsonObj.getMethod("fromObject", Object.class);
-            getStringOb = jsonObj.getMethod("getString", String.class);
-            getOb = jsonObj.getMethod("get", String.class);
+        Class<?> jsonObj = Class.forName("net.sf.json.JSONObject", true, Thread.currentThread().getContextClassLoader());
+        fromObjectOb = jsonObj.getMethod("fromObject", Object.class);
+        getStringOb = jsonObj.getMethod("getString", String.class);
+        getOb = jsonObj.getMethod("get", String.class);
 
-            Class<?> jsonArr = Class.forName("net.sf.json.JSONArray", true, Thread.currentThread().getContextClassLoader());
-            fromObjectAr = jsonArr.getMethod("fromObject", Object.class);
-            getStringAr = jsonArr.getMethod("getString", int.class);
-            getSizeAr = jsonArr.getMethod("size");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Class<?> jsonArr = Class.forName("net.sf.json.JSONArray", true, Thread.currentThread().getContextClassLoader());
+        fromObjectAr = jsonArr.getMethod("fromObject", Object.class);
+        getStringAr = jsonArr.getMethod("getString", int.class);
+        getSizeAr = jsonArr.getMethod("size");
     }
 
     /**
@@ -112,15 +109,11 @@ public class RestUtil {
      * @param br
      * @return the concatenation of the string from @br
      */
-    protected static String getStringFromBufferedReader(BufferedReader br) {
+    protected static String getStringFromBufferedReader(BufferedReader br) throws IOException {
         StringBuilder lines = new StringBuilder();
-        try {
-            String line;
-            while ((line = br.readLine()) != null)
-                lines.append(line);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String line;
+        while ((line = br.readLine()) != null)
+            lines.append(line);
         return lines.toString();
     }
 
@@ -131,18 +124,14 @@ public class RestUtil {
      * @param labels 
      * @return a key-value map
      */
-    public Map<String, String> getFromResponse(String... labels) {
+    public Map<String, String> getFromResponse(String... labels) throws InvocationTargetException, IllegalAccessException {
         Map<String, String> labelValue = new HashMap<>();
-        try {
-            Object obj = fromObjectOb.invoke(null, (Object) response);
-            for (String label : labels){
-                // Todo: validate the labels
-                // the json responsed from h2o is well-design. The details is in
-                // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
-                labelValue.put(label, (String) getStringOb.invoke(obj, (Object) label));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Object obj = fromObjectOb.invoke(null, (Object) response);
+        for (String label : labels){
+            // Todo: validate the labels
+            // the json responsed from h2o is well-design. The details is in
+            // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
+            labelValue.put(label, (String) getStringOb.invoke(obj, (Object) label));
         }
         return labelValue;
     }
@@ -154,31 +143,23 @@ public class RestUtil {
      * @param labels
      * @return a key-value map
      */
-    Map<String, List> getListFromResponse(String... labels) {
+    Map<String, List> getListFromResponse(String... labels) throws InvocationTargetException, IllegalAccessException {
         Map<String, List> labelValue = new HashMap<>();
-        try {
-            Object obj  = fromObjectOb.invoke(null, (Object) response);
-            for (String label : labels){
-                // Todo: validate the labels
-                // the json responsed from h2o is well-design. The details is in
-                // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
-                labelValue.put(label, (List) getOb.invoke(obj, (Object) label));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Object obj  = fromObjectOb.invoke(null, (Object) response);
+        for (String label : labels){
+            // Todo: validate the labels
+            // the json responsed from h2o is well-design. The details is in
+            // http://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html, which contains all RESTFul API and data structure
+            labelValue.put(label, (List) getOb.invoke(obj, (Object) label));
         }
         return labelValue;
     }
 
-    List getIndexFromJsonArray(String jl) {
+    List getIndexFromJsonArray(String jl) throws InvocationTargetException, IllegalAccessException {
         List l = new LinkedList<>();
-        try {
-            Object jsonA = fromObjectAr.invoke(null, (Object) jl);
-            for (int i = 0; i < (Integer) getSizeAr.invoke(jsonA); i++){
-                l.add(fromObjectOb.invoke(null, getStringAr.invoke(jsonA, (Object) i)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Object jsonA = fromObjectAr.invoke(null, (Object) jl);
+        for (int i = 0; i < (Integer) getSizeAr.invoke(jsonA); i++){
+            l.add(fromObjectOb.invoke(null, getStringAr.invoke(jsonA, (Object) i)));
         }
         return l;
     }

@@ -49,20 +49,4 @@
               todir="${bm-jars}"/>
     </target>
 
-    <target name="data">
-        <property name="resources-base" value="${bm-build-dir}/core/src/test"/>
-        <property name="resources" value="${resources-base}/resources"/>
-        <property name="data" value="${resources-base}/dat"/>
-
-        <mkdir dir="${data}"/>
-        <copy todir="${data}">
-            <fileset dir="${resources}" includes="**/*.png **/*.jpg"/>
-        </copy>
-
-        <!--totally 1225 barcode, all from zxing-->
-        <zip basedir="${resources-base}" includes="dat/**" destfile="${bm-dat}/${bm-name}.zip"/>
-
-        <delete dir="${data}"/>
-    </target>
-
 </project>

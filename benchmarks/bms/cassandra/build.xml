@@ -98,7 +98,7 @@
     </target>
 
     <target name="libs">
-        <copy todir="${bm-jars}">
+        <copy todir="${bm-out-jar}">
             <resources>
                 <!-- cassandra libs -->
                 <fileset dir="${cassandra-build-top}/lib" includes="*.jar"/>
@@ -117,12 +117,10 @@
                 </fileset>
             </resources>
         </copy>
-        <!-- cassandra libsigar dependency -->
-        <zip destfile="${bm-dat}/libsigar.zip" basedir="${cassandra-build-top}/lib/sigar-bin"/>
-        <!-- cassandra config (XXX: maybe put it in another target/directory) -->
-        <zip destfile="${bm-dat}/cassandra-conf.zip" basedir="${cassandra-build-top}/conf"/>
-        <!-- ycsb workloads -->
-        <zip destfile="${bm-dat}/ycsb-workloads.zip" basedir="${ycsb-dir}/workloads"/>
+        <get src="https://repo1.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
+             dest="${bm-out-jar}"/>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
     <target name="jar" depends="libs">
@@ -130,7 +128,5 @@
             tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
         <copy file="${cassandra-build-top}/build/apache-cassandra-thrift-${bm-version}-SNAPSHOT.jar"
             tofile="${bm-jars}/cassandra-thrift-${bm-version}.jar"/>
-        <get src="https://repo.maven.apache.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
-             dest="${bm-jars}"/>
     </target>
  </project>

@@ -1,6 +1,6 @@
-diff -urN ./build.gradle ../build-src/build.gradle
---- ./build.gradle	2019-04-22 04:57:14.000000000 +1000
-+++ ../build-src/build.gradle	2019-04-22 05:01:08.000000000 +1000
+diff -urN build/build.gradle build-new/build.gradle
+--- build/build.gradle	2019-04-22 04:57:14.000000000 +1000
++++ build-new/build.gradle	2019-08-27 17:44:58.000000000 +1000
 @@ -82,36 +82,10 @@
      into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
  }
@@ -39,9 +39,111 @@ diff -urN ./build.gradle ../build-src/build.gradle
  task mergedSource(type: Copy){
  
  }
-diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java
---- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2019-04-22 04:57:15.000000000 +1000
-+++ ../build-src/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-04-22 04:59:45.000000000 +1000
+diff -urN build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java build-new/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
+--- build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2019-04-22 04:57:15.000000000 +1000
++++ build-new/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2019-08-28 15:22:06.000000000 +1000
+@@ -439,7 +439,7 @@
+      * the main loop in a separate thread.
+      */
+     public void start(JmeContext.Type contextType) {
+-        start(contextType, false);
++        start(contextType, true);
+     }
+ 
+     /**
+diff -urN build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java build-new/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
+--- build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2019-04-22 04:57:19.000000000 +1000
++++ build-new/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2019-08-28 15:26:56.000000000 +1000
+@@ -47,6 +47,9 @@
+ import com.jme3.system.AppSettings;
+ import com.jme3.system.JmeContext.Type;
+ import com.jme3.system.JmeSystem;
++import com.jme3.system.NanoTimer;
++
++import java.util.Random;
+ 
+ /**
+  * <code>SimpleApplication</code> is the base class for all jME3 Applications.
+@@ -78,6 +81,7 @@
+     protected FlyByCamera flyCam;
+     protected boolean showSettings = true;
+     private AppActionListener actionListener = new AppActionListener();
++    private Random random = new Random();
+ 
+     private class AppActionListener implements ActionListener {
+ 
+@@ -237,6 +241,7 @@
+ 
+         // simple update and root node
+         simpleUpdate(tpf);
++        simpleUpdate(tpf, ((NanoTimer) timer).getFrameCount());
+ 
+         if (prof!=null) prof.appStep(AppStep.SpatialUpdate);
+         rootNode.updateLogicalState(tpf);
+@@ -271,7 +276,19 @@
+ 
+     public abstract void simpleInitApp();
+ 
++    private void simpleUpdate(float tpf, int frameCount) {
++        if (frameCount > Integer.parseInt(System.getProperty("frameThreshold"))){
++            synchronized (context){
++                System.out.println(this.settings.toString());
++                System.out.println(this.getClass().getName() + " finished...");
++                context.notify();
++                this.stop();
++            }
++        }
++    }
++
+     public void simpleUpdate(float tpf) {
++        cam.setLocation(cam.getLocation().setY(cam.getLocation().getY()+ (random.nextFloat()-0.5f) * 3));
+     }
+ 
+     public void simpleRender(RenderManager rm) {
+diff -urN build/jme3-core/src/main/java/com/jme3/system/AppSettings.java build-new/jme3-core/src/main/java/com/jme3/system/AppSettings.java
+--- build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2019-04-22 04:57:19.000000000 +1000
++++ build-new/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2019-08-28 15:25:25.000000000 +1000
+@@ -211,8 +211,8 @@
+     public static final String JOAL = "JOAL";
+ 
+     static {
+-        defaults.put("Width", 640);
+-        defaults.put("Height", 480);
++        defaults.put("Width", 1920);
++        defaults.put("Height", 1080);
+         defaults.put("BitsPerPixel", 24);
+         defaults.put("Frequency", 60);
+         defaults.put("DepthBits", 24);
+diff -urN build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java build-new/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
+--- build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2019-04-22 04:57:15.000000000 +1000
++++ build-new/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2019-08-28 14:03:34.000000000 +1000
+@@ -46,6 +46,7 @@
+     private long previousTime;
+     private float tpf;
+     private float fps;
++    private int frameCount;
+     
+     public NanoTimer() {
+         startTime = System.nanoTime();
+@@ -78,10 +79,15 @@
+         return tpf;
+     }
+ 
++    public int getFrameCount() {
++        return frameCount;
++    }
++
+     public void update() {
+         tpf = (getTime() - previousTime) * (1.0f / TIMER_RESOLUTION);
+         fps = 1.0f / tpf;
+         previousTime = getTime();
++        frameCount++;
+     }
+     
+     public void reset() {
+diff -urN build/jme3-examples/src/main/java/jme3test/TestChooser.java build-new/jme3-examples/src/main/java/jme3test/TestChooser.java
+--- build/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-04-22 04:57:15.000000000 +1000
++++ build-new/jme3-examples/src/main/java/jme3test/TestChooser.java	2019-08-28 15:38:11.000000000 +1000
 @@ -48,26 +48,21 @@
  import java.net.URL;
  import java.net.URLConnection;
@@ -101,7 +203,7 @@ diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/j
          // Get a File object for the package
          // URL url = UPBClassLoader.get().getResource(name);
          url = this.getClass().getResource(name);
-@@ -248,137 +243,144 @@
+@@ -248,137 +243,143 @@
  
      private void startApp(final java.util.List appClass){
          if (appClass == null){
@@ -164,29 +266,28 @@ diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/j
 +                    Class<?> clazz = (Class)appClass.get(i);
 +                    try {
 +                        if (LegacyApplication.class.isAssignableFrom(clazz) && !clazz.getName().equals("TestMultiplesFilters")) {
-+                            Object app = clazz.newInstance();
-+                            if (app instanceof SimpleApplication) {
-+                                final Method settingMethod = clazz.getMethod("setShowSettings", boolean.class);
-+                                settingMethod.invoke(app, showSetting);
-+                            }
++                            Object app = clazz.getConstructor().newInstance();
++
 +                            final Method mainMethod = clazz.getMethod("start", JmeContext.Type.class);
 +                            mainMethod.invoke(app, JmeContext.Type.Headless);
 +                            Field contextField = LegacyApplication.class.getDeclaredField("context");
 +                            contextField.setAccessible(true);
-+                            JmeContext context = null;
-+                            while (context == null) {
-+                                context = (JmeContext) contextField.get(app);
-+                                Thread.sleep(100);
++                            JmeContext context = (JmeContext) contextField.get(app);
++                            synchronized(context) {
++                                System.out.println(context.getClass().getName() + " created!");
++                                context.wait();
 +                            }
-+                            while (!context.isCreated()) {
-+                                Thread.sleep(100);
-+                                System.out.println(1);
-+                            }
-+                            while (context.isCreated()) {
-+                                final Method stopMethod = clazz.getMethod("stop");
-+                                stopMethod.invoke(app);
-+                                Thread.sleep(100);
-+                            }
++
++//                            JmeContext context = null;
++//                            while (context == null) {
++//                                Thread.sleep(100);
++//                            }
++//                            while (!context.isCreated()) {
++//                                Thread.sleep(100);
++//                            }
++//                            while (context.isCreated()) {
++//                                Thread.sleep(100);
++//                            }
 +                        } else {
 +                            final Method mainMethod = clazz.getMethod("main", (new String[0]).getClass());
 +                            mainMethod.invoke(clazz, new Object[]{new String[0]});
@@ -368,7 +469,7 @@ diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/j
  
      private class FilteredJList extends JList {
          private static final long serialVersionUID = 1L;
-@@ -424,18 +426,18 @@
+@@ -424,18 +425,18 @@
      /**
       * center the frame.
       */
@@ -399,7 +500,7 @@ diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/j
  
      /**
       * Start the chooser.
-@@ -448,18 +450,45 @@
+@@ -448,18 +449,45 @@
              UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
          } catch (Exception e) {
          }
@@ -454,18 +555,70 @@ diff -urN ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build-src/j
      protected void addDisplayedClasses(Vector<Class> classes) {
          find("jme3test", true, classes);
      }
-diff -urN ./jme3-networking/build.gradle ../build-src/jme3-networking/build.gradle
---- ./jme3-networking/build.gradle	2019-04-22 04:57:16.000000000 +1000
-+++ ../build-src/jme3-networking/build.gradle	2019-04-22 05:10:21.000000000 +1000
+diff -urN build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java build-new/jme3-examples/src/main/java/jme3test/light/TestLightNode.java
+--- build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2019-04-22 04:57:15.000000000 +1000
++++ build-new/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2019-08-28 14:12:06.000000000 +1000
+@@ -101,7 +101,7 @@
+     public void simpleUpdate(float tpf){
+ //        cam.setLocation(new Vector3f(5.0347548f, 6.6481347f, 3.74853f));
+ //        cam.setRotation(new Quaternion(-0.19183293f, 0.80776674f, -0.37974006f, -0.40805697f));
+-
++        super.simpleUpdate(tpf);
+         angle += tpf;
+         angle %= FastMath.TWO_PI;
+ 
+diff -urN build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java build-new/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
+--- build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2019-04-22 04:57:15.000000000 +1000
++++ build-new/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2019-08-28 15:27:26.000000000 +1000
+@@ -13,6 +13,7 @@
+ import com.jme3.scene.Node;
+ import com.jme3.scene.Spatial;
+ import com.jme3.system.AppSettings;
++import com.jme3.system.JmeContext;
+ import com.jme3.terrain.geomipmap.TerrainQuad;
+ import com.jme3.terrain.heightmap.AbstractHeightMap;
+ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
+@@ -42,18 +43,18 @@
+         TestMultiPostWater app = new TestMultiPostWater();
+         AppSettings s = new AppSettings(true);
+         s.setRenderer(AppSettings.LWJGL_OPENGL2);
+-        s.setAudioRenderer(AppSettings.LWJGL_OPENAL);
+-//       
++//
+ //        s.setRenderer("JOGL");
+ //        s.setAudioRenderer("JOAL");
+         app.setSettings(s);
+ 
+-        app.start();
++        app.start(JmeContext.Type.Headless);
+     }
+ 
+     @Override
+     public void simpleInitApp() {
+ 
++        System.out.println("Initializing the app...");
+ //      setDisplayFps(false);
+ //      setDisplayStatView(false);
+ 
+@@ -185,5 +186,6 @@
+ 
+     @Override
+     public void simpleUpdate(float tpf) {
++        super.simpleUpdate(tpf);
+     }
+ }
+diff -urN build/jme3-networking/build.gradle build-new/jme3-networking/build.gradle
+--- build/jme3-networking/build.gradle	2019-04-22 04:57:16.000000000 +1000
++++ build-new/jme3-networking/build.gradle	2019-08-27 17:44:58.000000000 +1000
 @@ -4,4 +4,5 @@
  
  dependencies {
      compile project(':jme3-core')
 +    compile 'com.sun.xml.ws:jaxws-ri:2.3.2'
  }
-diff -urN ./jme3-plugins/build.gradle ../build-src/jme3-plugins/build.gradle
---- ./jme3-plugins/build.gradle	2019-04-22 04:57:16.000000000 +1000
-+++ ../build-src/jme3-plugins/build.gradle	2019-04-22 05:07:31.000000000 +1000
+diff -urN build/jme3-plugins/build.gradle build-new/jme3-plugins/build.gradle
+--- build/jme3-plugins/build.gradle	2019-04-22 04:57:16.000000000 +1000
++++ build-new/jme3-plugins/build.gradle	2019-08-27 17:44:58.000000000 +1000
 @@ -17,4 +17,8 @@
      compile project(':jme3-core')
      compile 'com.google.code.gson:gson:2.8.1'

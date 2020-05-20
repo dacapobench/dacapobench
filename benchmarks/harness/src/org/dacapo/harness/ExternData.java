@@ -3,35 +3,31 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.FileOutputStream;
-import java.net.MalformedURLException;
+import java.io.*;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.Charset;
 import java.nio.channels.Channels;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.Properties;
 
+import javax.net.ssl.*;
 import javax.xml.bind.DatatypeConverter;
 
 import java.security.MessageDigest;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ExternData {
   /**
@@ -39,11 +35,16 @@ public class ExternData {
    * Using a "data installation directory" to keep
    * large data sets.
    */
+  public static final String WORKING_DIRE = Paths.get("").toAbsolutePath().toString();
   public static final Path DEFAULT_LOCAL_DACAPO_CONFIG = Paths.get(System.getProperty("user.home"), ".dacapo-config.properties");
   public static final String CONFIG_KEY_EXTERN_DATA_LOC = "Extern-Data-Location";
   public static final String DACAPO_DL_URL_LFS = "DaCapo-DL-URL-LFS";
   public static final String DACAPO_DL_URL_RAW = "DaCapo-DL-URL-RAW";
-  public static final String DACAPO_DL_COMMIT = "DaCapo-DL-Commit";
+  public static final String DACAPO_CHECKSUM_RE_PATH = "META-INF" + File.separator + "huge-data-md5s.list";
+
+  static {
+    disableSslVerification();
+  }
 
   private static String getDefaultLocation() {
     try {
@@ -75,23 +76,24 @@ public class ExternData {
    */
   public static void failExtDataNotFound(String size, File extdata) {
     System.err.printf("ERROR: failed to find external data for size '%s'.\n", size);
-    System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata.getAbsolutePath());
+    System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata == null ? "null" : extdata.getAbsolutePath());
     System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the large data, run DaCapo with --extdata-install <dir-name>");
-    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location to correctly identify the location of the external data.");
+    System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
+    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
     System.exit(-1);
   }
   public static void failExtJarNotFound(File extjar, File extdata) {
     System.err.printf("ERROR: failed to find jar: %s.\n", extjar.getName());
-    System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata.getAbsolutePath());
+    System.err.printf("Please check that you have installed the external jar package properly (current: %s)\n", extdata == null ? "null" : extdata.getAbsolutePath());
     System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the large data, run DaCapo with --extdata-install");
-    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location to correctly identify the location of the external data.");
+    System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
+    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
     System.exit(-1);
   }
 
   public static void setLocation(File path, boolean md5Check) {
     if (md5Check) {
+      downloadChecksum();
       // MD5 check
       System.out.printf("Checking MD5 at %s...", path.toString());
       if (!checkExtDataDirMD5(path)) {
@@ -118,8 +120,25 @@ public class ExternData {
     }
   }
 
-  private static boolean checkExtDataDirMD5(File dir) {
+  private static boolean downloadChecksum() {
+    try {
+      downloadAndExtractItemFromDaCapoDl("META-INF/huge-data-md5s.list", new File(WORKING_DIRE));
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean checkExtDataDirMD5(File dir){
+    File checksum = new File(WORKING_DIRE, DACAPO_CHECKSUM_RE_PATH);
     InputStream in = ClassLoader.getSystemResourceAsStream("META-INF/huge-data-md5s.list");
+    if(!checksum.exists()) {
+      try {
+        in = new FileInputStream(checksum);
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
     File datDir = new File(dir, "dat");
     return reader.lines().map(l -> {
@@ -141,30 +160,51 @@ public class ExternData {
   /**
    * Download and install external data
    */
-  public static void downloadAndInstall(File path) {
+  public static void downloadAndInstall(File path, String bench) {
     try {
       // create directory if not exist already
       if (!path.exists())
         path.mkdirs();
 
       // download
-      String dlurlRaw = TestHarness.getManifestAttribute(DACAPO_DL_URL_RAW);
-      String dlurlLFS = TestHarness.getManifestAttribute(DACAPO_DL_URL_LFS);
-      String commit = TestHarness.getManifestAttribute(DACAPO_DL_COMMIT);
       BufferedReader dllistReader = new BufferedReader(new InputStreamReader(
               ClassLoader.getSystemResourceAsStream("META-INF/dlfiles.list")));
+
+      ExecutorService executor = Executors.newCachedThreadPool();
       dllistReader.lines().forEach(s -> {
         try {
-          downloadAndExtractItem(s, dlurlRaw, dlurlLFS, commit, path);
-        } catch (IOException e) {
-          System.err.println("Download external data failed.");
-          System.err.printf("You may want to manually download %s to %s\n", e.getMessage(), path);
+          if(bench.length() == 0 || s.startsWith("dat/"+bench) || s.startsWith("jar/"+bench)) {
+            executor.submit(() -> {
+              if (s.startsWith("jar")) {
+                RunWasabiDownload.JarDownload(s.split("/")[1], path.getAbsolutePath());
+              }
+              if (s.startsWith("dat")) {
+                RunWasabiDownload.DataDownload(s.split("/")[1], path.getAbsolutePath());
+              }
+
+              File fileLocalItem = new File(path, s);
+              if (fileLocalItem.getName().contains("huge")) {
+                  System.out.printf("Extracting %s...", fileLocalItem.toString());
+                  try {
+                      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
+                              fileLocalItem.getParentFile());
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                      System.exit(-1);
+                  }
+                  System.out.println("Done.");
+              }
+
+              executor.shutdown();
+            });
+          }
         } catch(Exception e) {
           e.printStackTrace();
           System.exit(-1);
         }
       });
 
+      executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
       setLocation(path, false);
     } catch (Exception e) {
       e.printStackTrace();
@@ -172,74 +212,11 @@ public class ExternData {
     }
   }
 
-  private static ReadableByteChannel tryOpenDownloadChannel(URL url) throws IOException{
-      // Try open download channel
-      // NOTE: it seems that GitHub server doesn't like downloading huge data in quick succession,
-      // in which case it responds with 503 error code.
-      // If that happends, wait 5 secs and try again.
-      // Also set a maximum retry limit to 5. When exceeded, fail with exception.
-      int maxRetry = 5;
-      ReadableByteChannel rbc = null;
-      while (rbc == null && maxRetry > 0) {
-        try {
-          rbc = Channels.newChannel(url.openStream());
-        } catch(IOException e) {
-          System.out.println("Failed!");
-          System.err.println(e.getMessage());
-          if (maxRetry > 0) {
-            System.out.println("Will retry after 5s.");
-            try {
-              Thread.sleep(5000);
-            } catch(InterruptedException ie) {
-              System.err.println("Interrupted");
-            }
-            maxRetry --;
-            System.out.println("Retrying...");
-          }
-        }
-      }
-      if (rbc == null && maxRetry == 0) {
-        System.err.println("Exceeded maximum retry count. Failed!");
-        throw new IOException(url.toString());
-      }
-      return rbc;
-  }
-
-  private static void downloadAndExtractItem(String itemRelPath, String dlurlRaw, String dlurlLFS, String commit, File localDataPath) throws Exception {
-    URL urlItem = new URL(String.join("/", dlurlLFS, commit, itemRelPath));
-    URL urlMD5 = new URL(String.join("/", dlurlRaw, commit, itemRelPath + ".MD5"));
-    File fileLocalItem = new File(localDataPath, itemRelPath);
-
-    if (!fileLocalItem.getParentFile().exists())
-      fileLocalItem.getParentFile().mkdirs();
-
-    System.out.printf("Downloading %s to %s...", urlItem.toString(), fileLocalItem.toString());
-    ReadableByteChannel rbc = tryOpenDownloadChannel(urlItem);
-
-    FileOutputStream fos = new FileOutputStream(fileLocalItem);
-    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-    fos.close();
-    System.out.println("Done.");
-
-    System.out.printf("Checking %s MD5...", fileLocalItem.toString());
-    ReadableByteChannel rbcMD5 = tryOpenDownloadChannel(urlMD5);
-    ByteBuffer buf = ByteBuffer.allocate(32); // MD5 is always 32 characters long
-    rbcMD5.read(buf);
-    String md5Expect = new String(buf.array(), Charset.forName("ASCII")).toLowerCase();
-    String md5Actual = getMD5(fileLocalItem).toLowerCase();
-    if (!md5Expect.equals(md5Actual)) {
-      System.out.println("Failed!");
-      System.err.printf("MD5 checking of %s failed: expect %s, got %s\n", fileLocalItem.toString(),
-              md5Expect, md5Actual);
-      System.exit(-1);
-    }
-    System.out.println("Done.");
-    if (fileLocalItem.getName().endsWith(".zip")) {
-      System.out.printf("Extracting %s...", fileLocalItem.toString());
-      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
-              fileLocalItem.getParentFile());
-      System.out.println("Done.");
-    }
+  private static void downloadAndExtractItemFromDaCapoDl(String itemRelPath, File path) throws Exception {
+    // Create the directory
+    path.mkdir();
+    // download
+    RunWasabiDownload.Download(itemRelPath, path.getAbsolutePath());
   }
 
   private static String getMD5(File file) throws Exception{
@@ -251,5 +228,41 @@ public class ExternData {
         md.update(buffer, 0, bytesRead);
       }
       return DatatypeConverter.printHexBinary(md.digest());
+  }
+
+  private static void disableSslVerification() {
+    try
+    {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+          return null;
+        }
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+        }
+        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+        }
+      }
+      };
+
+      // Install the all-trusting trust manager
+      SSLContext sc = SSLContext.getInstance("SSL");
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+      // Create all-trusting host name verifier
+      HostnameVerifier allHostsValid = new HostnameVerifier() {
+        public boolean verify(String hostname, SSLSession session) {
+          return true;
+        }
+      };
+
+      // Install the all-trusting host verifier
+      HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    } catch (KeyManagementException e) {
+      e.printStackTrace();
+    }
   }
 }

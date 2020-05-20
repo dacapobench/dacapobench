@@ -37,14 +37,6 @@
         </copy>
     </target>
 
-    <target name="data">
-        <zip destfile="${bm-dat}/${bm-name}.zip">
-            <fileset dir="${bm-build-dir}/${bm-name}">
-                <include name="test/**/*" />
-            </fileset>
-        </zip>
-    </target>
-
     <target name="jar">
         <jar destfile="${bm-jars}/${bm-name}-${bm-version}.jar">
             <fileset dir="${bm-build-dir}/build">

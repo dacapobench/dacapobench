@@ -13,7 +13,7 @@
 	<property name="lib-build-dir" location="libs/${lib-name}/build"/>
 	<property name="lib-output-dir" location="libs/${lib-name}/dist"/>
 	<property name="lib-jars" location="${lib-output-dir}/jar"/>
-	<property name="lib-dat" value="${bm-output-dir}/dat"/>
+	<property name="lib-dat" value="${bm-out-dat}"/>
 	<property name="lib-downloads" location="libs/${lib-name}/downloads"/>
 	<property name="lib-src-dir" location="libs/${lib-name}/src"/>
 	<property name="lib-data" location="libs/${lib-name}/data"/>
@@ -88,6 +88,8 @@
 	<target name="jar"/>
 
 	<target name="complete">
-		<jar jarfile="${build.target-jar}" basedir="${lib-output-dir}" update="true"/>
+		<copy todir="${bm-out-jar}">
+			<fileset dir="${lib-output-dir}/jar" includes="*.jar"/>
+		</copy>
 	</target>
 </project>

@@ -66,7 +66,7 @@ public class Launcher {
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
-      System.exit(-1);
+      Runtime.getRuntime().halt(1);
     } finally {
       Thread.currentThread().setContextClassLoader(originalCLoader);
     }

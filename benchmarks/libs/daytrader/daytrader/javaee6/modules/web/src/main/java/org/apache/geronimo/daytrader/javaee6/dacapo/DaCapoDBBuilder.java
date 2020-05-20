@@ -55,6 +55,7 @@ public class DaCapoDBBuilder extends Thread {
 		} catch (Exception e) {
 			System.err.println("Could not create database: "+e.toString());
 			e.printStackTrace();
+			System.exit(-1);
 		}
 	}
 	
@@ -64,6 +65,7 @@ public class DaCapoDBBuilder extends Thread {
 		} catch (Exception e) {
 			System.err.println("Could not reset database: "+e.toString());
 			e.printStackTrace();
+			System.exit(-1);
 		}
 	}
 
@@ -119,7 +121,7 @@ public class DaCapoDBBuilder extends Thread {
 						if (j == MAX_TX_ATTEMPTS - 1) {
 							System.err.println("Error adding quote: "+e.toString());
 							e.printStackTrace();
-							return;
+							System.exit(-1);
 						}
 					}
 				}
@@ -246,7 +248,7 @@ public class DaCapoDBBuilder extends Thread {
 					if (i == MAX_TX_ATTEMPTS - 1) {
 						System.err.println("Error adding holding: "+e.toString());
 						e.printStackTrace();
-						return;
+						System.exit(-1);
 					}
 				}
 			}
@@ -265,7 +267,7 @@ public class DaCapoDBBuilder extends Thread {
 					String msg = "DaCapoDBBuilder: garbled size field in user header: "+header[h];
 					Log.error(msg);
 					System.err.println(msg);
-					return 0;						
+					System.exit(-1);
 				}
 			}
 		}
@@ -287,7 +289,7 @@ public class DaCapoDBBuilder extends Thread {
 			try {
 				sqlBuffer = parseDDLToBuffer(ddlFile);
 			} catch (Exception e) {
-
+				System.exit(-1);
 			}
 			try {
 				if (trade.recreateDBTables(sqlBuffer, null)) {
@@ -297,11 +299,13 @@ public class DaCapoDBBuilder extends Thread {
 				String msg = "Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing";
 				Log.error(msg);
 				System.err.println(msg);
+				System.exit(-1);
 			}
 		} catch (Exception e) {
 			String msg = "DaCapoDBBuilder: Unable to create database";
 			Log.error(msg);
 			System.err.println(msg);
+			System.exit(-1);
 		}
 	}
 
@@ -342,6 +346,7 @@ public class DaCapoDBBuilder extends Thread {
 					br.close();
 				} catch (IOException ex) {
 					Log.error("TradeBuildDB:parseDDLToBuffer Failed to close BufferedReader", ex);
+					System.exit(-1);
 				}
 			}
 		}

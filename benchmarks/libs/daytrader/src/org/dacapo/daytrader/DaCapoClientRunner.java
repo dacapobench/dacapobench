@@ -47,12 +47,23 @@ public class DaCapoClientRunner {
       // Request for running transactions
       connection.setRequestMethod("GET");
 
+      new Thread(() -> {
+        try {
+          Thread.sleep(60000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        } finally {
+          System.exit(-1);
+        }
+      }).start();
+
       if (connection.getResponseCode() != 200){
         throw new RuntimeException("Failed for running transactions!");
       }
     } catch (Exception e) {
       System.err.print("Exception running client iteration: " + e.toString());
       e.printStackTrace();
+      System.exit(-1);
     }
   }
 }

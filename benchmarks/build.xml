@@ -97,6 +97,12 @@
 
     <target name="check-dependencies">
         <available property="compile9" classname="java.sql.ShardingKey"/>
+
+        <condition property="java12">
+            <equals arg1="${ant.java.version}" arg2="12"/>
+        </condition>
+
+        <fail if="java12" message="the JDK version should be 11, JDK 12 is not supported at this moment"/>
         <antcall target="check-java-runtime"/>
 
         <!-- Checking the availability of all dependencies -->
@@ -126,18 +132,11 @@
     <target name="check-python-modules">
         <property name="file-name" value="dependency-check.py"/>
 
-        <!-- python script for checking dependencies -->
-        <touch file="${file-name}"/>
-        <echo message="import colorama${line.separator}import future${line.separator}import tabulate${line.separator}import requests${line.separator}import wheel"
-              file="${file-name}"/>
-
         <!-- checking python modules -->
         <exec executable="python" failonerror="yes">
-            <arg value="${file-name}"/>
+            <arg value="-c"/>
+            <arg value="import colorama${line.separator}import future${line.separator}import tabulate${line.separator}import requests${line.separator}import wheel"/>
         </exec>
-
-        <!-- delete the test.py -->
-        <delete file="${file-name}"/>
     </target>
 
     <target name="check-git-present">
@@ -326,8 +325,9 @@
     </target>
 
     <target name="clean-bootstrap" depends="init">
-        <delete dir="${dacpao.build.doc.dir}"/>
-        <delete dir="${dacpao.build.dir}"/>
+        <delete dir="${dacapao.build.doc.dir}"/>
+        <delete dir="${dacapao.build.dir}"/>
+        <delete dir="${dacapao.out.jar.dir}"/>
     </target>
 
     <!-- ================================= 
@@ -518,7 +518,7 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="jython" depends="init,harness,update-externdata-info">
         <build.bm benchmark="jython"/>
     </target>
-     <target name="kafka" depends="init,harness">
+     <target name="kafka" depends="init,harness,update-externdata-info">
         <build.bm benchmark="kafka"/>
     </target>
    <target name="luindex" depends="init,harness,update-externdata-info">
@@ -550,14 +550,13 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">
-        <get src="${dacapo-dl.url.raw}/${dacapo-dl.commit}/META-INF/huge-data-md5s.list" dest="${dacapo.build.dir}"/>
-        <get src="${dacapo-dl.url.raw}/${dacapo-dl.commit}/META-INF/dlfiles.list" dest="${dacapo.build.dir}"/>
+        <copy file="${basedir}/resources/huge-data-md5s.list" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/resources/dlfiles.list" todir="${dacapo.build.dir}"/>
         <echo message="setting DaCapo-DL-URL-LFS, DaCapo-DL-URL-RAW DaCapo-DL-Commit in manifest"/>
         <jar destfile="${build.target-jar}" update="true">
             <manifest>
                 <attribute name="DaCapo-DL-URL-LFS" value="${dacapo-dl.url.lfs}"/>
                 <attribute name="DaCapo-DL-URL-RAW" value="${dacapo-dl.url.raw}"/>
-                <attribute name="DaCapo-DL-Commit" value="${dacapo-dl.commit}"/>
             </manifest>
             <metainf dir="${dacapo.build.dir}">
 				<include name="huge-data-md5s.list"/>

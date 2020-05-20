@@ -42,16 +42,14 @@
         <antcall target="build-h2o-without-test"/>
     </target>
 
-    <target name="data" if="bm-data-exists">
-        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
-    </target>
-
     <target name="jar">
         <copy file="${bm-build-dir}/h2o-assemblies/main/build/libs/main.jar"
               todir="${bm-jars}"/>
         <javac srcdir="${bm-src-dir}" classpath="${json-jar}" destdir="${bm-output-dir}"
                includes="org/dacapo/h2o/**"
                debug="true" debuglevel="lines,vars,source"/>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
     <target name="build-h2o">

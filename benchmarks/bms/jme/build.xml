@@ -23,7 +23,12 @@
 
     <import file="../common.xml"/>
 
-     <target name="unpack" depends="untar, patch"/>
+    <target name="unpack" depends="untar, patch"/>
+
+    <target name="patch">
+        <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-files}" strip="0" ignorewhitespace="yes"/>
+    </target>
+
 
     <condition property="gradle-exe" value="gradlew.bat">
         <os family="windows"/>
@@ -46,9 +51,11 @@
 
     <target name="jar">
         <copy file="${bm-build-dir}/dist/jMonkeyEngine3.jar" todir="${bm-jars}"/>
-        <copy todir="${bm-jars}">
+        <copy todir="${bm-out-jar}">
             <fileset dir="${bm-build-dir}/dist/lib" includes="*.jar"/>
         </copy>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>

@@ -25,10 +25,8 @@
 
     <target name="jar">
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}"/>
-    </target>
-
-    <target name="data">
-        <copy file="${bm-data}/lusearch.zip" todir="${bm-dat}"/>
+        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>

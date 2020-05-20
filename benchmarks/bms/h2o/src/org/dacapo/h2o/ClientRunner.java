@@ -3,10 +3,11 @@ package org.dacapo.h2o;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 
 public class ClientRunner{
 
-    public static void running(String URL, String data, String source, String algo, String response, PrintStream stdout) {
+    public static void running(String URL, String data, String source, String algo, String response, PrintStream stdout, PrintStream stderr) throws NoSuchMethodException, ClassNotFoundException, IOException, IllegalAccessException, InterruptedException, InvocationTargetException {
         DacapoH2OFacade dhf = new DacapoH2OFacade(URL);
         // Import and parse the data set
         stdout.println("Importing file: " + source + "......");
@@ -31,5 +32,7 @@ public class ClientRunner{
         // Delete all frames
         dhf.deleteFrames(source);
         stdout.println("Frames deleted");
+
+        stderr.println("H2O finished");
     }
 }

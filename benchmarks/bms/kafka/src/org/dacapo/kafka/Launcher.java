@@ -4,6 +4,8 @@ package org.dacapo.kafka;
 import java.io.File;
 import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Launcher {
 
@@ -13,6 +15,7 @@ public class Launcher {
     private File agentConfig;
     private File produceBench;
     private File scratch;
+    private ClientRunner cli;
 
     public Launcher(File scratch, String[] bench) {
         this.scratch = scratch;
@@ -41,8 +44,12 @@ public class Launcher {
     }
 
     public void performIteration() throws Exception {
-        ClientRunner cli = new ClientRunner();
+        cli = new ClientRunner();
         cli.runClient(produceBench.getPath());
+    }
+
+    public void shutdown() throws Exception {
+        cli.finishUp();
     }
 
     private boolean hostUsed(String host, int port){

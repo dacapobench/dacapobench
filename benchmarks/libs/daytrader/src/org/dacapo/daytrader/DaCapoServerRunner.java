@@ -28,6 +28,7 @@ public class DaCapoServerRunner {
    */
   public static void initialize() {
     try {
+
       Main.main(new String[] {"org.jboss.as.standalone"});
 
       // Checking if server started
@@ -35,21 +36,21 @@ public class DaCapoServerRunner {
 
       while (true) {
         try {
-          Thread.sleep(100);
+          Thread.sleep(5000);
           HttpURLConnection connection = (HttpURLConnection) url.openConnection();
           if (connection.getResponseCode() != 200) throw new RuntimeException();
-        } catch (IOException e) {
-          continue;
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+        } catch (InterruptedException|IOException e) {
+          System.err.print("Exception initializing server: " + e.toString());
+          System.err.print("VM was forced to quit without executing the shutdown hook");
+          Runtime.getRuntime().halt(1);
         }
         break;
       }
 
-    } catch (Exception e) {
+    } catch (Throwable e) {
       System.err.print("Exception initializing server: " + e.toString());
-    } catch (Throwable throwable) {
-      throwable.printStackTrace();
+      System.err.print("VM was forced to quit without executing the shutdown hook");
+      Runtime.getRuntime().halt(1);
     }
   }
 

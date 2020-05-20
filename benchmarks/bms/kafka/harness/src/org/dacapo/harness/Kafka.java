@@ -20,10 +20,11 @@ import org.dacapo.parser.Config;
  */
 public class Kafka extends Benchmark {
 
-    Constructor lc;
-    Method launching;
-    Method performIteration;
-    Object launcherInstance;
+    private Constructor lc;
+    private Method launching;
+    private Method performIteration;
+    private Object launcherInstance;
+    private Method shutdown;
     private String[] args;
 
     public Kafka(Config config, File scratch, File data) throws Exception {
@@ -32,6 +33,7 @@ public class Kafka extends Benchmark {
         lc = launcher.getConstructor(File.class, String[].class);
         launching = launcher.getMethod("launching");
         performIteration = launcher.getMethod("performIteration");
+        shutdown = launcher.getMethod("shutdown");
     }
 
     @Override
@@ -47,5 +49,11 @@ public class Kafka extends Benchmark {
     public void iterate(String size) throws Exception {
         System.setProperty("TaskState", "Waiting");
         performIteration.invoke(launcherInstance);
+    }
+
+    @Override
+    public void postIteration(String size) throws Exception {
+        super.postIteration(size);
+        shutdown.invoke(launcherInstance);
     }
 }

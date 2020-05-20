@@ -3,6 +3,7 @@ package org.dacapo.h2o;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -76,15 +77,11 @@ public class DacapoH2OFacade {
     private Method getStringOb;
 
     //
-    DacapoH2OFacade(String h2O_URL) {
+    DacapoH2OFacade(String h2O_URL) throws NoSuchMethodException, ClassNotFoundException {
         h2o_rest = new RestUtil(h2O_URL);
         Class<?> jsonObj = null;
-        try {
-            jsonObj = Class.forName("net.sf.json.JSONObject", true, Thread.currentThread().getContextClassLoader());
-            getStringOb = jsonObj.getDeclaredMethod("getString", String.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        jsonObj = Class.forName("net.sf.json.JSONObject", true, Thread.currentThread().getContextClassLoader());
+        getStringOb = jsonObj.getDeclaredMethod("getString", String.class);
     }
 
     /**
@@ -93,13 +90,9 @@ public class DacapoH2OFacade {
      * @param path incomplete path to the target file
      * @return the possible completed path
      */
-    private List getCompletedPath(String path){
-        try {
-            //todo: validate the attributes
-            h2o_rest.getMethod(TYPE_HEAD + "?src=" + path);
-        } catch (IOException e) {
-            System.err.println("Failed to find the path: " + path);
-        }
+    private List getCompletedPath(String path) throws IOException, InvocationTargetException, IllegalAccessException {
+        //todo: validate the attributes
+        h2o_rest.getMethod(TYPE_HEAD + "?src=" + path);
         return h2o_rest.getListFromResponse("matches").get("matches");
     }
 
@@ -110,21 +103,13 @@ public class DacapoH2OFacade {
      * @param path a complete path
      * @return a boolean indicate if importing succeed or not
      */
-    boolean importFiles(String path){
-        try {
-            h2o_rest.getMethod(IMPORT_FILE + "?path=" + path);
-        } catch (IOException e) {
-            System.err.println("Failed to import the file: " + path);
-        }
+    boolean importFiles(String path) throws IOException, InvocationTargetException, IllegalAccessException {
+        h2o_rest.getMethod(IMPORT_FILE + "?path=" + path);
         return h2o_rest.getFromResponse("fails").get("fail") == null;
     }
 
-    void deleteFrames(String path){
-        try {
-            h2o_rest.deleteMethod(frames + "/" + path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void deleteFrames(String path) throws IOException {
+        h2o_rest.deleteMethod(frames + "/" + path);
     }
 
     /**
@@ -134,19 +119,15 @@ public class DacapoH2OFacade {
      * @param incompletePath a complete path
      * @return a boolean indicate if importing succeed or not
      */
-    private List<String> importFilesIncomplete(String incompletePath){
+    private List<String> importFilesIncomplete(String incompletePath) throws IOException, InvocationTargetException, IllegalAccessException {
         List<String> possiblePath = getCompletedPath(incompletePath);
         List<String> succeed = new LinkedList<>();
         System.out.println(possiblePath);
-        try {
-            for (String path : possiblePath) {
-                if (path.endsWith("csv")) {
-                    h2o_rest.getMethod(IMPORT_FILE + "?path=" + path);
-                    succeed.add(path);
-                }
+        for (String path : possiblePath) {
+            if (path.endsWith("csv")) {
+                h2o_rest.getMethod(IMPORT_FILE + "?path=" + path);
+                succeed.add(path);
             }
-        } catch (IOException e) {
-            System.err.println("Failed to import: " + incompletePath + "\n the possible path is:" + possiblePath);
         }
         return succeed;
     }
@@ -156,38 +137,26 @@ public class DacapoH2OFacade {
      * @param sourceFrames the list of string, path to all sourceFrames
      * @return
      */
-    private Map<String, String> getParseSetup(String... sourceFrames){
+    private Map<String, String> getParseSetup(String... sourceFrames) throws IOException, InvocationTargetException, IllegalAccessException {
         // Convert into JSON format string
         StringBuilder para = new StringBuilder();
         for (String sourceFrame : sourceFrames) {
             para.append("source_frames=").append(sourceFrame);
         }
-        try {
-            h2o_rest.postMethod(PARSE_SETUP, para.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        h2o_rest.postMethod(PARSE_SETUP, para.toString());
         return h2o_rest.getFromResponse(PARSE_SETUP_PARAMETERS_NAME);
     }
 
     /**
      * @param parameters The POST method parameters, it should be the form data in the browser.
      */
-    private void parse(Map<String, String> parameters){
+    private void parse(Map<String, String> parameters) throws IOException {
         StringBuilder para = new StringBuilder();
         for (String name : PARSE_PARAMETERS_NAME) {
-            try {
-                para.append(name).append("=").append(parameters.get(name)).append("&");
-            }catch (Exception e){
-                System.err.println("Failed to get parameter: " + name);
-            }
+            para.append(name).append("=").append(parameters.get(name)).append("&");
         }
         // Parsing the data frame to hex. A h2o designed data format.
-        try {
-            h2o_rest.postMethod(PARSE, para.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        h2o_rest.postMethod(PARSE, para.toString());
     }
 
     /**
@@ -195,7 +164,7 @@ public class DacapoH2OFacade {
      *
      * @param sourceFormat
      */
-    void parse(String sourceFormat){
+    void parse(String sourceFormat) throws IOException, InvocationTargetException, IllegalAccessException {
         if (!sourceFormat.startsWith("nfs:"))
             sourceFormat = "nfs:" + File.separator + sourceFormat;
         Map<String, String> kv = getParseSetup(sourceFormat);
@@ -261,30 +230,22 @@ public class DacapoH2OFacade {
      * @param para parameters for training the model
      * @return if the parameter is valid
      */
-    private int check_drf_parameter(String para){
+    private int check_drf_parameter(String para) throws IOException, InvocationTargetException, IllegalAccessException {
         String API = getModelValidateAPI("drf");
-        try {
-            h2o_rest.postMethod(API, para);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        h2o_rest.postMethod(API, para);
         return Integer.parseInt(h2o_rest.getFromResponse("error_count").get("error_count"));
     }
 
     /**
      * @param para parameters for training the model
      */
-    public void train_drf(String para){
-        try{
-            int v = check_drf_parameter(para);
-            if (v == 0){
-                String API = getModelAPI("drf");
-                h2o_rest.postMethod(API, para);
-            } else {
-                throw new InvalidParameterException("the parameters are invalid, there are " + v + " errors");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void train_drf(String para) throws IOException, InvocationTargetException, IllegalAccessException {
+        int v = check_drf_parameter(para);
+        if (v == 0){
+            String API = getModelAPI("drf");
+            h2o_rest.postMethod(API, para);
+        } else {
+            throw new InvalidParameterException("the parameters are invalid, there are " + v + " errors");
         }
     }
 
@@ -292,42 +253,30 @@ public class DacapoH2OFacade {
      * @param train_frame the file to be used for training the drf model
      * @param response_column response variable column
      */
-    public void train_drf(String train_frame, String response_column){
+    public void train_drf(String train_frame, String response_column) throws IOException, InvocationTargetException, IllegalAccessException {
         String para = DEFAULT_DRF_PARAMETER + "&training_frame=" + train_frame + "&" + "response_column=" + response_column;
 
         para = para + "&model_id=" + "drf-dacapo-" + train_frame;
         train_drf(para);
     }
 
-    private String getJobs(){
-        try {
-            h2o_rest.getMethod(JOB_LIST);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private String getJobs() throws IOException, InvocationTargetException, IllegalAccessException {
+        h2o_rest.getMethod(JOB_LIST);
         return h2o_rest.getFromResponse("jobs").get("jobs");
     }
 
-    private boolean jobsAllDone(){
+    private boolean jobsAllDone() throws IOException, InvocationTargetException, IllegalAccessException {
         String jl = getJobs();
         List list = h2o_rest.getIndexFromJsonArray(jl);
         for (Object jo : list){
-            try {
-                if (!getStringOb.invoke(jo,(Object) "status").equals("DONE")) return false;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if (!getStringOb.invoke(jo,(Object) "status").equals("DONE")) return false;
         }
         return true;
     }
 
-    public void waitForAllJobsToFinish(){
+    public void waitForAllJobsToFinish() throws IllegalAccessException, IOException, InvocationTargetException, InterruptedException {
         while (!jobsAllDone()){
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Thread.sleep(100);
         }
     }
 

@@ -1,8 +1,10 @@
 package org.dacapo.kafka;
 
+import org.dacapo.harness.Benchmark;
+
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
 
 public class CoordinatorStarter extends Initializer{
 
@@ -20,9 +22,7 @@ public class CoordinatorStarter extends Initializer{
                 try {
                     coordinatorStarter.invoke(null, (Object) new String[]{"-c", coordinatorConfig, "-n", "node0"});
                     System.out.println("Shutdown Coordinator...");
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }

@@ -32,11 +32,14 @@
     <property name="jaxb-impl-url" value="${maven.centre}/com/sun/xml/bind/jaxb-impl/${jaxb-version}"/>
     <property name="jaxb-impl-name" value="jaxb-impl-${jaxb-version}.jar"/>
 
+    <property name="bm-out-jar" value="${base-dir}/tmp"/>
+
     <target name="all" depends="clean,init,harness,jar"/>
     
     <target name="clean">
         <delete dir="${output-dir}"/>
         <delete dir="${build-dir}"/>
+        <delete dir="${bm-out-jar}"/>
     </target>
     
     <target name="init">
@@ -101,6 +104,7 @@
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source" classpath="${output-dir}"/>
         <javadoc sourcepath="${src}" destdir="${output-doc-dir}" classpath="${output-dir}"
                 additionalparam="-Xdoclint:none"/>
+        <delete file="${bm-out-jar}"/>
     </target>
     
     <target name="jar">

@@ -17,7 +17,7 @@ public class JME extends Benchmark{
     private String[] args;
 
     public JME(Config config, File scratch, File data) throws Exception {
-        super(config, scratch);
+        super(config, scratch, null, false, false, false);
         Class<?> clazz = Class.forName("jme3test.TestChooser", true, loader);
         this.method = clazz.getMethod("main", String[].class);
     }
@@ -30,6 +30,10 @@ public class JME extends Benchmark{
 
     @Override
     public void iterate(String size) throws Exception {
-        this.method.invoke(null, (Object) args);
+        // getting the number of frame needed to be rendered
+        System.setProperty("frameThreshold", args[1]);
+
+        String[] arg = new String[] {args[0]};
+        this.method.invoke(null, (Object) arg);
     }
 }

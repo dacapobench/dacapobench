@@ -218,6 +218,7 @@ public class DaCapoTrader extends Thread {
               try {
                 Thread.sleep(PAUSE_MS);
               } catch (InterruptedException ie) {
+                System.exit(1);
               }
             }
           }
