@@ -35,16 +35,16 @@
         For convinience, javacc and maven are included in the tools directory:
         ${toolsdir}
 
-
         BUILDING:
         0. System requirement:
         Building DaCapo requires latest JDK 11.
-        If building cassandra, graphchi, jython, and/or xalan,
-        make sure JDK 8 is also installed and
-        it's path set in default.properties file.
+        If building cassandra, graphchi, jython, and/or xalan, make sure to
+        create the local.properties file (using default.properties as a
+        templcate), and be sure to set the path to JDK 8 in that file.
 
-        Building the whole suite at once on macOS **may** have problem with max filehandle limits.
-        You may want to set it to a larger value, and launch ant with:
+        Building the whole suite at once on macOS **may** run into problems
+        with max filehandle limits.  You may want to set it to a larger value,
+        and launch ant with:
         $ JAVA_OPTS="-XX:-MaxFDLimit" ant
 
         1. Set your JAVA_HOME environment variable appropriately:
@@ -79,7 +79,6 @@
         and either pass.txt if all benchmarks build, or fail.txt if one or
         more benchmarks fail to build. Note: that either fail.txt or pass.txt
         is created when a full build is performed.
-
 </description>
 
     <property file="local.properties"/>
