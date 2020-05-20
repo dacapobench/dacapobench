@@ -1,6 +1,15 @@
 --- apache-tomcat-9.0.2-src/build.properties.default.orig	2018-06-26 12:32:27.000000000 +1000
 +++ apache-tomcat-9.0.2-src/build.properties.default	2018-06-26 12:32:33.000000000 +1000
-@@ -144,7 +144,7 @@
+@@ -90,7 +90,7 @@
+ # Do not pass -deprecation (-Xlint:deprecation) flag to javac
+ compile.deprecation=false
+ 
+-base-apache.loc.1=http://www.apache.org/dyn/closer.lua?action=download&filename=
++base-apache.loc.1=https://archive.apache.org/dist
+ base-apache.loc.2=https://archive.apache.org/dist
+ base-commons.loc.1=${base-apache.loc.1}/commons
+ base-commons.loc.2=${base-apache.loc.2}/commons
+ @@ -144,7 +144,7 @@
  nsis.nsisdl.dll=${nsis.home}/Plugins/${nsis.arch.dir}NSISdl.dll
  nsis.system.dll=${nsis.home}/Plugins/${nsis.arch.dir}System.dll
  nsis.nsdialogs.dll=${nsis.home}/Plugins/${nsis.arch.dir}nsDialogs.dll
