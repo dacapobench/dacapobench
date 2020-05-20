@@ -1,0 +1,11 @@
+--- cassandra-3.11.3/build.xml	2020-05-20 11:39:20.000000000 +1000
++++ ../../../tmp/build.xml	2020-05-20 11:59:25.307661030 +1000
+@@ -84,7 +84,7 @@
+     <property name="maven-ant-tasks.version" value="2.1.3" />
+     <property name="maven-ant-tasks.local" value="${user.home}/.m2/repository/org/apache/maven/maven-ant-tasks"/>
+     <property name="maven-ant-tasks.url"
+-              value="http://repo2.maven.org/maven2/org/apache/maven/maven-ant-tasks" />
++              value="${maven.centre}/org/apache/maven/maven-ant-tasks" />
+     <!-- details of how and which Maven repository we publish to -->
+     <property name="maven.version" value="3.0.3" />
+     <condition property="maven-repository-url" value="https://repository.apache.org/service/local/staging/deploy/maven2">
