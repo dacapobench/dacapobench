@@ -9,3 +9,14 @@
  
  # ----- Commons Daemon, version 1.1.0 or later -----
  commons-daemon.version=1.1.0
+--- ../build/apache-tomcat-9.0.19-src/build.properties.default  2019-04-13 00:28:18.000000000 +1000
++++ apache-tomcat-9.0.19-src/build.properties.default    2020-05-20 19:23:23.665530615 +1000
+@@ -90,7 +90,7 @@
+ # Do not pass -deprecation (-Xlint:deprecation) flag to javac
+ compile.deprecation=false
+ 
+-base-apache.loc.1=http://www.apache.org/dyn/closer.lua?action=download&filename=
++base-apache.loc.1=https://archive.apache.org/dist
+ base-apache.loc.2=https://archive.apache.org/dist
+ base-commons.loc.1=${base-apache.loc.1}/commons
+ base-commons.loc.2=${base-apache.loc.2}/commons
