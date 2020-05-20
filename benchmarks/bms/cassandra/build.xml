@@ -31,7 +31,7 @@
     <property name="ycsb-tgz" value="ycsb-${ycsb-version}.tar.gz"/>
 
     <property name="datastax-driver-version" value="3.6.0"/>
-    <property name="datastax-driver-url" value="https://repo1.maven.org/maven2/com/datastax/cassandra/cassandra-driver-core/${datastax-driver-version}"/>
+    <property name="datastax-driver-url" value="${maven.url}/com/datastax/cassandra/cassandra-driver-core/${datastax-driver-version}"/>
     <property name="datastax-driver-jar" value="cassandra-driver-core-${datastax-driver-version}.jar"/>
 
     <target name="source">
@@ -85,7 +85,7 @@
     </target>
 
     <property name="slf4j-version" value="1.7.25"/>
-    <property name="slf4j-url" value="https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/${slf4j-version}"/>
+    <property name="slf4j-url" value="${maven.url}/org/slf4j/slf4j-simple/${slf4j-version}"/>
     <property name="slf4j-jar" value="slf4j-simple-${slf4j-version}.jar"/>
 
     <target name="get-slf4j-simple-jar">
@@ -117,7 +117,7 @@
                 </fileset>
             </resources>
         </copy>
-        <get src="https://repo1.maven.org/maven2/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
+        <get src="${maven.url}/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-out-jar}"/>
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
         <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
