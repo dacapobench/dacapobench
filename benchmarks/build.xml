@@ -97,11 +97,13 @@
     <target name="check-dependencies">
         <available property="compile9" classname="java.sql.ShardingKey"/>
 
-        <condition property="java12">
-            <equals arg1="${ant.java.version}" arg2="12"/>
-        </condition>
-
-        <fail if="java12" message="the JDK version should be 11, JDK 12 is not supported at this moment"/>
+        <fail message="JDK version 11 is required to build DaCapo.  You appear to be using ${java.version}. Please set JAVA_HOME accordingly.">
+            <condition>
+                <not>
+                    <equals arg1="${java.specification.version}" arg2="11"/>
+                </not>
+            </condition>
+        </fail>
         <antcall target="check-java-runtime"/>
 
         <!-- Checking the availability of all dependencies -->
@@ -117,7 +119,7 @@
 
     <target name="check-java-runtime" if="compile9">
         <available property="jdk-exist" file="${jdk8home}/bin/javac"/>
-        <fail unless="jdk-exist" message="Jdk 8 could not be found in ${jdk8home}/bin"/>
+        <fail unless="jdk-exist" message="JDK 8 could not be found in ${jdk8home}/bin.   Please check that jdk8home is set correctly in local.properties."/>
     </target>
 
     <macrodef name="check.dependency">
