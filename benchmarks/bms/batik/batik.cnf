@@ -1,7 +1,7 @@
 benchmark batik
   class org.dacapo.harness.Batik
   thread-model single
-  jars "batik-all-1.11.jar", "serializer-2.7.2.jar", "xalan-2.7.2.jar", "xercesImpl-2.9.1.jar", "xml-apis-ext-1.3.04.jar", "xmlgraphics-commons-2.3.jar";
+  jars "batik-all-1.13.jar", "serializer-2.7.2.jar", "xalan-2.7.2.jar", "xercesImpl-2.12.0.jar", "xml-apis-ext-1.3.04.jar", "xmlgraphics-commons-2.4.jar";
 
 /*
  * Validation currently limited to checking existence of output file
@@ -24,8 +24,8 @@ size large args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/simplex
   output  stdout  digest  0x0b050f6a8339a871eafab0015048cd897dfcb8de,
           stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
           "simplex.png" digest 0xb355b591cbb5e26605e2858a4417973ddb7b2ba8,
-          "mapVASR.png" digest 0xe658162c0581dffc76230f44835e9415b7dd14f7,
-          "bavaria.png" digest 0xe0ea424b845063e33055ee66fb7b1be66d368284;
+          "mapVASR.png" digest 0x06cd33102a44e6ca371e8095f1e9057ae544069a,
+          "bavaria.png" digest 0xc3629d8325fc3e1efd0f1fcfd2c332819d1c51b1;
 
 size huge args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/usMetro.svg", "${DATA}/batik/mapVASR.svg",
                       "${DATA}/batik/bavaria.svg",
@@ -40,37 +40,37 @@ size huge args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/usMetro.svg
                       "${DATA}/batik/phi.svg", "${DATA}/batik/simplex.svg", "${DATA}/batik/mapLakes.svg",
                       "${DATA}/batik/Tettstedskart.svg", "${DATA}/batik/mapSanFran.svg", "${DATA}/batik/serbia.svg"
   output stdout         digest 0x3ebb7954cd8d418aad42f3ad6d71a1b512892178,
-    	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-        "usMetro.png"           digest 0xc8c2e79878cbce8ef4ea2e4b617096a9a53b5fe7,
-        "mapVASR.png"           digest 0x3086b028662d865e0913602823c0b339dc599b0b,
-        "bavaria.png"           digest 0xf9e58383e2418b8a065e895cbef8132d9099a599,
-        "lakeTauca.png"         digest 0xd8669db43ff28daf4e47cd5a6c240c2221445a0b,
-        "river.png"             digest 0xf73e4d82634f6241034e0c98fd6fa77498f3834c,
-        "tenerife.png"          digest 0x16914bc7c244d07ec2f1cd37a28b7938cf261ebc,
-        "france.png"            digest 0x0cb10e924d19eb8eb810cb5a5923190ed1608faa,
-        "nrwpTopography.png"    digest 0x11c543240c116fff3f175c00e3526c5eaf912d34,
-        "velhop.png"            digest 0xadc1d84736e76ba3432566b1be1bd026f3dad72d,
-        "polytopeCube.png"      digest 0xb0efc3858ce28057850761c31cde4c8824d74f9a,
-        "ukRef.png"             digest 0xb03484caf547263f0de0b5500f568cfbc3d21bfe,
-        "btw.png"               digest 0x1863cb44edf7f5267b01a9a6e857a8ba23639efc,
-        "lyon.png"              digest 0x474fa5d56baca7245f51c20f439913ceba099927,
-        "ohridTopographic.png"  digest 0x77cc1ccfa93a820354a6702bbd00893856636ce2,
-        "dcStreet.png"          digest 0xec4ca7b3d6393c0c6d4df7d3e883e836666eca1f,
-        "chicoutimi.png"        digest 0x5131d6c204d5fffec74919ddba9cdb7b722058bb,
-        "usElection.png"        digest 0x9fa22b8ef6455948fddd1e1b6edf3fecde25038a,
-        "moldova.png"           digest 0x97027e0f9d1f0e06a67e0442e53ac0d8a05820cd,
-        "mapPolitical.png"      digest 0x7680881cd645916fb2909b8817fbb2d4cd64be42,
-        "hague.png"             digest 0x16778e32cc629ad6df8ddbf2e7aa76337d3dc63f,
-        "locGermany.png"        digest 0x2965fe66467a816ff192ed6c4fda657e23110c9c,
-        "mowbrayOSM.png"        digest 0x2ca508d1f6a262666e673fedd1f97f43a7f3fa61,
-        "mapWorld.png"          digest 0xf6eec530c4c7ebada9cd7fc67fbc61be59179e47,
-        "sierpinski.png"        digest 0x3225d70ede7568a9a1f114ac02ecfc5e554bbc58,
-        "phi.png"               digest 0x4c9d62e9e8f587cb591e4c8149e14b11e9778409,
-        "simplex.png"           digest 0x5b47353992e6eefcb5d48792cc26f943d841b095,
-        "mapLakes.png"          digest 0x6eea69dabb66629a33ade05e86b370559acbba7f,
-        "Tettstedskart.png"     digest 0xc1e21c2eaed079b4a6ab0aa9dbbd6118f87b22d7,
-        "mapSanFran.png"        digest 0x871378f647282ea9fc6bbfd256e0368a7660ce41,
-        "serbia.png"            digest 0xe4cbf8e0d95dca14c6a8cdda9ec3912aeff41584;
+    	    stderr        digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+          "usMetro.png"   digest  0x846e97c5254b1388e0486008ce66cc2010caf1b4,
+          "mapVASR.png"   digest  0x06cd33102a44e6ca371e8095f1e9057ae544069a,
+          "bavaria.png"   digest  0xc3629d8325fc3e1efd0f1fcfd2c332819d1c51b1,
+          "lakeTauca.png" digest  0x7310090d364f86de9c35a226ae2f7df645607c58,
+          "river.png"     digest  0x9fabfc3ad5bfd75dd38ac319965e347b143c0215,
+          "tenerife.png"  digest  0x15baec9cd402189a998f473305b0bb3b295dd054,
+          "france.png"    digest  0x9a225dbe85c648230aa3e247a689aac9773f8ef6,
+          "nrwpTopography.png"    digest  0xcb6b19d970cce4e70d6779ae855bc38949f0e127,
+          "velhop.png"            digest  0xb991b6ea280d6c06b451e8a8d60c38011df1ae27,
+          "polytopeCube.png"      digest  0x6683157601c051db2918f0ac8719da6690371ea8,
+          "ukRef.png"             digest  0x95b80b9d8aa4f05d72ca845624a9487a39d97426,
+          "btw.png"               digest  0x53d81c473d492cdf15938816d6a5ee789f44c776,
+          "lyon.png"              digest  0xfd55edcdf89262b387ab5e4026215982865f13d3,
+          "ohridTopographic.png"  digest  0xa73e7c23d7873810a93240d80300a96d66eafd35,
+          "dcStreet.png"          digest  0x899c6afdc6aee2fe5d19c1202aeea639d780885a,
+          "chicoutimi.png"        digest  0xa3459aab6d23564ff052f629d925b38b5f712c54,
+          "usElection.png"        digest  0x24fa33fc590ae400d2271501358f14c1682273a8,
+          "moldova.png"           digest  0x0d69d08a042cdf68185d030128ffd1c598f88894,
+          "mapPolitical.png"      digest  0x24af5551fe19bb33233c65dfe2584db95d1e32ed,
+          "hague.png"             digest  0x638cc348e815fa89400016466df7867d53132e3d,
+          "locGermany.png"        digest  0x9dcaa0e651ad379b15e886079d5283b2b785fa50,
+          "mowbrayOSM.png"        digest  0xc590f4a03a5667d7619d16d95046edaa8605cb0c,
+          "mapWorld.png"          digest  0x0462550104802a205f1cded44e1dd4ffe53f1874,
+          "sierpinski.png"        digest  0x8d014a56614488e5c1b506ad45b0172553f56d93,
+          "phi.png"               digest  0x50a8297f567cc66055b58fcdd8d72b801d2dbd9e,
+          "simplex.png"           digest  0xb355b591cbb5e26605e2858a4417973ddb7b2ba8,
+          "mapLakes.png"          digest  0x2d90cec1584182416ff57aff5bc875653de16dbc,
+          "Tettstedskart.png"     digest  0xc9c2a9fa72816bae773135e250a81b780ab56274,
+          "mapSanFran.png"        digest  0x92733a77688d41be258db4f81ce6f0a4c3f24b7f,
+          "serbia.png"            digest  0x7abab117112b440ba926a524644d11b5ecaeac0b;
 
 description
   short	     "A Scalable Vector Graphics (SVG) toolkit",
@@ -78,6 +78,6 @@ description
   copyright  "Copyright (C) 2000 The Apache Software Foundation",
   license    "Apache License, Version 2.0",
   url        "http://xml.apache.org/batik/",
-  version    "1.11",
+  version    "1.13",
   threads    "Externally single-threaded.  Internally multi-threaded.";
 
