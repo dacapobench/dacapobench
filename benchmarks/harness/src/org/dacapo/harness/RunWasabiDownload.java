@@ -11,8 +11,8 @@ public class RunWasabiDownload {
     private static final String awsSecretKey = "1uQzF2Rl9CzCb8ygtD4eJJ45zVipHTD4Nbar7c1R";
     
     /** Put your bucket name here **/
-    private static final String dataBucketName = "dacapodata";
-    private static final String jarBucketName = "dacapo";
+    private static final String dataBucketName = "dacapo-evaluation-2020-dat";
+    private static final String jarBucketName = "dacapo-evaluation-2020-jar";
 
     /** The name of the region where the bucket is created. (e.g. us-west-1) **/
     private static final String regionName = "us-west-1";
