@@ -15,18 +15,18 @@
 
     <import file="../common.xml"/>
 
-    <property name="shakespeare.url" value="${wasabi.src.dl.url}/luindex/shakespeare.tgz"/>
-    <property name="bible.url" value="${wasabi.src.dl.url}/luindex/kjv.zip"/>
+    <property name="shakespeare.url" value="${dacapo.src.url}/luindex/shakespeare.tgz"/>
+    <property name="bible.url" value="${dacapo.src.url}/luindex/kjv.zip"/>
 
     <target name="source">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${wasabi.src.dl.url}/luindex"/>
+            <param name="target-url" value="${dacapo.src.url}/luindex"/>
             <param name="target-file" value="shakespeare.tgz"/>
         </antcall>
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${wasabi.src.dl.url}/luindex"/>
+            <param name="target-url" value="${dacapo.src.url}/luindex"/>
             <param name="target-file" value="kjv.zip"/>
         </antcall>
     </target>
