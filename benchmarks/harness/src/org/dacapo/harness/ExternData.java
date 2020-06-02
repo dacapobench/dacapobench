@@ -56,6 +56,7 @@ public class ExternData {
       return null;  // to satisfy the static checker
     }
   }
+
   /**
    * Retrieve data installation directory from $HOME/.dacapo-config.properties
    * If doesn't exist, return the default path (/path/to/dacapo.jar/../)
@@ -98,9 +99,8 @@ public class ExternData {
       System.out.printf("Checking MD5 at %s...", path.toString());
       if (!checkExtDataDirMD5(path)) {
         System.out.println("failed!");
-        System.err.println("WARNING: MD5 checking failed. Your huge data does not match expected release.");
-        System.err.println("Please download and install the latest huge data using --extdata-install flag;");
-        System.err.println("otherwise please note the changes in research publication.");
+        System.err.println("WARNING: MD5 check failed. Your data does not match expected release.");
+        System.err.println("Please download and install the latest data using --extdata-install flag.");
       } else
         System.out.println("done!");
     }
@@ -122,7 +122,7 @@ public class ExternData {
 
   private static boolean downloadChecksum() {
     try {
-      downloadAndExtractItemFromDaCapoDl("META-INF/huge-data-md5s.list", new File(WORKING_DIRE));
+      downloadAndExtractItem("META-INF/huge-data-md5s.list", new File(WORKING_DIRE));
     } catch (Exception e) {
       return false;
     }
@@ -176,10 +176,10 @@ public class ExternData {
           if(bench.length() == 0 || s.startsWith("dat/"+bench) || s.startsWith("jar/"+bench)) {
             executor.submit(() -> {
               if (s.startsWith("jar")) {
-                RunWasabiDownload.JarDownload(s.split("/")[1], path.getAbsolutePath());
+                DataDownload.Download(s.split("/")[1], path.getAbsolutePath(), "jar");
               }
               if (s.startsWith("dat")) {
-                RunWasabiDownload.DataDownload(s.split("/")[1], path.getAbsolutePath());
+                DataDownload.Download(s.split("/")[1], path.getAbsolutePath(), "dat");
               }
 
               File fileLocalItem = new File(path, s);
@@ -194,7 +194,6 @@ public class ExternData {
                   }
                   System.out.println("Done.");
               }
-
               executor.shutdown();
             });
           }
@@ -212,11 +211,11 @@ public class ExternData {
     }
   }
 
-  private static void downloadAndExtractItemFromDaCapoDl(String itemRelPath, File path) throws Exception {
+  private static void downloadAndExtractItem(String itemRelPath, File path) throws Exception {
     // Create the directory
     path.mkdir();
     // download
-    RunWasabiDownload.Download(itemRelPath, path.getAbsolutePath());
+    DataDownload.Download(itemRelPath, path.getAbsolutePath());
   }
 
   private static String getMD5(File file) throws Exception{
