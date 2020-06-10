@@ -183,17 +183,15 @@ public class ExternData {
               }
 
               File fileLocalItem = new File(path, s);
-              if (fileLocalItem.getName().contains("huge")) {
-                  System.out.printf("Extracting %s...", fileLocalItem.toString());
-                  try {
-                      Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
+              System.out.printf("Extracting %s...", fileLocalItem.toString());
+              try {
+                Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
                               fileLocalItem.getParentFile());
-                  } catch (IOException e) {
-                      e.printStackTrace();
-                      System.exit(-1);
-                  }
-                  System.out.println("Done.");
+              } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(-1);
               }
+              System.out.println("Done.");
               executor.shutdown();
             });
           }
