@@ -1,3 +1,5 @@
-|bm | updated | jdk 8 | jdk 11 | clean | validation | small | default | large | huge | latency |
-|-|-|-|-|-|-|-|-|-|-|-|
-|avrora|✓|✓|✓|✓|✓|✓|✓|✓|✗|✗|
+|bm | updated | jdk 8 | jdk 11 | clean | scratch | validation | small | default | large | huge | latency |
+|-|-|-|-|-|-|-|-|-|-|-|-|
+|avrora|✓|✓|✓|✓|?|✓|✓|✓|✓|||
+|batik|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
+
