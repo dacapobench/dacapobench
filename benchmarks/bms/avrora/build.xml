@@ -12,15 +12,10 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="avrora" />
-    <!--property name="bm-version" value="1.7.117" />
-    <property name="bm-url" value="https://nchc.dl.sourceforge.net/project/${bm-name}" />
-    <property name="bm-src" value="avrora-beta-${bm-version}.jar" />-->
-
-    <property name="bm-cvs-root" value=":pserver:anonymous@avrora.cvs.sourceforge.net:/cvsroot/avrora" />
-    <property name="bm-cvs-date" value="20131011" />
-    <property name="bm-cvs-package" value="${bm-name}" />
-    <property name="bm-version" value="cvs-${bm-cvs-date}" />
-    <property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz" />
+    <property name="bm-version" value="1.7.117"/>
+    <property name="bm-url" value="${dacapo.src.url}/avrora"/>
+    <property name="bm-src" value="${bm-name}-cvs-20131011-src.tar.gz"/>
+    <property name="bm-bin-url" value="${bm-url}/${bm-src}"/>
 
     <import file="../common.xml" />
 
