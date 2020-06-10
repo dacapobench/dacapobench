@@ -95,16 +95,14 @@
 	<property name="dacapo.src.dir" value="${basedir}/src"/>
 
     <target name="check-dependencies">
-        <available property="compile9" classname="java.sql.ShardingKey"/>
-
-        <fail message="JDK version 11 is required to build DaCapo.  You appear to be using ${java.version}. Please set JAVA_HOME accordingly.">
+        <fail message="JDK version 8 is required to build DaCapo.  You appear to be using ${java.specification.version} (${java.version}). Please set JAVA_HOME and your path accordingly.">
             <condition>
                 <not>
-                    <equals arg1="${java.specification.version}" arg2="11"/>
+                    <equals arg1="${java.specification.version}" arg2="1.8"/>
                 </not>
             </condition>
         </fail>
-        <antcall target="check-java-runtime"/>
+        <antcall target="check-java11-path"/>
 
         <!-- Checking the availability of all dependencies -->
         <check.dependency command="git"/>
@@ -117,9 +115,24 @@
         <antcall target="check-python-modules"/>
     </target>
 
-    <target name="check-java-runtime" if="compile9">
-        <available property="jdk-exist" file="${jdk8home}/bin/javac"/>
-        <fail unless="jdk-exist" message="JDK 8 could not be found in ${jdk8home}/bin.   Please check that jdk8home is set correctly in local.properties."/>
+    <target name="check-java11-path">
+        <available property="java11" file="${jdk.11.home}/bin/javac"/>
+        <fail unless="java11" message="A valid JDK could not be found in ${jdk.11.home}/bin.   Please check that jdk.11.home is set correctly in your local.properties file."/>
+
+        <exec executable="ant" failifexecutionfails="no" failonerror="yes">
+                <env key="JAVA_HOME" value="${jdk.11.home}"/>
+                <arg value="check-java11-runtime"/>
+            </exec>
+    </target>
+
+    <target name="check-java11-runtime">
+            <fail message="The JDK specified by jdk.11.home in your local.properties file must point to an installation of Java 11.  You appear to have set jdk.11.home to point to a Java ${java.specification.version} JDK (${jdk.11.home}).  Please set the jdk.11.home variable in your local.properties file accordingly.">
+            <condition>
+                <not>
+                    <equals arg1="${java.specification.version}" arg2="11"/>
+                </not>
+            </condition>
+        </fail>
     </target>
 
     <macrodef name="check.dependency">
@@ -447,8 +460,11 @@ See ${log.build.report} for a summary of benchmark build status.
 
     <macrodef name="build.bm">
         <attribute name="benchmark"/>
+        <attribute name="env.key" default=""/>
+        <attribute name="env.value" default=""/>
         <sequential>
             <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="@{benchmark}-status">
+                <env key="@{env.key}" value="@{env.value}"/>
                 <arg value="-Dtoolsdir=${toolsdir}"/>
                 <arg value="-Dbuild.time=${build.time}"/>
                 <arg value="-Dlog.build.dir=${log.build.dir}"/>
@@ -514,13 +530,13 @@ See ${log.build.report} for a summary of benchmark build status.
         <build.bm benchmark="h2o"/>
     </target>
     <target name="jme" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="jme"/>
+        <build.bm benchmark="jme" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
     </target>
     <target name="jython" depends="init,harness,update-externdata-info">
         <build.bm benchmark="jython"/>
     </target>
      <target name="kafka" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="kafka"/>
+        <build.bm benchmark="kafka" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
     </target>
    <target name="luindex" depends="init,harness,update-externdata-info">
         <build.bm benchmark="luindex"/>
@@ -529,19 +545,19 @@ See ${log.build.report} for a summary of benchmark build status.
         <build.bm benchmark="lusearch"/>
     </target>
     <target name="pmd" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="pmd"/>
+        <build.bm benchmark="pmd" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
     </target>
     <target name="sunflow" depends="init,harness,update-externdata-info">
         <build.bm benchmark="sunflow"/>
     </target>
     <target name="tomcat" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="tomcat"/>
+        <build.bm benchmark="tomcat" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
     </target>
     <target name="tradebeans" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="tradebeans"/>
+        <build.bm benchmark="tradebeans" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
     </target>
     <target name="tradesoap" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="tradesoap"/>
+        <build.bm benchmark="tradesoap" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
     </target>
     <target name="xalan" depends="init,harness,update-externdata-info">
         <build.bm benchmark="xalan"/>
