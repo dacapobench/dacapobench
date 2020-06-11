@@ -34,8 +34,8 @@ public class DataDownload {
      * specify the bucket name, region name and your credentials.
      */
     public static void Download(String fileKey, String targetDir) {
-        Download(fileKey, targetDir, "dat");
-        Download(fileKey, targetDir, "jar");
+        Download(fileKey, targetDir+File.separator+"dat", "dat");
+        Download(fileKey, targetDir+File.separator+"jar", "jar");
     }
 
     /**
@@ -46,18 +46,19 @@ public class DataDownload {
     public static void Download(String fileName, String path, String kind) {
         String urlstr = "";
         try {
-            File tgt = new File(path+File.separator+kind);
-            tgt.mkdir();
-            String dst = tgt.getAbsolutePath()+File.separator+fileName;
+            File tgtdir = new File(path);
+            tgtdir.mkdir();
+            String dst = tgtdir.getAbsolutePath()+File.separator+fileName;
             String bkt = kind.equals("jar") ? jarBucketName : dataBucketName;
             urlstr = getURLFromPropertiesFile()+"/"+bkt+"/"+fileName;
             URL url = new URL(urlstr);
             ReadableByteChannel rbc = Channels.newChannel(url.openStream());
             FileOutputStream fos = new FileOutputStream(dst);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            System.out.println("Downloaded: "+urlstr);            
+            System.out.println("Downloaded: "+urlstr+" to "+dst);
         } catch (Exception e) {
             System.out.println("Failed to download "+fileName+" from "+urlstr+" with exception: "+e+". Exiting.");
+            e.printStackTrace();
             System.exit(-1);
         }
     }

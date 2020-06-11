@@ -122,7 +122,7 @@ public class ExternData {
 
   private static boolean downloadChecksum() {
     try {
-      downloadAndExtractItem("META-INF/huge-data-md5s.list", new File(WORKING_DIRE));
+      DataDownload.Download("META-INF"+File.separator+"huge-data-md5s.list", new File(WORKING_DIRE).getAbsolutePath(), "dat");
     } catch (Exception e) {
       return false;
     }
