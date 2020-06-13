@@ -123,13 +123,17 @@ public class DacapoClassLoader extends URLClassLoader {
     // First, check if the class has already been loaded
     Class<?> c = findLoadedClass(name);
     if (c == null) {
-      try {
-
-        // Next, try to resolve it from the dacapo JAR files
-        c = super.findClass(name);
-      } catch (ClassNotFoundException e) {
-        // And if all else fails delegate to the parent.
+      if (name.startsWith("java")) {
+        // security: core classes should go directly to parent
         c = super.loadClass(name, resolve);
+      } else {
+        try {
+          // Next, try to resolve it from the dacapo JAR files
+          c = super.findClass(name);
+        } catch (ClassNotFoundException e) {
+          // And if all else fails delegate to the parent.
+          c = super.loadClass(name, resolve);
+        }
       }
     }
     if (resolve) {
