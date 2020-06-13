@@ -16,7 +16,8 @@ import java.util.List;
 
 import org.dacapo.parser.Config;
 
-public class CassandraBench extends Benchmark {
+public class Cassandra extends Benchmark {
+    String[] args;
 
     private File dirLibSigar;
     private File dirCassandraConf;
@@ -35,40 +36,34 @@ public class CassandraBench extends Benchmark {
     private Class<?> clsYCSBClient;
     private Method mtdYCSBClientMain;
 
-    public CassandraBench(Config config, File scratch, File data) throws Exception {
+    public Cassandra(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
     }
 
-    private void setupScratch() {
-        dirLibSigar = new File(scratch, "libsigar");
-        dirCassandraConf = new File(scratch, "cassandra-conf");
-        dirCassandraStorage = new File(scratch, "cassandra-storage");
-        dirCassandraLog = new File(scratch, "cassandra-log");
-        dirYCSBWorkloads = new File(scratch, "ycsb-workloads");
 
+    private void setupData() {
+        String path =  "dat"+File.separator+"cassandra"+File.separator;
+        dirLibSigar = new File(data, path+"libsigar");
+        dirCassandraConf = new File(data, path+"conf");
+        dirYCSBWorkloads = new File(data, path+"ycsb");
         ymlConf = new File(dirCassandraConf, "cassandra.yaml");
         xmlLogback = new File(dirCassandraConf, "logback.xml");
+    }
 
-        dirLibSigar.mkdir();
-        dirCassandraConf.mkdir();
+    private void setupScratch() {
+        dirCassandraStorage = new File(scratch, "cassandra-storage");
+        dirCassandraLog = new File(scratch, "cassandra-log");
         dirCassandraStorage.mkdir();
         dirCassandraLog.mkdir();
-        dirYCSBWorkloads.mkdir();
-        try {
-            unpackZipStream(new BufferedInputStream(new FileInputStream(ExternData.getLocation() + "/dat/cassandra-libsigar.zip")), dirLibSigar);
-            unpackZipStream(new BufferedInputStream(new FileInputStream(ExternData.getLocation() + "/dat/cassandra-conf.zip")), dirCassandraConf);
-            unpackZipStream(new BufferedInputStream(new FileInputStream(ExternData.getLocation() + "/dat/cassandra-ycsb-workloads.zip")), dirYCSBWorkloads);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
+
     }
+
     private void setupCassandra() {
         try {
             System.setProperty("java.library.path", dirLibSigar.getPath());
             System.setProperty("cassandra.storagedir", dirCassandraStorage.toString());
             System.setProperty("cassandra.logdir", dirCassandraLog.toString());
-            System.setProperty("cassandra.config", ymlConf.toURI().toString());
+            System.setProperty("cassandra.config", ymlConf.toPath().toUri().toString());
             System.setProperty("cassandra.logback.configurationFile", xmlLogback.toString());
             System.setProperty("cassandra-foreground", "yes");
 
@@ -84,7 +79,9 @@ public class CassandraBench extends Benchmark {
     @Override
     protected void prepare(String size) throws Exception {
         super.prepare(size);
+        args = config.preprocessArgs(size, scratch, data);
 
+        setupData();
         setupScratch();
 
         setupCassandra();
@@ -96,7 +93,7 @@ public class CassandraBench extends Benchmark {
         Method startMethod = EmbeddedCassandraServiceClass.getMethod("start");
         startMethod.invoke(cassandra);
 
-        clsYCSBClient = loader.loadClass("com.yahoo.ycsb.Client");
+        clsYCSBClient = loader.loadClass("site.ycsb.Client");
         mtdYCSBClientMain = clsYCSBClient.getMethod("main", String[].class);
         prepareYCSBArgs(size);
 
@@ -162,9 +159,11 @@ public class CassandraBench extends Benchmark {
 
     private void prepareYCSBArgs(String size) {
         ArrayList<String> baseArgs = new ArrayList<String>(Arrays.asList(
-            "-db", "com.yahoo.ycsb.db.CassandraCQLClient",
-            "-p", "hosts=localhost"));
-        List<String> sizeArgs = Arrays.asList(config.getArgs(size));
+            "-db", "site.ycsb.db.CassandraCQLClient", 
+            "-threads", "24",
+            "-p", "hosts=localhost"
+            ));
+        List<String> sizeArgs = Arrays.asList(args);
         File workload = new File(dirYCSBWorkloads, sizeArgs.get(0));
         baseArgs.addAll(Arrays.asList("-P", workload.toString()));
         baseArgs.addAll(sizeArgs.subList(1, sizeArgs.size()));
@@ -174,7 +173,6 @@ public class CassandraBench extends Benchmark {
 
     public void iterate(String size) throws Exception {
         System.setOut(logStream);
-        outStream.println("Iteration Started...");
 
         // load workload
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-load";
@@ -183,8 +181,6 @@ public class CassandraBench extends Benchmark {
         // run transactions
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-t";
         mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
-
-        outStream.println("Iteration Finished...");
     }
 
     @Override
@@ -197,11 +193,8 @@ public class CassandraBench extends Benchmark {
     public void cleanup() {
         // Clean the scratch up
         if (!getPreserve()) {
-            deleteTree(dirLibSigar);
-            deleteTree(dirCassandraConf);
             deleteTree(dirCassandraStorage);
             deleteTree(dirCassandraLog);
-            deleteTree(dirYCSBWorkloads);
         }
     }
 }

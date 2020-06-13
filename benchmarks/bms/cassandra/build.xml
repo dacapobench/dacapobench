@@ -12,7 +12,7 @@
      <property file="dacapo.properties"/>
 
     <property name="bm-name" value="cassandra"/>
-    <property name="bm-version" value="3.11.3"/>
+    <property name="bm-version" value="3.11.6"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="https://gitbox.apache.org/repos/asf/cassandra.git"/>
     <property name="bm-git-commit" value="cassandra-${bm-version}"/>
@@ -25,14 +25,14 @@
         <os family="windows"/>
     </condition>
 
-    <property name="ycsb-version" value="0.15.0"/>
+    <property name="ycsb-version" value="0.17.0"/>
     <property name="ycsb-git-url" value="https://github.com/brianfrankcooper/YCSB.git"/>
     <property name="ycsb-git-commit" value="${ycsb-version}"/>
     <property name="ycsb-tgz" value="ycsb-${ycsb-version}.tar.gz"/>
 
-    <property name="datastax-driver-version" value="3.6.0"/>
-    <property name="datastax-driver-url" value="${maven.url}/com/datastax/cassandra/cassandra-driver-core/${datastax-driver-version}"/>
-    <property name="datastax-driver-jar" value="cassandra-driver-core-${datastax-driver-version}.jar"/>
+    <property name="datastax-driver-version" value="4.6.1"/>
+    <property name="datastax-driver-url" value="${maven.url}/com/datastax/oss/java-driver-core/${datastax-driver-version}"/>
+    <property name="datastax-driver-jar" value="java-driver-core-${datastax-driver-version}.jar"/>
 
     <target name="source">
         <antcall target="check-source">
@@ -64,7 +64,7 @@
         <untar src="${bm-downloads}/${ycsb-tgz}" dest="${ycsb-dir}" compression="gzip"/>
         <patch patchfile="${bm-files}/ycsb.patch" dir="${ycsb-dir}" strip="0" ignorewhitespace="yes"/>
         <exec executable="${mvn-exe}" dir="${ycsb-dir}">
-            <arg line="-pl com.yahoo.ycsb:cassandra-binding dependency:copy-dependencies -am package -DskipTests"/>
+            <arg line="-pl site.ycsb:cassandra-binding dependency:copy-dependencies -am package -DskipTests"/>
         </exec>
     </target>
 
@@ -105,8 +105,15 @@
                 </fileset>
             </resources>
         </copy>
+        <!--- need to add the following exclusions 
+        > guava-16.0.1.jar
+80a82,83
+> slf4j-simple-1.7.21.jar
+> slf4j-simple-1.7.25.jar
+        -->
         <get src="${maven.url}/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-out-jar}"/>
+        
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
         <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
