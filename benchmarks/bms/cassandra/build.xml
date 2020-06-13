@@ -58,7 +58,7 @@
         <exec executable="ant" dir="${cassandra-build-top}"/>
     </target>
 
-    <target name="ycsb-build" depends="get-slf4j-simple-jar">
+    <target name="ycsb-build">
         <property name="ycsb-dir" value="${bm-build-dir}/ycsb-${ycsb-version}"/>
         <mkdir dir="${ycsb-dir}"/>
         <untar src="${bm-downloads}/${ycsb-tgz}" dest="${ycsb-dir}" compression="gzip"/>
@@ -72,30 +72,21 @@
         <property name="bm-harness-classpath" value="${cassandra-build-top}/build/classes/main:${bm-downloads}/${datastax-driver-jar}"/>
     </target>
 
-    <property name="slf4j-version" value="1.7.25"/>
-    <property name="slf4j-url" value="${maven.url}/org/slf4j/slf4j-simple/${slf4j-version}"/>
-    <property name="slf4j-jar" value="slf4j-simple-${slf4j-version}.jar"/>
-
-    <target name="get-slf4j-simple-jar">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${slf4j-url}"/>
-            <param name="target-file" value="${slf4j-jar}"/>
-        </antcall>
-        <property name="slf4j-simple-jar" value="${bm-downloads}/slf4j-simple-${slf4j-version}.jar"/>
-    </target>
-
     <target name="libs">
-        <copy todir="${bm-out-jar}">
+          <copy todir="${bm-out-jar}">
             <resources>
                 <!-- cassandra libs -->
-                <fileset dir="${cassandra-build-top}/lib" includes="*.jar"/>
+                <fileset dir="${cassandra-build-top}/lib" includes="*.jar">
+                    <exclude name="guava-16.0.1.jar"/>
+                </fileset>
                 <!-- datastax cassandra driver -->
                 <file file="${bm-downloads}/${datastax-driver-jar}"/>
                 <!-- ycsb libs -->
-                <file file="${slf4j-simple-jar}"/>
                 <file file="${ycsb-dir}/cassandra/target/cassandra-binding-${ycsb-version}.jar"/>
-                <fileset dir="${ycsb-dir}/cassandra/target/dependency" includes="*.jar"/>
+                <fileset dir="${ycsb-dir}/cassandra/target/dependency" includes="*.jar">
+                    <exclude name="guava-16.0.1.jar"/>
+                    <exclude name="slf4j-simple-1.7.21.jar"/>
+                </fileset>
                 <file file="${ycsb-dir}/core/target/core-${ycsb-version}.jar"/>
                 <fileset dir="${ycsb-dir}/core/target/dependency">
                     <filename name="HdrHistogram-2.1.4.jar"/>
@@ -105,12 +96,6 @@
                 </fileset>
             </resources>
         </copy>
-        <!--- need to add the following exclusions 
-        > guava-16.0.1.jar
-80a82,83
-> slf4j-simple-1.7.21.jar
-> slf4j-simple-1.7.25.jar
-        -->
         <get src="${maven.url}/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-out-jar}"/>
         

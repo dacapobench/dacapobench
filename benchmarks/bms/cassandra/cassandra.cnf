@@ -5,7 +5,7 @@ benchmark cassandra
 
 size default args "workload-default", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0x2e8c8976cb6a55beb4800da9982e9b86e34a4e95;
+           stderr digest 0xf758abfa1a5c2153fc05c97e1625ad7a293eb548;
 size large args "workload-large", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
            stderr digest 0x29465e2ee4840b9b4ce222d3be50cc5f7b692a7d;
