@@ -1,15 +1,15 @@
 benchmark avrora
   class org.dacapo.harness.Avrora
   thread-model single
-  jars "avrora-cvs-20131011.jar";
+  jars "avrora-1.7.117.jar";
 
 size small args "-seconds=30",
 	"-platform=mica2",
 	"-simulation=sensor-network",
 	"-nodecount=2,1",
 	"-stagger-start=1000000",
-	"${SCRATCH}/test/tinyos/CntToRfm.elf",
-	"${SCRATCH}/test/tinyos/RfmToLeds.elf"
+	"${DATA}/avrora/tinyos/CntToRfm.elf",
+	"${DATA}/avrora/tinyos/RfmToLeds.elf"
   output
         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
@@ -18,29 +18,29 @@ size default args "-seconds=30",
 	"-simulation=sensor-network",
 	"-nodecount=6,3",
 	"-stagger-start=1000000",
-	"${SCRATCH}/test/tinyos/CntToRfm.elf",
-	"${SCRATCH}/test/tinyos/RfmToLeds.elf"
+	"${DATA}/avrora/tinyos/CntToRfm.elf",
+	"${DATA}/avrora/tinyos/RfmToLeds.elf"
   output 
-    	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+        stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "-seconds=30",
 	"-platform=mica2",
 	"-simulation=sensor-network",
 	"-nodecount=21,9,21,6",
 	"-stagger-start=1000000",
-	"${SCRATCH}/test/tinyos/CntToRfm.elf",
-	"${SCRATCH}/test/tinyos/RfmToLeds.elf",
-	"${SCRATCH}/test/tinyos/Surge.elf",
-	"${SCRATCH}/test/tinyos/Blink_mica2.elf",
-	"${SCRATCH}/test/tinyos/XnpOscopeRF.elf",
-	"${SCRATCH}/test/tinyos/OscilloscopeRF.elf",
-	"${SCRATCH}/test/tinyos/HighFrequencySampling.elf",
-	"${SCRATCH}/test/tinyos/SenseToLeds.elf",
-	"${SCRATCH}/test/tinyos/XnpRfmToLeds.elf",
-	"${SCRATCH}/test/tinyos/RadioSenseToLeds_mica2.elf",
-	"${SCRATCH}/test/tinyos/SecureTOSBase.elf";
+	"${DATA}/avrora/tinyos/CntToRfm.elf",
+	"${DATA}/avrora/tinyos/RfmToLeds.elf",
+	"${DATA}/avrora/tinyos/Surge.elf",
+	"${DATA}/avrora/tinyos/Blink_mica2.elf",
+	"${DATA}/avrora/tinyos/XnpOscopeRF.elf",
+	"${DATA}/avrora/tinyos/OscilloscopeRF.elf",
+	"${DATA}/avrora/tinyos/HighFrequencySampling.elf",
+	"${DATA}/avrora/tinyos/SenseToLeds.elf",
+	"${DATA}/avrora/tinyos/XnpRfmToLeds.elf",
+	"${DATA}/avrora/tinyos/RadioSenseToLeds_mica2.elf",
+	"${DATA}/avrora/tinyos/SecureTOSBase.elf";
   output 
-    	 stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+        stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 
 description
