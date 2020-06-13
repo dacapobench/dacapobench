@@ -224,14 +224,6 @@ public abstract class Benchmark {
     this(config, scratch, data, true);
   }
 
-  public Benchmark(Config config, File scratch) throws Exception {
-    this(config, scratch, true);
-  }
-
-  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
-    this(config, scratch, null, silent);
-  }
-
   public Benchmark(Config config, File scratch, File data, boolean silent) throws Exception {
     this(config, scratch, data, silent, silent);
   }
@@ -279,19 +271,20 @@ public abstract class Benchmark {
    * @throws Exception
    */
   private void prepareJars() throws IOException, FileNotFoundException, DacapoException {
-    File file = new File(scratch + "/jar");
-    if (!file.exists())
-      file.mkdir();
-    if (config.jars != null) {
-      // extract jar lib from dacapo.jar
-      for (int i = 0; i < config.jars.length; i++) {
-        try {
-          extractFileResource("jar/" + config.jars[i], scratch);
-        } catch (DacapoException e) {
-          // ignore
-        }
-      }
-    }
+    System.err.println("FIXME checksum jars");
+    // File file = new File(scratch + "/jar");
+    // if (!file.exists())
+    //   file.mkdir();
+    // if (config.jars != null) {
+    //   // extract jar lib from dacapo.jar
+    //   for (int i = 0; i < config.jars.length; i++) {
+    //     try {
+    //       extractFileResource("jar/" + config.jars[i], scratch);
+    //     } catch (DacapoException e) {
+    //       // ignore
+    //     }
+    //   }
+    // }
   }
 
   /**
@@ -299,21 +292,22 @@ public abstract class Benchmark {
    * <code>data/<i>name</i>.zip</code> into the scratch directory.
    */
   protected void prepare() throws Exception {
+    System.err.println("FIXME checksum data");
     // the data zip may not exist, if data is packaged externally
-    try {
-      File fileLocalItem = new File(ExternData.getLocation() + "/dat/" + config.name + ".zip");
-      if (fileLocalItem.exists())
-        unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
-      else if (getURL("dat/" + config.name + ".zip") != null)
-        unpackZipFileResource("dat/" + config.name + ".zip", scratch);
-      else if(dataSet){
-        System.setErr(savedErr);
-        ExternData.failExtDataNotFound("", fileLocalItem);
-        System.exit(-1);
-      }
-    } catch (DacapoException e) {
-      e.printStackTrace();
-    }
+    // try {
+    //   File fileLocalItem = new File(ExternData.getLocation() + "/dat/" + config.name + ".zip");
+    //   if (fileLocalItem.exists())
+    //     unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
+    //   else if (getURL("dat/" + config.name + ".zip") != null)
+    //     unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+    //   else if(dataSet){
+    //     System.setErr(savedErr);
+    //     ExternData.failExtDataNotFound("", fileLocalItem);
+    //     System.exit(-1);
+    //   }
+    // } catch (DacapoException e) {
+    //   e.printStackTrace();
+    // }
   }
 
   /**
@@ -624,6 +618,17 @@ public abstract class Benchmark {
   public String fileInScratch(String name) {
     return new File(scratch, name).getPath();
   }
+
+  /**
+   * Return a file name, relative to the specified data directory.
+   *
+   * @param name Name of the file, relative to the top of the data directory
+   * @return The path name of the file
+   */
+  public String fileInData(String name) {
+    return new File(data, name).getPath();
+  }
+
 
   /**
    * Unpack a zip file resource into the specified directory. The directory
