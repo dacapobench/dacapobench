@@ -9,17 +9,17 @@ benchmark batik
  * image files.
  */
 
-size small args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg"
+size small args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/mapWaadt.svg"
   output  stdout           digest 0xa8f2208c90a7e2223ff376e873fd7ddb0ece3db7,
           stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
           "mapWaadt.png" exists;
 
-size default args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/bavaria.svg"
+size default args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/bavaria.svg"
   output  stdout  digest  0xaf6851f8321900751b1af4b2c2d1fb59073be9f1,
           stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
           "bavaria.png" exists;
 
-size large args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/simplex.svg","${SCRATCH}/batik/mapVASR.svg","${SCRATCH}/batik/bavaria.svg"
+size large args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/simplex.svg","${DATA}/batik/mapVASR.svg","${DATA}/batik/bavaria.svg"
   output  stdout  digest  0x0b050f6a8339a871eafab0015048cd897dfcb8de,
           stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
           "mapVASR.png" exists,
