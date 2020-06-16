@@ -116,7 +116,7 @@ public abstract class FullSourceWorkspaceTests {
     }
   }
 
-  public static void unzipWorkSpace(boolean large) {
+  public static void unzipWorkSpace(String path, boolean large) {
     if (VERBOSE)
       System.err.println("unzipWorkSpace()");
     if (DACAPO_PRINT)
@@ -126,7 +126,7 @@ public abstract class FullSourceWorkspaceTests {
       File targetWorkspaceDir = workspaceRoot.getLocation().toFile();
       String targetWorkspacePath = targetWorkspaceDir.getCanonicalPath();
       deleteWorkspace();
-      String fullSourceZipPath = targetWorkspaceDir.getParent() + File.separator + FULL_SOURCE_ZIP_REL_PATH;
+      String fullSourceZipPath = (path == null ? targetWorkspaceDir.getParent() : path) + File.separator + FULL_SOURCE_ZIP_REL_PATH;
       unzip(fullSourceZipPath + "-default.zip", targetWorkspacePath);
       if (large) {
         unzip(fullSourceZipPath + "-large.zip", targetWorkspacePath);
@@ -332,7 +332,7 @@ public abstract class FullSourceWorkspaceTests {
     int dirLength = directories == null ? 0 : directories.length;
     if (dirLength < 5) {
       System.out.println("Workspace empty!");
-      unzipWorkSpace(large);
+      unzipWorkSpace(null,large);
     }
     for (int i = 0; i < dirLength; i++) {
       String dirName = directories[i].getName();

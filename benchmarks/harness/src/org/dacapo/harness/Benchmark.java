@@ -294,21 +294,23 @@ public abstract class Benchmark {
   protected void prepare() throws Exception {
     System.err.println("FIXME checksum data");
     // the data zip may not exist, if data is packaged externally
-    // try {
-    //   File fileLocalItem = new File(ExternData.getLocation() + "/dat/" + config.name + ".zip");
-    //   if (fileLocalItem.exists())
-    //     unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
-    //   else if (getURL("dat/" + config.name + ".zip") != null)
-    //     unpackZipFileResource("dat/" + config.name + ".zip", scratch);
-    //   else if(dataSet){
-    //     System.setErr(savedErr);
-    //     ExternData.failExtDataNotFound("", fileLocalItem);
-    //     System.exit(-1);
-    //   }
-    // } catch (DacapoException e) {
-    //   e.printStackTrace();
-    // }
-  }
+    /*
+     try {
+      File fileLocalItem = new File(ExternData.getLocation() + "/dat/" + config.name + ".zip");
+      if (fileLocalItem.exists())
+         unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
+      else if (getURL("dat/" + config.name + ".zip") != null)
+         unpackZipFileResource("dat/" + config.name + ".zip", scratch);
+      else if(dataSet){
+        System.setErr(savedErr);
+       ExternData.failExtDataNotFound("", fileLocalItem);
+        System.exit(-1);
+       }
+     } catch (DacapoException e) {
+      e.printStackTrace();
+     }
+ */
+    }
 
   /**
    * One-off preparation performed once we know the benchmark size.

@@ -29,6 +29,8 @@ public class BenchmarkRunner implements IApplication {
   public Object start(IApplicationContext context) throws Exception {
     boolean large = false, unzip = false, setup = false, index = false, build = false, hierarchy = false, ast = false, complete = false, search = false, format = false, model = false, teardown = false;
 
+    String data = null;
+
     String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
@@ -60,10 +62,12 @@ public class BenchmarkRunner implements IApplication {
         unzip = setup = index = search = build = hierarchy = ast = complete = format = model = teardown = true;
       } else if (arg.equals("alltests")) {
         index = search = build = hierarchy = ast = complete = format = model = true;
+      } else {
+        data = arg;
       }
     }
 
-    if (unzip)     { FullSourceWorkspaceTests.unzipWorkSpace(large); }
+    if (unzip)     { FullSourceWorkspaceTests.unzipWorkSpace(data,large); }
     if (setup)     { FullSourceWorkspaceTests.setup(large); }
     
     if (index)     { FullSourceWorkspaceSearchTests.runDaCapoTests(); }

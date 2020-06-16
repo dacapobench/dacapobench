@@ -98,4 +98,15 @@
         </ant>
     </target>
 
+    <target name="data" depends="plugin, workspace-zips">
+        <!--- <unzip dest="${bm-build-dir}/" src="${bm-data}/dummyjre.zip"/> THis just contains jre/lib/rt.jar -->
+
+        <!-- Install the test data -->
+        <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
+            <!-- The eclipse runtime.  We just include as little as we can, -->
+            <!-- using an empirically derived list of what we really need.  -->
+            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
+            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
+        </zip>
+    </target>
 </project>

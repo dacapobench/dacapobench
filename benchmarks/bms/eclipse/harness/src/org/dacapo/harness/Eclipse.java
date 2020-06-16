@@ -21,6 +21,7 @@ import org.dacapo.parser.Config;
  */
 public class Eclipse extends Benchmark {
 
+
   static final String WKSP_DIRECTORY_RELATIVE_TO_SCRATCH = "workspace";
   static final String PLUGIN_ID = "org.dacapo.eclipse.Harness";
   static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.13.100.v20180827-1536.jar";
@@ -44,13 +45,15 @@ public class Eclipse extends Benchmark {
 
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
+    final String DATA = data.getAbsolutePath() + File.separator + "dat" + File.separator +"eclipse" + File.separator;
+
     if (!((Boolean) isRunning.invoke(null, (Object[]) null)).booleanValue()) {
       startup(size);
     }
     setJavaHomeIfRequired();
     try {
-      String[] largePluginArgs = { "large", "unzip" };
-      String[] pluginArgs = { "unzip" };
+      String[] largePluginArgs = { DATA, "large", "unzip",  };
+      String[] pluginArgs = { DATA, "unzip" };
       run.invoke(null, new Object[] { size.equals("large") ? largePluginArgs : pluginArgs });
     } catch (Exception e) {
       e.printStackTrace();
@@ -89,13 +92,14 @@ public class Eclipse extends Benchmark {
 
   private void startup(String size) {
     try {
+      final String DATA = data.getAbsolutePath() + File.separator + "dat" + File.separator +"eclipse" + File.separator;
       System.setProperty("osgi.os", "linux");
       System.setProperty("osgi.ws", "gtk");
       System.setProperty("osgi.arch", "x86");
-      System.setProperty("osgi.install.area", "file:" + fileInScratch("eclipse/"));
+      System.setProperty("osgi.install.area", "file:" + DATA + "eclipse");
       System.setProperty("osgi.noShutdown", "true");
-      System.setProperty("osgi.framework", "file:" + fileInScratch(OSGI_BOOTSTRAP_JAR));
-      System.setProperty("dacapo.local.jre", scratch.getAbsolutePath() + File.separator + "lib/rt.jar");
+      System.setProperty("osgi.framework", "file:" + DATA + OSGI_BOOTSTRAP_JAR);
+      System.setProperty("dacapo.local.jre", DATA + "lib/rt.jar");
       setJavaHomeIfRequired();
 
       String[] args = new String[4];
