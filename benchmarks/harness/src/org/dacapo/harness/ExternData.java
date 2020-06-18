@@ -48,8 +48,8 @@ public class ExternData {
 
   private static String getDefaultLocation() {
     try {
-      String parent = new File(ExternData.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-      return parent;
+      String jar =  new File(ExternData.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
+      return jar.replace(".jar","");
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);

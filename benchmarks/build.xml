@@ -187,11 +187,12 @@
                     else="${dacapo.version}-git+${git.hash}">
             <isset property="build.is-official"/>
         </condition>
-        <!-- set target jar name -->
+        <!-- set target data directory and jar name -->
+        <property name="build.target-dir" value="dacapo-${build.version}"/>
         <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
     </target>
 
-    <target name="init" depends="check-dependencies, set-build-version-info">
+    <target name="init" depends="check-dependencies, set-build-version-info, create-zip-directory">
         <!-- Create the time stamp -->
         <tstamp/>
         <delete dir="${log.build.dir}" />
@@ -469,6 +470,8 @@ See ${log.build.report} for a summary of benchmark build status.
                 <arg value="-Dbuild.time=${build.time}"/>
                 <arg value="-Dlog.build.dir=${log.build.dir}"/>
                 <arg value="-Dbuild.target-jar=${build.target-jar}"/>
+                <arg value="-Dbuild.target-jars=${build.target-jars}"/>
+                <arg value="-Dbuild.target-data=${build.target-data}"/>
                 <arg value="-buildfile"/>
                 <arg value="bms/@{benchmark}/build.xml"/>
                 <arg value="incremental"/>
@@ -564,6 +567,17 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
     <target name="zxing" depends="init,harness,update-externdata-info">
         <build.bm benchmark="zxing"/>
+    </target>
+
+    <target name="create-zip-directory" depends="set-build-version-info">
+        <property name="build.target-jars" value="${build.target-dir}/jar"/>
+        <property name="build.target-data" value="${build.target-dir}/dat"/>
+
+        <delete dir="${build.target-jars}"/>
+        <delete dir="${build.target-data}"/>
+        
+        <mkdir dir="${build.target-jars}"/>
+        <mkdir dir="${build.target-data}"/>
     </target>
 
     <target name="update-externdata-info" depends="set-build-version-info">

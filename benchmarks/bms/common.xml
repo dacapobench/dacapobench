@@ -30,8 +30,8 @@
 	<property name="bm-src-harness-dir" value="${bm-files}/harness/src"/>
 	<property name="bm-src-benchmark-dir" value="${bm-files}/benchmark"/>
 	<property name="bm-downloads" value="${bm-files}/downloads"/>
-	<property name="bm-out-jar" value="${bm-files}/outjar"/>
-	<property name="bm-out-dat" value="${bm-files}/outdat"/>
+	<property name="bm-out-jar" value="${build.target-jars}"/>
+	<property name="bm-out-dat" value="${build.target-data}/${bm-name}"/>
 
 	<property name="bm-jars" value="${bm-out-jar}"/>
 	<property name="bm-dat" value="${bm-out-dat}"/>
@@ -112,14 +112,12 @@
 		<delete dir="${bm-output-dir}"/>
 		<delete dir="${bm-build-dir}"/>
 		<delete dir="${bm-deps-output-dir}"/>
-		<delete dir="${bm-out-jar}"/>
 	</target>
 
 	<target name="init" depends="clean">
 		<mkdir dir="${bm-build-dir}"/>
 		<mkdir dir="${bm-output-dir}"/>
 		<mkdir dir="${bm-output-harness-dir}"/>
-		<mkdir dir="${bm-jars}"/>
 		<mkdir dir="${bm-dat}"/>
 		<mkdir dir="${bm-cnf}"/>
 	</target>
@@ -175,7 +173,10 @@
 	<target name="jar"/>
 
 	<target name="data" if="bm-data-exists">
-		<zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
+		<!-- <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/> -->
+		<!-- <copy todir="${build.target-dat}">
+  			<fileset dir="${bm-data}"/>
+		</copy> -->
 	</target>
 
 	<target name="complete">
