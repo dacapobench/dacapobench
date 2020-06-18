@@ -36,6 +36,11 @@
             <param name="target-url" value="${bm-url}"/>
             <param name="target-file" value="${bm-src-at}"/>
         </antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/eclipse"/>
+            <param name="target-file" value="dummyjre.zip"/>
+        </antcall>
     </target>
 
     <target name="move-eclipse">
@@ -70,13 +75,15 @@
                 <include name="**/${workspace-full}.zip"/>
             </fileset>
         </unzip>
+
         <!-- Create two complimentary zips for default and large workspaces -->
-        <zip destfile="${bm-build-dir}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
+        <zip destfile="${bm-dat}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
             <patternset includesfile="${bm-files}/bundles-default.lst"/>
         </zip>
-        <zip destfile="${bm-build-dir}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
+        <zip destfile="${bm-dat}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
             <patternset excludesfile="${bm-files}/bundles-default.lst"/>
         </zip>
+        
         <delete dir="${bm-build-dir}/eclipse-testing"/>
     </target>
 
@@ -100,13 +107,27 @@
 
     <target name="data" depends="plugin, workspace-zips">
         <!--- <unzip dest="${bm-build-dir}/" src="${bm-data}/dummyjre.zip"/> THis just contains jre/lib/rt.jar -->
+        <unzip dest="${bm-dat}" src="${bm-downloads}/dummyjre.zip"/>
+
 
         <!-- Install the test data -->
-        <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
+        <copy todir="${bm-dat}">
             <!-- The eclipse runtime.  We just include as little as we can, -->
             <!-- using an empirically derived list of what we really need.  -->
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
-        </zip>
+        </copy>
+        <copy todir="${bm-dat}">
+            <fileset dir="${bm-build-dir}">
+                <exclude name="eclipse/plugins/**"/>
+            </fileset>
+        </copy>
+        <!---
+        <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">-->
+            <!-- The eclipse runtime.  We just include as little as we can, -->
+            <!-- using an empirically derived list of what we really need.  -->
+        <!---   <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
+            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/> -->
+       <!--- </zip>-->
     </target>
 </project>
