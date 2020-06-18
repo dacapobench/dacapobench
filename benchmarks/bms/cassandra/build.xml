@@ -109,4 +109,17 @@
         <copy file="${cassandra-build-top}/build/apache-cassandra-thrift-${bm-version}-SNAPSHOT.jar"
             tofile="${bm-jars}/cassandra-thrift-${bm-version}.jar"/>
     </target>
+
+    <target name="data">
+        <copy todir="${bm-dat}">
+            <fileset dir="${bm-data}/"/>
+        </copy>
+        <copy todir="${bm-dat}/conf">
+            <fileset dir="${cassandra-build-top}/conf/"/>
+        </copy>
+        <copy todir="${bm-dat}/libsigar">
+            <fileset dir="${cassandra-build-top}/lib/sigar-bin/"/>
+        </copy>
+    </target>
+
  </project>
