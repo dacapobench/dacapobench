@@ -42,10 +42,13 @@
     </target>
 
     <target name="deps">
-       <!-- <copy file="${batik-top}/lib/js.jar" todir="${bm-deps-output-dir}"/ -->
         <copy file="${batik-top}/lib/fop-transcoder-allinone-2.5.jar" todir="${bm-deps-output-dir}"/>
     </target>
 
-
+    <target name="data">
+        <copy todir="${bm-dat}">
+            <fileset dir="${bm-data}/"/>
+        </copy>
+    </target>
 
 </project>
