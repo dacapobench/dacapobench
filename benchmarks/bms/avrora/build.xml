@@ -40,4 +40,11 @@
         </jar>
     </target>
 
+    <target name="data">
+        <!-- Install the test data -->
+        <copy todir="${bm-dat}">
+            <fileset dir="${bm-build-dir}/avrora/test"/>
+        </copy>
+    </target>
+
 </project>
