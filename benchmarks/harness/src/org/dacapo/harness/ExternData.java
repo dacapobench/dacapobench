@@ -75,9 +75,10 @@ public class ExternData {
   /**
    * Fail function when external data not found.
    */
-  public static void failExtDataNotFound(String size, File extdata, String file) {
-    System.err.printf("ERROR: failed to find external data for size '%s'.\n", size);
-    System.err.printf("Expected to find: ", file);
+  public static void failExtDataNotFound(String size, File extdata, String file, String cfg) {
+    System.err.println("ERROR: failed to find external data for size "+size);
+    System.err.println("Expected to find: " + file);
+    System.err.println("For config entry: " + cfg);
     System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata == null ? "null" : extdata.getAbsolutePath());
     System.err.println("Please do one of the following:");
     System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");

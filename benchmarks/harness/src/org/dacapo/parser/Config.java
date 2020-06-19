@@ -768,8 +768,9 @@ public class Config {
       if (tmp.contains("${DATA}")) {
         tmp = tmp.replace("${DATA}", dataPath);
         File argFile = new File(tmp);
-        if (!argFile.exists())
-          ExternData.failExtDataNotFound(size, extdata, tmp);
+        if (!argFile.exists()) {
+          ExternData.failExtDataNotFound(size, extdata, tmp, raw[i]);
+        }
       }
       cooked[i] = tmp;
     }
