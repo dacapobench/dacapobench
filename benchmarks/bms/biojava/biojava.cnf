@@ -7,19 +7,23 @@ size small args "${DATA}/biojava/PF00104_small.fasta"
   output
     stdout digest 0x1330c6773c114760d81e633da213064786bb41c8;
 
-size default args "${DATA}/biojava/uniprot_sprot_varsplic.fasta"
+size default args "${DATA}/biojava/human_assoc_gold_strains_gg16S_aligned.fasta"
   output
-    stdout digest 0xffd9aab70ebde6315d2c64a9fdcaf93dfe59febf;
+    stdout digest 0x33712d620cf1b49b83017fedf8bd3e5b4769ae62;
 
 size large args "${DATA}/biojava/core_set_aligned.fasta"
   output
     stdout digest 0x039481f64d66930f41e2beb9f87131e08b9c2553;
 
+size huge args "${DATA}/biojava/slice_28f_519R_gg_norm_tax.fasta"
+  output
+    stdout digest 0x87e28962ede52417ce67c796e4b3dc9fc7512785;
+
 description
-  short	     "BioJava is an open-source software project dedicated to provide Java tools to process biological data.",
-  long       "BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures.",
+  short	     "BioJava generates 10 physico-chemical properties of protein sequences.",
+  long       "BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures.  The benchmark generates 10 physico-chemical properties of different sized protein sequences.",
   copyright	 "Copyright (C) 2020 Authors of BioJava project",
   license    "GNU Lesser General Public License v2.1",
   url        "https://biojava.org/",
-  version    "5.1.1",
-  threads    "Explicitly multi-threaded, scaled to available processors.";
+  version    "5.3.0",
+  threads    "Explicitly multi-threaded, scaled to available processors, however these workloads exhibit very little parallelism";

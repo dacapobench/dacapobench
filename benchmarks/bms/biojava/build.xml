@@ -12,7 +12,7 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="biojava"/>
-    <property name="bm-version" value="5.1.1"/>
+    <property name="bm-version" value="5.3.0"/>
     <property name="bm-src" value="${bm-name}-${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
     <property name="bm-git-commit" value="10c1c6c234e2ee1d2adf6488ee6f32855181360a"/>
@@ -47,19 +47,6 @@
             <arg value="-Dmaven.test.skip=true"/>
         </exec>
     </target>
-
- <!--  http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/core_set_aligned.fasta
-    
-
- http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/Isolated_named_strains_16S_aligned.fasta (800MB)
-
-https://biospec.nih.gov/MSDB.fasta
-https://biospec.nih.gov/uniprot_sprot_varsplic.fasta
-
-
-ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot_varsplic.fasta.gz
-
-https://biospec.nih.gov/Sprot_varsplic.fasta -->
 
     <target name="jar">
         <copy file="${bm-build-dir}/biojava-aa-prop/target/AAProperties-jar-with-dependencies.jar"
