@@ -25,6 +25,15 @@
         <os family="windows"/>
     </condition>
 
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/biojava"/>
+            <param name="target-file" value="biojava-data.zip"/>
+        </antcall>
+    </target>
+
+
     <target name="unpack" depends="untar, patch"/>
 
     <target name="patch">
@@ -39,8 +48,29 @@
         </exec>
     </target>
 
+ <!--  http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/core_set_aligned.fasta
+    
+
+ http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/Isolated_named_strains_16S_aligned.fasta (800MB)
+
+https://biospec.nih.gov/MSDB.fasta
+https://biospec.nih.gov/uniprot_sprot_varsplic.fasta
+
+
+ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot_varsplic.fasta.gz
+
+https://biospec.nih.gov/Sprot_varsplic.fasta -->
+
     <target name="jar">
         <copy file="${bm-build-dir}/biojava-aa-prop/target/AAProperties-jar-with-dependencies.jar"
               todir="${bm-jars}"/>
     </target>
+
+    <target name="data">
+        <unzip dest="${bm-dat}" src="${bm-downloads}/biojava-data.zip"/>
+        <copy todir="${bm-dat}">
+            <fileset file="${bm-build-dir}/biojava-core/src/test/resources/PF00104_small.fasta"/>
+        </copy>
+    </target>
+
 </project>
