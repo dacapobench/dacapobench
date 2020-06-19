@@ -21,6 +21,7 @@ import org.dacapo.parser.Config;
 public class Fop extends Benchmark {
 
   private String[] args;
+  private String[] names;
   private String[] inputs;
   private String[] outputs;
 
@@ -38,14 +39,23 @@ public class Fop extends Benchmark {
   }
 
   private void collectInputs() {
-    File dir = new File(args[0]);
-    String [] list = dir.list();
+    File src = new File(args[0]);
+    File dst = new File(args[1]);
+    String [] list = src.list();
+    String srcdir = src.getPath();
+    if (list == null) { // single file
+      list = new String[1];
+      list[0] = src.getName();
+      srcdir = src.getParent();
+    }
     inputs = new String [list.length];
     outputs = new String [list.length];
-    String targetFormat = args[1].substring(1);
+    names = new String [list.length];
+    String targetFormat = args[2].substring(1);
     for (int i = 0; i < list.length; i ++) {
-      inputs[i] = dir.getPath() + File.separatorChar + list[i];
-      outputs[i] = dir.getPath() + File.separatorChar + 
+      names[i] = list[i];
+      inputs[i] = srcdir + File.separatorChar + list[i];
+      outputs[i] = dst.getPath() + File.separatorChar + 
                     list[i].substring(0, list[i].lastIndexOf(".fo") + 1) + targetFormat;
     }
   }
@@ -81,12 +91,14 @@ public class Fop extends Benchmark {
     try {
       String [] invokeArgs = new String[4];
       invokeArgs[0] = "-q";
-      invokeArgs[2] = args[1];
+      invokeArgs[2] = args[2];
       for (int i = 0; i < inputs.length; i ++) {
         invokeArgs[1] = inputs[i];
         invokeArgs[3] = outputs[i];
+        System.out.print(names[i]+" ");
         method.invoke(null, new Object[] { invokeArgs });
       }
+      System.out.println();
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);

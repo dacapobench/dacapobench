@@ -7,8 +7,13 @@ benchmark fop
  * 'small' uses debug mode ("-d"), which puts current stats in the output,
  * so we don't use stdout to validate small.
  */
-size default args "${SCRATCH}/fop", "-pdf"
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+
+size small args "${DATA}/fop/alignment.fo", "${SCRATCH}", "-pdf"
+  output stdout digest 0xa58b9f9e54d89f797a5b7c0e326352f114c4575c,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size default args "${DATA}/fop", "${SCRATCH}", "-pdf"
+  output stdout digest 0x3953d536cc2919a07e0cc7f5b90ddb986013c878,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

@@ -46,4 +46,13 @@
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
         <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
+
+        <target name="data">
+        <copy todir="${bm-dat}" flatten="true">
+            <fileset dir="${bm-build-top}/examples/">
+                <include name="**/*.fo"/>
+                <exclude name="**/cid-fonts.fo"/>
+            </fileset>
+        </copy>
+    </target>
 </project>
