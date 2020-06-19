@@ -12,19 +12,19 @@ diff -urN fop-2.2/fop/build.xml ../build-new/fop-2.2/fop/build.xml
    <property name="javac.fork" value="no"/>
    <property name="junit.fork" value="yes"/>
    <property name="junit.haltonfailure" value="off"/>
-diff -urN fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java ../build-new/fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java
---- fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java	2017-04-03 21:23:57.000000000 +1000
-+++ ../build-new/fop-2.2/fop-core/src/main/java/org/apache/fop/cli/Main.java	2019-06-10 22:21:41.000000000 +1000
-@@ -194,9 +194,9 @@
+--- fop-2.5/fop-core/src/main/java/org/apache/fop/cli/Main.java 2020-05-05 19:42:04.000000000 +1000
++++ ../Main.java        2020-06-19 20:05:31.430534950 +1000
+@@ -191,9 +191,10 @@
              // System.exit(0) called to close AWT/SVG-created threads, if any.
              // AWTRenderer closes with window shutdown, so exit() should not
              // be called here
 -            if (!MimeConstants.MIME_FOP_AWT_PREVIEW.equals(outputFormat)) {
 -                System.exit(0);
 -            }
-+            //if (!MimeConstants.MIME_FOP_AWT_PREVIEW.equals(outputFormat)) {
-+            //    System.exit(0);
-+            //}
++            // Don't shut down for DaCapo
++            // if (!MimeConstants.MIME_FOP_AWT_PREVIEW.equals(outputFormat)) {
++            //     System.exit(0);
++            // }
          } catch (Exception e) {
              if (options != null) {
                  options.getLogger().error("Exception", e);

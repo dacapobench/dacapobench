@@ -1,7 +1,7 @@
 benchmark fop
   class org.dacapo.harness.Fop
   thread-model single
-  jars "fop.jar", "avalon-framework-api-4.3.1.jar", "avalon-framework-impl-4.3.1.jar", "batik-all-1.9-fop.jar", "commons-io-1.3.1.jar", "commons-logging-1.0.4.jar", "fontbox-2.0.4.jar", "serializer-2.7.2.jar", "servlet-2.2.jar", "xalan-2.7.2.jar", "xercesImpl-2.9.1.jar", "xml-apis-1.3.04.jar", "xml-apis-ext-1.3.04.jar", "xmlgraphics-commons-2.2.jar" ;
+  jars "fop.jar", "batik-all-1.13.jar", "commons-io-1.3.1.jar", "commons-logging-1.0.4.jar", "fontbox-2.0.16.jar", "serializer-2.7.2.jar", "servlet-2.2.jar", "xalan-2.7.2.jar", "xercesImpl-2.12.0.jar", "xml-apis-1.4.01.jar", "xml-apis-ext-1.3.04.jar", "xmlgraphics-commons-2.4.jar";
 
 /*
  * 'small' uses debug mode ("-d"), which puts current stats in the output,
@@ -18,11 +18,11 @@ size default args "${DATA}/fop", "${SCRATCH}", "-pdf"
 
 description
   short		"An output-independent print formatter",
-  long		"fop takes an XSL-FO file, parses it and formats it, generating a postscript file",
-  copyright	"Copyright (C) 1999-2006 The Apache Software Foundation",
+  long		"fop takes one or more XSL-FO file, parses it and formats it, generating a pdf file",
+  copyright	"Copyright (C) 1999-2020 The Apache Software Foundation",
   author 	"Apache Software Foundation",
   license	"Apache Public License",
   url        "http://xmlgraphics.apache.org/fop/",
-  version	"2.2",
+  version	"2.5",
   repeats	"Single iteration, renders a single XSL-FO file",
   threads       "Single threaded";

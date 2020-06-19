@@ -12,7 +12,7 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="fop" />
-    <property name="bm-version" value="2.2" />
+    <property name="bm-version" value="2.5" />
     <property name="bm-url" value="${apache.dl.url}/xmlgraphics/fop/source" />
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz" />
 
@@ -29,22 +29,11 @@
 
     <target name="jar">
         <copy file="${bm-build-top}/build/fop.jar" todir="${bm-jars}" />
-        <copy file="${bm-build-top}/lib/avalon-framework-api-4.3.1.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/avalon-framework-impl-4.3.1.jar" todir="${bm-out-jar}" />
-        <!-- Changing the name in case failed for copy -->
-        <copy file="${bm-build-top}/lib/batik-all-1.9.jar" tofile="${bm-out-jar}/batik-all-1.9-fop.jar" />
-        <copy file="${bm-build-top}/lib/commons-io-1.3.1.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/commons-logging-1.0.4.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/fontbox-2.0.4.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/serializer-2.7.2.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/servlet-2.2.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/xalan-2.7.2.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/xercesImpl-2.9.1.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/xml-apis-1.3.04.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/xml-apis-ext-1.3.04.jar" todir="${bm-out-jar}" />
-        <copy file="${bm-build-top}/lib/xmlgraphics-commons-2.2.jar" todir="${bm-out-jar}" />
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <copy todir="${bm-jars}">
+            <fileset dir="${bm-build-top}/lib/">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
     </target>
 
         <target name="data">
