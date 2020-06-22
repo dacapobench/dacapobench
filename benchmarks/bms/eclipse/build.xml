@@ -12,11 +12,11 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="eclipse"/>
-    <property name="bm-version" value="4.9"/>
-    <property name="bm-drop" value="201809060745"/>
+    <property name="bm-version" value="4.16"/>
+    <property name="bm-drop" value="202006040540"/>
     <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops4/R-${bm-version}-${bm-drop}"/>
     <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa-x86_64.tar.gz"/>
-    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.13.100.v20180827-1536.jar"/>
+    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.15.300.v20200520-1959.jar"/>
 
     <import file="../common.xml"/>
     <property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
