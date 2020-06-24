@@ -42,7 +42,7 @@
 
     <target name="data">
         <!-- Install the test data -->
-        <copy todir="${bm-dat}">
+        <copy todir="${bm-data}">
             <fileset dir="${bm-build-dir}/avrora/test"/>
         </copy>
     </target>

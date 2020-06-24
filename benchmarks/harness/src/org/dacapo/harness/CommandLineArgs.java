@@ -266,14 +266,14 @@ public class CommandLineArgs {
 
   static List<String> extractBenchmarkSet() throws IOException {
     List<String> benchmarks = new ArrayList<String>();
-    URL url = CommandLineArgs.class.getClassLoader().getResource("cnf");
+    URL url = CommandLineArgs.class.getClassLoader().getResource("META-INF/cnf");
     String protocol = url.getProtocol();
     if (protocol.equals("jar")) {
       JarURLConnection jarConnection = (JarURLConnection) url.openConnection();
       for (Enumeration<?> entries = jarConnection.getJarFile().entries(); entries.hasMoreElements();) {
         String entry = ((JarEntry) entries.nextElement()).getName();
         if (entry.endsWith(".cnf")) {
-          entry = entry.replace("cnf/", "").replace(".cnf", "");
+          entry = entry.replace("META-INF/cnf/", "").replace(".cnf", "");
           benchmarks.add(entry);
         }
       }

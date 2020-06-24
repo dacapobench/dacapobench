@@ -24,7 +24,7 @@
 	<property name="bm-output-harness-dir" value="${bm-files}/dist"/>
 	<property name="bm-output-benchmark-dir" value="${bm-files}/dist/benchmark"/>
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
-	<property name="bm-data" value="${bm-files}/data"/>
+	<property name="bm-data" value="${bm-files}/data/${bm-name}"/>
 	<available file="${bm-data}" property="bm-data-exists" type="dir"/>
 	<property name="bm-src-dir" value="${bm-files}/src"/>
 	<property name="bm-src-harness-dir" value="${bm-files}/harness/src"/>
@@ -35,7 +35,8 @@
 
 	<property name="bm-jars" value="${bm-out-jar}"/>
 	<property name="bm-dat" value="${bm-out-dat}"/>
-	<property name="bm-cnf" value="${bm-output-dir}/cnf"/>
+	<property name="bm-cnf" value="${bm-output-dir}/META-INF/cnf"/>
+	<property name="bm-md5" value="${bm-output-dir}/META-INF/md5"/>
 
 	<property name="harness-classpath" value="harness/dist/"/>
 
@@ -112,6 +113,7 @@
 		<delete dir="${bm-output-dir}"/>
 		<delete dir="${bm-build-dir}"/>
 		<delete dir="${bm-deps-output-dir}"/>
+		<delete dir="${bm-data}"/>
 	</target>
 
 	<target name="init" depends="clean">
@@ -120,13 +122,32 @@
 		<mkdir dir="${bm-output-harness-dir}"/>
 		<mkdir dir="${bm-dat}"/>
 		<mkdir dir="${bm-cnf}"/>
+		<mkdir dir="${bm-data}"/>
 	</target>
 
 	<target name="unpack"/>
 
 	<target name="build" depends="dacapo-harness, benchmark, config, harness"/>
 
-	<target name="benchmark" depends="bm-build, jar, data"/>
+	<target name="data-copy-checksum" depends="data">
+		<property name="bm-md5-tmp" value="${bm-files}/data/md5"/>
+		<!-- create checksum -->
+		<delete dir="${bm-md5-tmp}"/>
+		<checksum pattern="{0} {3}" todir="${bm-md5-tmp}">
+        	<fileset dir="${bm-data}" />
+    	</checksum>
+    	<concat destfile="${bm-md5}/${bm-name}.MD5">
+        	<fileset dir="${bm-md5-tmp}" />
+    	</concat>
+		<replace file="${bm-md5}/${bm-name}.MD5" token=" bms/${bm-name}/data/" value=" "/>
+
+		<!-- copy files -->
+	    <copy todir="${bm-dat}">
+            <fileset dir="${bm-data}"/>
+        </copy>
+	</target>
+
+	<target name="benchmark" depends="bm-build, jar, data-copy-checksum"/>
 
 	<target name="bm-build"/>
 

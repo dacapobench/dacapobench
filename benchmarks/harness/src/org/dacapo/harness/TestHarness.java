@@ -117,7 +117,7 @@ public class TestHarness {
         // name of file containing configurations
         InputStream ins = null;
         if (commandLineArgs.getCnfOverride() == null) {
-          String cnf = "cnf/" + bm + ".cnf";
+          String cnf = "META-INF/cnf/" + bm + ".cnf";
           ins = TestHarness.class.getClassLoader().getResourceAsStream(cnf);
           if (ins == null) {
             System.err.println("Unknown benchmark: " + bm);

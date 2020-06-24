@@ -9,6 +9,10 @@
 package org.dacapo.harness;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.security.MessageDigest;
+import javax.xml.bind.DatatypeConverter;
+
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Properties;
@@ -287,30 +291,50 @@ public abstract class Benchmark {
     // }
   }
 
+  private boolean checkMD5(String path, String md5path){
+    InputStream in = Benchmark.class.getClassLoader().getResourceAsStream(md5path);
+    if (in == null) {
+      System.err.println("Can't find MD5 for benchmark: " + config.name);
+      System.exit(20);
+    }
+    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    return reader.lines().map(l -> {
+      String [] fields = l.split(" ");
+      String md5Expected = fields[0];
+      String filePath = fields[1];
+      try {
+        String md5 = getMD5(new File(data+File.separator+path, filePath));
+        if (!md5.toUpperCase().equals(md5Expected.toUpperCase())) {
+          return false;
+        }
+      } catch (Exception e) {
+        System.out.println("Checksum failure: expected "+fields[0]+" for "+data+File.separator+path+File.separator+fields[1]);
+        return false;
+      }
+      return true;
+    }).reduce(true, (a, b) -> a & b);
+  }
+
+  private static String getMD5(File file) throws Exception{
+    MessageDigest md = MessageDigest.getInstance("MD5");
+    byte [] buffer = new byte [1024 * 64]; // 64KB buffer
+    InputStream stream = Files.newInputStream(file.toPath());
+    int bytesRead = 0;
+    while ((bytesRead = stream.read(buffer)) != -1) {
+      md.update(buffer, 0, bytesRead);
+    }
+    return DatatypeConverter.printHexBinary(md.digest());
+  }
+
   /**
-   * Perform pre-benchmark preparation. By default it unpacks the zip file
-   * <code>data/<i>name</i>.zip</code> into the scratch directory.
+   * Perform pre-benchmark preparation. By default it checksums the 
+   * data files for this benchmark.
    */
   protected void prepare() throws Exception {
-    System.err.println("FIXME checksum data");
-    // the data zip may not exist, if data is packaged externally
-    /*
-     try {
-      File fileLocalItem = new File(ExternData.getLocation() + "/dat/" + config.name + ".zip");
-      if (fileLocalItem.exists())
-         unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)), scratch);
-      else if (getURL("dat/" + config.name + ".zip") != null)
-         unpackZipFileResource("dat/" + config.name + ".zip", scratch);
-      else if(dataSet){
-        System.setErr(savedErr);
-       ExternData.failExtDataNotFound("", fileLocalItem);
-        System.exit(-1);
-       }
-     } catch (DacapoException e) {
-      e.printStackTrace();
-     }
- */
+    if (!checkMD5("dat", "META-INF/md5/" + config.name  + ".MD5")) {
+      System.exit(-1);
     }
+  }
 
   /**
    * One-off preparation performed once we know the benchmark size.

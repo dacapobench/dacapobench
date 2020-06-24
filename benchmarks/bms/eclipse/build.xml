@@ -77,10 +77,10 @@
         </unzip>
 
         <!-- Create two complimentary zips for default and large workspaces -->
-        <zip destfile="${bm-dat}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
+        <zip destfile="${bm-data}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
             <patternset includesfile="${bm-files}/bundles-default.lst"/>
         </zip>
-        <zip destfile="${bm-dat}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
+        <zip destfile="${bm-data}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
             <patternset excludesfile="${bm-files}/bundles-default.lst"/>
         </zip>
         
@@ -106,28 +106,20 @@
     </target>
 
     <target name="data" depends="plugin, workspace-zips">
-        <!--- <unzip dest="${bm-build-dir}/" src="${bm-data}/dummyjre.zip"/> THis just contains jre/lib/rt.jar -->
-        <unzip dest="${bm-dat}" src="${bm-downloads}/dummyjre.zip"/>
-
+        <!--- This just contains jre/lib/rt.jar -->
+        <unzip dest="${bm-data}" src="${bm-downloads}/dummyjre.zip"/>
 
         <!-- Install the test data -->
-        <copy todir="${bm-dat}">
+        <copy todir="${bm-data}">
             <!-- The eclipse runtime.  We just include as little as we can, -->
             <!-- using an empirically derived list of what we really need.  -->
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </copy>
-        <copy todir="${bm-dat}">
+        <copy todir="${bm-data}">
             <fileset dir="${bm-build-dir}">
                 <exclude name="eclipse/plugins/**"/>
             </fileset>
         </copy>
-        <!---
-        <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">-->
-            <!-- The eclipse runtime.  We just include as little as we can, -->
-            <!-- using an empirically derived list of what we really need.  -->
-        <!---   <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
-            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/> -->
-       <!--- </zip>-->
     </target>
 </project>

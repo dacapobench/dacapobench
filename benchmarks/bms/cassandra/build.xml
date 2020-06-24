@@ -47,6 +47,11 @@
 			<param name="target-file" value="${ycsb-tgz}"/>
 			<param name="fail-on-error" value="true"/>
 		</antcall>
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/cassandra"/>
+            <param name="target-file" value="cassandra-data.zip"/>
+        </antcall>
     </target>
 
     <property name="cassandra-build-top" value="${bm-build-dir}/cassandra-${bm-version}"/>
@@ -111,13 +116,14 @@
     </target>
 
     <target name="data">
-        <copy todir="${bm-dat}">
+        <unzip dest="${bm-data}" src="${bm-downloads}/cassandra-data.zip"/>
+        <copy todir="${bm-data}">
             <fileset dir="${bm-data}/"/>
         </copy>
-        <copy todir="${bm-dat}/conf">
+        <copy todir="${bm-data}/conf">
             <fileset dir="${cassandra-build-top}/conf/"/>
         </copy>
-        <copy todir="${bm-dat}/libsigar">
+        <copy todir="${bm-data}/libsigar">
             <fileset dir="${cassandra-build-top}/lib/sigar-bin/"/>
         </copy>
     </target>

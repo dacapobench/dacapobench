@@ -37,7 +37,7 @@
     </target>
 
     <target name="data">
-        <copy todir="${bm-dat}" flatten="true">
+        <copy todir="${bm-data}" flatten="true">
             <fileset dir="${bm-build-top}/examples/">
                 <include name="**/*.fo"/>
                 <exclude name="**/cid-fonts.fo"/>

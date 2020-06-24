@@ -54,8 +54,8 @@
     </target>
 
     <target name="data">
-        <unzip dest="${bm-dat}" src="${bm-downloads}/biojava-data.zip"/>
-        <copy todir="${bm-dat}">
+        <unzip dest="${bm-data}" src="${bm-downloads}/biojava-data.zip"/>
+        <copy todir="${bm-data}">
             <fileset file="${bm-build-dir}/biojava-core/src/test/resources/PF00104_small.fasta"/>
         </copy>
     </target>
