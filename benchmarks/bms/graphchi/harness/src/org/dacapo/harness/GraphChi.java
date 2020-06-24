@@ -20,7 +20,7 @@ public class GraphChi extends Benchmark {
   private Class<?> cls;
 
   public GraphChi(Config config, File scratch, File data) throws Exception {
-    super(config, scratch, data, true);
+    super(config, scratch, data, false, true);
   }
 
   @Override
