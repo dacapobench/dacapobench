@@ -21,6 +21,14 @@
 
     <property name="batik-top" value="${bm-build-dir}/batik-${batik.major.version}"/>
 
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/batik"/>
+            <param name="target-file" value="batik-data.zip"/>
+        </antcall>
+    </target>
+
     <target name="unpack" depends="unzip, patch"/>
 
     <target name="bm-build">
@@ -46,9 +54,7 @@
     </target>
 
     <target name="data">
-        <copy todir="${bm-dat}">
-            <fileset dir="${bm-data}/"/>
-        </copy>
+        <unzip dest="${bm-dat}" src="${bm-downloads}/batik-data.zip"/>
     </target>
 
 </project>
