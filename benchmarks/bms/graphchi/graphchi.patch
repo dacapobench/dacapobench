@@ -23,41 +23,6 @@ index 52d0b86..1a7857a 100644
      <dependency>
        <groupId>org.apache.commons</groupId>
        <artifactId>commons-math</artifactId>
-diff --git orig/src/main/java/edu/cmu/graphchi/ChiLogger.java ./src/main/java/edu/cmu/graphchi/ChiLogger.java
-index fd67754..0c7ac42 100644
---- orig/src/main/java/edu/cmu/graphchi/ChiLogger.java
-+++ ./src/main/java/edu/cmu/graphchi/ChiLogger.java
-@@ -63,18 +63,18 @@ public class ChiLogger {
-             StringBuilder sb = new StringBuilder();
- 
-             // Minimize memory allocations here.
--            dat.setTime(record.getMillis());
--            args[0] = dat;
--
--
--            // Date and time
--            StringBuffer text = new StringBuffer();
--            if (formatter == null) {
--                formatter = new MessageFormat(format);
--            }
--            formatter.format(args, text, null);
--            sb.append(text);
--            sb.append(" ");
-+            // dat.setTime(record.getMillis());
-+            // args[0] = dat;
-+
-+
-+            // // Date and time
-+            // StringBuffer text = new StringBuffer();
-+            // if (formatter == null) {
-+            //     formatter = new MessageFormat(format);
-+            // }
-+            // formatter.format(args, text, null);
-+            // sb.append(text);
-+            // sb.append(" ");
- 
- 
-             // Logger name
 --- pom.xml	2018-12-16 15:39:31.000000000 +0800
 +++ pomtemp.xml	2018-12-16 15:40:39.000000000 +0800
 @@ -169,6 +169,13 @@
@@ -74,3 +39,96 @@ index fd67754..0c7ac42 100644
      </plugins>
      <testOutputDirectory>target/test-classes</testOutputDirectory>
      <testSourceDirectory>test</testSourceDirectory>
+--- src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java     2020-05-22 17:34:27.000000000 +1000
++++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java    2020-06-24 13:36:40.940907159 +1000
+@@ -155,7 +155,8 @@
+          * so that each row contains one latent factor.
+          */
+         if (ctx.getIteration() == 0) {
+-            logger.info("Initializing latent factors for " + ctx.getNumVertices() + " vertices");
++            // logger.info("Initializing latent factors for " + ctx.getNumVertices() + " vertices");
++            System.out.println("Initializing latent factors for " + ctx.getNumVertices() + " vertices");
+             vertexValueMatrix = new HugeDoubleMatrix(ctx.getNumVertices(), D);
+ 
+             /* Fill with random data */
+@@ -217,9 +218,8 @@
+             D = Integer.parseInt(args[2]);
+         }
+         ALSMatrixFactorization als = computeALS(baseFilename, nShards, D, 5);
+-
+-
+-        als.writeOutputMatrices();
++       // als.writeOutputMatrices();
++       als.checksumMatrices();
+     }
+ 
+ 
+@@ -239,12 +239,14 @@
+                 !new File(baseFilename + ".matrixinfo").exists()) {
+             sharder.shard(new FileInputStream(new File(baseFilename)), FastSharder.GraphInputFormat.MATRIXMARKET);
+         } else {
+-            logger.info("Found shards -- no need to preprocess");
++            //logger.info("Found shards -- no need to preprocess");
++            System.out.println("Found shards -- no need to preprocess");
+         }
+ 
+         /* Init */
+         ALSMatrixFactorization als = new ALSMatrixFactorization(D, baseFilename, nShards);
+-        logger.info("Set latent factor dimension to: " + als.D);
++        // logger.info("Set latent factor dimension to: " + als.D);
++        System.out.println("Set latent factor dimension to: " + als.D);
+ 
+         /* Run GraphChi */
+         GraphChiEngine<Integer, Float> engine = new GraphChiEngine<Integer, Float>(baseFilename, nShards);
+@@ -258,7 +260,8 @@
+ 
+         /* Output RMSE */
+         double trainRMSE = Math.sqrt(als.rmse / (1.0 * engine.numEdges()));
+-        logger.info("Train RMSE: " + trainRMSE + ", total edges:" + engine.numEdges());
++        // logger.info("Train RMSE: " + trainRMSE + ", total edges:" + engine.numEdges());
++        System.out.println("Total edges: " + engine.numEdges());
+         return als;
+     }
+ 
+@@ -336,4 +339,41 @@
+ 
+         logger.info("Latent factor matrices saved: " + baseFilename + "_U.mm" + ", " + baseFilename + "_V.mm");
+     }
++
++
++    /**
++     * Output in matrix market format
++     * @throws Exception
++     */
++    private void checksumMatrices() throws Exception {
++        /* First read the original matrix dimensions */
++        BipartiteGraphInfo graphInfo = getGraphInfo();
++        int numLeft = graphInfo.getNumLeft();
++        int numRight = graphInfo.getNumRight();
++
++        VertexIdTranslate vertexIdTranslate =
++                VertexIdTranslate.fromFile(new File(ChiFilenames.getVertexTranslateDefFile(baseFilename, numShards)));
++
++        /* Sum left */
++        long count = 0;
++        double sum = 0;
++        for(int j=0; j < numLeft; j++) {
++            int vertexId = vertexIdTranslate.forward(j);  // Translate to internal vertex id
++            for(int i=0; i < D; i++) {
++                count++;
++                sum += vertexValueMatrix.getValue(vertexId, i);
++            }
++        }
++
++        /* Sum right */
++        double rsum = 0;
++        for(int j=0; j < numRight; j++) {
++            int vertexId = vertexIdTranslate.forward(numLeft + j);   // Translate to internal vertex id
++            for(int i=0; i < D; i++) {
++                count++;
++                sum += vertexValueMatrix.getValue(vertexId, i);
++            }
++        }
++        System.out.println(count+ " elements, check: "+(10*((int) sum)/count));
++    }
+ }

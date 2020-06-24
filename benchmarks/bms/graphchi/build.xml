@@ -30,6 +30,14 @@
         <os family="windows"/>
     </condition>
 
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/graphchi"/>
+            <param name="target-file" value="graphchi-data.zip"/>
+        </antcall>
+    </target>
+
     <target name="unpack" depends="untar, patch"/>
 
     <target name="bm-build">
@@ -44,4 +52,28 @@
         <copy file="${bm-build-dir}/target/${bm-name}-java-${bm-version}-jar-with-dependencies.jar"
                 tofile="${bm-jars}/${bm-name}-${bm-version}.jar"/>
     </target>
+
+
+<!--
+   * NOTE on generating source data for graphchi.
+   *
+   * 1. The source data is the training set of Netflix Challenge, containing
+   *    99,072,112 ratings from user ids to movie ids. Each line is in the form
+   *    of "userid movieid rating"
+   *    https://courses.cs.washington.edu/courses/cse547/16sp/datasets.html
+   * 2. The dataset is trimmed to 10M, 1M and 10K edges for large, default,
+   *    and small.  This is trivial: trim the file to the appropriate number
+   *    of lines (+3 for the header), then find the largest userid and largest
+   *    movieid in the resulting file, and update the header accordingly.
+   * 3. In our workload, we avoid the sharding step, which is basically disk
+   *    I/O.  This is very easy to do; we just run the workload against the
+   *    dataset above, and on its first iteration, the workload will shard
+   *    the data.   We capture that sharded data in our dataset zip file,
+   *    replacing the original input text file with an empty file of the
+   *    same name.
+-->
+    <target name="data">
+        <unzip dest="${bm-dat}" src="${bm-downloads}/graphchi-data.zip"/>
+    </target>
+
 </project>
