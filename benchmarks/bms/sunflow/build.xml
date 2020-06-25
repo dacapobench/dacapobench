@@ -21,6 +21,14 @@
 
     <target name="unpack" depends="unzip, patch"/>
 
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/sunflow"/>
+            <param name="target-file" value="sunflow-data.zip"/>
+        </antcall>
+    </target>
+
     <target name="bm-build" depends="janino">
         <mkdir dir="${bm-build-dir}/build"/>
         <javac srcdir="${bm-build-dir}/${bm-name}/src"
@@ -28,20 +36,18 @@
             debug="true" debuglevel="lines,vars,source"/>
     </target>
 
-    <!-- Doing nothing   -->
     <target name="data"/>
 
     <target name="jar">
+        <unzip dest="${bm-build-dir}/build/sunflow/resources" src="${bm-downloads}/sunflow-data.zip"/>
         <jar destfile="${bm-jars}/${bm-name}-${bm-version}.jar">
             <fileset dir="${bm-build-dir}/build">
                 <include name="**/*.class"/>
             </fileset>
-            <fileset dir="${bm-data}">
+            <fileset dir="${bm-build-dir}/build/sunflow">
                 <include name="resources/golden_*.png"/>
             </fileset>
         </jar>
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>
