@@ -136,8 +136,6 @@
 		<delete dir="${bm-md5-tmp}"/>
 		<checksum pattern="{0} {3}" todir="${bm-md5-tmp}">
         	<fileset dir="${bm-data}" />
-    	</checksum>
-		<checksum pattern="{0} {3}" todir="${bm-md5-tmp}">
         	<fileset dir="${bm-jars}" />
     	</checksum>
     	<concat destfile="${bm-md5}/${bm-name}.MD5">
