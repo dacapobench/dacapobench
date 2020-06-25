@@ -264,34 +264,11 @@ public abstract class Benchmark {
         err.enableOutput(!silentErr);
       }
     }
-    prepareJars();
     loader = DacapoClassLoader.create(config, scratch, data);
     prepare();
   }
 
-  /**
-   * Extract the jar files used by the benchmark
-   * 
-   * @throws Exception
-   */
-  private void prepareJars() throws IOException, FileNotFoundException, DacapoException {
-    System.err.println("FIXME checksum jars");
-    // File file = new File(scratch + "/jar");
-    // if (!file.exists())
-    //   file.mkdir();
-    // if (config.jars != null) {
-    //   // extract jar lib from dacapo.jar
-    //   for (int i = 0; i < config.jars.length; i++) {
-    //     try {
-    //       extractFileResource("jar/" + config.jars[i], scratch);
-    //     } catch (DacapoException e) {
-    //       // ignore
-    //     }
-    //   }
-    // }
-  }
-
-  private boolean checkMD5(String path, String md5path){
+  private boolean checkMD5(String md5path){
     InputStream in = Benchmark.class.getClassLoader().getResourceAsStream(md5path);
     if (in == null) {
       System.err.println("Can't find MD5 for benchmark: " + config.name);
@@ -303,12 +280,12 @@ public abstract class Benchmark {
       String md5Expected = fields[0];
       String filePath = fields[1];
       try {
-        String md5 = getMD5(new File(data+File.separator+path, filePath));
+        String md5 = getMD5(new File(data, filePath));
         if (!md5.toUpperCase().equals(md5Expected.toUpperCase())) {
           return false;
         }
       } catch (Exception e) {
-        System.out.println("Checksum failure: expected "+fields[0]+" for "+data+File.separator+path+File.separator+fields[1]);
+        System.out.println("Checksum failure: expected "+fields[0]+" for "+data+File.separator+fields[1]);
         return false;
       }
       return true;
@@ -331,7 +308,7 @@ public abstract class Benchmark {
    * data files for this benchmark.
    */
   protected void prepare() throws Exception {
-    if (!checkMD5("dat", "META-INF/md5/" + config.name  + ".MD5")) {
+    if (!checkMD5("META-INF/md5/" + config.name  + ".MD5")) {
       System.exit(-1);
     }
   }

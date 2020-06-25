@@ -24,7 +24,9 @@
 	<property name="bm-output-harness-dir" value="${bm-files}/dist"/>
 	<property name="bm-output-benchmark-dir" value="${bm-files}/dist/benchmark"/>
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
-	<property name="bm-data" value="${bm-files}/data/${bm-name}"/>
+	<property name="bm-jars" value="${bm-files}/data/jar"/>
+	<property name="bm-data" value="${bm-files}/data/dat/${bm-name}"/>
+
 	<available file="${bm-data}" property="bm-data-exists" type="dir"/>
 	<property name="bm-src-dir" value="${bm-files}/src"/>
 	<property name="bm-src-harness-dir" value="${bm-files}/harness/src"/>
@@ -33,7 +35,6 @@
 	<property name="bm-out-jar" value="${build.target-jars}"/>
 	<property name="bm-out-dat" value="${build.target-data}/${bm-name}"/>
 
-	<property name="bm-jars" value="${bm-out-jar}"/>
 	<property name="bm-dat" value="${bm-out-dat}"/>
 	<property name="bm-cnf" value="${bm-output-dir}/META-INF/cnf"/>
 	<property name="bm-md5" value="${bm-output-dir}/META-INF/md5"/>
@@ -113,7 +114,7 @@
 		<delete dir="${bm-output-dir}"/>
 		<delete dir="${bm-build-dir}"/>
 		<delete dir="${bm-deps-output-dir}"/>
-		<delete dir="${bm-data}"/>
+		<delete dir="${bm-files}/data/"/>
 	</target>
 
 	<target name="init" depends="clean">
@@ -136,6 +137,9 @@
 		<checksum pattern="{0} {3}" todir="${bm-md5-tmp}">
         	<fileset dir="${bm-data}" />
     	</checksum>
+		<checksum pattern="{0} {3}" todir="${bm-md5-tmp}">
+        	<fileset dir="${bm-jars}" />
+    	</checksum>
     	<concat destfile="${bm-md5}/${bm-name}.MD5">
         	<fileset dir="${bm-md5-tmp}" />
     	</concat>
@@ -144,6 +148,9 @@
 		<!-- copy files -->
 	    <copy todir="${bm-dat}">
             <fileset dir="${bm-data}"/>
+        </copy>
+		<copy todir="${bm-out-jar}">
+            <fileset dir="${bm-jars}"/>
         </copy>
 	</target>
 
@@ -192,13 +199,6 @@
 	</target>
 
 	<target name="jar"/>
-
-	<target name="data" if="bm-data-exists">
-		<!-- <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/> -->
-		<!-- <copy todir="${build.target-dat}">
-  			<fileset dir="${bm-data}"/>
-		</copy> -->
-	</target>
 
 	<target name="complete">
 		<unjar src="${build.target-jar}" dest="${bm-output-dir}" overwrite="yes">
