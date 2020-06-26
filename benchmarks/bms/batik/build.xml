@@ -29,7 +29,7 @@
         </antcall>
     </target>
 
-    <target name="unpack" depends="unzip, patch"/>
+    <target name="unpack" depends="unzip"/>
 
     <target name="bm-build">
         <exec executable="${ant.home}/bin/ant" dir="${batik-top}" failonerror="yes">
