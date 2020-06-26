@@ -277,15 +277,16 @@ public abstract class Benchmark {
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
     return reader.lines().map(l -> {
       String [] fields = l.split(" ");
-      String md5Expected = fields[0];
+      String md5Expected = fields[0].toLowerCase();
       String filePath = fields[1];
       try {
-        String md5 = getMD5(new File(data, filePath));
-        if (!md5.toUpperCase().equals(md5Expected.toUpperCase())) {
+        String md5 = getMD5(new File(data, filePath)).toLowerCase();
+        if (!md5.equals(md5Expected)) {
+          System.out.println("Checksum failure: expected "+md5Expected+" for "+data+File.separator+fields[1]+" but got "+md5);
           return false;
         }
       } catch (Exception e) {
-        System.out.println("Checksum failure: expected "+fields[0]+" for "+data+File.separator+fields[1]);
+        System.out.println("Checksum failure: did not find expected file "+data+File.separator+fields[1]);
         return false;
       }
       return true;
