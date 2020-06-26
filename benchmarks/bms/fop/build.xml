@@ -27,11 +27,15 @@
         <ant dir="${bm-build-top}" target="package" inheritall="false" />
     </target>
 
-    <target name="jar">
+    <target name="jar" depends="batik">
         <copy file="${bm-build-top}/build/fop.jar" todir="${bm-jars}" />
         <copy todir="${bm-jars}">
+            <!-- copy selectively so as not to overwrite batik libraries -->
             <fileset dir="${bm-build-top}/lib/">
-                <include name="**/*.jar"/>
+                <include name="**/commons*.jar"/>
+                <include name="**/fontbox*.jar"/>
+                <include name="**/servlet*.jar"/>
+                <include name="**/xml-apis-1.*.jar"/>
             </fileset>
         </copy>
     </target>

@@ -55,14 +55,17 @@
 		</antcall>
 	</target>
 
-	<target name="pre-build" depends="clean, init, unpack"/>
+	<target name="pre-build" depends="clean-build, init, unpack"/>
 
-	<target name="clean">
-		<delete dir="${lib-output-dir}"/>
+	<target name="clean-build">
 		<delete dir="${lib-build-dir}"/>
 	</target>
 
-	<target name="init" depends="clean">
+	<target name="clean" depends="clean-build">
+		<delete dir="${lib-output-dir}"/>
+	</target>
+
+	<target name="init" depends="clean-build">
 		<mkdir dir="${lib-output-dir}"/>
 		<mkdir dir="${lib-jars}"/>
 	</target>

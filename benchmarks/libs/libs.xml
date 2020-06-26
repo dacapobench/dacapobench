@@ -15,6 +15,13 @@
         <ant antfile="${lib-base}/bcel/build.xml"/>
     </target>
 
+    <!-- batik-->
+    <property name="batik-version" value="1.13"/>
+    <property name="batik-jar" value="${lib-base}/batik/dist/jar/batik-all-${batik-version}.jar"/>
+    <target name="batik">
+        <ant antfile="${lib-base}/batik/build.xml"/>
+    </target>
+
     <!-- dacapo-digest -->
     <property name="dacapo-digest-jar" value="${lib-base}/dacapo-digest/dist/jar/dacapo-digest.jar"/>
     <target name="dacapo-digest">
