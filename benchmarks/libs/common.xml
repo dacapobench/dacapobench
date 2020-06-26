@@ -88,7 +88,7 @@
 	<target name="jar"/>
 
 	<target name="complete">
-		<copy todir="${bm-out-jar}">
+		<copy todir="${bm-jars}">
 			<fileset dir="${lib-output-dir}/jar" includes="*.jar"/>
 		</copy>
 	</target>
