@@ -75,6 +75,7 @@ public class H2 extends Benchmark {
   public void prepare(String size) throws Exception {
     useBenchmarkClassLoader();
     try {
+      System.out.println("Preparing the H2 database...");
       this.prepareTPCC.invoke(this.tpcc, size);
     } finally {
       revertClassLoader();

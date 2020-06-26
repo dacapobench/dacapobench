@@ -231,7 +231,13 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
              // These are constant across the order items
              psOrderLine.setShort(1, w);
              psOrderLine.setShort(2, d);
-@@ -792,10 +798,10 @@
+@@ -787,22 +793,22 @@
+                 "UPDATE DELIVERY_REQUEST SET DR_STATE = ? " +
+                 "WHERE DR_ID = ?");
+             PreparedStatement dlCompleteDelivery = prepareStatement(
+-                "UPDATE DELIVERY_REQUEST SET DR_STATE = 'C', DR_COMPLETED = CURRENT TIMESTAMP " +
++                "UPDATE DELIVERY_REQUEST SET DR_STATE = 'C', DR_COMPLETED = CURRENT_TIMESTAMP " +
+                 "WHERE DR_ID = ?");
              
              PreparedStatement dlFindOrderToDeliver = prepareStatement(
                  "SELECT MIN(NO_O_ID) AS ORDER_TO_DELIVER FROM NEWORDERS " +
@@ -244,6 +250,14 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
              
              PreparedStatement dlSetOrderCarrier = prepareStatement(
                  "UPDATE ORDERS SET O_CARRIER_ID = ? " +
+                 "WHERE O_W_ID = ? AND O_D_ID = ? AND O_ID = ?");
+             
+             PreparedStatement dlSetOrderlineDate = prepareStatement(
+-                "UPDATE ORDERLINE SET OL_DELIVERY_D = CURRENT TIMESTAMP " +
++                "UPDATE ORDERLINE SET OL_DELIVERY_D = CURRENT_TIMESTAMP " +
+                 "WHERE OL_W_ID = ? AND OL_D_ID = ? AND OL_O_ID = ?");
+
+
 diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java
 --- ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2018-03-11 03:30:56.000000000 +1100
 +++ ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2019-06-25 12:19:35.000000000 +1000
@@ -274,13 +288,14 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
 -                + "C_PAYMENT_CNT, C_DELIVERY_CNT, C_DATA)  "
 +                + "C_PAYMENT_CNT, C_DELIVERY_CNT, C_DATA, C_DATA_INITIAL)  "
                  + "VALUES (?, ?, ?, ?, 'OE', ?, ?, ?, ?, ?, ?, ?, "
-                 + " CURRENT TIMESTAMP ,?, 50000.00, ?, -10.0, 10.0,"
+-                + " CURRENT TIMESTAMP ,?, 50000.00, ?, -10.0, 10.0,"
 -                + " 1, 0, ?)");
++                + "CURRENT_TIMESTAMP, ?, 50000.00, ?, -10.0, 10.0,"
 +                + " 1, 0, ?, ?)");
  
          PreparedStatement psH = conn
 -                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA) VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, 10.00, ?)");
-+                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA, H_INITIAL) VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, 10.00, ?, TRUE)");
++                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA, H_INITIAL) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 10.00, ?, TRUE)");
  
          psC.setShort(2, d); // c_d_id
          psC.setShort(3, w); // c_w_id

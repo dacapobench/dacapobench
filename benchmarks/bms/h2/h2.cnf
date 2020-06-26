@@ -1,31 +1,28 @@
 benchmark h2 
   class org.dacapo.harness.H2
   thread-model per_cpu
-  jars "dacapo-h2.jar","derbyTesting.jar","junit-4.12.jar","h2-1.4.196.jar";
+  jars "dacapo-h2.jar","derbyTesting.jar","junit-4.12.jar","h2-1.4.199.jar";
 
 size small args 
 		"--total-transactions", "400",
 		"--scale","2",
-		"--cleanup-in-iteration",
-		"--create-suffix", ";MVCC=true"
+		"--cleanup-in-iteration"
   thread-limit 400
   output stdout digest 0x9e2c93be488a4dab37923989b7df8cd029f8bb09,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
 size default args
-		"--total-transactions","8000",
-		"--scale","8",
-		"--cleanup-in-iteration",
-		"--create-suffix", ";MVCC=true"
+		"--total-transactions","32000",
+		"--scale","16",
+		"--cleanup-in-iteration"
   thread-limit 16000
-  output stdout digest 0xcc22392e3bac40184ea67dc8d7065028af4d9a76,
+  output stdout digest 0xe095f0c0da08af9e7419a7c1e30db59a0e11cb15,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args 
-		"--total-transactions","64000",
+		"--total-transactions","128000",
 		"--scale","16",
-		"--cleanup-in-iteration",
-		"--create-suffix", ";MVCC=true"
+		"--cleanup-in-iteration"
   thread-limit 64000
   output stdout digest 0x0d72a7e0103ffe0f37c76b5dee6c4c7f2adbee59,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
@@ -33,8 +30,7 @@ size large args
 size huge args 
 		"--total-transactions","256000",
 		"--scale","32",
-		"--cleanup-in-iteration",
-		"--create-suffix", ";MVCC=true"
+		"--cleanup-in-iteration"
   thread-limit 256000
   output stdout digest 0xe4154dca4e8f2d9d34f659524220c50b0b498310,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
@@ -47,6 +43,6 @@ description
   author	"TPC-C like workload authored by The Apache Software Foundation, and Database authored by H2",
   license	"Apache License, Version 2.0 covering TPC-C like workload, and Eclipse Public License Version 1.0 covering H2",
   url		"http://db.apache.org/derby/ and http://www.h2database.com",
-  version	"10.14.1.0 and 1.4.196",
+  version	"10.14.1.0 and 1.4.199",
   repeats	"<totalTransactions> evenly divided among the hardware threads.",
   threads   "One client thread per hardware thread, the queries processes exhibit some contention between threads.";
