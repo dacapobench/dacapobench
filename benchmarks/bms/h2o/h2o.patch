@@ -11,40 +11,28 @@
  include 'h2o-assemblies:main'
  include 'h2o-assemblies:genmodel'
  include 'h2o-persist-gcs'
-@@ -43,12 +43,12 @@
- // Reconfigure scala projects to support cross compilation
- // The following code will create two projects for each included item:
- //   For example: h2o-scala_2.10, h2o-scala_2.11
--apply plugin: 'scala-cross-build'
--
+@@ -142,12 +142,12 @@
+   }
+ }
+ 
+-apply plugin: ScalaCrossBuildPlugin
++// apply plugin: ScalaCrossBuildPlugin
+ 
 -scalaCrossCompile {
--  targetVersions "2.10.4", "2.11.7"
--  include 'h2o-scala'
+-    targetVersions "2.10.7", "2.11.12"
+-    include 'h2o-scala'
 -}
-+//apply plugin: 'scala-cross-build'
-+//
-+//scalaCrossCompile {
-+//  targetVersions "2.10.4", "2.11.7"
-+//  include 'h2o-scala'
-+//}
++// scalaCrossCompile {
++//     targetVersions "2.10.7", "2.11.12"
++//     include 'h2o-scala'
++// }
  
  // Make structure flat and avoid annoying dummy modules
  rootProject.children.each { project ->
---- build.gradle	2019-02-15 16:33:05.000000000 +1100
-+++ ../build-src/build.gradle	2019-02-20 20:18:27.000000000 +1100
-@@ -59,8 +59,8 @@
-       project(':h2o-algos'),
-       project(':h2o-web'),
-       project(':h2o-app'),
--      project(':h2o-scala_2.10'),
--      project(':h2o-scala_2.11'),
-+//      project(':h2o-scala_2.10'),
-+//      project(':h2o-scala_2.11'),
-       project(':h2o-persist-gcs'),
-       project(':h2o-persist-hdfs'),
-       project(':h2o-persist-s3'),
-@@ -111,18 +111,18 @@
-       project(':h2o-ext-jython-cfunc'),
+--- build.gradle        2020-06-27 13:17:19.000000000 +1000
++++ ../build/build.gradle       2020-06-27 13:27:09.102550028 +1000
+@@ -126,18 +126,18 @@
+       project(':h2o-genmodel-ext-deepwater')
      ]
  
 -    scalaProjects = [
@@ -74,7 +62,7 @@
  
      // The project which need to be run under CI only
      testNeedsCiProject = [
-@@ -225,9 +225,9 @@
+@@ -241,9 +241,9 @@
  
      // Publish artifacts - we should filter subproject in future but now apply publisher plugin
      // to all projects
@@ -87,7 +75,7 @@
  
      // Note: this is deprecated and will be removed in the future
      apply from: "$rootDir/gradle/makeSupport.gradle"
-@@ -260,28 +260,28 @@
+@@ -277,28 +277,28 @@
      }
  
      // Configure Scala projects
@@ -96,7 +84,7 @@
 -        apply from: "$rootDir/gradle/cp.gradle"
 -        if (testNeedsCiProject.contains(project)) {
 -            logger.warn("The project $project needs CI for running tests! You can pass `-PdoCI=true` to force CI behaviour.")
--            project.testMultiNode.enabled = project.ext.isCi
+-            project.testMultiNode.enabled = isCi
 -        }
 -    }
 -
@@ -113,34 +101,34 @@
 -            apply from: "$rootDir/gradle/ubench.gradle"
 -        }
 -    }
-+//    if (project in scalaProjects) {
-+//        apply from: "$rootDir/gradle/scala.gradle"
-+//        apply from: "$rootDir/gradle/cp.gradle"
-+//        if (testNeedsCiProject.contains(project)) {
-+//            logger.warn("The project $project needs CI for running tests! You can pass `-PdoCI=true` to force CI behaviour.")
-+//            project.testMultiNode.enabled = project.ext.isCi
-+//        }
-+//    }
-+//
-+//    if (project in rProjects) {
-+//        apply from: "$rootDir/gradle/r.gradle"
-+//    }
-+//
-+//    if (project in pythonProjects) {
-+//        apply from: "$rootDir/gradle/r.gradle"   // same plugins
-+//    }
++    // if (project in scalaProjects) {
++    //     apply from: "$rootDir/gradle/scala.gradle"
++    //     apply from: "$rootDir/gradle/cp.gradle"
++    //     if (testNeedsCiProject.contains(project)) {
++    //         logger.warn("The project $project needs CI for running tests! You can pass `-PdoCI=true` to force CI behaviour.")
++    //         project.testMultiNode.enabled = isCi
++    //     }
++    // }
 +
-+//    if (project in ubenchProjects) {
-+//        if (project.hasProperty("doUBench") && project.doUBench == "true") {
-+//            apply from: "$rootDir/gradle/ubench.gradle"
-+//        }
-+//    }
++    // if (project in rProjects) {
++    //     apply from: "$rootDir/gradle/r.gradle"
++    // }
++
++    // if (project in pythonProjects) {
++    //     apply from: "$rootDir/gradle/r.gradle"   // same plugins
++    // }
++
++    // if (project in ubenchProjects) {
++    //     if (project.hasProperty("doUBench") && project.doUBench == "true") {
++    //         apply from: "$rootDir/gradle/ubench.gradle"
++    //     }
++    // }
  }
  
  //
 --- h2o-assemblies/main/build.gradle	2019-02-15 16:33:05.000000000 +1100
 +++ ../build-src/h2o-assemblies/main/build.gradle	2019-02-20 20:18:27.000000000 +1100
-@@ -146,6 +146,6 @@
+@@ -162,6 +162,6 @@
  // Include licences
  shadowJar.dependsOn(licenseReport)
  // Execute always copyJar
