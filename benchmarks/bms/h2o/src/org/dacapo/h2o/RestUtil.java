@@ -41,14 +41,14 @@ public class RestUtil {
      * @throws IOException
      */
     public void getMethod(String api) throws IOException {
-        URL restURL = new URL(this.url + "/" + api);
+        URL restURL = new URL(this.url + "/" + api.replace("evaluation-git+", "evaluation-git%2B"));
 
         // Open the connection
         HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
         conn.setRequestMethod("GET");
 
         if (conn.getResponseCode() != 200)
-            throw new IOException("The returned code is: " + conn.getResponseCode());
+            throw new IOException("Request failed for "+restURL+" with error code: " + conn.getResponseCode());
 
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         response = getStringFromBufferedReader(br);
@@ -57,7 +57,7 @@ public class RestUtil {
     }
 
     public void deleteMethod(String api) throws IOException {
-        URL restURL = new URL(this.url + "/" + api);
+        URL restURL = new URL(this.url + "/" + api.replace("evaluation-git+", "evaluation-git%2B"));
 
         // Open the connection
         HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
@@ -76,7 +76,8 @@ public class RestUtil {
      * @throws IOException
      */
     public void postMethod(String api, String query) throws IOException {
-        URL restURL = new URL(this.url + "/" + api);
+        URL restURL = new URL(this.url + "/" + api.replace("evaluation-git+", "evaluation-git%2B"));
+        query = query.replace("evaluation-git+", "evaluation-git%2B");
 
         // Open the connection
         HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
@@ -95,7 +96,7 @@ public class RestUtil {
         
         // testing if there is a positive response 
         if (conn.getResponseCode() != 200)
-            throw new IOException("The returned code is: " + conn.getResponseCode());
+            throw new IOException("Request failed for "+restURL+" with error code: " + conn.getResponseCode());
 
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         response = getStringFromBufferedReader(br);

@@ -25,6 +25,16 @@
 
     <target name="unpack" depends="untar, patch, idea, eclipse"/>
 
+
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/h2o"/>
+            <param name="target-file" value="h2o-data.zip"/>
+        </antcall>
+    </target>
+
+
     <condition property="gradle-exe" value="gradlew.bat">
         <os family="windows"/>
     </condition>
@@ -42,14 +52,15 @@
         <antcall target="build-h2o-without-test"/>
     </target>
 
+    <target name="data">
+        <unzip dest="${bm-data}" src="${bm-downloads}/h2o-data.zip"/>
+    </target>
     <target name="jar">
         <copy file="${bm-build-dir}/h2o-assemblies/main/build/libs/main.jar"
               todir="${bm-jars}"/>
         <javac srcdir="${bm-src-dir}" classpath="${json-jar}" destdir="${bm-output-dir}"
                includes="org/dacapo/h2o/**"
                debug="true" debuglevel="lines,vars,source"/>
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
     <target name="build-h2o">
