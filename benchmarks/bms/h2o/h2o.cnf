@@ -1,25 +1,34 @@
 benchmark h2o
   class org.dacapo.harness.H2O
   thread-model per_cpu
-  jars "main.jar", "json-lib-2.4-jdk15.jar", "commons-beanutils-1.9.4.jar", "commons-collections-3.2.2.jar", "commons-lang-2.6.jar", "commons-logging.jar", "ezmorph-1.0.6.jar";
+  jars "h2o.jar", "json-lib-2.4-jdk15.jar", "commons-beanutils-1.9.4.jar", "commons-collections-3.2.2.jar", "commons-lang-2.6.jar", "commons-logging.jar", "ezmorph-1.0.6.jar";
 
-size default args "${DATA}/h2o", "slice_localization_data.csv", "drf" , "reference"
+
+size small args "${DATA}/h2o", "citibiketripdata201908s.csv", "drf" , "tripduration"
   threads 1      // per available processor
-  thread-limit 32
-  output stdout digest 0x3f997d59ea1f71601b40870a959bf8b8d3262aab,
-         stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
-
-
-size large args "${DATA}/h2o", "CitiBike2014.csv", "drf" , "tripduration"
+  thread-limit 1024
+  output stdout digest 0x2b40279dd7fc87aae163726d68e53a7841728308;
+  
+size default args "${DATA}/h2o", "citibiketripdata201908.csv", "drf" , "tripduration"
   threads 1      // per available processor
-  thread-limit 32
+  thread-limit 1024
+  output stdout digest 0x1aab065a1376445d213907a200012d8bed338f45;
+  
+size large args "${DATA}/h2o", "citibiketripdata201908l.csv", "drf" , "tripduration"
+  threads 1      // per available processor
+  thread-limit 1024
+  output stdout digest 0xe40deffc2c2ab923c1aa99a27b9da9aad57b71ae;
+
+size huge args "${DATA}/h2o", "citibiketripdata201908h.csv", "drf" , "tripduration"
+  threads 1      // per available processor
+  thread-limit 1024
   output stdout digest 0xcae20123ccf6c587480902d0b3f1f831f1d59ed7;
 
 description
   short	     "Open Source Fast Scalable Machine Learning Platform.",
-  long       "H2O is an in-memory platform for distributed, scalable machine learning.",
+  long       "H2O is an in-memory platform for distributed, scalable machine learning.  The benchmark uses the 201908-citibike-tripdata dataset.",
   copyright	 "Copyright (c) H2O.ai. All rights reserved",
   license    "Apache License, Version 2.0",
   url        "https://github.com/h2oai/h2o-3",
-  version    "3-jenkins-master-4559",
+  version    "3.30.0.5",
   threads    "Explicitly multi-threaded, scaled to available processors.";

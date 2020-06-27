@@ -14,7 +14,6 @@
 
     <property name="bm-name" value="h2o"/>
     <property name="bm-version" value="3.30.0.5"/>
-    <property name="bm-version" value="3-jenkins-master-4559"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
 
     <property name="git-group" value="h2oai"/>
@@ -58,7 +57,7 @@
     </target>
     <target name="jar">
         <copy file="${bm-build-dir}/h2o-assemblies/main/build/libs/main.jar"
-              todir="${bm-jars}"/>
+              tofile="${bm-jars}/h2o.jar"/>
         <javac srcdir="${bm-src-dir}" classpath="${json-jar}" destdir="${bm-output-dir}"
                includes="org/dacapo/h2o/**"
                debug="true" debuglevel="lines,vars,source"/>

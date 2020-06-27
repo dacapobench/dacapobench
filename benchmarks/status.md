@@ -8,6 +8,7 @@
 |fop|✓|✓|✓|✓|✓|✓|✓|✓||||
 |graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|h2o|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 
 
@@ -24,4 +25,5 @@
 * H2 
   * should be built from source, is not
   * shoudl output message saying database is being constructed
+* Something is creating a spurious ${bm-jars} directory...
 
