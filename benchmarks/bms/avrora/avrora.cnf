@@ -1,7 +1,6 @@
 benchmark avrora
   class org.dacapo.harness.Avrora
-  thread-model single
-  jars "avrora-1.7.117.jar";
+  thread-model single;
 
 size small args "-seconds=30",
 	"-platform=mica2",

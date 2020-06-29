@@ -1,7 +1,6 @@
 benchmark h2o
   class org.dacapo.harness.H2O
-  thread-model per_cpu
-  jars "h2o.jar", "json-lib-2.4-jdk15.jar", "commons-beanutils-1.9.4.jar", "commons-collections-3.2.2.jar", "commons-lang-2.6.jar", "commons-logging.jar", "ezmorph-1.0.6.jar";
+  thread-model per_cpu;
 
 
 size small args "${DATA}/h2o", "citibiketripdata201908s.csv", "drf" , "tripduration"

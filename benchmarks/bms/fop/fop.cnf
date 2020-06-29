@@ -1,7 +1,6 @@
 benchmark fop
   class org.dacapo.harness.Fop
-  thread-model single
-  jars "fop.jar", "batik-all-1.13.jar", "commons-io-1.3.1.jar", "commons-logging-1.0.4.jar", "fontbox-2.0.16.jar", "serializer-2.7.2.jar", "servlet-2.2.jar", "xalan-2.7.2.jar", "xercesImpl-2.12.0.jar", "xml-apis-1.4.01.jar", "xml-apis-ext-1.3.04.jar", "xmlgraphics-commons-2.4.jar";
+  thread-model single;
 
 /*
  * 'small' uses debug mode ("-d"), which puts current stats in the output,

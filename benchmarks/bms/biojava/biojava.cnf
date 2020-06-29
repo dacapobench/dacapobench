@@ -1,7 +1,6 @@
 benchmark biojava
   class org.dacapo.harness.BioJava
-  thread-model per_cpu
-  jars "AAProperties-jar-with-dependencies.jar";
+  thread-model per_cpu;
 
 size small args "${DATA}/biojava/PF00104_small.fasta"
   output

@@ -1,7 +1,6 @@
 benchmark graphchi
   class org.dacapo.harness.GraphChi
-  thread-model per_cpu
-  jars "graphchi-0.2.2.jar";
+  thread-model per_cpu;
 
 size small args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm_10K", "2"
   output stdout digest 0xce90a8af938806c984cdafa69732ecd6045aa4d3;
