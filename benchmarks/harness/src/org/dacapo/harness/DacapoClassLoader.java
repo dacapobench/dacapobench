@@ -15,6 +15,7 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.dacapo.parser.Config;
 
@@ -40,15 +41,17 @@ public class DacapoClassLoader extends URLClassLoader {
    * @return The class loader in which this benchmark's iterations should
    * execute.
    */
-  public static DacapoClassLoader create(Config config, File scratch, File extdata) {
+  public static DacapoClassLoader create(Config config, File scratch, File extdata, Set<URL> jarDeps) {
     DacapoClassLoader rtn = null;
     try {
-      URL[] urls = getJars(config, scratch, extdata);
-      if (Benchmark.getVerbose()) {
-        System.out.println("Benchmark classpath:");
-        for (URL url : urls) {
-          System.out.println("  " + url.toString());
-        }
+      // URL[] urls = getJars(config, scratch, extdata);
+      URL[] urls = new URL[jarDeps.size()];
+      jarDeps.toArray(urls);  
+      if (true || Benchmark.getVerbose()) {
+         System.out.println("Benchmark classpath:");
+         for (URL url : urls) {
+           System.out.println("  " + url.toString());
+         }
       }
       rtn = new DacapoClassLoader(urls, ClassLoader.getSystemClassLoader());
     } catch (Exception e) {

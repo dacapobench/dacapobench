@@ -18,6 +18,8 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.dacapo.parser.Config;
 
@@ -167,6 +169,9 @@ public abstract class Benchmark {
 
   protected Method method;
 
+  private Set<URL> jarDeps = new HashSet();
+  private Set<URL> datDeps = new HashSet();
+
   /**
    * Run a benchmark. This is final because individual benchmarks should not
    * interfere with the flow of control.
@@ -264,8 +269,46 @@ public abstract class Benchmark {
         err.enableOutput(!silentErr);
       }
     }
-    loader = DacapoClassLoader.create(config, scratch, data);
+    getDeps("META-INF/md5/" + config.name  + ".MD5");
+    loader = DacapoClassLoader.create(config, scratch, data, jarDeps);
     prepare();
+  }
+
+  private boolean getDeps(String md5path) {
+    InputStream in = Benchmark.class.getClassLoader().getResourceAsStream(md5path);
+    if (in == null) {
+      System.err.println("Can't find MD5 for benchmark: " + config.name);
+      System.exit(20);
+    }
+    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    return reader.lines().map(l -> {
+      String [] fields = l.split(" ");
+      String md5Expected = fields[0].toLowerCase();
+      String filePath = fields[1];
+
+
+      try {
+        File f = new File(data, filePath);
+
+        if (filePath.startsWith("jar")) {
+          //  System.out.println("Adding jar: --"+filePath+"--"+md5Expected+"--");
+            jarDeps.add(f.toURI().toURL());
+          } else {
+          // System.out.println("Adding dat: --"+filePath+"--"+md5Expected+"--");
+            datDeps.add(f.toURI().toURL());
+          }
+
+        String md5 = getMD5(f).toLowerCase();
+        if (!md5.equals(md5Expected)) {
+          System.out.println("Checksum failure: expected "+md5Expected+" for "+data+File.separator+fields[1]+" but got "+md5);
+          return false;
+        }
+      } catch (Exception e) {
+        System.out.println("Checksum failure: did not find expected file "+data+File.separator+fields[1]);
+        return false;
+      }
+      return true;
+    }).reduce(true, (a, b) -> a & b);
   }
 
   private boolean checkMD5(String md5path){
