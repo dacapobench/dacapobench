@@ -313,7 +313,7 @@ public abstract class Benchmark {
           return false;
         }
       } catch (Exception e) {
-        System.out.println("Checksum failure: did not find expected file "+data+File.separator+fields[1]);
+        System.out.println("Dependency check failure: did not find expected file "+data+File.separator+fields[1]);
         return false;
       }
       return true;
