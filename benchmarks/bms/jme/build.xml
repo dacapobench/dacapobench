@@ -55,8 +55,6 @@
         <copy todir="${bm-jars}">
             <fileset dir="${bm-build-dir}/dist/lib" includes="*.jar"/>
         </copy>
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>
