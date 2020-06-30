@@ -1,6 +1,6 @@
 diff -ur build/build.gradle ../build/build.gradle
 --- build/build.gradle	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/build.gradle	2020-06-30 21:51:55.928418082 +1000
++++ ../build/build.gradle	2020-06-30 22:37:01.311398838 +1000
 @@ -92,36 +92,10 @@
      into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
  }
@@ -41,7 +41,7 @@ diff -ur build/build.gradle ../build/build.gradle
      delete file('dist/javadoc')
 diff -ur build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
 --- build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-06-30 22:37:01.311398838 +1000
 @@ -439,7 +439,7 @@
       * the main loop in a separate thread.
       */
@@ -53,26 +53,40 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../bu
      /**
 diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
 --- build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-06-30 21:51:55.928418082 +1000
-@@ -48,6 +48,9 @@
++++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-06-30 22:38:40.523389453 +1000
+@@ -48,6 +48,10 @@
  import com.jme3.system.AppSettings;
  import com.jme3.system.JmeContext.Type;
  import com.jme3.system.JmeSystem;
 +import com.jme3.system.NanoTimer;
 +
 +import java.util.Random;
++import java.io.FileWriter;
  
  /**
   * <code>SimpleApplication</code> is the base class for all jME3 Applications.
-@@ -79,6 +82,7 @@
+@@ -79,6 +83,8 @@
      protected FlyByCamera flyCam;
      protected boolean showSettings = true;
      private AppActionListener actionListener = new AppActionListener();
 +    private Random random = new Random();
++    FileWriter tpfcsv;
  
      private class AppActionListener implements ActionListener {
  
-@@ -256,6 +260,7 @@
+@@ -104,6 +110,11 @@
+ 
+     public SimpleApplication( AppState... initialStates ) {
+         super(initialStates);
++        try {
++            tpfcsv = new FileWriter(System.getProperty("tpfFile"));
++        } catch (Exception e) {
++            System.out.println("Failed trying to create tps: "+e);
++        }
+     }
+ 
+     @Override
+@@ -256,6 +267,7 @@
  
          // simple update and root node
          simpleUpdate(tpf);
@@ -80,29 +94,42 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
  
          if (prof!=null) prof.appStep(AppStep.SpatialUpdate);
          rootNode.updateLogicalState(tpf);
-@@ -290,7 +295,19 @@
+@@ -290,7 +302,32 @@
  
      public abstract void simpleInitApp();
  
 +    private void simpleUpdate(float tpf, int frameCount) {
-+        if (frameCount > Integer.parseInt(System.getProperty("frameThreshold"))){
++        if (frameCount > Integer.parseInt(System.getProperty("framesToRender"))){
 +            synchronized (context){
 +                System.out.println(this.settings.toString());
 +                System.out.println(this.getClass().getName() + " finished...");
 +                context.notify();
 +                this.stop();
++                try {
++                    tpfcsv.close();
++                } catch (Exception e) {
++                    System.out.println("Failed trying to close tps: "+e);
++                }
 +            }
 +        }
 +    }
 +
      public void simpleUpdate(float tpf) {
++       // System.out.println("SU-"+((NanoTimer) timer).getFrameCount()+"--"+((NanoTimer) timer).getTimePerFrame());
++        String str = Float.toString(((NanoTimer) timer).getTimePerFrame())+ System.lineSeparator();
++        try {
++            tpfcsv.write(str);
++        } catch (Exception e) {
++            System.out.println("Failed trying to write tps: "+e);
++
++        }
 +        cam.setLocation(cam.getLocation().setY(cam.getLocation().getY()+ (random.nextFloat()-0.5f) * 3));
      }
  
      public void simpleRender(RenderManager rm) {
 diff -ur build/jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
 --- build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-06-30 22:37:01.311398838 +1000
 @@ -252,8 +252,8 @@
      public static final String JOAL = "JOAL";
  
@@ -116,7 +143,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build
          defaults.put("DepthBits", 24);
 diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
 --- build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-06-30 22:37:01.311398838 +1000
 @@ -46,6 +46,7 @@
      private long previousTime;
      private float tpf;
@@ -143,8 +170,8 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/j
      public void reset() {
 diff -ur build/jme3-examples/build.gradle ../build/jme3-examples/build.gradle
 --- build/jme3-examples/build.gradle	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/build.gradle	2020-06-30 21:51:55.928418082 +1000
-@@ -24,9 +24,9 @@
++++ ../build/jme3-examples/build.gradle	2020-06-30 22:37:01.311398838 +1000
+@@ -24,14 +24,14 @@
      compile project(':jme3-effects')
  
      // EITHER use jme3-bullet + jme3-bullet-native OR ELSE jme3-jbullet
@@ -157,9 +184,16 @@ diff -ur build/jme3-examples/build.gradle ../build/jme3-examples/build.gradle
  
      compile project(':jme3-jogg')
      compile project(':jme3-jogl')
+-    compile project(':jme3-lwjgl')
+-//    compile project(':jme3-lwjgl3')
++//    compile project(':jme3-lwjgl')
++    compile project(':jme3-lwjgl3')
+     compile project(':jme3-networking')
+     compile project(':jme3-niftygui')
+     compile project(':jme3-plugins')
 diff -ur build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java
 --- build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-06-30 22:37:01.311398838 +1000
 @@ -101,7 +101,7 @@
      public void simpleUpdate(float tpf){
  //        cam.setLocation(new Vector3f(5.0347548f, 6.6481347f, 3.74853f));
@@ -171,7 +205,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java ../
  
 diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
 --- build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-06-30 22:37:01.311398838 +1000
 @@ -48,26 +48,21 @@
  import java.net.URL;
  import java.net.URLConnection;
@@ -584,7 +618,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
      }
 diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
 --- build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-06-30 22:37:01.311398838 +1000
 @@ -13,6 +13,7 @@
  import com.jme3.scene.Node;
  import com.jme3.scene.Spatial;
@@ -624,7 +658,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.jav
  }
 diff -ur build/jme3-networking/build.gradle ../build/jme3-networking/build.gradle
 --- build/jme3-networking/build.gradle	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-networking/build.gradle	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-networking/build.gradle	2020-06-30 22:37:01.311398838 +1000
 @@ -4,4 +4,5 @@
  
  dependencies {
@@ -633,7 +667,7 @@ diff -ur build/jme3-networking/build.gradle ../build/jme3-networking/build.gradl
  }
 diff -ur build/jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
 --- build/jme3-plugins/build.gradle	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-plugins/build.gradle	2020-06-30 21:51:55.928418082 +1000
++++ ../build/jme3-plugins/build.gradle	2020-06-30 22:37:01.311398838 +1000
 @@ -17,4 +17,8 @@
      compile project(':jme3-core')
      compile 'com.google.code.gson:gson:2.8.1'

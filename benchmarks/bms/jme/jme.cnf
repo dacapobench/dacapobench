@@ -2,9 +2,8 @@ benchmark jme
   class org.dacapo.harness.JME
   thread-model per_cpu;
 
-size default args "TestMultiPostWater", "400"
+size default args "TestMultiPostWater", "400", "${SCRATCH}/jme-tpf.csv"
   threads 1      // per available processor
-  thread-limit 32
   output
       stdout digest 0x6b9c250f47694246d1ce1e9cae60676e4c533e6c;
 
@@ -14,5 +13,5 @@ description
   copyright	 "TODO",
   license    "Apache License, Version 2.0",
   url        "https://github.com/jMonkeyEngine/jmonkeyengine",
-  version    "3.11.3",
+  version    "3.3.2-stable",
   threads    "Explicitly multi-threaded, scaled to available processors.";
