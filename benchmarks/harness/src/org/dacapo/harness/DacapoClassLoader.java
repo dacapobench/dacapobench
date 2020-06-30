@@ -13,6 +13,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +34,16 @@ import org.dacapo.parser.Config;
  */
 public class DacapoClassLoader extends URLClassLoader {
 
+  private static void sortURLs(URL[] urls) {
+    Map<String, URL> m = new TreeMap<>();
+    for (URL url : urls) {
+      m.put(url.toString(), url);
+    }
+    int i = 0;
+    for (String u : m.keySet()) {
+      urls[i++] = m.get(u);
+    }
+  }
   /**
    * Factory method to create the class loader to be used for each invocation of
    * this benchmark
@@ -44,10 +58,10 @@ public class DacapoClassLoader extends URLClassLoader {
   public static DacapoClassLoader create(Config config, File scratch, File extdata, Set<URL> jarDeps) {
     DacapoClassLoader rtn = null;
     try {
-      // URL[] urls = getJars(config, scratch, extdata);
       URL[] urls = new URL[jarDeps.size()];
-      jarDeps.toArray(urls);  
-      if (true || Benchmark.getVerbose()) {
+      jarDeps.toArray(urls);
+      sortURLs(urls);
+      if (Benchmark.getVerbose()) {
          System.out.println("Benchmark classpath:");
          for (URL url : urls) {
            System.out.println("  " + url.toString());

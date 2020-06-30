@@ -78,7 +78,7 @@
     </target>
 
     <target name="libs">
-          <copy todir="${bm-out-jar}">
+          <copy todir="${bm-jars}">
             <resources>
                 <!-- cassandra libs -->
                 <fileset dir="${cassandra-build-top}/lib" includes="*.jar">
@@ -102,7 +102,7 @@
             </resources>
         </copy>
         <get src="${maven.url}/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
-             dest="${bm-out-jar}"/>
+             dest="${bm-jars}"/>
         
         <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
         <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
