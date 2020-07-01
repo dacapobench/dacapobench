@@ -28,16 +28,16 @@ public class Jython extends Benchmark {
     this.method = clazz.getMethod("main", String[].class);
     Class<?> pyClass = Class.forName("org.python.core.PySystemState", true, loader);
     pySetArgsMethod = pyClass.getMethod("setArgv", String[].class);
-    System.setProperty("python.home", fileInScratch("jython"));
+    System.setProperty("python.home", fileInData("dat"+File.separator+"jython"));
     System.setProperty("python.cachedir", fileInScratch("cachedir"));
     System.setProperty("python.verbose", "warning");
     System.setProperty("python.console", "org.python.core.PlainConsole");
     useBenchmarkClassLoader();
     try {
-      method.invoke(null, (Object) new String[] { fileInScratch("jython/noop.py") });
-    } finally {
-      revertClassLoader();
-    }
+       method.invoke(null, (Object) new String[] { fileInData("dat"+File.separator+"jython"+File.separator+"noop.py") });
+     } finally {
+       revertClassLoader();
+     }
   }
 
   /**
