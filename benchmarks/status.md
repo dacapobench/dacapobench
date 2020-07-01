@@ -10,6 +10,7 @@
 |h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 |h2o|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 |jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|
+|jython|✓|✓|✓||✓|✓|✓|✓|✓|||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 
 
@@ -27,5 +28,9 @@
   * should be built from source, is not
   * shoudl output message saying database is being constructed
 * JME
-  * Check reason for low CPU useage
+  * Check reason for low CPU useage (GPU?)
+* Jython
+  * Turn off excepton on high warp factor (for small): "warp factor too high: test times are < 10ms"
+  * Clean up output
+
 

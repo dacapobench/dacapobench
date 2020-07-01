@@ -19,7 +19,7 @@ diff -ur CPythonLib.orig/distutils/command/bdist_msi.py CPythonLib/distutils/com
 +++ CPythonLib/distutils/command/bdist_msi.py	2009-08-12 18:09:57.000000000 +1000
 @@ -1,5 +1,5 @@
  # -*- coding: iso-8859-1 -*-
--# Copyright (C) 2005, 2006 Martin v. Löwis
+-# Copyright (C) 2005, 2006 Martin v. Lï¿½wis
 +# Copyright (C) 2005, 2006 Martin v. Loewis
  # Licensed to PSF under a Contributor Agreement.
  # The bdist_wininst command proper
@@ -31,7 +31,7 @@ diff -ur CPythonLib.orig/encodings/punycode.py CPythonLib/encodings/punycode.py
  # -*- coding: iso-8859-1 -*-
  """ Codec for the Punicode encoding, as specified in RFC 3492
  
--Written by Martin v. Löwis.
+-Written by Martin v. Lï¿½wis.
 +Written by Martin v. Loewis.
  """
  
@@ -43,8 +43,20 @@ diff -ur CPythonLib.orig/encodings/string_escape.py CPythonLib/encodings/string_
  """ Python 'escape' Codec
  
  
--Written by Martin v. Löwis (martin@v.loewis.de).
+-Written by Martin v. Lï¿½wis (martin@v.loewis.de).
 +Written by Martin v. Loeis (martin@v.loewis.de).
  
  """
  import codecs
+diff -ur ./Python-2.7.orig/Tools/pybench/CommandLine.py ../build/Python-2.7/Tools/pybench/CommandLine.py
+--- ./Python-2.7.orig/Tools/pybench/CommandLine.py   2006-06-14 04:56:56.000000000 +1000
++++ ./Python-2.7/Tools/pybench/CommandLine.py    2020-07-01 22:13:45.023817754 +1000
+@@ -367,7 +369,7 @@
+             print
+             rc = 1
+ 
+-        raise SystemExit,rc
++        # raise SystemExit,rc
+ 
+     def add_option(self, option):
+ 
