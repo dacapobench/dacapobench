@@ -32,7 +32,6 @@ public class JME extends Benchmark{
     public void iterate(String size) throws Exception {
         // getting the number of frame needed to be rendered
         System.setProperty("framesToRender", args[1]);
-        System.setProperty("tpfFile", args[2]);
 
         String[] arg = new String[] {args[0]};
         this.method.invoke(null, (Object) arg);

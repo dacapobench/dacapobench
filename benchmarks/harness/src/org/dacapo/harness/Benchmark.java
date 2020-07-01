@@ -172,6 +172,8 @@ public abstract class Benchmark {
   private Set<URL> jarDeps = new HashSet();
   private Set<URL> datDeps = new HashSet();
 
+  private String latencyFileBasePath;
+
   /**
    * Run a benchmark. This is final because individual benchmarks should not
    * interfere with the flow of control.
@@ -271,6 +273,8 @@ public abstract class Benchmark {
     }
     if (!getDeps("META-INF/md5/" + config.name  + ".MD5"))
       System.exit(-1);
+      
+    latencyFileBasePath = new File(scratch, "dacapo.latency").getAbsolutePath();
 
     loader = DacapoClassLoader.create(config, scratch, data, jarDeps);
     prepare();
@@ -366,6 +370,8 @@ public abstract class Benchmark {
         System.out.print(args[i] + " ");
       System.out.println();
     }
+  
+    System.setProperty("dacapo.latency.csv", latencyFileBasePath+"-"+(iteration-1)+".csv");
 
     /*
      * Allow those benchmarks that can't tolerate overwriting prior output to

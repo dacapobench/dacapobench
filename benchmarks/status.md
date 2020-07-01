@@ -9,6 +9,7 @@
 |graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 |h2o|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 
 
@@ -25,4 +26,6 @@
 * H2 
   * should be built from source, is not
   * shoudl output message saying database is being constructed
+* JME
+  * Check reason for low CPU useage
 

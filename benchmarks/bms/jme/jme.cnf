@@ -2,10 +2,20 @@ benchmark jme
   class org.dacapo.harness.JME
   thread-model per_cpu;
 
+size small args "TestMultiPostWater", "10", "${SCRATCH}/jme-tpf.csv"
+  threads 1      // per available processor
+  output
+      stdout digest 0xd270790bfcc2c3b25fd671fe78fa3b5022386894;
+
 size default args "TestMultiPostWater", "400", "${SCRATCH}/jme-tpf.csv"
   threads 1      // per available processor
   output
-      stdout digest 0x6b9c250f47694246d1ce1e9cae60676e4c533e6c;
+      stdout digest 0xeebb1b8f6ee06e58b944e1a2a20d3e77b97ad1b3;
+
+size large args "TestMultiPostWater", "1000", "${SCRATCH}/jme-tpf.csv"
+  threads 1      // per available processor
+  output
+      stdout digest 0x26790fcb8eaf2957e492d9391adac2e8afdb0757;
 
 description
   short	     "A complete 3D game development suite written purely in Java.",
