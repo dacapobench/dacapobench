@@ -349,7 +349,7 @@
          target: compile  all sources
          ================================= -->
     <!--<target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,kafka,jython,luindex,lusearch,pmd,sunflow,tomcat,tradebeans,tradesoap,xalan,zxing">-->
-    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,sunflow">
+    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,jython,sunflow">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>

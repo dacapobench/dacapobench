@@ -23,7 +23,7 @@ public class Jython extends Benchmark {
   private Method pySetArgsMethod;
 
   public Jython(Config config, File scratch, File data) throws Exception {
-    super(config, scratch, data);
+    super(config, scratch, data, false, false);
     Class<?> clazz = Class.forName("org.python.util.jython", true, loader);
     this.method = clazz.getMethod("main", String[].class);
     Class<?> pyClass = Class.forName("org.python.core.PySystemState", true, loader);

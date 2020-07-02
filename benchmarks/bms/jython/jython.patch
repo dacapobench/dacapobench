@@ -60,3 +60,64 @@ diff -ur ./Python-2.7.orig/Tools/pybench/CommandLine.py ../build/Python-2.7/Tool
  
      def add_option(self, option):
  
+diff -ur ./Python-2.7.orig/Tools/pybench/pybench.py ./Python-2.7/Tools/pybench/pybench.py
+--- ./Python-2.7.orig/Tools/pybench/pybench.py       2020-07-01 21:25:57.279537914 +1000
++++ ./Python-2.7/Tools/pybench/pybench.py        2020-07-02 09:48:12.218053360 +1000
+@@ -325,9 +325,9 @@
+         t = timer()
+         test()
+         t = timer() - t
+-        if t < MIN_TEST_RUNTIME:
+-            raise ValueError('warp factor too high: '
+-                             'test times are < 10ms')
++        # if t < MIN_TEST_RUNTIME:
++        #     raise ValueError('warp factor too high: '
++        #                      'test times are < 10ms')
+         eff_time = t - min_overhead
+         if eff_time < 0:
+             raise ValueError('wrong calibration')
+@@ -558,8 +558,7 @@
+                        (total_eff_time * MILLI_SECONDS))
+                 print
+             else:
+-                print '* Round %i done in %.3f seconds.' % (i+1,
+-                                                            total_eff_time)
++                print '* Round %i done.' % (i+1)
+         print
+ 
+     def stat(self):
+@@ -838,9 +837,8 @@
+         print '-' * LINE
+         print 'PYBENCH %s' % __version__
+         print '-' * LINE
+-        print '* using %s %s' % (
+-            getattr(platform, 'python_implementation', lambda:'Python')(),
+-            string.join(string.split(sys.version), ' '))
++        print '* using %s' % (
++            getattr(platform, 'python_implementation', lambda:'Python')())
+ 
+         # Switch off garbage collection
+         if not withgc:
+@@ -931,14 +931,14 @@
+             print '*** KeyboardInterrupt -- Aborting'
+             print
+             return
+-        bench.print_header()
+-        if compare_to:
+-            bench.print_comparison(compare_to,
+-                                   hidenoise=hidenoise,
+-                                   limitnames=limitnames)
+-        else:
+-            bench.print_benchmark(hidenoise=hidenoise,
+-                                  limitnames=limitnames)
++        # bench.print_header()
++        # if compare_to:
++        #     bench.print_comparison(compare_to,
++        #                            hidenoise=hidenoise,
++        #                            limitnames=limitnames)
++        # else:
++        #     bench.print_benchmark(hidenoise=hidenoise,
++        #                           limitnames=limitnames)
+ 
+         # Ring bell
+         sys.stderr.write('\007')
