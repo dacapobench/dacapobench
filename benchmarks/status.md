@@ -1,16 +1,16 @@
-|bm | updated | jdk 8 | jdk 11 | clean | scratch | validation | small | default | large | huge | latency |
-|-|-|-|-|-|-|-|-|-|-|-|-|
+|bm | updated | jdk 8 | jdk 11 | clean | scratch | validation | small | default | large | huge | long | latency |
+|-|-|-|-|-|-|-|-|-|-|-|-|-|
 |avrora|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |batik|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |biojava|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
-|cassandra|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|?|
+|cassandra|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 |eclipse|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |fop|✓|✓|✓|✓|✓|✓|✓|✓||||
-|graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
-|h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
-|h2o|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
-|jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|
-|jython|✓|✓|✓||✓|✓|✓|✓|✓|||
+|graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|||?|
+|h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|h2o|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||?|
+|jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|
+|jython|✓|✓|✓||✓|✓|✓|✓|✓||✓||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 
 
@@ -29,8 +29,4 @@
   * shoudl output message saying database is being constructed
 * JME
   * Check reason for low CPU useage (GPU?)
-* Jython
-  * Turn off excepton on high warp factor (for small): "warp factor too high: test times are < 10ms"
-  * Clean up output
-
-
+* Update parser to use 'verbose' rather than 'long' for the description field, allowing 'long' to be used as a size.

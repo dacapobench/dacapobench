@@ -14,13 +14,17 @@ size large args "${DATA}/jython/pybench/pybench.py", "--with-gc", "-n", "4", "-C
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
+size xlong args "${DATA}/jython/pybench/pybench.py", "--with-gc", "-n", "25", "-C", "0", "-w", "1"
+  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
 description
   short		"A python interpreter written in Java",
-  long		"jython executes (interprets) the pybench benchmark or a small python program",
+  long		"jython executes (interprets) the pybench benchmark",
   copyright	"Copyright (c) Python Software Foundation",
   author	"Jim Hugunin and Barry Warsaw",
   license	"The Jython License.",
   url		"http://www.jython.org/",
   version	"2.7.2",
   threads       "Single-threaded.",
-  repeats	"Single iteration runs a single iteration of the pybench python benchmark";
+  repeats	"Single iteration runs one iteration of the pybench python benchmark, which internally has many repeats";

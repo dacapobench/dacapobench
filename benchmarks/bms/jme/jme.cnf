@@ -17,6 +17,11 @@ size large args "TestMultiPostWater", "1000", "${SCRATCH}/jme-tpf.csv"
   output
       stdout digest 0x26790fcb8eaf2957e492d9391adac2e8afdb0757;
 
+size xlong args "TestMultiPostWater", "20000", "${SCRATCH}/jme-tpf.csv"
+  threads 1      // per available processor
+  output
+      stdout digest 0x26790fcb8eaf2957e492d9391adac2e8afdb0757;
+
 description
   short	     "A complete 3D game development suite written purely in Java.",
   long       "jMonkeyEngine is a 3D game engine for adventurous Java developers. It’s open-source, cross-platform, and cutting-edge.",
@@ -24,4 +29,5 @@ description
   license    "Apache License, Version 2.0",
   url        "https://github.com/jMonkeyEngine/jmonkeyengine",
   version    "3.3.2-stable",
-  threads    "Explicitly multi-threaded, scaled to available processors.";
+  threads    "Explicitly multi-threaded, scaled to available processors.",
+  repeats	   "Single iteration renders many frames";

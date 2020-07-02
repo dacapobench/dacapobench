@@ -26,6 +26,14 @@ size large args
   output stdout digest 0x0d72a7e0103ffe0f37c76b5dee6c4c7f2adbee59,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
+size xlong args 
+		"--total-transactions","1280000",
+		"--scale","16",
+		"--cleanup-in-iteration"
+  thread-limit 64000
+  output stdout digest 0x0d72a7e0103ffe0f37c76b5dee6c4c7f2adbee59,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         
 size huge args 
 		"--total-transactions","256000",
 		"--scale","32",
