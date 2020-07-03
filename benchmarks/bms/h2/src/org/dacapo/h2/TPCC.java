@@ -110,6 +110,7 @@ public class TPCC {
 
   private long preIterationTime = 0;
   private long resetToInitialDataTime = 0;
+  private long timerBase = 0;
 
   // Location of the database, this specifies the directory (folder) on a file
   // system where the database is stored. This application must have be able to
@@ -249,7 +250,7 @@ public class TPCC {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
-    reporter.reset();
+    reporter.reset(totalTransactions);
 
     long start = System.currentTimeMillis();
 
@@ -274,7 +275,7 @@ public class TPCC {
 
       Operations ops = new Standard(connections[i]);
 
-      submitters[i] = new TPCCSubmitter(reporter, ops, rands[i], scale);
+      submitters[i] = new TPCCSubmitter(reporter, ops, rands[i], scale, i);
     }
 
     preIterationTime = System.currentTimeMillis() - start;
@@ -292,6 +293,7 @@ public class TPCC {
       threads[i] = newThread(i, submitters[i], transactionsPerTerminal[i]);
     }
 
+    reporter.resetTimerBase();
     for (int i = 0; i < threads.length; i++)
       threads[i].start();
 
@@ -323,6 +325,7 @@ public class TPCC {
   }
 
   public void postIteration(String size) throws Exception {
+    reporter.close();
     if (verbose && (firstIteration || !inMemoryDB)) {
       System.out.println("Time to perform pre-iteration phase: " + preIterationTime + " msec");
     }

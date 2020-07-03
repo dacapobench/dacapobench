@@ -84,6 +84,7 @@ public class H2 extends Benchmark {
 
   @Override
   public void preIteration(String size) throws Exception {
+    super.preIteration(size);
     useBenchmarkClassLoader();
     try {
       this.preIterationTPCC.invoke(this.tpcc, size);

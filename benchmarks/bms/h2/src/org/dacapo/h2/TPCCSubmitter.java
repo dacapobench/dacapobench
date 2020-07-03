@@ -42,6 +42,8 @@ public class TPCCSubmitter extends Submitter {
 
   private OERandom rand;
   private TPCCReporter reporter;
+  
+  private int tid;
 
   static void setSeed(long seed) {
     globalSeed = seed;
@@ -53,14 +55,16 @@ public class TPCCSubmitter extends Submitter {
     return result;
   }
 
-  public TPCCSubmitter(TPCCReporter reporter, Operations ops, OERandom rand, short maxW) {
+  public TPCCSubmitter(TPCCReporter reporter, Operations ops, OERandom rand, short maxW, int tid) {
     super(null, ops, rand, maxW);
     this.rand = rand;
     this.reporter = reporter;
+    this.tid = tid;
   }
 
   @Override
   public long runTransactions(final Object displayData, final int count) throws Exception {
+    long start = System.nanoTime();
     for (int i = 0; i < count; i++) {
       rand.setSeed(getNextSeed());
 
@@ -73,7 +77,9 @@ public class TPCCSubmitter extends Submitter {
         }
       }
       transactionCount[txType]++;
-      reporter.done();
+      long end = System.nanoTime();
+      reporter.done(tid, start, end);
+      start = end;
     }
 
     // timing is done elsewhere

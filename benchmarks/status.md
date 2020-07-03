@@ -7,7 +7,7 @@
 |eclipse|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |fop|✓|✓|✓|✓|✓|✓|✓|✓||||
 |graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|||?|
-|h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|
 |h2o|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||?|
 |jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|
 |jython|✓|✓|✓||✓|✓|✓|✓|✓||✓||
@@ -30,3 +30,64 @@
 * JME
   * Check reason for low CPU useage (GPU?)
 * Update parser to use 'verbose' rather than 'long' for the description field, allowing 'long' to be used as a size.
+\\
+
+
+Validation FAILED for jme xlong
+
+real	5m38.646s
+user	0m4.070s
+sys	0m0.307s
+
+
+h2 default: 6794 18s user
+h2 large: 26s user (fail)
+h2 huge: 32s
+h2 xlarge 2m real
+h2 'dots' too verbose for large settings
+
+No good
+		"--scale","128",
+		"--cleanup-in-iteration"
+  thread-limit 256000
+
+1min
+  		"--total-transactions","128000",
+		"--scale","64",
+		"--cleanup-in-iteration"
+
+Stopped after 18 mins (had not generated db fully)
+    size xlong args 
+		"--total-transactions","4096000",
+		"--scale","64",
+		"--cleanup-in-iteration"
+
+Stopped after 
+    size xlong args 
+		"--total-transactions","4096000",
+		"--scale","48",
+		"--cleanup-in-iteration"
+
+xlong2
+real	1m9.247s
+user	7m59.654s
+sys	0m3.362s
+
+xlong3
+real	1m21.654s
+user	9m8.678s
+sys	0m3.979s
+
+xlong6
+real	1m27.738s
+user	10m9.393s
+sys	0m3.844s
+
+xlong7
+real	1m38.758s
+user	11m22.263s
+sys	0m4.204s
+
+real	1m21.079s
+user	8m50.431s
+sys	0m3.713s
