@@ -35,6 +35,8 @@ public class Cassandra extends Benchmark {
 
     private Class<?> clsYCSBClient;
     private Method mtdYCSBClientMain;
+    private Method mtdYCSBClientTxTimes;
+    private Method mtdYCSBClientTimerBase;
 
     public Cassandra(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
@@ -80,7 +82,6 @@ public class Cassandra extends Benchmark {
     protected void prepare(String size) throws Exception {
         super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
-
         setupData();
         setupScratch();
 
@@ -95,6 +96,9 @@ public class Cassandra extends Benchmark {
 
         clsYCSBClient = loader.loadClass("site.ycsb.Client");
         mtdYCSBClientMain = clsYCSBClient.getMethod("main", String[].class);
+        mtdYCSBClientTxTimes = clsYCSBClient.getMethod("getTxTimes");
+        mtdYCSBClientTimerBase = clsYCSBClient.getMethod("getTimerBase");
+
         prepareYCSBArgs(size);
 
         prepareYCSBCQL();
@@ -160,7 +164,7 @@ public class Cassandra extends Benchmark {
     private void prepareYCSBArgs(String size) {
         ArrayList<String> baseArgs = new ArrayList<String>(Arrays.asList(
             "-db", "site.ycsb.db.CassandraCQLClient", 
-            "-threads", "24",
+            "-threads", Integer.toString(config.getThreadCount(size)),
             "-p", "hosts=localhost"
             ));
         List<String> sizeArgs = Arrays.asList(args);
@@ -185,6 +189,34 @@ public class Cassandra extends Benchmark {
 
     @Override
     public void postIteration(String size) throws Exception {
+        FileWriter dacapocsv = null;
+        try {
+          dacapocsv = new FileWriter(System.getProperty("dacapo.latency.csv"));
+          dacapocsv.write("# thread, start nsec, end nsec"+System.lineSeparator());
+        } catch (Exception e) {
+          System.out.println("Failed trying to create latency stats: "+e);
+          System.exit(-1);
+        }
+        long[][] txTimes = (long[][]) mtdYCSBClientTxTimes.invoke(null);
+        long timerBase = (long) mtdYCSBClientTimerBase.invoke(null);
+
+        try {
+            for (int t = 0; t < config.getThreadCount(size); t++) {
+              for (int i = 0; i < txTimes[t].length; i++) {
+                long end = txTimes[t][i] - timerBase;
+                if (txTimes[t][i] != 0) {
+                  long start = (i == 0) ? 0 : (txTimes[t][i-1] - timerBase);
+                  String str;
+                  str = Integer.toString(t)+", "+Long.toString(start)+", "+Long.toString(end)+System.lineSeparator();
+                  dacapocsv.write(str);
+                } 
+              }
+            }
+            dacapocsv.close();
+        } catch (Exception e) {
+            System.out.println("Failed trying to write latency stats: "+e);
+        }
+
         super.postIteration(size);
         //Preventing the long stopping log information from cassandra
         System.setOut(logStream);

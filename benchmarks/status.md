@@ -3,7 +3,7 @@
 |avrora|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |batik|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |biojava|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
-|cassandra|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|cassandra|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|
 |eclipse|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |fop|✓|✓|✓|✓|✓|✓|✓|✓||||
 |graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|||?|
@@ -26,7 +26,6 @@
   * Check that build is not happening in DATA
 * H2 
   * should be built from source, is not
-  * shoudl output message saying database is being constructed
 * JME
   * Check reason for low CPU useage (GPU?)
 * Update parser to use 'verbose' rather than 'long' for the description field, allowing 'long' to be used as a size.

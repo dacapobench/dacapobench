@@ -1,7 +1,24 @@
 diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/site/ycsb/Client.java
 --- ../../tmp/core/src/main/java/site/ycsb/Client.java	2020-06-13 15:24:43.000000000 +1000
-+++ core/src/main/java/site/ycsb/Client.java	2020-06-13 21:20:27.550101957 +1000
-@@ -267,9 +267,10 @@
++++ core/src/main/java/site/ycsb/Client.java	2020-07-03 20:31:07.264529724 +1000
+@@ -155,7 +155,16 @@
+   private static StatusThread statusthread = null;
+ 
+   // HTrace integration related constants.
++  private static long[][] txTimes;
+ 
++  public static long[][] getTxTimes() {
++    return txTimes;
++  }
++
++  private static long timerBase;
++  public static long getTimerBase() {
++    return timerBase;
++  }
+   /**
+    * All keys for configuring the tracing system start with this prefix.
+    */
+@@ -267,9 +276,10 @@
  
        Measurements.getMeasurements().exportMeasurements(exporter);
      } finally {
@@ -15,7 +32,7 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      }
    }
  
-@@ -305,7 +306,6 @@
+@@ -305,7 +315,6 @@
  
      initWorkload(props, warningthread, workload, tracer);
  
@@ -23,7 +40,24 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      final CountDownLatch completeLatch = new CountDownLatch(threadcount);
  
      final List<ClientThread> clients = initDb(dbname, props, threadcount, targetperthreadperms,
-@@ -378,7 +378,7 @@
+@@ -337,7 +346,7 @@
+       }
+ 
+       st = System.currentTimeMillis();
+-
++      timerBase = System.nanoTime();
+       for (Thread t : threads.keySet()) {
+         t.start();
+       }
+@@ -367,7 +376,6 @@
+         if (terminator != null && !terminator.isInterrupted()) {
+           terminator.interrupt();
+         }
+-
+         if (status) {
+           // wake up status thread if it's asleep
+           statusthread.interrupt();
+@@ -378,7 +386,7 @@
              // ignored
            }
          }
@@ -32,18 +66,16 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
          workload.cleanup();
        }
      } catch (WorkloadException e) {
-@@ -396,8 +396,8 @@
+@@ -396,8 +404,6 @@
        e.printStackTrace();
        System.exit(-1);
      }
 -
 -    System.exit(0);
-+    // DaCapo: don't bomb the system/process when finish
-+    // System.exit(0);
    }
  
    private static List<ClientThread> initDb(String dbname, Properties props, int threadcount,
-@@ -409,14 +409,17 @@
+@@ -409,19 +415,24 @@
      final List<ClientThread> clients = new ArrayList<>(threadcount);
      try (final TraceScope span = tracer.newScope(CLIENT_INIT_SPAN)) {
        int opcount;
@@ -61,7 +93,22 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
        }
        if (threadcount > opcount){
          threadcount = opcount;
-@@ -506,13 +509,11 @@
+         System.out.println("Warning: the threadcount is bigger than recordcount, the threadcount will be recordcount!");
+       }
++      txTimes = new long[threadcount][(opcount / threadcount)+1];
++
+       for (int threadid = 0; threadid < threadcount; threadid++) {
+         DB db;
+         try {
+@@ -443,6 +454,7 @@
+             completeLatch);
+         t.setThreadId(threadid);
+         t.setThreadCount(threadcount);
++        t.setTxBuffer(txTimes[threadid]);
+         clients.add(t);
+       }
+ 
+@@ -506,13 +518,11 @@
      try {
        Properties projectProp = new Properties();
        projectProp.load(classLoader.getResourceAsStream("project.properties"));
@@ -77,7 +124,7 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      try {
        Class workloadclass = classLoader.loadClass(props.getProperty(WORKLOAD_PROPERTY));
  
-@@ -528,15 +529,8 @@
+@@ -528,15 +538,8 @@
  
    private static Properties parseArguments(String[] args) {
      Properties props = new Properties();
@@ -93,7 +140,7 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      if (args.length == 0) {
        usageMessage();
        System.out.println("At least one argument specifying a workload is required.");
-@@ -565,9 +559,11 @@
+@@ -565,9 +568,11 @@
          props.setProperty(TARGET_PROPERTY, String.valueOf(ttarget));
          argindex++;
        } else if (args[argindex].compareTo("-load") == 0) {
@@ -105,9 +152,48 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
          props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(true));
          argindex++;
        } else if (args[argindex].compareTo("-s") == 0) {
+diff -ur ../../tmp/core/src/main/java/site/ycsb/ClientThread.java core/src/main/java/site/ycsb/ClientThread.java
+--- ../../tmp/core/src/main/java/site/ycsb/ClientThread.java	2020-06-13 15:24:42.000000000 +1000
++++ core/src/main/java/site/ycsb/ClientThread.java	2020-07-03 20:31:07.264529724 +1000
+@@ -40,6 +40,7 @@
+   private int opsdone;
+   private int threadid;
+   private int threadcount;
++  private long[] txtimes;
+   private Object workloadstate;
+   private Properties props;
+   private long targetOpsTickNs;
+@@ -62,6 +63,7 @@
+     this.dotransactions = dotransactions;
+     this.workload = workload;
+     this.opcount = opcount;
++
+     opsdone = 0;
+     if (targetperthreadperms > 0) {
+       targetOpsPerMs = targetperthreadperms;
+@@ -81,6 +83,10 @@
+     threadcount = threadCount;
+   }
+ 
++  public void setTxBuffer(final long[] txTimes) {
++    txtimes = txTimes;
++  }
++
+   public int getOpsDone() {
+     return opsdone;
+   }
+@@ -122,7 +128,7 @@
+           if (!workload.doTransaction(db, workloadstate)) {
+             break;
+           }
+-
++          txtimes[opsdone] = System.nanoTime();
+           opsdone++;
+ 
+           throttleNanos(startTimeNanos);
 diff -ur ../../tmp/core/src/main/java/site/ycsb/DBWrapper.java core/src/main/java/site/ycsb/DBWrapper.java
 --- ../../tmp/core/src/main/java/site/ycsb/DBWrapper.java	2020-06-13 15:24:42.000000000 +1000
-+++ core/src/main/java/site/ycsb/DBWrapper.java	2020-06-13 21:17:40.174086332 +1000
++++ core/src/main/java/site/ycsb/DBWrapper.java	2020-07-03 20:31:07.264529724 +1000
 @@ -97,9 +97,11 @@
          }
        }
@@ -123,4 +209,3 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/DBWrapper.java core/src/main/jav
      }
    }
  
-Only in core: target
