@@ -108,7 +108,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
  
          if (prof!=null) prof.appStep(AppStep.SpatialUpdate);
          rootNode.updateLogicalState(tpf);
-@@ -290,6 +307,36 @@
+@@ -290,6 +307,41 @@
  
      public abstract void simpleInitApp();
  
@@ -124,9 +124,14 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
 +        }
 +
 +        int frameCount = ((NanoTimer) timer).getFrameCount();
++        int tenPercent = framesToRender / 10;
++        if (frameCount % tenPercent == 0) {
++            System.out.print((frameCount / tenPercent)+"0% ");
++        }
 +        if (frameCount == framesToRender) {
 +            /* we're done; terminate */
 +            synchronized (context){
++                System.out.println();
 +                System.out.println("Rendered "+frameCount+" frames for "+this.getClass().getSimpleName());
 +                context.notify();
 +                this.stop();
