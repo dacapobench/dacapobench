@@ -82,7 +82,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
          super(initialStates);
 +        try {
 +            dacapocsv = new FileWriter(System.getProperty("dacapo.latency.csv"));
-+            dacapocsv.write("# start nsec, elapsed nsec"+System.lineSeparator());
++            dacapocsv.write("# (unused), start nsec, end nsec"+System.lineSeparator());
 +        } catch (Exception e) {
 +            System.out.println("Failed trying to create latency stats: "+e);
 +        }
@@ -115,8 +115,8 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
 +    private void dacapoUpdate() {
 +        /* output frame latency to dacapo csv */
 +        long start = ((NanoTimer) timer).getLastStartTime();
-+        long latency = ((NanoTimer) timer).getLastTime();
-+        String str = Long.toString(start)+", "+Long.toString(latency)+System.lineSeparator();
++        long end = ((NanoTimer) timer).getStartTime();
++        String str = "0, "+Long.toString(start)+", "+Long.toString(end)+System.lineSeparator();
 +        try {
 +            dacapocsv.write(str);
 +        } catch (Exception e) {
@@ -199,8 +199,8 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/j
          return tpf;
      }
  
-+    public long getLastTime() {
-+        return lastTime;
++    public long getStartTime() {
++        return startTime;
 +    }
 +
 +    public long getLastStartTime() {
