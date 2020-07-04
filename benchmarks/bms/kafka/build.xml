@@ -21,19 +21,9 @@
     <property name="gr-bin" value="gradle-${gr-version}-bin.zip"/>
     <property name="gr-url" value="https://services.gradle.org/distributions"/>
 
-  <!--- <property name="bm-git-url" value="${github.url}/apache/${bm-name}"/>
-    <property name="bm-git-commit" value="7f6b4b16eef05e5f885666ef9afeadc9b9e99bd1"/> -->
-
     <import file="../common.xml"/>
     <property name="kafka-build-dir" value="${bm-build-dir}/${bm-name}-${bm-version}-src"/>
     <property name="gradle-dir" value="${bm-build-dir}/gradle-${gr-version}"/>
-        <!-- <target name="kafkauntar">
-    	<untar src="${bm-downloads}/${bm-src}" dest="${bm-build-dir}/" compression="gzip"/>
-        <move todir="${bm-build-dir}"/>
-            <fileset file="${bm-build-dir}/${bm-name}-${bm-version}-src/**"/>
-        </move>
-        <delete dir="${bm-build-dir}/${bm-name}-${bm-version}-src"/>
-    </target> -->
 
 
     <target name="source" depends="common.source">
@@ -46,10 +36,6 @@
 
     <target name="unpack" depends="untar, patch">
         <unzip src="${bm-downloads}/${gr-bin}" dest="${bm-build-dir}"/>
-            <!-- <patternset>
-                <include name="eclipse-testing/eclipse-junit-tests-*.zip"/>
-            </patternset>
-        </unzip> -->
     </target>
 
     <target name="bm-build" depends="make-exe">

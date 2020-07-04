@@ -6,7 +6,7 @@
 |cassandra|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|
 |eclipse|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |fop|✓|✓|✓|✓|✓|✓|✓|✓||||
-|graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|||?|
+|graphchi|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||||
 |h2|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|
 |h2o|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||?|
 |jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|
@@ -29,6 +29,9 @@
   * should be built from source, is not
 * JME
   * Check reason for low CPU useage (GPU?)
+* Kafka 
+  * why is CPU utilization low?
+  * Still one uguly warning message
 * Update parser to use 'verbose' rather than 'long' for the description field, allowing 'long' to be used as a size.
 \\
 

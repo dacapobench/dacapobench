@@ -22,7 +22,7 @@ public class AgentStarter extends Initializer{
             public void run() {
                 try {
                     agentStarter.invoke(null, (Object) new String[]{"-c", agentConfig, "-n", "node0"});
-                    System.out.println("Shutdown Agent...");
+                    System.out.println("...Agent has completed.");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

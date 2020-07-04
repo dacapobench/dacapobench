@@ -19,6 +19,7 @@ public class ServerStarter extends Initializer{
             public void run() {
                 try {
                     kafkaServerStarter.invoke(null, (Object) new String[]{serverKafka});
+                    System.out.println("Kafka Server has completed...");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

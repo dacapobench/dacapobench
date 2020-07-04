@@ -1,6 +1,6 @@
-diff -ur ../tmp/kafka-2.5.0-src/config/log4j.properties ./kafka-2.5.0-src/config/log4j.properties
+diff -ur ../tmp/kafka-2.5.0-src/config/log4j.properties kafka-2.5.0-src/config/log4j.properties
 --- ../tmp/kafka-2.5.0-src/config/log4j.properties	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/config/log4j.properties	2020-07-04 19:39:10.826604639 +1000
++++ kafka-2.5.0-src/config/log4j.properties	2020-07-05 07:42:54.649631980 +1000
 @@ -14,8 +14,8 @@
  # limitations under the License.
  
@@ -61,9 +61,9 @@ diff -ur ../tmp/kafka-2.5.0-src/config/log4j.properties ./kafka-2.5.0-src/config
 +log4j.logger.kafka.authorizer.logger=ERROR, authorizerAppender
  log4j.additivity.kafka.authorizer.logger=false
  
-diff -ur ../tmp/kafka-2.5.0-src/config/server.properties ./kafka-2.5.0-src/config/server.properties
+diff -ur ../tmp/kafka-2.5.0-src/config/server.properties kafka-2.5.0-src/config/server.properties
 --- ../tmp/kafka-2.5.0-src/config/server.properties	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/config/server.properties	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/config/server.properties	2020-07-05 07:42:54.649631980 +1000
 @@ -57,7 +57,7 @@
  ############################# Log Basics #############################
  
@@ -73,9 +73,9 @@ diff -ur ../tmp/kafka-2.5.0-src/config/server.properties ./kafka-2.5.0-src/confi
  
  # The default number of log partitions per topic. More partitions allow greater
  # parallelism for consumption, but this will also result in more files across
-diff -ur ../tmp/kafka-2.5.0-src/config/zookeeper.properties ./kafka-2.5.0-src/config/zookeeper.properties
+diff -ur ../tmp/kafka-2.5.0-src/config/zookeeper.properties kafka-2.5.0-src/config/zookeeper.properties
 --- ../tmp/kafka-2.5.0-src/config/zookeeper.properties	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/config/zookeeper.properties	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/config/zookeeper.properties	2020-07-05 07:42:54.649631980 +1000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -85,9 +85,9 @@ diff -ur ../tmp/kafka-2.5.0-src/config/zookeeper.properties ./kafka-2.5.0-src/co
  # the port at which the clients will connect
  clientPort=2181
  # disable the per-ip limit on the number of connections since this is a non-production config
-diff -ur ../tmp/kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala ./kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
+diff -ur ../tmp/kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
 --- ../tmp/kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2020-07-04 19:40:14.042624028 +1000
++++ kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2020-07-05 07:42:54.649631980 +1000
 @@ -82,7 +82,7 @@
          }
        } catch {
@@ -97,9 +97,9 @@ diff -ur ../tmp/kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataC
            None
          case e1: Exception =>
            error("Failed to read meta.properties file under dir %s due to %s".format(file.getAbsolutePath(), e1.getMessage))
-diff -ur ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json
+diff -ur ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json kafka-2.5.0-src/tests/spec/simple_produce_bench.json
 --- ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-07-05 07:42:54.653631976 +1000
 @@ -23,8 +23,8 @@
    "durationMs": 10000000,
    "producerNode": "node0",
@@ -111,9 +111,9 @@ diff -ur ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json ./kafka-2.5
    "activeTopics": {
      "foo[1-3]": {
        "numPartitions": 10,
-diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2020-07-05 07:42:54.653631976 +1000
 @@ -250,7 +250,7 @@
          final Agent agent = new Agent(platform, Scheduler.SYSTEM, restServer, resource);
          restServer.start(resource);
@@ -123,9 +123,9 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/age
              try {
                  agent.beginShutdown();
                  agent.waitForShutdown();
-diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-07-05 07:46:49.077434776 +1000
 @@ -195,6 +195,15 @@
          return resp.body();
      }
@@ -183,9 +183,25 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
                  TaskStateType taskStateType = res.<TaskStateType>get("taskStateType");
                  List<String> taskIds = new ArrayList<>();
                  Pattern taskIdPattern = null;
-diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
+@@ -429,7 +461,6 @@
+                 CreateTaskRequest req = new CreateTaskRequest(taskId, taskSpec);
+                 try {
+                     client.createTask(req);
+-                    System.out.printf("Sent CreateTaskRequest for task %s.%n", req.id());
+                 } catch (RequestConflictException rce) {
+                     System.out.printf("CreateTaskRequest for task %s got a 409 status code - " +
+                         "a task with the same ID but a different specification already exists.%nException: %s%n",
+@@ -449,7 +480,6 @@
+                 String taskId = res.getString("taskId");
+                 DestroyTaskRequest req = new DestroyTaskRequest(taskId);
+                 client.destroyTask(req);
+-                System.out.printf("Sent DestroyTaskRequest for task %s.%n", taskId);
+                 break;
+             }
+             case "shutdown": {
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-07-05 07:42:54.653631976 +1000
 @@ -129,6 +129,10 @@
          taskManager.waitForShutdown();
      }
@@ -206,9 +222,9 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
              try {
                  coordinator.beginShutdown(false);
                  coordinator.waitForShutdown();
-diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-07-05 07:42:54.653631976 +1000
 @@ -137,6 +137,13 @@
          return response;
      }
@@ -223,9 +239,9 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
      @PUT
      @Path("/shutdown")
      public Empty beginShutdown(CoordinatorShutdownRequest request) throws Throwable {
-diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2020-07-05 07:42:54.653631976 +1000
 @@ -235,7 +235,7 @@
                  if (worker == null) {
                      // Identify tasks which are running, but which we don't know about.
@@ -235,9 +251,9 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
                      workers.put(workerId, new ManagedWorker(workerId, state.taskId(),
                          state.spec(), false, state));
                  } else {
-diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-07-05 07:42:54.653631976 +1000
 @@ -49,6 +49,8 @@
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
@@ -352,9 +368,9 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
       * Get information about a single task being managed.
       *
       * Returns #{@code null} if the task does not exist
-diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-07-04 19:38:11.598585473 +1000
++++ kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-07-05 07:42:54.653631976 +1000
 @@ -72,6 +72,12 @@
  
      private KafkaFutureImpl<String> doneFuture;

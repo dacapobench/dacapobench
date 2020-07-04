@@ -17,6 +17,7 @@ public class ZookeeperStarter extends Initializer{
             public void run() {
                 try {
                     starterZookeeper.invoke(null, (Object) new String[]{configZookeeper});
+                    System.out.println("...Zookeeper has completed.");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

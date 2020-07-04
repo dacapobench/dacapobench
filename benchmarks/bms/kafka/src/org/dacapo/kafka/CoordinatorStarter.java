@@ -21,7 +21,7 @@ public class CoordinatorStarter extends Initializer{
             public void run() {
                 try {
                     coordinatorStarter.invoke(null, (Object) new String[]{"-c", coordinatorConfig, "-n", "node0"});
-                    System.out.println("Shutdown Coordinator...");
+                    System.out.println("...Coordinator has completed.");
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }

@@ -626,8 +626,9 @@ public abstract class Benchmark {
         long p90 = lats.get((int) (0.9 * n)-1);
         long p99 = lats.get((int) (0.99 * n)-1);
         long p999 = lats.get((int) (0.999 * n)-1);
+        long p9999 = lats.get((int) (0.9999 * n)-1);
         long p100 = lats.get(n - 1);
-        System.out.println("===== Tail latency: 50% "+p50+" usec, 90% "+p90+" usec, 99% "+p99+" usec, 99.9% "+p999+" usec, max "+p100+" usec =====");
+        System.out.println("===== Tail latency: 50% "+p50+" usec, 90% "+p90+" usec, 99% "+p99+" usec, 99.9% "+p999+" usec, 99.99% "+p9999+" usec, max "+p100+" usec =====");
       }
     } catch (IOException e) {
       System.out.println("Exception trying to read latency stats from "+System.getProperty("dacapo.latency.csv")+": "+e);
