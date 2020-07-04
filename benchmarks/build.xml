@@ -540,7 +540,7 @@ See ${log.build.report} for a summary of benchmark build status.
         <build.bm benchmark="jython"/>
     </target>
      <target name="kafka" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="kafka" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
+        <build.bm benchmark="kafka"/>
     </target>
    <target name="luindex" depends="init,harness,update-externdata-info">
         <build.bm benchmark="luindex"/>
