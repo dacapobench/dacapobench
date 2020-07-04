@@ -1,6 +1,6 @@
-diff -urN ./kafka-2.5.0-src/config/server.properties ../build-new/config/server.properties
---- ./kafka-2.5.0-src/config/server.properties	2019-03-02 02:41:06.000000000 +1100
-+++ ../build-new/config/server.properties	2019-10-20 13:22:55.000000000 +1100
+diff -ur ../tmp/kafka-2.5.0-src/config/server.properties ./kafka-2.5.0-src/config/server.properties
+--- ../tmp/kafka-2.5.0-src/config/server.properties	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/config/server.properties	2020-07-04 15:31:11.233374045 +1000
 @@ -57,7 +57,7 @@
  ############################# Log Basics #############################
  
@@ -10,9 +10,9 @@ diff -urN ./kafka-2.5.0-src/config/server.properties ../build-new/config/server.
  
  # The default number of log partitions per topic. More partitions allow greater
  # parallelism for consumption, but this will also result in more files across
-diff -urN ./kafka-2.5.0-src/config/zookeeper.properties ../build-new/config/zookeeper.properties
---- ./kafka-2.5.0-src/config/zookeeper.properties	2019-03-02 02:41:06.000000000 +1100
-+++ ../build-new/config/zookeeper.properties	2019-10-20 13:22:55.000000000 +1100
+diff -ur ../tmp/kafka-2.5.0-src/config/zookeeper.properties ./kafka-2.5.0-src/config/zookeeper.properties
+--- ../tmp/kafka-2.5.0-src/config/zookeeper.properties	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/config/zookeeper.properties	2020-07-04 15:31:11.233374045 +1000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -22,9 +22,9 @@ diff -urN ./kafka-2.5.0-src/config/zookeeper.properties ../build-new/config/zook
  # the port at which the clients will connect
  clientPort=2181
  # disable the per-ip limit on the number of connections since this is a non-production config
-diff -urN ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json ../build-new/tests/spec/simple_produce_bench.json
---- ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2019-03-02 02:41:07.000000000 +1100
-+++ ../build-new/tests/spec/simple_produce_bench.json	2019-10-20 13:21:49.000000000 +1100
+diff -ur ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json
+--- ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-07-04 15:31:11.233374045 +1000
 @@ -23,8 +23,8 @@
    "durationMs": 10000000,
    "producerNode": "node0",
@@ -36,24 +36,10 @@ diff -urN ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json ../build-new/te
    "activeTopics": {
      "foo[1-3]": {
        "numPartitions": 10,
-diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
---- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2019-03-02 02:41:07.000000000 +1100
-+++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2019-10-20 13:21:49.000000000 +1100
-@@ -129,6 +129,10 @@
-         taskManager.waitForShutdown();
-     }
- 
-+    public TaskState waitForFinishing(TaskRequest request) throws Exception {
-+        return taskManager.waitForFinishing(request);
-+    }
-+
-     public static void main(String[] args) throws Exception {
-         ArgumentParser parser = ArgumentParsers
-             .newArgumentParser("trogdor-coordinator")
-diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
---- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
-+++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-10-20 13:21:49.000000000 +1100
-@@ -194,6 +194,15 @@
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
+--- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-07-04 15:31:11.233374045 +1000
+@@ -195,6 +195,15 @@
          return resp.body();
      }
  
@@ -69,7 +55,7 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
      public void shutdown() throws Exception {
          HttpResponse<Empty> resp =
              JsonRestServer.httpRequest(log, url("/coordinator/shutdown"), "PUT",
-@@ -237,6 +246,20 @@
+@@ -238,6 +247,20 @@
              .help("Show a coordinator task.");
          addTargetArgument(showTaskParser);
          addJsonArgument(showTaskParser);
@@ -90,7 +76,7 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
          showTaskParser.addArgument("--id", "-i")
              .action(store())
              .required(true)
-@@ -381,8 +404,17 @@
+@@ -382,8 +405,17 @@
                      }
                  }
                  break;
@@ -110,9 +96,23 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
                  TaskStateType taskStateType = res.<TaskStateType>get("taskStateType");
                  List<String> taskIds = new ArrayList<>();
                  Pattern taskIdPattern = null;
-diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
---- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2019-03-02 02:41:07.000000000 +1100
-+++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2019-10-20 13:21:49.000000000 +1100
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
+--- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-07-04 15:31:11.233374045 +1000
+@@ -129,6 +129,10 @@
+         taskManager.waitForShutdown();
+     }
+ 
++    public TaskState waitForFinishing(TaskRequest request) throws Exception {
++        return taskManager.waitForFinishing(request);
++    }
++
+     public static void main(String[] args) throws Exception {
+         ArgumentParser parser = ArgumentParsers
+             .newArgumentParser("trogdor-coordinator")
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
+--- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-07-04 15:31:11.233374045 +1000
 @@ -137,6 +137,13 @@
          return response;
      }
@@ -127,9 +127,9 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
      @PUT
      @Path("/shutdown")
      public Empty beginShutdown(CoordinatorShutdownRequest request) throws Throwable {
-diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
---- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2019-03-02 02:41:07.000000000 +1100
-+++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2019-10-20 13:21:49.000000000 +1100
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
+--- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-07-04 15:31:11.233374045 +1000
 @@ -49,6 +49,8 @@
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
@@ -181,7 +181,7 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
      }
  
      /**
-@@ -393,7 +416,10 @@
+@@ -394,7 +417,10 @@
              } catch (Exception e) {
                  log.error("Unable to find nodes for task {}", task.id, e);
                  task.doneMs = time.milliseconds();
@@ -192,7 +192,7 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
                  task.maybeSetError("Unable to find nodes for task: " + e.getMessage());
                  return null;
              }
-@@ -449,7 +475,10 @@
+@@ -450,7 +476,10 @@
                      task.cancelled = true;
                      task.clearStartFuture();
                      task.doneMs = time.milliseconds();
@@ -203,7 +203,7 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
                      log.info("Stopped pending task {}.", id);
                      break;
                  case RUNNING:
-@@ -462,7 +491,10 @@
+@@ -463,7 +492,10 @@
                              log.info("Task {} is now complete with error: {}", id, task.error);
                          }
                          task.doneMs = time.milliseconds();
@@ -214,7 +214,7 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
                      } else {
                          for (Map.Entry<String, Long> entry : activeWorkerIds.entrySet()) {
                              nodeManagers.get(entry.getKey()).stopWorker(entry.getValue());
-@@ -594,7 +626,10 @@
+@@ -595,7 +627,10 @@
          TreeMap<String, Long> activeWorkerIds = task.activeWorkerIds();
          if (activeWorkerIds.isEmpty()) {
              task.doneMs = time.milliseconds();
@@ -225,7 +225,7 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
              log.info("{}: Task {} is now complete on {} with error: {}",
                  nodeName, task.id, Utils.join(task.workerIds.keySet(), ", "),
                  task.error.isEmpty() ? "(none)" : task.error);
-@@ -638,6 +673,18 @@
+@@ -639,6 +674,18 @@
      }
  
      /**
@@ -244,3 +244,64 @@ diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordin
       * Get information about a single task being managed.
       *
       * Returns #{@code null} if the task does not exist
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
+--- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-07-04 15:32:52.977532938 +1000
+@@ -72,6 +72,12 @@
+ 
+     private KafkaFutureImpl<String> doneFuture;
+ 
++    private int tx = 0;
++    private static long[][] latency = null;
++    public static void setLatencyBuffer(Object buf) {
++        latency = (long[][]) buf;
++    }
++
+     public ProduceBenchWorker(String id, ProduceBenchSpec spec) {
+         this.id = id;
+         this.spec = spec;
+@@ -131,17 +137,23 @@
+     private static class SendRecordsCallback implements Callback {
+         private final SendRecords sendRecords;
+         private final long startMs;
++        private long lastStart;
+ 
+         SendRecordsCallback(SendRecords sendRecords, long startMs) {
+             this.sendRecords = sendRecords;
+             this.startMs = startMs;
++            this.lastStart = System.nanoTime();
+         }
+ 
+         @Override
+         public void onCompletion(RecordMetadata metadata, Exception exception) {
+             long now = Time.SYSTEM.milliseconds();
+             long durationMs = now - startMs;
+-            sendRecords.recordDuration(durationMs);
++            long start = System.nanoTime();
++            /// Here
++            // System.out.println("D "+durationMs+" "+this);
++            sendRecords.recordDuration(durationMs, lastStart, start);
++            lastStart = start;
+             if (exception != null) {
+                 log.error("SendRecordsCallback: error", exception);
+             }
+@@ -310,7 +322,10 @@
+             throttle.increment();
+         }
+ 
+-        void recordDuration(long durationMs) {
++        /// HERE
++        void recordDuration(long durationMs, long startNs, long endNs) {
++            latency[0][tx] = startNs;
++            latency[1][tx++] = endNs;
+             histogram.add(durationMs);
+         }
+     }
+@@ -411,6 +426,7 @@
+             throw new IllegalStateException("ProduceBenchWorker is not running.");
+         }
+         log.info("{}: Deactivating ProduceBenchWorker.", id);
++        System.out.println("Stopping "+tx);
+         doneFuture.complete("");
+         executor.shutdownNow();
+         executor.awaitTermination(1, TimeUnit.DAYS);
