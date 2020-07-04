@@ -20,6 +20,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.dacapo.parser.Config;
 
@@ -596,8 +599,38 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
+    tailLatencyStats();
     if (!preserve) {
       postIterationCleanup(size);
+    }
+  }
+
+  private void tailLatencyStats() {
+    try {
+      if (new File(System.getProperty("dacapo.latency.csv")).exists()) {
+        List<Long> lats = new ArrayList();
+        BufferedReader csv = new BufferedReader(new FileReader(System.getProperty("dacapo.latency.csv")));
+        String row;
+        while ((row = csv.readLine()) != null) {
+          if (!row.startsWith("#")) {
+            String[] data = row.split(", ");
+            long start = Long.parseLong(data[1]);
+            long end = Long.parseLong(data[2]);
+            lats.add((end-start)/1000);
+          }
+        }
+        csv.close();
+        Collections.sort(lats);
+        int n = lats.size();
+        long p50 = lats.get((int) (0.5 * n)-1);
+        long p90 = lats.get((int) (0.9 * n)-1);
+        long p99 = lats.get((int) (0.99 * n)-1);
+        long p999 = lats.get((int) (0.999 * n)-1);
+        long p100 = lats.get(n - 1);
+        System.out.println("==== Tail latency: 50% "+p50+" usec, 90% "+p90+" usec, 99% "+p99+" usec, 99.9% "+p999+" usec, max "+p100+" usec ====");
+      }
+    } catch (IOException e) {
+      System.out.println("Exception trying to read latency stats from "+System.getProperty("dacapo.latency.csv")+": "+e);
     }
   }
 
