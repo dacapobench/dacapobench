@@ -15,15 +15,17 @@ public class Launcher {
     private File agentConfig;
     private File produceBench;
     private File scratch;
+    private File data;
     private ClientRunner cli;
 
-    public Launcher(File scratch, String[] bench) {
+    public Launcher(File scratch, File data, String[] bench) {
         this.scratch = scratch;
-        this.produceBench = new File(scratch, bench[0]);
+        this.data = data;
+        this.produceBench = new File(data, bench[0]);
     }
 
     public void launching() throws Exception{
-        setUpScratch();
+        setUpData();
         setSystemProperty();
 
         ZookeeperStarter zoo = new ZookeeperStarter(configZookeeper.getPath());
@@ -62,11 +64,11 @@ public class Launcher {
         return used;
     }
 
-    private void setUpScratch() {
-        this.configZookeeper = new File(scratch, "zookeeper.properties");
-        this.serverKafka = new File(scratch, "server.properties");
-        this.log4jProperties = new File(scratch, "tools-log4j.properties");
-        this.agentConfig = new File(scratch, "trogdor.conf");
+    private void setUpData() {
+        this.configZookeeper = new File(data, "zookeeper.properties");
+        this.serverKafka = new File(data, "server.properties");
+        this.log4jProperties = new File(data, "tools-log4j.properties");
+        this.agentConfig = new File(data, "trogdor.conf");
     }
 
     private void setSystemProperty() {

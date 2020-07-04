@@ -30,7 +30,7 @@ public class Kafka extends Benchmark {
     public Kafka(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false, true);
         Class launcher = Class.forName("org.dacapo.kafka.Launcher", true, this.loader);
-        lc = launcher.getConstructor(File.class, String[].class);
+        lc = launcher.getConstructor(File.class, File.class, String[].class);
         launching = launcher.getMethod("launching");
         performIteration = launcher.getMethod("performIteration");
         shutdown = launcher.getMethod("shutdown");
@@ -40,7 +40,8 @@ public class Kafka extends Benchmark {
     protected void prepare(String size) throws Exception {
         super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
-        launcherInstance = lc.newInstance(this.scratch, args);
+        File kafkaData = new File(data, "dat"+File.separator+"kafka");
+        launcherInstance = lc.newInstance(this.scratch, kafkaData, args);
         Thread.currentThread().setContextClassLoader(loader);
         launching.invoke(launcherInstance);
     }

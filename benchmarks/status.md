@@ -25,6 +25,7 @@
 * Eclipse
   * Check that build is not happening in DATA
 * H2 
+  * move latency file writes out of timing loop (like cassandra)
   * should be built from source, is not
 * JME
   * Check reason for low CPU useage (GPU?)
