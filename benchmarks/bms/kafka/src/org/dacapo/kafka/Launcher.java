@@ -17,11 +17,15 @@ public class Launcher {
     private File scratch;
     private File data;
     private ClientRunner cli;
+    private int transactions;
+    long[][] txTimes;
 
     public Launcher(File scratch, File data, String[] bench) {
         this.scratch = scratch;
         this.data = data;
         this.produceBench = new File(data, bench[0]);
+        this.transactions = Integer.parseInt(bench[1]);
+        txTimes = new long[2][transactions];
     }
 
     public void launching() throws Exception{
@@ -46,7 +50,7 @@ public class Launcher {
     }
 
     public void performIteration() throws Exception {
-        cli = new ClientRunner();
+        cli = new ClientRunner(txTimes);
         cli.runClient(produceBench.getPath());
     }
 

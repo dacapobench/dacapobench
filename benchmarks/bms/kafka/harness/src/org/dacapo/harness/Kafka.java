@@ -54,7 +54,7 @@ public class Kafka extends Benchmark {
 
     @Override
     public void postIteration(String size) throws Exception {
-        super.postIteration(size);
         shutdown.invoke(launcherInstance);
+        super.postIteration(size);
     }
 }

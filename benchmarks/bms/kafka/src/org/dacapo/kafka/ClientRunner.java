@@ -10,11 +10,11 @@ public class ClientRunner{
     private Method clientStarter;
     private String pID = "producer";
     private Method setLatencyBuf;
-    private static final int MAX_TX = 1000000;
-    long[][] txTimes = new long[2][MAX_TX];
     long timerBase = 0;
+    long[][] txTimes = null;
 
-    ClientRunner() throws Exception{
+    ClientRunner(long[][] txTimes) throws Exception{
+        this.txTimes = txTimes;
         initialize();
     }
 
@@ -54,9 +54,9 @@ public class ClientRunner{
             System.out.println("Failed trying to create latency stats: "+e);
             System.exit(-1);
           }
-
+          System.out.print("Writing latency data to "+System.getProperty("dacapo.latency.csv")+"...");
         try {
-              for (int i = 0; i < MAX_TX; i++) {
+              for (int i = 0; i < txTimes[1].length; i++) {
                 long end = txTimes[1][i] - timerBase;
                 long start = txTimes[0][i] - timerBase;
                 if (txTimes[0][i] != 0) {
@@ -70,6 +70,7 @@ public class ClientRunner{
         } catch (Exception e) {
             System.out.println("Failed trying to write latency stats: "+e);
         }
+        System.out.println("...done");
 
         clientStarter.invoke(null, (Object) new String[]{"destroyTask", "-t", "localhost:8889", "-i", pID});
     }

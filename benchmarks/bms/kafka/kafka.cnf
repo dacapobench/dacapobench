@@ -2,8 +2,16 @@ benchmark kafka
   class org.dacapo.harness.Kafka
   thread-model per_cpu;
 
-size default args "simple_produce_bench.json"
-  output stdout digest 0xea314224c30fe85a89b992532d0099477aefb711,
+size small args "simple_produce_bench-small.json", "10000"
+  output stdout digest 0x70be37c36abcfddba3b0158408d9e083357df9ad,
+         stderr digest 0x355bcc577d7183bf81865d36b24f975a3a0f8e5b;
+         
+size default args "simple_produce_bench.json", "1000000"
+  output stdout digest 0x1d608a1e1cd83a71ae7b41313d7a820b3261b52f,
+         stderr digest 0x355bcc577d7183bf81865d36b24f975a3a0f8e5b;
+         
+size large args "simple_produce_bench-large.json", "10000000"
+  output stdout digest 0x9d4d8842aff703c47f1bc6d2f1f8b9c26c8c63c9,
          stderr digest 0x355bcc577d7183bf81865d36b24f975a3a0f8e5b;
 
 description

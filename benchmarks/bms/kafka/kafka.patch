@@ -1,6 +1,69 @@
+diff -ur ../tmp/kafka-2.5.0-src/config/log4j.properties ./kafka-2.5.0-src/config/log4j.properties
+--- ../tmp/kafka-2.5.0-src/config/log4j.properties	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/config/log4j.properties	2020-07-04 19:39:10.826604639 +1000
+@@ -14,8 +14,8 @@
+ # limitations under the License.
+ 
+ # Unspecified loggers and loggers with additivity=true output to server.log and stdout
+-# Note that INFO only applies to unspecified loggers, the log level of the child logger is used otherwise
+-log4j.rootLogger=INFO, stdout, kafkaAppender
++# Note that ERROR only applies to unspecified loggers, the log level of the child logger is used otherwise
++log4j.rootLogger=ERROR, stdout, kafkaAppender
+ 
+ log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+ log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+@@ -58,34 +58,34 @@
+ log4j.appender.authorizerAppender.layout.ConversionPattern=[%d] %p %m (%c)%n
+ 
+ # Change the line below to adjust ZK client logging
+-log4j.logger.org.apache.zookeeper=INFO
++log4j.logger.org.apache.zookeeper=ERROR
+ 
+ # Change the two lines below to adjust the general broker logging level (output to server.log and stdout)
+-log4j.logger.kafka=INFO
+-log4j.logger.org.apache.kafka=INFO
++log4j.logger.kafka=ERROR
++log4j.logger.org.apache.kafka=ERROR
+ 
+-# Change to DEBUG or TRACE to enable request logging
+-log4j.logger.kafka.request.logger=WARN, requestAppender
++# Change to DEBUG or ERROR to enable request logging
++log4j.logger.kafka.request.logger=ERROR, requestAppender
+ log4j.additivity.kafka.request.logger=false
+ 
+-# Uncomment the lines below and change log4j.logger.kafka.network.RequestChannel$ to TRACE for additional output
++# Uncomment the lines below and change log4j.logger.kafka.network.RequestChannel$ to ERROR for additional output
+ # related to the handling of requests
+-#log4j.logger.kafka.network.Processor=TRACE, requestAppender
+-#log4j.logger.kafka.server.KafkaApis=TRACE, requestAppender
++#log4j.logger.kafka.network.Processor=ERROR, requestAppender
++#log4j.logger.kafka.server.KafkaApis=ERROR, requestAppender
+ #log4j.additivity.kafka.server.KafkaApis=false
+-log4j.logger.kafka.network.RequestChannel$=WARN, requestAppender
++log4j.logger.kafka.network.RequestChannel$=ERROR, requestAppender
+ log4j.additivity.kafka.network.RequestChannel$=false
+ 
+-log4j.logger.kafka.controller=TRACE, controllerAppender
++log4j.logger.kafka.controller=ERROR, controllerAppender
+ log4j.additivity.kafka.controller=false
+ 
+-log4j.logger.kafka.log.LogCleaner=INFO, cleanerAppender
++log4j.logger.kafka.log.LogCleaner=ERROR, cleanerAppender
+ log4j.additivity.kafka.log.LogCleaner=false
+ 
+-log4j.logger.state.change.logger=TRACE, stateChangeAppender
++log4j.logger.state.change.logger=ERROR, stateChangeAppender
+ log4j.additivity.state.change.logger=false
+ 
+-# Access denials are logged at INFO level, change to DEBUG to also log allowed accesses
+-log4j.logger.kafka.authorizer.logger=INFO, authorizerAppender
++# Access denials are logged at ERROR level, change to DEBUG to also log allowed accesses
++log4j.logger.kafka.authorizer.logger=ERROR, authorizerAppender
+ log4j.additivity.kafka.authorizer.logger=false
+ 
 diff -ur ../tmp/kafka-2.5.0-src/config/server.properties ./kafka-2.5.0-src/config/server.properties
 --- ../tmp/kafka-2.5.0-src/config/server.properties	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/config/server.properties	2020-07-04 15:31:11.233374045 +1000
++++ ./kafka-2.5.0-src/config/server.properties	2020-07-04 19:38:11.598585473 +1000
 @@ -57,7 +57,7 @@
  ############################# Log Basics #############################
  
@@ -12,19 +75,31 @@ diff -ur ../tmp/kafka-2.5.0-src/config/server.properties ./kafka-2.5.0-src/confi
  # parallelism for consumption, but this will also result in more files across
 diff -ur ../tmp/kafka-2.5.0-src/config/zookeeper.properties ./kafka-2.5.0-src/config/zookeeper.properties
 --- ../tmp/kafka-2.5.0-src/config/zookeeper.properties	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/config/zookeeper.properties	2020-07-04 15:31:11.233374045 +1000
++++ ./kafka-2.5.0-src/config/zookeeper.properties	2020-07-04 19:38:11.598585473 +1000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  # the directory where the snapshot is stored.
 -dataDir=/tmp/zookeeper
-+dataDir=scratch/zookeeper
++dataDir=./scratch/zookeeper
  # the port at which the clients will connect
  clientPort=2181
  # disable the per-ip limit on the number of connections since this is a non-production config
+diff -ur ../tmp/kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala ./kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
+--- ../tmp/kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2020-07-04 19:40:14.042624028 +1000
+@@ -82,7 +82,7 @@
+         }
+       } catch {
+         case _: NoSuchFileException =>
+-          warn("No meta.properties file under dir %s".format(file.getAbsolutePath()))
++          /* warn("No meta.properties file under dir %s".format(file.getAbsolutePath())) */
+           None
+         case e1: Exception =>
+           error("Failed to read meta.properties file under dir %s due to %s".format(file.getAbsolutePath(), e1.getMessage))
 diff -ur ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json
 --- ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-07-04 15:31:11.233374045 +1000
++++ ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2020-07-04 19:38:11.598585473 +1000
 @@ -23,8 +23,8 @@
    "durationMs": 10000000,
    "producerNode": "node0",
@@ -36,9 +111,21 @@ diff -ur ../tmp/kafka-2.5.0-src/tests/spec/simple_produce_bench.json ./kafka-2.5
    "activeTopics": {
      "foo[1-3]": {
        "numPartitions": 10,
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
+--- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2020-07-04 19:38:11.598585473 +1000
+@@ -250,7 +250,7 @@
+         final Agent agent = new Agent(platform, Scheduler.SYSTEM, restServer, resource);
+         restServer.start(resource);
+         Exit.addShutdownHook("agent-shutdown-hook", () -> {
+-            log.warn("Running agent shutdown hook.");
++            // log.warn("Running agent shutdown hook.");
+             try {
+                 agent.beginShutdown();
+                 agent.waitForShutdown();
 diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-07-04 15:31:11.233374045 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2020-07-04 19:38:11.598585473 +1000
 @@ -195,6 +195,15 @@
          return resp.body();
      }
@@ -98,7 +185,7 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
                  Pattern taskIdPattern = null;
 diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-07-04 15:31:11.233374045 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2020-07-04 19:38:11.598585473 +1000
 @@ -129,6 +129,10 @@
          taskManager.waitForShutdown();
      }
@@ -110,9 +197,18 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
      public static void main(String[] args) throws Exception {
          ArgumentParser parser = ArgumentParsers
              .newArgumentParser("trogdor-coordinator")
+@@ -172,7 +176,7 @@
+             restServer, resource, ThreadLocalRandom.current().nextLong(0, Long.MAX_VALUE / 2));
+         restServer.start(resource);
+         Exit.addShutdownHook("coordinator-shutdown-hook", () -> {
+-            log.warn("Running coordinator shutdown hook.");
++            // log.warn("Running coordinator shutdown hook.");
+             try {
+                 coordinator.beginShutdown(false);
+                 coordinator.waitForShutdown();
 diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-07-04 15:31:11.233374045 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2020-07-04 19:38:11.598585473 +1000
 @@ -137,6 +137,13 @@
          return response;
      }
@@ -127,9 +223,21 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
      @PUT
      @Path("/shutdown")
      public Empty beginShutdown(CoordinatorShutdownRequest request) throws Throwable {
+diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java
+--- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2020-04-08 11:13:18.000000000 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2020-07-04 19:38:11.598585473 +1000
+@@ -235,7 +235,7 @@
+                 if (worker == null) {
+                     // Identify tasks which are running, but which we don't know about.
+                     // Add these to the NodeManager as tasks that should not be running.
+-                    log.warn("{}: scheduling unknown worker with ID {} for stopping.", node.name(), workerId);
++                    // log.warn("{}: scheduling unknown worker with ID {} for stopping.", node.name(), workerId);
+                     workers.put(workerId, new ManagedWorker(workerId, state.taskId(),
+                         state.spec(), false, state));
+                 } else {
 diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-07-04 15:31:11.233374045 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2020-07-04 19:38:11.598585473 +1000
 @@ -49,6 +49,8 @@
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
@@ -246,7 +354,7 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coo
       * Returns #{@code null} if the task does not exist
 diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
 --- ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-04-08 11:13:18.000000000 +1000
-+++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-07-04 15:32:52.977532938 +1000
++++ ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2020-07-04 19:38:11.598585473 +1000
 @@ -72,6 +72,12 @@
  
      private KafkaFutureImpl<String> doneFuture;
@@ -285,23 +393,28 @@ diff -ur ../tmp/kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/wor
              if (exception != null) {
                  log.error("SendRecordsCallback: error", exception);
              }
-@@ -310,7 +322,10 @@
+@@ -310,7 +322,15 @@
              throttle.increment();
          }
  
 -        void recordDuration(long durationMs) {
-+        /// HERE
 +        void recordDuration(long durationMs, long startNs, long endNs) {
 +            latency[0][tx] = startNs;
 +            latency[1][tx++] = endNs;
++            int tenPercent = latency[0].length / 10;
++            if (tx % tenPercent == 0) {
++                System.out.print((tx / tenPercent)+"0% ");
++                if (tx == latency[0].length)
++                    System.out.println();
++              }
              histogram.add(durationMs);
          }
      }
-@@ -411,6 +426,7 @@
+@@ -411,6 +431,7 @@
              throw new IllegalStateException("ProduceBenchWorker is not running.");
          }
          log.info("{}: Deactivating ProduceBenchWorker.", id);
-+        System.out.println("Stopping "+tx);
++        System.out.println("Completed "+tx+" transactions.");
          doneFuture.complete("");
          executor.shutdownNow();
          executor.awaitTermination(1, TimeUnit.DAYS);

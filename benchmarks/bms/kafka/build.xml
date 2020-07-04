@@ -58,6 +58,7 @@
         </exec>
     </target>
 
+
     <condition property="gradle-exe" value="gradle.bat">
         <os family="windows"/>
     </condition>
@@ -75,13 +76,26 @@
         </antcall>
     </target>
 
-    <target name="data">
+    <property name="base-spec" value="${kafka-build-dir}/tests/spec/simple_produce_bench"/>
+    <target name="copy-specs">
+        <!-- create specs for different workload sizes -->
+        <copy file="${base-spec}.json" tofile="${base-spec}-small.json"/>
+        <replace file="${base-spec}-small.json" token='"maxMessages": 1000000' value='"maxMessages": 10000'/>
+        <copy file="${base-spec}.json" tofile="${base-spec}-large.json"/>
+         <replace file="${base-spec}-large.json" token='"maxMessages": 1000000' value='"maxMessages": 10000000'/>
+
+        <!-- tone down the logging -->
+        <replace file="${kafka-build-dir}/config/log4j.properties" token='INFO' value='ERROR'/>
+        <replace file="${kafka-build-dir}/config/log4j.properties" token='WARN' value='ERROR'/>
+        <replace file="${kafka-build-dir}/config/log4j.properties" token='TRACE' value='ERROR'/>
+        <replace file="${kafka-build-dir}/config/connect-log4j.properties" token='INFO ' value='ERROR'/>
+        </target>
+
+    <target name="data" depends="copy-specs">
         <copy todir="${bm-data}">
             <fileset dir="${kafka-build-dir}/config" includes="*"/>
             <fileset dir="${kafka-build-dir}/tests/spec" includes="*"/>
         </copy>
-        <zip basedir="${bm-data}" includes="**" destfile="${bm-dat}/${bm-name}.zip"/>
-        <checksum file="${bm-dat}/${bm-name}.zip"/>
     </target>
 
     <target name="jar">
