@@ -1,5 +1,5 @@
-diff -urN ./config/server.properties ../build-new/config/server.properties
---- ./config/server.properties	2019-03-02 02:41:06.000000000 +1100
+diff -urN ./kafka-2.5.0-src/config/server.properties ../build-new/config/server.properties
+--- ./kafka-2.5.0-src/config/server.properties	2019-03-02 02:41:06.000000000 +1100
 +++ ../build-new/config/server.properties	2019-10-20 13:22:55.000000000 +1100
 @@ -57,7 +57,7 @@
  ############################# Log Basics #############################
@@ -10,8 +10,8 @@ diff -urN ./config/server.properties ../build-new/config/server.properties
  
  # The default number of log partitions per topic. More partitions allow greater
  # parallelism for consumption, but this will also result in more files across
-diff -urN ./config/zookeeper.properties ../build-new/config/zookeeper.properties
---- ./config/zookeeper.properties	2019-03-02 02:41:06.000000000 +1100
+diff -urN ./kafka-2.5.0-src/config/zookeeper.properties ../build-new/config/zookeeper.properties
+--- ./kafka-2.5.0-src/config/zookeeper.properties	2019-03-02 02:41:06.000000000 +1100
 +++ ../build-new/config/zookeeper.properties	2019-10-20 13:22:55.000000000 +1100
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
@@ -22,8 +22,8 @@ diff -urN ./config/zookeeper.properties ../build-new/config/zookeeper.properties
  # the port at which the clients will connect
  clientPort=2181
  # disable the per-ip limit on the number of connections since this is a non-production config
-diff -urN ./tests/spec/simple_produce_bench.json ../build-new/tests/spec/simple_produce_bench.json
---- ./tests/spec/simple_produce_bench.json	2019-03-02 02:41:07.000000000 +1100
+diff -urN ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json ../build-new/tests/spec/simple_produce_bench.json
+--- ./kafka-2.5.0-src/tests/spec/simple_produce_bench.json	2019-03-02 02:41:07.000000000 +1100
 +++ ../build-new/tests/spec/simple_produce_bench.json	2019-10-20 13:21:49.000000000 +1100
 @@ -23,8 +23,8 @@
    "durationMs": 10000000,
@@ -36,8 +36,8 @@ diff -urN ./tests/spec/simple_produce_bench.json ../build-new/tests/spec/simple_
    "activeTopics": {
      "foo[1-3]": {
        "numPartitions": 10,
-diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
---- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2019-03-02 02:41:07.000000000 +1100
+diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
+--- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2019-03-02 02:41:07.000000000 +1100
 +++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2019-10-20 13:21:49.000000000 +1100
 @@ -129,6 +129,10 @@
          taskManager.waitForShutdown();
@@ -50,8 +50,8 @@ diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator
      public static void main(String[] args) throws Exception {
          ArgumentParser parser = ArgumentParsers
              .newArgumentParser("trogdor-coordinator")
-diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
---- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
+diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
+--- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-03-02 02:41:07.000000000 +1100
 +++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2019-10-20 13:21:49.000000000 +1100
 @@ -194,6 +194,15 @@
          return resp.body();
@@ -110,8 +110,8 @@ diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator
                  TaskStateType taskStateType = res.<TaskStateType>get("taskStateType");
                  List<String> taskIds = new ArrayList<>();
                  Pattern taskIdPattern = null;
-diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
---- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2019-03-02 02:41:07.000000000 +1100
+diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
+--- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2019-03-02 02:41:07.000000000 +1100
 +++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2019-10-20 13:21:49.000000000 +1100
 @@ -137,6 +137,13 @@
          return response;
@@ -127,8 +127,8 @@ diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator
      @PUT
      @Path("/shutdown")
      public Empty beginShutdown(CoordinatorShutdownRequest request) throws Throwable {
-diff -urN ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
---- ./tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2019-03-02 02:41:07.000000000 +1100
+diff -urN ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
+--- ./kafka-2.5.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2019-03-02 02:41:07.000000000 +1100
 +++ ../build-new/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2019-10-20 13:21:49.000000000 +1100
 @@ -49,6 +49,8 @@
  import org.slf4j.Logger;
