@@ -15,6 +15,15 @@
 
     <import file="../common.xml"/>
 
+
+    <target name="source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.src.url}/lusearch"/>
+            <param name="target-file" value="lusearch-data.zip"/>
+        </antcall>
+    </target>
+
     <target name="bm-build" depends="lucene">
         <mkdir dir="${bm-build-dir}"/>
         <javac srcdir="${bm-src-dir}"
@@ -23,10 +32,12 @@
            includes="org/dacapo/lusearch/*" debug="true" debuglevel="lines,vars,source"/>
     </target>
 
+    <target name="data" depends="lucene">
+        <unzip dest="${bm-data}" src="${bm-downloads}/lusearch-data.zip"/>
+    </target>
+
     <target name="jar">
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}"/>
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>

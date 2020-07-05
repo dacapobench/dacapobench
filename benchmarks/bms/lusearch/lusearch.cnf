@@ -3,8 +3,8 @@ benchmark lusearch
   thread-model per_cpu
   jars "dacapo-lusearch.jar", "lucene-core-7.1.0-SNAPSHOT.jar", "lucene-demo-7.1.0-SNAPSHOT.jar", "lucene-queryparser-7.1.0-SNAPSHOT.jar";
 
-size small args "-index","${SCRATCH}/lusearch/index-default",
-                "-queries","${SCRATCH}/lusearch/queries-default/",
+size small args "-index","${DATA}/lusearch/index-default",
+                "-queries","${DATA}/lusearch/queries-default/",
                 "-output", "${SCRATCH}/lusearch.out",
                 "-totalqueries", "8",
                 "-threads", "${THREADS}"
@@ -22,8 +22,8 @@ size small args "-index","${SCRATCH}/lusearch/index-default",
     "lusearch.out6" digest(text) 0x8e5211fc95260b74676defd9ecda0896faca9056,
     "lusearch.out7" digest(text) 0xa4ab2577aa78ead6fec346ee1d8ad1edcec0a55d;
 
-size default args "-index","${SCRATCH}/lusearch/index-default",
-                "-queries", "${SCRATCH}/lusearch/queries-default/",
+size default args "-index","${DATA}/lusearch/index-default",
+                "-queries", "${DATA}/lusearch/queries-default/",
                 "-output", "${SCRATCH}/lusearch.out",
                 "-totalqueries", "128",
                 "-threads", "${THREADS}"
