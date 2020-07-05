@@ -301,10 +301,9 @@ public abstract class Benchmark {
     }
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
     return reader.lines().map(l -> {
-      String [] fields = l.split(" ");
-      String md5Expected = fields[0].toLowerCase();
-      String filePath = fields[1];
 
+      String md5Expected = l.substring(0, 32).toLowerCase();
+      String filePath = l.substring(33);
       try {
         File f = new File(data, filePath);
 
@@ -316,11 +315,11 @@ public abstract class Benchmark {
 
         String md5 = getMD5(f).toLowerCase();
         if (!md5.equals(md5Expected)) {
-          System.out.println("Checksum failure: expected "+md5Expected+" for "+data+File.separator+fields[1]+" but got "+md5);
+          System.out.println("Checksum failure: expected "+md5Expected+" for "+data+File.separator+filePath+" but got "+md5);
           return false;
         }
       } catch (Exception e) {
-        System.out.println("Dependency check failure: did not find expected file "+data+File.separator+fields[1]);
+        System.out.println("Dependency check failure: did not find expected file "+data+File.separator+filePath);
         return false;
       }
       return true;
