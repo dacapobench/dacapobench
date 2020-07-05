@@ -41,8 +41,13 @@
 
     <target name="jar">
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}"/>
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <!-- <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/> -->
+    </target>
+
+    <target name="data">
+        <untar src="${bm-downloads}/shakespeare.tgz" dest="${bm-data}/shakespeare" compression="gzip"/>
+        <unzip src="${bm-downloads}/kjv.zip" dest="${bm-data}/kjv"/>
     </target>
 
     <!-- <target name="lucene-enwiki-bench-data-check">

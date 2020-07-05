@@ -46,6 +46,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
+import javax.sound.sampled.SourceDataLine;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -86,7 +88,9 @@ public class Index {
         throw new IOException("Cannot read from document directory");
       }
       File prefix = docDir.getAbsolutePath().contains(scratch.getAbsolutePath()) ? scratch : data;
+      System.out.print("Indexing "+docDir.getName()+"... ");
       indexDocs(writer, docDir, prefix);
+
       System.out.println("Optimizing...");
       writer.forceMerge(1);
     }
@@ -178,13 +182,14 @@ public class Index {
         String[] files = file.list();
         // an IO error could occur
         if (files != null) {
+          System.out.print(file.getName()+" ("+files.length+") ");
           Arrays.sort(files);
           for (int i = 0; i < files.length; i++) {
             indexDocs(writer, new File(file, files[i]), prefix);
           }
         }
       } else {
-        System.out.println("adding " + file.getCanonicalPath().substring(prefixIdx));
+        // System.out.println("adding " + file.getCanonicalPath().substring(prefixIdx));
         try {
           Document doc = new Document();
           FieldType docFT = new FieldType();

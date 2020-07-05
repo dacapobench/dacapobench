@@ -12,6 +12,7 @@
 |jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|
 |jython|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓||
 |kafka|✓|✓|✓||✓|✓|✓|✓|✓||?|✓|
+|luindex|✓|✓|✓||✓|✓|✓|✓|||?||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 
 
@@ -33,6 +34,8 @@
   * why is CPU utilization low?
   * Still one uguly warning message
 * Update parser to use 'verbose' rather than 'long' for the description field, allowing 'long' to be used as a size.
+* Latency:
+  * Bound buffer size.   Fill it up then sample to it afterwards.  Allow size to be specified on command line.
 \\
 
 

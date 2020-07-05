@@ -3,13 +3,13 @@ benchmark luindex
   thread-model single
   jars "dacapo-luindex.jar", "lucene-core-7.1.0-SNAPSHOT.jar", "lucene-demo-7.1.0-SNAPSHOT.jar";
 
-size small args "--dirwalk", "${SCRATCH}/luindex/kjv"
-  output stdout  digest 0xe5beba33a55380ac9af7d25ee257d219a0ebb385,
+size small args "--dirwalk", "${DATA}/luindex/shakespeare"
+  output stdout  digest 0x5a769f4f6e755bd36238d3de31ecc8a3321fe360,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/segments_1"  bytes 136;
 
-size default args "--dirwalk", "${SCRATCH}/luindex/shakespeare","${SCRATCH}/luindex/kjv"
-  output stdout  digest 0x5b625bbe95e8386283c060727dedd942546de554,
+size default args "--dirwalk", "${DATA}/luindex/shakespeare","${DATA}/luindex/kjv"
+  output stdout  digest 0xce4bfcb21148f7066a6797cef2db7e34cd6e6bfa,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/segments_1"  bytes 136;
 
