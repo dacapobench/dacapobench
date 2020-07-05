@@ -12,8 +12,8 @@
 |jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|
 |jython|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓||
 |kafka|✓|✓|✓||✓|✓|✓|✓|✓||?|✓|
-|luindex|✓|✓|✓||✓|✓|✓|✓|||?||
-|lusearch|✓|✓|✓||✓|✓|✓|✓|||?||
+|luindex|✓|✓|✓|✓|✓|✓|✓|✓||✓|||
+|lusearch|✓|✓|✓||✓|✓|✓|✓||✓|?|?|
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 
 
@@ -37,6 +37,11 @@
 * Update parser to use 'verbose' rather than 'long' for the description field, allowing 'long' to be used as a size.
 * Latency:
   * Bound buffer size.   Fill it up then sample to it afterwards.  Allow size to be specified on command line.
+  * Create buffers in harness in a uniform way
+  * Always provide a latency buffer, and optionally start and thread id buffers
+  * only go to file if requested, otherwise do it all in memory with pre-allocated buffer
+* Lusearch and index
+  * Recalibrate using wiki data (smaller samples)
 \\
 
 
