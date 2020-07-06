@@ -17,7 +17,20 @@
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
     <property name="bm-git-commit" value="4ed549f0b2925ead2c52897cc6ee093d624acd0f"/>
 
+    <!-- use eclipse JDT as input to large tests -->
+    <property name="jdt-url" value="https://git.eclipse.org/c/jdt/eclipse.jdt.core.git/snapshot"/>
+    <property name="jdt-src" value="eclipse.jdt.core-I20200703-1800.zip"/>
+
+
     <import file="../common.xml"/>
+
+    <target name="source" depends="common.source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${jdt-url}"/>
+            <param name="target-file" value="${jdt-src}"/>
+        </antcall>
+    </target>
 
     <property name="bm-build-top" value="${bm-build-dir}"/>
 
@@ -56,6 +69,44 @@
         </copy>
     </target>
 
+    <target name="data">
+        <!-- inputs for small -->
+        <copy todir="${bm-data}/default">
+            <fileset dir="${bm-build-top}">
+                <include name="pmd-core/src/main/java/net/sourceforge/pmd/util/log/*.java"/>
+            </fileset>
+        </copy>
+        <!-- inputs for default -->
+        <copy todir="${bm-data}/default">
+            <fileset dir="${bm-build-top}">
+                <include name="pmd-core/**/*.java"/>
+                <include name="pmd-cpp/**/*.java"/>
+                <include name="pmd-groovy/**/*.java"/>
+                <include name="pmd-java8/**/*.java"/>
+                <include name="pmd-javascript/**/*.java"/>
+                <include name="pmd-vm/**/*.java"/>
+                <include name="pmd-xml/**/*.java"/>
+            </fileset>
+        </copy>
+        <!-- inputs for large -->
+        <unzip src="${bm-downloads}/${jdt-src}" dest="${bm-data}/large">
+            <patternset>
+                <include name="**/ASTConverterTest*.java"/>
+                <include name="**/JavaSearchBugsTests.java"/>
+                <include name="**/MethodVerifyTest.java"/>
+                <include name="**/CompletionEngine.java"/>
+                <include name="**/NullReferenceTest.java"/>
+                <include name="**/CompletionTests_1_5.java"/>
+                <include name="**/NullTypeAnnotationTest.java"/>
+                <include name="**/CompletionTests.java"/>
+                <include name="**/GenericTypeTest.java"/>
+                <include name="**/FormatterRegressionTests.java"/>
+                <include name="**/XLargeTest.java"/>
+            </patternset>
+        </unzip>
+
+    </target>
+
     <property name="asm-version" value="7.1"/>
     <property name="commons-io-version" value="2.6"/>
     <property name="commons-lang3-version" value="3.8.1"/>
@@ -63,7 +114,7 @@
     <property name="saxon-version" value="9.1.0.8"/>
 
     <target name="libs">
-        <copy todir="${bm-out-jar}">
+        <copy todir="${bm-jars}">
             <resources>
                 <file file="${pmd-dist-target}/lib/asm-${asm-version}.jar"/>
                 <file file="${pmd-dist-target}/lib/commons-io-${commons-io-version}.jar"/>
@@ -73,7 +124,5 @@
                 <file file="${pmd-dist-target}/lib/saxon-${saxon-version}-dom.jar"/>
             </resources>
         </copy>
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 </project>

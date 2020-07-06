@@ -1,6 +1,61 @@
-diff -urN ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ../build-src/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
---- ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2019-04-22 02:15:35.000000000 +1000
-+++ ../build-src/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2019-04-22 03:56:51.000000000 +1000
+diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/cli/PMDCommandLineInterface.java ./pmd-core/src/main/java/net/sourceforge/pmd/cli/PMDCommandLineInterface.java
+--- ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/cli/PMDCommandLineInterface.java	2020-05-22 17:43:23.000000000 +1000
++++ ./pmd-core/src/main/java/net/sourceforge/pmd/cli/PMDCommandLineInterface.java	2020-07-06 17:58:03.126412270 +1000
+@@ -162,6 +162,7 @@
+     }
+ 
+     public static void run(String[] args) {
++        System.out.println("CLI() " + Runtime.getRuntime().availableProcessors());
+         setStatusCodeOrExit(PMD.run(args));
+     }
+ 
+diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java
+--- ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2020-05-22 17:43:23.000000000 +1000
++++ ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2020-07-06 18:03:20.374312705 +1000
+@@ -100,6 +100,7 @@
+      *            The runtime Configuration of PMD to use.
+      */
+     public PMD(PMDConfiguration configuration) {
++        System.out.println("PMD() " + Runtime.getRuntime().availableProcessors() + "-->" + configuration.getThreads());
+         this.configuration = configuration;
+         this.rulesetsFileProcessor = new SourceCodeProcessor(configuration);
+     }
+@@ -474,6 +475,12 @@
+         int status = 0;
+         final PMDConfiguration configuration = params.toConfiguration();
+ 
++        System.out.println("run() " + Runtime.getRuntime().availableProcessors() + "-->" + configuration.getThreads());
++
++        configuration.setThreads(Runtime.getRuntime().availableProcessors());
++        
++        System.out.println("run() " + Runtime.getRuntime().availableProcessors() + "-->" + configuration.getThreads());
++
+         final Level logLevel = params.isDebug() ? Level.FINER : Level.INFO;
+         final ScopedLogHandlersManager logHandlerManager = new ScopedLogHandlersManager(logLevel, new ConsoleHandler());
+         final Level oldLogLevel = LOG.getLevel();
+diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java ./pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java
+--- ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java	2020-05-22 17:43:23.000000000 +1000
++++ ./pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java	2020-07-06 17:58:03.126412270 +1000
+@@ -28,6 +28,8 @@
+     public MultiThreadProcessor(final PMDConfiguration configuration) {
+         super(configuration);
+ 
++
++        System.out.println("Running with " + configuration.getThreads() + " threads");
+         executor = Executors.newFixedThreadPool(configuration.getThreads(), new PmdThreadFactory());
+         completionService = new ExecutorCompletionService<>(executor);
+     }
+@@ -43,6 +45,7 @@
+         try {
+             for (int i = 0; i < submittedTasks; i++) {
+                 final Report report = completionService.take().get();
++                System.out.println("CR " + report.getElapsedTimeInMillis());
+                 super.renderReports(renderers, report);
+             }
+         } catch (final InterruptedException ie) {
+diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
+--- ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2020-05-22 17:43:24.000000000 +1000
++++ ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2020-07-06 17:58:03.126412270 +1000
 @@ -7,8 +7,6 @@
  import java.io.IOException;
  import java.io.Writer;

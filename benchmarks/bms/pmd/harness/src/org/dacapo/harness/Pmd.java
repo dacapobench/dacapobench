@@ -36,7 +36,9 @@ public class Pmd extends Benchmark {
     super(config, scratch, data);
     Class<?> clazz = Class.forName("net.sourceforge.pmd.PMD", true, loader);
     this.method = clazz.getMethod("main", String[].class);
-
+    
+    
+    System.out.println("Constructor: "+Runtime.getRuntime().availableProcessors());
     /*
      * Explicitly set some properties that control factory methods
      * 
