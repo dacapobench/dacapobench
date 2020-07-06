@@ -12,10 +12,10 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="pmd"/>
-    <property name="bm-version" value="6.13.0"/>
+    <property name="bm-version" value="6.25.0"/>
     <property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
-    <property name="bm-git-commit" value="4ed549f0b2925ead2c52897cc6ee093d624acd0f"/>
+    <property name="bm-git-commit" value="a219b2e1befbe22ac6f4ca924fb9158a095bc93c"/>
 
     <!-- use eclipse JDT as input to large tests -->
     <property name="jdt-url" value="https://git.eclipse.org/c/jdt/eclipse.jdt.core.git/snapshot"/>
@@ -70,26 +70,17 @@
     </target>
 
     <target name="data">
-        <!-- inputs for small -->
-        <copy todir="${bm-data}/default">
-            <fileset dir="${bm-build-top}">
-                <include name="pmd-core/src/main/java/net/sourceforge/pmd/util/log/*.java"/>
-            </fileset>
-        </copy>
-        <!-- inputs for default -->
-        <copy todir="${bm-data}/default">
+        <!-- inputs for small and default -->
+        <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}">
                 <include name="pmd-core/**/*.java"/>
-                <include name="pmd-cpp/**/*.java"/>
-                <include name="pmd-groovy/**/*.java"/>
-                <include name="pmd-java8/**/*.java"/>
-                <include name="pmd-javascript/**/*.java"/>
-                <include name="pmd-vm/**/*.java"/>
-                <include name="pmd-xml/**/*.java"/>
+                <exclude name="**/file_with_ISO-8859-1_encoding.java"/>
+                <exclude name="**/file_with_utf8_bom.java"/>
             </fileset>
         </copy>
+
         <!-- inputs for large -->
-        <unzip src="${bm-downloads}/${jdt-src}" dest="${bm-data}/large">
+        <unzip src="${bm-downloads}/${jdt-src}" dest="${bm-data}/eclipse">
             <patternset>
                 <include name="**/ASTConverterTest*.java"/>
                 <include name="**/JavaSearchBugsTests.java"/>
@@ -107,22 +98,16 @@
 
     </target>
 
-    <property name="asm-version" value="7.1"/>
-    <property name="commons-io-version" value="2.6"/>
-    <property name="commons-lang3-version" value="3.8.1"/>
-    <property name="jcommander-version" value="1.72"/>
-    <property name="saxon-version" value="9.1.0.8"/>
-
     <target name="libs">
         <copy todir="${bm-jars}">
-            <resources>
-                <file file="${pmd-dist-target}/lib/asm-${asm-version}.jar"/>
-                <file file="${pmd-dist-target}/lib/commons-io-${commons-io-version}.jar"/>
-                <file file="${pmd-dist-target}/lib/commons-lang3-${commons-lang3-version}.jar"/>
-                <file file="${pmd-dist-target}/lib/jcommander-${jcommander-version}.jar"/>
-                <file file="${pmd-dist-target}/lib/saxon-${saxon-version}.jar"/>
-                <file file="${pmd-dist-target}/lib/saxon-${saxon-version}-dom.jar"/>
-            </resources>
+            <fileset dir="${pmd-dist-target}/lib">
+                <include name="**/asm-*.jar"/>
+                <include name="**/commons-io-*.jar"/>
+                <include name="**/commons-lang3-*.jar"/>
+                <include name="**/jcommander-*.jar"/>
+                <include name="**/saxon-*.jar"/>
+                <include name="**/saxon-*-dom.jar"/>
+            </fileset>
         </copy>
     </target>
 </project>

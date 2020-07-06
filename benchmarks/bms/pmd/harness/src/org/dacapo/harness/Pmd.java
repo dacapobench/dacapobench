@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,14 +32,13 @@ import org.dacapo.parser.Config;
 public class Pmd extends Benchmark {
 
   String[] args;
+  String reportFileName = null;
 
   public Pmd(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data);
     Class<?> clazz = Class.forName("net.sourceforge.pmd.PMD", true, loader);
     this.method = clazz.getMethod("main", String[].class);
     
-    
-    System.out.println("Constructor: "+Runtime.getRuntime().availableProcessors());
     /*
      * Explicitly set some properties that control factory methods
      * 
@@ -55,9 +55,44 @@ public class Pmd extends Benchmark {
     System.setProperty((String)pmdcli.getField("NO_EXIT_AFTER_RUN").get(null), "true");
   }
 
+  private void sortReport() {
+    ArrayList<String> report = new ArrayList<String>();
+
+    try {
+      BufferedReader in = new BufferedReader(new FileReader(reportFileName));    
+      String next = in.readLine();
+      while (next != null) {
+        report.add(next);
+        next = in.readLine();
+      }
+      in.close();
+
+      Collections.sort(report);
+
+      BufferedWriter out = new BufferedWriter(new FileWriter(reportFileName));
+      for (String line : report) {
+        out.write(line);
+        out.newLine();
+      }
+      out.close();
+  } catch (IOException e) {
+    System.err.println("Failed trying to sort pmd report file '"+reportFileName+"' "+e);
+  }
+  }
+
+  @Override
+  public boolean validate(String size) {
+    sortReport();
+    return super.validate(size);
+  }
+
   protected void prepare(String size) throws Exception {
     super.prepare(size);
     args = config.preprocessArgs(size, scratch, data);
+    for (int i = 0; i < args.length; i++) {
+      if (args[i].equals("-r"))
+        reportFileName = args[i+1];
+    }
   }
 
   public void iterate(String size) throws Exception {
