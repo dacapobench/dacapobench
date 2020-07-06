@@ -349,7 +349,7 @@
          target: compile  all sources
          ================================= -->
     <!--<target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,kafka,jython,luindex,lusearch,pmd,sunflow,tomcat,tradebeans,tradesoap,xalan,zxing">-->
-    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,jython,kafka,luindex,lusearch,sunflow">
+    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,jython,kafka,luindex,lusearch,pmd,sunflow">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -549,7 +549,7 @@ See ${log.build.report} for a summary of benchmark build status.
         <build.bm benchmark="lusearch"/>
     </target>
     <target name="pmd" depends="init,harness,update-externdata-info">
-        <build.bm benchmark="pmd" env.key="JAVA_HOME" env.value="${jdk.11.home}"/>
+        <build.bm benchmark="pmd"/>
     </target>
     <target name="sunflow" depends="init,harness,update-externdata-info">
         <build.bm benchmark="sunflow"/>

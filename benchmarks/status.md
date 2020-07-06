@@ -14,7 +14,7 @@
 |kafka|✓|✓|✓||✓|✓|✓|✓|✓||?|✓|
 |luindex|✓|✓|✓|✓|✓|✓|✓|✓||✓|||
 |lusearch|✓|✓|✓||✓|✓|✓|✓||✓|?|?|
-|pmd|||✓|✓|✓|✓|✓|✓|✓|||
+|pmd|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 
 
@@ -43,7 +43,20 @@
   * only go to file if requested, otherwise do it all in memory with pre-allocated buffer
 * Lusearch and index
   * Recalibrate using wiki data (smaller samples)
+* pmd
+  * default 1m14
+  * d0 5.3
+  * d1 3.1
+  * d2 3.1
+  * d3 3.1
+  * d4 12.7
+  * d5 3.89
+  * d6 6.96
+  * d7 3.77
+  * l 17
 \\
+
+
 
 
 Validation FAILED for jme xlong
