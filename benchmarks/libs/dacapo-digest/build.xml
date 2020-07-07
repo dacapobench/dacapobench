@@ -1,0 +1,37 @@
+<!--
+ * Copyright (c) 2009 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ * 
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+<project name="bcel" default="all" basedir="../..">
+    <description>DaCapo Digest Library</description>
+
+    <property environment="env"/>
+
+    <property file="ant/dacapo.properties"/>
+
+    <property name="lib-name" value="dacapo-digest"/>
+
+    <import file="../common.xml"/>
+
+    <target name="jar" depends="build">
+        <jar destfile="${lib-jars}/${lib-name}.jar" basedir="${lib-build-dir}"/>
+        <!--
+        <copy file="${lib-build-dir}/${lib-name}-${lib-version}/lib/${lib-jar}" tofile="${lib-output-dir}/jar/${lib-jar}" />
+        <copy file="${lib-build-dir}/${lib-name}-${lib-version}/lib/${lib-commons-jar}" tofile="${lib-output-dir}/jar/${lib-commons-jar}" />
+    -->
+    </target>
+
+    <target name="build" depends="build.init">
+        <javac srcdir="${lib-src-dir}" destdir="${lib-build-dir}" debug="true" debuglevel="lines,vars,source"/>
+    </target>
+
+    <target name="build.init">
+        <mkdir dir="${lib-build-dir}"/>
+    </target>
+
+</project>
+

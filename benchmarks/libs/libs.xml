@@ -22,6 +22,12 @@
         <ant antfile="${lib-base}/batik/build.xml"/>
     </target>
 
+    <!-- dacapo-digest -->
+    <property name="dacapo-digest-jar" value="${lib-base}/dacapo-digest/dist/jar/dacapo-digest.jar"/>
+    <target name="dacapo-digest">
+        <ant antfile="${lib-base}/dacapo-digest/build.xml"/>
+    </target>
+
     <!-- daytrader -->
     <target name="daytrader">
         <ant antfile="${lib-base}/daytrader/build.xml"/>
