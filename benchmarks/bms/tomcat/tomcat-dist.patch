@@ -2,7 +2,7 @@ Binary files ../orig-dist/bin/bootstrap.jar and apache-tomcat-9.0.19-src/output/
 Binary files ../orig-dist/bin/tomcat-juli.jar and apache-tomcat-9.0.19-src/output/dist/bin/tomcat-juli.jar differ
 diff -ur ../orig-dist/conf/catalina.properties apache-tomcat-9.0.19-src/output/dist/conf/catalina.properties
 --- ../orig-dist/conf/catalina.properties	2020-07-08 15:44:06.162809295 +1000
-+++ apache-tomcat-9.0.19-src/output/dist/conf/catalina.properties	2020-07-08 15:52:30.907944525 +1000
++++ apache-tomcat-9.0.19-src/output/dist/conf/catalina.properties	2020-07-08 16:07:32.596954865 +1000
 @@ -50,7 +50,7 @@
  #       ${catalina.base} path or the ${catalina.home} path contains a comma.
  #       Because double quotes are used for quoting, the double quote character
@@ -12,9 +12,68 @@ diff -ur ../orig-dist/conf/catalina.properties apache-tomcat-9.0.19-src/output/d
  
  #
  # List of comma-separated paths defining the contents of the "server"
+diff -ur ../orig-dist/conf/server.xml apache-tomcat-9.0.19-src/output/dist/conf/server.xml
+--- ../orig-dist/conf/server.xml	2020-07-08 15:44:06.162809295 +1000
++++ apache-tomcat-9.0.19-src/output/dist/conf/server.xml	2020-07-08 16:08:40.165011481 +1000
+@@ -19,13 +19,13 @@
+      define subcomponents such as "Valves" at this level.
+      Documentation at /docs/config/server.html
+  -->
+-<Server port="8005" shutdown="SHUTDOWN">
++<Server port="7005" shutdown="SHUTDOWN">
+   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+   <!-- Security listener. Documentation at /docs/config/listeners.html
+   <Listener className="org.apache.catalina.security.SecurityListener" />
+   -->
+   <!--APR library loader. Documentation at /docs/apr.html -->
+-  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
++  <Listener className="org.apache.catalina.core.AprLifecycleListener" />
+   <!-- Prevent memory leaks due to use of particular java/javax APIs-->
+   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+@@ -66,9 +66,9 @@
+          APR (HTTP/AJP) Connector: /docs/apr.html
+          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
+     -->
+-    <Connector port="8080" protocol="HTTP/1.1"
++    <Connector port="7080" protocol="HTTP/1.1"
+                connectionTimeout="20000"
+-               redirectPort="8443" />
++               redirectPort="7443" />
+     <!-- A "Connector" using the shared thread pool-->
+     <!--
+     <Connector executor="tomcatThreadPool"
+@@ -113,7 +113,7 @@
+     -->
+ 
+     <!-- Define an AJP 1.3 Connector on port 8009 -->
+-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
++    <Connector port="7009" protocol="AJP/1.3" redirectPort="7443" />
+ 
+ 
+     <!-- An Engine represents the entry point (within Catalina) that processes
+@@ -150,16 +150,14 @@
+ 
+         <!-- SingleSignOn valve, share authentication between web applications
+              Documentation at: /docs/config/valve.html -->
+-        <!--
+         <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
+-        -->
+ 
+         <!-- Access log processes all example.
+              Documentation at: /docs/config/valve.html
+              Note: The pattern used is equivalent to using pattern="common" -->
+-        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
++        <!-- <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+                prefix="localhost_access_log" suffix=".txt"
+-               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
++               pattern="%h %l %u %t &quot;%r&quot; %s %b" /> -->
+ 
+       </Host>
+     </Engine>
 diff -ur ../orig-dist/conf/tomcat-users.xml apache-tomcat-9.0.19-src/output/dist/conf/tomcat-users.xml
 --- ../orig-dist/conf/tomcat-users.xml	2020-07-08 15:44:06.162809295 +1000
-+++ apache-tomcat-9.0.19-src/output/dist/conf/tomcat-users.xml	2020-07-08 15:50:09.023697061 +1000
++++ apache-tomcat-9.0.19-src/output/dist/conf/tomcat-users.xml	2020-07-08 16:07:32.600954869 +1000
 @@ -34,11 +34,9 @@
    examples web application, do not forget to remove the <!.. ..> that surrounds
    them. You will also need to set the passwords to something appropriate.
