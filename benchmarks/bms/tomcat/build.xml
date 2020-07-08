@@ -56,6 +56,9 @@
 
     <target name="data">
         <unzip dest="${bm-data}" src="${bm-files}/tomcat.zip"/>
+        <delete>
+            <fileset dir="${bm-data}" includes="**/*.jar"/>
+        </delete>
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}/output/dist">
                 <include name="**/*.jar"/>
