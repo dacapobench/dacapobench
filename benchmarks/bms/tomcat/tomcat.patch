@@ -1,6 +1,6 @@
 diff -ur ../tmp/apache-tomcat-9.0.19-src/build.properties.default ./apache-tomcat-9.0.19-src/build.properties.default
 --- ../tmp/apache-tomcat-9.0.19-src/build.properties.default	2019-04-13 00:28:18.000000000 +1000
-+++ ./apache-tomcat-9.0.19-src/build.properties.default	2020-07-07 19:10:32.828025593 +1000
++++ ./apache-tomcat-9.0.19-src/build.properties.default	2020-07-08 15:36:53.793416166 +1000
 @@ -90,7 +90,7 @@
  # Do not pass -deprecation (-Xlint:deprecation) flag to javac
  compile.deprecation=false
@@ -21,7 +21,7 @@ diff -ur ../tmp/apache-tomcat-9.0.19-src/build.properties.default ./apache-tomca
  commons-daemon.version=1.1.0
 diff -ur ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java
 --- ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java	2019-04-13 00:28:20.000000000 +1000
-+++ ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java	2020-07-07 19:10:32.828025593 +1000
++++ ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java	2020-07-08 15:36:53.793416166 +1000
 @@ -144,13 +144,21 @@
  
      private void initClassLoaders() {
@@ -65,7 +65,7 @@ diff -ur ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootst
                  repositories.add(new Repository(repository, RepositoryType.JAR));
 diff -ur ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java
 --- ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java	2019-04-13 00:28:20.000000000 +1000
-+++ ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java	2020-07-07 19:10:32.828025593 +1000
++++ ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java	2020-07-08 15:36:53.793416166 +1000
 @@ -160,12 +160,15 @@
  
          if (repositories != null) {

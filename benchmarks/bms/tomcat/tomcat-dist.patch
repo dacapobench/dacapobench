@@ -1,0 +1,64 @@
+Binary files ../orig-dist/bin/bootstrap.jar and apache-tomcat-9.0.19-src/output/dist/bin/bootstrap.jar differ
+Binary files ../orig-dist/bin/tomcat-juli.jar and apache-tomcat-9.0.19-src/output/dist/bin/tomcat-juli.jar differ
+diff -ur ../orig-dist/conf/catalina.properties apache-tomcat-9.0.19-src/output/dist/conf/catalina.properties
+--- ../orig-dist/conf/catalina.properties	2020-07-08 15:44:06.162809295 +1000
++++ apache-tomcat-9.0.19-src/output/dist/conf/catalina.properties	2020-07-08 15:52:30.907944525 +1000
+@@ -50,7 +50,7 @@
+ #       ${catalina.base} path or the ${catalina.home} path contains a comma.
+ #       Because double quotes are used for quoting, the double quote character
+ #       may not appear in a path.
+-common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"
++common.loader=${catalina.cl.repo}
+ 
+ #
+ # List of comma-separated paths defining the contents of the "server"
+diff -ur ../orig-dist/conf/tomcat-users.xml apache-tomcat-9.0.19-src/output/dist/conf/tomcat-users.xml
+--- ../orig-dist/conf/tomcat-users.xml	2020-07-08 15:44:06.162809295 +1000
++++ apache-tomcat-9.0.19-src/output/dist/conf/tomcat-users.xml	2020-07-08 15:50:09.023697061 +1000
+@@ -34,11 +34,9 @@
+   examples web application, do not forget to remove the <!.. ..> that surrounds
+   them. You will also need to set the passwords to something appropriate.
+ -->
+-<!--
+-  <role rolename="tomcat"/>
+-  <role rolename="role1"/>
+-  <user username="tomcat" password="<must-be-changed>" roles="tomcat"/>
+-  <user username="both" password="<must-be-changed>" roles="tomcat,role1"/>
+-  <user username="role1" password="<must-be-changed>" roles="role1"/>
+--->
++<role rolename="manager-gui"/>
++<role rolename="manager-status"/>
++<role rolename="manager-script"/>
++<role rolename="manager-jmx"/>
++<user username="tomcat" password="s3cret" roles="manager-gui,manager-status,manager-script,manager-jmx"/>
+ </tomcat-users>
+Binary files ../orig-dist/lib/annotations-api.jar and apache-tomcat-9.0.19-src/output/dist/lib/annotations-api.jar differ
+Binary files ../orig-dist/lib/catalina-ant.jar and apache-tomcat-9.0.19-src/output/dist/lib/catalina-ant.jar differ
+Binary files ../orig-dist/lib/catalina-ha.jar and apache-tomcat-9.0.19-src/output/dist/lib/catalina-ha.jar differ
+Binary files ../orig-dist/lib/catalina.jar and apache-tomcat-9.0.19-src/output/dist/lib/catalina.jar differ
+Binary files ../orig-dist/lib/catalina-storeconfig.jar and apache-tomcat-9.0.19-src/output/dist/lib/catalina-storeconfig.jar differ
+Binary files ../orig-dist/lib/catalina-tribes.jar and apache-tomcat-9.0.19-src/output/dist/lib/catalina-tribes.jar differ
+Binary files ../orig-dist/lib/el-api.jar and apache-tomcat-9.0.19-src/output/dist/lib/el-api.jar differ
+Binary files ../orig-dist/lib/jasper-el.jar and apache-tomcat-9.0.19-src/output/dist/lib/jasper-el.jar differ
+Binary files ../orig-dist/lib/jasper.jar and apache-tomcat-9.0.19-src/output/dist/lib/jasper.jar differ
+Binary files ../orig-dist/lib/jaspic-api.jar and apache-tomcat-9.0.19-src/output/dist/lib/jaspic-api.jar differ
+Binary files ../orig-dist/lib/jsp-api.jar and apache-tomcat-9.0.19-src/output/dist/lib/jsp-api.jar differ
+Binary files ../orig-dist/lib/servlet-api.jar and apache-tomcat-9.0.19-src/output/dist/lib/servlet-api.jar differ
+Binary files ../orig-dist/lib/tomcat-api.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-api.jar differ
+Binary files ../orig-dist/lib/tomcat-coyote.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-coyote.jar differ
+Binary files ../orig-dist/lib/tomcat-dbcp.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-dbcp.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-cs.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-cs.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-de.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-de.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-es.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-es.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-fr.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-fr.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-ja.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-ja.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-ko.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-ko.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-pt-BR.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-pt-BR.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-ru.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-ru.jar differ
+Binary files ../orig-dist/lib/tomcat-i18n-zh-CN.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-i18n-zh-CN.jar differ
+Binary files ../orig-dist/lib/tomcat-jdbc.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-jdbc.jar differ
+Binary files ../orig-dist/lib/tomcat-jni.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-jni.jar differ
+Binary files ../orig-dist/lib/tomcat-util.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-util.jar differ
+Binary files ../orig-dist/lib/tomcat-util-scan.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-util-scan.jar differ
+Binary files ../orig-dist/lib/tomcat-websocket.jar and apache-tomcat-9.0.19-src/output/dist/lib/tomcat-websocket.jar differ
+Binary files ../orig-dist/lib/websocket-api.jar and apache-tomcat-9.0.19-src/output/dist/lib/websocket-api.jar differ

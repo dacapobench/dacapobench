@@ -55,29 +55,19 @@
     </target>
 
     <target name="data">
-        <!-- <unzip dest="${bm-data}" src="${bm-files}/tomcat.zip"/>
-        <delete>
-            <fileset dir="${bm-data}" includes="**/*.jar"/>
-        </delete> -->
+        <patch patchfile="${bm-files}/tomcat-dist.patch" strip="1" dir="${bm-build-top}"/>
+
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}/output/dist">
-                <!-- <include name="**/*.jar"/> -->
                 <exclude name="conf/server.xml"/>
             </fileset>
         </copy>
-        <unzip dest="${bm-data}" src="${bm-files}/tomcat.zip">
-            <patternset>
-                <include name="conf/tomcat-users.xml"/>
-                <include name="conf/server.xml"/>
 
-                <!-- <include name="conf/web.xml"/> -->
-                <!-- <include name="conf/jaspic-providers.xml"/> -->
-                <!-- <include name="conf/context.xml"/> -->
-            </patternset>
-        </unzip>
-        <copy file="${bm-files}/catalina.properties" todir="${bm-data}" />
-        <!-- <copy file="${bm-files}/server.xml" todir="${bm-data}/conf" />
-        <copy file="${bm-files}/tomcat-users.xml" todir="${bm-data}/conf" /> -->
+        <copy todir="${bm-data}">
+            <fileset dir="${bm-files}/tmp3">
+                <include name="conf/server.xml"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="jar" depends="build-properties">
