@@ -24,7 +24,7 @@
 	<property name="bm-output-harness-dir" value="${bm-files}/dist"/>
 	<property name="bm-output-benchmark-dir" value="${bm-files}/dist/benchmark"/>
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
-	<property name="bm-jars" value="${bm-files}/data/jar"/>
+	<property name="bm-jars" value="${bm-files}/data/jar/${bm-name}"/>
 	<property name="bm-data" value="${bm-files}/data/dat/${bm-name}"/>
 
 	<available file="${bm-data}" property="bm-data-exists" type="dir"/>
@@ -32,7 +32,7 @@
 	<property name="bm-src-harness-dir" value="${bm-files}/harness/src"/>
 	<property name="bm-src-benchmark-dir" value="${bm-files}/benchmark"/>
 	<property name="bm-downloads" value="${bm-files}/downloads"/>
-	<property name="bm-out-jar" value="${build.target-jars}"/>
+	<property name="bm-out-jar" value="${build.target-jars}/${bm-name}"/>
 	<property name="bm-out-dat" value="${build.target-data}/${bm-name}"/>
 
 	<property name="bm-dat" value="${bm-out-dat}"/>

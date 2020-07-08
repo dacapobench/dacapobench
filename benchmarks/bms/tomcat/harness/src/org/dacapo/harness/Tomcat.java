@@ -62,8 +62,17 @@ public class Tomcat extends Benchmark {
       try {
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "info");
-        System.setProperty("catalina.home", scratch.getAbsolutePath());
-        System.setProperty("catalina.config", new File(fileInScratch("catalina.properties")).toURL().toExternalForm());
+        System.setProperty("catalina.home", data.getAbsolutePath()+File.separator+"dat"+File.separator+"tomcat");
+        System.out.println("Home: '"+System.getProperty("catalina.home")+"'");
+        System.setProperty("catalina.config", new File(fileInData("dat"+File.separator+"tomcat"+File.separator+"catalina.properties")).toURL().toExternalForm());
+        String lib = fileInData("dat"+File.separator+"tomcat"+File.separator+"lib"+File.separator+"*.jar");
+        String bin = fileInData("dat"+File.separator+"tomcat"+File.separator+"bin"+File.separator+"*.jar");
+        System.setProperty("catalina.cl.repo", lib+", "+bin);
+
+        System.out.println("Config: '"+System.getProperty("catalina.config")+"'");
+
+        System.out.println("Repo: '"+System.getProperty("catalina.cl.repo")+"'");
+
         method.invoke(controller, "prepare");
 
         System.out.println("Server thread created");

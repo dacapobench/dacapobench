@@ -54,13 +54,23 @@
         </javac>
     </target>
 
-    <target name="data"/>
+    <target name="data">
+        <unzip dest="${bm-data}" src="${bm-files}/tomcat.zip"/>
+        <copy todir="${bm-data}">
+            <fileset dir="${bm-build-top}/output/dist">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+        <copy file="${bm-files}/catalina.properties" todir="${bm-data}" />
+    </target>
+
     <target name="jar" depends="build-properties">
-        <copy todir="${bm-jars}">
+         <copy todir="${bm-jars}">
             <fileset dir="${bm-build-top}/output/dist/bin" includes="*.jar"/>
             <fileset file="${commons-httpclient-jar}"/>
             <fileset file="${commons-logging-jar}"/>
             <fileset file="${commons-codec-jar}"/>
+            <fileset dir="${bm-build-top}/output/build/lib" includes="*.jar"/>
         </copy>
 
         <jar destfile="${bm-jars}/dacapo-tomcat.jar">

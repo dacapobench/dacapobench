@@ -1,5 +1,6 @@
---- apache-tomcat-9.0.19-src/build.properties.default	2020-05-21 14:58:29.754311209 +1000
-+++ apache-tomcat-9.0.19-src/build.properties.default	2020-05-21 14:58:41.814297202 +1000
+diff -ur ../tmp/apache-tomcat-9.0.19-src/build.properties.default ./apache-tomcat-9.0.19-src/build.properties.default
+--- ../tmp/apache-tomcat-9.0.19-src/build.properties.default	2019-04-13 00:28:18.000000000 +1000
++++ ./apache-tomcat-9.0.19-src/build.properties.default	2020-07-07 19:10:32.828025593 +1000
 @@ -90,7 +90,7 @@
  # Do not pass -deprecation (-Xlint:deprecation) flag to javac
  compile.deprecation=false
@@ -18,3 +19,102 @@
  
  # ----- Commons Daemon, version 1.1.0 or later -----
  commons-daemon.version=1.1.0
+diff -ur ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java
+--- ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java	2019-04-13 00:28:20.000000000 +1000
++++ ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/Bootstrap.java	2020-07-07 19:10:32.828025593 +1000
+@@ -144,13 +144,21 @@
+ 
+     private void initClassLoaders() {
+         try {
++            System.out.println("A");
+             commonLoader = createClassLoader("common", null);
++            System.out.println("B");
+             if( commonLoader == null ) {
+                 // no config file, default to this loader - we might be in a 'single' env.
++                System.out.println("C");
++
+                 commonLoader=this.getClass().getClassLoader();
+             }
++            System.out.println("D");
++
+             catalinaLoader = createClassLoader("server", commonLoader);
+             sharedLoader = createClassLoader("shared", commonLoader);
++            System.out.println("F");
++
+         } catch (Throwable t) {
+             handleThrowable(t);
+             log.error("Class loader creation threw exception", t);
+@@ -171,8 +179,10 @@
+         List<Repository> repositories = new ArrayList<>();
+ 
+         String[] repositoryPaths = getPaths(value);
++        System.out.println("RP: "+value);
+ 
+         for (String repository : repositoryPaths) {
++            System.out.println("Adding: "+repository);
+             // Check for a JAR URL repository
+             try {
+                 @SuppressWarnings("unused")
+@@ -187,6 +197,7 @@
+             if (repository.endsWith("*.jar")) {
+                 repository = repository.substring
+                     (0, repository.length() - "*.jar".length());
++                System.out.println("Globbing: "+repository);
+                 repositories.add(new Repository(repository, RepositoryType.GLOB));
+             } else if (repository.endsWith(".jar")) {
+                 repositories.add(new Repository(repository, RepositoryType.JAR));
+diff -ur ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java
+--- ../tmp/apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java	2019-04-13 00:28:20.000000000 +1000
++++ ./apache-tomcat-9.0.19-src/java/org/apache/catalina/startup/ClassLoaderFactory.java	2020-07-07 19:10:32.828025593 +1000
+@@ -160,12 +160,15 @@
+ 
+         if (repositories != null) {
+             for (Repository repository : repositories)  {
++                System.out.println("Dealing with: "+repository.getLocation());
+                 if (repository.getType() == RepositoryType.URL) {
++                    System.out.println("U: "+repository.getLocation());
+                     URL url = buildClassLoaderUrl(repository.getLocation());
+                     if (log.isDebugEnabled())
+                         log.debug("  Including URL " + url);
+                     set.add(url);
+                 } else if (repository.getType() == RepositoryType.DIR) {
++                    System.out.println("D: "+repository.getLocation());
+                     File directory = new File(repository.getLocation());
+                     directory = directory.getCanonicalFile();
+                     if (!validateFile(directory, RepositoryType.DIR)) {
+@@ -176,6 +179,7 @@
+                         log.debug("  Including directory " + url);
+                     set.add(url);
+                 } else if (repository.getType() == RepositoryType.JAR) {
++                    System.out.println("J: "+repository.getLocation());
+                     File file=new File(repository.getLocation());
+                     file = file.getCanonicalFile();
+                     if (!validateFile(file, RepositoryType.JAR)) {
+@@ -186,11 +190,14 @@
+                         log.debug("  Including jar file " + url);
+                     set.add(url);
+                 } else if (repository.getType() == RepositoryType.GLOB) {
++                    System.out.println("G: "+repository.getLocation());
+                     File directory=new File(repository.getLocation());
+                     directory = directory.getCanonicalFile();
+                     if (!validateFile(directory, RepositoryType.GLOB)) {
+                         continue;
+                     }
++                    System.out.println("G2: "+repository.getLocation());
++
+                     if (log.isDebugEnabled())
+                         log.debug("  Including directory glob "
+                             + directory.getAbsolutePath());
+@@ -198,10 +205,12 @@
+                     if (filenames == null) {
+                         continue;
+                     }
++                    System.out.println("G3: "+repository.getLocation());
+                     for (int j = 0; j < filenames.length; j++) {
+                         String filename = filenames[j].toLowerCase(Locale.ENGLISH);
+                         if (!filename.endsWith(".jar"))
+                             continue;
++                        System.out.println("Adding: "+filenames[j]);
+                         File file = new File(directory, filenames[j]);
+                         file = file.getCanonicalFile();
+                         if (!validateFile(file, RepositoryType.JAR)) {
