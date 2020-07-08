@@ -59,7 +59,8 @@
 
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}/output/dist">
-                <!-- <exclude name="conf/server.xml"/> -->
+                <!-- this can probably be further optimized -->
+                <exclude name="lib/*.jar"/>
             </fileset>
         </copy>
     </target>

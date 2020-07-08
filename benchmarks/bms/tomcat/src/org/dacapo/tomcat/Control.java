@@ -63,7 +63,6 @@ public class Control {
   }
 
   private void startServer() throws IOException {
-    System.out.println("----Starting----");
     new StartApp("/examples").fetch(AuthenticatedSession.create("tomcat", "s3cret", port), new File(scratch, "startApp.log"));
   }
 

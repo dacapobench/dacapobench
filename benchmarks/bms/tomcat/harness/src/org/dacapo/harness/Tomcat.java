@@ -63,16 +63,9 @@ public class Tomcat extends Benchmark {
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "info");
         System.setProperty("catalina.home", data.getAbsolutePath()+File.separator+"dat"+File.separator+"tomcat");
-        System.out.println("Home: '"+System.getProperty("catalina.home")+"'");
         System.setProperty("catalina.config", new File(fileInData("dat"+File.separator+"tomcat"+File.separator+"catalina.properties")).toURL().toExternalForm());
-        String lib = fileInData("dat"+File.separator+"tomcat"+File.separator+"lib"+File.separator+"*.jar");
-        String bin = fileInData("dat"+File.separator+"tomcat"+File.separator+"bin"+File.separator+"*.jar");
         String jar = fileInData("jar"+File.separator+"tomcat"+File.separator+"*.jar");
-        System.setProperty("catalina.cl.repo", lib+", "+bin);
-
-        System.out.println("Config: '"+System.getProperty("catalina.config")+"'");
-
-        System.out.println("Repo: '"+System.getProperty("catalina.cl.repo")+"'");
+        System.setProperty("catalina.cl.repo", jar);
 
         method.invoke(controller, "prepare");
 
@@ -113,7 +106,7 @@ public class Tomcat extends Benchmark {
     final int oddIterations = iterations - (iterationsPerClient * threadCount);
 
     final Thread[] threads = new Thread[threadCount];
-    System.out.println("Creating client threads");
+    System.out.println("Creating client threads to issue "+iterations+" rounds of 41 requests ("+(41*iterations)+").");
     for (int i = 0; i < threadCount; i++) {
       Runnable client = clientConstructor.newInstance(scratch, i, iterationsPerClient + (i < oddIterations ? 1 : 0), getVerbose(), PORT);
       threads[i] = new Thread(client);
@@ -123,6 +116,7 @@ public class Tomcat extends Benchmark {
     for (int i = 0; i < threadCount; i++) {
       threads[i].join();
     }
+    System.out.println();
     System.out.println("Client threads complete ... unloading web application");
     method.invoke(controller, "stopIteration");
   }

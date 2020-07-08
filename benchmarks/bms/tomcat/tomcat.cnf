@@ -7,27 +7,23 @@ benchmark tomcat
 
 size small args "4"
   thread-limit 4
-  output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "client.0.log" exists;     // Actually one for each client thread
+  output stdout digest 0x0890d1b13d75b260f2d44c367914c4755465e56e,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "512"
+size default args "2000"
   thread-limit 512
-  output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "client.0.log" exists;     // Actually one for each client thread
+  output stdout digest 0x1d5b763b0c62c166ac60cd1c5d2d0e07df8c745f,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "4096"
+size large args "20000"
   thread-limit 4096
-  output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "client.0.log" exists;     // Actually one for each client thread
+  output stdout digest 0xa4154402b4ff0e6aba350b40574b6f75f2b39774,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "16384"
+size xlong args "800000"
   thread-limit 16384
-  output stdout digest 0x6747a7ac3ac3ac6d61eb353e1d9b0f3181e90dda,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         "client.0.log" exists;     // Actually one for each client thread
+  output stdout digest 0x5dbaaaad1b407c0c8364a9b34feb409d142774e1,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"Tomcat servlet container",
@@ -36,6 +32,6 @@ description
   author	"Apache Software Foundation",
   license	"Apache License, Version 2.0",
   url		"http://tomcat.apache.org",
-  version	"9.0.2",
+  version	"9.0.37",
   threads	"Expliclitly multi-threaded workload, scaled to available processors.",
   repeats	"Each iteration starts the tomcat server, creates the client threads and waits for them to perform their tasks.";
