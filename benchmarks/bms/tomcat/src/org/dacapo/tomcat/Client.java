@@ -39,7 +39,7 @@ public class Client implements Runnable {
   private final List<Page> pages = Arrays.asList(
       new HttpGet("/examples/jsp/jsp2/el/basic-arithmetic.jsp","dc3db1fb460a427ad6aef0b71d42319213a81f67"),
       new HttpGet("/examples/jsp/jsp2/el/basic-comparisons.jsp","7ea08cc03fe9ff5d3cdd7cec7ae5dc1badc2da60"),
-      new HttpGet("/examples/jsp/jsp2/el/implicit-objects.jsp?foo=bar","fe7fb232248ecc93f5991cfc1b71c55f99ca4d2e"),
+      new HttpGet("/examples/jsp/jsp2/el/implicit-objects.jsp?foo=bar","3f8a13e109a21ebf947c8cba40c077ba7c90e0e5"),
       new HttpGet("/examples/jsp/jsp2/el/functions.jsp?foo=JSP+2.0","880dab5554db41d30c52c86ad016b3e7b4fc25ff"),
       new HttpGet("/examples/jsp/jsp2/simpletag/hello.jsp","fa2cc0fd8bf403beb0e2b55b282b2a9c1e1d8f01"),
       new HttpGet("/examples/jsp/jsp2/simpletag/repeat.jsp","5f7c6a02f0307f082015d35ed03cf6ff55bc88e3"),
@@ -139,10 +139,11 @@ public class Client implements Runnable {
       for (int i = 0; i < pageCount; i++) {
         for (int p = 0; p < pages.size(); p++) {
           Page page = pages.get(p);
-          File logFile = new File(logDir, String.format("result.%d.%d.%d.html", ordinal, p, i));
-          boolean result = page.fetch(session, logFile, verbose);
-          log.printf("%-50s, %s%n", page.getAddress(), result ? "success" : "fail");
+         // File logFile = new File(logDir, String.format("result.%d.%d.%d.html", ordinal, p, i));
+          boolean result = page.fetch(session, null, verbose);
+         // log.printf("%-50s, %s%n", page.getAddress(), result ? "success" : "fail");
         }
+        System.out.print(".");
       }
     } catch (Exception e) {
       e.printStackTrace();

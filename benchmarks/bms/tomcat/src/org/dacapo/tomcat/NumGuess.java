@@ -34,7 +34,7 @@ public class NumGuess extends HttpGet {
    */
   @Override
   public boolean fetch(Session session, File logFile, boolean keep) throws IOException {
-    Writer output = new FileWriter(logFile);
+    Writer output = (logFile == null) ? null : new FileWriter(logFile);
     try {
       int guess = 64;
       int stride = 32;
@@ -46,11 +46,11 @@ public class NumGuess extends HttpGet {
         GetMethod get = new GetMethod(formatUrl(session, address + (i == 0 ? "" : "?guess=" + guess)));
         final int iGetResultCode = session.httpClient.executeMethod(get);
         final String responseBody = readStream(get.getResponseBodyAsStream());
-        if (keep)
+        if (keep && output != null)
           output.write(responseBody);
         if (iGetResultCode != expectedStatus) {
           System.err.printf("URL %s returned status %d (expected %d)%n", address, iGetResultCode, expectedStatus);
-          if (!keep)
+          if (!keep && output != null)
             output.write(responseBody);
           return false;
         }
@@ -69,16 +69,24 @@ public class NumGuess extends HttpGet {
           guess -= stride;
           stride /= 2;
         } else {
-          if (!keep)
-            output.write(responseBody);
-          output.write("Unexpected result - quitting\n");
+          if (output != null) {
+            if (!keep)
+              output.write(responseBody);
+            output.write("Unexpected result - quitting\n");
+          } else {
+            System.err.println("Unexpected result - quitting\n");
+          }
           return false;
         }
       }
-      output.write("Too many iterations - exiting\n");
+      if (output != null) {
+        output.write("Too many iterations - exiting\n");
+      } else {
+        System.err.println("Too many iterations - exiting\n");
+      }
       return false;
     } finally {
-      output.close();
+      if (output != null) output.close();
     }
   }
 }
