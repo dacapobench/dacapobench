@@ -65,8 +65,10 @@ public class Tomcat extends Benchmark {
         System.setProperty("catalina.home", data.getAbsolutePath()+File.separator+"dat"+File.separator+"tomcat");
         System.out.println("Home: '"+System.getProperty("catalina.home")+"'");
         System.setProperty("catalina.config", new File(fileInData("dat"+File.separator+"tomcat"+File.separator+"catalina.properties")).toURL().toExternalForm());
+        String lib = fileInData("dat"+File.separator+"tomcat"+File.separator+"lib"+File.separator+"*.jar");
+        String bin = fileInData("dat"+File.separator+"tomcat"+File.separator+"bin"+File.separator+"*.jar");
         String jar = fileInData("jar"+File.separator+"tomcat"+File.separator+"*.jar");
-        System.setProperty("catalina.cl.repo", jar);
+        System.setProperty("catalina.cl.repo", lib+", "+bin);
 
         System.out.println("Config: '"+System.getProperty("catalina.config")+"'");
 

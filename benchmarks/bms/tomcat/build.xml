@@ -55,25 +55,38 @@
     </target>
 
     <target name="data">
-        <unzip dest="${bm-data}" src="${bm-files}/tomcat.zip"/>
+        <!-- <unzip dest="${bm-data}" src="${bm-files}/tomcat.zip"/>
         <delete>
             <fileset dir="${bm-data}" includes="**/*.jar"/>
-        </delete>
+        </delete> -->
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}/output/dist">
-                <include name="**/*.jar"/>
+                <!-- <include name="**/*.jar"/> -->
+                <exclude name="conf/server.xml"/>
             </fileset>
         </copy>
+        <unzip dest="${bm-data}" src="${bm-files}/tomcat.zip">
+            <patternset>
+                <include name="conf/tomcat-users.xml"/>
+                <include name="conf/server.xml"/>
+
+                <!-- <include name="conf/web.xml"/> -->
+                <!-- <include name="conf/jaspic-providers.xml"/> -->
+                <!-- <include name="conf/context.xml"/> -->
+            </patternset>
+        </unzip>
         <copy file="${bm-files}/catalina.properties" todir="${bm-data}" />
+        <!-- <copy file="${bm-files}/server.xml" todir="${bm-data}/conf" />
+        <copy file="${bm-files}/tomcat-users.xml" todir="${bm-data}/conf" /> -->
     </target>
 
     <target name="jar" depends="build-properties">
          <copy todir="${bm-jars}">
             <fileset dir="${bm-build-top}/output/dist/bin" includes="*.jar"/>
+            <fileset dir="${bm-build-top}/output/build/lib" includes="*.jar"/>
             <fileset file="${commons-httpclient-jar}"/>
             <fileset file="${commons-logging-jar}"/>
             <fileset file="${commons-codec-jar}"/>
-            <fileset dir="${bm-build-top}/output/build/lib" includes="*.jar"/>
         </copy>
 
         <jar destfile="${bm-jars}/dacapo-tomcat.jar">
