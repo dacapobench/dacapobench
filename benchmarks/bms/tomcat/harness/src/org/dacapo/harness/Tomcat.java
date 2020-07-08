@@ -23,7 +23,7 @@ import org.dacapo.parser.Config;
  */
 public class Tomcat extends Benchmark {
 
-  private static final int PORT = 7080;// Integer.valueOf(System.getProperty("dacapo.tomcat.port", "7080"));
+  private static final int PORT = 8080;// Integer.valueOf(System.getProperty("dacapo.tomcat.port", "7080"));
   private final Class<?> clazz;
   private final Constructor<Runnable> clientConstructor;
   private final Object controller;
