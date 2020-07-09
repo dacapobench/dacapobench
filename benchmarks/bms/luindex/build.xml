@@ -33,6 +33,7 @@
 
     <target name="bm-build" depends="lucene">
         <mkdir dir="${bm-build-dir}"/>
+        <echo message="~~)${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}(~~"/>
         <javac srcdir="${bm-src-dir}" source="1.8"
            classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}" 
            destdir="${bm-build-dir}" 

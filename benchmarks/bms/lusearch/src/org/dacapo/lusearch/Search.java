@@ -274,7 +274,7 @@ public class Search {
     public void doPagingSearch(Query query) throws IOException {
 
       // Collect enough docs to show 5 pages
-      TopDocsCollector<ScoreDoc> collector =  TopScoreDocCollector.create(MAX_DOCS_TO_COLLECT);
+      TopDocsCollector<ScoreDoc> collector =  TopScoreDocCollector.create(MAX_DOCS_TO_COLLECT, Integer.MAX_VALUE);
       searcher.search(query, collector);
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
 

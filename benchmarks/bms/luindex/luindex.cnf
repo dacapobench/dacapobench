@@ -6,12 +6,12 @@ benchmark luindex
 size small args "--dirwalk", "${DATA}/luindex/shakespeare"
   output stdout  digest 0x5a769f4f6e755bd36238d3de31ecc8a3321fe360,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/segments_1"  bytes 136;
+	 "index/segments_1"  bytes 137;
 
 size default args "--dirwalk", "${DATA}/luindex/shakespeare","${DATA}/luindex/kjv"
   output stdout  digest 0xce4bfcb21148f7066a6797cef2db7e34cd6e6bfa,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/segments_1"  bytes 136;
+	 "index/segments_1"  bytes 137;
 
 size huge args "--linedoc", "${DATA}/luindex/enwiki/enwiki-1.txt", "${DATA}/luindex/enwiki/enwiki-2.txt"
   output stdout  digest 0x3067fa0a00d9311e95cf963dab1dfea1fca4e993,
