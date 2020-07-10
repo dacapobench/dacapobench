@@ -598,7 +598,8 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
-    tailLatencyStats();
+    if (System.getProperty("dacapo.latency.csv") != null)
+      tailLatencyStats();
     if (!preserve) {
       postIterationCleanup(size);
     }

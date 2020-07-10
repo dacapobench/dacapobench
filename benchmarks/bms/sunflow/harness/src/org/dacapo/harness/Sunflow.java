@@ -46,6 +46,8 @@ public class Sunflow extends org.dacapo.harness.Benchmark {
    * @param size The "size" of the iteration (small, default, large)
    */
   public void preIteration(String size) throws Exception {
+    super.preIteration(size);
+    
     String[] args = config.preprocessArgs(size, scratch, data);
     useBenchmarkClassLoader();
     try {
