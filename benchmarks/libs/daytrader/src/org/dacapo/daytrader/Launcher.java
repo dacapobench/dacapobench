@@ -28,7 +28,7 @@ public class Launcher {
 
   // This jar contains the code that knows how to create and communicate with
   // geronimo environments
-  private final static String[] DACAPO_CLI_JAR = { "jar/daytrader.jar" };
+  private final static String[] DACAPO_CLI_JAR = { ".."+File.separator+".."+File.separator+"jar"+File.separator+"tradebeans"+File.separator+"daytrader.jar" };
 
   // The following list is defined in the "Class-Path:" filed of MANIFEST.MF for the client and server jars
   private final static String[] WILDFLY_SERVER_JARS = {"jboss-modules.jar"};
@@ -39,18 +39,22 @@ public class Launcher {
 
   private static ClassLoader serverCLoader = null;
   private static Method clientMethod = null;
-  private static File scratch = null;
+  private static File root = null;
 
-  public static void initialize(File scratchdir, int threads, String dtSize, boolean beans) {
+  public static void initialize(File rootdir, int threads, String dtSize, boolean beans) {
     numThreads = threads;
     size = dtSize;
     useBeans = beans;
-    scratch = new File(scratchdir.getAbsolutePath());
+    root = new File(rootdir.getAbsolutePath());
     setWildflyProperties();
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
 
     try {
       // Create a server environment
+      System.err.println("Creating...");
+
+
+
       serverCLoader = createWildflyClassLoader(originalCLoader, true);
       Thread.currentThread().setContextClassLoader(serverCLoader);
       Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
@@ -73,8 +77,8 @@ public class Launcher {
   }
 
   private static void setWildflyProperties() {
-    System.setProperty("jboss.home.dir", new File(scratch, DIRECTORY).getPath());
-    System.setProperty("module.path", new File(scratch, DIRECTORY + File.separator + "modules").getPath());
+    System.setProperty("jboss.home.dir", new File(root, DIRECTORY).getPath());
+    System.setProperty("module.path", new File(root, DIRECTORY + File.separator + "modules").getPath());
   }
 
   public static void performIteration() {
@@ -114,7 +118,9 @@ public class Launcher {
    * @throws Exception
    */
   private static ClassLoader createWildflyClassLoader(ClassLoader parent, boolean server) {
-    File wildfly = new File(scratch, DIRECTORY).getAbsoluteFile();
+    File wildfly = new File(root, DIRECTORY).getAbsoluteFile();
+    System.err.println("Creating..."+wildfly.getAbsolutePath());
+
     return new URLClassLoader(getWildflyLibraryJars(wildfly, server), parent);
   }
 
@@ -128,11 +134,13 @@ public class Launcher {
   private static URL[] getWildflyLibraryJars(File wildfly, boolean server) {
     List<URL> jars = new ArrayList<URL>();
 
-    if (server) {
+    if (server) {          System.err.println("server...");
+
       addJars(jars, wildfly, WILDFLY_SERVER_JARS);
     }
+    System.err.println("cli...");
 
-    addJars(jars, scratch, DACAPO_CLI_JAR);
+    addJars(jars, root, DACAPO_CLI_JAR);
 
     return jars.toArray(new URL[jars.size()]);
   }
@@ -141,7 +149,7 @@ public class Launcher {
    * Compile a list of paths to jars from a base directory and relative paths.
    * 
    * @param jars The url contain URL to jar files
-   * @param directory The scratch directory, in which the jars will be located
+   * @param directory The root directory, in which the jars will be located
    * @param jarNames The name of jar files to be added
    * @return An array of URLs, one URL for each jar
    */
@@ -151,6 +159,7 @@ public class Launcher {
         File jar = new File(directory, jarNames[i]);
         try {
           URL url = jar.toURI().toURL();
+          System.err.println("adding..."+url.toString());
           jars.add(url);
         } catch (MalformedURLException e) {
           System.err.println("Unable to create URL for jar: " + jarNames[i] + " in " + directory.toString());

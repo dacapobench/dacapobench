@@ -51,7 +51,7 @@ public class Tradebeans extends Benchmark {
     // Hide server starting messages
     emptyOutput();
 
-    initializeMethod.invoke(null, scratch, config.getThreadCount(size), dtSize, true);
+    initializeMethod.invoke(null, new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"tradebeans"), config.getThreadCount(size), dtSize, true);
 
     // stdout for iterate
     System.setOut(stdout);

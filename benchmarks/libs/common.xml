@@ -13,6 +13,7 @@
 	<property name="lib-build-dir" location="libs/${lib-name}/build"/>
 	<property name="lib-output-dir" location="libs/${lib-name}/dist"/>
 	<property name="lib-jars" location="${lib-output-dir}/jar"/>
+	<!-- FIXME this should go to a common libs area rather than duplicate -->
 	<property name="lib-dat" value="${bm-out-dat}"/>
 	<property name="lib-downloads" location="libs/${lib-name}/downloads"/>
 	<property name="lib-src-dir" location="libs/${lib-name}/src"/>

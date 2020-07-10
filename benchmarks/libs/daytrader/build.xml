@@ -95,6 +95,11 @@
         <copy todir="${lib-build-dir}/wildfly-${wildfly-version}.Final/standalone/deployments"
               file="${dt-build}/javaee6/assemblies/daytrader-ear/target/daytrader-ear-3.0-SNAPSHOT.ear"/>
 
-        <zip destfile="${lib-dat}/daytrader.zip" basedir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/>
+        <!-- <zip destfile="${lib-dat}/daytrader.zip" basedir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/> -->
+        <!-- <copy todir="${lib-dat}" basedir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/>  -->
+
+        <copy todir="${lib-dat}">
+            <fileset dir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/> 
+        </copy>
     </target>
 </project>

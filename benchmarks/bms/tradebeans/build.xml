@@ -23,8 +23,12 @@
         <rename src="${bm-out-dat}/daytrader.zip" dest="${bm-out-dat}/${bm-name}.zip"/>
     </target>
 
+    <target name="data">
+        <!-- <unzip src="${bm-files}/tradebeans.zip" dest="${bm-data}"/> -->
+    </target>
+    
     <target name="jar">
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <!-- <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
+        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/> -->
     </target>
 </project>
