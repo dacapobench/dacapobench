@@ -135,8 +135,7 @@
 		<!-- create checksum -->
 		<delete dir="${bm-md5-tmp}"/>
 		<checksum pattern="{0} {3}" todir="${bm-md5-tmp}">
-        	<fileset dir="${bm-data}" />
-        	<fileset dir="${bm-jars}" />
+        	<fileset dir="${bm-files}/data" />
     	</checksum>
     	<concat destfile="${bm-md5}/${bm-name}.MD5">
         	<fileset dir="${bm-md5-tmp}" />
@@ -144,11 +143,11 @@
 		<replace file="${bm-md5}/${bm-name}.MD5" token=" bms/${bm-name}/data/" value=" "/>
 
 		<!-- copy files -->
-	    <copy todir="${bm-dat}">
-            <fileset dir="${bm-data}"/>
+	    <copy todir="${bm-dat}/..">
+            <fileset dir="${bm-data}/.."/>
         </copy>
-		<copy todir="${bm-out-jar}">
-            <fileset dir="${bm-jars}"/>
+		<copy todir="${bm-out-jar}/..">
+            <fileset dir="${bm-jars}/.."/>
         </copy>
 	</target>
 

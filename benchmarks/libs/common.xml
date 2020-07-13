@@ -13,8 +13,9 @@
 	<property name="lib-build-dir" location="libs/${lib-name}/build"/>
 	<property name="lib-output-dir" location="libs/${lib-name}/dist"/>
 	<property name="lib-jars" location="${lib-output-dir}/jar"/>
-	<!-- FIXME this should go to a common libs area rather than duplicate -->
-	<property name="lib-dat" value="${bm-out-dat}"/>
+	<property name="bm-lib-jars" location="${bm-files}/data/jar/lib/${lib-name}"/>
+	<property name="lib-dat" value="${lib-output-dir}/dat"/>
+	<property name="bm-lib-data" value="${bm-files}/data/dat/lib/${lib-name}"/>
 	<property name="lib-downloads" location="libs/${lib-name}/downloads"/>
 	<property name="lib-src-dir" location="libs/${lib-name}/src"/>
 	<property name="lib-data" location="libs/${lib-name}/data"/>
@@ -69,6 +70,7 @@
 	<target name="init" depends="clean-build">
 		<mkdir dir="${lib-output-dir}"/>
 		<mkdir dir="${lib-jars}"/>
+		<mkdir dir="${lib-dat}"/>
 	</target>
 
 	<target name="unpack"/>
@@ -92,8 +94,11 @@
 	<target name="jar"/>
 
 	<target name="complete">
-		<copy todir="${bm-jars}">
+		<copy todir="${bm-lib-jars}">
 			<fileset dir="${lib-output-dir}/jar" includes="*.jar"/>
+		</copy>
+		<copy todir="${bm-lib-data}">
+			<fileset dir="${lib-output-dir}/dat" includes="**/*"/>
 		</copy>
 	</target>
 </project>
