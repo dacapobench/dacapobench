@@ -23,53 +23,6 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
      </extensions>
      <management>
          <security-realms>
-@@ -95,37 +96,30 @@
-     </management>
-     <profile>
-         <subsystem xmlns="urn:jboss:domain:logging:7.0">
-+            <!-- <add-logging-api-dependencies value="false"/>
-+	        <use-deployment-logging-config value="false"/> -->
-             <console-handler name="CONSOLE">
--                <level name="INFO"/>
-+                <level name="ERROR"/>
-                 <formatter>
-                     <named-formatter name="COLOR-PATTERN"/>
-                 </formatter>
-             </console-handler>
--            <periodic-rotating-file-handler name="FILE" autoflush="true">
--                <formatter>
--                    <named-formatter name="PATTERN"/>
--                </formatter>
--                <file relative-to="jboss.server.log.dir" path="server.log"/>
--                <suffix value=".yyyy-MM-dd"/>
--                <append value="true"/>
--            </periodic-rotating-file-handler>
-             <logger category="com.arjuna">
--                <level name="WARN"/>
-+                <level name="ERROR"/>
-             </logger>
-             <logger category="io.jaegertracing.Configuration">
--                <level name="WARN"/>
-+                <level name="ERROR"/>
-             </logger>
-             <logger category="org.jboss.as.config">
--                <level name="DEBUG"/>
-+                <level name="ERROR"/>
-             </logger>
-             <logger category="sun.rmi">
--                <level name="WARN"/>
-+                <level name="ERROR"/>
-             </logger>
-             <root-logger>
--                <level name="INFO"/>
-+                <level name="ERROR"/>
-                 <handlers>
--                    <handler name="CONSOLE"/>
--                    <handler name="FILE"/>
-+                    <handler name="CONSOLE"/> 
-                 </handlers>
-             </root-logger>
-             <formatter name="PATTERN">
 @@ -150,7 +144,7 @@
          <subsystem xmlns="urn:jboss:domain:core-management:1.0"/>
          <subsystem xmlns="urn:jboss:domain:datasources:5.0">
