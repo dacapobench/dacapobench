@@ -47,7 +47,7 @@ public class Tradesoap extends Benchmark {
     // Hide server starting messages
     emptyOutput();
 
-    initializeMethod.invoke(null, scratch, config.getThreadCount(size), dtSize, false);
+    initializeMethod.invoke(null, new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader"), config.getThreadCount(size), dtSize, false);
 
     // stdout for iterate
     System.setOut(stdout);
@@ -61,7 +61,7 @@ public class Tradesoap extends Benchmark {
     }
     System.out.println("Shutting down Wildfly...");
     if (!getPreserve()) {
-      deleteTree(new File(scratch, "wildfly-16.0.0.Final"));
+      deleteTree(new File(scratch, "wildfly-17.0.0.Final"));
       deleteTree(new File(scratch, "jar"));
     }
   }

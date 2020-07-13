@@ -19,16 +19,8 @@
         <javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}" includes="**" debug="true" debuglevel="lines,vars,source"/>
     </target>
 
-    <target name="bm-build" depends="daytrader">
-        <!-- <rename src="${bm-out-dat}/daytrader.zip" dest="${bm-out-dat}/${bm-name}.zip"/> -->
-    </target>
+    <target name="bm-build" depends="daytrader"/>
 
-    <target name="data">
-        <!-- <unzip src="${bm-files}/tradebeans.zip" dest="${bm-data}"/> -->
-    </target>
-    
-    <target name="jar">
-        <!-- <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/> -->
-    </target>
+    <target name="data"/>
+    <target name="jar"/>
 </project>

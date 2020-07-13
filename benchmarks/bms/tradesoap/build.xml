@@ -21,13 +21,9 @@
            debug="true" debuglevel="lines,vars,source"/>
     </target>
 
-    <target name="bm-build" depends="daytrader">
-        <rename src="${bm-out-dat}/daytrader.zip" dest="${bm-out-dat}/${bm-name}.zip"/>
-    </target>
+   <target name="bm-build" depends="daytrader"/>
 
-    <target name="jar">
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-    </target>
+    <target name="data"/>
+    <target name="jar"/>
 
 </project>
