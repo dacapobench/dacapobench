@@ -98,8 +98,15 @@
         <!-- <zip destfile="${lib-dat}/daytrader.zip" basedir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/> -->
         <!-- <copy todir="${lib-dat}" basedir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/>  -->
 
+
+        <echo message="----${lib-dat}----" />
+
         <copy todir="${lib-dat}">
-            <fileset dir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/> 
+            <fileset dir="${lib-build-dir}">
+                <include name="wildfly-${wildfly-version}.Final/**"/>
+                <exclude name="wildfly-${wildfly-version}.Final/standalone/configuration/logging.properties"/>
+            </fileset>
         </copy>
+        <delete file="${lib-dat}/wildfly-${wildfly-version}.Final/standalone/configuration/logging.properties"/>
     </target>
 </project>

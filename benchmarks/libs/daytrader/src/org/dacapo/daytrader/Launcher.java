@@ -28,7 +28,7 @@ public class Launcher {
 
   // This jar contains the code that knows how to create and communicate with
   // geronimo environments
-  private final static String[] DACAPO_CLI_JAR = { ".."+File.separator+".."+File.separator+"jar"+File.separator+"tradebeans"+File.separator+"daytrader.jar" };
+  private final static String[] DACAPO_CLI_JAR = { ".."+File.separator+".."+File.separator+".."+File.separator+"jar"+File.separator+"lib"+File.separator+"daytrader"+File.separator+"daytrader.jar" };
 
   // The following list is defined in the "Class-Path:" filed of MANIFEST.MF for the client and server jars
   private final static String[] WILDFLY_SERVER_JARS = {"jboss-modules.jar"};
