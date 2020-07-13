@@ -1,6 +1,6 @@
 diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wildfly-17.0.0.Final/standalone/configuration/standalone.xml
 --- ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml	2019-06-07 10:39:04.000000000 +1000
-+++ wildfly-17.0.0.Final/standalone/configuration/standalone.xml	2020-07-13 22:58:57.463582035 +1000
++++ wildfly-17.0.0.Final/standalone/configuration/standalone.xml	2020-07-13 23:13:10.076184293 +1000
 @@ -24,12 +24,12 @@
          <extension module="org.jboss.as.weld"/>
          <extension module="org.wildfly.extension.batch.jberet"/>
@@ -81,7 +81,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
              <default-security-domain value="other"/>
              <default-missing-method-permissions-deny-access value="true"/>
              <statistics enabled="${wildfly.ejb3.statistics-enabled:${wildfly.statistics-enabled:false}}"/>
-@@ -338,23 +337,23 @@
+@@ -338,6 +337,11 @@
                  <provider-sasl-server-factory name="global"/>
              </sasl>
          </subsystem>
@@ -91,31 +91,9 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
 +            <security server-requires-ssl="false" client-requires-ssl="false"/>
 +        </subsystem>
          <subsystem xmlns="urn:jboss:domain:infinispan:8.0">
-+            <cache-container name="server" default-cache="default" module="org.wildfly.clustering.server">
-+                <local-cache name="default">
-+                    <transaction mode="BATCH"/>
-+                </local-cache>
-+            </cache-container>
              <cache-container name="web" default-cache="passivation" module="org.wildfly.clustering.web.infinispan">
                  <local-cache name="passivation">
-                     <locking isolation="REPEATABLE_READ"/>
-                     <transaction mode="BATCH"/>
-                     <file-store passivation="true" purge="false"/>
-                 </local-cache>
--                <local-cache name="sso">
--                    <locking isolation="REPEATABLE_READ"/>
--                    <transaction mode="BATCH"/>
--                </local-cache>
--                <local-cache name="routing"/>
--            </cache-container>
--            <cache-container name="server" default-cache="default" module="org.wildfly.clustering.server">
--                <local-cache name="default">
--                    <transaction mode="BATCH"/>
--                </local-cache>
-             </cache-container>
-             <cache-container name="ejb" aliases="sfsb" default-cache="passivation" module="org.wildfly.clustering.ejb.infinispan">
-                 <local-cache name="passivation">
-@@ -414,6 +413,37 @@
+@@ -414,6 +418,37 @@
                  <smtp-server outbound-socket-binding-ref="mail-smtp"/>
              </mail-session>
          </subsystem>
@@ -153,7 +131,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
          <subsystem xmlns="urn:wildfly:microprofile-config-smallrye:1.0"/>
          <subsystem xmlns="urn:wildfly:microprofile-health-smallrye:1.0" security-enabled="false"/>
          <subsystem xmlns="urn:wildfly:microprofile-metrics-smallrye:2.0" security-enabled="false" exposed-subsystems="*" prefix="${wildfly.metrics.prefix:wildfly}"/>
-@@ -514,6 +544,9 @@
+@@ -514,6 +549,9 @@
          <interface name="public">
              <inet-address value="${jboss.bind.address:127.0.0.1}"/>
          </interface>
@@ -163,7 +141,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
      </interfaces>
      <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
          <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/>
-@@ -523,6 +556,8 @@
+@@ -523,6 +561,8 @@
          <socket-binding name="https" port="${jboss.https.port:8443}"/>
          <socket-binding name="txn-recovery-environment" port="4712"/>
          <socket-binding name="txn-status-manager" port="4713"/>
