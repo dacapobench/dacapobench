@@ -1,15 +1,7 @@
 diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wildfly-17.0.0.Final/standalone/configuration/standalone.xml
 --- ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml	2019-06-07 10:39:04.000000000 +1000
-+++ wildfly-17.0.0.Final/standalone/configuration/standalone.xml	2020-07-13 22:28:50.082126544 +1000
-@@ -12,6 +12,7 @@
-         <extension module="org.jboss.as.jmx"/>
-         <extension module="org.jboss.as.jpa"/>
-         <extension module="org.jboss.as.jsf"/>
-+        <extension module="org.jboss.as.jsr77"/>
-         <extension module="org.jboss.as.logging"/>
-         <extension module="org.jboss.as.mail"/>
-         <extension module="org.jboss.as.naming"/>
-@@ -24,12 +25,12 @@
++++ wildfly-17.0.0.Final/standalone/configuration/standalone.xml	2020-07-13 22:42:15.014855801 +1000
+@@ -24,12 +24,12 @@
          <extension module="org.jboss.as.weld"/>
          <extension module="org.wildfly.extension.batch.jberet"/>
          <extension module="org.wildfly.extension.bean-validation"/>
@@ -23,7 +15,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
          <extension module="org.wildfly.extension.microprofile.config-smallrye"/>
          <extension module="org.wildfly.extension.microprofile.health-smallrye"/>
          <extension module="org.wildfly.extension.microprofile.metrics-smallrye"/>
-@@ -37,6 +38,7 @@
+@@ -37,6 +37,7 @@
          <extension module="org.wildfly.extension.request-controller"/>
          <extension module="org.wildfly.extension.security.manager"/>
          <extension module="org.wildfly.extension.undertow"/>
@@ -31,7 +23,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
      </extensions>
      <management>
          <security-realms>
-@@ -95,37 +97,30 @@
+@@ -95,37 +96,30 @@
      </management>
      <profile>
          <subsystem xmlns="urn:jboss:domain:logging:7.0">
@@ -78,7 +70,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
                  </handlers>
              </root-logger>
              <formatter name="PATTERN">
-@@ -150,7 +145,7 @@
+@@ -150,7 +144,7 @@
          <subsystem xmlns="urn:jboss:domain:core-management:1.0"/>
          <subsystem xmlns="urn:jboss:domain:datasources:5.0">
              <datasources>
@@ -87,7 +79,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
                      <connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
                      <driver>h2</driver>
                      <security>
-@@ -169,13 +164,6 @@
+@@ -169,13 +163,6 @@
              <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000" runtime-failure-causes-rollback="${jboss.deployment.scanner.rollback.on.failure:false}"/>
          </subsystem>
          <subsystem xmlns="urn:jboss:domain:discovery:1.0"/>
@@ -101,7 +93,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
          <subsystem xmlns="urn:jboss:domain:ee:4.0">
              <spec-descriptor-property-replacement>false</spec-descriptor-property-replacement>
              <concurrent>
-@@ -192,7 +180,6 @@
+@@ -192,7 +179,6 @@
                      <managed-scheduled-executor-service name="default" jndi-name="java:jboss/ee/concurrency/scheduler/default" context-service="default" hung-task-threshold="60000" keepalive-time="3000"/>
                  </managed-scheduled-executor-services>
              </concurrent>
@@ -109,7 +101,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
          </subsystem>
          <subsystem xmlns="urn:jboss:domain:ee-security:1.0"/>
          <subsystem xmlns="urn:jboss:domain:ejb3:5.0">
-@@ -203,6 +190,10 @@
+@@ -203,6 +189,10 @@
                  <stateful default-access-timeout="5000" cache-ref="simple" passivation-disabled-cache-ref="simple"/>
                  <singleton default-access-timeout="5000"/>
              </session-bean>
@@ -120,7 +112,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
              <pools>
                  <bean-instance-pools>
                      <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
-@@ -224,6 +215,7 @@
+@@ -224,6 +214,7 @@
              </timer-service>
              <remote connector-ref="http-remoting-connector" thread-pool-name="default">
                  <channel-creation-options>
@@ -128,7 +120,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
                      <option name="MAX_OUTBOUND_MESSAGES" value="1234" type="remoting"/>
                  </channel-creation-options>
              </remote>
-@@ -233,6 +225,7 @@
+@@ -233,6 +224,7 @@
                      <keepalive-time time="100" unit="milliseconds"/>
                  </thread-pool>
              </thread-pools>
@@ -136,7 +128,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
              <default-security-domain value="other"/>
              <default-missing-method-permissions-deny-access value="true"/>
              <statistics enabled="${wildfly.ejb3.statistics-enabled:${wildfly.statistics-enabled:false}}"/>
-@@ -338,23 +331,23 @@
+@@ -338,23 +330,23 @@
                  <provider-sasl-server-factory name="global"/>
              </sasl>
          </subsystem>
@@ -170,13 +162,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
              </cache-container>
              <cache-container name="ejb" aliases="sfsb" default-cache="passivation" module="org.wildfly.clustering.ejb.infinispan">
                  <local-cache name="passivation">
-@@ -409,14 +402,45 @@
-             <jpa default-datasource="" default-extended-persistence-inheritance="DEEP"/>
-         </subsystem>
-         <subsystem xmlns="urn:jboss:domain:jsf:1.1"/>
-+        <subsystem xmlns="urn:jboss:domain:jsr77:1.0"/>
-         <subsystem xmlns="urn:jboss:domain:mail:3.0">
-             <mail-session name="default" jndi-name="java:jboss/mail/Default">
+@@ -414,9 +406,39 @@
                  <smtp-server outbound-socket-binding-ref="mail-smtp"/>
              </mail-session>
          </subsystem>
@@ -217,7 +203,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
          <subsystem xmlns="urn:wildfly:microprofile-opentracing-smallrye:1.0"/>
          <subsystem xmlns="urn:jboss:domain:naming:2.0">
              <remote-naming/>
-@@ -514,6 +538,9 @@
+@@ -514,6 +536,9 @@
          <interface name="public">
              <inet-address value="${jboss.bind.address:127.0.0.1}"/>
          </interface>
@@ -227,7 +213,7 @@ diff -ur ../tmp/wildfly-17.0.0.Final/standalone/configuration/standalone.xml wil
      </interfaces>
      <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
          <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/>
-@@ -523,6 +550,8 @@
+@@ -523,6 +548,8 @@
          <socket-binding name="https" port="${jboss.https.port:8443}"/>
          <socket-binding name="txn-recovery-environment" port="4712"/>
          <socket-binding name="txn-status-manager" port="4713"/>
