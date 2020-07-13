@@ -20,7 +20,19 @@
 	<property name="lib-src-dir" location="libs/${lib-name}/src"/>
 	<property name="lib-data" location="libs/${lib-name}/data"/>
 
-	<target name="all" depends="url-source, svn-source, hg-source, git-source, pre-build, build, jar, complete"/>
+	<target name="check-if-built">
+        <condition property="is.built">
+			<resourcecontains resource="${lib-build-dir}/build.time" substring="${build.time}"/>
+        </condition>
+	</target>
+
+	<target name="unconditional-build" depends="url-source, svn-source, hg-source, git-source, pre-build, build, jar"/>
+
+	<target name="conditional-build" unless="${is.built}" depends="check-if-built">
+		<antcall target="unconditional-build"/>
+	</target>
+
+	<target name="all" depends="conditional-build, complete"/>
 
 	<target name="url-source" if="lib-url">
 		<antcall target="check-source">
@@ -71,6 +83,7 @@
 		<mkdir dir="${lib-output-dir}"/>
 		<mkdir dir="${lib-jars}"/>
 		<mkdir dir="${lib-dat}"/>
+		<echo file="${lib-build-dir}/build.time" message="${build.time}"/>
 	</target>
 
 	<target name="unpack"/>
@@ -100,5 +113,6 @@
 		<copy todir="${bm-lib-data}">
 			<fileset dir="${lib-output-dir}/dat" includes="**/*"/>
 		</copy>
+		<property name="${lib-name}.built" value="1"/>
 	</target>
 </project>
