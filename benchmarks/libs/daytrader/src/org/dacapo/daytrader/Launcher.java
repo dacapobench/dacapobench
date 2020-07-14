@@ -41,19 +41,17 @@ public class Launcher {
   private static Method clientMethod = null;
   private static File root = null;
 
-  public static void initialize(File rootdir, int threads, String dtSize, boolean beans) {
+  public static void initialize(File data, File scratch, int threads, String dtSize, boolean beans) {
     numThreads = threads;
     size = dtSize;
     useBeans = beans;
-    root = new File(rootdir.getAbsolutePath());
+    System.setProperty("jboss.server.log.dir", scratch.getAbsolutePath());
+    root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
     setWildflyProperties();
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
 
     try {
       // Create a server environment
-      System.err.println("Creating...");
-
-
 
       serverCLoader = createWildflyClassLoader(originalCLoader, true);
       Thread.currentThread().setContextClassLoader(serverCLoader);
@@ -119,7 +117,6 @@ public class Launcher {
    */
   private static ClassLoader createWildflyClassLoader(ClassLoader parent, boolean server) {
     File wildfly = new File(root, DIRECTORY).getAbsoluteFile();
-    System.err.println("Creating..."+wildfly.getAbsolutePath());
 
     return new URLClassLoader(getWildflyLibraryJars(wildfly, server), parent);
   }
@@ -134,11 +131,9 @@ public class Launcher {
   private static URL[] getWildflyLibraryJars(File wildfly, boolean server) {
     List<URL> jars = new ArrayList<URL>();
 
-    if (server) {          System.err.println("server...");
-
-      addJars(jars, wildfly, WILDFLY_SERVER_JARS);
+    if (server) { 
+        addJars(jars, wildfly, WILDFLY_SERVER_JARS);
     }
-    System.err.println("cli...");
 
     addJars(jars, root, DACAPO_CLI_JAR);
 
@@ -159,7 +154,6 @@ public class Launcher {
         File jar = new File(directory, jarNames[i]);
         try {
           URL url = jar.toURI().toURL();
-          System.err.println("adding..."+url.toString());
           jars.add(url);
         } catch (MalformedURLException e) {
           System.err.println("Unable to create URL for jar: " + jarNames[i] + " in " + directory.toString());

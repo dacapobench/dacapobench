@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-
+my $sesions_per_user = 1;
 my $user_density = 1.5;           # over-provisioning of user set (only use 1/N)
 my $ops_per_session_mean = 16;
 my $ops_per_session_sd = 8;
@@ -47,24 +47,24 @@ my @regionnames = ();
 my @usstates = ("AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FM", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MH", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "MP", "OH", "OK", "OR", "PW", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY");
 my @streettypes = ("Street", "Street", "Street", "Avenue", "Place", "Boulevard", "Road");
 my @chars=('a'..'z','A'..'Z','0'..'9','_');
-my @emaildomains=("gmail.com", "gmail.com", "hotmail.com", "hotmail.com", "yahoo.com", "yahoo.com", "aol.com");
+my @emaildomains=("gnail.com", "gsnail.com", "hotpail.com", "hotfail.com", "yahoy.com", "yahaa.com", "ail.com");
 
 my @surplus_users = ();
 my %users = ();
 
 my $output_dir = shift(@ARGV);
 
-my %sessions = ("tiny" => 32,
+my %sessions = ("tiny" => 8,
      "default-soap" => 128,
-		 "default-bean" => 2048,
-     "large-soap" => 512,
+		 "default-bean" => 1024,
+     "large-soap" => 2048,
 		 "large-bean" => 8192,
      "huge-soap" => 2048,
 		 "huge-bean" => 32768);
 my %stockquotes = ();
 
 init($output_dir);
-my $max_users = $user_density*($sessions{"huge"});
+my $max_users = $user_density*($sessions{"huge-bean"});
 create_users($max_users);
 create_operations();
 
@@ -104,8 +104,12 @@ sub init{
 
 sub create_operations {
   my $output_file = "$output_dir/workload.txt";
-  my @userset = ();
-  get_userset(\@userset);
+  my @usersets = ();
+  for (my $i = 0; $i < $sesions_per_user; $i++) {
+    my @tmp = ();
+    get_userset(\@tmp);
+    $usersets[i] = \@tmp;
+  }
 
   open (OUTPUT, ">$output_file");
   my $header = "#$sep";
@@ -114,10 +118,12 @@ sub create_operations {
   }
   print OUTPUT $header."\n";
 
-  my $uid;
-  foreach $uid (@userset) {
-    my $session = generate_session($uid);
-    print OUTPUT "$session\n";
+  my $sz = scalar @{$usersets[0]};
+  for (my $u = 0; $u < $sz; $u++) {
+    for (my $i = 0; $i < $sesions_per_user; $i++) {
+      my $session = generate_session($usersets[$i][$u]);
+      print OUTPUT "$session\n";
+    }
   }
   close OUTPUT;
 }

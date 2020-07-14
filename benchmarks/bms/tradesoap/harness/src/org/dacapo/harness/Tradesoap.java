@@ -30,7 +30,7 @@ public class Tradesoap extends Benchmark {
   public Tradesoap(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
-    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, Integer.TYPE, String.class, Boolean.TYPE });
+    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, String.class, Boolean.TYPE });
     this.method = clazz.getMethod("performIteration", new Class[] {});
     this.shutdownMethod = clazz.getMethod("shutdown", new Class[] {});
   }
@@ -47,7 +47,7 @@ public class Tradesoap extends Benchmark {
     // Hide server starting messages
     emptyOutput();
 
-    initializeMethod.invoke(null, new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader"), config.getThreadCount(size), dtSize, false);
+    initializeMethod.invoke(null, data, scratch, config.getThreadCount(size), dtSize, false);
 
     // stdout for iterate
     System.setOut(stdout);

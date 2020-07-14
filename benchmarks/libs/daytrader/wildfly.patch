@@ -1,6 +1,6 @@
 diff -ur ../tmp/wildfly-20.0.1.Final/standalone/configuration/standalone.xml wildfly-20.0.1.Final/standalone/configuration/standalone.xml
 --- ../tmp/wildfly-20.0.1.Final/standalone/configuration/standalone.xml	2020-07-07 18:38:14.000000000 +1000
-+++ wildfly-20.0.1.Final/standalone/configuration/standalone.xml	2020-07-14 18:47:30.186741387 +1000
++++ wildfly-20.0.1.Final/standalone/configuration/standalone.xml	2020-07-14 21:54:44.031606241 +1000
 @@ -30,6 +30,7 @@
          <extension module="org.wildfly.extension.ee-security"/>
          <extension module="org.wildfly.extension.elytron"/>
@@ -17,7 +17,15 @@ diff -ur ../tmp/wildfly-20.0.1.Final/standalone/configuration/standalone.xml wil
      </extensions>
      <management>
          <security-realms>
-@@ -151,7 +153,7 @@
+@@ -144,14 +146,14 @@
+             </job-repository>
+             <thread-pool name="batch">
+                 <max-threads count="10"/>
+-                <keepalive-time time="30" unit="seconds"/>
++                <keepalive-time time="300" unit="seconds"/>
+             </thread-pool>
+         </subsystem>
+         <subsystem xmlns="urn:jboss:domain:bean-validation:1.0"/>
          <subsystem xmlns="urn:jboss:domain:core-management:1.0"/>
          <subsystem xmlns="urn:jboss:domain:datasources:6.0">
              <datasources>
@@ -45,16 +53,19 @@ diff -ur ../tmp/wildfly-20.0.1.Final/standalone/configuration/standalone.xml wil
              <pools>
                  <bean-instance-pools>
                      <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
-@@ -225,6 +230,7 @@
+@@ -225,15 +230,17 @@
              </timer-service>
              <remote connector-ref="http-remoting-connector" thread-pool-name="default">
                  <channel-creation-options>
-+                    <option name="READ_TIMEOUT" value="${prop.remoting-connector.read.timeout:20}" type="xnio"/>
++                    <option name="READ_TIMEOUT" value="${prop.remoting-connector.read.timeout:1000}" type="xnio"/>
                      <option name="MAX_OUTBOUND_MESSAGES" value="1234" type="remoting"/>
                  </channel-creation-options>
              </remote>
-@@ -234,6 +240,7 @@
-                     <keepalive-time time="60" unit="seconds"/>
+             <thread-pools>
+                 <thread-pool name="default">
+                     <max-threads count="10"/>
+-                    <keepalive-time time="60" unit="seconds"/>
++                    <keepalive-time time="300" unit="seconds"/>
                  </thread-pool>
              </thread-pools>
 +            <iiop enable-by-default="false" use-qualified-name="false"/>
@@ -73,6 +84,22 @@ diff -ur ../tmp/wildfly-20.0.1.Final/standalone/configuration/standalone.xml wil
          <subsystem xmlns="urn:jboss:domain:infinispan:10.0">
              <cache-container name="web" default-cache="passivation" module="org.wildfly.clustering.web.infinispan">
                  <local-cache name="passivation">
+@@ -380,13 +392,13 @@
+                     <core-threads count="50"/>
+                     <queue-length count="50"/>
+                     <max-threads count="50"/>
+-                    <keepalive-time time="10" unit="seconds"/>
++                    <keepalive-time time="300" unit="seconds"/>
+                 </short-running-threads>
+                 <long-running-threads>
+                     <core-threads count="50"/>
+                     <queue-length count="50"/>
+                     <max-threads count="50"/>
+-                    <keepalive-time time="10" unit="seconds"/>
++                    <keepalive-time time="300" unit="seconds"/>
+                 </long-running-threads>
+             </default-workmanager>
+             <cached-connection-manager/>
 @@ -406,6 +418,37 @@
                  <smtp-server outbound-socket-binding-ref="mail-smtp"/>
              </mail-session>

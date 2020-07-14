@@ -17,6 +17,8 @@
 |pmd|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |tomcat|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|?|
+|tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 
 
 ### TODO
@@ -44,6 +46,26 @@
   * only go to file if requested, otherwise do it all in memory with pre-allocated buffer
 * Lusearch and index
   * Recalibrate using wiki data (smaller samples)
+* Trade
+  * two apparent bugs
+    * occasionally see 
+```org.h2.jdbc.JdbcSQLException: Unique index or primary key violation: "PRIMARY_KEY_F ON PUBLIC.ACCOUNTPROFILEEJB(USERID) VALUES ('000000', 1)"; SQL statement:
+insert into accountprofileejb ( userid, passwd, fullname, address, email, creditcard ) VALUES (  ?  ,  ?  ,  ?  ,  ?  ,  ?  ,  ?  ) [23505-197]
+```
+    * typically times out on huge setting
+
+  * Stop daytrader/wildfly-17.0.0.Final/standalone/configuration/logging.properties being changed, which probably means turning off logging as per comment at top of that file.
+  * Also log indicates failure to find some jars on account of "+" in path name... the fact that this still works suggests that tehre are redundant jars.
+  [org.jboss.weld.deployer] (MSC service thread 1-5) WFLYWELD0016: Could not read entries: java.nio.file.NoSuchFileException: /home/steveb/devel/dacapo/dacapobench/benchmarks/dacapo-evaluation-git 89281bd/dat/daytrader/wildfly-17.0.0.Final/modules/system/layers/base/io/smallrye/health/main/smallrye-health-1.0.2.jar
+  ```
+          at org.jboss.as.weld@17.0.0.Final//org.jboss.as.weld.deployment.processors.UrlScanner.handleArchiveByFile(UrlScanner.java:136)
+        at org.jboss.as.weld@17.0.0.Final//org.jboss.as.weld.deployment.processors.UrlScanner.handle(UrlScanner.java:125)
+        at org.jboss.as.weld@17.0.0.Final//org.jboss.as.weld.deployment.processors.UrlScanner.scan(UrlScanner.java:89)
+        at org.jboss.as.weld@17.0.0.Final//org.jboss.as.weld.deployment.processors.ExternalBeanArchiveProcessor.discover(ExternalBeanArchiveProcessor.java:287)
+        at org.jboss.as.weld@17.0.0.Final//org.jboss.as.weld.deployment.processors.ExternalBeanArchiveProcessor.deploy(ExternalBeanArchiveProcessor.java:198)
+        at org.jboss.as.server@9.0.1.Final//org.jboss.as.server.deployment.DeploymentUnitPhaseService.start(DeploymentUnitPhaseService.java:176)
+        at org.jboss.msc@1.4.7.Final//org.jboss.msc.service.ServiceControllerImpl$StartTask.startService(ServiceControllerImpl.java:1737)
+  ```
 * pmd
   * default 1m14
   * d0 5.3
