@@ -28,12 +28,12 @@ size huge args "huge-soap"
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
-  short		"Tradesoap Daytrader benchmark",
-  long		"Tradesoap a SOAP version of the Daytrader benchmark from Apache",
+  short		"Tradesoap SOAP Daytrader benchmark",
+  long		"Tradesoap a SOAP version of the Daytrader benchmark from Apache. It runs over the WildFly application server.",
   copyright	"Copyright (C) The Apache Software Foundation",
-  author        "Apache Geronimo, donated by IBM",
-  license       "Apache License, Version 2.0",
+  author        "RedHat and Apache Geronimo, donated by IBM",
+  license       "Apache License, Version 2.0 and LGPL 2.1",
   url           "http://geronimo.apache.org/",
-  version	"3.0.1",
+  version	"Wildfly 20.0.1, Daytrader svn-1879851",
   threads       "Explicitly multi-threaded client, scaled to available processors.  Internally multi-threaded server.",
   repeats	"Populates a database with stocks and users, and then perfoms a number of trader actions organized as packets (trade sesions).";
