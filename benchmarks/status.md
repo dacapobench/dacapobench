@@ -24,6 +24,9 @@
 
 
 ### TODO
+* Priorities
+  * Fix lucene workloads
+  * Fix / add latency reporting
 * Move standard workloads out of wasabi src, into github (audit them for size first)
 * Data is read only
   * check that benchmarks never write to dat director
@@ -69,17 +72,13 @@ insert into accountprofileejb ( userid, passwd, fullname, address, email, credit
         at org.jboss.as.server@9.0.1.Final//org.jboss.as.server.deployment.DeploymentUnitPhaseService.start(DeploymentUnitPhaseService.java:176)
         at org.jboss.msc@1.4.7.Final//org.jboss.msc.service.ServiceControllerImpl$StartTask.startService(ServiceControllerImpl.java:1737)
   ```
-* pmd
-  * default 1m14
-  * d0 5.3
-  * d1 3.1
-  * d2 3.1
-  * d3 3.1
-  * d4 12.7
-  * d5 3.89
-  * d6 6.96
-  * d7 3.77
-  * l 17
+
+* WARN:
+  * cassandra WARNING: Illegal reflective access by org.apache.cassandra.utils.FBUtilities (file:/home/steveb/devel/dacapo/dacapobench/benchmarks/dacapo-evaluation-git+7cd326b/jar/cassandra/cassandra-3.11.6.jar) to field java.io.FileDescriptor.fd
+  * h2o WARNING: Illegal reflective access by ml.dmlc.xgboost4j.java.NativeLibLoader (file:/home/steveb/devel/dacapo/dacapobench/benchmarks/dacapo-evaluation-git+7cd326b/jar/h2o/h2o.jar) to field java.lang.ClassLoader.usr_paths
+  * jme WARNING: Illegal reflective access by com.jme3.util.ReflectionAllocator (file:/home/steveb/devel/dacapo/dacapobench/benchmarks/dacapo-evaluation-git+7cd326b/jar/jme/jme3-core.jar) to method sun.nio.ch.DirectBuffer.cleaner()
+  * tomcat WARNING: Illegal reflective access by org.apache.catalina.loader.WebappClassLoaderBase (file:/home/steveb/devel/dacapo/dacapobench/benchmarks/dacapo-evaluation-git+7cd326b/jar/tomcat/catalina.jar) to field java.io.ObjectStreamClass$Caches.localDescs
+
 \\
 
 
