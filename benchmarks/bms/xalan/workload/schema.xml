@@ -1,0 +1,292 @@
+
+<div1 id="schema"><head>Schema for XForms</head> 
+
+<eg><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XML Spy v3.5 NT (http://www.xmlspy.com) by Micah (W3C XForms Working Group) -->
+<!-- converted with http://www.w3.org/2001/03/webdata/xsu -->
+<!DOCTYPE xsd:schema
+  PUBLIC "-//W3C//DTD XMLSchema 200102//EN" "http://www.w3.org/2001/XMLSchema.dtd" [
+<!ENTITY % p 'xsd:'>
+<!ENTITY % s ':xsd'>
+]>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+xmlns:xform="http://www.w3.org/2001/06/xforms"
+targetNamespace="http://www.w3.org/2001/06/xforms"
+elementFormDefault="qualified">
+  <!-- 
+structural elements
+-->
+  <xsd:element name="xform">
+    <xsd:annotation>
+      <xsd:documentation>Definition of the xform container element.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="xform:submitInfo" minOccurs="0"/>
+        <xsd:element ref="xform:model" minOccurs="0"/>
+        <xsd:element ref="xform:instance" minOccurs="0"/>
+        <xsd:element ref="xform:bind" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:any namespace="##any"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attributeGroup ref="xform:linkingAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="model">
+    <xsd:annotation>
+      <xsd:documentation>Definition of model container. Content model TBD.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attributeGroup ref="xform:linkingAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="instance">
+    <xsd:annotation>
+      <xsd:documentation>Definition of instance container.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attributeGroup ref="xform:linkingAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="submitInfo">
+    <xsd:annotation>
+      <xsd:documentation>Definition of submit info container.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##any"/>
+        <!-- allow zero or more submitExtension elements -->
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="target" type="xsd:anyURI" use="required"/>
+      <xsd:attribute name="method" type="xform:methodType" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:attributeGroup name="linkingAttributes">
+    <xsd:attribute name="href" type="xsd:anyURI"/>
+  </xsd:attributeGroup>
+  <xsd:element name="bind">
+    <xsd:annotation>
+      <xsd:documentation>Definition of bind container.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <!--
+User Interface form controls and other elements
+-->
+  <xsd:attributeGroup name="commonUIAttributes">
+    <xsd:attribute name="lang" type="xsd:language" use="optional"/>
+    <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+    <xsd:attribute name="class" type="xsd:string" use="optional"/>
+    <xsd:attribute name="style" type="xsd:string" use="optional"/>
+    <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+    <xsd:attribute name="xform" type="xsd:IDREF" use="optional"/>
+    <xsd:attribute name="accessKey" type="xsd:string" use="optional"/>
+    <xsd:attribute name="navIndex" type="xsd:nonNegativeInteger" use="optional"/>
+  </xsd:attributeGroup>
+  <xsd:element name="caption">
+    <xsd:complexType mixed="true">
+      <xsd:sequence>
+        <xsd:any namespace="##any"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attributeGroup ref="xform:linkingAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="hint">
+    <xsd:complexType mixed="true">
+      <xsd:sequence>
+        <xsd:any namespace="##any"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attributeGroup ref="xform:linkingAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="help">
+    <xsd:complexType mixed="true">
+      <xsd:sequence>
+        <xsd:any namespace="##any"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attributeGroup ref="xform:linkingAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="onevent">
+    <xsd:annotation>
+      <xsd:documentation>Defined in a different specification</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:group name="choiceGroup">
+    <xsd:choice>
+      <xsd:element ref="xform:choices"/>
+      <xsd:element ref="xform:item"/>
+    </xsd:choice>
+  </xsd:group>
+  <xsd:element name="choices">
+    <xsd:complexType>
+      <xsd:sequence maxOccurs="unbounded">
+        <xsd:group ref="xform:choiceGroup"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="item" type="xform:string"/>
+  <xsd:group name="commonUIChildren">
+    <xsd:sequence>
+      <xsd:element ref="xform:caption"/>
+      <xsd:element ref="xform:help" minOccurs="0"/>
+      <xsd:element ref="xform:hint" minOccurs="0"/>
+      <xsd:element ref="xform:onevent" minOccurs="0"/>
+      <xsd:any namespace="##any"/>
+    </xsd:sequence>
+  </xsd:group>
+  <xsd:element name="textbox">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="secret">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="uploadMedia">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attribute name="mediaType" type="xform:spaceSeparatedListType" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="selectOne">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="xform:commonUIChildren"/>
+        <xsd:element ref="xform:choices"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attribute name="selectUI" type="xform:selectUIType" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="selectMany">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="xform:commonUIChildren"/>
+        <xsd:element ref="xform:choices"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attribute name="selectUI" type="xform:selectUIType" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="selectBoolean">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="xform:commonUIChildren"/>
+        <xsd:element ref="xform:choices"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attribute name="selectUI" type="xform:selectUIType" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="range">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+      <xsd:attribute name="start" type="xsd:string" use="required"/>
+      <xsd:attribute name="end" type="xsd:string" use="required"/>
+      <xsd:attribute name="stepSize" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="button">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="output">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+      <xsd:attribute name="xform" type="xsd:string" use="optional"/>
+      <xsd:attribute name="format" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="submit">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="reset">
+    <xsd:complexType>
+      <xsd:group ref="xform:commonUIChildren"/>
+      <xsd:attributeGroup ref="xform:commonUIAttributes"/>
+    </xsd:complexType>
+  </xsd:element>
+  <!--
+Bring over xsd simpleTypes
+-->
+  <xsd:simpleType name="decimal">
+    <xsd:restriction base="xsd:decimal"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="string">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="boolean">
+    <xsd:restriction base="xsd:boolean"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="date">
+    <xsd:restriction base="xsd:date"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="time">
+    <xsd:restriction base="xsd:time"/>
+  </xsd:simpleType>
+  <!-- Note: similar for all other built-in Schema types; new schema was not available at publish 
+
+time -->
+  <!--
+New simpleTypes
+-->
+  <xsd:simpleType name="currency">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z]{3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="maskType">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="((A|a|X|x|N|n|M|m)|(\\.))*([0-9\*](A|a|X|x|N|n|M|m))?"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="spaceSeparatedListType">
+    <xsd:list itemType="xsd:token"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="selectUIType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="radioGroup"/>
+      <xsd:enumeration value="checkboxGroup"/>
+      <xsd:enumeration value="pulldown"/>
+      <xsd:enumeration value="listbox"/>
+      <xsd:enumeration value="comboGroup"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="methodType">
+    <xsd:restriction base="xform:string">
+      <xsd:enumeration value="postXML"/>
+      <xsd:enumeration value="post"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>]]></eg>
+</div1> 

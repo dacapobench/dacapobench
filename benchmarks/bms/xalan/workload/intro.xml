@@ -1,0 +1,132 @@
+
+<div1 id="intro" role="chapter1"> <head>About the XForms 1.0 Specification</head> 
+<div2 id="intro-background"> <head>Background</head> 
+<p>Forms are an important part of the Web, and they continue to be the
+      primary means of interactivity used by many Web sites. Web applications and
+      eCommerce solutions have sparked the demand for better Web forms with richer
+      interactions. XForms are the response to this demand--extended analysis,
+      followed by the creation of a new platform-independent markup language for
+      online interaction between an <termref def="def-XForms-Processor">XForms Processor</termref> and
+      a remote entity. XForms are the successor to XHTML forms, and benefit from the
+      lessons learned in the years of HTML forms implementation experience.</p>
+    <p>Further background information on XForms can be found at 
+      <loc href="http://www.w3.org/MarkUp/Forms/">http://www.w3.org/MarkUp/Forms</loc>.</p>
+  </div2> 
+  <div2 id="intro-reading">
+    <head>Reading the Specification</head>
+    <p>This specification has been written with various types of readers in
+      mind--in particular XForms authors and XForms implementors. We hope the
+      specification will provide authors with the tools they need to write efficient,
+      attractive, and accessible documents, without overexposing them to the XForms
+      implementation details. Implementors, however, should find all they need to
+      build conforming XForms Processors. The specification begins with a general
+      presentation of XForms and becomes more and more technical and specific towards
+      the end. For quick access to information, a general table of contents, specific
+      tables of contents at the beginning of each section, and an index provide easy
+      navigation, in both the electronic and printed versions.</p>
+    <p>The specification has been written with two modes of presentation in
+      mind: electronic and printed. In case of a discrepancy, the electronic version
+      is considered the authoritative version of the document.</p>
+  </div2>
+  <div2 id="intro-org">
+    <head>How the Specification is Organized</head>
+    <p>The specification is organized into the following chapters:</p>
+    <glist>
+      <gitem>
+        <label>Chapters 1 and 2</label>
+        <def>
+          <p>An introduction to XForms The introduction includes a brief
+            tutorial on XForms and a discussion of design principles behind XForms.</p>
+        </def>
+      </gitem>
+      <gitem>
+        <label>Chapters 3 and up</label>
+        <def>
+          <p>XForms reference manual. The bulk of the reference manual consists
+            of the specification of XForms. This reference defines what may go into XForms
+            and how XForms Processors must interpret the various components in order to
+            claim conformance.</p>
+        </def>
+      </gitem>
+      <gitem>
+        <label>Appendixes</label>
+        <def>
+          <p>Appendixes contain a normative description of XForms described in
+            XML Schema, information on optional function libraries, references, a change
+            history, and other useful information.</p>
+        </def>
+      </gitem>
+    </glist>
+  </div2>
+  <div2 id="intro-conventions">
+    <head>Documentation Conventions</head>
+    <p>The following highlighting and typography is used to present technical
+      material in this document and other documents from the XForms Working
+      Group:</p>
+      
+    <p>Special terms are defined in their own chapter; hyperlinks connect uses
+      of the term to the definition.</p>
+      
+    <p>Throughout this document, the namespace prefixes "<code>xform:</code>",
+      "<code>xsd:</code>", and "<code>xsi:</code>" are used to denote the XForms, 
+      XML Schema, and XML Schema for Instances namespaces
+      respectively. This is by convention only; any namespace prefix may be used in
+      practice.</p>
+      
+    <p>Official terms are defined in the following manner: <termdef id="def-term" term="term">
+    You can find most <term>terms</term> in the chapter <specref ref="terms"/></termdef>.
+    Links to <termref def="def-term">term</termref>s may be specially highlighted in the text.</p>
+<!--    
+    <p>BNF grammar productions are presented as follows:</p>
+    <scrap>
+      <head>Example</head>
+      <prod id="example1">
+        <lhs>name1</lhs>
+        <rhs>BNF Grammar 1</rhs>
+      </prod>
+      <prod id="example2">
+        <lhs>name2</lhs>
+        <rhs>BNF Grammar 2</rhs>
+      </prod>
+    </scrap>
+-->    
+    <p>The XML representations of various elements within XForms are presented
+  as follows: Listed are the element name, names of all attributes, allowed
+  values of attributes appearing after a "=" character, default values of
+  attributes appearing after a ":" character, and allowed content. One or
+  more headings below the table provide additional explanatory information.</p>
+  <example><head role="syntax">XML Syntax Representation &lt;<el>example</el>&gt;</head><eg><![CDATA[<example
+  count = integer
+  size = (small | medium | large) : medium
+>
+  <!-- Content: (allowed-content) -->
+</example>]]></eg><slist>
+    <sitem><term>count = integer</term> - description of this attribute</sitem>
+    <sitem><term>size = (small | medium | large) : medium</term> - description of
+    this attribute</sitem>
+  </slist></example>  
+  
+  
+  
+  
+  <p>Non-normative short examples are set off typographically:</p>
+    <slist><sitem>Example Item</sitem></slist><p>or</p><eg role="foo">Example Item</eg>
+    
+    
+  <p>References to external documents appear as follows: <bibref ref="ref-example"/>
+  with links to the references section of this document.</p><blist>
+  <bibl key="Sample Reference" id="ref-example"><titleref>Reference</titleref> - linked
+  to from above.</bibl></blist>
+  
+  <p>The following highlighting is used for non-normative commentary:</p>
+  
+  <note id="note-id" role="note"> <p>A general admonition to readers.</p></note>
+  
+  <ednote id="ednote-id" role="example"><name>Editorial Note Name</name>
+  <edtext> Editorial commentary.</edtext></ednote>
+  
+  <issue id="issue-id" role="example"><head>Issue-Name</head>
+  <p> A specific issue to which input from readers is requested.</p></issue>
+  
+  </div2>
+</div1> 

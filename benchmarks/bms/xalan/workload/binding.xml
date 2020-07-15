@@ -1,0 +1,179 @@
+
+<div1 id="binding"><head>Binding</head> <div2 id="binding-intro"><head>Introduction</head> 
+<p><termref def="def-binding">Binding</termref> is the glue that connects the 
+  separate pieces of XForms--the <termref def="def-XForms-Model">XForms Model</termref>,
+  <termref def="def-instance-data">instance data</termref>, and <termref def="def-form-control">form control</termref>s.
+  The binding is independent of the user interface language used.</p>
+<p>Binding is specified through the use of 
+  <termref def="def-binding-expression">binding expression</termref>s. The syntax 
+  and details of binding expressions are defined in the chapter <specref ref="expr"/>. 
+  This chapter describes the wider topic of how binding expressions are used within XForms.</p>
+<p>A future revision of this chapter will address binding 
+  across XForms Models, for instance declaring an "address" in one XForms Model
+  and referencing it from another.</p>
+
+</div2>
+
+<div2 id="binding-attributes"><head>Binding Attributes</head>
+<p>XForms defines an attribute <att>ref</att> that can be placed on any form 
+  control. Note that when placed on form 
+  controls outside of XForms, it must be appropriately namespace-qualified. The value 
+  of the attribute is a binding expression, 
+  based on <specref ref="expr"/>, that links the form control
+  to a particular location in the instance data (and therefore a particular model 
+  item). For example:</p>
+
+  <example><head>XForms User Interface Markup with Binding Attributes</head>
+  <eg><![CDATA[<xform:textbox ref="binding-expression">
+   <xform:caption>Your first name</xform:caption>
+</xform:textbox>]]></eg>
+
+<p>The <att>ref</att> attribute links the form 
+        control to the instance data and XForms Model declared elsewhere 
+        in the <termref def="def-containing-document">containing document</termref>.</p></example>
+        
+<p>This can also be used on non-XForms form controls, for instance XHTML:</p>
+
+<example><head>XHTML with Binding Attributes</head>
+<eg><![CDATA[<html:input type="text" name="..." xform:ref="binding-expression"/>]]></eg>
+<p> Here the <code>ref</code> attribute links an XHTML form 
+    control to the instance data and XForms Model contained elsewhere 
+    in the containing document. Note that the <code>html:</code> prefix is 
+    used here to represent the XHTML namespace.</p></example>
+
+<p>Details on the operation of binding expressions are given throughout the rest of this chapter.</p>
+</div2>
+
+<div2 id="binding-direct"><head>Direct Binding</head>
+<p>When a containing document has only a single XForms 
+  Model and only a single set of instance data, binding is simpler because there 
+  is no possibility of ambiguity as to which XForms 
+  Model and instance data will participate. The following syntax can be used for the
+  binding expression:</p>
+<ulist>
+  <item><p>A binding expression that evaluates to a node-set in the instance 
+    data. If the node-set contains more than one node, only the first node is used. If the
+    node-set contains zero nodes, the binding expression is invalid.</p></item>
+</ulist>
+<p>For example:</p>
+
+<example><head>Binding Expression</head>
+<eg><![CDATA[<xform:textbox ref="orderForm/shipTo/firstName">
+...]]></eg>
+<p>Here the <att>ref</att> attribute specifies a path through the instance data to the desired location.</p>
+<eg><![CDATA[<orderForm>
+  <shipTo>
+    <firstName>value</firstName>
+  </shipTo>
+</orderForm>]]></eg>
+<p>Here is the matching instance data for the above example.</p></example>
+
+<p>A special case applies when binding to 
+  an element in the instance data that 
+  contains an attribute of type <code>xsd:ID</code>. In this case, an XPath function 
+  <function>id()</function>, can be used:</p>
+
+<example><head>Binding Expression with XPath id() Syntax</head>
+<eg><![CDATA[<xform:textbox ref="id('myfirstname')">
+...]]></eg>
+
+<p>Here the <att>ref</att> attribute specifies a link to an instance 
+          data element with an id of <code>myfirstname</code>.</p>
+<eg><![CDATA[<a>
+  <b id="myfirstname">value</b>
+</a>]]></eg>
+<p>Here is the instance data for the above example.</p></example>
+
+<p>For this syntax to be valid, the following conditions must be true:</p>
+<ulist>
+  <item><p>The instance data must be included 
+    in the same document as the XForms User Interface</p></item>
+  <item><p>Every referenced element in the instance 
+    data must be marked with a valid ID (i.e. the ID is unique throughout 
+    the whole document)</p></item>
+  
+</ulist>
+<p>Note also that:</p>
+<ulist>
+  <item><p>this method is limited, because it requires exactly one instance, decorated 
+    with ID attributes.</p></item>
+  <item><p>It is still legal to have elements without ID attributes in the instance data.</p></item>
+  <item><p>Only elements can be addressed</p></item>
+</ulist>
+</div2>
+
+<div2 id="binding-indirect"><head>Indirect Binding</head>
+<p>In situations where a form is designed by collaboration (such as between a 
+  graphic designer and a database/XML specialist) it is desirable to locate all 
+  binding expressions in a single area in the containing document. XForms allows 
+  the binding expression to appear 
+  in a separate element <el>bind</el>, a child of the <el>xform</el> element.</p>
+<p>The attributes of <el>bind</el> are <att>id</att> of type <code>xsd:ID</code> 
+  and <att>ref</att> which takes a binding expression. When a binding expression
+  is defined this way, the form control 
+  can reference the <att>id</att> of the <el>bind</el> element, 
+  as seen here:</p>
+  
+<example><head>Binding Expression Using Indirection</head>
+<eg><![CDATA[<xform:textbox ref="id('myfirstname')">
+...]]></eg>
+<p>Here the <att>ref</att> attribute specifies a link to a binding 
+          expression defined elsewhere.</p>
+<eg><![CDATA[<xform:bind id="myfirstname" ref="orderForm/shipTo/firstName"/>
+<xform:instance>
+  <orderForm>
+    <shipTo>
+      <firstName>value</firstName>
+    </shipTo>
+  </orderForm>
+</xform:instance>]]></eg>
+<p>Here is the instance data for the above example.</p></example>
+
+<p>This accomplishes the following:</p>
+<ulist>
+  <item><p>It is no longer necessary to add IDs to the instance.</p></item>
+  <item><p>The binding mechanism is <emph>independent</emph>
+    of the schema and user interface mechanisms.</p></item>
+</ulist>
+</div2>
+
+<div2 id="binding-multiple"><head>Multiple Forms per Page</head>
+<p>One design goal of XForms is to support multiple forms per page. This is accomplished 
+  by having multiple <el>xform</el> elements within a containing document. 
+  Each <el>xform</el> element might have a separate XForms Model or 
+  instance data defined. This makes binding slightly more complex, because 
+  the correct <el>xform</el> element needs to be referenced.</p>
+<p>By default, binding expressions are based on the instance data
+  associated with the first <el>xform</el> element in document 
+  order. To refer to the contents of subsequent <el>xform</el> elements, 
+  these must be decorated with <att>id</att> attributes of type <code>xsd:ID</code>. 
+  Attached to the form control element, an additional attribute <att>xform</att> 
+  serves to set the context node for the attached binding expression to the
+  instance data or XForms Model associated with 
+  the <el>xform</el> element with the matching <att>id</att>.</p>
+<p>For example:</p>
+<example><head>Binding Expression Specifying Non-default <el>xform</el> Element</head>
+<eg><![CDATA[<xform:textbox xform="b" ref="/orderForm/shipTo/firstName">
+...]]></eg>
+
+<p>Here the <att>xform</att> and <att>ref</att> attributes specify 
+          a binding to the instance data and XForms Model.</p>
+<eg><![CDATA[<xform:xform id="b">
+  <xform:model>
+    ...
+  </xform:model>
+  <xform:instance>
+    <orderForm xmlns="...">
+      <shipTo>
+        <firstName>value</firstName>
+      </shipTo>
+    </orderForm>
+  </xform:instance>
+</xform:xform>]]></eg></example>
+<p>Scoped resolution of binding expressions, as defined in the chapter
+  <specref ref="expr"/> can in some cases be used to avoid repetitive 
+  uses of the <att>xform</att> attribute.</p>
+
+
+  </div2> 
+</div1> 

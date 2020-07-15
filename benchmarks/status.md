@@ -16,12 +16,14 @@
 |lusearch|✓|✓|✓||✓|✓|✓|✓||✓|?|?|
 |pmd|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
-|tomcat|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|?|
-|tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
-|tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|tomcat|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|?|
+|tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
+|xalan|n/a|✓|✓|✓|✓|✓|✓|✓|✓|||||
 
 
 ### TODO
+* Move standard workloads out of wasabi src, into github (audit them for size first)
 * Data is read only
   * check that benchmarks never write to dat director
 * Packaging

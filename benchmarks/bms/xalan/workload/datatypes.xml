@@ -1,0 +1,153 @@
+
+<div1 id="datatypes"><head>Datatypes</head>
+
+<div2 id="datatypes-schema"><head>XML Schema Datatypes</head><p>XForms includes all XML
+  Schema <termref def="def-datatype">datatype</termref>s, including the concepts of
+  <termref def="def-value-space">value space</termref> and
+  <termref def="def-lexical-space">lexical space</termref>, and all constraining
+  <termref def="def-facet">facet</termref>s, as specified in <bibref ref="ref-xschema-2"/>.
+  For reference, these are</p>
+  <p>Built-in primitive types:</p>
+  <slist>
+  <sitem>duration</sitem>
+  <sitem>dateTime</sitem>
+  <sitem>time</sitem>
+  <sitem>date</sitem>
+  <sitem>gYearMonth</sitem>
+  <sitem>gYear</sitem>
+  <sitem>gMonthDay</sitem>
+  <sitem>gDay</sitem>
+  <sitem>gMonth</sitem>
+  <sitem>string</sitem>
+  <sitem>boolean</sitem>
+  <sitem>base64Binary</sitem>
+  <sitem>hexBinary</sitem>
+  <sitem>float</sitem>
+  <sitem>decimal</sitem>
+  <sitem>double</sitem>
+  <sitem>anyURI</sitem>
+  <sitem>QName</sitem>
+  <sitem>NOTATION</sitem>
+  </slist><p>Built-in derived types:</p>
+  <slist>
+  <sitem>normalizedString</sitem>
+  <sitem>token</sitem>
+  <sitem>language</sitem>
+  <sitem>Name</sitem>
+  <sitem>NCName</sitem>
+  <sitem>ID</sitem>
+  <sitem>IDREF</sitem>
+  <sitem>IDREFS</sitem>
+  <sitem>ENTITY</sitem>
+  <sitem>ENTITIES</sitem>
+  <sitem>integer</sitem>
+  <sitem>nonPositiveInteger</sitem>
+  <sitem>negativeInteger</sitem>
+  <sitem>long</sitem>
+  <sitem>int</sitem>
+  <sitem>short</sitem>
+  <sitem>byte</sitem>
+  <sitem>nonNegativeInteger</sitem>
+  <sitem>unsignedLong</sitem>
+  <sitem>unsignedInt</sitem>
+  <sitem>unsignedShort</sitem>
+  <sitem>unsignedByte</sitem>
+  <sitem>positiveInteger</sitem>
+  </slist><p>The Schema for XForms derives new types for all the above datatypes, placing no
+  additional restrictions on the allowed value space, but including them in the XForms namespace.</p>
+  <issue id="datatype-identifiers"><p>One requirement is for XForms to include unique identifiers
+  for each datatype listed here. We believe the facilities in XML Schema are sufficient for this,
+  but welcome feedback  on this issue.</p></issue>
+  <issue id="ieee-datatypes"><p>There is concern that IEEE floating point, as used by the
+  datatypes <code>xsd:float</code> and <code>xsd:double</code> may be difficult or impossible
+  to implement on small devices. XPath (see <specref ref="expr"/>) also uses IEEE representation
+  for numbers, and must be taken into consideration as to resolution of this conflict.</p></issue>
+  
+  <issue id="xml-datatypes"><p>Several datatypes, namely <code>xsd:QName</code>,
+  <code>xsd:NOTATION</code>, <code>xsd:Name</code>, <code>xsd:NCName</code>, <code>xsd:ID</code>,
+  <code>xsd:IDREF</code>, <code>xsd:IDREFS</code>, <code>xsd:ENTITY</code>, and
+  <code>xsd:ENTITES</code> are highly specific to XML, and perhaps not as useful in XForms.
+  Particularly on small devices, the incremental cost of supporting these datatypes might be
+  excessive.</p></issue>
+  
+  <issue id="pattern-facet"><p>Fully implementing the <code>pattern</code> facet might be too
+  expensive on small devices.</p></issue>
+  
+  <issue id="mask-facet"><p>Previous Working Drafts of XForms specified a <code>mask</code>
+  facet, with less implementation cost than the Schema <code>pattern</code> facet. What are
+  our options for adding an entirely new facet not defined in XML Schema?</p>
+  <p>The mask facet was defined as follows:</p>
+  <example><head>Mask Facet</head><p>XML Schema has defined a Regular Expression language which
+  is &quot;similar to the regular expression language used in the Perl Programming language&quot;, 
+  and can be applied to most built-in datatypes. Regular expression syntax, however, 
+  is considered complex by some. Therefore, XForms defines the concept of a <code>mask</code> 
+  facet. All <code>mask</code> facets 
+  are convertible into <el>pattern</el>s.</p>
+<p>XML schema 
+  allows multiple <code>pattern</code> facets to be specified. Similarly, multiple 
+  <code>mask</code> or <code>pattern</code> facets, but not a mixture, are permitted.</p>
+<p>XForms <code>mask</code> uses the syntax and processing from <bibref ref="ref-wml1.3"/> 
+  <code>format</code>. Some examples:</p>
+<ulist>
+  <item><p><code>A</code> matches &quot;A&quot;, &quot;X&quot;, &quot;$&quot;, &quot;%&quot;, 
+    or &quot;.&quot;</p></item>
+  <item><p><code>a</code> matches &quot;a&quot;, &quot;x&quot;, &quot;$&quot;, &quot;%&quot;, 
+    or &quot;.&quot;</p></item>
+  <item><p><code>X</code> matches &quot;A&quot;, &quot;X&quot;, &quot;$&quot;, &quot;%&quot;, 
+    &quot;.&quot;, or &quot;4&quot;</p></item>
+  <item><p><code>x</code> matches &quot;a&quot;, &quot;x&quot;, &quot;$&quot;, &quot;%&quot;, 
+    &quot;.&quot;, or &quot;4&quot;</p></item>
+  <item><p><code>N</code> matches &quot;0&quot;, &quot;4&quot;, or &quot;7&quot;</p></item>
+  <item><p><code>3N</code> matches &quot;0&quot;, &quot;63&quot;, or &quot;999&quot; 
+    but not &quot;1234&quot; (Note: only allowed at end of mask)</p></item>
+  <item><p><code>*X</code> matches &quot;$&quot;, &quot;3.0&quot;, or &quot;ABCDEFG&quot; 
+    (Note: only allowed at end of mask)</p></item>
+  <item><p><code>\</code> causes the next literal character to be inserted into the 
+    mask</p></item>
+  <item><p><code>NNN\-NNNN</code> matches &quot;123-4567&quot; but not &quot;1234567&quot;</p></item>
+</ulist>
+<p>As with WML <code>format</code> processing, an XForms Processor must ignore 
+  invalid <code>mask</code>s.</p></example></issue>
+  
+  <issue id="now-facet"><p>Previous Working Drafts of XForms specified "dynamic facets"
+  that could be reevaluated at arbitrary times. One benefit of that approach was that a
+  <code>now()</code> expression could be used as a constraining facet on date/time datatypes.
+  What are our options for including similar functionality within the framework of XML Schema
+  datatypes?</p></issue></div2>
+  
+  <div2 id="datatypes-xforms"><head>XForms Datatypes</head><p>The Schema for XForms derives the
+  following types for use within forms:</p>
+  
+  <div3 id="dt-currency"><head>currency</head>
+<p>The XForms datatype <code>currency</code> is derived from the XForms datatype 
+  <code>xform:string</code>. A <code>pattern</code> facet with a value of <code>[A-Z]{3}</code>
+  is specified.</p>
+<p>Valid currency values are specified in <bibref ref="ref-iso-4217"/>.</p>
+<note><p>Since new currencies may appear at any time, the currency values as defined  in
+<bibref ref="ref-iso-4217"/> are not strictly enforced.</p></note><ulist>  
+
+<item><p><term>Examples:</term>A value of 'Japanese Yen' would be represented as: </p>
+<slist><sitem>JPY</sitem></slist></item>
+<item> <p>A value 'US Dollars' would be represented as:</p>
+<slist><sitem>USD</sitem></slist></item>
+
+</ulist>
+</div3><div3 id="dt-money"><head>monetary</head>
+
+<p>Forms often deal with monetary values. In many cases the currency type in use is well-known,
+and not even needed in the instance data. When an explicit currency identifier is needed,
+authors can freely use separate <code>xform:decimal</code> and <code>xform:currency</code>
+values to accomplish this. For a unified approach, a monetary datatype would combine, in a single lexical space,
+both a currency code and a decimal value.</p>
+<issue id="monetary-datatype"><p>Is such a datatype needed in XForms? If yes, how can it
+be defined in terms of XML Schema?</p></issue><ulist>  
+
+<item><p><term>Examples:</term> A value of 42 Indonesian Rupiahs would be represented as:</p>
+<slist><sitem>42IDR</sitem></slist>
+</item><item><p> A value of 4.37 Euro would be represented as:</p>
+<slist><sitem>4.37EUR</sitem></slist></item>
+
+</ulist>
+</div3>
+</div2>
+</div1> 

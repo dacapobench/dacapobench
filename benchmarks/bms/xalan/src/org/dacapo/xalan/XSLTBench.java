@@ -37,6 +37,7 @@ public class XSLTBench {
   // What version of XALAN should we have
   private final String XALAN_VERSION = "Xalan Java 2.7.2";
   private final File scratch;
+  private final File data;
 
   int workers;
 
@@ -97,7 +98,7 @@ public class XSLTBench {
             break;
           Transformer transformer = _template.newTransformer();
           transformer.setErrorListener(this);
-          FileInputStream inputStream = new FileInputStream(new File(scratch, fileName));
+          FileInputStream inputStream = new FileInputStream(new File(data, fileName));
           Source inFile = new StreamSource(inputStream);
           transformer.transform(inFile, outFile);
           inputStream.close();
@@ -137,10 +138,12 @@ public class XSLTBench {
   // An array for the workers
   XalanWorker[] _workers = null;
 
-  public XSLTBench(File scratch) throws Exception {
+  public XSLTBench(File data, File scratch) throws Exception {
     // Check Xalan version, this is easy to get wrong because its
     // bundled with Java these days, so we do explict check
+    this.data = data;
     this.scratch = scratch;
+
     Properties props = System.getProperties();
     if (!org.apache.xalan.Version.getVersion().equals(XALAN_VERSION)) {
       System.err.println("***  Incorrect version of Xalan in use!");
@@ -160,7 +163,7 @@ public class XSLTBench {
     System.setProperties(props);
 
     // Compile the test stylesheet for later use
-    Source stylesheet = new StreamSource(new File(scratch, "xalan/xmlspec.xsl"));
+    Source stylesheet = new StreamSource(new File(data, "xalan/xmlspec.xsl"));
     TransformerFactory factory = TransformerFactory.newInstance();
     _template = factory.newTemplates(stylesheet);
 

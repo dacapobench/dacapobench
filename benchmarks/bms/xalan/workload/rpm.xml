@@ -1,0 +1,522 @@
+
+<div1 id="rpm"><head>Processing Model</head>
+
+<div2 id="rpm-intro"><head>Introduction</head>
+
+<p>The XForms Reference Processing Model is a normative explanation of the components, 
+  predictive behavior, and mechanisms of XForms Processors. It is not intended to
+  constrain implementations. XForms Processors may be implemented in any manner, so
+  long as the end results are identical to that described in this chapter.</p>
+  
+<p>This chapter uses the terms <term>may</term>, <term>must</term>, and 
+  <term>should</term> (when rendered as in this paragraph) in 
+  accord with RFC 2119.</p>
+  
+<issue id="issue-processing">
+<p>This chapter is still at an early phase and may contain errors or omissions.
+Feedback on this chapter is especially appreciated.</p></issue>
+
+<div3 id="rpm-intro-rationale"><head>Design Rationale</head>
+
+<p>The Reference Processing Model set out in this chapter will:</p>
+<ulist>
+  <item><p>Be simple enough to implement across a wide range of devices, including 
+    resource-constrained handhelds and appliances.</p></item>
+  <item><p>Define a predictive processing model with enough detail for implementors 
+    to create interoperable software.</p></item>
+  <item><p>Define a well-ordered system for calculations and dependencies independent 
+    of processor speed or threading.</p></item>
+  <item><p>Provide a unified addressing scheme for binding expressions, independent 
+    of how the structure of the instance data is defined.</p></item>
+  <item><p>Be simple enough for the existing base of HTML authors to quickly get up 
+    to speed.</p></item>
+  <item><p>Be compatible (to the extent reasonably possible) with existing form processing.</p></item>
+  
+</ulist>
+</div3>
+</div2>
+
+<div2 id="rpm-properties"><head>XForms Properties</head>
+
+<p>For each <el>xform</el> element, the XForms Processor maintains 
+  a set of read-write properties, as described here. These properties are available to all
+  expressions in the <termref def="def-containing-document">containing document</termref>.</p>
+<ulist>
+  
+  
+  
+  
+  <item><p><code>immediate-refresh</code></p></item>
+  <item><p><code>immediate-revalidate</code></p></item>
+  <item><p><code>immediate-recalculate</code></p></item>
+  <item><p><code>use-nil</code></p></item>
+</ulist>
+<p><code>immediate-refresh</code>  controls whether changes in the 
+  instance data are immediately updated in the UI</p>
+<p><code>immediate-revalidate</code>  controls whether changes in 
+  the instance data immediately trigger a validation</p>
+<p><code>immedate-recalculate</code> controls whether changes in 
+  the instance data immediately trigger a recalculation</p>
+<p><code>use-nil</code> controls whether XML Schema Instance nils 
+  are placed in the instance data</p><p>Additionally, the following properties are available for reading (but not modification). These properties are available to all expressions in the containing document.</p><ulist>
+  <item><p><code>version</code></p></item>
+  <item><p><code>conformance-level</code></p></item>
+  
+  <item><p><code>timezone</code></p></item>
+  
+  
+  
+  
+</ulist><p><code>version</code>  is defined as the string "1.0" for 
+  XForms 1.0</p>
+<p><code>conformance-level</code> strings are defined later in this chapter</p>
+
+<p><code>timezone</code>  strings are signed integers representing the 
+  number of minutes offset from GMT</p>
+
+
+</div2>
+
+<div2 id="rpm-events"><head>Events</head>
+<p>XForms uses an events system as defined in <bibref ref="ref-dom2-events"/>,
+with a Capture phase, arrival at the Event Target, and then a Bubbling Phase.</p>
+
+<p>Events fall into different groupings. One class of events indicates that some 
+  processing is about to happen. That processing may be halted by the event handler:</p>
+<ulist>
+  <item><p><code>xforms-submit</code></p></item>
+  <item><p><code>xforms-reset</code></p></item>
+  <item><p><code>xforms-value-changing</code></p></item>
+  <item><p><code>xforms-interactive-value-changing</code></p></item>
+  <item><p><code>xforms-instance-changed</code></p></item>
+</ulist>
+<p>Another class of events indicates that some processing has already happened 
+  or is in progress. Such processing can not be halted by the event hander:</p>
+<ulist>
+  <item><p><code>xforms-construct</code></p></item>
+  <item><p><code>xforms-destruct</code></p></item>
+  
+  <item><p><code>xforms-initialize</code></p></item>
+  <item><p><code>xforms-exception</code></p></item>
+</ulist>
+<p>Finally, certain events are used by the author or the XForms Processor to cause 
+  processing to happen:</p>
+<ulist>
+  <item><p><code>xforms-recalculate</code></p></item>
+  <item><p><code>xforms-refresh</code></p></item>
+</ulist>
+<p>Unless otherwise noted, the target node for all events is the <el>xform</el> 
+  element. When a containing document has multiple <el>xform</el> 
+  elements, the binding is used to determine which <el>xform</el> 
+  element is used.</p>
+  
+<p>The Working Group is using pre-defined generic event handling, defined in <bibref ref="ref-xhtml-events"/>, additionally defining a set of XForms-specific actions.</p>
+</div2>
+
+
+
+<div2 id="rpm-processing"><head>XForms Processing</head>
+
+<div3 id="rpm-processing-init"><head>Initialization/Resume</head>
+
+<p>The following describes the initialization process for XForms. Initialization 
+  must occur before any other processing. For each <el>xform</el> 
+  element in the containing document, in document order, the following processing 
+  occurs:</p>
+<olist>
+  <item><p> An <code>xforms-construct</code> event is fired; this is the place for 
+    authors to handle any initialization tasks.</p></item><item><p>Instance data is constructed (<specref ref="rpm-processing-instance"/>).</p></item>
+  
+  <item><p>An <code>xforms-initialize</code> event is fired. A handler for this event could perform form initialization tasks such as a database lookup.</p></item>
+  <item><p>A recalculation (<specref ref="rpm-processing-recalc"/>) takes place.</p></item>
+  <item><p>A UI refresh (<specref ref="rpm-processing-refresh"/>) takes place.</p></item>
+</olist>
+</div3>
+
+<div3 id="rpm-processing-instance"><head>Instance Data Construction</head><p>The following steps describe how the instance data associated with each <el>xform</el> element is constructed. Of the following options, the first applicable option is chosen. Only one of the following applies:</p><olist>
+  <item><p>If an <el>instance</el> element is present and contains non-whitespace child nodes, the contents of the <el>instance</el> element are copied into the instance data tree, based on the infoset mappings defined in the XPath <bibref ref="ref-xpath-1.0"/>data model.</p></item><item><p>If an <el>instance</el> element is present and contains a reference to non-local 
+    initial instance data, it is retrieved by traversing the link to it, then copied into the instance data as described above.  A remote instance that
+    is unretrievable for any reason is ignored, in which case an 
+    XForms Processor <term>may</term> issue a warning.</p></item>
+  <item><p>If  an <el>instance</el> element is not present, then a default instance data configuration is produced, according to the following rules:
+  </p><olist>
+      <item><p>Each form control bound to the 
+        <el>xform</el> element currently being processed is visited 
+        in document order. Each form control's binding expression is 
+        evaluated.</p></item>
+      <item><p>If the instance data item 
+        result of evaluating the binding expression doesn't already exist, it is 
+        created, and if the <code>use-nil</code> 
+        property is true, populated with a nil value (an <att>xsi:nil="true"</att> attribute). Note that  only 
+        elements can hold nil values. The form control receives a default
+        blank value. The algorithm for creating instance data items is 
+        as follows: For each location step in the canonical binding expression,
+        from left to right, where no matching node exists in the
+        instance data, a new node is inserted.</p><issue id="creating-instance-nodes"><p>The algorithm for creating instance nodes is under discussion, with one possibility being ignoring the path information, using only the local name, in a flat list.</p></issue></item>
+  </olist></item><item><p>If none of the above options are fulfilled, this is an error condition, and the XForms Processor <term>must</term> stop processing with an error message.</p></item></olist></div3><div3 id="rpm-processing-navorder"><head>Navigation Sequence Algorithm</head>
+
+<p> Navigation is determined on a containing document-wide basis. The navigation sequence 
+  is determined as follows:</p>
+<olist>
+  <item><p> Those form controls that support <code>navindex</code> and assign a positive 
+    value to it are navigated first. Navigation proceeds from the form control 
+    with the lowest <code>navindex</code> value to the form control with the highest 
+    value. Values need not be sequential nor must they begin with any particular 
+    value. form controls that have identical 
+    <code>navindex</code> values should be navigated in document order.</p></item>
+  <item><p> Those form controls that do not supply <code>navindex</code> or supply 
+    a value of "0" are navigated next. These form controls are navigated in document 
+    order.</p></item>
+  <item><p>Those form controls that are disabled, hidden, or on a non <code>relevant</code> 
+    subtree are assigned a relative order in the overall sequence but do not participate 
+    as navigable controls.</p></item>
+  <item><p> The navigation sequence past the the last form control (or before the first) 
+    is undefined. XForms Processors may cycle back to the first/last control, 
+    remove focus from the form, or other possibilities.</p></item>
+</olist>
+</div3>
+
+<div3 id="rpm-processing-interact"><head>Interactivity</head>
+
+<p>XForms provides similar processing to the HTML <code>onChange</code> event. 
+  As users indicate completion of a form control by navigating away the following 
+  occurs:</p>
+<olist>
+  <item><p> If the display value has changed since the user last navigated to the form 
+    control, an <code>xforms-value-changing</code> event is fired. If the 
+    display value hasn't changed, processing for this event ends.
+  </p><olist>
+      <item><p>Any listener may prevent default processing (one option under consideration 
+        provides a <code>&lt;stopevent/&gt;</code> action), which will end event 
+        processing immediately after the Capture and Bubbling phases. Alternatively, 
+        a listener may perform a custom translation from display value to canonical 
+        value. Any listener may have side-effects that modify any instance data item,
+        in which case the modified instance data items must be marked "dirty".</p></item>
+    <item><p>Default processing is to convert the display value of the form control 
+      to the canonical value as specified in the Datatypes chapter. Default processing 
+      should automatically take into account regional settings (if any), such 
+      as decimal character symbol, date formats, etc.</p></item>
+  </olist></item>
+  <item><p>If the <code>immediate-revalidate</code> property is true, all validations
+    (<specref ref="rpm-processing-revalidate"/>) bound to the form control are run. Note that validation is performed against 
+    the canonical value, not the display value.
+  </p><olist>
+    <item><p>If any validation fails, the user <term>must</term> be notified, and 
+      <term>may</term> not be allowed to navigate away from the control. The 
+      invalid entry in the form control <term>should</term> be preserved. 
+      The associated instance data item is left unchanged, thereby ending processing 
+      for this event.</p></item>
+  </olist></item>
+  <item><p>The instance data item is updated with the new value, and marked "dirty".</p></item>
+  <item><p> If the <code>immediate-recalculate</code> property is true, a recalculate
+  (<specref ref="rpm-processing-recalc"/>) occurs to perform any defined calculations.</p></item>
+  <item><p>If the <code>immediate-refresh</code> property is true, a refresh (<specref ref="rpm-processing-refresh"/>) 
+    occurs to update any form controls that might be dependent on this newly changed 
+    value.</p></item>
+</olist>
+<p>Certain form controls allow interactive response without finalizing on a value. 
+  Examples of this include edit boxes (users can type various characters before 
+  "tabbing out") and slider controls (users can be continuously adjusting 
+  the value before releasing at a certain value). Interactive temporary values 
+  such as this are expressly allowed to be <quote>invalid</quote>, that is outside 
+  the permissible value space. This is because incomplete data may be present 
+  while the user is entering transitional values.</p>
+<p>Example: A partially entered currency value of "U" is not valid because 
+  it doesn't (yet) have 3 characters. This is permitted temporarily, as long as 
+  the user remains on the form control. XForms Processors with sufficient processing 
+  resources would typically update/refresh on every character. Resource-constrained 
+  XForms Processors would typically only update/refresh on the final value.</p>
+<olist>
+  <item><p> Any time the display value of a form control changes (such as through character 
+    or cut/paste activities), even without indication that this is a final value, 
+    an <code>xforms-interactive-value-changing</code> event is fired. Resource-constrained 
+    XForms Processor implementations <term>may</term> choose to ignore all 
+    such events.
+  </p><olist>
+    <item><p>Event listeners may prevent default processing.</p></item>
+    <item><p>Otherwise, default handling is as follows: The current form control is 
+      revalidated (<specref ref="rpm-processing-revalidate"/>). This is for internal purposes only, 
+      and happens regardless of the <code>immediate-revalidate</code> setting. 
+      If all validations on the form control are successful, the instance data item
+      is updated, and marked "dirty". If any validations fail (indicating 
+      a transitional value) all form controls bound to the same instance data item
+      <term>may</term> be directly updated with the display value. Otherwise, 
+      the following occurs:</p></item>
+    <item><p>If the <code>immediate-recalculate</code> property is true, a recalculation
+      (<specref ref="rpm-processing-recalc"/>) occurs to perform any defined calculations.</p></item>
+    <item><p>If the <code>immediate-refresh</code> property is true, a refresh (<specref ref="rpm-processing-refresh"/>) 
+      occurs to update any form controls that might be dependent on this newly 
+      changed value.</p></item>
+  </olist></item>
+</olist>
+<p>Implementations that choose to respond <code>xforms-interactive-value-changing</code> 
+  are expected optimize processing (for instance not flashing the entire screen 
+  for each character entered, etc.).</p>
+</div3>
+
+<div3 id="rpm-processing-recalc"><head>Recalculation Algorithm</head>
+
+<p>XForms Processors are free (and encouraged) to skip or change any steps in 
+  this algorithm, as long as the end result is the same. Each form control may 
+  have a model item property <code>priority</code> value, which is the main factor 
+  in determining calculation order.</p>
+<p>Following is the default handling for an <code>xforms-recalculate</code> event:</p>
+<olist>
+  <item><p>Each model item with a bound <code>calculate</code> model item property
+  is visited in <term>calculation order</term>, which is defined as follows:
+  </p><olist>
+    <item><p>Those model items that are bound to a <code>priority</code> and assign 
+      a positive integer to it are computed first. Computation proceeds from the 
+      model item with the lowest bound <code>priority</code> to the model item 
+      with the highest bound <code>priority</code>. Values need not be sequential 
+      nor must they begin with any particular value. Model items with the same bound
+      <code>priority</code> value are computed in document order.</p></item>
+    <item><p>Those model items not bound to a priority or bound to one with the value 
+      "0" are computed next. These model items are computed in document 
+      order.</p></item>
+  </olist></item>
+  <item><p>For each model item, the expression in the <code>calculate</code> model item 
+  property is evaluated. Any instance data item changes as a result of 
+    this are marked with a "dirty" flag.</p></item>
+  <item><p>The instance data item bound to the model item is updated with the result 
+    of the <code>calculate</code> expression, and the "dirty" flag is set.</p></item>
+</olist>
+</div3>
+
+<div3 id="rpm-processing-refresh"><head>UI Refresh Algorithm</head>
+<p>Following is the default handling for an <code>xforms-refresh</code> event:</p>
+<olist>
+  <item><p> For purposes of UI refresh, the instance data as it exists at the 
+    beginning of processing the <code>xforms-refresh</code> event is used.</p></item>
+  <item><p> Each form control is visited in refresh order, which is defined as follows:
+  </p><olist>
+    <item><p>Those form controls that have a given or computed navigation sequence 
+      value are visited first, in the navigation sequence.</p></item>
+    <item><p>Those form controls outside the navigation sequence are visited next. 
+      These form controls are visited in document order.</p></item>
+  </olist></item>
+  <item><p>For each form control, the <code>relevant</code> constraint is evaluated, 
+    which might result in the form control being disabled/hidden/etc. as specified 
+    in the chapter <specref ref="model"/>.</p></item>
+  <item><p>For each form control, the binding expression is evaluated. If the
+  instance data indicates that the instance data item is not "dirty", processing for
+  that particular form control completes.
+  </p><olist>
+    <item><p>Otherwise, if the instance data item is "dirty", an <code>xforms-instance-changed</code> 
+      event is fired.</p></item>
+    <item><p>Listeners to the <code>xforms-instance-changed</code> event are free to 
+      compute a new display value.</p></item>
+    <item><p>Listeners to the <code>xforms-instance-changed</code> event are prohibited 
+      from directly updating any form controls present.</p></item>
+    <item><p>Listeners to the <code>xforms-instance-changed</code> event are prohibited 
+      from altering any portion of the instance data. To attempt to do so 
+      results in an <code>xforms-exception</code> being fired.</p></item>
+    <item><p>Listeners may prevent the default processing of the <code>xforms-instance-changed</code> 
+      event.</p></item>
+    <item><p>Default processing is to convert the canonical value into a display value, 
+      taking into account regional settings (if any) such as decimal separator 
+      character, etc.</p></item>
+  </olist></item>
+  <item><p>The form control is updated with the display value.</p></item>
+  <item><p>After all form controls have been updated, all "dirty" flags in 
+    the instance data are cleared.</p></item>
+</olist>
+
+<note><p>Editor's Note: Still to be addressed is the processing when a datatype facet 
+  or model item property are changed--what gets marked "dirty"?; what 
+  gets recalculated?; what gets revalidated?; what gets refreshed?</p></note>
+</div3>
+
+<div3 id="rpm-processing-revalidate"><head>Revalidation Algorithm</head>
+
+<p>Revalildation always occurs within the scope of a context form control.
+Following is the revalidation process:</p>
+<olist>
+  <item><p> The bound instance data item is checked against any bound XForms Datatype 
+    constraining facets. If any fail, the context form control is considered invalid.</p></item>
+  <item><p> The bound instance data item is checked against any bound Schema Datatype 
+    constraining facets. If any fail, the context form control is considered invalid.</p></item>
+  <item><p> If a <code>validate</code> model item property is bound to the context 
+    form control, the expression within is evaluated. If it evaluates to false, 
+    the context form control is considered invalid.</p></item>
+  <item><p> If the context form control is invalid, the XForms Processor <term>must</term> 
+    notify the user. The XForms Processor <term>may</term> combine messages 
+    before presentation to the user.</p></item>
+</olist>
+</div3>
+</div2>
+
+<div2 id="rpm-send"><head>Submit and Reset</head>
+
+<p>The form filling experience ends with submitting the form, 
+  or starting over. The XForms processing for these events are covered here. The following sections describe how to instance data is prepared for submission.</p>
+
+
+<div3 id="rpm-send-submit"><head>Submit</head>
+
+<p>In response to an <code>xforms-submit</code> event, the following takes place:</p>
+<olist>
+  <item><p>Event listeners may prevent default processing of the submit request. Otherwise, 
+    default handling as described below occurs.</p></item>
+  <item><p>Every form control is revalidated (<specref ref="rpm-processing-revalidate"/>). Any invalid 
+    values <term>must</term> be reported to the user and submit processing 
+    <term>must</term> not continue.</p></item>
+  <item><p>A subset or all of the instance data is selected based on
+  the binding expression used to invoke the submit request. The selected nodes and all children are selected for serialization as submitted data.
+  If no <att>ref</att> attribute is specified, all nodes in the instance data are selected by default. </p><olist>
+    <item><p>If the instance data selection results in an empty node-set, the submit 
+      <term>must</term> be aborted and submit processing <term>must</term> 
+      not continue.</p></item>
+  </olist></item>
+  <item><p>Instance data is serialized according to one of the processes defined below.</p></item>
+  <item><p>Instance data is delivered over the network as an HTTP POST.</p></item><item><p>Upon successful delivery of the submit data, an <code>xforms-destruct</code> event is fired and form processing shuts down.</p></item><item><p>The response page sent by the server replaces the current containing document.</p></item>
+</olist>
+<issue id="method-strings"><p>We have yet to define the method strings (e.g. <code>method="post"</code> in XHTML)</p></issue></div3>
+
+<div3 id="rpm-send-reset"><head>Reset</head>
+<p>In response to an <code>xforms-reset</code> event, the following takes place:</p>
+<olist>
+  <item><p>Event listeners may prevent default processing of the reset request. Otherwise, 
+    default handling as described below occurs.</p></item>
+  <item><p>A subset or all of the instance data is selected based on the
+  binding expression used to invoke the suspend request.
+   The selected nodes and all children are selected for resetting.
+  If no <att>ref</att> attribute is specified, all nodes in the instance data are selected by default. </p><olist>
+    <item><p>If the instance data selection results in an empty node-set, the reset 
+      has no effect.</p></item>
+  </olist></item>
+  <item><p>New instance data for the selected instance data is prepared, based on the <el>instance</el> element associated with the current <el>xform</el> element, according to 
+    the rules for initialization above.</p></item>
+  <item><p>The selected instance data is replaced with the new instance data.</p></item>
+</olist>
+</div3>
+
+
+</div2>  
+  
+<div2 id="rpm-serialize"><head>Serialization Formats for  Instance Data</head><div3 id="rpm-send-urlencoded"><head>application/x-www-form-urlencoded</head>
+
+<p>This format is intended to facilitate the integration of XForms into HTML forms 
+  processing environments, and represents an extension of the <bibref ref="ref-xhtml-1.0"/>
+  form content type of the same name with extensions to expresses the hierarchical
+  nature of instance data.</p>
+<p>This format is not suitable for the persistence of binary content. Therefore, 
+  it is recommended that XForms capable of containing binary content use either 
+  the multipart/form-data (<specref ref="rpm-send-multipart"/>) or text/xml (<specref ref="rpm-send-xml"/>) formats.</p>
+<issue id="issue-urlencoding-mods"><head>Modifications to urlencoding process</head>
+<p>The urlencoding technique given here does not exactly match how legacy
+  implementations produce urlencoded data. (In particular, we are adding contextual
+  information with slashes and multiple location-steps) Will this approach interfere
+  with legacy implementations?</p></issue>
+<issue id="issue-utf8-encoding"><p>Under discussion 
+  is the intent to have the data be UTF8 encoded; however, this is dependent upon 
+  IETF developments. Would UTF8 meet the needs of the forms community?</p></issue>
+<p>The steps for building this persistence format is as follows:</p>
+<olist>
+  <item><p>Prepare a new UTF-8 encoded string buffer to hold the persisted instance
+  data.</p></item>
+  <item><p>Beginning with the root element of the  instance data, iterate
+    over the selected content of the instance data in document order and build an ordered set of
+    strings by performing the following steps: 
+    
+  </p><olist>
+      <item><p>For each element with an attribute, append to the set a string of the 
+        format <quote><emph>path</emph>=<emph>value</emph></quote> where
+        <emph>path</emph> is the canonical binding expression that refers to each
+        attribute, and <emph>value</emph> is the character content of each attribute
+        (urlencoded if necessary).</p></item>
+      <item><p>For each element enclosing character content, append to the set a string 
+        of the format <quote><emph>path</emph>=<emph>value</emph></quote> where <emph>path</emph> is 
+        the canonical binding expression that refers to the element, and
+        <emph>value</emph> is the character content of the element (urlencoded if
+        necessary).</p></item>
+      <item><p>For each element enclosing element content, continue the iteration.</p></item>
+    </olist></item>
+  <item><p>Append the strings from the ordered set together, delimiting the strings 
+    with an ampersand '&amp;' character, and place the result of the append into 
+    the UTF-8 encoded string buffer.</p></item>
+</olist>
+<p>Example:</p>
+<example><head>application/x-www-form-urlencoded</head>
+<eg>/PersonName/@title=Mr&amp;/PersonName/FirstName=Roland</eg>
+<p>This format consists of sets of a canonical binding expression paired with a value.</p>
+<eg>&lt;PersonName title="Mr"&gt;
+  &lt;FirstName&gt;Roland&lt;/FirstName&gt;
+&lt;/PersonName&gt;</eg>
+<p>Here is the instance data for the above example.</p>
+</example>
+</div3>
+
+<div3 id="rpm-send-multipart"><head>multipart/form-data</head>
+
+<p>This format is intended to facilitate the integration of XForms into HTML forms 
+  processing environments, and represents an extension of the <bibref ref="ref-xhtml-1.0"/>
+  form content type of the same name that expresses the hierarchical 
+  nature of instance data. Unlike the application/x-www-form-urlencoded (<specref ref="rpm-send-urlencoded"/>) 
+  format, this format is suitable for the persistence of binary content.</p>
+<p>This format follows the rules of all multipart MIME data streams for form data as outlined 
+  in <bibref ref="ref-rfc-2388"/>, with the "name" of each part being the canonical binding expression that references the selected instance data item.</p>
+
+<p>Example:</p>
+<example><head>multipart/form-data</head>
+
+<eg>Content-Type: multipart/form-data; boundary=AaB03x
+
+--AaB03x
+  Content-Disposition: form-data; name="/PersonName/@title"
+
+Mr
+--AaB03x
+  Content-Disposition: form-data; name="/PersonName/FirstName"
+
+Roland
+--AaB03x
+
+...Possibly more data...
+
+--AaB03x-</eg>
+ <p>This format consists of sets of a canonical binding expression paired 
+   with a value.</p>
+<eg>&lt;PersonName title=&quot;Mr&quot;&gt;
+  &lt;FirstName&gt;Roland&lt;/FirstName&gt;
+&lt;/PersonName&gt;</eg>
+<p>Here is the instance data for the above example.</p>
+</example>
+
+
+</div3>
+
+<div3 id="rpm-send-xml"><head>text/xml</head>
+<p>This format permits the expression of the instance data as an XML-based format 
+  that is straightforward to process with off-the-shelf XML processing tools. 
+  In addition, this format is suitable for the persistence of binary content.</p>
+<p>The steps for building this persistence format is as follows:</p>
+<olist>
+  <item><p>Prepare a new empty XML document to hold the persisted instance data.</p></item>
+  <item><p>If the selected content of the instance data corresponds to a singly-rooted data
+  structure, serialize, into the XML document the entire content of the selected instance
+  data, beginning at the root node.</p></item>
+  <item><p>If the selected content of the instance data corresponds to a multiply-rooted data
+  structure (such as a general parsed entity), an unqualified root element of &lt;<el>Envelope</el>&gt;,
+  with an unqualified element &lt;<el>Body</el>&gt; is inserted into the XML document, and the
+  selected instance data serialized into the content of the &lt;<el>Body</el>&gt; element.</p></item>
+</olist>
+
+<div4 id="rpm-send-xml-binary"><head>Binary Content</head>
+
+<p>Instance data items of the types xsd:base64Binary and xsd:hexBinary are specifically
+allowed, and are included in the serialized data according to the rules defined in
+<bibref ref="ref-xschema-2"/></p>
+<issue id="issue-instance-metadata"><p>Where a value 
+  within the instance data represents binary content, can we store meta-information
+  with an <code>xform:mediaType</code> attribute reflecting the appropriate content
+  type (e.g., <quote>image/jpg</quote>)?</p></issue>
+</div4>
+</div3></div2><div2 id="rpm-conform"><head>Conformance</head>
+<p>XForms are being designed for use on hardware platforms of all sizes, from tiny handheld devices to high-powered servers. Clearly, a one-size-fits-all approach has its drawbacks. For this reason, the XForms Working Group has begun specifying two conformance levels for XForms Processors, documents, and authoring tools.</p>
+<div3 id="rpm-conform-basic"><head>XForms Basic</head><p>This conformance level will be suitable for devices with limited computing power, such as mobile phones, handheld computers, and appliances. This conformance level will depend on a subset of XML Schema, and will not include any resource-intensive features. Implementations of XForms Basic should return "<code>basic</code>" for the <code>conformance-level</code> property.</p></div3><div3 id="rpm-conform-full"><head>XForms Full</head><p>
+
+
+This conformance level will be suitable for more powerful forms processing, such as might be found on a standard desktop browser or a server. Implementations of XForms Full should return "<code>full</code>" for the <code>conformance-level</code> property.</p><p>Additional details will be provided in future revisions of this chapter.</p></div3></div2>
+
+</div1> 

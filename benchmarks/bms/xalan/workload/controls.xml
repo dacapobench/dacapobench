@@ -1,0 +1,693 @@
+
+<!-- tvr: dont nuke this 
+<!DOCTYPE div1 PUBLIC "-//W3C//DTD Specification V2.1//EN" "http://www.w3.org/XML/1998/06/xmlspec-v21.dtd">
+<?xml-stylesheet 
+href="file:////home/tvraman/text/ibm/xforms/xsl/xmlspec.xsl"
+type="text/xsl"?>
+-->
+<!-- href="http://dev.w3.org/cvsweb/spec-prod/html/xmlspec.xsl" -->
+<div1 id="controls">
+  <head>Form Controls</head>
+  <div2 id="ui-intro">
+    <head>Introduction</head>
+    
+    <p>
+      XForms User Interface controls, also called <termref def="def-form-control">form control</termref>s, are declared using
+      markup elements, and their behavior refined via
+      markup attributes. This markup may be further
+      decorated with style properties that can be set
+      using CSS stylesheets to deliver a customized look
+      and feel. Form controls defined
+      here are bound to the underlying instance data
+      using the <termref def="def-binding">binding</termref> attributes as defined in the
+      chapter <specref ref="binding"/>.</p>
+
+    
+    <p>
+      The XForms form controls enable
+      accessibility by taking a uniform approach to such
+      features as captions, help text, tabbing and keyboard
+      shortcuts.  Internationalization issues are being
+      addressed in conjunction with the Internationalization
+      Working Group and are addressed by following the same
+      design principles as within the rest of XHTML. All form controls defined here are suitable for implementation as Aural CSS (ACSS) form controls.</p>
+
+    <p>
+        Several XForms form controls are of a general class that represent the concept of
+        selecting from available choices.  Such selection
+        controls can be characterized along a presentational
+        dimension that is completely orthogonal to the
+        functional distinction.  Distinguishing the
+        <emph>presentational</emph> from the
+        <emph>functional</emph> dimension allows the
+        expression of the <emph>meaning</emph> of a
+        particular form control--see <bibref ref="aui-conversational-gestures"/> for a definition
+        of such high-level  user interaction primitives.</p>
+      
+
+      <p>This chapter includes non-normative graphical
+      examples of many form controls.
+      The CSS Working Group is providing assistance with creating
+      default CSS rules for producing visual renderings 
+      of standard XForms form controls. This
+      specification will also include non-normative rules for
+      how these same controls might be rendered to alternative
+      access modalities.</p><issue id="control-names">
+      <p>All form control names listed here should be considered advisory until further consensus is reached in the Working Group.</p>
+    </issue><p>For each form control, the following aspects will be defined:</p>
+
+  <slist><sitem>Description</sitem><sitem>Examples</sitem><sitem>Data Binding Restrictions</sitem><sitem>Implementation Hints</sitem><sitem>XML Representation</sitem></slist><p>The form controls defined here use common attributes and elements that are defined later in this chapter (<specref ref="ui-common"/>).</p></div2>
+  
+  <div2 id="ui-entry"><head>textbox</head><p>Description: This form control enables free-form data entry.</p><p>Examples:</p><eg xml:space="preserve"><![CDATA[<textbox ref="order/shipTo/street" style="width:xx; height:xx">
+ <caption>Street<caption>
+ <help>Please enter the number and street name</help>
+</textbox>]]></eg><p>
+        In the above, CSS style attributes <code>height</code>
+        and <code>width</code>
+        specify the display size of the form control. Note
+        that the constraints on how much text can be input are
+        obtained from the underlying XForms Model definition
+        and not from these display properties.</p>
+
+      
+
+      
+      <p>A graphical browser might render the above example as follows:</p>
+
+      <p><graphic source="images/ui-textbox.png" alt="an average-looking text entry field. The title, 'street' has been automatically aligned to the left"/></p>
+    <p>Data Binding Restrictions: The entered value of the form control (after processing as described in <specref ref="rpm"/>) is treated as a lexical value. A datatype bound to this form control will be treated as a restriction upon the allowed entered value.</p><p>Implementation Hints: Implementations may represent this form control with more than one native user interface control, for example a form control that appears to be three separate smaller entry fields for "day", "month", and "year" for a date datatype. Further, for date datatypes, a calendar system for data entry may be used, including non-Gregorian calendar systems. For numeric datatypes, additional features might include spin buttons or other conveniences. When bound to a datatype that accepts newline characters, this form control should accept multi-line input.</p><example role="syntax">
+        <head>XML Representation: &lt;<el>textbox</el>&gt;</head>
+        
+        <eg><![CDATA[<textbox
+  (common attributes)
+>
+  <!-- caption, help?, hint?, onevent? -->
+</textbox>]]></eg><slist>
+          <sitem><term>common attributes</term> defined in
+            <specref ref="ui-common-attributes"/></sitem>
+        </slist>
+      </example></div2>
+  
+  <div2 id="ui-secret"><head>secret</head><p>Description: This form control is used for obtaining   information that is considered sensitive, and thus  not echoed
+        to a visual or aural display as it is being entered, e.g., password entry.</p><p>Example:</p><eg xml:space="preserve"><![CDATA[<secret ref="/login/password" style="width:xx; height:xx">
+  <caption>Please enter your password --it will not be visible as you type.<caption>
+</secret>]]></eg><p>
+        In the above, CSS style attributes
+        <code>height</code> and <code>width</code> specify
+        the display size of the form control. Note that
+        the constraints on how much text can be input are
+        obtained from the underlying XForms model definition
+        and not from these display properties.</p>
+
+      
+
+      
+      <p>A graphical browser might render this form control
+        as follows:</p>
+
+      <p><graphic source="images/ui-password.png" alt="an
+                  average-looking text entry field, with '*'
+                  characters where the text would be
+                  expected"/></p>
+      <p>Data Binding Restrictions: Identical to <el>textbox</el>.</p><p>Implementation Hints: In general,  implementations, including accessibility aids, would render a "*" or similar character instead of  the actual characters entered, and thus would  not render the entered value of this form control. Note that this provides only a casual level of security; truly sensitive information will require additional security measures outside the scope of XForms.</p><example><head>XML Representation
+          &lt;<el>secret</el>&gt;</head>
+        <eg><![CDATA[<secret
+  (common attributes)
+>
+  <!-- caption, help?, hint?, onevent? -->
+</secret>]]></eg>
+        <slist>
+
+          <sitem><term>common attributes</term> defined 
+            in <specref ref="ui-common-attributes"/></sitem>
+        </slist>
+      </example></div2>
+  
+  
+  
+  <div2 id="ui-uploadMedia"><head>uploadMedia</head><p>Description: This form control enables the common feature of Web sites to upload a file from the local file system, as well as accepting input from various devices including microphones, pens, and digital cameras.</p><p>Example:</p><eg xml:space="preserve"><![CDATA[<uploadMedia ref="mail/attach1" mediaType="image/*">
+  <caption>Select image:</caption>
+</upload>]]></eg>
+      
+      
+
+      
+      <p>A graphical browser might render this form control as follows:</p>
+
+      <p><graphic source="images/ui-upload.png" alt="A drop-down box; main display reads 'Select Image:' with a cutesey icon. The drop-down
+                  itself has three items: (icon)-From Scanner or Camera...; (icon)-Scribble...; Browse..."/></p>
+      <p>Data Binding Restrictions:  This form control can only be bound to datatypes <code>xsd:base64Binary</code> or <code>xsd:hexBinary</code>, or types derived by restriction from these.</p><p>Implementation Hints:</p><ulist>
+        <item>
+          <p>Implementations with a file system SHOULD support "file upload"--selecting a specific file, for all mediaTypes. The types of files presented
+            by default MUST reflect the mediaType specified in the XForms Model, for
+            example defaulting to only audio file types in the file dialog when the
+            mediaType is "audio/*". In XForms 1.0, there is a 1:1 binding between a
+            uploadMedia form control and one of the <code>xform:binary</code> datatypes, although that
+            single file may be compound (e.g. application/zip).</p>
+        </item>
+        <item>
+          <p>Implementations with specific pen/digitizer hardware SHOULD (and
+            implementations with other pointing devices MAY) support "scribble"--allowing in-place creation of pen-based PNG image data, when the mediaType
+            is "image/*" or "image/png". Other mediaTypes besides image/png MAY share this
+            input method.</p>
+        <note><p>Commonly, people have trouble drawing recognizable figures or
+                signatures with a conventional pointing device like a mouse or track ball.
+                Hence, a reasonable implementation of XForms might not want this feature, hence the
+                "MAY" here for generic pointing
+                devices</p></note></item>
+        <item>
+          <p>Implementations with specific audio recording capabilities SHOULD support
+            <emph>record</emph>--in-place recording of an audio clip, when the mediaType is
+            "audio/*" or "audio/basic". Other mediaTypes besides "audio/basic" MAY share this
+            input method.</p>
+        </item>
+        <item>
+          <p>Implementations with a digital camera/scanner interface SHOULD support
+            <emph>send image</emph>--in-place upload of images from an attached device, when the
+            mediaType is "image/*" or "image/jpeg". Other mediaTypes besides "image/jpg" MAY
+            share this input method.</p>
+        </item>
+        <item>
+          <p>Implementations with video recording capability SHOULD provide a "record"
+            option for video/* mediaTypes.</p>
+        </item>
+        <item>
+          <p>Implementations with 3d capabilities SHOULD provide a 3d interface option
+            for model/* mediaTypes.</p>
+        </item>
+        <item>
+          <p>Implementations MAY provide proprietary implementations (for example, a
+            mediaType of text/rtf could invoke an edit window with a proprietary word
+            processing application)</p>
+        </item>
+        <item>
+          <p>Implementations are encouraged to support other input devices not
+            mentioned here.</p>
+        </item>
+        </ulist>
+      
+      <example role="syntax"><head>XML Representation: &lt;<el>uploadMedia</el>&gt;</head>
+        <eg><![CDATA[<uploadMedia
+  (common attributes)
+  mediaType = list of content types
+>
+  <!-- caption, help?, hint?, onevent? -->
+</uploadMedia>]]></eg>
+        <slist>
+          <sitem><term>common attributes </term> defined in <specref ref="ui-common-attributes"/></sitem><sitem><term>mediaType = list of media types</term> - list of suggested media types, used by the XForms Processor to determine which input methods apply.</sitem></slist>
+      </example></div2><div2 id="ui-selectOne"><head>selectOne</head><p>Description: This form control allows the user to make a single selection from multiple choices.</p><p>Typically, a stylesheet would be used to determine
+        the exact appearance of form controls, though a
+        means is provided to make a concrete selection
+        through an attribute.  The value of the attribute
+        consists of one of the following values, each of
+        which may have a platform-specific behavior:</p>
+
+      <slist>
+        <sitem> radioGroup</sitem>
+        <sitem>checkboxGroup</sitem>
+        <sitem>pulldown</sitem>
+        <sitem>listbox </sitem>
+        <sitem>comboGroup</sitem>
+      </slist><p>Example:</p><eg xml:space="preserve"><![CDATA[<selectOne ref="icecream/flavor">
+  <caption>Flavor</caption>
+  <choices>
+    <item value="vanilla">Vanilla</item>
+    <item value="strawberry">Strawberry</item>
+    <item value="chocolate">Chocolate</item>
+  </choices>
+</selectOne>]]></eg>
+
+        <p>
+          In the above example, selecting one of the choices will result in the associated <att>value</att>
+          given by attribute <att>value</att> on the selected item being set in the underlying data instance at the location <code>icecream/flavor</code>.
+          The <att>value</att>s given in the user interface shown above may be used in constructing a default schema if no schema is provided by the XForms author.
+        </p>
+
+        
+
+        
+        <p>A graphical browser might render this form control as any of the following:</p>
+
+        <table><tbody><tr><th>listbox</th><th>checkboxGroup</th><th>radioGroup</th><th>pulldown</th></tr>
+            <tr><td><graphic source="images/ui-selectOne-listbox.png" alt="a list control, Vanilla, Strawberry, and Chocolate visible; Strawberry selected"/></td><td><graphic source="images/ui-selectOne-checkbox.png" alt="checkboxes, Vanilla, Strawberry, Chocolate; Chocolate is selected"/></td><td><graphic source="images/ui-selectOne-radio.png" alt="radio buttons, Vanilla, Strawberry, Chocolate; Strawberry is selected"/></td><td><graphic source="images/ui-selectOne-pulldown.png" alt="a collapsed pull-down list; Vanilla is selected"/></td></tr></tbody></table><p>Data Binding Restrictions: This form control will select the lexical value from the <att>value</att> attribute (or in the absence of such an attribute, the text content of the <el>item</el> element) of the single item selected. If the datatype bound to this form control does not permit the selected value (for instance a datatype of <code>xsd:decimal</code> with an attribute <code>value="abc"</code>), the form control with that selection will be perpetually considered invalid and it will not be possible to submit the form. Authors are encouraged to avoid this situation.</p><p>If the datatype bound to this form control includes a non-enumerated value space (for instance <code>xsd:string</code>, or <code>xsd:string</code> as part of a union), or if the "comboGroup" UI hint is specified, the form control then should allow free data entry, as described in <specref ref="ui-entry"/>, in addition to the behavior defined here.</p><issue id="items-specified-elsewhere"><p>Yet to be decided is allowing display and/or storage values located elsewhere to be retrieved from a binding expression.</p></issue><p>Some user interface combinations may allow a state of zero selected items, in which case the lexical value of a zero-length string is selected.</p><p>Implementation Hints: 
+          User interfaces may choose to render <el>selectOne</el>
+          as a pulldown list or group of radio buttons, among other options. The selectUI attribute offers a hint as to which rendering might be most appropriate, although any styling information (such as CSS) should take precedence.</p><example role="syntax"><head>XML Representation: &lt;<el>selectOne</el>&gt;</head>
+          <eg><![CDATA[<selectOne
+  (common attributes)
+  selectUI = ("radioGroup" | "checkboxGroup" | "pulldown" | "listbox" | "comboGroup")
+>
+  <!-- caption, help?, hint?, onevent?, choices* -->
+</selectOne>]]></eg>
+          <slist>
+            <sitem><term>common attributes </term> defined
+              in <specref ref="ui-common-attributes"/></sitem>
+            <sitem><term>    selectUI = ("radioGroup" | "checkboxGroup" | "pulldown" | "listbox" | "comboGroup")</term> - appearance
+              override</sitem>
+          </slist>
+        </example></div2>
+  
+  <div2 id="ui-selectMany"><head>selectMany</head><p>Description: This form control allows the user to make multiple selections from multiple choices.</p>
+      
+      <p>Example:</p><eg xml:space="preserve"><![CDATA[<selectMany ref="icecream/flavors">
+  <caption>Flavors</caption>
+  <choices>
+    <item value="v">Vanilla</item>
+    <item value="s">Strawberry</item>
+    <item value="c">Chocolate</item>
+  </choices>
+</selectMany>]]></eg><p>In the above example, more than one flavor can be
+          selected, populating the instance data with multiple selections.</p>
+
+        
+
+        
+        <p>A graphical browser might render form control
+          <el>selectMany </el>as any of the following:</p>
+
+        <table><tbody><tr><th>listbox</th><th>checkboxGroup</th><th>radioGroup</th><th>pulldown</th></tr>
+              <tr><td><graphic source="images/ui-selectMany-listbox.png" alt="list-box; Vanilla, Strawberry, and
+                               Chocolate visible; Strawberry and Chocolate
+                               selected"/></td><td><graphic source="images/ui-selectMany-checkbox.png" alt="checkboxes, Vanilla, Strawberry, and
+                                                            Chocolate; Strawberry and Chocolate
+                                                            selected"/></td><td><graphic source="images/ui-selectMany-radio.png" alt="Radio buttons, Vanilla, Strawberry, and
+                                                                                         Chocolate; Strawberry and Chocolate
+                                                                                         selected"/></td><td>N/A</td></tr></tbody></table>
+        <p>Data Binding Restrictions: When zero or one items are selected, this form control behaves exactly like <el>selectOne</el> with regard to the lexical value that is selected. When multiple items are selected, the lexical value is a space-separated list of the selected values. The datatype bound to this form control must be capable of supporting this format, typically a Schema list type. Cases where each of the multiple selections appear in the instance data attached to a separate element are handled through the <el>repeat</el> construction (<specref ref="ui-repeat"/>).</p><note><p>A limitation of the Schema list datatypes is that whitespace characters in the storage values (the <code>value="..."</code> attribute of the <el>item</el> element) are always interpreted as separators between individual data values. Therefore, authors should avoid using whitespace characters within storage values.</p><p>For instance, the following incorrect item declaration:</p><eg><![CDATA[<item value="United States of America">USA</item>]]></eg><p>when selected, would introduce not one but four additional selection values: "America", "of", "States", and "United".</p></note><p>Implementation Hints: An accessibility aid might allow the user to browse
+          through the available choices  and leverage
+          the grouping of choices in the markup to
+          provide enhanced navigation through long lists
+          of choices.</p><example role="syntax">
+          <head>XML Representation: &lt;<el>selectMany</el>&gt;</head>
+          <eg><![CDATA[<selectMany
+  (common attributes)
+  selectUI = ("radioGroup" | "checkboxGroup" | "pulldown" | "listbox" | "comboGroup")
+>
+  <!-- caption, help?, hint?, onevent?, choices* -->
+</selectMany>]]></eg>
+          <slist>
+            <sitem><term>common attributes </term> defined
+              in <specref ref="ui-common-attributes"/></sitem>
+            <sitem><term>  selectUI = ("radioGroup" | "checkboxGroup" | "pulldown" | "listbox" | "comboGroup")</term> - appearance override</sitem></slist>
+        </example></div2><div2 id="ui-selectBool"><head>selectBoolean</head><p>Description: This form control represents an on/off or true/false or yes/no (or similar) choice.</p><p>Example:</p><eg><![CDATA[<selectBoolean ref="questionnaire/married">
+  <caption>Are you married?</caption>
+  <help>We need this to determine your tax allowance</help>
+  <choices>
+    <item value="true">Yes</item>
+    <item value="false">No</item>
+  </choices>
+</selectBoolean>]]></eg><p>Data Binding Restrictions: This form control produces only two possible lexical values: <code>true</code> or <el>false</el>. To be considered valid, the datatype bound to this form control (typically <code>xform:boolean</code>) must be able to accept these two lexical values.</p><note><p>Scenarios where the desired lexical value is anything other than 'true'/'false' are not suitable for the <code>selectBoolean</code> form control.</p><p>For example, if the values placed into the instance data were required to be either "male" or "female", the <code>selectOne</code> form control should be used instead.</p></note><p>Implementation Hints: Visual implementations would typically render this as a checkbox. In some cases, like the above example or in aural environments, it may be helpful to provide labels for the respective choices. This is accomplished through the <el>choices</el> mechanism, similar to the other <el>select...</el> form controls.</p><example role="syntax"><head>XML Representation:
+            &lt;<el>selectBoolean</el>&gt;</head> <eg><![CDATA[<selectBoolean
+  (common attributes )
+  selectUI = ("radioGroup" | "checkboxGroup" | "pulldown" | "listbox" | "comboGroup")
+>
+  <!-- caption, help?, hint?, onevent?, choices* -->
+</selectBoolean>]]></eg>
+          <slist>
+            <sitem><term>common attributes </term> defined
+              in <specref ref="ui-common-attributes"/></sitem>
+            <sitem><term>selectUI = (TBD)</term></sitem></slist>
+        </example></div2>
+  
+  
+  
+  <div2 id="ui-range"><head>range</head><p>Description: This form control allows selection from a continuous range of values.</p>
+
+      <p>Example:</p><eg><![CDATA[<range ref="/stats/balance" start="-2.0" end="2.0" stepSize="0.5">
+  <caption>Balance:</caption>
+</range>]]></eg><p>A graphical browser might render this as follows:</p>
+  <p><graphic source="images/ui-range.png" alt="a slider control, from -2 to +2"/></p>
+  <p>Data Binding Restrictions: Only datatypes  which represent a continuous range where
+   it is possible to express a difference value can be bound to this form control.
+   (For instance, <code>xform:decimal</code> would be fine, while <code> xform:string</code>
+   or <code>xform:..Binary</code> would not). In terms of Schema datatypes, the datatype must
+   be either 1) have a total order relationship, or 2) an overall partial order relationship,
+   but totally ordered within the range specified between the <att>start</att> and <att>end</att>
+   attributes. </p>
+   <issue id="enum-range"><p>Should an enumeration be allowed to bind to this form control?
+   If yes, how should it be ordered?</p></issue>
+   
+   <p>Implementation Hints: In graphical environments, this form control would typically be
+   rendered as a "slider" or "volume control".</p><p>Notice that the attributes
+   of this element encapsulate sufficient metadata that in
+        conjunction with the type information 
+        available from the XForms Model proves sufficient to produce
+        meaningful prompts when using modalities like speech,
+        e.g., when using an accessibility aid.
+        Thus, an Aural CSS enabled user agent might speak a prompt of the
+        form 
+        <emph>Please pick a date in the range January 1, 2001 through
+          December 31, 2001.</emph>
+      </p><example role="syntax">
+        <head>XML Representation: &lt;<el>range</el>&gt;</head>
+        <eg><![CDATA[<range
+  (common attributes)
+  start = datavalue
+  end = datavalue
+  stepSize = datavalue-difference
+>
+  <!-- caption, help?, hint?, onevent? -->
+</range>]]></eg>
+        <slist>
+          <sitem><term>common attributes </term> defined in
+            <specref ref="ui-common-attributes"/></sitem>
+          <sitem><term>start = datavalue</term> - 
+            Lexical starting bound for the range, of the
+            same datatype bound to the form control</sitem>
+          <sitem><term>end = datavalue</term> - Lexical ending bound for the range, of the same datatype bound to the form control</sitem><sitem><term>stepSize = datatype-difference</term> - Prefered step-size to use  for incrementing or
+            decrementing the value within the form
+            control, of a datatype that can express the difference between two values of the datatype bound to the form control</sitem></slist>
+      </example>
+
+      
+      
+      </div2><div2 id="ui-button"><head>button</head><p>Description: This form control is similar to the XHTML
+        element of the same name and allows for
+        user-triggered actions. This form control may also be used to
+        advantage in realizing other custom form controls.</p><p>Example:</p><eg><![CDATA[<button>
+Example unavailable at time of publication
+</button>]]></eg><p>Data Binding Restrictions:</p><note><p>Binding a model item has no direct effect on a button, but provides a context for any event handlers that are attached.</p></note><p>Implementation Hints: Graphical implementations would typically render this form control as a push-button.</p>
+
+      <example role="syntax">
+        <head>XML Representation: &lt;<el>button</el>&gt;</head>
+        <eg xml:space="preserve"><![CDATA[<button
+  (common attributes)
+>
+  <!-- caption, help?, hint?, onevent? -->
+</button>]]></eg>
+        <slist>
+          <sitem><term>common attributes </term> defined in
+            <specref ref="ui-common-attributes"/></sitem>
+        </slist>
+      </example></div2><div2 id="ui-output"><head>output</head><p>Description: This form control renders a value from the instance data, but provides no means for entering or changing data. 
+        This form control may be used in a <el>caption</el>,
+        for instance,  when authors want to say: "I charged you <emph>value</emph> - and here is 
+          why.</p><p>Example:</p><eg xml:space="preserve"><![CDATA[I charged you
+<output ref="order/totalPrice"/>
+and here is why:]]></eg>
+      
+
+      
+      <p>A graphical browser might render an output form control as follows:</p>
+
+      <p><graphic source="images/ui-output.png" alt="average-looking text, reading 'I charged you
+                  100.0 - and here is why:'"/></p>
+      <p>Data Binding Restrictions: The lexical value of the datatype bound to this form control is displayed, after processing as described in <specref ref="rpm"/>.</p><p>Implementation Hints: An audio browser might apply  properties to this form control to
+        <emph>aurally highlight</emph>
+        the displayed value to provide audio formatted output.</p><example><head>XML Representation: &lt;<el>output</el>&gt;</head>
+        <eg><![CDATA[<output
+ id = xsd:ID
+ ref = binding-expression
+ xform = instance data selector
+ format = formatting-expression
+>
+  <!-- empty content -->
+</output>]]></eg>
+        <slist>
+          <sitem><term>id = xsd:ID</term> - Optional unique identifier used for linking.</sitem><sitem><term>ref = binding-expression</term> - <termref def="def-binding-expression">Binding expression</termref></sitem><sitem><term>xform = xsd:IDREF</term> - Optional   instance data selector. Details in the chapter <specref ref="binding"/>.</sitem><sitem><term>format = formatting-expression</term> - Optional format specifier</sitem></slist>
+      </example><ednote>
+        <edtext>We need to decide on how we define attribute
+          <code>format</code> on form control
+          <el>output</el>.
+          The functionality needed is similar to what
+          functions like <code>printf</code> typically
+          take.<!--MJD - perhaps <code>format()</code> would be
+          a good addition to the function call library in
+          <specref ref="expr"/>. TVR: A cleaner alternative is to specify format rules using
+          the  appropriate facets as defined by the data
+          model -e.g., precision.--></edtext>
+        
+      </ednote></div2><div2 id="ui-submit"><head>submit</head><p>Description: This form control submits all or part of the instance data to which it is bound.</p><p>Example:</p><eg><![CDATA[<submit xform="timecard">
+  <caption>Submit</caption>
+</submit>]]></eg><p>Implementation Hints: The default handling for this controls is equivalent to the <code>submit()</code> method.</p><example role="syntax"><head>XML
+          Representation: &lt;<el>submit</el>&gt;</head>
+        
+        <eg><![CDATA[<submit
+  (common attributes)
+>
+  <!-- caption, help?, hint?, onevent? -->
+</submit>]]></eg><slist>
+          <sitem><term>common attributes </term> defined in <specref ref="ui-common-attributes"/></sitem></slist>
+      </example></div2><div2 id="ui-reset"><head>reset</head><p>Description: This form control resets to the initial values all or part of the instance data to which it is bound.</p><p>Example:</p><eg><![CDATA[<reset ref="/tcard/data" xform="timecard">
+  <caption>Reset totals</caption>
+</reset>]]></eg><p>Implementation Hints: The default handling for this controls is equivalent to the <code>reset()</code> method.</p><example role="syntax">
+        <head>XML Representation:
+          &lt;<el>reset</el>&gt;</head>
+        <eg><![CDATA[<reset
+  (common attributes)
+>
+  <!-- caption, help?, hint?, onevent? -->
+</reset>]]></eg>
+        <slist>
+          <sitem><term>common attributes </term> defined in
+            <specref ref="ui-common-attributes"/></sitem>
+        </slist>
+      </example></div2>
+  
+  
+  
+  
+  
+<div2 id="ui-common">
+    <head>Common Markup</head>
+    
+    <p>
+      The preceding form control definitions make reference to several child elements and attributes that are common to several of the XForms form controls. This section defines these common markup components.</p>
+
+    <div3 id="ui-common-attributes">
+      <head>Common Attributes</head>
+      <issue id="XHTML-attrs"><p>XHTML defines two attributes on element
+          <att>html:form</att>--<att>accept</att>
+          and <att>accept-charset</att>. Additionally, attribute
+          <att>accept-charset</att> also appears on element
+          <att>html:input</att>.
+          We need to bring the equivalent to these into the XForms specification.</p></issue>
+      <example role="syntax">
+        <head>XML Representation: Common Attributes</head>
+        <eg><![CDATA[xmlns = xsd:anyURI
+xml:lang = xsd:language
+id = xsd:ID
+class = space separated list of classes
+style = associated style info
+ref = binding-expression
+xform = xsd:IDREF
+navIndex = xsd:nonNegativeInteger : 0
+accessKey = xsd:token]]></eg>
+        <slist> 
+          <sitem><term>xmlns = xsd:anyURI</term> - Optional standard XML attribute for identifying an XML namespace.</sitem>
+          <sitem><term>xml:lang = xsd:language</term> - Optional standard XML attribute to specify a human language for this element.</sitem>
+          <sitem><term>id = xsd:ID</term> - Optional unique identifier used for linking.</sitem>
+          <sitem><term>class = space separated list of classes</term> - Optional selector for a style rule.</sitem>
+          <sitem><term>style = associated style info</term> - Optional inline style specification.</sitem>
+          <sitem><term>ref = binding-expression</term> - <termref def="def-binding-expression">Binding expression</termref>. Details in the chapter <specref ref="binding"/>.</sitem>
+          <sitem><term>xform = xsd:IDREF</term> - Optional   instance data selector. Details in the chapter <specref ref="binding"/>.</sitem>
+          <sitem><term>navIndex = xsd:nonNegativeInteger : 0</term> - Optional attribute is a non-negative integer in the range of 0-32767 used 
+            to define the navigation sequence. This gives the author control over the 
+            sequence in which <termref def="def-form-control">form control</termref>s 
+            are traversed. The default navigation order is specified in the chapter <specref ref="rpm"/>.</sitem><sitem><term> accessKey = xsd:string</term> - Optional attribute defines a shortcut for moving the input focus directly 
+            to a particular <termref def="def-form-control">form control</termref>. 
+            The value of this is typically a single character which when pressed together 
+            with a platform specific modifier key (e.g. the <emph>alt</emph> key) results 
+            in the focus being set to this <termref def="def-form-control">form 
+              control</termref>.</sitem>
+          
+        </slist>
+      </example>
+      
+      <p>
+        CSS properties for controlling the look and feel of
+        XForms form controls are being defined in
+        conjunction with the CSS Working Group.  This version
+        of the XForms working draft defines the XForms form controls independent of visual
+        presentation. Additionally, sample default
+        visual presentations are shown for each form control
+        defined in this Working Draft.  The CSS Working Group
+        has agreed to help us develop a default CSS stylesheet
+        capable of producing the sample default renderings
+        illustrated in this working draft.  The results of the
+        above will be used to document the use of CSS
+        properties within XForms user interface elements for
+        the final version of the XForms specification.</p>
+
+      
+    </div3>
+    <div3 id="ui-common-elements">
+      <head>Common Child Elements</head>
+      
+      <p>
+        Child elements <el>caption</el>, <el>help</el> and
+        <el>hint</el> detailed below provide the ability to attach human-readable
+        metadata to XForms form controls.
+      </p>
+
+      
+      <p>Instead of supplying such metadata e.g., the label
+        for a form control, as inline content of
+        the contained element <el>caption</el>, the metadata can be
+        pointed to by using a simple XLink attribute
+        <att>xlink:href</att> on element <el>caption</el> (or <el>hint</el> or <el>help</el>).
+        Notice that systematic use of this feature can be
+        exploited in internationalizing XForms user interfaces
+        by:
+        
+      </p>
+
+      <ulist><item><p>Factoring all human readable
+            messages to a separate
+            resource XML file.</p></item><item><p>Using URIs into this XML resource
+            bundle within individual caption
+            elements</p></item><item><p>Finally, an XForms
+            processor can use content negotiation to obtain the
+            appropriate XML resource bundle,
+            e.g., based on the <code>accept-language</code>
+            headers from the client, to serve up the user
+            interface with messages localized to the
+            client's locale.</p></item></ulist><div4 id="ui-common-elements-caption">
+        <head>caption</head>
+        
+        <p>The required element <el>caption</el>  labels the containing form control with
+          a descriptive label. Additionally, the caption makes it possible
+          for someone who can't see the form control to
+          obtain a short description while navigating
+          between form controls.</p>
+
+
+        
+        <example role="syntax">
+          <head>XML Representation: &lt;<el>caption</el>&gt;</head>
+          <eg><![CDATA[<caption
+  (common attributes)
+>
+  <!-- mixed content -->
+</caption>]]></eg>
+          <slist>
+            <sitem><term>common attributes</term> defined in
+              <specref ref="ui-common-attributes"/></sitem>
+          </slist>
+        </example>
+
+        <p>An accessibility aid would typically speak the metadata
+          encapsulated in element <el>caption</el> when the
+          containing form control gets focus.</p>
+      </div4>
+      <div4 id="ui-common-elements-help">
+        <head>help</head>
+        
+        <p>
+          The optional element <el>help</el> provides a longer
+          description that will help users  understand how
+          to fill out this <termref def="def-form-control">form control</termref>.
+          The <el>help</el> text will   be shown only
+          on request.</p>
+
+        <example role="syntax">
+          <head>XML Representation: &lt;<el>help</el>&gt;</head>
+          <eg><![CDATA[<help
+  (common attributes)
+>
+  <!-- mixed content -->
+</help>]]></eg>
+          <slist>
+            <sitem><term>common attributes </term> defined
+              in <specref ref="ui-common-attributes"/></sitem>
+          </slist>
+        </example>
+
+        
+        <p>A graphical browser might render help as follows:</p>
+
+        <p><graphic source="images/ui-password-with-help.png" alt="a
+                    password entry field, with a popup window below,
+                    displaying instructions for retrieving a forgotton
+                    password"/></p><p>An accessibility aid might speak this
+          information upon request.</p>
+      </div4>
+
+      <div4 id="ui-common-elements-hint">
+        <head>hint</head>
+        
+        <p>
+          The optional element <el>hint</el> provides a short
+          hint for the user, typically represented as a
+          tooltip by graphical user agents.  The tooltip
+          text will normally be shown when the user remains
+          on the form control for more than a certain length
+          of time.  Accessibility aids might render such
+          tooltips using speech. This element is optional,
+          and its content model is mixed.</p>
+
+        <example role="syntax">
+          <head>XML Representation:
+            &lt;<el>hint</el>&gt;</head>
+          <eg><![CDATA[<hint
+  (common attributes)
+>
+  <!-- mixed content -->
+</hint>]]></eg>
+          <slist>
+            <sitem><term>common attributes </term> defined in <specref ref="ui-common-attributes"/></sitem></slist>
+        </example>
+
+        
+        <p>A graphical browser might render hints as follows:</p>
+
+        <p><graphic source="images/ui-textbox-with-hint.png" alt="an average-looking text entry field, with a mouse pointer visible and a tooltip below, reading 'Please enter the number and street name'"/></p>
+      </div4>
+
+      <div4 id="ui-common-elements-onevent">
+        <head>onevent</head>
+        
+        <p>
+          This element can be used to bind event handlers to
+          form controls. It is defined in <bibref ref="ref-xhtml-events"/>. Details on XForms events
+          can be found in the chapter
+          <specref ref="rpm"/>.</p>
+
+        
+        <example role="syntax">
+          <head>XML Representation: &lt;<el>onevent</el>&gt;</head>
+          <eg><![CDATA[<onevent
+  (attributes defined in XHTML Events)
+>
+  <!-- Action handlers -->
+</onevent>]]></eg>
+        </example>
+        <p>
+          Element <el>onevent</el> is defined in the XHTML Events
+          module.
+          It declares   an event listener 
+          by specifying the event  to handle  and the event handler to
+          invoke.</p>
+      </div4>
+      
+    <div4 id="ui-common-elements-item"><head>item</head>
+
+        <p>This element is used within list form controls to represent a single item of the list.</p>
+        <issue id="onevent-for-item"><p>Should onevent handlers be allowed here for individual items in a list?</p></issue><example role="syntax"><head>XML Representation: &lt;<el>item</el>&gt;</head>
+          <eg><![CDATA[<item
+  value = lexical-representation
+>
+  <!-- #PCDATA -->
+</item>]]></eg>
+          <slist>
+            <sitem><term>value = lexical-representation</term> - the "storage value" for the item, to be placed in the instance data when this item is chosen.</sitem></slist>
+        </example>
+      </div4><div4 id="ui-common-elements-choices"><head>choices</head>
+        <p>This element is used within list form controls to group items. This provides the same functionality as element <el>optgroup</el> in HTML 4.0.</p>
+        <example role="syntax"><head>XML Representation: &lt;<el>choices</el>&gt;</head>
+          <eg><![CDATA[<choices>
+  <!-- (item | choices)+ -->
+</choices>]]></eg>
+          
+        </example>
+      </div4></div3>
+  </div2></div1>
+<!-- 
+Local Variables:
+mode: xae
+sgml-indent-step: 2
+sgml-indent-data: t
+sgml-set-face: nil
+sgml-insert-missing-element-comment: nil
+fill-column: 65
+End:
+--> 

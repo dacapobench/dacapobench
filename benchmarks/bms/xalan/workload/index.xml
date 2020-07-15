@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE spec PUBLIC "-//W3C//DTD Specification Version 2.1//EN" "xmlspec-v21.dtd"[
+  <!ENTITY cellback '#d0d9fa'>
+  <!ENTITY xformsWG "<loc href='http://www.w3.org/MarkUp/Forms/'>W3C XForms Working Group</loc>">
+  <!ENTITY year "2001">
+  <!ENTITY mm "06">
+  <!ENTITY MM "June">
+  <!ENTITY dd "08">
+  <!ENTITY MMDD "&mm;&dd;">
+  <!ENTITY iso.doc.date "&year;&MMDD;">
+  <!ENTITY order "&#163;">
+  <!ENTITY le "&#8804;">
+  <!-- less than or equal to, U+2264 ISOtech -->
+  <!ENTITY ne "&#8800;">
+  <!-- not equal to, U+2260 ISOtech -->
+  <!ENTITY infin "&#8734;">
+  <!-- infinity, U+221E ISOtech -->
+  <!ENTITY times "&#215;">
+  <!-- multiplication, U+00D7 -->
+  <!ENTITY sect "&#xa7;">
+  <!ENTITY eacute "&#xe9;">
+  <!ENTITY ouml "&#xf6;">
+  <!ENTITY copy "&#xa9;">
+  
+  <!-- entities for embedding -->
+  <!ENTITY binding SYSTEM "binding.xml" >
+  <!ENTITY concepts SYSTEM "concepts.xml" >
+  <!ENTITY controls SYSTEM "controls.xml" >
+  <!ENTITY datatypes SYSTEM "datatypes.xml" >
+  <!ENTITY expr SYSTEM "expr.xml" >
+  <!ENTITY intro SYSTEM "intro.xml" >
+  <!ENTITY model SYSTEM "model.xml" >
+  <!ENTITY rpm SYSTEM "rpm.xml" >
+  <!ENTITY structure SYSTEM "structure.xml" >
+  <!ENTITY terms SYSTEM "terms.xml" >
+  <!ENTITY ui SYSTEM "ui.xml" >
+  
+  <!ENTITY acks SYSTEM "acks.xml" >
+  <!ENTITY changes SYSTEM "changes.xml" >
+<!--  <!ENTITY example SYSTEM "example.xml" > -->
+<!--  <!ENTITY optional SYSTEM "optional.xml" > -->
+  <!ENTITY prod-notes SYSTEM "prod-notes.xml" >
+  <!ENTITY references SYSTEM "references.xml" >
+  <!ENTITY schema SYSTEM "schema.xml" >
+
+  <!-- we'll see if anyone has a sense of humor --> <!-- note: I tried to do this with conditional sections, but XT seems to get confused and reports a syntax error --> <!ENTITY % sense-of-humor "INCLUDE"> <!ENTITY % no-sense-of-humor "IGNORE"> <!-- <![%sense-of-humor[ <!ENTITY long "Homer"> <!ENTITY int "Sideshow-Bob"> <!ENTITY short "Bart"> <!ENTITY byte "Troy-McClure"> <!ENTITY unsignedLong "Apu-Nahasapeemapetilon"> <!ENTITY unsignedInt "Chief-Wiggums"> <!ENTITY unsignedShort "Mr-Burns"> <!ENTITY unsignedByte "Krusty-the-Clown"> --> <!-- ]]> <![%no-sense-of-humor[ --> <!ENTITY long "long"> <!ENTITY int "int"> <!ENTITY short "short"> <!ENTITY byte "byte"> <!ENTITY unsignedLong "unsignedLong"> <!ENTITY unsignedInt "unsignedInt"> <!ENTITY unsignedShort "unsignedShort"> <!ENTITY unsignedByte "unsignedByte"> <!-- ]]> --> <!ATTLIST eg text CDATA #IMPLIED> <!-- experimental pointer to out-of-line example text --> <!ELEMENT propdef ANY> <!-- best we can do without editing xml-spec --> <!ATTLIST propdef id ID #REQUIRED name CDATA #REQUIRED> <!ELEMENT propref EMPTY> <!ATTLIST propref ref IDREF #REQUIRED> <!ELEMENT xpropref (#PCDATA)> <!ATTLIST xpropref href CDATA #IMPLIED> <!ELEMENT compdef (proplist)> <!ATTLIST compdef name CDATA #REQUIRED ref IDREF #REQUIRED> <!ELEMENT compref EMPTY> <!ATTLIST compref ref IDREF #REQUIRED> <!ELEMENT proplist (propdef*)> <!ELEMENT reprdef (reprelt*,reprcomp*)> <!ATTLIST reprdef eltname NMTOKENS #REQUIRED local NMTOKEN #IMPLIED> <!ELEMENT reprelt EMPTY> <!ATTLIST reprelt eltname NMTOKENS #REQUIRED type NMTOKEN #IMPLIED> <!ELEMENT reprcomp (reprdep?,propmap*)> <!ATTLIST reprcomp ref IDREF #REQUIRED abstract CDATA #REQUIRED> <!ELEMENT reprdep ANY> <!-- best we can do without editing xml-spec --> <!ELEMENT propmap ANY> <!-- best we can do without editing xml-spec --> <!ATTLIST propmap name IDREF #REQUIRED> <!ELEMENT eltref EMPTY> <!ATTLIST eltref ref NMTOKEN #REQUIRED> <!ELEMENT stale ANY> <!ELEMENT dtref EMPTY> <!ATTLIST dtref ref NMTOKEN #REQUIRED> <!ELEMENT baseref EMPTY> <!ELEMENT itemTyperef EMPTY> <!ELEMENT fundamental-facets EMPTY> <!ENTITY % local.p.class "|stale|facets|subtypes| inverse-facets|open-issues|revisions|fundamental-facets|applicable-facets"> <!ENTITY % local.termdef.class "|propdef"> <!ENTITY % local.ref.class "|propref|xpropref|eltref|compref|dtref|baseref|itemTyperef"> <!ENTITY % local.illus.class "|compdef|reprdef|proplist"> <!ENTITY i-attribute "&nbsp;<xpropref href='http://www.w3.org/TR/xml-infoset#infoitem.attribute'>attribute</xpropref>"> <!ENTITY i-children "&nbsp;<xpropref href='http://www.w3.org/TR/xml-infoset#infoitem.element'>children</xpropref>"> <!ENTITY i-child "&nbsp;<xpropref href='http://www.w3.org/TR/xml-infoset#infoitem.element'>child</xpropref>"> <!ENTITY i-attributes "&nbsp;<xpropref href='http://www.w3.org/TR/xml-infoset#infoitem.element'>attributes</xpropref>"> <!ENTITY i-attrChildren "&nbsp;<xpropref href='http://www.w3.org/TR/xml-infoset#infoitem.attribute'>children</xpropref>"> <!ENTITY i-value "&nbsp;<xpropref href='http://www.w3.org/TR/xml-infoset#infoitem.attribute'>value</xpropref>"> <!ENTITY i-ccode "&nbsp;<xpropref href='http://www.w3.org/TR/xml-infoset#infoitem.character'>character code</xpropref>"> <!ELEMENT applicable-facets EMPTY> <!ELEMENT facets EMPTY> <!ELEMENT subtypes EMPTY> <!ELEMENT inverse-facets EMPTY> <!ATTLIST inverse-facets name CDATA #REQUIRED> <!ELEMENT open-issues EMPTY> <!ELEMENT revisions EMPTY> <!ATTLIST table align CDATA #IMPLIED bgcolor CDATA #IMPLIED> ]>
+<spec w3c-doctype="wd"> 
+  <header> 
+    <title>XForms  1.0</title> 
+    <version></version> 
+    <w3c-designation>xforms-&iso.doc.date;</w3c-designation> 
+    <w3c-doctype>W3C Working Draft</w3c-doctype> 
+    <pubdate> 
+      <day>&dd;</day> 
+      <month>&MM;</month> 
+      <year>&year;</year>
+    </pubdate> 
+    <publoc> 
+      <loc href="http://www.w3.org/TR/&year;/WD-xforms-&iso.doc.date;/">
+        http://www.w3.org/TR/&year;/WD-xforms-&iso.doc.date;</loc>
+ 
+        
+        (<loc role="available-format" href="http://www.w3.org/TR/&year;/WD-xforms-&iso.doc.date;/index-all.html">One big file</loc>, <loc role="available-format" href="http://www.w3.org/TR/&year;/WD-xforms-&iso.doc.date;/WD-xforms-&iso.doc.date;.zip">Zip archive</loc>)</publoc> 
+    <prevlocs> 
+      <loc href="http://www.w3.org/TR/2001/WD-xforms-20010216/">
+        http://www.w3.org/TR/2001/WD-xforms-20010216</loc> 
+    </prevlocs> 
+    <latestloc> 
+      <loc href="http://www.w3.org/TR/xforms/">
+        http://www.w3.org/TR/xforms/</loc> 
+    </latestloc> 
+    <authlist> 
+      <author> 
+        <name>Micah Dubinko</name> 
+        <affiliation>Cardiff</affiliation> 
+        <email href="mailto:mdubinko@Cardiff.com">mdubinko@Cardiff.com</email> 
+      </author> 
+      <author> 
+        <name>Josef Dietl</name> 
+        <affiliation>Mozquito Technologies</affiliation> 
+        <email href="mailto:josef@mozquito.com">josef@mozquito.com</email> 
+      </author> 
+      <author> 
+        <name>Roland Merrick</name> 
+        <affiliation>IBM</affiliation> 
+        <email href="mailto:Roland_Merrick@uk.ibm.com">Roland_Merrick@uk.ibm.com</email> 
+      </author> 
+      <author> 
+        <name>Dave Raggett</name> 
+        <affiliation>W3C/Openwave</affiliation> 
+        <email href="mailto:dsr@w3.org">dsr@w3.org</email> 
+      </author> 
+      <author> 
+        <name>T. V. Raman</name> 
+        <affiliation>IBM</affiliation> 
+        <email href="mailto:tvraman@almaden.ibm.com">tvraman@almaden.ibm.com</email> 
+      </author> 
+       <author> 
+        <name>Linda Bucsay Welsh</name> 
+        <affiliation>Intel</affiliation> 
+        <email href="mailto:linda@intel.com">linda@intel.com</email> 
+      </author> 
+     </authlist> 
+    <status> 
+      <p><emph>This section describes the status of this document at the time
+        of its publication. Other documents may supersede this document. The latest
+        status of this document series is maintained at the W3C.</emph></p> 
+      <p>This is a Working Draft that incorporates new material agreed upon at the Boston face to face meeting, including the adoption of XML Schema replacing XForms Simple Syntax,  as well as initial efforts at modularizing XForms and additional feedback from outside sources. Interested parties are encouraged to provide additional feedback and comments.</p> 
+      <p>This document is a W3C Working Draft for review by W3C members and other interested parties. It is a draft document and may be updated, replaced, or obsoleted by other documents at any time. It is inappropriate to use W3C Working Drafts as reference material or to cite them as other than "work in progress". A list of current public W3C Working Drafts can be found at <loc href="http://www.w3.org/TR/">http://www.w3.org/TR</loc>.</p><p>This document has been produced as part of the <loc href="http://www.w3.org/MarkUp/">W3C HTML Activity</loc>.</p><p>Please send detailed comments on this document to <loc href="mailto:www-forms@w3.org">www-forms@w3.org</loc>, the public forum for discussion of W3C's work on Web forms. To subscribe, send an email to the above address with the word <emph>subscribe</emph> in the subject line (include the word <emph>unsubscribe</emph> if you want to unsubscribe). The <loc href="http://lists.w3.org/Archives/Public/www-forms/">archive</loc> for the list is accessible online.</p> 
+    </status> 
+    <abstract> 
+      <p> Forms were introduced into HTML in 1993. Since then they have become a critical part of the Web. The existing mechanisms in HTML for forms
+        are now outdated, and W3C has started work on developing an effective
+        replacement. This document outlines the requirements for "XForms", W3C's name
+         for the next generation of Web forms.</p> 
+    </abstract> 
+    <langusage> 
+      <language id="EN">English</language> 
+    </langusage> 
+    <revisiondesc> 
+      <slist> 
+        <sitem> 2001-03-06: MJD: conversion to XMLspec</sitem> 
+      </slist> 
+    </revisiondesc> 
+  </header> 
+
+<body>
+&intro;
+&concepts;
+&terms;
+&datatypes;
+&model;
+&expr;
+&controls;
+&ui;
+&binding;
+&structure;
+&rpm;
+</body>
+ 
+<back>
+&schema;
+<!-- &optional; -->
+&references;
+<!-- &example; -->
+&changes;
+&acks;
+&prod-notes;
+</back> 
+</spec>

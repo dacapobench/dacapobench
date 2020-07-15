@@ -33,9 +33,10 @@ public class Xalan extends Benchmark {
     Class<?> clazz = Class.forName("org.dacapo.xalan.XSLTBench", true, loader);
     this.method = clazz.getMethod("doWork", int.class);
     createWorkersMethod = clazz.getMethod("createWorkers", int.class);
-    Constructor<?> constructor = clazz.getConstructor(File.class);
+    Constructor<?> constructor = clazz.getConstructor(File.class,File.class);
     useBenchmarkClassLoader();
-    benchmark = constructor.newInstance(scratch);
+    benchmark = constructor.newInstance(new File(data,"dat"),  scratch);
+
   }
 
   /**

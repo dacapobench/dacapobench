@@ -37,11 +37,15 @@
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}/benchmark"/>
     </target>
 
+    <target name="data">
+        <copy todir="${bm-data}">
+            <fileset dir="${bm-files}/workload"/>
+        </copy>
+    </target>
+
     <target name="jar">
         <copy file="${xalan-top}/build/xalan.jar" todir="${bm-jars}"/>
         <copy file="${xalan-top}/build/serializer.jar" todir="${bm-jars}"/>
-        <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/>
     </target>
 
 </project>

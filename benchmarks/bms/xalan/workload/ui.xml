@@ -1,0 +1,925 @@
+
+<!-- tvr: dont nuke this 
+<!DOCTYPE div1 PUBLIC "-//W3C//DTD Specification V2.1//EN" "http://www.w3.org/XML/1998/06/xmlspec-v21.dtd">
+<?xml-stylesheet 
+href="file:////home/tvraman/text/ibm/xforms/xsl/xmlspec.xsl"
+type="text/xsl"?>
+-->
+<!-- href="http://dev.w3.org/cvsweb/spec-prod/html/xmlspec.xsl" -->
+<div1 id="ui">
+  <head>XForms User Interface</head>
+<div2 id="ui-conditional">
+    <head>Conditional Constructs For Dynamic User Interfaces</head>
+    
+    <p>
+      The XForms User Interface allows the authoring of
+      dynamic user interfaces, i.e., user interfaces that
+      vary based on the current state of the
+      instance data being populated. As an example,
+      portions of a questionnaire pertaining to the user's
+      automobile may become <emph>relevant</emph> only if
+      the user has answered in the affirmative to the
+      question 'Do you own a car?'.  Another
+      use case for such dynamic user interfaces
+      is when the underlying <termref def="def-XForms-Model">XForms Model</termref> contains
+      conditional structures.</p>
+
+    <div3 id="ui-conditional-switch">
+      <head>switch</head>
+      <ednote><name>Raman</name>
+        <edtext>Please do not attach semantics to the
+          element name to prejudge the design.
+        </edtext>
+      </ednote>
+      <p>
+        This element contains one or more
+        <el>case</el> elements.  Each
+        <el>case</el> has an <code>id</code> attribute
+        that is used within event handlers appearing
+        within the form controls to activate or deactivate
+        that  portion of the user interface created by the markup
+        contained within that <el>case</el> element.  
+      </p>
+
+      
+      <eg xml:space="preserve"><![CDATA[<switch id="01" default="initial">
+  <case id="us">
+    <group>
+      <caption>Please Specify a US Shipping Address.</caption>
+    </group>
+  </case>
+  <case id="uk">
+    <group >
+      <caption>Please specify a UK shipping address.</caption>
+    </group>
+  </case>
+  <case id="initial">
+    <group >
+      ...
+    </group>
+  </case>
+</switch>]]></eg>
+
+      <p>The above will result in the portion of the user interface
+        contained within the <emph>default case</emph> being
+        initially displayed.
+        Next, we define an XForms event handler <el>toggle</el>  below for
+        activating and deactivating different portions of this
+        conditional construct.</p>  
+
+      <example role="syntax">
+        <head>XML Representation: Action  &lt;<el>toggle</el>&gt;</head>
+        <eg><![CDATA[<toggle switch="switchID" case="caseID" />]]></eg>
+        <slist>
+          <sitem>Attribute <att>switch</att> identifies the
+            switch constructor to be affected.</sitem>
+          <sitem>Attribute <att>case</att> identifies the portion of
+            the <el>switch</el> construct to activate.</sitem>
+        </slist>
+      </example>
+    <p>
+      In addition to event handler <el>toggle</el>, event handler
+      <el>scroll</el>
+      might be used within construct <el>switch</el> to cycle through
+      the various contained  <el>case</el> clauses.</p></div3>
+
+    
+  </div2><div2 id="ui-repeat">
+    <head>Repeating Structures</head>
+    
+    <p>
+      The XForms Model allows the definition of repeating
+      structures such as multiple items being purchased
+      within a purchase order.  When defining the XForms Model, such higher-level aggregations are constructed
+      out of basic building blocks; similarly, here we
+      define higher-level user interface constructs that
+      build on the form controls defined previously, that can bind to
+      data structures such as lists and collections.</p>
+
+    <div3 id="ui-repeat-design">
+      <head>Design Rationale</head>
+      
+      <p>
+        The basic XForms form controls defined so far
+        permit populating data instances  conforming to
+        Schema simpleTypes.
+        These form controls can be aggregated using
+        <el>group</el>(see <specref ref="ui-layout"/>)  to form higher-level user
+        interface form controls. As an extension to this, the user interface markup for
+        repeating structures only adds encapsulation  metadata 
+        about the collection being populated, as well as the
+        necessary controls needed for adding, deleting and
+        navigating the items in the repeating structure.
+        Finally, this section also defines relevant portions of the
+        processing model that track the item that is
+        <emph>current</emph> in a repeat structure..</p>
+
+
+      
+      <p> Element <el>repeat</el> encapsulates the following
+        pieces of metadata:</p>
+
+      <ulist>
+        <item>
+          <p><emph>
+              Binding expression</emph> specifying the collection to be
+            populated by the contained XForms form
+            controls. 
+            This binding expression returns a <emph>node-set</emph> that
+            represents the collection of items over which
+            this <el>repeat</el> will iterate.</p>
+          <issue id="nodeset-vs-ref"><p>Question: should we call this binding
+              attribute <code>node-set</code> as opposed to
+              <code>ref</code> to highlight that we
+              use the returned node-set rather than the
+              single desired node as in most other usages of the <att>ref</att> attribute? Note that submit and reset also use full node-set processing.</p></issue>
+        </item>
+        <item>
+          <p>
+            <emph>Starting index</emph> of the first element from the
+            collection to be displayed to the user.</p>
+        </item>
+        <item>
+          <p><emph>
+              Number of elements</emph> 
+            from the collection to be displayed to the user.</p>
+        </item>
+      </ulist>
+    </div3>
+    <div3 id="ui-repeat-handlers">
+      <head>Special Event Handlers For  Element <el>repeat</el></head>
+
+      <p>
+        We define  XForms-specific event handlers for
+        use within element <el>repeat</el>.
+        These event handlers will appear within element
+        <el>onevent</el> to specify the event handler to
+        trigger when an event is received by the containing
+        event listener.
+        In the examples below, we will assume event
+        <code>dom-click</code>;
+        however, note that this specification does not normatively
+        define the mapping between  physical events 
+        and specific behaviors.</p>
+
+      <p>
+        Construct <el>repeat</el> introduces the notion of a
+        <emph>cursor</emph> that is maintained by
+        the XForms processing model for each repeating structure.
+        Thus, each <el>repeat</el> has its own 
+        a conceptual <emph>cursor</emph>.
+        Event handlers are provided for querying and updating  the
+        position of this cursor;
+        this cursor position in turn is used for determining the
+        behavior of <el>insert</el> and <el>delete</el>.
+        Thus, these event handlers can be thought of as the markup
+        equivalent of the additions to the XForms DOM
+        introduced by construct <el>repeat</el>.
+      </p>
+      
+      
+      
+      <olist>
+        <item>
+          <p>
+            <el>setRepeatCursor</el>        for marking an item  as
+            being <emph>current</emph>.
+          </p>
+          <example role="syntax">
+            <head>XML Representation:Action  &lt;<el>setRepeatCursor</el>&gt;</head>
+            <eg><![CDATA[<setRepeatCursor repeat="repeatId" cursor="itemID"/>]]></eg>
+            <slist>
+              <sitem>Attribute <att>repeat</att> identifies the
+                repeat constructor whose <emph>cursor</emph> is to be updated.</sitem>
+              <sitem> Attribute <att>cursor</att> identifies  the
+                <emph>cursor</emph>  position. It should be a
+                binding expression that evaluates to an element of
+                the node set being iterated over by this repeat construct.</sitem>
+              
+
+              
+            </slist>
+          </example>
+
+        </item>
+        <item>
+          <p>
+            <el>getRepeatCursor</el>        for accessing 
+            position of the repeat cursor.
+          </p>
+          <example role="syntax">
+            <head>XML Representation:Action  &lt;<el>getRepeatCursor</el>&gt;</head>
+            <eg><![CDATA[<getRepeatCursor repeat="repeatId" />]]></eg>
+            <slist>
+              <sitem>Attribute <att>repeat</att> identifies the
+                repeat constructor whose <emph>cursor</emph>
+                position is to be obtained.</sitem>
+            </slist>
+          </example>
+
+        </item>
+        <item><p>
+            <el>scroll</el>       
+            for changing item that is <emph>current</emph>.
+          </p>
+          <example role="syntax">
+            <head>XML Representation:Action  &lt;<el>scroll</el>&gt;</head>
+            <eg><![CDATA[<scroll repeat="repeatId" step="n" />]]></eg>
+            <slist>
+              <sitem>Attribute <att>repeat</att> identifies the
+                repeat constructor whose <emph>cursor</emph>
+                position is to be updated.</sitem>
+              <sitem>Attribute <att>step</att> is an integer value that
+                specifies  the amount by
+                which the list is scrolled. Negative values may
+                be used to scroll the list in the reverse direction.</sitem>
+            </slist>
+            <issue id="additional-actions"><p>We may add special values for scrolling to the
+                top or bottom of the list, as well as other needed actions.</p></issue>
+          </example>
+        </item>
+        
+        <item><p>
+            <el>insert</el> for inserting an item at the current
+            cursor position into the
+            repeating structure. This causes the instantiation of
+            the necessary user interface 
+            for populating a new entry in the underlying collection. It also
+            updates the instance data by instantiating the necessary
+            nodes.</p>
+          <example role="syntax">
+            <head>XML Representation:Action  &lt;<el>insert</el>&gt;</head>
+            <eg><![CDATA[<insert repeat="repeatId" />]]></eg>
+            <slist>
+              <sitem>Attribute <att>repeat</att> identifies the
+                repeat constructor being affected, and defaults
+                to the <el>repeat</el> construct within which
+                this event handler appears.
+              </sitem>
+            </slist>
+          </example>
+
+        </item>
+        <item><p> <el>delete</el> for deleting an item from the
+            repeating structure.  This causes the destruction of
+            the necessary user interface for populating the entry
+            at the current cursor position in the underlying
+            collection. It also updates the instance data by
+            destroying  the necessary nodes.</p>
+          <example role="syntax">
+            <head>XML Representation:Action  &lt;<el>delete</el>&gt;</head>
+            <eg><![CDATA[<delete repeat="repeatId" />]]></eg>
+            <slist>
+              <sitem>Attribute <att>repeat</att> identifies the
+                repeat constructor being affected, and defaults
+                to the <el>repeat</el> construct within which
+                this event handler appears.
+              </sitem>
+            </slist>
+          </example>
+        </item>
+      </olist>
+
+      <p>
+        The event handlers enumerated above may be used within event
+        listeners attached to <el>button</el> elements
+        placed inside the body of construct <el>repeat</el>.
+        In combination with the facilities provided by
+        element <el>group</el> and CSS layout, this allows
+        document authors to customize the positioning of 
+        controls for standard actions such as insert or
+        delete.
+      </p>
+    </div3>
+    <div3 id="ui-repeat-repeat">
+      <head>repeat</head>
+      
+      <p>
+        Element <el>repeat</el> represents a repeating homogenous
+        collection, in other words, a collection consisting
+        entirely of like form controls.</p>
+
+      
+      <eg xml:space="preserve"><![CDATA[<repeat ref="bindingExpr" startIndex="si" number="n">
+  <caption>Shopping Cart</caption>
+  <!-- XForms UI for one element of the collection -->
+  <!-- controls for adding, deleting and navigating entries -->
+</repeat>]]></eg>
+
+      
+      <p>Notice that the underlying schema for the
+        collection being populated would typically have defined
+        attributes <att>minOccurs</att> and
+        <att>maxOccurs</att>; these values will in
+        turn determine if the user agent displays
+        appropriate UI controls for the user to add or
+        delete entries in the collection.  Event listeners 
+        within element <el>repeat</el> control UI
+        aspects such as scrolling and insertion. This
+        specification will not specify normative means for
+        displaying such add and delete controls; as with the
+        rest of the XForms User Interface design, we leave
+        these to be flexible while showing a default
+        presentation.</p>
+
+      <example role="syntax"><head>XML Representation: &lt;<el>repeat</el>&gt;</head>
+        <eg><![CDATA[<repeat
+  (common attributes)
+  startIndex = xsd:positiveInteger : 1
+  number = xsd:nonNegativeInteger
+>
+  <!-- caption, help?, hint?, onevent?, ( any form control )* -->
+</repeat>]]></eg>
+        <slist>
+          <sitem><term>common attributes </term> defined in
+            <specref ref="ui-common-attributes"/></sitem>
+          <sitem><term>startIndex = xsd:positiveInteger : 1</term> -  1-based hint to the XForms Processor 
+            as to which starting element from the collection to
+            display.</sitem>
+          <sitem><term>number = xsd:nonNegativeInteger</term> - hint to the XForms Processor 
+            as to how many elements from the collection to
+            display.</sitem>
+          <sitem><term>any form control</term> - any form control
+            defined in <specref ref="controls"/></sitem>
+        </slist>
+      </example>
+
+    </div3>
+    <div3 id="ui-repeat-consequences">
+      <head>Design Consequences</head>
+      
+      <p>
+        This subsection enumerates the design consequences
+        and is for members of the Working Group to evaluate
+        the above design.</p>
+
+      <ulist>
+        <item>
+          <p>
+            Binding expression is placed on element
+            <el>repeat</el> and should refer to the
+            collection being populated, not to an
+            individual item of the collection. Thus, it
+            would be   <el>items/item</el> in  a
+            purchase order, where element <el>items</el>
+            contains one or more <el>item</el>
+            children.</p>
+        </item>
+        <item>
+          <p>
+            The form controls appearing inside
+            element <el>repeat</el> needs to be suitable for
+            populating individual items of the collection.
+            Thus, to continue the purchase order example,
+            the contained XForms form controls
+            would need to be suitable for populating a data
+            instance conforming to <el>item</el>.</p>
+        </item>
+        <item>
+          <p>
+            A simple but powerful consequence of the above
+            is that if the XForms Model specifies nested
+            collections, then we can create a corresponding
+            user interface by <emph>nesting</emph>
+            <el>repeat</el> elements.  As an example,
+            consider the XForms Model  for a hypothetical
+            purchase order that contains element
+            <el>items</el> for holding collection of
+            <el>item</el> elements. Further, assume that
+            element <el>item</el> comprises of two atomic
+            fields <el>catalogNumber</el>,
+            <el>partNumber</el> and a collection
+            <el>colors</el> which in turn holds one or more
+            <el>color</el> elements.  The user interface for
+            populating this data instance would use nested
+            <el>repeat</el> elements.</p> </item> <item>
+          <p>
+            Notice that the
+            contained XForms form controls inside
+            element <el>repeat</el> do not explicitly
+            specify the index of the collection entry being
+            populated. This is intentional; it keeps both
+            authoring as well as the processing model
+            simple.  But as a consequence, the user
+            interface cannot bind to an element from the
+            underlying collection <emph>out of
+              sequence</emph>.  Notice that this is not a
+            serious drawback because the use interface layer
+            can always populate a specific member of a
+            collection without using element
+            <el>repeat</el>.</p>
+        </item>
+      </ulist>
+    </div3>
+  </div2><div2 id="ui-template">
+    <head>Reusable Form Controls</head>
+    <div3 id="ui-templates-creating">
+      <head>Creating User Interface Templates</head>
+      
+      <p>
+        <emph>User Interface templates</emph> allow the creation of
+        reusable user interface components.  Just as we can
+        define data types and structures that can be reused
+        within the XForms Model,
+        reusable user interface components allow us to
+        design complex user interfaces using the basic
+        building blocks described in the previous section, and then reuse
+        these components in multiple situations. As with any
+        component framework, this has two basic
+        requirements:</p>
+
+      <ulist>
+        <item>
+          <p>
+            Components need to declare what aspects of the component are parameterizable 
+            by the caller.</p>
+        </item>
+        <item>
+          <p>
+            The caller needs to be able to override the default values of the parameters 
+            declared in the component.</p>
+        </item>
+      </ulist>
+      
+      <p>
+        Here, we describe such a component framework along with sample markup. For 
+        this example, assume that <code>USShippingAddress</code> is a reusable data 
+        type that is used in multiple places in the <termref def="def-XForms-Model">XForms Model</termref>, e.g. the user will 
+        be asked for a <code>billingAddress</code> and <code>shippingAddress</code>--both 
+        of type <code>USShippingAddress</code>.</p>
+
+      
+      <p>
+        First, we show a simple example that is designed to bind an XForms <termref def="def-form-control">form 
+        control</termref> to a <termref def="def-model-item">model item</termref> of 
+        type <code>address</code> with no attention to making the component 
+        reusable.</p>
+
+      
+      <eg xml:space="preserve"><![CDATA[<group>
+  <textbox ref="address/street">
+    <caption>Please enter your street address</caption>
+  </textbox>
+  <textbox ref="address/zip">
+    <caption>Zip Code</caption>
+  </textbox>
+</group>]]></eg>
+
+      
+      <p>
+        Next, we prepare the above 
+        fragment to become a reusable component 
+        that could be used for obtaining both the shipping and billing address. To do 
+        this, we need to parameterize those portions of the <emph>component</emph> that 
+        the caller will wish to modify.</p>
+
+      
+      <eg xml:space="preserve"><![CDATA[<uiTemplate id="AddressWidget">
+  <param name="streetPrompt"/>
+  <param name="zipPrompt"/>
+  <param name="border" value="line"/>
+  <group border="$border">
+    <textbox ref="address/street">
+      <caption><value-of name="streetPrompt"/></caption>
+    </textbox>
+    <textbox ref="address/zip">
+      <caption><value-of name="zipPrompt"/></caption>
+    </textbox>
+  </group>
+</uiTemplate>]]></eg>
+
+      
+      <p>
+        Note that the markup shown above does not create a
+        user interface; user interface is created by explicitly
+        instantiating the component via element
+        <code>useUITemplate</code> described next.</p>
+      
+      
+      <p>
+        Next, we use this component to instantiate the
+        user interface for obtaining the shipping and
+        billing address.</p>
+
+      
+      <eg xml:space="preserve"><![CDATA[<useUITemplate ref="myAddress" component="AddressWidget">
+  <withParam name="streetPrompt">Shipping Street Address</withParam>
+  <withParam name="zipPrompt">Zip Code for shipping state</withParam>
+  <withParam name="border">dotted</withParam>
+</useUITemplate>]]></eg>
+
+      
+      <p>
+        The reusable component is instantiated by element <el>useUITemplate</el>; 
+        parameter values are specified by the contained
+        <el>withParam</el> elements.
+        Attribute <att>xform</att> sets the binding context relative to which binding expressions within the instantiated  template get evaluated.</p>
+
+    </div3>
+    <div3 id="ui-templates-dtd-temp">
+      <head>DTD For uiTemplate And useUITemplate</head>
+      
+      <p>TODO: convert to 'XML Representation' consistent with rest of spec.</p>
+      
+      <eg role="dtd" xml:space="preserve"><![CDATA[<!--       param element for use in uiTemplate -->
+<!ELEMENT  param      EMPTY>
+<!--       name       Name of parameter being declared           -->
+<!ATTLIST  param
+  name     CDATA      #REQUIRED>
+<!--       Defines a reusable user interface template -->
+<!ELEMENT  uiTemplate   (param*, %FormControls;+)>
+<!--       id         Unique ID for use when instantiating this template -->
+<!ATTLIST  uiTemplate
+  id       ID         #REQUIRED>
+<!--       Used to pass parameter values when instantiating uiTemplate -->
+<!ELEMENT  withParam  #MIXED>
+<!--       name       Name of parameter whose value is being specified -->
+<!ATTLIST  withParam
+name       CDATA      #REQUIRED>]]></eg>
+
+    </div3>
+  </div2><div2 id="ui-layout">
+    <head>Layout in XForms</head>
+    
+    
+    <p>
+      The <el>group</el> element is used as a container
+      for defining a hierarchy of form controls.  Groups lay
+      out their children using a constraint-based system
+      that supports both relative flexible sizing and
+      intrinsic sizing.  Groups can be nested to create
+      complex hierarchies. Using CSS, an inline box can be
+      specified using the <code>display</code> property with
+      a value of <code>inline</code>.  A block-level group can
+      be specified with a value of <code>block</code>, which
+      is the default.</p>
+
+    <example role="syntax"><head>XML Representation: &lt;<el>group</el>&gt;</head>
+      <eg>&lt;group&gt;
+  &lt;!-- all form controls &amp; mixed content --&gt;
+&lt;/group&gt;</eg>
+      
+    </example>
+
+    <p>
+      All form
+      controls defined so far are treated as
+      inline text for purposes of XHTML processing.
+      XForms visual clients are expected to use   a  a box layout model as defined by CSS for
+      determining the overall layout of the XForms visual
+      interface. Grouping of form controls using
+      element <el>group</el>
+      also provides semantics about the relationship amongst user
+      interface controls; such knowledge can be useful in
+      delivering a coherent UI to small devices--e.g.,
+      if the user interface needs to be split up amongst several
+      screens,  controls appearing inside the
+      same
+      group would typically be rendered on the same screen.</p>
+
+    
+    <p>
+      Finally, the hierarchy defined by nested group elements is used to determine the 
+      traversal order specified by attribute <att>navindex</att> on form controls. 
+      Setting the input focus on a  group results in the focus being set to the 
+      lowest form control in the tabbing order within that
+      group.</p>
+
+    <issue id="group-binding"><p>t is an open issue whether the <termref def="def-binding">binding</termref> attribute <att>xform</att> 
+        is allowed on element <el>group</el>.
+        It might make authoring easier but makes
+        implementations significantly harder.
+        Note that this note is here because at one point in our
+        design we said that controls inside a
+        <el>group</el>
+        could use relative XPath expressions with the context being
+        set by the containing group. </p></issue>
+    <div3 id="ui-layout-dir">
+      <head>Orientation and Direction</head>
+      
+      <p>
+        Containers typically have an orientation and a direction.
+        The <code>box-orient</code> CSS property specifies
+        the orientation of the group.  It has values of
+        <code>horizontal</code>, <code>vertical</code>, or
+        <code>inherit</code>.  A horizontal group lays out its
+        children in a horizontal line, and a vertical group
+        stacks its children vertically.
+      </p>
+
+      
+      <p>
+        The <code>box-direction</code>
+        CSS property specifies the direction of the group.  It has values of
+        <code>normal</code>, <code>reverse</code>, and <code>inherit</code>.  
+        A normal horizontal group lays out its children from left to right, and a normal
+        vertical group lays out its children from top to bottom.  
+      </p>
+
+      
+      <p>
+        Direction within nested groups is inherited by
+        default.  If direction is omitted on the outermost
+        group, it is assumed to have a
+        horizontal orientation and normal direction.
+      </p>
+
+      <!-- example goes here. -->
+      
+      <eg xml:space="preserve"><![CDATA[<group>
+  <textbox  ref="/person/name">
+    <caption>Please enter your name</caption>
+  </textbox>
+  <textbox ref="/person/ssid">
+    <caption>Enter your SSID</caption>
+  </textbox>
+</group>]]></eg>
+
+      
+      <p>
+        When items are placed in a group without specifying any additional 
+        information about their size, then the  sizes the children 
+        <emph>intrinsically</emph>. In other words, the group makes each child only as big
+        as it needs to be. Notice that in 
+        the above example, the two form controls are only as
+        big as they need to be, and that this in turn
+        determines the size of the group (since we assume for
+        simplicity that this group is not nested).</p>
+
+      
+      <p>
+        Widths can be specified for items inside a horizontal group. When an 
+        object specifies its width in CSS, it is telling the group that 
+        it would like to be that width. Similarly, heights can be specified in CSS
+        for items in a vertical group. 
+        A non-nested group placed inside an enclosing CSS block will obey
+        all the usual sizing rules of the block.  For example, setting the width of
+        a non-nested group to 100% ensures that the group is the maximum width permitted by 
+        the enclosing CSS block.
+      </p>
+
+    </div3>
+    <div3 id="ui-layout-align">
+      <head>Alignment</head>
+      
+      <p>
+        The <code>box-align</code> property specifies how controls are aligned along the orientation
+        of the group.  Its possible values are <code>left</code>, <code>center</code>, <code>right</code>, 
+        <code>top</code>, <code>bottom</code>, <code>baseline</code>, <code>stretch</code> and <code>inherit</code>.  
+        The default value is <code>stretch</code>.
+      </p>
+
+      
+      <p>
+        By default a horizontal group ensures that all children are the same height.  Once a height
+        is computed for a horizontal group, all of the children are stretched vertically to the
+        height of the group (minus the CSS border and padding on the group).  
+        Similarly, a vertical group ensures that all its children are
+        the same width.  The stretch policy overrides any
+        specified width or height values.</p>
+
+      
+      <eg xml:space="preserve"><![CDATA[<group style="box-orient: vertical">
+  <output ref="/person/name"/>
+  <output ref="/person/age"/>
+  <output ref="/person/country"/>
+</group>]]></eg>
+
+      
+      <p>
+        In addition to <code>stretch</code>, a horizontal group can also align its children using the 
+        values <code>top</code>, <code>center</code>, <code>baseline</code> and <code>bottom</code>.  A vertical
+        group can align its children using the values <code>left</code>, <code>center</code>, and <code>right</code>.
+        When these values are used, the items are no longer stretched.  They are sized intrinsically
+        and then aligned on the group axis according to the specified property value on the containing
+        group.</p>
+
+    </div3>
+    <div3 id="ui-layout-sizing">
+      <head>Controlling  Automatic Sizing </head>
+      
+      <p>
+        The layout algorithm can be controlled by specifying the
+        degree to which items may <emph>flex</emph> i.e.,
+        the degree to which an item allows itself to be
+        <emph>auto-sized</emph>.
+        Items in groupes fall into two categories: <code>flexible</code> and 
+        <code>inflexible</code>. Inflexible objects will not grow, even when there is 
+        extra space left over in the group.
+        When several objects in a group are flexible, the extra space is divided 
+        among the objects based on how flexible they are. The group determines how 
+        much space to give an object by adding up the flex values on all of its 
+        children. An object gets an amount of extra space equal to the percentage 
+        of flex that it is responsible for.</p>
+
+      
+      <p>
+        For example, if two objects have a flex of 1, then after both objects 
+        are given their preferred sizes, the first object 
+        gets 1/(1+1) = 1/2 of the extra space, and the second object also gets 1/2 
+        of the extra space.</p>
+
+      <!-- create example 4 here -->
+      
+      <eg xml:space="preserve"><![CDATA[<group style="box-orient: horizontal; width: 200px">
+  <textbox  style="box-flex: 1"  ref="/person/name>
+    <caption>Please enter your full name: </caption>
+  </textbox>
+  <textbox  style="box-flex: 1.5" ref="/person/age>
+    <caption>How young?</caption>
+  </textbox>
+</group>]]></eg>
+
+    </div3>
+    <div3 id="ui-layout-minmax">
+      <head>Preferred, Minimum, and Maximum Sizes</head>
+      
+      <p>
+        For inflexible objects, the specification of the <code>width</code>
+        and <code>height</code> CSS properties can be used to 
+        specify a preferred  size. If these properties are omitted, 
+        an inflexible object will be sized intrinsically, i.e., it will be given
+        the minimum amount of space required to lay out the item.</p>
+
+      
+      <p>
+        With flexible objects, there are more options. Just as with inflexible 
+        objects, the <code>width</code>
+        and <code>height</code> properties can be used to specify a preferred 
+        size. Unlike inflexible objects, however, this size is only a guideline. 
+        A flexible object will stretch as necessary. It will also 
+        shrink if required until it can shrink no more (e.g., 
+        when the object hits its minimum required intrinsic size).</p>
+
+      
+      <eg xml:space="preserve"> <![CDATA[<group style="box-orient: vertical">
+  <textbox style="box-flex: 1; height:1000px" ref="/person/name">
+    <caption>Please enter your name:</caption>
+  </textbox>
+</group>]]></eg>
+
+      
+      <p>
+        In the above example if the group were to shrink, the
+        textbox being flexible would shrink--despite its
+        preferred height of <code>1000px</code>.  The group
+        continues to shrink minimum required height for the
+        textbox is reached. After that, the textbox can
+        shrink no further. If the group were to continue to
+        shrink, the form control's contents would be
+        clipped, and a portion of the control would no
+        longer be visible.</p>
+
+      
+      <p>
+        For a more fine-grained control of
+        minimum and maximum sizes, the
+        <code>min-width</code>, <code>min-height</code>,
+        <code>max-width</code>, and <code>max-height</code>
+        CSS properties can be used. When specified, these
+        properties provide extra information to the group as
+        it shrinks and grows the object in question.</p>
+
+      
+      <p>
+        In a horizontal group, for example, if a minimum
+        width is specified, then the flexible object will
+        not be allowed to shrink below that width. If a
+        maximum width is specified, then the flexible object
+        will not be allowed to grow beyond that width.</p>
+
+      
+      <p>
+        The above example demonstrates the use of <code>min-height</code> and <code>max-height</code>
+        within a vertical group. In the first 
+        image the group has been shrunk until it is smaller than 100 pixels in 
+        height. Because the <el>iframe</el> has a specified minimum height of 100 pixels, 
+        it is not allowed to shrink any further, and so as the group falls below 100 
+        pixels, the <el>iframe</el> gets clipped, and portions of it become invisible.</p>
+
+      
+      <p>
+        In the second image, the group has been expanded past 300 pixels in 
+        height. Even though the group is getting bigger, the extra space is not 
+        being consumed by the <el>iframe</el>, because its maximum height of 300 pixels has 
+        been reached. It will grow no further.</p>
+
+      
+      <p>
+        Below is another example illustrating min and max width.</p>
+      
+      <eg>Example unavailable at publication time</eg>
+
+      <p>
+        In the above example, the group has been stretched so that it is very 
+        wide. The first child has a maximum width of 50 pixels, and it divides the 
+        excess space equally with the second child until its maximum width has 
+        been reached. After that, since it is not allowed to grow any further, the 
+        remaining space all goes to the second child.</p>
+
+    </div3>
+    <div3 id="ui-layout-packing">
+      <head>Packing Controls</head> 
+      
+      <p>
+        When all of the items within a <el>group</el>
+        element are inflexible or when all objects have
+        grown to their maximum sizes and can stretch no
+        further, extra space may be left over in the group.
+        An additional property can be used to dictate how
+        any additional space should be distributed between
+        objects.  The CSS property <code>box-pack</code> has
+        the possible values of <code>left</code>,
+        <code>right</code>, <code>top</code>,
+        <code>bottom</code>, <code>center</code>,
+        <code>justify</code> and <code>inherit</code>.  The
+        default is <code>justify</code>.</p>
+
+      
+      <p>
+        In the above example, the button is centered within the group using the <code>box-align</code>
+        and <code>box-pack</code> properties together.  The former centers the button vertically, and
+        the latter centers the button horizontally.</p>
+
+    </div3>
+    <div3 id="ui-layout-overflow">
+      <head>Overflow</head>
+      
+      <p>
+        Items within a group may use the CSS <code>overflow</code> property to obtain horizontal and
+        vertical scrollbars as needed.  Flexible objects that shrink below their minimum intrinsic
+        size (but that still have a size greater than a specified CSS minimum) can display 
+        scrollbars using the <code>overflow</code> property.  If overflow is not specified,
+        the object will be clipped instead.</p>
+
+    </div3>
+    <div3 id="ui-layout-inline">
+      <head>Inlines and Blocks</head>
+      
+      <p>
+        Whether an element is inline or block when placed directly inside a group is irrelevant.  Objects
+        will be flowed horizontally or vertically based off the
+        <code>box-orient</code> property.
+      </p>
+
+      
+      <p>
+        When any raw text nodes are encountered directly inside a group, an anonymous block is constructed
+        to wrap the text.  This anonymous block then participates in the  layout as
+        a single item.</p>
+
+    </div3>
+    
+  </div2><div2 id="ui-subforms">
+    <head>Multiple Sub-forms Or Sub-pages</head>
+    <ednote>
+      <name>Raman</name> <date>March 12, 2001</date>
+      <edtext>Notice that we originally started by creating
+        an equivalent of <code>fieldset</code>--but given
+        the present design of the XForms UI layer, and given
+        that conditional construct <el>case</el> can take
+        either <code>group</code> or <el>html:div</el> elements,
+        there is little left in this construct that is
+        additional to what is in XHTML <el>html:div</el>.  I
+        therefore suggest simply reusing <el>html:div</el>--perhaps
+        bind XForms specific behaviors through CSS
+        e.g., a stack of cards for example?  The way I am
+        thinking of this is that whether it is a stack of
+        cards shown one at a time, or a sequence of tab
+        dialogs is a presentation issue and might therefore be
+        best left to CSS as we have done with the rest of the
+        presentational issues in XForms.</edtext>
+    </ednote>
+    <div3 id="ui-subforms-pages">
+      <head>Subpages</head>
+      
+      <p>
+        Subpages provide a means to present XForms one bit at a time, breaking a complex 
+        task into smaller, simpler parts. Presentation of a subpage can occupy the entire 
+        "page" or just part of a page. Different presentations are possible, e.g. a 
+        stack of <emph>pages</emph> with visible name tags, or as a set of buttons for flipping 
+        through the stack or navigating directly to a particular subpage. One possible 
+        representation is a <el>formset</el> element enclosing one or more <el>subpage</el> 
+        elements, each of which starts with a
+        <el>caption</el> element. </p>
+
+      
+      <p>
+        As the name implies <el>subpage</el> is not specific to XForms--our intent 
+        is to design <el>subpage</el> so that it can be used within XForms--and 
+        more generally within XHTML to create presentations where document views are 
+        presented to progressively reveal the document
+        structure and content.</p>
+
+    </div3>
+  </div2></div1>
+<!-- 
+Local Variables:
+mode: xae
+sgml-indent-step: 2
+sgml-indent-data: t
+sgml-set-face: nil
+sgml-insert-missing-element-comment: nil
+fill-column: 65
+End:
+--> 
