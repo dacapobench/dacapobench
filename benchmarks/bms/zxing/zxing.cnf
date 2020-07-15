@@ -3,7 +3,7 @@ benchmark zxing
   thread-model per_cpu
   jars "javase-3.3.4-SNAPSHOT-jar-with-dependencies.jar";
 
-size default args "${SCRATCH}/dat/";
+size default args "${DATA}/zxing";
 
 description
   short		"multi-format 1D/2D barcode image processing library",

@@ -44,6 +44,15 @@
         </exec>
     </target>
 
+    <target name="data">
+        <copy todir="${bm-data}">
+            <fileset dir="${bm-build-dir}/core/src/test/resources">
+                <include name="**/*.png"/> 
+                <include name="**/*.jpg"/> 
+           </fileset>
+        </copy>
+    </target>
+
     <target name="jar">
         <copy file="${bm-build-dir}/javase/target/javase-${bm-version}-jar-with-dependencies.jar"
               todir="${bm-jars}"/>
