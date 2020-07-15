@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 The Australian National University.
+ * Copyright (c) 2009-2020 The Australian National University.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
@@ -13,6 +13,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import sun.misc.Unsafe;
+import java.lang.reflect.Field;
 
 import org.dacapo.parser.Config;
 
@@ -82,6 +85,32 @@ public class Cassandra extends Benchmark {
     protected void prepare(String size) throws Exception {
         super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
+
+        /*
+         *  FIXME
+         * 
+         *  This workaround silences JDK11 warnings relating to use of
+         *  reflection.
+         *
+         *  Specifically, cassandra generates the following warning:
+         * 
+         *  WARNING: Illegal reflective access by org.apache.cassandra.utils.FBUtilities (file:/[...]/cassandra/cassandra-3.11.6.jar) to field java.io.FileDescriptor.fd
+         *
+         * Fixing the underlying issue means changing the upstream library,
+         * which is beyond the scope of this benchmarking suite.
+         */
+        try {
+            Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            Unsafe u = (Unsafe) theUnsafe.get(null);
+      
+            Class cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
+            Field logger = cls.getDeclaredField("logger");
+            u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
+        } catch (Exception e) {
+            // ignore
+        }
+
         setupData();
         setupScratch();
 
