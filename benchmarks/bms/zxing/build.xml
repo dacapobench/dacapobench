@@ -13,10 +13,10 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="zxing"/>
-    <property name="bm-version" value="3.3.4-SNAPSHOT"/>
+    <property name="bm-version" value="3.4.0"/>
     <property name="bm-src" value="${bm-name}-${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
-    <property name="bm-git-commit" value="ea0a9a670fd52d1367201e0d3b88488010b07d2e"/>
+    <property name="bm-git-commit" value="67138cedc8cd2c8db2158be5da402ba0e2e1b000"/>
 
     <import file="../common.xml"/>
 
@@ -26,7 +26,7 @@
         <os family="windows"/>
     </condition>
 
-    <target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar,patch"/>
 
     <target name="bm-build" depends="unpack">
         <exec executable="${mvn-exe}" dir="${bm-files}/build">

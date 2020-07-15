@@ -25,7 +25,7 @@ public class Zxing extends Benchmark{
   String[] args;
 
   public Zxing(Config config, File scratch, File data) throws Exception {
-      super(config, scratch, data);
+      super(config, scratch, data, false, false);
       Class<?> clazz = Class.forName("com.google.zxing.client.j2se.CommandLineRunner", true, loader);
       this.method = clazz.getMethod("main", String[].class);
   }
@@ -41,7 +41,7 @@ public class Zxing extends Benchmark{
     try {
       String barcode = args[0];
       // Complete the path of each barcode
-      this.method.invoke(null, (Object) new String[] {"--recursive", barcode});
+      this.method.invoke(null, (Object) new String[] {"--recursive", "--brief", "--try_harder", barcode});
     } catch (Exception e){
       e.printStackTrace();
     }

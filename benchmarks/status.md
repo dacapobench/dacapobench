@@ -1,6 +1,6 @@
 |bm | updated | jdk 8 | jdk 11 | clean | scratch | validation | small | default | large | huge | long | latency |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
-|avrora|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
+|avrora|n/a|✓|✓|✓|✓|✓|✓|✓|✓|||
 |batik|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |biojava|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |cassandra|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|
@@ -20,6 +20,7 @@
 |tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 |tradebeans|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|?|
 |xalan|n/a|✓|✓|✓|✓|✓|✓|✓|✓|||||
+|zxing|✓|✓|✓|✓|✓|✓|✓|✓||||||
 
 
 ### TODO
