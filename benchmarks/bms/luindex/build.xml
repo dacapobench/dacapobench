@@ -15,22 +15,6 @@
 
     <import file="../common.xml"/>
 
-    <property name="shakespeare.url" value="${dacapo.src.url}/luindex/shakespeare.tgz"/>
-    <property name="bible.url" value="${dacapo.src.url}/luindex/kjv.zip"/>
-
-    <target name="source">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${dacapo.src.url}/luindex"/>
-            <param name="target-file" value="shakespeare.tgz"/>
-        </antcall>
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${dacapo.src.url}/luindex"/>
-            <param name="target-file" value="kjv.zip"/>
-        </antcall>
-    </target>
-
     <target name="bm-build" depends="lucene">
         <mkdir dir="${bm-build-dir}"/>
         <echo message="~~)${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}(~~"/>
@@ -42,32 +26,9 @@
 
     <target name="jar">
         <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}"/>
-        <!-- <zip basedir="${bm-out-jar}" destfile="${dacapao.out.jar.dir}/${bm-name}.zip"/>
-        <checksum file="${dacapao.out.jar.dir}/${bm-name}.zip"/> -->
     </target>
 
     <target name="data">
-        <untar src="${bm-downloads}/shakespeare.tgz" dest="${bm-data}/shakespeare" compression="gzip"/>
-        <unzip src="${bm-downloads}/kjv.zip" dest="${bm-data}/kjv"/>
+        <unzip src="${bm-files}/enwiki.zip" dest="${bm-data}"/>
     </target>
-
-    <!-- <target name="lucene-enwiki-bench-data-check">
-        <available property="lucene-enwiki-bench-data-exists" file="${bm-data}/luindex/enwiki/enwiki.txt"/>
-        <condition property="lucene-enwiki-bench-data-valid-md5">
-            <and>
-                <isset property="lucene-enwiki-bench-data-exists"/>
-                <checksum file="${bm-data}/luindex/enwiki/enwiki.txt" fileext=".MD5" algorithm="MD5"/>
-            </and>
-        </condition>
-    </target>
-
-    <target name="lucene-enwiki-bench-data" depends="lucene-enwiki-bench-data-check" unless="lucene-enwiki-bench-data-valid-md5">
-        <mkdir dir="${lucene-build-dir}/benchmark/work"/>
-        <exec executable="ant" dir="${lucene-build-dir}/benchmark">
-            <arg value="enwiki"/>
-        </exec>
-        <mkdir dir="${bm-data}/luindex/enwiki"/>
-        <move file="${lucene-build-dir}/benchmark/work/enwiki.txt" todir="${bm-data}/luindex/enwiki"/>
-    </target> -->
-
 </project>

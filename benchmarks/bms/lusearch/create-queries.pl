@@ -21,7 +21,7 @@
 #          M = 18 => 256K words
 #
 
-$wordlist = "words.txt.gz";               # source of words we're using (gleaned from kjv & shakespeare)
+$wordlist = "enwiki-anarchism-copleston-words.txt.gz";               # source of words we're using (gleaned from enwiki)
 $baseoutname = "query";                   # basename of generated files
 
 $listorder = shift(@ARGV);                # log_2 of the number of output files
@@ -98,7 +98,7 @@ sub writelists {
    shuffle(\@index);
    
    for ($l=0; $l < $lists; $l++) {
-     $name = sprintf("%s%.*d.txt",$baseoutname,($lists < 10 ? 1 : ($lists < 100 ? 2 : 3)),$l);
+     $name = sprintf("%s%.*d.txt",$baseoutname,($lists < 10 ? 1 : ($lists < 100 ? 2 : ($lists < 1000 ? 3 : 4))),$l);
 	 open(OUT, ">$name");
 	 for ($i=0; $i < $listsize; $i++) {
 	 	print OUT ($listarray->[$index[$l]][$i]."\n");

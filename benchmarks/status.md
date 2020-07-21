@@ -13,7 +13,7 @@
 |jython|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓||
 |kafka|✓|✓|✓||✓|✓|✓|✓|✓||?|✓|
 |luindex|✓|✓|✓|✓|✓|✓|✓|✓||✓|||
-|lusearch|✓|✓|✓||✓|✓|✓|✓||✓|?|?|
+|lusearch|✓|✓|✓||✓|✓|✓|✓||✓|✓|?|
 |pmd|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |tomcat|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|?|
@@ -25,8 +25,14 @@
 
 ### TODO
 * Priorities
-  * Fix lucene workloads
-  * Fix / add latency reporting
+  * Immediate
+    * Fix / add latency reporting
+    * Fix spurious dir creation ({$bm-files})
+  * Soon
+    * Investiage trade failures
+    * Update size names
+    * Investigate biojava, cassandra, perf issues
+* Check why lusearch failed once the query set was made larger, or at least why the benchmark time got much faster once the queries had 512 entries rather than 256.
 * Move standard workloads out of wasabi src, into github (audit them for size first)
 * Data is read only
   * check that benchmarks never write to dat director

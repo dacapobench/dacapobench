@@ -115,15 +115,18 @@ public class Index {
       }
 
       BufferedReader reader = new BufferedReader(new FileReader(txtFile));
-      reader.readLine();  // skip header line
       String line = reader.readLine();
       int n = 0;
+      String lead = "Adding documents from "+txtFile.getName()+": ";
+
+      System.out.print(lead+"\r");
       while (line != null) {
-        System.out.println("adding " + line.substring(0, line.indexOf(SEP)));
         writer.addDocument(getLuceneDocFromLine(line));
         line = reader.readLine();
         n ++;
+        if (n % 1000 == 0) System.out.print(lead+n+"\r");
       }
+      System.out.println(lead+n);
     }
 
     System.out.println("Optimizing...");
@@ -152,14 +155,14 @@ public class Index {
     doc.add(new Field("title", line.substring(0, spot), defaultFT));
 
     // Add date as a field. Indexed, but not tokenized.
-    doc.add(new Field("date", line.substring(1+spot, spot2), defaultFT));
+    doc.add(new Field("modified", line.substring(1+spot, spot2), defaultFT));
 
     // Add body as a field. Tokenized and indexed, but not stored.
     FieldType bodyFT = new FieldType();
     bodyFT.setTokenized(true);
     bodyFT.setStored(false);
     bodyFT.setIndexOptions(IndexOptions.DOCS);
-    doc.add(new Field("body", line.substring(1 + spot2, spot3), bodyFT));
+    doc.add(new Field("contents", line.substring(1 + spot2, spot3), bodyFT));
 
     return doc;
   }

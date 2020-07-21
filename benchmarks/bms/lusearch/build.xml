@@ -33,7 +33,7 @@
     </target>
 
     <target name="data" depends="lucene">
-        <unzip dest="${bm-data}" src="${bm-downloads}/lusearch-data.zip"/>
+        <unzip dest="${bm-data}" src="${bm-files}/lusearch-data.zip"/>
     </target>
 
     <target name="jar">

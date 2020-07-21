@@ -22,6 +22,7 @@ package org.dacapo.lusearch;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class Search {
   /** Simple command-line based search demo. */
   public void main(String[] args) throws Exception {
     String usage = "Usage:\tjava org.dacapo.lusearch.Search [-ind" +
-            "ex dir] [-field f] [-repeat n] [-queries file] [-raw] [-norms field] [-paging hitsPerPage]";
+            "ex dir] [-field f] [-iterations n] [-queries file] [-raw] [-norms field] [-paging hitsPerPage]";
     usage += "\n\tSpecify 'false' for hitsPerPage to use streaming instead of paging search.";
     if (args.length > 0 && ("-h".equals(args[0]) || "-help".equals(args[0]))) {
       System.out.println(usage);
@@ -90,7 +91,7 @@ public class Search {
     String index = "index";
     String field = "contents";
     String queryBase = null;
-    int repeat = 0;
+    int iterations = 1;
     boolean raw = false;
     String normsField = null;
     int hitsPerPage = 10;
@@ -108,8 +109,8 @@ public class Search {
       } else if ("-queries".equals(args[i])) {
         queryBase = args[i + 1];
         i++;
-      } else if ("-repeat".equals(args[i])) {
-        repeat = Integer.parseInt(args[i + 1]);
+      } else if ("-iterations".equals(args[i])) {
+        iterations = Integer.parseInt(args[i + 1]);
         i++;
       } else if ("-raw".equals(args[i])) {
         raw = true;
@@ -132,15 +133,16 @@ public class Search {
     }
     completed = 0;
     for (int j = 0; j < threads; j++) {
-      new QueryThread(this, "Query" + j, j, threads, totalQueries, index, outBase, queryBase, field, normsField, raw, hitsPerPage).start();
+      new QueryThread(this, "Query" + j, j, threads, totalQueries, index, outBase, queryBase, field, normsField, raw, hitsPerPage, iterations).start();
     }
     synchronized (this) {
-      while (completed != totalQueries) {
+      while (completed != totalQueries*iterations) {
         try {
           this.wait();
         } catch (InterruptedException e) {
         }
       }
+      System.out.println();
     }
   }
 
@@ -158,9 +160,10 @@ public class Search {
     String normsField;
     boolean raw;
     int hitsPerPage;
+    int iterations;
 
     public QueryThread(Search parent, String name, int id, int threadCount, int totalQueries, String index, String outBase, String queryBase, String field,
-        String normsField, boolean raw, int hitsPerPage) {
+        String normsField, boolean raw, int hitsPerPage, int iterations) {
       super(name);
       this.parent = parent;
       this.id = id;
@@ -174,14 +177,17 @@ public class Search {
       this.normsField = normsField;
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
+      this.iterations = iterations;
     }
 
     public void run() {
       try {
         int count = totalQueries / threadCount + (id < (totalQueries % threadCount) ? 1 : 0);
-        for (int i = 0, queryId = id; i < count; i++, queryId += threadCount) {
-          // make and run query
-          new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage).run();
+        for (int r = 0; r < iterations; r++) {
+          for (int i = 0, queryId = id; i < count; i++, queryId += threadCount) {
+            // make and run query
+            new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage, totalQueries, iterations).run();
+          }
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -201,20 +207,24 @@ public class Search {
     IndexSearcher searcher;
     BufferedReader in;
     PrintWriter out;
+    int iterations;
+    int fivePercent;
 
     public QueryProcessor(Search parent, String name, int id, String index, String outBase, String queryBase, String field, String normsField, boolean raw,
-        int hitsPerPage) {
+        int hitsPerPage, int totalQueries, int iterations) {
       this.parent = parent;
       this.field = field;
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
+      this.fivePercent = iterations*totalQueries/20;
+      this.iterations = iterations;
       try {
         reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
         /*if (normsField != null)
           reader = new OneNormsReader(reader, normsField);*/
         searcher = new IndexSearcher(reader);
 
-        String query = queryBase + "query" + (id < 10 ? "00" : (id < 100 ? "0" : "")) + id + ".txt";
+        String query = queryBase + File.separator + "query" + (id < 10 ? "000" : (id < 100 ? "00" : (id < 1000 ? "0" : ""))) + id + ".txt";
         in = new BufferedReader(new FileReader(query));
         out = new PrintWriter(new BufferedWriter(new FileWriter(outBase + id)));
 
@@ -237,10 +247,14 @@ public class Search {
         if (line.length() == 0)
           break;
 
+        if (line.equals("OR") || line.equals("AND") || line.equals("NOT") || line.equals("TO"))
+          line = line.toLowerCase();
+
         Query query = null;
         try {
           query = parser.parse(line);
         } catch (Exception e) {
+          System.err.println("Failed to process query: '"+line+"'");
           e.printStackTrace();
         }
         searcher.search(query, 10);
@@ -253,8 +267,11 @@ public class Search {
       out.close();
       synchronized (parent) {
         parent.completed++;
-        if (parent.completed % 4 == 0) {
-          System.out.println(parent.completed + " query batches completed");
+        if (fivePercent == 0)
+          System.out.print("Completing query batches: "+parent.completed+"\r");
+        else if (parent.completed % fivePercent == 0) {
+          int percentage = 5 * (parent.completed / fivePercent);
+          System.out.print("Completing query batches: "+percentage+"%\r");
         }
         parent.notify();
       }
