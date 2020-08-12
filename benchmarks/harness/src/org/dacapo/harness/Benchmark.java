@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2009 The Australian National University.
+ * Copyright (c) 2006, 2009, 2020 The Australian National University.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
@@ -600,6 +600,7 @@ public abstract class Benchmark {
   public void postIteration(String size) throws Exception {
     if (System.getProperty("dacapo.latency.csv") != null)
       tailLatencyStats();
+    System.out.println(LatencyReporter.reportLatency());
     if (!preserve) {
       postIterationCleanup(size);
     }

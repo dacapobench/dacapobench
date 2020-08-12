@@ -13,7 +13,7 @@
 |jython|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓||
 |kafka|✓|✓|✓||✓|✓|✓|✓|✓||?|✓|
 |luindex|✓|✓|✓|✓|✓|✓|✓|✓||✓|||
-|lusearch|✓|✓|✓||✓|✓|✓|✓||✓|✓|?|
+|lusearch|✓|✓|✓||✓|✓|✓|✓|✓|✓|✓|?|
 |pmd|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |sunflow|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |tomcat|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|?|
@@ -33,6 +33,7 @@
     * Update size names
     * Investigate biojava, cassandra, perf issues
 * Check why lusearch failed once the query set was made larger, or at least why the benchmark time got much faster once the queries had 512 entries rather than 256.
+* checkout why cpu utilization for lusearch large is so variable (dips to 200% then sometimes 2000%)
 * Move standard workloads out of wasabi src, into github (audit them for size first)
 * Data is read only
   * check that benchmarks never write to dat director

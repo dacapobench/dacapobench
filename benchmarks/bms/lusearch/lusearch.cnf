@@ -5,9 +5,9 @@ benchmark lusearch
 size small args "-index","${DATA}/lusearch/index",
                 "-queries","${DATA}/lusearch/queries",
                 "-output", "${SCRATCH}/lusearch.out",
-                "-totalqueries", "8",
+                "-totalquerysets", "8",
+                "-querySetSize", "256",
                 "-threads", "${THREADS}"
-  thread-limit 8
   thread-limit 8
   output 
     stdout digest 0x6c9ba3e8f57e1cfd67b7e9d193e4f5f961c48fd4,
@@ -24,9 +24,9 @@ size small args "-index","${DATA}/lusearch/index",
 size default args "-index","${DATA}/lusearch/index",
                 "-queries", "${DATA}/lusearch/queries",
                 "-output", "${SCRATCH}/lusearch.out",
-                "-totalqueries", "2048",
+                "-totalquerysets", "2048",
+                "-querySetSize", "256",
                 "-threads", "${THREADS}"
-  thread-limit 2048
   thread-limit 2048
   output 
     stdout     digest 0x76ab115e7bd1e9a45c7dafa5f3008710b858389e,
@@ -44,10 +44,10 @@ size default args "-index","${DATA}/lusearch/index",
 size large args "-index","${DATA}/lusearch/index",
                 "-queries", "${DATA}/lusearch/queries",
                 "-output", "${SCRATCH}/lusearch.out",
-                "-totalqueries", "2048",
+                "-totalquerysets", "2048",
+                "-querySetSize", "256",
                 "-iterations", "10",
                 "-threads", "${THREADS}"
-  thread-limit 2048
   thread-limit 2048
   output 
     stdout     digest 0x76ab115e7bd1e9a45c7dafa5f3008710b858389e,
@@ -65,10 +65,10 @@ size large args "-index","${DATA}/lusearch/index",
 size xlarge args "-index","${DATA}/lusearch/index",
                 "-queries", "${DATA}/lusearch/queries",
                 "-output", "${SCRATCH}/lusearch.out",
-                "-totalqueries", "2048",
+                "-totalquerysets", "2048",
+                "-querySetSize", "256",
                 "-iterations", "100",
                 "-threads", "${THREADS}"
-  thread-limit 2048
   thread-limit 2048
   output 
     stdout     digest 0x76ab115e7bd1e9a45c7dafa5f3008710b858389e,
@@ -87,9 +87,9 @@ size huge args "-index","${DATA}/lusearch/index-enwiki",
                 "-field", "body",
                 "-queries", "${DATA}/lusearch/queries-enwiki",
                 "-output", "${SCRATCH}/lusearch.out",
-                "-totalqueries", "2048",
+                "-totalquerysets", "2048",
+                "-querySetSize", "256",
                 "-threads", "${THREADS}"
-  thread-limit 2048
   thread-limit 2048
   output 
     stdout     digest 0xc435bf8c10ee995d0cfa71548feedb3e64504fd0,

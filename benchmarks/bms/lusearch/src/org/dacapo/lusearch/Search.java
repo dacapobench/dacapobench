@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 
+import org.dacapo.harness.LatencyReporter;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -97,7 +98,8 @@ public class Search {
     int hitsPerPage = 10;
     String outBase = null;
     int threads = 1;
-    int totalQueries = 32;
+    int totalQuerieSets = 32;
+    int querySetSize = 256;
 
     for (int i = 0; i < args.length; i++) {
       if ("-index".equals(args[i])) {
@@ -126,17 +128,24 @@ public class Search {
       } else if ("-threads".equals(args[i])) {
         threads = Integer.parseInt(args[i + 1]);
         i++;
-      } else if ("-totalqueries".equals(args[i])) {
-        totalQueries = Integer.parseInt(args[i + 1]);
+      } else if ("-totalquerysets".equals(args[i])) {
+        totalQuerieSets = Integer.parseInt(args[i + 1]);
+        i++;
+      } else if ("-querysetsize".equals(args[i])) {
+        querySetSize = Integer.parseInt(args[i + 1]);
         i++;
       }
     }
     completed = 0;
+    int totalQueries = totalQuerieSets * iterations * querySetSize;
+    LatencyReporter.initialize(totalQueries);
+
     for (int j = 0; j < threads; j++) {
-      new QueryThread(this, "Query" + j, j, threads, totalQueries, index, outBase, queryBase, field, normsField, raw, hitsPerPage, iterations).start();
+      LatencyReporter lr = new LatencyReporter(j, threads, totalQueries);
+      new QueryThread(this, "Query" + j, j, threads, totalQuerieSets, index, outBase, queryBase, field, normsField, raw, hitsPerPage, iterations, lr).start();
     }
     synchronized (this) {
-      while (completed != totalQueries*iterations) {
+      while (completed != totalQuerieSets*iterations) {
         try {
           this.wait();
         } catch (InterruptedException e) {
@@ -161,9 +170,10 @@ public class Search {
     boolean raw;
     int hitsPerPage;
     int iterations;
+    LatencyReporter reporter;
 
     public QueryThread(Search parent, String name, int id, int threadCount, int totalQueries, String index, String outBase, String queryBase, String field,
-        String normsField, boolean raw, int hitsPerPage, int iterations) {
+        String normsField, boolean raw, int hitsPerPage, int iterations, LatencyReporter reporter) {
       super(name);
       this.parent = parent;
       this.id = id;
@@ -178,6 +188,7 @@ public class Search {
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
       this.iterations = iterations;
+      this.reporter = reporter;
     }
 
     public void run() {
@@ -186,7 +197,7 @@ public class Search {
         for (int r = 0; r < iterations; r++) {
           for (int i = 0, queryId = id; i < count; i++, queryId += threadCount) {
             // make and run query
-            new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage, totalQueries, iterations).run();
+            new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage, totalQueries, iterations, reporter).run();
           }
         }
       } catch (Exception e) {
@@ -209,15 +220,17 @@ public class Search {
     PrintWriter out;
     int iterations;
     int fivePercent;
+    LatencyReporter reporter;
 
     public QueryProcessor(Search parent, String name, int id, String index, String outBase, String queryBase, String field, String normsField, boolean raw,
-        int hitsPerPage, int totalQueries, int iterations) {
+        int hitsPerPage, int totalQueries, int iterations, LatencyReporter reporter) {
       this.parent = parent;
       this.field = field;
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
       this.fivePercent = iterations*totalQueries/20;
       this.iterations = iterations;
+      this.reporter = reporter;
       try {
         reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
         /*if (normsField != null)
@@ -257,9 +270,11 @@ public class Search {
           System.err.println("Failed to process query: '"+line+"'");
           e.printStackTrace();
         }
+        reporter.start();
         searcher.search(query, 10);
 
         doPagingSearch(query);
+        reporter.end();
       }
 
       reader.close();
