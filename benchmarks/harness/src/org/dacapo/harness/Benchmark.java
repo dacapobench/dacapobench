@@ -600,7 +600,7 @@ public abstract class Benchmark {
   public void postIteration(String size) throws Exception {
     if (System.getProperty("dacapo.latency.csv") != null)
       tailLatencyStats();
-    System.out.println(LatencyReporter.reportLatency());
+    LatencyReporter.reportLatency();
     if (!preserve) {
       postIterationCleanup(size);
     }

@@ -9,6 +9,7 @@
 
 package org.dacapo.harness;
 
+import org.dacapo.harness.LatencyReporter;
 import org.dacapo.parser.Config;
 import java.io.File;
 
@@ -58,6 +59,8 @@ public class JME extends Benchmark{
 
     @Override
     public void iterate(String size) throws Exception {
+        LatencyReporter.initialize(Integer.parseInt(args[1]), 1);
+
         // getting the number of frame needed to be rendered
         System.setProperty("framesToRender", args[1]);
 

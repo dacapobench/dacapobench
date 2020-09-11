@@ -1,6 +1,6 @@
 diff -ur build/build.gradle ../build/build.gradle
 --- build/build.gradle	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/build.gradle	2020-07-01 14:25:34.795958881 +1000
++++ ../build/build.gradle	2020-09-11 16:03:41.240198727 +1000
 @@ -92,36 +92,10 @@
      into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
  }
@@ -41,7 +41,7 @@ diff -ur build/build.gradle ../build/build.gradle
      delete file('dist/javadoc')
 diff -ur build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
 --- build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-07-01 14:25:34.795958881 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-09-11 16:03:41.240198727 +1000
 @@ -439,7 +439,7 @@
       * the main loop in a separate thread.
       */
@@ -53,43 +53,58 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../bu
      /**
 diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
 --- build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-07-01 14:25:34.795958881 +1000
-@@ -48,6 +48,10 @@
++++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-09-11 16:03:41.240198727 +1000
+@@ -47,7 +47,14 @@
+ import com.jme3.scene.Spatial.CullHint;
  import com.jme3.system.AppSettings;
  import com.jme3.system.JmeContext.Type;
++
  import com.jme3.system.JmeSystem;
 +import com.jme3.system.NanoTimer;
 +
 +import java.util.Random;
 +import java.io.FileWriter;
++import java.lang.reflect.Method;
++import java.lang.reflect.InvocationTargetException;
  
  /**
   * <code>SimpleApplication</code> is the base class for all jME3 Applications.
-@@ -79,6 +83,10 @@
+@@ -72,6 +79,9 @@
+     public static final String INPUT_MAPPING_MEMORY = DebugKeysAppState.INPUT_MAPPING_MEMORY;
+     public static final String INPUT_MAPPING_HIDE_STATS = "SIMPLEAPP_HideStats";
+ 
++    Method dacapoStart;
++    Method dacapoEnd;
++
+     protected Node rootNode = new Node("Root Node");
+     protected Node guiNode = new Node("Gui Node");
+     protected BitmapText fpsText;
+@@ -79,6 +89,8 @@
      protected FlyByCamera flyCam;
      protected boolean showSettings = true;
      private AppActionListener actionListener = new AppActionListener();
 +    private Random random = new Random(0);
 +    private final int framesToRender = Integer.parseInt(System.getProperty("framesToRender"));
-+
-+    FileWriter dacapocsv;
  
      private class AppActionListener implements ActionListener {
  
-@@ -104,6 +112,12 @@
+@@ -104,6 +116,15 @@
  
      public SimpleApplication( AppState... initialStates ) {
          super(initialStates);
 +        try {
-+            dacapocsv = new FileWriter(System.getProperty("dacapo.latency.csv"));
-+            dacapocsv.write("# (unused), start nsec, end nsec"+System.lineSeparator());
-+        } catch (Exception e) {
-+            System.out.println("Failed trying to create latency stats: "+e);
++            Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter", true, SimpleApplication.class.getClassLoader());
++            dacapoStart = clazz.getMethod("start", int.class);
++            dacapoEnd = clazz.getMethod("end", int.class);
++        } catch (ClassNotFoundException e) {
++            System.err.println("Failed to access DaCapo latency reporter: "+e);
++        } catch (NoSuchMethodException e) {
++            System.err.println("Failed trying to create latency stats: "+e);
 +        }
      }
  
      @Override
-@@ -124,6 +138,7 @@
+@@ -124,6 +145,7 @@
          }
          //re-setting settings they can have been merged from the registry.
          setSettings(settings);
@@ -97,36 +112,60 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
          super.start();
      }
          
-@@ -255,7 +270,9 @@
+@@ -239,11 +261,32 @@
+         simpleInitApp();
+     }
+ 
++    public void dacapoStart() {
++        try {
++            dacapoStart.invoke(null, 0);  // only one reporter object
++        } catch (IllegalAccessException e) {
++            System.err.println("Failed to access DaCapo latency reporter: "+e);
++        } catch (InvocationTargetException e) {
++            System.err.println("Failed to access DaCapo latency reporter: "+e);
++        }
++    }
++
++    public void dacapoEnd() {
++        try {
++            dacapoEnd.invoke(null, 0);  // only one reporter object
++        } catch (IllegalAccessException e) {
++            System.err.println("Failed to access DaCapo latency reporter: "+e);
++        } catch (InvocationTargetException e) {
++            System.err.println("Failed to access DaCapo latency reporter: "+e);
++        }
++    }
++
+     @Override
+     public void update() {
+         if (prof!=null) prof.appStep(AppStep.BeginFrame);
+ 
+         super.update(); // makes sure to execute AppTasks
++
+         if (speed == 0 || paused) {
+             return;
+         }
+@@ -255,7 +298,8 @@
          stateManager.update(tpf);
  
          // simple update and root node
 -        simpleUpdate(tpf);
 +        // simpleUpdate(tpf);
-+        // simpleUpdate(tpf, ((NanoTimer) timer).getFrameCount());
 +        dacapoUpdate();
  
          if (prof!=null) prof.appStep(AppStep.SpatialUpdate);
          rootNode.updateLogicalState(tpf);
-@@ -290,6 +307,41 @@
+@@ -290,6 +334,29 @@
  
      public abstract void simpleInitApp();
  
 +    private void dacapoUpdate() {
-+        /* output frame latency to dacapo csv */
-+        long start = ((NanoTimer) timer).getLastStartTime();
-+        long end = ((NanoTimer) timer).getStartTime();
-+        String str = "0, "+Long.toString(start)+", "+Long.toString(end)+System.lineSeparator();
-+        try {
-+            dacapocsv.write(str);
-+        } catch (Exception e) {
-+            System.out.println("Failed trying to write latency stats: "+e);
-+        }
++        dacapoEnd();
 +
 +        int frameCount = ((NanoTimer) timer).getFrameCount();
 +        int tenPercent = framesToRender / 10;
 +        if (frameCount % tenPercent == 0) {
-+            System.out.print((frameCount / tenPercent)+"0% ");
++            System.out.print("\r"+(frameCount / tenPercent)+"0%");
 +        }
 +        if (frameCount == framesToRender) {
 +            /* we're done; terminate */
@@ -135,14 +174,10 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
 +                System.out.println("Rendered "+frameCount+" frames for "+this.getClass().getSimpleName());
 +                context.notify();
 +                this.stop();
-+                try {
-+                    dacapocsv.close();
-+                } catch (Exception e) {
-+                    System.out.println("Failed trying to close latency stats: "+e);
-+                }
 +            }            
 +        } else {
 +            /* update camera for the next frame, using seeded random number */
++            dacapoStart();
 +            cam.setLocation(cam.getLocation().setY(cam.getLocation().getY()+ (random.nextFloat()-0.5f) * 3));
 +        }
 +    }
@@ -152,7 +187,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
  
 diff -ur build/jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
 --- build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-07-01 14:25:34.795958881 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-09-11 16:03:41.240198727 +1000
 @@ -252,8 +252,8 @@
      public static final String JOAL = "JOAL";
  
@@ -166,74 +201,43 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build
          defaults.put("DepthBits", 24);
 diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
 --- build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-07-01 14:25:34.795958881 +1000
-@@ -42,13 +42,16 @@
-     private static final long TIMER_RESOLUTION = 1000000000L;
-     private static final float INVERSE_TIMER_RESOLUTION = 1f/1000000000L;
-     
-+    private long timerBase;
-     private long startTime;
--    private long previousTime;
-+    private long lastTime;
-+    private long lastStartTime;
++++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-09-11 16:03:41.240198727 +1000
+@@ -46,6 +46,7 @@
+     private long previousTime;
      private float tpf;
      private float fps;
 +    private int frameCount;
      
      public NanoTimer() {
--        startTime = System.nanoTime();
-+        timerBase = System.nanoTime();
-     }
- 
-     /**
-@@ -63,7 +66,7 @@
-     }
- 
-     public long getTime() {
--        return System.nanoTime() - startTime;
-+        return System.nanoTime() - timerBase;
-     }
- 
-     public long getResolution() {
-@@ -78,14 +81,30 @@
+         startTime = System.nanoTime();
+@@ -78,10 +79,15 @@
          return tpf;
      }
  
-+    public long getStartTime() {
-+        return startTime;
-+    }
-+
-+    public long getLastStartTime() {
-+        return lastStartTime;
-+    }
-+
 +    public int getFrameCount() {
 +        return frameCount;
 +    }
 +
      public void update() {
--        tpf = (getTime() - previousTime) * (1.0f / TIMER_RESOLUTION);
-+        lastStartTime = startTime;
-+        startTime = getTime();
-+        lastTime = startTime - lastStartTime;
-+        tpf = lastTime * (1.0f / TIMER_RESOLUTION);
+         tpf = (getTime() - previousTime) * (1.0f / TIMER_RESOLUTION);
          fps = 1.0f / tpf;
--        previousTime = getTime();
+         previousTime = getTime();
 +        frameCount++;
      }
      
      public void reset() {
--        startTime = System.nanoTime();
--        previousTime = getTime();
-+        timerBase = System.nanoTime();
-+        startTime = 0;
-+        lastStartTime = 0;
-     }
- }
 diff -ur build/jme3-examples/build.gradle ../build/jme3-examples/build.gradle
 --- build/jme3-examples/build.gradle	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/build.gradle	2020-07-01 14:25:34.799958887 +1000
-@@ -24,14 +24,14 @@
++++ ../build/jme3-examples/build.gradle	2020-09-11 16:03:41.240198727 +1000
+@@ -4,6 +4,7 @@
+     ext.mainClass = 'jme3test.TestChooser'
+ }
+ 
++
+ task run(dependsOn: 'build', type:JavaExec) {
+     main = mainClass
+     classpath = sourceSets.main.runtimeClasspath
+@@ -24,14 +25,14 @@
      compile project(':jme3-effects')
  
      // EITHER use jme3-bullet + jme3-bullet-native OR ELSE jme3-jbullet
@@ -255,7 +259,7 @@ diff -ur build/jme3-examples/build.gradle ../build/jme3-examples/build.gradle
      compile project(':jme3-plugins')
 diff -ur build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java
 --- build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-07-01 14:25:34.799958887 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-09-11 16:03:41.240198727 +1000
 @@ -101,7 +101,7 @@
      public void simpleUpdate(float tpf){
  //        cam.setLocation(new Vector3f(5.0347548f, 6.6481347f, 3.74853f));
@@ -267,7 +271,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java ../
  
 diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
 --- build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-07-01 14:28:43.012175609 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-09-11 16:05:00.296259995 +1000
 @@ -48,26 +48,21 @@
  import java.net.URL;
  import java.net.URLConnection;
@@ -484,7 +488,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -
 -        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 -        mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
--
+ 
 -        final JButton okButton = new JButton("Ok");
 -        okButton.setMnemonic('O');
 -        buttonPanel.add(okButton);
@@ -494,7 +498,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -                startApp(selectedClass);
 -            }
 -        });
- 
+-
 -        final JButton cancelButton = new JButton("Cancel");
 -        cancelButton.setMnemonic('C');
 -        buttonPanel.add(cancelButton);
@@ -591,7 +595,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
  
      private class FilteredJList extends JList {
          private static final long serialVersionUID = 1L;
-@@ -424,18 +424,18 @@
+@@ -424,42 +424,68 @@
      /**
       * center the frame.
       */
@@ -607,6 +611,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -        this.setLocation((screenSize.width - frameSize.width) / 2,
 -                (screenSize.height - frameSize.height) / 2);
 -    }
+-
 +//    private void center() {
 +//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 +//        Dimension frameSize = this.getSize();
@@ -619,10 +624,15 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 +//        this.setLocation((screenSize.width - frameSize.width) / 2,
 +//                (screenSize.height - frameSize.height) / 2);
 +//    }
- 
      /**
       * Start the chooser.
-@@ -448,18 +448,45 @@
+      *
+      * @param args
+      *            command line parameters
+      */
+-    public static void main(final String[] args) {
++     public static void main(final String[] args) {
+         try {
              UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
          } catch (Exception e) {
          }
@@ -679,7 +689,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
      }
 diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
 --- build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-07-01 14:25:34.799958887 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-09-11 16:03:41.244198728 +1000
 @@ -13,6 +13,7 @@
  import com.jme3.scene.Node;
  import com.jme3.scene.Spatial;
@@ -710,15 +720,17 @@ diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.jav
  //      setDisplayFps(false);
  //      setDisplayStatView(false);
  
-@@ -131,6 +132,7 @@
+@@ -131,6 +132,9 @@
          fpp.addFilter(water3);
  
          viewPort.addProcessor(fpp);
 +        System.out.println("...done.");
++
++        dacapoStart();
  
          //fpp.setNumSamples(4);
      }
-@@ -185,5 +187,6 @@
+@@ -185,5 +189,6 @@
  
      @Override
      public void simpleUpdate(float tpf) {
@@ -727,7 +739,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.jav
  }
 diff -ur build/jme3-networking/build.gradle ../build/jme3-networking/build.gradle
 --- build/jme3-networking/build.gradle	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-networking/build.gradle	2020-07-01 14:25:34.799958887 +1000
++++ ../build/jme3-networking/build.gradle	2020-09-11 16:03:41.244198728 +1000
 @@ -4,4 +4,5 @@
  
  dependencies {
@@ -736,7 +748,7 @@ diff -ur build/jme3-networking/build.gradle ../build/jme3-networking/build.gradl
  }
 diff -ur build/jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
 --- build/jme3-plugins/build.gradle	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-plugins/build.gradle	2020-07-01 14:25:34.799958887 +1000
++++ ../build/jme3-plugins/build.gradle	2020-09-11 16:03:41.244198728 +1000
 @@ -17,4 +17,8 @@
      compile project(':jme3-core')
      compile 'com.google.code.gson:gson:2.8.1'

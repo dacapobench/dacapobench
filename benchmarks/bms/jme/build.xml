@@ -29,7 +29,6 @@
         <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-files}" strip="0" ignorewhitespace="yes"/>
     </target>
 
-
     <condition property="gradle-exe" value="gradlew.bat">
         <os family="windows"/>
     </condition>
@@ -42,7 +41,6 @@
             <param name="target-filename" value="${build-script}"/>
         </antcall>
 
-        <!-- Build h2o without testing -->
         <exec executable="${build-script}" dir="${bm-build-dir}/jme3-examples" failonerror="yes">
             <arg value="clean"/>
             <arg value="dist"/>
