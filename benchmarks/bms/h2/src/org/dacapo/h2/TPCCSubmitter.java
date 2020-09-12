@@ -25,6 +25,8 @@ import org.apache.derbyTesting.system.oe.client.Operations;
 import org.apache.derbyTesting.system.oe.client.Submitter;
 import org.apache.derbyTesting.system.oe.util.OERandom;
 
+import org.dacapo.harness.LatencyReporter;
+
 /**
  * A TPC-C like Submitter that will execute a fixed number of transactions only
  * counting those transactions that succeed. Failed transactions are ignored and
@@ -68,6 +70,7 @@ public class TPCCSubmitter extends Submitter {
     for (int i = 0; i < count; i++) {
       rand.setSeed(getNextSeed());
 
+      LatencyReporter.start(tid);
       int txType = getTransactionType();
       boolean success = false;
       while (!success) {
@@ -77,8 +80,9 @@ public class TPCCSubmitter extends Submitter {
         }
       }
       transactionCount[txType]++;
+      LatencyReporter.end(tid);
       long end = System.nanoTime();
-      reporter.done(tid, start, end);
+      reporter.done();
       start = end;
     }
 

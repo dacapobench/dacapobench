@@ -8,6 +8,8 @@
  */
 package org.dacapo.h2;
 
+import org.dacapo.harness.LatencyReporter;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,8 +94,8 @@ public class TPCC {
   // OLTP runners
   private Connection[] connections;
   private Submitter[] submitters;
-  private TPCCReporter reporter = new TPCCReporter();
   private OERandom[] rands;
+  private TPCCReporter reporter = new TPCCReporter();
 
   private TreeMap<String,String>   threadMap;
   private TreeMap<String,String[]> argMap;
@@ -249,7 +251,7 @@ public class TPCC {
   public void preIteration(String size) throws Exception {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
-
+    LatencyReporter.initialize(totalTransactions, submitters.length);
     reporter.reset(totalTransactions);
 
     long start = System.currentTimeMillis();
@@ -293,7 +295,6 @@ public class TPCC {
       threads[i] = newThread(i, submitters[i], transactionsPerTerminal[i]);
     }
 
-    reporter.resetTimerBase();
     for (int i = 0; i < threads.length; i++)
       threads[i].start();
 
@@ -325,7 +326,6 @@ public class TPCC {
   }
 
   public void postIteration(String size) throws Exception {
-    reporter.close();
     if (verbose && (firstIteration || !inMemoryDB)) {
       System.out.println("Time to perform pre-iteration phase: " + preIterationTime + " msec");
     }
