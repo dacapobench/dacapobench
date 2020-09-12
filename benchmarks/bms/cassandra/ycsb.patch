@@ -1,24 +1,25 @@
-diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/site/ycsb/Client.java
---- ../../tmp/core/src/main/java/site/ycsb/Client.java	2020-06-13 15:24:43.000000000 +1000
-+++ core/src/main/java/site/ycsb/Client.java	2020-07-03 20:31:07.264529724 +1000
-@@ -155,7 +155,16 @@
+diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java
+--- build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2020-06-13 15:24:43.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2020-09-12 15:02:58.015072043 +1000
+@@ -33,6 +33,9 @@
+ import java.util.concurrent.CountDownLatch;
+ import java.util.concurrent.TimeUnit;
+ 
++import java.lang.reflect.Method;
++import java.lang.reflect.InvocationTargetException;
++
+ /**
+  * Turn seconds remaining into more useful units.
+  * i.e. if there are hours or days worth of seconds, use them.
+@@ -155,7 +158,6 @@
    private static StatusThread statusthread = null;
  
    // HTrace integration related constants.
-+  private static long[][] txTimes;
- 
-+  public static long[][] getTxTimes() {
-+    return txTimes;
-+  }
-+
-+  private static long timerBase;
-+  public static long getTimerBase() {
-+    return timerBase;
-+  }
+-
    /**
     * All keys for configuring the tracing system start with this prefix.
     */
-@@ -267,9 +276,10 @@
+@@ -267,9 +269,10 @@
  
        Measurements.getMeasurements().exportMeasurements(exporter);
      } finally {
@@ -32,7 +33,7 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      }
    }
  
-@@ -305,7 +315,6 @@
+@@ -305,7 +308,6 @@
  
      initWorkload(props, warningthread, workload, tracer);
  
@@ -40,16 +41,15 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      final CountDownLatch completeLatch = new CountDownLatch(threadcount);
  
      final List<ClientThread> clients = initDb(dbname, props, threadcount, targetperthreadperms,
-@@ -337,7 +346,7 @@
+@@ -337,7 +339,6 @@
        }
  
        st = System.currentTimeMillis();
 -
-+      timerBase = System.nanoTime();
        for (Thread t : threads.keySet()) {
          t.start();
        }
-@@ -367,7 +376,6 @@
+@@ -367,7 +368,6 @@
          if (terminator != null && !terminator.isInterrupted()) {
            terminator.interrupt();
          }
@@ -57,7 +57,7 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
          if (status) {
            // wake up status thread if it's asleep
            statusthread.interrupt();
-@@ -378,7 +386,7 @@
+@@ -378,7 +378,7 @@
              // ignored
            }
          }
@@ -66,23 +66,70 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
          workload.cleanup();
        }
      } catch (WorkloadException e) {
-@@ -396,8 +404,6 @@
+@@ -396,8 +396,51 @@
        e.printStackTrace();
        System.exit(-1);
      }
--
++  }
++
++  private static Method dacapoInitialize;
++  private static Method dacapoStart;
++  private static Method dacapoEnd;
++  private static void dacapoInitialize(int transactions, int threads) {
++    try {
++      Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter",
++          true, Client.class.getClassLoader());
++      dacapoInitialize = clazz.getMethod("initialize", int.class, int.class);
++      dacapoStart = clazz.getMethod("start", int.class);
++      dacapoEnd = clazz.getMethod("end", int.class);
++    } catch (ClassNotFoundException e) {
++      System.err.println("Failed to access DaCapo latency reporter: "+e);
++    } catch (NoSuchMethodException e) {
++      System.err.println("Failed trying to create latency stats: "+e);
++    }
++
++    try {
++      dacapoInitialize.invoke(null, transactions, threads);  // only one reporter object
++    } catch (IllegalAccessException e) {
++      System.err.println("Failed to access DaCapo latency reporter: "+e);
++    } catch (InvocationTargetException e) {
++      System.err.println("Failed to access DaCapo latency reporter: "+e);
++    }
++  }
++
++  public static void dacapoStart(int threadID) {
++    try {
++      dacapoStart.invoke(null, threadID);  // only one reporter object
++    } catch (IllegalAccessException e) {
++      System.err.println("Failed to access DaCapo latency reporter: "+e);
++    } catch (InvocationTargetException e) {
++      System.err.println("Failed to access DaCapo latency reporter: "+e);
++    }
++  }
+ 
 -    System.exit(0);
++  public static void dacapoEnd(int threadID) {
++    try {
++      dacapoEnd.invoke(null, threadID);  // only one reporter object
++    } catch (IllegalAccessException e) {
++      System.err.println("Failed to access DaCapo latency reporter: "+e);
++    } catch (InvocationTargetException e) {
++      System.err.println("Failed to access DaCapo latency reporter: "+e);
++    }
    }
  
    private static List<ClientThread> initDb(String dbname, Properties props, int threadcount,
-@@ -409,19 +415,24 @@
+@@ -409,19 +452,26 @@
      final List<ClientThread> clients = new ArrayList<>(threadcount);
      try (final TraceScope span = tracer.newScope(CLIENT_INIT_SPAN)) {
        int opcount;
 +
        if (dotransactions) {
          opcount = Integer.parseInt(props.getProperty(OPERATION_COUNT_PROPERTY, "0"));
-+        System.err.println("    operations: "+props.getProperty(OPERATION_COUNT_PROPERTY));
++        System.err.println("    operations: "+opcount);
++
++        dacapoInitialize(opcount, threadcount);
++
        } else {
          if (props.containsKey(INSERT_COUNT_PROPERTY)) {
            opcount = Integer.parseInt(props.getProperty(INSERT_COUNT_PROPERTY, "0"));
@@ -95,20 +142,11 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
          threadcount = opcount;
          System.out.println("Warning: the threadcount is bigger than recordcount, the threadcount will be recordcount!");
        }
-+      txTimes = new long[threadcount][(opcount / threadcount)+1];
 +
        for (int threadid = 0; threadid < threadcount; threadid++) {
          DB db;
          try {
-@@ -443,6 +454,7 @@
-             completeLatch);
-         t.setThreadId(threadid);
-         t.setThreadCount(threadcount);
-+        t.setTxBuffer(txTimes[threadid]);
-         clients.add(t);
-       }
- 
-@@ -506,13 +518,11 @@
+@@ -506,13 +556,11 @@
      try {
        Properties projectProp = new Properties();
        projectProp.load(classLoader.getResourceAsStream("project.properties"));
@@ -124,7 +162,7 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      try {
        Class workloadclass = classLoader.loadClass(props.getProperty(WORKLOAD_PROPERTY));
  
-@@ -528,15 +538,8 @@
+@@ -528,15 +576,8 @@
  
    private static Properties parseArguments(String[] args) {
      Properties props = new Properties();
@@ -140,7 +178,7 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
      if (args.length == 0) {
        usageMessage();
        System.out.println("At least one argument specifying a workload is required.");
-@@ -565,9 +568,11 @@
+@@ -565,9 +606,11 @@
          props.setProperty(TARGET_PROPERTY, String.valueOf(ttarget));
          argindex++;
        } else if (args[argindex].compareTo("-load") == 0) {
@@ -152,18 +190,10 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/Client.java core/src/main/java/s
          props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(true));
          argindex++;
        } else if (args[argindex].compareTo("-s") == 0) {
-diff -ur ../../tmp/core/src/main/java/site/ycsb/ClientThread.java core/src/main/java/site/ycsb/ClientThread.java
---- ../../tmp/core/src/main/java/site/ycsb/ClientThread.java	2020-06-13 15:24:42.000000000 +1000
-+++ core/src/main/java/site/ycsb/ClientThread.java	2020-07-03 20:31:07.264529724 +1000
-@@ -40,6 +40,7 @@
-   private int opsdone;
-   private int threadid;
-   private int threadcount;
-+  private long[] txtimes;
-   private Object workloadstate;
-   private Properties props;
-   private long targetOpsTickNs;
-@@ -62,6 +63,7 @@
+diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java
+--- build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2020-09-12 15:04:06.735200739 +1000
+@@ -62,6 +62,7 @@
      this.dotransactions = dotransactions;
      this.workload = workload;
      this.opcount = opcount;
@@ -171,29 +201,26 @@ diff -ur ../../tmp/core/src/main/java/site/ycsb/ClientThread.java core/src/main/
      opsdone = 0;
      if (targetperthreadperms > 0) {
        targetOpsPerMs = targetperthreadperms;
-@@ -81,6 +83,10 @@
-     threadcount = threadCount;
-   }
+@@ -116,13 +117,15 @@
+     try {
+       if (dotransactions) {
+         long startTimeNanos = System.nanoTime();
++        
  
-+  public void setTxBuffer(final long[] txTimes) {
-+    txtimes = txTimes;
-+  }
-+
-   public int getOpsDone() {
-     return opsdone;
-   }
-@@ -122,7 +128,7 @@
+         while (((opcount == 0) || (opsdone < opcount)) && !workload.isStopRequested()) {
+ 
++          Client.dacapoStart(threadid);
            if (!workload.doTransaction(db, workloadstate)) {
              break;
            }
 -
-+          txtimes[opsdone] = System.nanoTime();
++          Client.dacapoEnd(threadid);
            opsdone++;
  
            throttleNanos(startTimeNanos);
-diff -ur ../../tmp/core/src/main/java/site/ycsb/DBWrapper.java core/src/main/java/site/ycsb/DBWrapper.java
---- ../../tmp/core/src/main/java/site/ycsb/DBWrapper.java	2020-06-13 15:24:42.000000000 +1000
-+++ core/src/main/java/site/ycsb/DBWrapper.java	2020-07-03 20:31:07.264529724 +1000
+diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java
+--- build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2020-09-12 14:58:53.442554771 +1000
 @@ -97,9 +97,11 @@
          }
        }

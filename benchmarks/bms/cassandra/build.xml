@@ -67,7 +67,7 @@
         <property name="ycsb-dir" value="${bm-build-dir}/ycsb-${ycsb-version}"/>
         <mkdir dir="${ycsb-dir}"/>
         <untar src="${bm-downloads}/${ycsb-tgz}" dest="${ycsb-dir}" compression="gzip"/>
-        <patch patchfile="${bm-files}/ycsb.patch" dir="${ycsb-dir}" strip="0" ignorewhitespace="yes"/>
+        <patch patchfile="${bm-files}/ycsb.patch" dir="${ycsb-dir}" strip="3" ignorewhitespace="yes"/>
         <exec executable="${mvn-exe}" dir="${ycsb-dir}">
             <arg line="-pl site.ycsb:cassandra-binding dependency:copy-dependencies -am package -DskipTests"/>
         </exec>

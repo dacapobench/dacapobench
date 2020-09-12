@@ -138,7 +138,7 @@ public class Search {
     }
     completed = 0;
     int totalQueries = totalQuerieSets * iterations * querySetSize;
-    LatencyReporter.initialize(totalQueries);
+    LatencyReporter.initialize(totalQueries, threads);
 
     for (int j = 0; j < threads; j++) {
       LatencyReporter lr = new LatencyReporter(j, threads, totalQueries);
