@@ -9,24 +9,23 @@ public class ClientRunner{
 
     private Method clientStarter;
     private String pID = "producer";
-    private Method setLatencyBuf;
+    private Method setTxCount;
     long timerBase = 0;
-    long[][] txTimes = null;
+    private int txCount;
 
-    ClientRunner(long[][] txTimes) throws Exception{
-        this.txTimes = txTimes;
+    ClientRunner(int txCount) throws Exception{
+        this.txCount = txCount;
         initialize();
     }
 
     public void initialize() throws Exception{
-
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         Class trogdorClient = Class.forName("org.apache.kafka.trogdor.coordinator.CoordinatorClient", true, loader);
         clientStarter = trogdorClient.getMethod("main", String[].class);
 
         Class worker = Class.forName("org.apache.kafka.trogdor.workload.ProduceBenchWorker");
-        setLatencyBuf = worker.getMethod("setLatencyBuffer", Object.class);
+        setTxCount = worker.getMethod("setTxCount", int.class);
     }
 
     /**
@@ -37,7 +36,7 @@ public class ClientRunner{
         // Running the benchmark
         System.out.println("Trogdor is running the workload....");
         timerBase = System.nanoTime();
-        setLatencyBuf.invoke(null, (Object) txTimes);
+        setTxCount.invoke(null, txCount);
         clientStarter.invoke(null, (Object) new String[]{"createTask", "-t", "localhost:8889", "-i", pID, "--spec", produceBench});
 
         // waiting for finishing
@@ -46,31 +45,6 @@ public class ClientRunner{
     }
 
     void finishUp() throws Exception{
-        /* dump latency stats to file */
-        FileWriter dacapocsv = null;
-        try {
-            dacapocsv = new FileWriter(System.getProperty("dacapo.latency.csv"));
-            dacapocsv.write("# (unused), start nsec, end nsec"+System.lineSeparator());
-        } catch (Exception e) {
-            System.out.println("Failed trying to create latency stats: "+e);
-            System.exit(-1);
-        }
-        try {
-            for (int i = 0; i < txTimes[1].length; i++) {
-                long end = txTimes[1][i] - timerBase;
-                long start = txTimes[0][i] - timerBase;
-                if (txTimes[0][i] != 0) {
-                    String str;
-                    str = ", "+Long.toString(start)+", "+Long.toString(end)+System.lineSeparator();
-                    dacapocsv.write(str);
-                    txTimes[0][i] = txTimes[0][i] = 0;
-                } 
-            }
-            dacapocsv.close();
-        } catch (Exception e) {
-            System.out.println("Failed trying to write latency stats: "+e);
-        }
-        
         clientStarter.invoke(null, (Object) new String[]{"destroyTask", "-t", "localhost:8889", "-i", pID});
     }
 }
