@@ -39,6 +39,7 @@
         <mkdir dir="${bm-build-dir}/benchmark"/>
         <javac srcdir="${bm-src-dir}" destdir="${bm-build-dir}/benchmark"
                source="1.8" target="1.8"
+               classpath="${harness-classpath}"
                includes="org/dacapo/tomcat/*"
                debug="true" debuglevel="lines,vars,source">
             <classpath>
