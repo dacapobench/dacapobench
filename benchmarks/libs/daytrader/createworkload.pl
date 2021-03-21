@@ -59,7 +59,7 @@ my %sessions = ("tiny" => 8,
 		 "default-bean" => 1024,
      "large-soap" => 2048,
 		 "large-bean" => 8192,
-     "huge-soap" => 2048,
+     "huge-soap" => 16384,
 		 "huge-bean" => 32768);
 my %stockquotes = ();
 
