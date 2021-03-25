@@ -34,16 +34,16 @@ public class Launcher {
   private final static String[] WILDFLY_SERVER_JARS = {"jboss-modules.jar"};
 
   private static int numThreads = -1;
-  private static String size;
+  private static int logNumSessions = 0;
   private static boolean useBeans = true;
 
   private static ClassLoader serverCLoader = null;
   private static Method clientMethod = null;
   private static File root = null;
 
-  public static void initialize(File data, File scratch, int threads, String dtSize, boolean beans) {
+  public static void initialize(File data, File scratch, int threads, int lns, boolean beans) {
     numThreads = threads;
-    size = dtSize;
+    logNumSessions = lns;
     useBeans = beans;
     System.setProperty("jboss.server.log.dir", scratch.getAbsolutePath());
     root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
@@ -61,9 +61,9 @@ public class Launcher {
 
       // Create a client environment
       clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoClientRunner");
-      method = clazz.getMethod("initialize", String.class, int.class, boolean.class);
-      method.invoke(null, size, numThreads, useBeans);
-      clientMethod = clazz.getMethod("runIteration", String.class, int.class, boolean.class);
+      method = clazz.getMethod("initialize", Integer.TYPE, int.class, boolean.class);
+      method.invoke(null, logNumSessions, numThreads, useBeans);
+      clientMethod = clazz.getMethod("runIteration", Integer.TYPE, int.class, boolean.class);
 
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
@@ -87,7 +87,7 @@ public class Launcher {
     ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(serverCLoader);
-      clientMethod.invoke(null, size, numThreads, useBeans);
+      clientMethod.invoke(null, logNumSessions, numThreads, useBeans);
     } catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();

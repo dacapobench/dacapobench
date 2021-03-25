@@ -23,7 +23,7 @@ public class DaCapoClient {
 		boolean initialize = false;
 		boolean beans = false;
 		int numThreads = 64;
-		String size = "tiny";
+		int logNumSessions = 3;
 		try {
 			for (int i = 0; i < args.length; i++) {
 				if ("-t".equals(args[i])) {
@@ -31,15 +31,15 @@ public class DaCapoClient {
 				} else if ("-i".equals(args[i])) {
 					initialize = true;
 				} else if ("-s".equals(args[i])) {
-					size = args[++i];
+					logNumSessions = Integer.parseInt(args[++i]);
 				} else if ("-b".equals(args[i])) {
 					beans = true;
 				}
 			}
 			if (initialize) {
-				DaCapoTrader.initializeTrade(size);
+				DaCapoTrader.initializeTrade(logNumSessions);
 			} else {
-				DaCapoRunner.runDaCapoTrade(size, numThreads, !beans);
+				DaCapoRunner.runDaCapoTrade(logNumSessions, numThreads, !beans);
 			}
 		} catch (Exception e) {
 			System.err.println("Caught an unexpected exception!");

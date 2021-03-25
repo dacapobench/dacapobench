@@ -23,20 +23,20 @@ public class DaCapoRunner {
   static int completed[] = new int[2];
   static int tradeSessions = 0;
   
-	public static void runDaCapoTrade(String size, int numThreads, boolean soap) {
-		startTraders(size, numThreads, soap);
+	public static void runDaCapoTrade(int logNumSessions, int numThreads, boolean soap) {
+		startTraders(logNumSessions, numThreads, soap);
 		wait(numThreads);
 	}
 	
-	private static void startTraders(String size, int numThreads, boolean soap) {
+	private static void startTraders(int logNumSessions, int numThreads, boolean soap) {
 
 		DaCapoTrader[] traders = new DaCapoTrader[numThreads];
 		for (int i = 0; i < numThreads; i++) {
 			try {
-				traders[i] = new DaCapoTrader(soap, completed, i, numThreads, size);
+				traders[i] = new DaCapoTrader(soap, completed, i, numThreads, logNumSessions);
 				traders[i].setName("DaCapo Thread " + i);
 				if (i == 0) {
-					tradeSessions = traders[i].loadWorkload(size);
+					tradeSessions = traders[i].loadWorkload(logNumSessions);
 					DaCapoTrader.setSessionStride(tradeSessions, numThreads);
 				}
 			} catch (Exception e) {

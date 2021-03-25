@@ -41,7 +41,7 @@ public class DaCapoTrader extends Thread {
   private int[] consumed;
   private static String[] tradeSessions;
   private int threads;
-  private String size;
+  private int logNumSessions;
   private TradeServices trade = null;
   private static final int MAX_TRANSACTION_RETRIES = 5;
   private static final int OP_H = 0, OP_P = 1, OP_Q = 2, OP_B = 3, OP_S = 4, OP_U = 5, OP_R = 6, OP_L = 7, OP_O = 8, OP_NQ = 9;
@@ -75,11 +75,11 @@ public class DaCapoTrader extends Thread {
   public DaCapoTrader() {
   }
 
-  public DaCapoTrader(boolean soap, int[] completed, int ordinal, int threads, String size) {
+  public DaCapoTrader(boolean soap, int[] completed, int ordinal, int threads, int logNumSessions) {
     try {
       this.consumed = completed;
       this.threads = threads;
-      this.size = size;
+      this.logNumSessions = logNumSessions;
       this.soap = soap;
       this.threadID = ordinal;
       try {
@@ -100,7 +100,7 @@ public class DaCapoTrader extends Thread {
 
   public void reset() {
     try {
-      DaCapoDBBuilder.reset(trade, size, threads);
+      DaCapoDBBuilder.reset(trade, logNumSessions, threads);
     } catch (Exception e) {
       System.err.println("Caught exception while resetting DaCapo workload: " + e.toString());
       e.printStackTrace();
@@ -198,7 +198,7 @@ public class DaCapoTrader extends Thread {
 //    System.out.flush();
   }
 
-  public static void initializeTrade(final String size) {
+  public static void initializeTrade(final int logNumSessions) {
     Thread initializer = new Thread(new Runnable() {
       public void run() {
         // Using the direct one because it is faster
@@ -206,7 +206,7 @@ public class DaCapoTrader extends Thread {
         if (VERBOSE) System.err.println("Initializing...");
         for (int i = 0; i < MAX_INITIALIZATION_WAIT_CYCLES; i++) {
           try {
-            DaCapoDBBuilder.create(initTrade, 1, size);
+            DaCapoDBBuilder.create(initTrade, 1);
             return;
           } catch (Exception e) {
             if (i == MAX_INITIALIZATION_WAIT_CYCLES - 1) {
@@ -241,7 +241,7 @@ public class DaCapoTrader extends Thread {
       sessionStride = idealStride;
   }
 
-  public int loadWorkload(String size) {
+  public int loadWorkload(int logNumSessions) {
     try {
       String fileName = "workload.txt";
       URL workloadFile = getURL(fileName);
@@ -253,10 +253,7 @@ public class DaCapoTrader extends Thread {
       }
       BufferedReader br = new BufferedReader(new InputStreamReader(workloadFile.openStream()));
 
-      int numSessions = parseHeader(br.readLine().trim(), size);
-
-      if (VERBOSE)
-        System.err.println("[" + threadID + "] Successfully read header.  Will load " + numSessions + " sessions");
+      int numSessions = 1<<logNumSessions;
       tradeSessions = new String[numSessions];
 
       String s;
@@ -267,6 +264,7 @@ public class DaCapoTrader extends Thread {
           if (VERBOSE) System.err.println("[" + threadID + "] Loaded session: " + s);
         }
       }
+
       if (i != numSessions) {
         String msg = "DaCapoDBBuilder: could only read " + i + " of " + numSessions + " users from input file " + fileName + " , please correct the file and retry";
         Log.error(msg);
@@ -361,13 +359,14 @@ public class DaCapoTrader extends Thread {
   private int doLogout(String uid) {
     for (int i = 0; i < MAX_OP_ATTEMPTS[OP_O]; i++) {
       try {
-        if (VERBOSE) System.err.println("[" + threadID + "] Logging out " + uid + "...");
+        if (VERBOSE)
+          System.err.println("[" + threadID + "] Logging out " + uid + "...");
         trade.logout(uid);
         localOpCount[OP_O]++;
         return 1;
       } catch (Exception e) {
         if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_O] - 1) {
-          System.out.println("Error logging out " + uid + ": " + e.toString());
+          System.err.println("Error logging out " + uid + ": " + e.toString());
           e.printStackTrace();
         }
       }

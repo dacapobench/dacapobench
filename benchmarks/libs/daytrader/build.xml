@@ -106,6 +106,9 @@
                 <include name="wildfly-${wildfly-version}.Final/**"/>
                 <exclude name="wildfly-${wildfly-version}.Final/standalone/configuration/logging.properties"/>
             </fileset>
+           <fileset dir="${lib-data}">
+              <include name="operations.csv"/>
+            </fileset>
         </copy>
         <delete file="${lib-dat}/wildfly-${wildfly-version}.Final/standalone/configuration/logging.properties"/>
     </target>

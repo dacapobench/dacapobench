@@ -4,16 +4,16 @@ my $user_density = 1.5;           # over-provisioning of user set (only use 1/N)
 my $ops_per_session_mean = 16;
 my $ops_per_session_sd = 8;
 my %op_prob = (
-	       "h" => .20,	# homepage
-	       "q" => .45,	# quote
-	       "l" =>   0,	# login (implicit)
-	       "o" =>   0,	# logout (implicit)
-	       "r" => .005,	# register a completely new user
-	       "a" => .06,	# display account info
-	       "p" => .09,	# portfolio
-	       "b" => .09,	# buy
-	       "s" => .09,	# sell
-	       "u" => .015	# update account profile
+	       "h" => .21,	# homepage
+	       "q" => .468,	# quote
+#	       "l" =>   0,	# login (implicit)
+#	       "o" =>   0,	# logout (implicit)
+	       "r" => .006,	# register a completely new user
+#	       "a" =>   0,	# display account info
+	       "p" => .1,	# portfolio
+	       "b" => .1,	# buy
+	       "s" => .1,	# sell
+	       "u" => .016	# update account profile
 	      );
 
 my $add_to_holdings = 0;            # do we update holdings when buying?
@@ -23,6 +23,7 @@ my $prob_quote_held_stock = 0.60;   # typically get quotes on held stock
 my $prob_buy_held_stock = 0.50;     # often buy held stock
 
 my %op_actual = ();
+my @ls_ops = ();
 my $sell_deficit = 0;
 
 my $sep = "\t";
@@ -53,20 +54,17 @@ my @surplus_users = ();
 my %users = ();
 
 my $output_dir = shift(@ARGV);
+my $log_min_sessions = 3;
+my $log_max_sessions = 15;
+my $op_count = 0;
 
-my %sessions = ("tiny" => 8,
-     "default-soap" => 128,
-		 "default-bean" => 1024,
-     "large-soap" => 2048,
-		 "large-bean" => 8192,
-     "huge-soap" => 16384,
-		 "huge-bean" => 32768);
 my %stockquotes = ();
 
 init($output_dir);
-my $max_users = $user_density*($sessions{"huge-bean"});
+my $max_users = $user_density*(1<<$log_max_sessions);
 create_users($max_users);
 create_operations();
+verify_operations();
 
 my $total_ops = 0;
 foreach $key (keys %op_actual) {
@@ -75,6 +73,7 @@ foreach $key (keys %op_actual) {
 foreach $key (sort keys %op_actual) {
   printf "$key %.3f\n", ($op_actual{$key}/$total_ops);
 }
+
 exit;
 
 #
@@ -99,9 +98,6 @@ sub init{
 # operations
 #
 #
-
-
-
 sub create_operations {
   my $output_file = "$output_dir/workload.txt";
   my @usersets = ();
@@ -113,19 +109,59 @@ sub create_operations {
 
   open (OUTPUT, ">$output_file");
   my $header = "#$sep";
-  foreach $key (sort {$sessions{$a} <=> $sessions{$b}} keys %sessions) {
-    $header .= "$key: ".$sessions{$key}."$sep";
-  }
-  print OUTPUT $header."\n";
 
+  $s = 0;
+  $ls = $log_min_sessions;
   my $sz = scalar @{$usersets[0]};
   for (my $u = 0; $u < $sz; $u++) {
     for (my $i = 0; $i < $sesions_per_user; $i++) {
       my $session = generate_session($usersets[$i][$u]);
       print OUTPUT "$session\n";
+      $s++;
+      if ($s == (1<<$ls)) {
+        $ls_ops[$ls] = ();
+        foreach $o (keys %op_actual) {
+          $ls_ops[$ls]{$o} = $op_actual{$o};
+        }
+        $ls++;
+      }
     }
   }
   close OUTPUT;
+
+  my $output_file = "$output_dir/operations.csv";
+  open (OUTPUT, ">$output_file");
+  for($i = $log_min_sessions; $i < $log_max_sessions; $i++) {
+    $str = "$i, ";
+    $total = 2<<$i;
+    $ls_ops[$i]{"o"} += $ls_ops[$i]{"r"}; # each registration generates a logout.
+    foreach $k (sort keys %{$ls_ops[$i]}) {
+      $str .= "$k: ".$ls_ops[$i]{$k}.", ";
+      $total += $ls_ops[$i]{$k};
+    }
+    print OUTPUT "$i, $total, $str\n";
+  }
+  close OUTPUT;
+}
+
+sub verify_operations {
+  my $input_file = "$output_dir/workload.txt";
+  open (IN, "$input_file");
+  my $ls = $log_min_sessions;
+  for ($s = 0; $s < 1<<$log_max_sessions; $s++) {
+    if ($s == 1<<$ls) { $ls++; }
+    $session = <IN>;
+    if ($session =~ /(\d+)\s/) {
+      if ($1 >= ((1<<$ls)*$user_density)) {
+        print "Bad user: ".$1."/".(1<<$ls)." (".((1<<$ls)*$user_density)."): ".$session;
+        return;
+      }
+    } else {
+      print "Bad session ".$session;
+    }
+  }
+  print "Successfully verified\n";
+  close IN;
 }
 
 # get a randomized set of $sessions users
@@ -134,14 +170,14 @@ sub get_userset {
   
   my @taken = ();
   my $low = 0;
-  foreach $key (sort {$sessions{$a} <=> $sessions{$b}} keys %sessions) {
-    my $high = $sessions{$key};
-    my $max_uid = $high*$user_density;
+  for ($ls = $log_min_sessions; $ls <= $log_max_sessions; $ls++) {
+    my $high = 1<<$ls;
+    my $max_uid = ($high-1)*$user_density;
     for (my $spot = $low; $spot < $high; $spot++) {
       my $u = int (rand $max_uid);
       while ($taken[$u]) {
-	$u++;
-	if ($u == $max_uid) { $u = 0; }
+	      $u++;
+	      if ($u == $max_uid) { $u = 0; }
       }
       $$userset[$spot] = sprintf("%.6d",$u);
       $taken[$u] = 1;
@@ -149,20 +185,6 @@ sub get_userset {
     $low = $high;
   }
 }
-
-#   my $low = 0;
-#   foreach $key (sort {$sessions{$a} <=> $sessions{$b}} keys %sessions) {
-#     my $high = $sessions{$key};
-#     for (my $i = $low; $i < $high; $i++) {
-#       my $spot = $low + int(rand ($high - $low));
-#       while ($$userset[$spot] ne "") {
-# 	$spot++;
-# 	if ($spot == $high) {$spot = $low;}
-#       }
-#       $$userset[$spot] = sprintf("%.6d",$i);
-#     }
-#     $low = $high;
-#   }
 
 
 sub generate_session {
@@ -189,7 +211,7 @@ sub generate_session {
   } while ($op ne "o");
 
   $session .= "$tail_ops";
-
+  $op_count += 2; # log in and log out
   return $session;
 }
 
@@ -208,10 +230,15 @@ sub generate_op {
     foreach $key (keys %op_prob) {
       $cumul += $op_prob{$key};
       if ($cumul >= $val) {
-	$op = $key;
-	last;
+	      $op = $key;
+	      last;
       }
     }
+    if ($op eq "o") {
+      print "ERROR, produced an 'o' $val\n";
+      exit;
+    }
+
     my $num_holdings = keys %$holdings;
     if ($op eq "s" && $num_holdings == 0) {
       $op = "b";
@@ -225,6 +252,7 @@ sub generate_op {
     }
 
     $op_actual{$op}++;
+    $op_count++;
 
     if ($op eq "q") {
       $op .= " ".get_quote($holdings, \@quotes); 
@@ -393,13 +421,7 @@ sub init_stocks {
 sub create_users {
   my ($maxusers) = @_;
 
-  my $installed_users = 0;
-  foreach $key (keys %sessions) {
-    if ($sessions{$key}*$user_density > $installed_users) {
-      $installed_users = $sessions{$key}*$user_density;
-    }
-  }
-
+  my $installed_users = (1<<$log_max_sessions)*$user_density;
   my $surplus_users = $installed_users; # generate surplus for use in update and addition ops
 
   init_names();
@@ -417,8 +439,9 @@ sub write_user_table {
   open (USERS, ">$usersfile");
   
   my $header = "#$sep";
-  foreach $key (sort {$sessions{$a} <=> $sessions{$b}} keys %sessions) {
-    $header .= "$key: ".($sessions{$key}*$user_density)."$sep";
+  for($ls = $log_min_sessions; $ls <= $log_max_sessions; $ls++) {
+        $header .= "s$ls: ".int((1<<$ls)*$user_density)."$sep";
+
   }
   print USERS $header."\n";
 

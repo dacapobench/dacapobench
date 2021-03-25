@@ -30,7 +30,7 @@ public class Tradesoap extends Benchmark {
   public Tradesoap(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
-    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, String.class, Boolean.TYPE });
+    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Boolean.TYPE });
     this.method = clazz.getMethod("performIteration", new Class[] {});
     this.shutdownMethod = clazz.getMethod("shutdown", new Class[] {});
   }
@@ -38,16 +38,19 @@ public class Tradesoap extends Benchmark {
   @Override
   protected void prepare(String size) throws Exception {
     String[] args = config.preprocessArgs(size, scratch, data);
-    String dtSize = "medium";
+    int logNumSessions = 3;
     if (args.length == 1)
-      dtSize = args[0];
-
+      logNumSessions = Integer.parseInt(args[0]);
+    else {
+      System.err.println("Quitting.   Bad arguments: "+args);
+      System.exit(1);
+    }
     System.out.println("Launching the server");
     PrintStream stdout = System.out;
     // Hide server starting messages
     emptyOutput();
 
-    initializeMethod.invoke(null, data, scratch, config.getThreadCount(size), dtSize, false);
+    initializeMethod.invoke(null, data, scratch, config.getThreadCount(size), logNumSessions, false);
 
     // stdout for iterate
     System.setOut(stdout);

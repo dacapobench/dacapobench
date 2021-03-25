@@ -17,10 +17,10 @@ import java.net.URL;
  */
 public class DaCapoClientRunner {
 
-  public static void initialize(String size, int numThreads, boolean useBeans) {
+  public static void initialize(int logNumSessions, int numThreads, boolean useBeans) {
     try {
 
-      URL url = new URL("http://localhost:8080/daytrader/config?action=dacapoBuild&size=" + size + (useBeans ? "&bean=-b" : "" ));
+      URL url = new URL("http://localhost:8080/daytrader/config?action=dacapoBuild&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
       // Request for creating tables
@@ -38,10 +38,10 @@ public class DaCapoClientRunner {
     }
   }
 
-  public static void runIteration(String size, int numThreads, boolean useBeans) {
+  public static void runIteration(int logNumSessions, int numThreads, boolean useBeans) {
 
     try {
-      URL url = new URL("http://localhost:8080/daytrader/config?action=dacapoRun&size=" + size + (useBeans ? "&bean=-b" : "" ));
+      URL url = new URL("http://localhost:8080/daytrader/config?action=dacapoRun&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
       // Request for running transactions

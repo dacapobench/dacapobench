@@ -48,7 +48,7 @@ public class DaCapoDBBuilder extends Thread {
 
 	}
 	
-	public static void create(TradeJEEDirect trade, int numThreads, String size) {
+	public static void create(TradeJEEDirect trade, int numThreads) {
 		try	{
 			trade.resetTrade(true);
 			createDB(trade);
@@ -89,11 +89,11 @@ public class DaCapoDBBuilder extends Thread {
 	}
 
 	
-	public static boolean reset(TradeServices trade, String size, int threads) {
+	public static boolean reset(TradeServices trade, int logNumSessions, int threads) {
 		// Initialize the data set
 		if (users == null || stocks == null) {
-			users = readStrings("users.txt", size);
-			stocks = readStrings("stocks.txt", size);
+			users = readStrings("users.txt", logNumSessions);
+			stocks = readStrings("stocks.txt", logNumSessions);
 		}
 		int ordinal = getOrdinal(trade);
 		populateUsers(trade, ordinal, threads);
@@ -163,7 +163,7 @@ public class DaCapoDBBuilder extends Thread {
 		return rtn;
 	}
 	
-	private static String[] readStrings(String fileName, String size) {
+	private static String[] readStrings(String fileName, int logNumSessions) {
 		URL inputFile = null;
 		try {
 			inputFile = getURL(fileName); 
@@ -174,9 +174,9 @@ public class DaCapoDBBuilder extends Thread {
 				return null;
 			}
 
-			int numStrings = getNumStrings(inputFile, size, fileName.equalsIgnoreCase("stocks.txt"));		
+			int numStrings = getNumStrings(inputFile, "s"+logNumSessions, fileName.equalsIgnoreCase("stocks.txt"));
 			if (numStrings == 0) {
-				String msg = "DaCapoDBBuilder: can't determine the number of users for size \""+size+"\" in input file "+ fileName +" , please provide the file and retry";
+				String msg = "DaCapoDBBuilder: can't determine the number of users for size \""+logNumSessions+"\" in input file "+ fileName +" , please provide the file and retry";
 				Log.error(msg);
 				System.err.println(msg);
 				return null;
