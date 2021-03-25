@@ -184,7 +184,7 @@
         <!-- overwritable with -Dbuild.is-official=true on commandline-->
         <condition property="build.version"
                     value="${dacapo.version}"
-                    else="${dacapo.version}-git+${git.hash}">
+                    else="${dacapo.version}-git-${git.hash}">
             <isset property="build.is-official"/>
         </condition>
         <!-- set target data directory and jar name -->
