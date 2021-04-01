@@ -1,4 +1,4 @@
-|bm | updated | jdk 8 | jdk 11 | clean | scratch | validation | small | default | large | huge | long | latency |
+|bm | updated | jdk 8 | jdk 11 | clean | scratch | validation | small | default | large | huge | long | latency | off heap?
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |avrora|n/a|✓|✓|✓|✓|✓|✓|✓|✓|||
 |batik|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
