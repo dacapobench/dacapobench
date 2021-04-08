@@ -38,7 +38,7 @@ public class DaCapoClientRunner {
     }
   }
 
-  public static void runIteration(int logNumSessions, int numThreads, boolean useBeans) {
+  public static void runIteration(int logNumSessions, int numThreads, int timeoutms, boolean useBeans) {
 
     try {
       URL url = new URL("http://localhost:8080/daytrader/config?action=dacapoRun&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
@@ -49,9 +49,9 @@ public class DaCapoClientRunner {
 
       new Thread(() -> {
         try {
-          Thread.sleep(60000);
+          Thread.sleep(timeoutms);
         } catch (InterruptedException e) {
-          e.printStackTrace();
+          System.err.println("ERROR:  Iteration exceeded timeout of "+timeoutms+"ms.  Quitting.");
         } finally {
           System.exit(-1);
         }

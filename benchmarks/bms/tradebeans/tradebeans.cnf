@@ -2,28 +2,28 @@ benchmark tradebeans
   class org.dacapo.harness.Tradebeans
   thread-model per_cpu;
 
-size small args "3" 
+size small args "3", "5"
   threads 1      // per available processor
   thread-limit 32
   output stdout  digest 0x221b968a54790b9e2b807274467ea82b6617e5e5,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "10"
+size default args "10", "100"
   threads 1      // per available processor
   thread-limit 2048
   output stdout  digest 0xd1e7a1569682ab8843c7cd2193df6453a6a6d9b3,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "13"
+size large args "13", "200"
   threads 1      // per available processor
   thread-limit 8192
   output stdout  digest 0x284c9a2ed2446ec4bf41bf69bf89fea5b091aeab,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size huge args "15"
+size huge args "15", "600"
   threads 1      // per available processor
   thread-limit 32768
-  output stdout  digest 0x7d549bb05c16933d2d640c35d4d77d6d2f74afc1,
+  output stdout  digest 0x1f68c051324dd7bf4a666391fe2fe491517eb2bf,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

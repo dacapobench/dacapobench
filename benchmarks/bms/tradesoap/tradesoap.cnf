@@ -3,25 +3,25 @@ benchmark tradesoap
   thread-model per_cpu
   jars "daytrader.jar";
 
-size small args "3" 
+size small args "3", "5"
   threads 1      // per available processor
   thread-limit 8
   output stdout  digest 0x5b774ef47622f4e36e305f179a8f8cb070e42de9,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "7"
+size default args "7", "100"
   threads 1      // per available processor
   thread-limit 128
   output stdout  digest 0x4ba295c0dfc9dbbc4460d244a224bf63a0ad2e29,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "11"
+size large args "11", "200"
   threads 1      // per available processor
   thread-limit 1024
   output stdout  digest 0xb6c3d18c11aa9ac01d58a3a4a623d7efb3d70c32,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size huge args "14"
+size huge args "14", "600"
   threads 1      // per available processor
   thread-limit 2048
   output stdout  digest 0xb42d204ff65488790b0877f0ed1f0665929663e4,

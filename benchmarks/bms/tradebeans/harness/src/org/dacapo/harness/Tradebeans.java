@@ -34,7 +34,7 @@ public class Tradebeans extends Benchmark {
 
     // Find the launcher
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
-    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Boolean.TYPE });
+    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE});
     this.method = clazz.getMethod("performIteration", new Class[] {});
     this.shutdownMethod = clazz.getMethod("shutdown", new Class[] {});
   }
@@ -43,9 +43,12 @@ public class Tradebeans extends Benchmark {
   protected void prepare(String size) throws Exception {
     String[] args = config.preprocessArgs(size, scratch, data);
     int logNumSessions = 3;
-    if (args.length == 1)
+    int timeoutms = 0;
+    final int threads = config.getThreadCount(size);
+    if (args.length == 2) {
       logNumSessions = Integer.parseInt(args[0]);
-    else {
+      timeoutms = 1000*Integer.parseInt(args[1]);
+    } else {
       System.err.println("Quitting.   Bad arguments: "+args);
       System.exit(1);
     }
@@ -54,7 +57,8 @@ public class Tradebeans extends Benchmark {
     // Hide server starting messages
     emptyOutput();
 
-    initializeMethod.invoke(null, data, scratch, config.getThreadCount(size), logNumSessions, true);
+    LatencyReporter.initialize(threads);
+    initializeMethod.invoke(null, data, scratch, threads, logNumSessions, timeoutms, true);
 
     // stdout for iterate
     System.setOut(stdout);

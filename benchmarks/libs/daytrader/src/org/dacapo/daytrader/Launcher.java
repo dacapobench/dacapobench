@@ -36,17 +36,22 @@ public class Launcher {
   private static int numThreads = -1;
   private static int logNumSessions = 0;
   private static boolean useBeans = true;
+  private static int timeoutms = 0;
 
   private static ClassLoader serverCLoader = null;
   private static Method clientMethod = null;
   private static File root = null;
 
-  public static void initialize(File data, File scratch, int threads, int lns, boolean beans) {
+  public static void initialize(File data, File scratch, int threads, int lns,  int timeout, boolean beans) {
     numThreads = threads;
     logNumSessions = lns;
     useBeans = beans;
+    timeoutms = timeout;
+
+    System.setProperty("dacapo.daytrader.ops", data.getPath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader"+File.separator+"operations.csv");
     System.setProperty("jboss.server.log.dir", scratch.getAbsolutePath());
     root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
+    System.setProperty("dacapo.latency.file", scratch.getAbsolutePath()+File.separator+"latency.out");
     setWildflyProperties();
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
 
@@ -63,8 +68,7 @@ public class Launcher {
       clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoClientRunner");
       method = clazz.getMethod("initialize", Integer.TYPE, int.class, boolean.class);
       method.invoke(null, logNumSessions, numThreads, useBeans);
-      clientMethod = clazz.getMethod("runIteration", Integer.TYPE, int.class, boolean.class);
-
+      clientMethod = clazz.getMethod("runIteration", Integer.TYPE, int.class, int.class, boolean.class);
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
@@ -87,7 +91,8 @@ public class Launcher {
     ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(serverCLoader);
-      clientMethod.invoke(null, logNumSessions, numThreads, useBeans);
+      clientMethod.invoke(null, logNumSessions, numThreads, timeoutms
+      , useBeans);
     } catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();
