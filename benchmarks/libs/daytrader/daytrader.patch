@@ -1155,11 +1155,11 @@ diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytra
 +            {
 +                size = req.getParameter("size");
 +                bean = req.getParameter("bean");
-+                DaCapoClient.main(new String[] {"-i", "-t", "1", "-s", size, bean});
++                DaCapoClient.main(new String[] {"-i", "-s", size, bean});
 +            } else if (action.equals("dacapoRun")){
 +                size = req.getParameter("size");
 +                bean = req.getParameter("bean");
-+                DaCapoClient.main(new String[] {"-t", "1", "-s", size, bean});
++                DaCapoClient.main(new String[] {"-s", size, bean});
 +            }
              doConfigDisplay(req, resp, result + "Current DayTrader Configuration:");
          }

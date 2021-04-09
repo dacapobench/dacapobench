@@ -22,10 +22,19 @@ public class DaCapoRunner {
   
   static int completed[] = new int[2];
   static int tradeSessions = 0;
-  
-	public static void runDaCapoTrade(int logNumSessions, int numThreads, boolean soap) {
-		startTraders(logNumSessions, numThreads, soap);
+  static boolean running = false;
+  static int numThreads;
+
+	public static void runDaCapoTrade(int logNumSessions, boolean soap) {
+		synchronized(completed) {
+			if (!running) {
+				running = true;
+				numThreads = Integer.parseInt(System.getProperty("dacapo.client.threads"));
+				startTraders(logNumSessions, numThreads, soap);
+			}
+		}
 		wait(numThreads);
+		running = false;
 	}
 	
 	private static void startTraders(int logNumSessions, int numThreads, boolean soap) {

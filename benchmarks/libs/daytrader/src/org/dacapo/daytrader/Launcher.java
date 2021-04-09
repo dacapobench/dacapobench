@@ -39,7 +39,6 @@ public class Launcher {
   private static int timeoutms = 0;
 
   private static ClassLoader serverCLoader = null;
-  private static Method clientMethod = null;
   private static File root = null;
 
   public static void initialize(File data, File scratch, int threads, int lns,  int timeout, boolean beans) {
@@ -48,16 +47,11 @@ public class Launcher {
     useBeans = beans;
     timeoutms = timeout;
 
-    System.setProperty("dacapo.daytrader.ops", data.getPath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader"+File.separator+"operations.csv");
-    System.setProperty("jboss.server.log.dir", scratch.getAbsolutePath());
-    root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
-    System.setProperty("dacapo.latency.file", scratch.getAbsolutePath()+File.separator+"latency.out");
-    setWildflyProperties();
+    setProperties(data, scratch, threads);
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
 
     try {
-      // Create a server environment
-
+      // Create a server environment (using server classloader)
       serverCLoader = createWildflyClassLoader(originalCLoader, true);
       Thread.currentThread().setContextClassLoader(serverCLoader);
       Class<?> clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoServerRunner");
@@ -65,10 +59,7 @@ public class Launcher {
       method.invoke(null);
 
       // Create a client environment
-      clazz = serverCLoader.loadClass("org.dacapo.daytrader.DaCapoClientRunner");
-      method = clazz.getMethod("initialize", Integer.TYPE, int.class, boolean.class);
-      method.invoke(null, logNumSessions, numThreads, useBeans);
-      clientMethod = clazz.getMethod("runIteration", Integer.TYPE, int.class, int.class, boolean.class);
+      DaCapoClientRunner.initialize(logNumSessions, numThreads, useBeans);
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
@@ -78,9 +69,16 @@ public class Launcher {
     }
   }
 
-  private static void setWildflyProperties() {
+  private static void setProperties(File data, File scratch, int threads) {
+    System.setProperty("dacapo.client.threads", Integer.toString(threads));
+    
+    System.setProperty("jboss.server.log.dir", scratch.getAbsolutePath());
+    System.setProperty("dacapo.latency.file", scratch.getAbsolutePath()+File.separator+"latency.out");
+
+    root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
     System.setProperty("jboss.home.dir", new File(root, DIRECTORY).getPath());
     System.setProperty("module.path", new File(root, DIRECTORY + File.separator + "modules").getPath());
+    System.setProperty("dacapo.daytrader.ops", new File(root, "operations.csv").getPath());
   }
 
   public static void performIteration() {
@@ -91,8 +89,7 @@ public class Launcher {
     ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(serverCLoader);
-      clientMethod.invoke(null, logNumSessions, numThreads, timeoutms
-      , useBeans);
+      DaCapoClientRunner.runIteration(logNumSessions, numThreads, timeoutms, useBeans);
     } catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();
