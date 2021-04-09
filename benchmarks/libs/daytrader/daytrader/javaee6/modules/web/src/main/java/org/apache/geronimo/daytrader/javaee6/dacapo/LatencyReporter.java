@@ -11,27 +11,21 @@ public class LatencyReporter {
   static final int NS_COARSENING = 1; // measure at this precision
 
   private static double[] latency;
+  private static Integer globalIdx = 0;
   private static long timerBase;
-  private static int globalIdx;
 
   static void initialize(int logNumSessions) {
     int operations = getOperations(logNumSessions);
     latency = new double[operations];
     timerBase = System.nanoTime();
-  }
-
-  synchronized private static int incGlobalIndex() {
-    return globalIdx++;
-  }
-
-  synchronized static void reset() {
     globalIdx = 0;
-    for (int i = 0; i < latency.length; i++)
-      latency[i] = 0;
   }
 
   static int start() {
-    int index = incGlobalIndex();
+    int index = 0;
+    synchronized (globalIdx) {
+      index = globalIdx++;
+    }
     double start = (System.nanoTime() - timerBase) / NS_COARSENING;
     latency[index] = (double) -start;
     long start_cast = Double.valueOf(-latency[index]).longValue();

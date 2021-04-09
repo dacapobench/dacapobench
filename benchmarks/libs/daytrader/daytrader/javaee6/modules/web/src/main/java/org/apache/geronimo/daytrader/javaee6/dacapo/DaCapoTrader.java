@@ -83,7 +83,6 @@ public class DaCapoTrader extends Thread {
       this.logNumSessions = logNumSessions;
       this.soap = soap;
       this.threadID = ordinal;
-      LatencyReporter.initialize(logNumSessions);
 
       try {
         if (VERBOSE) System.err.println("[" + threadID + "] Creating Trade Action");
@@ -135,8 +134,6 @@ public class DaCapoTrader extends Thread {
       }
     }
     if (VERBOSE) System.err.println("[" + threadID + "] completed reset(), thread " + ordinal);
-
-    LatencyReporter.reset();
   }
 
   public void run() {

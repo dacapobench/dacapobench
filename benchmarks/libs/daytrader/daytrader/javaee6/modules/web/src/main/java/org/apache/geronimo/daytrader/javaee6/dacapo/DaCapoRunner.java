@@ -38,7 +38,7 @@ public class DaCapoRunner {
 	}
 	
 	private static void startTraders(int logNumSessions, int numThreads, boolean soap) {
-
+		LatencyReporter.initialize(logNumSessions);
 		DaCapoTrader[] traders = new DaCapoTrader[numThreads];
 		for (int i = 0; i < numThreads; i++) {
 			try {
