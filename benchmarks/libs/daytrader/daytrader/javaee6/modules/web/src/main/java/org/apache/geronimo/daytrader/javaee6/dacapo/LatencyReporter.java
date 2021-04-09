@@ -71,6 +71,10 @@ public class LatencyReporter {
     } catch (Exception e) {
         System.err.println("Failed to open operations.csv: "+e);
     }
+    if (rtn == 0) {
+      System.err.println("ERROR: Failed to find operation count for 2^"+logNumSessions+" operations");
+      System.exit(-1);
+    }
     return rtn;
   }
 }
