@@ -50,7 +50,6 @@ public class DaCapoDBBuilder extends Thread {
 	
 	public static void create(TradeJEEDirect trade, int numThreads) {
 		try	{
-			trade.resetTrade(true);
 			createDB(trade);
 		} catch (Exception e) {
 			System.err.println("Could not create database: "+e.toString());
