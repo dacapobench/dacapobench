@@ -98,7 +98,7 @@
         <delete file="${output-dir}/module-info.class"/>
     </target>
     
-    <target name="harness" depends="init,dacapo-digest,dependency,parser">
+    <target name="harness" depends="init,dependency,parser">
         <!-- include digest --> 
         <unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source" classpath="${output-dir}"/>
