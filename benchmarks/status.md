@@ -25,9 +25,6 @@
 
 ### TODO
 * Priorities
-  * Immediate
-    * Fix / add latency reporting
-    * Fix spurious dir creation ({$bm-files})
   * Soon
     * Investiage trade failures
     * Update size names
