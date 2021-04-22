@@ -1,7 +1,6 @@
-diff --git orig/pom.xml ./pom.xml
-index 52d0b86..1a7857a 100644
---- orig/pom.xml
-+++ ./pom.xml
+diff -ur ./pom.xml ../build/pom.xml
+--- ./pom.xml	2020-05-22 17:34:27.000000000 +1000
++++ ../build/pom.xml	2021-04-22 20:49:15.914009842 +1000
 @@ -47,7 +47,7 @@
      <dependency>
        <groupId>org.scala-lang</groupId>
@@ -11,21 +10,19 @@ index 52d0b86..1a7857a 100644
      </dependency>
      <dependency>
        <groupId>mysql</groupId>
-@@ -73,11 +73,6 @@
-       <artifactId>hadoop-core</artifactId>
-       <version>0.20.2</version>
-     </dependency>
--    <dependency>
--      <groupId>org.apache.commons</groupId>
--      <artifactId>commons-math</artifactId>
--      <version>2.0</version>
--    </dependency>
+@@ -76,11 +76,6 @@
      <dependency>
        <groupId>org.apache.commons</groupId>
        <artifactId>commons-math</artifactId>
---- pom.xml	2018-12-16 15:39:31.000000000 +0800
-+++ pomtemp.xml	2018-12-16 15:40:39.000000000 +0800
-@@ -169,6 +169,13 @@
+-      <version>2.0</version>
+-    </dependency>
+-    <dependency>
+-      <groupId>org.apache.commons</groupId>
+-      <artifactId>commons-math</artifactId>
+       <version>2.1</version>
+     </dependency>
+     <dependency>
+@@ -174,6 +169,13 @@
            </execution>
          </executions>
        </plugin>
@@ -39,8 +36,9 @@ index 52d0b86..1a7857a 100644
      </plugins>
      <testOutputDirectory>target/test-classes</testOutputDirectory>
      <testSourceDirectory>test</testSourceDirectory>
---- src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java     2020-05-22 17:34:27.000000000 +1000
-+++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java    2020-06-24 13:36:40.940907159 +1000
+diff -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java
+--- ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2020-05-22 17:34:27.000000000 +1000
++++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2021-04-22 20:49:15.914009842 +1000
 @@ -155,7 +155,8 @@
           * so that each row contains one latent factor.
           */
@@ -90,11 +88,10 @@ index 52d0b86..1a7857a 100644
          return als;
      }
  
-@@ -336,4 +339,41 @@
- 
-         logger.info("Latent factor matrices saved: " + baseFilename + "_U.mm" + ", " + baseFilename + "_V.mm");
+@@ -293,6 +296,43 @@
+         }
      }
-+
+ 
 +
 +    /**
 +     * Output in matrix market format
@@ -131,4 +128,24 @@ index 52d0b86..1a7857a 100644
 +        }
 +        System.out.println(count+ " elements, check: "+(10*((int) sum)/count));
 +    }
- }
++
+     /**
+      * Output in matrix market format
+      * @throws Exception
+diff -ur ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java
+--- ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2020-05-22 17:34:27.000000000 +1000
++++ ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2021-04-22 20:50:48.666124344 +1000
+@@ -115,7 +115,10 @@
+         shovelStreams = new DataOutputStream[numShards];
+         vertexShovelStreams = new DataOutputStream[numShards];
+         for(int i=0; i < numShards; i++) {
+-            shovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(shovelFilename(i))));
++            File sf = new File(shovelFilename(i));
++            if (!sf.exists()) {
++                shovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(sf)));
++            }
+             if (vertexProcessor != null) {
+                 vertexShovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(vertexShovelFileName(i))));
+             }
+Only in ../build: target
+Only in ../build: walkmanager.log
