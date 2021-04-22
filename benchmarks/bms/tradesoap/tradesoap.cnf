@@ -17,13 +17,13 @@ size default args "7", "100"
 
 size large args "11", "200"
   threads 1      // per available processor
-  thread-limit 1024
+  thread-limit 1024 // see <max-pool-size> in wildfly.patch
   output stdout  digest 0xb6c3d18c11aa9ac01d58a3a4a623d7efb3d70c32,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size huge args "14", "600"
   threads 1      // per available processor
-  thread-limit 2048
+  thread-limit 1024 // see <max-pool-size> in wildfly.patch
   output stdout  digest 0xb42d204ff65488790b0877f0ed1f0665929663e4,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 

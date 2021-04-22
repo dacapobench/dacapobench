@@ -68,6 +68,13 @@ public class DaCapoDBBuilder extends Thread {
 		}
 	}
 
+	synchronized private static void readStrings(int logNumSessions) {
+		if (users == null || stocks == null) {
+			users = readStrings("users.txt", logNumSessions);
+			stocks = readStrings("stocks.txt", logNumSessions);
+		}
+	}
+
 	synchronized private static int getOrdinal(TradeServices trade) {
 		try {
 			int ordinal = threadCount++;
@@ -89,11 +96,7 @@ public class DaCapoDBBuilder extends Thread {
 
 	
 	public static boolean reset(TradeServices trade, int logNumSessions, int threads) {
-		// Initialize the data set
-		if (users == null || stocks == null) {
-			users = readStrings("users.txt", logNumSessions);
-			stocks = readStrings("stocks.txt", logNumSessions);
-		}
+		readStrings(logNumSessions);
 		int ordinal = getOrdinal(trade);
 		populateUsers(trade, ordinal, threads);
 		if (ordinal == threads - 1) {
