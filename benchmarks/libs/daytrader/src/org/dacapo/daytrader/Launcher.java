@@ -9,6 +9,7 @@
 package org.dacapo.daytrader;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,6 +26,7 @@ public class Launcher {
   private final static String VERSION = "20.0.1";
   private final static String TYPE = "Final";
   private final static String DIRECTORY = "wildfly-" + VERSION + "." + TYPE;
+  private final static String EAR = "daytrader-ear-3.0-SNAPSHOT.ear";
 
   // This jar contains the code that knows how to create and communicate with
   // geronimo environments
@@ -46,8 +48,11 @@ public class Launcher {
     logNumSessions = lns;
     useBeans = beans;
     timeoutms = timeout;
+    root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
 
-    setProperties(data, scratch, threads);
+    setProperties(root, scratch, threads);
+    setupFiles(scratch);
+
     ClassLoader originalCLoader = Thread.currentThread().getContextClassLoader();
 
     try {
@@ -71,14 +76,39 @@ public class Launcher {
 
   private static void setProperties(File data, File scratch, int threads) {
     System.setProperty("dacapo.client.threads", Integer.toString(threads));
-    
-    System.setProperty("jboss.server.log.dir", scratch.getAbsolutePath());
     System.setProperty("dacapo.latency.file", scratch.getAbsolutePath()+File.separator+"latency.out");
-
-    root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
-    System.setProperty("jboss.home.dir", new File(root, DIRECTORY).getPath());
-    System.setProperty("module.path", new File(root, DIRECTORY + File.separator + "modules").getPath());
     System.setProperty("dacapo.daytrader.ops", new File(root, "operations.csv").getPath());
+
+    System.setProperty("jboss.home.dir", new File(root, DIRECTORY).getPath());
+    System.setProperty("jboss.server.base.dir", scratch.getAbsolutePath());
+
+    System.setProperty("module.path", new File(root, DIRECTORY + File.separator + "modules").getPath());
+  }
+
+  private static void setupFiles(File scratch) {
+    try {
+      File origsvr = new File(root.getAbsolutePath()+File.separator+DIRECTORY+File.separator+"standalone");
+
+      File cfg = new File(scratch.getAbsolutePath()+File.separator+"configuration");
+      File origcfg = new File(origsvr.getAbsolutePath()+File.separator+"configuration");
+      if (!cfg.exists())
+        cfg.mkdirs();
+      for (String file : origcfg.list()) {
+        File source = new File(origcfg.getAbsolutePath()+File.separator+file);
+        File dest = new File(cfg.getAbsolutePath()+File.separator+file);
+        Files.copy(source.toPath(), dest.toPath());
+      }
+
+      File dep = new File(scratch.getAbsolutePath()+File.separator+"deployments");
+      if (!dep.exists())
+        dep.mkdirs();
+      File origdep = new File(origsvr.getAbsolutePath()+File.separator+"deployments");
+      Files.copy(new File(origdep+File.separator+EAR).toPath(), new File(dep+File.separator+EAR).toPath());
+    } catch (Exception e) {
+      System.err.println("Exception while seting up files: " + e.toString());
+      e.printStackTrace();
+      Runtime.getRuntime().halt(1);
+    }
   }
 
   public static void performIteration() {
