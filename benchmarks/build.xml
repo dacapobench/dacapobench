@@ -190,6 +190,7 @@
         <!-- set target data directory and jar name -->
         <property name="build.target-dir" value="dacapo-${build.version}"/>
         <property name="build.target-jar" value="dacapo-${build.version}.jar"/>
+        <property name="build.target-zip" value="dacapo-${build.version}.zip"/>
     </target>
 
     <target name="init" depends="check-dependencies, set-build-version-info, create-zip-directory">
@@ -299,7 +300,7 @@
     <!-- ================================= 
          target: dist              
          ================================= -->
-    <target name="dist" depends="harness,compile,update-externdata-info"/>
+    <target name="dist" depends="harness,compile,update-externdata-info,create-zip"/>
 
     <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation"/>
 
@@ -596,4 +597,16 @@ See ${log.build.report} for a summary of benchmark build status.
 			</metainf>
         </jar>
     </target>
+
+    <target name="create-zip" depends="set-build-version-info">
+    <echo message="CHMOD ${build.target-dir}"/>
+        <chmod perm="a-w" type="both">
+            <fileset dir="${build.target-dir}"/>
+        </chmod>
+        <zip destfile="${build.target-zip}">
+            <fileset dir="${build.target-dir}"/>
+            <fileset file="${build.target-file}"/>
+        </zip>
+    </target>
+
 </project>
