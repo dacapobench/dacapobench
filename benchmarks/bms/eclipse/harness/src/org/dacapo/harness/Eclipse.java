@@ -9,6 +9,7 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.nio.file.*;
 
 //import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import java.lang.reflect.Method;
@@ -46,6 +47,10 @@ public class Eclipse extends Benchmark {
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
     final String DATA = data.getAbsolutePath() + File.separator + "dat" + File.separator +"eclipse" + File.separator;
+
+    Path orig = Paths.get(DATA+File.separator+"eclipse"+File.separator+"configuration");
+    Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"configuration");
+    Files.walkFileTree(orig, new FileCopy(orig, tmp));
 
     if (!((Boolean) isRunning.invoke(null, (Object[]) null)).booleanValue()) {
       startup(size);
@@ -97,6 +102,7 @@ public class Eclipse extends Benchmark {
       System.setProperty("osgi.ws", "gtk");
       System.setProperty("osgi.arch", "x86");
       System.setProperty("osgi.install.area", "file:" + DATA + "eclipse");
+      System.setProperty("osgi.configuration.area", "file:" + scratch.getAbsolutePath() + File.separator + "configuration");
       System.setProperty("osgi.noShutdown", "true");
       System.setProperty("osgi.framework", "file:" + DATA + OSGI_BOOTSTRAP_JAR);
       System.setProperty("dacapo.local.jre", DATA + "lib/rt.jar");
