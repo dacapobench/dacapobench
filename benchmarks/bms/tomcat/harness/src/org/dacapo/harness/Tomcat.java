@@ -8,7 +8,9 @@
  */
 package org.dacapo.harness;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
 import java.lang.reflect.Constructor;
 
 import sun.misc.Unsafe;
@@ -60,6 +62,8 @@ public class Tomcat extends Benchmark {
   public void prepare(String size) throws Exception {
     super.prepare(size);
 
+    prepareScratch();
+
     try {
       useBenchmarkClassLoader();
 
@@ -91,6 +95,7 @@ public class Tomcat extends Benchmark {
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "info");
         System.setProperty("catalina.home", data.getAbsolutePath()+File.separator+"dat"+File.separator+"tomcat");
+        System.setProperty("catalina.base", scratch.getAbsolutePath()+File.separator+"tomcat");
         System.setProperty("catalina.config", new File(fileInData("dat"+File.separator+"tomcat"+File.separator+"catalina.properties")).toURL().toExternalForm());
         String jar = fileInData("jar"+File.separator+"tomcat"+File.separator+"*.jar");
         System.setProperty("catalina.cl.repo", jar);
@@ -105,6 +110,34 @@ public class Tomcat extends Benchmark {
       e.printStackTrace();
     }
   }
+
+  private void prepareScratch() {
+    mkdir("work");
+    mkdir("temp");
+    mkdir("logs");
+    cp("conf");
+    cp("lib");
+    cp("webapps"+File.separator+"manager");
+    cp("webapps"+File.separator+"examples"+File.separator+"jsp");
+    cp("webapps"+File.separator+"examples"+File.separator+"WEB-INF");
+  }
+
+  private void mkdir(String path) {
+    File dir = new File(scratch.getAbsolutePath()+File.separator+"tomcat"+File.separator+path);
+    dir.mkdirs();
+  }
+
+  private void cp(String path) {
+    try {
+
+    Path orig = Paths.get(data.getAbsolutePath()+File.separator+"dat"+File.separator+"tomcat"+File.separator+path);
+    Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"tomcat"+File.separator+path);
+    Files.walkFileTree(orig, new Copy(orig, tmp));
+    } catch (Exception e) {
+      System.err.println("Failed to copy path "+path);
+      e.printStackTrace();
+    } 
+   }
 
   /**
    * After each iteration, delete the output files
@@ -197,5 +230,37 @@ public class Tomcat extends Benchmark {
     System.out.println();
     System.out.flush();
     System.out.printf("==================== Thread Dump End ====================%n");
+  }
+
+  public class Copy extends SimpleFileVisitor<Path> {
+    private Path src;
+    private Path tgt;
+ 
+    public Copy(Path src, Path tgt) {
+        this.src = src;
+        this.tgt = tgt;
+    }
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
+      try {
+        Path tgtFile = tgt.resolve(src.relativize(file));
+        Files.copy(file, tgtFile);
+      } catch (IOException ex) {
+        System.err.println(ex);
+      }
+      return FileVisitResult.CONTINUE;
+    }
+ 
+    @Override
+    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) {
+      try {
+        Path newDir = tgt.resolve(src.relativize(dir));
+        Files.createDirectories(newDir);
+      } catch (IOException ex) {
+        System.err.println(ex);
+      }
+      return FileVisitResult.CONTINUE;
+    }
   }
 }
