@@ -1,6 +1,19 @@
-diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java
---- build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2020-06-13 15:24:43.000000000 +1000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2020-09-12 15:02:58.015072043 +1000
+diff -ur ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java
+--- ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2021-04-24 17:43:51.026214265 +1000
+@@ -587,7 +587,8 @@
+ 
+       return Status.OK;
+     } catch (Exception e) {
+-      logger.error(MessageFormatter.format("Error inserting key: {}", key).getMessage(), e);
++      System.err.println("Error inserting key: {"+key+"}");
++      System.err.println(e);
+     }
+ 
+     return Status.ERROR;
+diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java
+--- ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2020-06-13 15:24:43.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2021-04-24 17:32:05.039418968 +1000
 @@ -33,6 +33,9 @@
  import java.util.concurrent.CountDownLatch;
  import java.util.concurrent.TimeUnit;
@@ -190,9 +203,9 @@ diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycs
          props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(true));
          argindex++;
        } else if (args[argindex].compareTo("-s") == 0) {
-diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java
---- build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2020-06-13 15:24:42.000000000 +1000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2020-09-12 15:04:06.735200739 +1000
+diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java
+--- ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2021-04-24 17:32:05.039418968 +1000
 @@ -62,6 +62,7 @@
      this.dotransactions = dotransactions;
      this.workload = workload;
@@ -218,9 +231,9 @@ diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../bui
            opsdone++;
  
            throttleNanos(startTimeNanos);
-diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java
---- build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2020-06-13 15:24:42.000000000 +1000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2020-09-12 14:58:53.442554771 +1000
+diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java
+--- ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2021-04-24 17:32:05.039418968 +1000
 @@ -97,9 +97,11 @@
          }
        }
@@ -235,4 +248,19 @@ diff -ur build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/
 +      }
      }
    }
+ 
+diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java
+--- ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2021-04-24 17:32:05.039418968 +1000
+@@ -617,9 +617,9 @@
+ 
+       } else {
+         System.err.println("Error inserting, not retrying any more. number of attempts: " + numOfRetries +
+-            "Insertion Retry Limit: " + insertionRetryLimit);
++            "Insertion Retry Limit: " + insertionRetryLimit+ ", Got "+status);
++        Thread.dumpStack();
+         break;
+-
+       }
+     } while (true);
  
