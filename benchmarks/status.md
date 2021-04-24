@@ -1,7 +1,7 @@
 |bm | updated | jdk 8 | jdk 11 | clean | scratch | validation | small | default | large | huge | long | latency | off heap?
 |-|-|-|-|-|-|-|-|-|-|-|-|-|
 |avrora|n/a|✓|✓|✓|✓|✓|✓|✓|✓|||
-|batik|~|✓|✓|✓|✓|✓|✓|✓|✓|✓||
+|batik|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |biojava|~|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |cassandra|~|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|
 |eclipse|~|✓|✓|✓|✓|✓|✓|✓|✓|||
@@ -26,7 +26,7 @@
 ### TODO
 * Priorities
   * Soon
-    * Data is read only
+    * Fix instructions at top of build.xml -- completely wrong
     * Update size names
     * Investigate biojava, cassandra, perf issues
 * Check why lusearch failed once the query set was made larger, or at least why the benchmark time got much faster once the queries had 512 entries rather than 256.
