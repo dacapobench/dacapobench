@@ -12,10 +12,10 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="biojava"/>
-    <property name="bm-version" value="5.3.0"/>
+    <property name="bm-version" value="5.4.0"/>
     <property name="bm-src" value="${bm-name}-${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
-    <property name="bm-git-commit" value="10c1c6c234e2ee1d2adf6488ee6f32855181360a"/>
+    <property name="bm-git-commit" value="9dcddeb0072ecc29aca8d8b1d43c3b18a430ac30"/>
 
     <import file="../common.xml"/>
 
@@ -37,7 +37,7 @@
     <target name="unpack" depends="untar, patch"/>
 
     <target name="patch">
-        <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-files}" strip="0" ignorewhitespace="yes"/>
+        <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-files}" strip="1" ignorewhitespace="yes"/>
     </target>
 
     <target name="bm-build">

@@ -1,6 +1,7 @@
-diff -Nur build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java tempbuild/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
---- build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2018-12-11 13:56:09.000000000 +0800
-+++ tempbuild/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2018-12-15 21:21:21.000000000 +0800
+Only in ../build/biojava-aa-prop: .project
+diff -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
+--- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2021-04-24 15:38:44.000000000 +1000
++++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2021-04-24 15:38:48.623611040 +1000
 @@ -88,7 +88,7 @@
  			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList,
  					decimalPlace);
@@ -10,19 +11,17 @@ diff -Nur build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Comm
  	}
  
  	public static void run(String[] args) throws Exception{
-diff -Nur build/pom.xml tempbuild/pom.xml
---- build/pom.xml	2018-12-11 13:56:11.000000000 +0800
-+++ tempbuild/pom.xml	2018-12-15 21:23:40.000000000 +0800
-@@ -313,7 +313,7 @@
- 				<plugin>
- 					<groupId>org.apache.maven.plugins</groupId>
- 					<artifactId>maven-surefire-plugin</artifactId>
--					<version>2.22.0</version>
-+					<version>3.0.0-M2</version>
- 				</plugin>
- 				<plugin>
- 					<groupId>org.apache.maven.plugins</groupId>
-@@ -664,16 +664,16 @@
+Only in ../build/biojava-aa-prop: target
+Only in ../build/biojava-alignment: .project
+Only in ../build/biojava-alignment: target
+Only in ../build/biojava-core: .project
+Only in ../build/biojava-core: target
+Only in ../build/biojava-structure: .project
+Only in ../build/biojava-structure: target
+diff -ur ./pom.xml ../build/pom.xml
+--- ./pom.xml	2021-04-24 15:38:44.000000000 +1000
++++ ../build/pom.xml	2021-04-24 15:38:48.623611040 +1000
+@@ -670,16 +670,16 @@
  		<module>biojava-core</module>
  		<module>biojava-alignment</module>
  		<module>biojava-structure</module>
@@ -47,3 +46,6 @@ diff -Nur build/pom.xml tempbuild/pom.xml
  	</modules>
  	<inceptionYear>2000</inceptionYear>
  	<issueManagement>
+Only in ../build: pom.xml.orig
+Only in ../build: pom.xml.rej
+Only in ../build: .project
