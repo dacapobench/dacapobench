@@ -43,6 +43,8 @@ public class H2O extends Benchmark{
         args = config.preprocessArgs(size, scratch, data);
         emptyOutput();
 
+        System.setProperty("org.eclipse.jetty.util.log.announce", "false");
+
         /*
          * FIXME
          * 
@@ -70,6 +72,7 @@ public class H2O extends Benchmark{
 
         // Launch the h2o server
         useBenchmarkClassLoader();
+        // use these for debugging: "-log_level", "DEBUG", "-log_dir", scratch+File.separator+"h2o.log"
         this.method.invoke(null,  (Object) new String[] {"-ip", ip, "-port", port});
     }
 
