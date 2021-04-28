@@ -12,11 +12,11 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="eclipse"/>
-    <property name="bm-version" value="4.16"/>
-    <property name="bm-drop" value="202006040540"/>
+    <property name="bm-version" value="4.19"/>
+    <property name="bm-drop" value="202103031800"/>
     <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops4/R-${bm-version}-${bm-drop}"/>
     <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa-x86_64.tar.gz"/>
-    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.15.300.v20200520-1959.jar"/>
+    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.16.200.v20210226-1447.jar"/> <!-- this value must be consistent with constant in org.dacapo.harness.Eclipse.java -->
 
     <import file="../common.xml"/>
     <property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
@@ -113,6 +113,8 @@
         <copy todir="${bm-data}">
             <!-- The eclipse runtime.  We just include as little as we can, -->
             <!-- using an empirically derived list of what we really need.  -->
+            <!-- Use scratch/workspace/.metadata/.log to identify missing   -->
+            <!-- bundles.                                                   -->
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </copy>

@@ -3,8 +3,8 @@
 |avrora|n/a|✓|✓|✓|✓|✓|✓|✓|✓|||
 |batik|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
 |biojava|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓||
-|cassandra|~|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|
-|eclipse|~|✓|✓|✓|✓|✓|✓|✓|✓|||
+|cassandra|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|
+|eclipse|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |fop|✓|✓|✓|✓|✓|✓|✓|✓||||
 |graphchi|~|✓|✓|✓|✓|✓|✓|✓|✓|✓||||
 |h2|~|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|
@@ -26,6 +26,7 @@
 ### TODO
 * Priorities
   * Soon
+    * Cassandra does not work with Java 15 due to accessing a hidden class (eg  https://github.com/doanduyhai/Achilles/issues/372 and https://issues.apache.org/jira/browse/CASSANDRA-16304)
     * Fix instructions at top of build.xml -- completely wrong
     * Update size names
     * Investigate biojava, cassandra, perf issues

@@ -25,7 +25,7 @@ public class Eclipse extends Benchmark {
 
   static final String WKSP_DIRECTORY_RELATIVE_TO_SCRATCH = "workspace";
   static final String PLUGIN_ID = "org.dacapo.eclipse.Harness";
-  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.15.300.v20200520-1959.jar";
+  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.16.200.v20210226-1447.jar";
 
   static String oldJavaHome = null;
   static Eclipse eclipse;
