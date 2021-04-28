@@ -349,9 +349,10 @@ public abstract class FullSourceWorkspaceTests {
     }
 
     // Create lib entries for the JDKs
+    String dacapoJre = System.getProperty("dacapo.local.jre");
+    JavaCore.setClasspathVariable("JRE_LIB", new Path(dacapoJre), null);
     String jreLibPath = JavaCore.getClasspathVariable("JRE_LIB").toOSString();
     String[] jdkLibs = Util.getJavaClassLibs();
-    String dacapoJre = System.getProperty("dacapo.local.jre");
     int jdkLibsLength = jdkLibs.length;
     IClasspathEntry[] jdkEntries = new IClasspathEntry[jdkLibsLength + 1];
     int jdkEntriesCount = 0;
