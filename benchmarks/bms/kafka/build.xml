@@ -13,52 +13,24 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="kafka"/>
-    <property name="bm-version" value="2.5.0"/>
+    <property name="bm-version" value="2.8.0"/>
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tgz"/>
     <property name="bm-url" value="${apache.dl.url}/${bm-name}/${bm-version}"/>
 
-    <property name="gr-version" value="6.5.1"/>
-    <property name="gr-bin" value="gradle-${gr-version}-bin.zip"/>
-    <property name="gr-url" value="https://services.gradle.org/distributions"/>
-
     <import file="../common.xml"/>
     <property name="kafka-build-dir" value="${bm-build-dir}/${bm-name}-${bm-version}-src"/>
-    <property name="gradle-dir" value="${bm-build-dir}/gradle-${gr-version}"/>
 
-
-    <target name="source" depends="common.source">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${gr-url}"/>
-            <param name="target-file" value="${gr-bin}"/>
-        </antcall>
-    </target>
-
-    <target name="unpack" depends="untar, patch">
-        <unzip src="${bm-downloads}/${gr-bin}" dest="${bm-build-dir}"/>
-    </target>
+    <target name="unpack" depends="untar, patch"/>
 
     <target name="bm-build" depends="make-exe">
-        <exec executable="${gradle-dir}/bin/${gradle-exe}" dir="${kafka-build-dir}">
+        <exec executable="${kafka-build-dir}/gradlew" dir="${kafka-build-dir}">
             <arg value="jar"/>
         </exec>
     </target>
 
-
-    <condition property="gradle-exe" value="gradle.bat">
-        <os family="windows"/>
-    </condition>
-    <property name="gradle-exe" value="gradle"/>
-
-    <target name="gradlew">
-        <copy todir="${kafka-build-dir}">
-            <fileset dir="${bm-src-dir}/resources"/>
-        </copy>
-    </target>
-
     <target name="make-exe">
         <antcall target="make-executable">
-            <param name="target-filename" value="${gradle-dir}/bin/${gradle-exe}"/>
+            <param name="target-filename" value="${kafka-build-dir}/gradlew"/>
         </antcall>
     </target>
 
