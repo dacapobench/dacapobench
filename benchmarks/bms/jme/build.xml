@@ -13,21 +13,17 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="jme"/>
-    <property name="bm-version" value="3.3.2-stable"/>
+    <property name="bm-version" value="3.4.0-beta2"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
 
     <property name="git-group" value="jMonkeyEngine"/>
     <property name="git-project" value="jmonkeyengine"/>
     <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
-    <property name="bm-git-commit" value="1a05e3fc5f2f3a6a503aa22758f8c093e95777c5"/>
+    <property name="bm-git-commit" value="81d5ca635e82f2a3a9ce3f54698547a0483c88af"/>
 
     <import file="../common.xml"/>
 
     <target name="unpack" depends="untar, patch"/>
-
-    <target name="patch">
-        <patch patchfile="${bm-files}/${bm-name}.patch" dir="${bm-files}" strip="0" ignorewhitespace="yes"/>
-    </target>
 
     <condition property="gradle-exe" value="gradlew.bat">
         <os family="windows"/>

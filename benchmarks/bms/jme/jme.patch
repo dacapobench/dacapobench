@@ -1,7 +1,7 @@
-diff -ur build/build.gradle ../build/build.gradle
---- build/build.gradle	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/build.gradle	2020-09-11 16:03:41.240198727 +1000
-@@ -92,36 +92,10 @@
+diff -ur ./build.gradle ../build/build.gradle
+--- ./build.gradle	2021-04-29 14:10:04.000000000 +1000
++++ ../build/build.gradle	2021-04-29 15:45:41.349834432 +1000
+@@ -115,33 +115,10 @@
      into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
  }
  
@@ -24,13 +24,10 @@ diff -ur build/build.gradle ../build/build.gradle
 -    options.overview = file("javadoc-overview.html")
 -    // Note: The closures below are executed lazily.
 -    source subprojects.collect {project ->
--        project.sourceSets*.allJava
+-        project.sourceSets.main.allJava // main only, exclude tests
 -    }
 -    classpath = files(subprojects.collect {project ->
 -            project.sourceSets*.compileClasspath})
--    //    source {
--    //        subprojects*.sourceSets*.main*.allSource
--    //    }
 -    classpath.from {
 -        subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
 -    }
@@ -39,11 +36,11 @@ diff -ur build/build.gradle ../build/build.gradle
  clean.dependsOn('cleanMergedJavadoc')
  task cleanMergedJavadoc(type: Delete) {
      delete file('dist/javadoc')
-diff -ur build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
---- build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2020-09-11 16:03:41.240198727 +1000
-@@ -439,7 +439,7 @@
-      * the main loop in a separate thread.
+diff -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
+--- ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2021-04-29 15:44:19.633692625 +1000
+@@ -463,7 +463,7 @@
+      * @param contextType the type of context to create
       */
      public void start(JmeContext.Type contextType) {
 -        start(contextType, false);
@@ -51,9 +48,9 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../bu
      }
  
      /**
-diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
---- build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2020-09-11 16:03:41.240198727 +1000
+diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
+--- ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2021-04-29 16:33:58.875567011 +1000
 @@ -47,7 +47,14 @@
  import com.jme3.scene.Spatial.CullHint;
  import com.jme3.system.AppSettings;
@@ -69,7 +66,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
  
  /**
   * <code>SimpleApplication</code> is the base class for all jME3 Applications.
-@@ -72,6 +79,9 @@
+@@ -70,6 +77,9 @@
      public static final String INPUT_MAPPING_MEMORY = DebugKeysAppState.INPUT_MAPPING_MEMORY;
      public static final String INPUT_MAPPING_HIDE_STATS = "SIMPLEAPP_HideStats";
  
@@ -79,16 +76,16 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
      protected Node rootNode = new Node("Root Node");
      protected Node guiNode = new Node("Gui Node");
      protected BitmapText fpsText;
-@@ -79,6 +89,8 @@
+@@ -77,6 +87,8 @@
      protected FlyByCamera flyCam;
      protected boolean showSettings = true;
-     private AppActionListener actionListener = new AppActionListener();
+     final private AppActionListener actionListener = new AppActionListener();
 +    private Random random = new Random(0);
 +    private final int framesToRender = Integer.parseInt(System.getProperty("framesToRender"));
  
      private class AppActionListener implements ActionListener {
  
-@@ -104,6 +116,15 @@
+@@ -103,6 +115,15 @@
  
      public SimpleApplication( AppState... initialStates ) {
          super(initialStates);
@@ -104,7 +101,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
      }
  
      @Override
-@@ -124,6 +145,7 @@
+@@ -123,6 +144,7 @@
          }
          //re-setting settings they can have been merged from the registry.
          setSettings(settings);
@@ -112,7 +109,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
          super.start();
      }
          
-@@ -239,11 +261,32 @@
+@@ -240,11 +262,32 @@
          simpleInitApp();
      }
  
@@ -145,7 +142,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
          if (speed == 0 || paused) {
              return;
          }
-@@ -255,7 +298,8 @@
+@@ -256,7 +299,8 @@
          stateManager.update(tpf);
  
          // simple update and root node
@@ -155,7 +152,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
  
          if (prof!=null) prof.appStep(AppStep.SpatialUpdate);
          rootNode.updateLogicalState(tpf);
-@@ -290,6 +334,29 @@
+@@ -291,6 +335,29 @@
  
      public abstract void simpleInitApp();
  
@@ -185,10 +182,10 @@ diff -ur build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../bu
      public void simpleUpdate(float tpf) {
      }
  
-diff -ur build/jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
---- build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2020-09-11 16:03:41.240198727 +1000
-@@ -252,8 +252,8 @@
+diff -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
+--- ./jme3-core/src/main/java/com/jme3/system/AppSettings.java	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2021-04-29 15:44:19.633692625 +1000
+@@ -266,8 +266,8 @@
      public static final String JOAL = "JOAL";
  
      static {
@@ -199,9 +196,9 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build
          defaults.put("BitsPerPixel", 24);
          defaults.put("Frequency", 60);
          defaults.put("DepthBits", 24);
-diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
---- build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2020-09-11 16:03:41.240198727 +1000
+diff -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
+--- ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2021-04-29 16:35:08.399554029 +1000
 @@ -46,6 +46,7 @@
      private long previousTime;
      private float tpf;
@@ -210,7 +207,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/j
      
      public NanoTimer() {
          startTime = System.nanoTime();
-@@ -78,10 +79,15 @@
+@@ -82,11 +83,16 @@
          return tpf;
      }
  
@@ -218,6 +215,7 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/j
 +        return frameCount;
 +    }
 +
+     @Override
      public void update() {
          tpf = (getTime() - previousTime) * (1.0f / TIMER_RESOLUTION);
          fps = 1.0f / tpf;
@@ -225,10 +223,10 @@ diff -ur build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/j
 +        frameCount++;
      }
      
-     public void reset() {
-diff -ur build/jme3-examples/build.gradle ../build/jme3-examples/build.gradle
---- build/jme3-examples/build.gradle	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/build.gradle	2020-09-11 16:03:41.240198727 +1000
+     @Override
+diff -ur ./jme3-examples/build.gradle ../build/jme3-examples/build.gradle
+--- ./jme3-examples/build.gradle	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-examples/build.gradle	2021-04-29 16:36:18.687550462 +1000
 @@ -4,6 +4,7 @@
      ext.mainClass = 'jme3test.TestChooser'
  }
@@ -237,19 +235,10 @@ diff -ur build/jme3-examples/build.gradle ../build/jme3-examples/build.gradle
  task run(dependsOn: 'build', type:JavaExec) {
      main = mainClass
      classpath = sourceSets.main.runtimeClasspath
-@@ -24,14 +25,14 @@
+@@ -23,8 +24,8 @@
      compile project(':jme3-effects')
- 
-     // EITHER use jme3-bullet + jme3-bullet-native OR ELSE jme3-jbullet
--    compile project(':jme3-bullet')
--    compile project(':jme3-bullet-native')
--//    compile project(':jme3-jbullet')
-+  //  compile project(':jme3-bullet')
-+  //  compile project(':jme3-bullet-native')
-+    compile project(':jme3-jbullet')
- 
+     compile project(':jme3-jbullet')
      compile project(':jme3-jogg')
-     compile project(':jme3-jogl')
 -    compile project(':jme3-lwjgl')
 -//    compile project(':jme3-lwjgl3')
 +//    compile project(':jme3-lwjgl')
@@ -257,21 +246,9 @@ diff -ur build/jme3-examples/build.gradle ../build/jme3-examples/build.gradle
      compile project(':jme3-networking')
      compile project(':jme3-niftygui')
      compile project(':jme3-plugins')
-diff -ur build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java
---- build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/light/TestLightNode.java	2020-09-11 16:03:41.240198727 +1000
-@@ -101,7 +101,7 @@
-     public void simpleUpdate(float tpf){
- //        cam.setLocation(new Vector3f(5.0347548f, 6.6481347f, 3.74853f));
- //        cam.setRotation(new Quaternion(-0.19183293f, 0.80776674f, -0.37974006f, -0.40805697f));
--
-+        super.simpleUpdate(tpf);
-         angle += tpf;
-         angle %= FastMath.TWO_PI;
- 
-diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
---- build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2020-09-11 16:05:00.296259995 +1000
+diff -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
+--- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2021-04-29 16:54:18.652110832 +1000
 @@ -48,26 +48,21 @@
  import java.net.URL;
  import java.net.URLConnection;
@@ -331,7 +308,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
          // Get a File object for the package
          // URL url = UPBClassLoader.get().getResource(name);
          url = this.getClass().getResource(name);
-@@ -248,137 +243,142 @@
+@@ -242,39 +237,24 @@
  
      private void startApp(final java.util.List appClass){
          if (appClass == null){
@@ -341,13 +318,16 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -                                          JOptionPane.ERROR_MESSAGE);
 +            System.err.println("Error: Please select a test from the list");
              return;
-         }
- 
+-        }
+-
 -            new Thread(new Runnable(){
--                public void run(){
--                    for (int i = 0; i < appClass.size(); i++) {
--                        Class<?> clazz = (Class)appClass.get(i);
--                        try {
++        } else {
++            Thread t = new Thread(new Runnable(){
+                 @Override
+                 public void run(){
+                     for (int i = 0; i < appClass.size(); i++) {
+                         Class<?> clazz = (Class)appClass.get(i);
+                         try {
 -                            if (LegacyApplication.class.isAssignableFrom(clazz)) {
 -                                Object app = clazz.newInstance();
 -                                if (app instanceof SimpleApplication) {
@@ -356,8 +336,12 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -                                }
 -                                final Method mainMethod = clazz.getMethod("start");
 -                                mainMethod.invoke(app);
--                                Field contextField = LegacyApplication.class.getDeclaredField("context");
--                                contextField.setAccessible(true);
++                            if (LegacyApplication.class.isAssignableFrom(clazz) && !clazz.getName().equals("TestMultiplesFilters")) {
++                                Object app = clazz.getConstructor().newInstance();
++                                final Method mainMethod = clazz.getMethod("start", JmeContext.Type.class);
++                                mainMethod.invoke(app, JmeContext.Type.Headless);
+                                 Field contextField = LegacyApplication.class.getDeclaredField("context");
+                                 contextField.setAccessible(true);
 -                                JmeContext context = null; 
 -                                while (context == null) {
 -                                    context = (JmeContext) contextField.get(app);
@@ -368,47 +352,19 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -                                }
 -                                while (context.isCreated()) {
 -                                    Thread.sleep(100);
--                                }
--                            } else {
--                                final Method mainMethod = clazz.getMethod("main", (new String[0]).getClass());
--                                mainMethod.invoke(clazz, new Object[]{new String[0]});
-+        Thread t = new Thread(new Runnable(){
-+            public void run(){
-+                for (int i = 0; i < appClass.size(); i++) {
-+                    Class<?> clazz = (Class)appClass.get(i);
-+                    try {
-+                        if (LegacyApplication.class.isAssignableFrom(clazz) && !clazz.getName().equals("TestMultiplesFilters")) {
-+                            Object app = clazz.getConstructor().newInstance();
-+
-+                            final Method mainMethod = clazz.getMethod("start", JmeContext.Type.class);
-+                            mainMethod.invoke(app, JmeContext.Type.Headless);
-+                            Field contextField = LegacyApplication.class.getDeclaredField("context");
-+                            contextField.setAccessible(true);
-+                            JmeContext context = (JmeContext) contextField.get(app);
-+                            synchronized(context) {
-+                                context.wait();
-                             }
--                            // wait for destroy
--                            System.gc();
--                        } catch (IllegalAccessException ex) {
--                            logger.log(Level.SEVERE, "Cannot access constructor: "+clazz.getName(), ex);
--                        } catch (IllegalArgumentException ex) {
--                            logger.log(Level.SEVERE, "main() had illegal argument: "+clazz.getName(), ex);
--                        } catch (InvocationTargetException ex) {
--                            logger.log(Level.SEVERE, "main() method had exception: "+clazz.getName(), ex);
--                        } catch (InstantiationException ex) {
--                            logger.log(Level.SEVERE, "Failed to create app: "+clazz.getName(), ex);
--                        } catch (NoSuchMethodException ex){
--                            logger.log(Level.SEVERE, "Test class doesn't have main method: "+clazz.getName(), ex);
--                        } catch (Exception ex) {
--                            logger.log(Level.SEVERE, "Cannot start test: "+clazz.getName(), ex);
--                            ex.printStackTrace();
--                        }
--                    }
--                }
++                                JmeContext context = (JmeContext) contextField.get(app);
++                                synchronized(context) {
++                                    context.wait();
+                                 }
+                             } else {
+                                 final Method mainMethod = clazz.getMethod("main", (new String[0]).getClass());
+@@ -298,85 +278,14 @@
+                         }
+                     }
+                 }
 -            }).start();
 -    }
- 
+-
 -    /**
 -     * Code to create components and action listeners.
 -     *
@@ -424,7 +380,7 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -
 -        final FilteredJList list = new FilteredJList();
 -        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
--        DefaultListModel model = new DefaultListModel();
+-        DefaultListModel<Class> model = new DefaultListModel<>();
 -        for (Class c : classes) {
 -            model.addElement(c);
 -        }
@@ -435,46 +391,19 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -
 -        list.getSelectionModel().addListSelectionListener(
 -                new ListSelectionListener() {
+-                    @Override
 -                    public void valueChanged(ListSelectionEvent e) {
 -                        selectedClass = list.getSelectedValuesList();
-+//                            JmeContext context = null;
-+//                            while (context == null) {
-+//                                Thread.sleep(100);
-+//                            }
-+//                            while (!context.isCreated()) {
-+//                                Thread.sleep(100);
-+//                            }
-+//                            while (context.isCreated()) {
-+//                                Thread.sleep(100);
-+//                            }
-+                        } else {
-+                            final Method mainMethod = clazz.getMethod("main", (new String[0]).getClass());
-+                            mainMethod.invoke(clazz, new Object[]{new String[0]});
-+                        }
-+                        // wait for destroy
-+                        System.gc();
-+                    } catch (IllegalAccessException ex) {
-+                        logger.log(Level.SEVERE, "Cannot access constructor: "+clazz.getName(), ex);
-+                    } catch (IllegalArgumentException ex) {
-+                        logger.log(Level.SEVERE, "main() had illegal argument: "+clazz.getName(), ex);
-+                    } catch (InvocationTargetException ex) {
-+                        logger.log(Level.SEVERE, "main() method had exception: "+clazz.getName(), ex);
-+                    } catch (InstantiationException ex) {
-+                        logger.log(Level.SEVERE, "Failed to create app: "+clazz.getName(), ex);
-+                    } catch (NoSuchMethodException ex){
-+                        logger.log(Level.SEVERE, "Test class doesn't have main method: "+clazz.getName(), ex);
-+                    } catch (Exception ex) {
-+                        logger.log(Level.SEVERE, "Cannot start test: "+clazz.getName(), ex);
-+                        ex.printStackTrace();
-                     }
+-                    }
 -                });
 -        list.addMouseListener(new MouseAdapter() {
+-            @Override
 -            public void mouseClicked(MouseEvent e) {
 -                if (e.getClickCount() == 2 && selectedClass != null) {
 -                    startApp(selectedClass);
-                 }
-             }
-         });
+-                }
+-            }
+-        });
 -        list.addKeyListener(new KeyAdapter() {
 -            @Override
 -            public void keyTyped(KeyEvent e) {
@@ -488,12 +417,13 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -
 -        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 -        mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
- 
+-
 -        final JButton okButton = new JButton("Ok");
 -        okButton.setMnemonic('O');
 -        buttonPanel.add(okButton);
 -        getRootPane().setDefaultButton(okButton);
 -        okButton.addActionListener(new ActionListener() {
+-            @Override
 -            public void actionPerformed(ActionEvent e) {
 -                startApp(selectedClass);
 -            }
@@ -503,102 +433,30 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -        cancelButton.setMnemonic('C');
 -        buttonPanel.add(cancelButton);
 -        cancelButton.addActionListener(new ActionListener() {
+-            @Override
 -            public void actionPerformed(ActionEvent e) {
 -                dispose();
--            }
++            });
++            t.start();
++            try {
++                t.join();
++            } catch (InterruptedException e) {
++                e.printStackTrace();
+             }
 -        });
 -
 -        pack();
 -        center();
--    }
-+        t.start();
-+        try {
-+            t.join();
-+        } catch (InterruptedException e) {
-+            e.printStackTrace();
 +        }
-+    }
-+
-+//    /**
-+//     * Code to create components and action listeners.
-+//     *
-+//     * @param classes
-+//     *            what Classes to show in the list box
-+//     */
-+//    private void setup(Vector<Class> classes) {
-+//        final JPanel mainPanel = new JPanel();
-+//        mainPanel.setLayout(new BorderLayout());
-+//        getContentPane().setLayout(new BorderLayout());
-+//        getContentPane().add(mainPanel, BorderLayout.CENTER);
-+//        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-+//
-+//        final FilteredJList list = new FilteredJList();
-+//        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-+//        DefaultListModel model = new DefaultListModel();
-+//        for (Class c : classes) {
-+//            model.addElement(c);
-+//        }
-+//        list.setModel(model);
-+//
-+//        mainPanel.add(createSearchPanel(list), BorderLayout.NORTH);
-+//        mainPanel.add(new JScrollPane(list), BorderLayout.CENTER);
-+//
-+//        list.getSelectionModel().addListSelectionListener(
-+//                new ListSelectionListener() {
-+//                    public void valueChanged(ListSelectionEvent e) {
-+//                        selectedClass = list.getSelectedValuesList();
-+//                    }
-+//                });
-+//        list.addMouseListener(new MouseAdapter() {
-+//            public void mouseClicked(MouseEvent e) {
-+//                if (e.getClickCount() == 2 && selectedClass != null) {
-+//                    startApp(selectedClass);
-+//                }
-+//            }
-+//        });
-+//        list.addKeyListener(new KeyAdapter() {
-+//            @Override
-+//            public void keyTyped(KeyEvent e) {
-+//                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-+//                    startApp(selectedClass);
-+//                } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-+//                    dispose();
-+//                }
-+//            }
-+//        });
-+//
-+//        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-+//        mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
-+//
-+//        final JButton okButton = new JButton("Ok");
-+//        okButton.setMnemonic('O');
-+//        buttonPanel.add(okButton);
-+//        getRootPane().setDefaultButton(okButton);
-+//        okButton.addActionListener(new ActionListener() {
-+//            public void actionPerformed(ActionEvent e) {
-+//                startApp(selectedClass);
-+//            }
-+//        });
-+//
-+//        final JButton cancelButton = new JButton("Cancel");
-+//        cancelButton.setMnemonic('C');
-+//        buttonPanel.add(cancelButton);
-+//        cancelButton.addActionListener(new ActionListener() {
-+//            public void actionPerformed(ActionEvent e) {
-+//                dispose();
-+//            }
-+//        });
-+//
-+//        pack();
-+//        center();
-+//    }
+     }
  
      private class FilteredJList extends JList {
-         private static final long serialVersionUID = 1L;
-@@ -424,42 +424,68 @@
+@@ -424,22 +333,6 @@
+     }
+ 
      /**
-      * center the frame.
-      */
+-     * center the frame.
+-     */
 -    private void center() {
 -        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 -        Dimension frameSize = this.getSize();
@@ -612,44 +470,26 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 -                (screenSize.height - frameSize.height) / 2);
 -    }
 -
-+//    private void center() {
-+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-+//        Dimension frameSize = this.getSize();
-+//        if (frameSize.height > screenSize.height) {
-+//            frameSize.height = screenSize.height;
-+//        }
-+//        if (frameSize.width > screenSize.width) {
-+//            frameSize.width = screenSize.width;
-+//        }
-+//        this.setLocation((screenSize.width - frameSize.width) / 2,
-+//                (screenSize.height - frameSize.height) / 2);
-+//    }
-     /**
+-    /**
       * Start the chooser.
       *
       * @param args
-      *            command line parameters
-      */
--    public static void main(final String[] args) {
-+     public static void main(final String[] args) {
-         try {
+@@ -450,16 +343,24 @@
              UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
          } catch (Exception e) {
          }
 -        new TestChooser().start(args);
 -    }
- 
+-
 -    protected void start(String[] args) {
--        final Vector<Class> classes = new Vector<Class>();
+         final Vector<Class> classes = new Vector<>();
 -        logger.fine("Composing Test list...");
 -        addDisplayedClasses(classes);
 -        setup(classes);
 -        Class<?> cls;
 -        setVisible(true);
-+        Vector<Class> classes = new Vector<>();
 +        TestChooser tc = new TestChooser();
 +        tc.addDisplayedClasses(classes);
-+
 +        Iterator<Class> i = classes.iterator();
 +        while (i.hasNext()){
 +            String name = i.next().getName();
@@ -657,40 +497,21 @@ diff -ur build/jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jm
 +                i.remove();
 +        }
 +        tc.startApp(classes);
-+//        for (String clazz : args){
-+//            try {
-+//                classes.add(Class.forName(clazz));
-+//            } catch (ClassNotFoundException e) {
-+//                e.printStackTrace();
-+//            }
-+//        }
++    }
 +
-     }
- 
 +    private static boolean contains(String[] args, String name){
 +        for (String packageName : args){
 +            if (name.contains(packageName))
 +                return true;
 +        }
 +        return false;
-+    }
-+
-+//    protected void start(String[] args) {
-+//        final Vector<Class> classes = new Vector<Class>();
-+//        logger.fine("Composing Test list...");
-+//        addDisplayedClasses(classes);
-+//        setup(classes);
-+//        Class<?> cls;
-+//        setVisible(true);
-+//    }
-+
-     protected void addDisplayedClasses(Vector<Class> classes) {
-         find("jme3test", true, classes);
      }
-diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
---- build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-06-30 14:46:38.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2020-09-11 16:03:41.244198728 +1000
-@@ -13,6 +13,7 @@
+ 
+     protected void addDisplayedClasses(Vector<Class> classes) {
+diff -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
+--- ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2021-04-29 16:39:57.775588637 +1000
+@@ -44,6 +44,7 @@
  import com.jme3.scene.Node;
  import com.jme3.scene.Spatial;
  import com.jme3.system.AppSettings;
@@ -698,15 +519,11 @@ diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.jav
  import com.jme3.terrain.geomipmap.TerrainQuad;
  import com.jme3.terrain.heightmap.AbstractHeightMap;
  import com.jme3.terrain.heightmap.ImageBasedHeightMap;
-@@ -42,18 +43,18 @@
+@@ -70,15 +71,14 @@
          TestMultiPostWater app = new TestMultiPostWater();
          AppSettings s = new AppSettings(true);
          s.setRenderer(AppSettings.LWJGL_OPENGL2);
 -        s.setAudioRenderer(AppSettings.LWJGL_OPENAL);
--//       
-+//
- //        s.setRenderer("JOGL");
- //        s.setAudioRenderer("JOAL");
          app.setSettings(s);
  
 -        app.start();
@@ -715,12 +532,12 @@ diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.jav
  
      @Override
      public void simpleInitApp() {
- 
+-
 +        System.out.print("Initializing...");
  //      setDisplayFps(false);
  //      setDisplayStatView(false);
  
-@@ -131,6 +132,9 @@
+@@ -156,6 +156,9 @@
          fpp.addFilter(water3);
  
          viewPort.addProcessor(fpp);
@@ -730,25 +547,27 @@ diff -ur build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.jav
  
          //fpp.setNumSamples(4);
      }
-@@ -185,5 +189,6 @@
+@@ -212,5 +215,6 @@
  
      @Override
      public void simpleUpdate(float tpf) {
 +        super.simpleUpdate(tpf);
      }
  }
-diff -ur build/jme3-networking/build.gradle ../build/jme3-networking/build.gradle
---- build/jme3-networking/build.gradle	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-networking/build.gradle	2020-09-11 16:03:41.244198728 +1000
-@@ -4,4 +4,5 @@
+diff -ur ./jme3-networking/build.gradle ../build/jme3-networking/build.gradle
+--- ./jme3-networking/build.gradle	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-networking/build.gradle	2021-04-29 15:44:19.637692630 +1000
+@@ -4,6 +4,7 @@
  
  dependencies {
      compile project(':jme3-core')
 +    compile 'com.sun.xml.ws:jaxws-ri:2.3.2'
  }
-diff -ur build/jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
---- build/jme3-plugins/build.gradle	2020-06-30 14:46:36.000000000 +1000
-+++ ../build/jme3-plugins/build.gradle	2020-09-11 16:03:41.244198728 +1000
+ 
+ javadoc {
+diff -ur ./jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
+--- ./jme3-plugins/build.gradle	2021-04-29 14:10:04.000000000 +1000
++++ ../build/jme3-plugins/build.gradle	2021-04-29 15:44:19.637692630 +1000
 @@ -17,4 +17,8 @@
      compile project(':jme3-core')
      compile 'com.google.code.gson:gson:2.8.1'
