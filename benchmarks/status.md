@@ -12,9 +12,9 @@
 |jme|✓|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|
 |jython|n/a|✓|✓|✓|✓|✓|✓|✓|✓||✓||
 |kafka|✓|✓|✓||✓|✓|✓|✓|✓||?|✓|
-|luindex|~|✓|✓|✓|✓|✓|✓|✓||✓|||
-|lusearch|~|✓|✓||✓|✓|✓|✓|✓|✓|✓|✓|
-|pmd|~|✓|✓|✓|✓|✓|✓|✓|✓|||
+|luindex|✓|✓|✓|✓|✓|✓|✓|✓||✓|||
+|lusearch|✓|✓|✓||✓|✓|✓|✓|✓|✓|✓|✓|
+|pmd|✓|✓|✓|✓|✓|✓|✓|✓|✓|||
 |sunflow|~|✓|✓|✓|✓|✓|✓|✓|✓|||
 |tomcat|~|✓|✓|✓|✓|✓|✓|✓|✓||✓|✓|
 |tradebeans|~|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|✓|
@@ -27,9 +27,11 @@
 * Priorities
   * Soon
     * Cassandra does not work with Java 15 due to accessing a hidden class (eg  https://github.com/doanduyhai/Achilles/issues/372 and https://issues.apache.org/jira/browse/CASSANDRA-16304)
+    * jme is a beta release, update once stable (3.4.0-beta2)
     * Fix instructions at top of build.xml -- completely wrong
     * Update size names
-    * Investigate biojava, cassandra, perf issues
+    * Investigate biojava, cassandra, lusearch perf issues
+    * check lusearch xlarge tx overflow error (latency buffer sizing)
 * Check why lusearch failed once the query set was made larger, or at least why the benchmark time got much faster once the queries had 512 entries rather than 256.
 * checkout why cpu utilization for lusearch large is so variable (dips to 200% then sometimes 2000%)
 * Move standard workloads out of wasabi src, into github (audit them for size first)

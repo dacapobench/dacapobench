@@ -1,7 +1,7 @@
-diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java
---- ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2020-07-06 19:15:27.000000000 +1000
-+++ ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2020-07-06 20:18:52.832459366 +1000
-@@ -471,6 +471,8 @@
+diff -ur ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java
+--- ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2021-05-01 17:48:26.000000000 +1000
++++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2021-05-01 19:49:18.828533975 +1000
+@@ -519,6 +519,8 @@
          int status = PMDCommandLineInterface.NO_ERRORS_STATUS;
          final PMDConfiguration configuration = params.toConfiguration();
  
@@ -10,9 +10,9 @@ diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ./pmd-core/s
          final Level logLevel = params.isDebug() ? Level.FINER : Level.INFO;
          final ScopedLogHandlersManager logHandlerManager = new ScopedLogHandlersManager(logLevel, new ConsoleHandler());
          final Level oldLogLevel = LOG.getLevel();
-diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
---- ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2020-07-06 19:15:27.000000000 +1000
-+++ ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2020-07-06 20:03:04.146881600 +1000
+diff -ur ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
+--- ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2021-05-01 17:48:26.000000000 +1000
++++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2021-05-01 19:49:18.828533975 +1000
 @@ -9,8 +9,6 @@
  import java.util.Collections;
  import java.util.List;
@@ -20,9 +20,9 @@ diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRen
 -import org.apache.commons.io.IOUtils;
 -
  import net.sourceforge.pmd.PMDConfiguration;
+ import net.sourceforge.pmd.annotation.Experimental;
  import net.sourceforge.pmd.cli.PMDParameters;
- import net.sourceforge.pmd.internal.util.ShortFilenameUtil;
-@@ -105,8 +103,6 @@
+@@ -107,8 +105,6 @@
              this.writer.flush();
          } catch (IOException e) {
              throw new IllegalStateException(e);
@@ -30,4 +30,4 @@ diff -ur ../tmp/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRen
 -            IOUtils.closeQuietly(writer);
          }
      }
- }
+ 
