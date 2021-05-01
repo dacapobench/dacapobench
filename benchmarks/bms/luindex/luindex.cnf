@@ -6,17 +6,17 @@ benchmark luindex
 size small args "--linedoc", "${DATA}/luindex/enwiki-anarchism-abydos.md"
   output stdout  digest 0x6ab9062dd4eba0940d2646062c01013b17103d3d,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/segments_1"  bytes 137;
+	 "index/segments_1"  bytes 154;
 
 size default args "--linedoc", "${DATA}/luindex/enwiki-anarchism-abydos.md", "${DATA}/luindex/enwiki-abydos-copleston.md"
   output stdout  digest 0x0421e971e601dc245afca006bbbf1fcc5f973ef4,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/segments_1"  bytes 137;
+	 "index/segments_1"  bytes 154;
 
 size huge args "--linedoc", "${DATA}/luindex/enwiki/enwiki-1.txt", "${DATA}/luindex/enwiki/enwiki-2.txt"
   output stdout  digest 0x3067fa0a00d9311e95cf963dab1dfea1fca4e993,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/segments_1"  bytes 137;
+	 "index/segments_1"  bytes 154;
 
 description
   short		"A text indexing tool",
@@ -25,6 +25,6 @@ description
   author	"Lucene Project Management Committee",
   license	"Apache License, Version 2.0",
   url           "http://lucene.apache.org/",
-  version	"8.5.2",
+  version	"8.8.2",
   repeats	"Single iteration indexes two multi-file documents",
   threads       "Externally single-threaded.  Limited internal concurrency.";

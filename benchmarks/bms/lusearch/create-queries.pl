@@ -6,6 +6,9 @@
 # query), 1/4 of each list contains words shared with one other query, 1/8
 # contains words shared by three other lists, 1/16 contains words shared 8 ways,
 # etc etc.
+#
+# Note that if $wordlist is insufficiently long, words will be recycled, so the
+# the above analysis about word distribution will not hold.
 # 
 # The lists are created from the randomized source using a simple algorithm, then
 # the order of each list is randomized and the relationship between the lists is
@@ -16,11 +19,21 @@
 #          M = log_2 the total number of words
 #
 # by defualt, we use:
-#        create-queries.pl 6 18
-#          N = 6 => 64 query lists
-#          M = 18 => 256K words
+#        create-queries.pl 11 19
+#          N = 11 => 2048 query lists
+#          M = 19 => 512K words
 #
-
+# To create the indices, use the luindex benchmark (with the -preserve option),
+# ensuring that the corpus being indexed is relevant given the choice of
+# $wordlist.
+#
+# Then create a zip file containing the indexes and queries:
+#
+# zip -r ../lusearch-data.zip index queries
+# 
+# (where queries contains the files generated here, and index is taken from
+#  the scratch directory after running luindex as described above).
+#
 $wordlist = "enwiki-anarchism-copleston-words.txt.gz";               # source of words we're using (gleaned from enwiki)
 $baseoutname = "query";                   # basename of generated files
 
@@ -62,6 +75,7 @@ sub populatelists {
   my $listsizeorder = shift;
   my $lists = shift;
   my $order = shift;
+  my $idx = 0;
   
   my $value = 0;
   my $elementbase = 0;  
@@ -72,7 +86,8 @@ sub populatelists {
  	my $groupsize = $lists/$groups;
  	for ($group = 0; $group < $groups; $group++) {
  	  for ($e = 0; $e < $elements; $e++) {
- 	    $word  = pop(@$words);
+ 	    $word  = $$words[$idx++];
+      if ($idx == @$words) { $idx = 0; print "overflow!\n"} # wrap around
  	    $element = $elementbase + $e;
  	    for ($gl = 0; $gl < $groupsize; $gl++) {
  	      $list = $gl + ($groupsize * $group);
