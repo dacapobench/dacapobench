@@ -55,7 +55,8 @@ public class LatencyReporter {
   public static void initialize(int transactions, int threads, int batchSize) {
     timerBase = System.nanoTime();
     if (transactions > LATENCY_BUFFER_SIZE) {
-      System.out.println("Too many transactions");
+      System.err.println("Too many transactions. "+transactions+" > LATENCY_BUFFER_SIZE ("+LATENCY_BUFFER_SIZE+")");
+      java.lang.Thread.dumpStack();
       System.exit(-1);
     } else {
       latency = new double[transactions];
