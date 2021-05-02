@@ -94,7 +94,7 @@ public class Client implements Runnable {
        */
       new HttpGet("/examples/jsp/checkbox/check.html",200,"7a8cff196197a6ed7562a45c7844ac6bf99b02a7"),
       new HttpGet("/examples/jsp/colors/colors.html","3f78993d965d6ce5c46663a44771f97d3eeea16a"),
-      new HttpGet("/examples/jsp/cal/login.html","b1de3498ea083c6df65baf2b76ab8e911594c6d8"),
+      new HttpGet("/examples/jsp/cal/login.html","0f7a38c4bcc6b1ff4de306890fc4b3cac98214ed"),
 
       // Shows the current time, so can't be digested
       new HttpGet("/examples/jsp/include/include.jsp",200),
