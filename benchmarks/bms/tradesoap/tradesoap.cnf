@@ -9,10 +9,10 @@ size small args "3", "5"
   output stdout  digest 0x5b774ef47622f4e36e305f179a8f8cb070e42de9,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "7", "100"
+size default args "9", "100"
   threads 1      // per available processor
   thread-limit 128
-  output stdout  digest 0x4ba295c0dfc9dbbc4460d244a224bf63a0ad2e29,
+  output stdout  digest 0xca103c396bf6f4ab766d89170a447ee621faf978,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "11", "200"
@@ -24,7 +24,7 @@ size large args "11", "200"
 size huge args "14", "600"
   threads 1      // per available processor
   thread-limit 1024 // see <max-pool-size> in wildfly.patch
-  output stdout  digest 0xb42d204ff65488790b0877f0ed1f0665929663e4,
+  output stdout  digest 0xff8c16cfc3eab813aafaa33d00f5cd3e3eb05350,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
