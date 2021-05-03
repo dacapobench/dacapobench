@@ -1,7 +1,19 @@
-Only in ../build/biojava-aa-prop: .project
+diff -ur ./biojava-aa-prop/pom.xml ../build/biojava-aa-prop/pom.xml
+--- ./biojava-aa-prop/pom.xml	2021-04-24 15:38:44.000000000 +1000
++++ ../build/biojava-aa-prop/pom.xml	2021-05-03 11:46:28.649896021 +1000
+@@ -40,6 +40,9 @@
+ 							<addClasspath>true</addClasspath>
+ 							<mainClass>org.biojava.nbio.aaproperties.CommandPrompt</mainClass>
+ 						</manifest>
++				        <manifestEntries>
++					        <Multi-Release>true</Multi-Release>
++       				</manifestEntries>
+ 					</archive>
+ 					<descriptorRefs>
+ 						<descriptorRef>jar-with-dependencies</descriptorRef>
 diff -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
 --- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2021-04-24 15:38:44.000000000 +1000
-+++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2021-04-24 15:38:48.623611040 +1000
++++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2021-05-03 11:44:57.405610317 +1000
 @@ -88,7 +88,7 @@
  			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList,
  					decimalPlace);
@@ -11,16 +23,9 @@ diff -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPr
  	}
  
  	public static void run(String[] args) throws Exception{
-Only in ../build/biojava-aa-prop: target
-Only in ../build/biojava-alignment: .project
-Only in ../build/biojava-alignment: target
-Only in ../build/biojava-core: .project
-Only in ../build/biojava-core: target
-Only in ../build/biojava-structure: .project
-Only in ../build/biojava-structure: target
 diff -ur ./pom.xml ../build/pom.xml
 --- ./pom.xml	2021-04-24 15:38:44.000000000 +1000
-+++ ../build/pom.xml	2021-04-24 15:38:48.623611040 +1000
++++ ../build/pom.xml	2021-05-03 11:44:57.405610317 +1000
 @@ -670,16 +670,16 @@
  		<module>biojava-core</module>
  		<module>biojava-alignment</module>
@@ -46,6 +51,3 @@ diff -ur ./pom.xml ../build/pom.xml
  	</modules>
  	<inceptionYear>2000</inceptionYear>
  	<issueManagement>
-Only in ../build: pom.xml.orig
-Only in ../build: pom.xml.rej
-Only in ../build: .project
