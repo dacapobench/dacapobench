@@ -48,10 +48,6 @@ public class Eclipse extends Benchmark {
     super.preIteration(size);
     final String DATA = data.getAbsolutePath() + File.separator + "dat" + File.separator +"eclipse" + File.separator;
 
-    Path orig = Paths.get(DATA+File.separator+"eclipse"+File.separator+"configuration");
-    Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"configuration");
-    Files.walkFileTree(orig, new FileCopy(orig, tmp));
-
     if (!((Boolean) isRunning.invoke(null, (Object[]) null)).booleanValue()) {
       startup(size);
     }
@@ -107,6 +103,10 @@ public class Eclipse extends Benchmark {
       System.setProperty("osgi.framework", "file:" + DATA + OSGI_BOOTSTRAP_JAR);
       System.setProperty("dacapo.local.jre", DATA + "lib/rt.jar");
       setJavaHomeIfRequired();
+
+      Path orig = Paths.get(DATA+File.separator+"eclipse"+File.separator+"configuration");
+      Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"configuration");
+      Files.walkFileTree(orig, new FileCopy(orig, tmp));
 
       String[] args = new String[4];
       args[0] = "-data"; // identify the workspace
