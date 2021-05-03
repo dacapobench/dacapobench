@@ -140,11 +140,17 @@ public abstract class Page {
 
     String digestString = stringDigest(strGetResponseBody);
     boolean digestMatch = digestString.equals(expectedDigest);
+
+    // Deal with the fact that from Java 15 the response contains more info,
+    // leading to a vm-specific digest mismatch on the 'err.jsp' request only.
+    if (!digestMatch && address.equals("/examples/jsp/error/err.jsp?name=audi&submit=Submit")) {
+      digestMatch = strGetResponseBody.contains("The exception") && strGetResponseBody.contains("made a wrong choice");
+    }
+
     if (!digestMatch) {
-      if (!keep)
-        writeLog(logFile, strGetResponseBodyLocalized);
-      System.err.printf("URL %s%n" + "   expected %s%n" + "   found    %s%n" + "   response code %d, log file %s%n", address, expectedDigest, digestString,
-          iGetResultCode, logFile.getName());
+      if (!keep) {
+        System.err.printf("URL %s%n" + "   expected %s%n" + "   found    %s%n" + "   response code %d, response:%s%n", address, expectedDigest, digestString, iGetResultCode, strGetResponseBodyLocalized);
+      }
     }
     return digestMatch;
   }
