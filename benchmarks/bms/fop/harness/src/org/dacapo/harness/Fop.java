@@ -9,6 +9,7 @@
 package org.dacapo.harness;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.dacapo.harness.Benchmark;
@@ -47,6 +48,8 @@ public class Fop extends Benchmark {
       list = new String[1];
       list[0] = src.getName();
       srcdir = src.getParent();
+    } else {
+      Arrays.sort(list);
     }
     inputs = new String [list.length];
     outputs = new String [list.length];
