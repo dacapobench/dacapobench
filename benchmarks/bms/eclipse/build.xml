@@ -80,9 +80,7 @@
         <zip destfile="${bm-data}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
             <patternset includesfile="${bm-files}/bundles-default.lst"/>
         </zip>
-        <zip destfile="${bm-data}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
-            <patternset excludesfile="${bm-files}/bundles-default.lst"/>
-        </zip>
+        <zip destfile="${bm-data}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace"/>
         
         <delete dir="${bm-build-dir}/eclipse-testing"/>
     </target>
