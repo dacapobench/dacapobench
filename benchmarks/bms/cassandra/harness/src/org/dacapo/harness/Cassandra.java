@@ -42,6 +42,7 @@ public class Cassandra extends Benchmark {
 
     public Cassandra(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
+        assertJavaVersionLE(14, "Cassandra currently requires Java < 15 due to https://issues.apache.org/jira/browse/CASSANDRA-16304.");
     }
 
 

@@ -847,4 +847,36 @@ public abstract class Benchmark {
     return silentErr;
   }
 
+  public void assertJavaVersionEQ(int version, String message) {
+    if (version != getJavaVersion())
+      incorrectJavaVersion(message);
+  }
+
+  public void assertJavaVersionGE(int version, String message) {
+    if (getJavaVersion() < version)
+      incorrectJavaVersion(message);
+  }
+
+  public void assertJavaVersionLE(int version, String message) {
+    if (getJavaVersion() > version)
+      incorrectJavaVersion(message);
+  }
+
+  private void incorrectJavaVersion(String message) {
+    System.err.print("Java version "+System.getProperty("java.version") + " is incompatable with "+config.name+": ");
+    System.err.println(message);
+    System.err.println("Exiting.");
+    System.exit(-1);
+  }
+
+  private static int getJavaVersion() {
+    String version = System.getProperty("java.version");
+    if (version.startsWith("1.")) {
+        version = version.substring(2, 3);
+    } else {
+        int dot = version.indexOf(".");
+        if(dot != -1) { version = version.substring(0, dot); }
+    }
+    return Integer.parseInt(version);
+  }
 }
