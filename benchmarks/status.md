@@ -26,12 +26,17 @@
 ### TODO
 * Priorities
   * Soon
+    * Audit huge workloads
+    * Finalize packaging (zip without huge, huge auto-downloaded on demand) 
+    * Add dilation command line option
+    * Kafka not working with JDK11+ https://stackoverflow.com/questions/46920461/java-lang-noclassdeffounderror-javax-activation-datasource-on-wsimport-intellij https://stackoverflow.com/questions/52921879/migration-to-jdk-11-has-error-occure-java-lang-noclassdeffounderror-javax-acti
     * Cassandra does not work with Java 15 due to accessing a hidden class (eg  https://github.com/doanduyhai/Achilles/issues/372 and https://issues.apache.org/jira/browse/CASSANDRA-16304)
     * jme is a beta release, update once stable (3.4.0-beta2)
     * Fix instructions at top of build.xml -- completely wrong
     * Update size names
     * Investigate biojava, cassandra, lusearch perf issues
     * check lusearch xlarge tx overflow error (latency buffer sizing)
+* biojava fails validation on later releases due to a WARNING message triggered by the following: https://issues.apache.org/jira/browse/LOG4J2-2537
 * checkout why cpu utilization for lusearch large is so variable (dips to 200% then sometimes 2000%)
 * Move standard workloads out of wasabi src, into github (audit them for size first)
 

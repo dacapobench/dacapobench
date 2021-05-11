@@ -2,19 +2,19 @@ benchmark jython
   class org.dacapo.harness.Jython
   thread-model single;
 
-size small args "${DATA}/jython/pybench/pybench.py", "--with-gc", "-n", "1", "-C", "0", "-w", "300"
+size small args "${SCRATCH}/pybench/pybench.py", "--with-gc", "-n", "1", "-C", "0", "-w", "300"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "${DATA}/jython/pybench/pybench.py", "--with-gc", "-n", "2", "-C", "0", "-w", "20"
+size default args "${SCRATCH}/pybench/pybench.py", "--with-gc", "-n", "2", "-C", "0", "-w", "20"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "${DATA}/jython/pybench/pybench.py", "--with-gc", "-n", "4", "-C", "0", "-w", "5"
+size large args "${SCRATCH}/pybench/pybench.py", "--with-gc", "-n", "4", "-C", "0", "-w", "5"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size xlong args "${DATA}/jython/pybench/pybench.py", "--with-gc", "-n", "50", "-C", "0", "-w", "1"
+size xlong args "${SCRATCH}/pybench/pybench.py", "--with-gc", "-n", "50", "-C", "0", "-w", "1"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 

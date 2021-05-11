@@ -8,8 +8,9 @@
  */
 package org.dacapo.harness;
 
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Method;
+import java.nio.file.*;
 
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
@@ -33,8 +34,11 @@ public class Jython extends Benchmark {
     System.setProperty("python.verbose", "warning");
     System.setProperty("python.console", "org.python.core.PlainConsole");
     useBenchmarkClassLoader();
+    Path dat = Paths.get(fileInData("dat"+File.separator+"jython"+File.separator+"noop.py"));
+    Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"noop.py");
+    Files.copy(dat, tmp);
     try {
-       method.invoke(null, (Object) new String[] { fileInData("dat"+File.separator+"jython"+File.separator+"noop.py") });
+       method.invoke(null, (Object) new String[] { scratch.getAbsolutePath()+File.separator+"noop.py" });
      } finally {
        revertClassLoader();
      }
@@ -46,6 +50,10 @@ public class Jython extends Benchmark {
    * script sees. Hence the Py.setArgv call, followed by the jython.main call.
    */
   public void iterate(String size) throws Exception {
+    Path dat = Paths.get(fileInData("dat"+File.separator+"jython"+File.separator+"pybench"));
+    Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"pybench");
+    Files.walkFileTree(dat, new FileCopy(dat, tmp));
+
     String[] args = config.preprocessArgs(size, scratch, data);
     pySetArgsMethod.invoke(null, (Object) args);
     method.invoke(null, (Object) args);
