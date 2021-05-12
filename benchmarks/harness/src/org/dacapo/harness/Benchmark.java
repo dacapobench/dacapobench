@@ -847,6 +847,7 @@ public abstract class Benchmark {
     return silentErr;
   }
 
+  static final int UNPARSABLE_VERSION = -1;
   public void assertJavaVersionEQ(int version, String message) {
     if (version != getJavaVersion())
       incorrectJavaVersion(message);
@@ -863,20 +864,33 @@ public abstract class Benchmark {
   }
 
   private void incorrectJavaVersion(String message) {
-    System.err.print("Java version "+System.getProperty("java.version") + " is incompatable with "+config.name+": ");
-    System.err.println(message);
-    System.err.println("Exiting.");
-    System.exit(-1);
+    if (getJavaVersion() == UNPARSABLE_VERSION) {
+      System.err.println("WARNING: "+config.name+" will only run with specific Java versions.   However the Java version string provided by this JVM ('"+System.getProperty("java.version")+"') could not be parsed.  It is therefore unclear whether this JVM is compatable.  The particular requirement for "+config.name+" is as follows: '"+message+"'");
+    } else {
+      System.err.print("Java version '"+System.getProperty("java.version") + "' is incompatable with "+config.name+": ");
+      System.err.println(message);
+      System.err.println("Exiting.");
+      System.exit(-1);
+    }
   }
 
   private static int getJavaVersion() {
     String version = System.getProperty("java.version");
+    if (version.endsWith("-internal")) {
+      version = version.substring(0, version.indexOf("-internal"));
+    }
     if (version.startsWith("1.")) {
         version = version.substring(2, 3);
     } else {
         int dot = version.indexOf(".");
         if(dot != -1) { version = version.substring(0, dot); }
     }
-    return Integer.parseInt(version);
+    int v;
+    try {
+      v = Integer.parseInt(version);
+    } catch (NumberFormatException e) {
+      v = UNPARSABLE_VERSION;
+    }
+    return v;
   }
 }
