@@ -1,123 +1,15 @@
-Only in src: java
-diff -ur ../clean/src/org/python/core/PySystemState.java src/org/python/core/PySystemState.java
---- ../clean/src/org/python/core/PySystemState.java	2009-06-14 21:51:38.000000000 +1000
-+++ src/org/python/core/PySystemState.java	2009-06-16 22:15:24.000000000 +1000
-@@ -1187,6 +1187,11 @@
-        packageManager = new SysPackageManager(pkgdir, props);
-    }
-
+diff -ur ./src/org/python/core/PySystemState.java ../build/src/org/python/core/PySystemState.java
+--- ./src/org/python/core/PySystemState.java	2020-07-01 20:40:08.000000000 +1000
++++ ../build/src/org/python/core/PySystemState.java	2021-05-12 16:37:35.603295436 +1000
+@@ -1288,6 +1288,11 @@
+         packageManager = new SysPackageManager(pkgdir, props);
+     }
+ 
 +    public static void setArgv(String[] args) {
 +	defaultArgv = initArgv(args);
 +	Py.defaultSystemState.argv = (PyList)defaultArgv.repeat(1);
 +    }
 +
-    private static PyList initArgv(String[] args) {
-        PyList argv = new PyList();
-        if (args != null) {
-diff -ur CPythonLib.orig/distutils/command/bdist_msi.py CPythonLib/distutils/command/bdist_msi.py
---- CPythonLib.orig/distutils/command/bdist_msi.py	2009-08-12 19:11:05.000000000 +1000
-+++ CPythonLib/distutils/command/bdist_msi.py	2009-08-12 18:09:57.000000000 +1000
-@@ -1,5 +1,5 @@
- # -*- coding: iso-8859-1 -*-
--# Copyright (C) 2005, 2006 Martin v. L�wis
-+# Copyright (C) 2005, 2006 Martin v. Loewis
- # Licensed to PSF under a Contributor Agreement.
- # The bdist_wininst command proper
- # based on bdist_wininst
-diff -ur CPythonLib.orig/encodings/punycode.py CPythonLib/encodings/punycode.py
---- CPythonLib.orig/encodings/punycode.py	2009-08-12 19:11:05.000000000 +1000
-+++ CPythonLib/encodings/punycode.py	2009-08-12 18:12:17.000000000 +1000
-@@ -1,7 +1,7 @@
- # -*- coding: iso-8859-1 -*-
- """ Codec for the Punicode encoding, as specified in RFC 3492
- 
--Written by Martin v. L�wis.
-+Written by Martin v. Loewis.
- """
- 
- import codecs
-diff -ur CPythonLib.orig/encodings/string_escape.py CPythonLib/encodings/string_escape.py
---- CPythonLib.orig/encodings/string_escape.py	2009-08-12 19:11:05.000000000 +1000
-+++ CPythonLib/encodings/string_escape.py	2009-08-12 18:08:19.000000000 +1000
-@@ -2,7 +2,7 @@
- """ Python 'escape' Codec
- 
- 
--Written by Martin v. L�wis (martin@v.loewis.de).
-+Written by Martin v. Loeis (martin@v.loewis.de).
- 
- """
- import codecs
-diff -ur ./Python-2.7.orig/Tools/pybench/CommandLine.py ../build/Python-2.7/Tools/pybench/CommandLine.py
---- ./Python-2.7.orig/Tools/pybench/CommandLine.py   2006-06-14 04:56:56.000000000 +1000
-+++ ./Python-2.7/Tools/pybench/CommandLine.py    2020-07-01 22:13:45.023817754 +1000
-@@ -367,7 +369,7 @@
-             print
-             rc = 1
- 
--        raise SystemExit,rc
-+        # raise SystemExit,rc
- 
-     def add_option(self, option):
- 
-diff -ur ./Python-2.7.orig/Tools/pybench/pybench.py ./Python-2.7/Tools/pybench/pybench.py
---- ./Python-2.7.orig/Tools/pybench/pybench.py       2020-07-01 21:25:57.279537914 +1000
-+++ ./Python-2.7/Tools/pybench/pybench.py        2020-07-02 09:48:12.218053360 +1000
-@@ -325,9 +325,9 @@
-         t = timer()
-         test()
-         t = timer() - t
--        if t < MIN_TEST_RUNTIME:
--            raise ValueError('warp factor too high: '
--                             'test times are < 10ms')
-+        # if t < MIN_TEST_RUNTIME:
-+        #     raise ValueError('warp factor too high: '
-+        #                      'test times are < 10ms')
-         eff_time = t - min_overhead
-         if eff_time < 0:
-             raise ValueError('wrong calibration')
-@@ -558,8 +558,7 @@
-                        (total_eff_time * MILLI_SECONDS))
-                 print
-             else:
--                print '* Round %i done in %.3f seconds.' % (i+1,
--                                                            total_eff_time)
-+                print '* Round %i done.' % (i+1)
-         print
- 
-     def stat(self):
-@@ -838,9 +837,8 @@
-         print '-' * LINE
-         print 'PYBENCH %s' % __version__
-         print '-' * LINE
--        print '* using %s %s' % (
--            getattr(platform, 'python_implementation', lambda:'Python')(),
--            string.join(string.split(sys.version), ' '))
-+        print '* using %s' % (
-+            getattr(platform, 'python_implementation', lambda:'Python')())
- 
-         # Switch off garbage collection
-         if not withgc:
-@@ -931,14 +931,14 @@
-             print '*** KeyboardInterrupt -- Aborting'
-             print
-             return
--        bench.print_header()
--        if compare_to:
--            bench.print_comparison(compare_to,
--                                   hidenoise=hidenoise,
--                                   limitnames=limitnames)
--        else:
--            bench.print_benchmark(hidenoise=hidenoise,
--                                  limitnames=limitnames)
-+        # bench.print_header()
-+        # if compare_to:
-+        #     bench.print_comparison(compare_to,
-+        #                            hidenoise=hidenoise,
-+        #                            limitnames=limitnames)
-+        # else:
-+        #     bench.print_benchmark(hidenoise=hidenoise,
-+        #                           limitnames=limitnames)
- 
-         # Ring bell
-         sys.stderr.write('\007')
+     private static PyList initArgv(String[] args) {
+         PyList argv = new PyList();
+         if (args != null) {
