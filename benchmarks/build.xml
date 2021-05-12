@@ -576,6 +576,9 @@ See ${log.build.report} for a summary of benchmark build status.
         <property name="build.target-data" value="${build.target-dir}/dat"/>
 
         <delete dir="${build.target-jars}"/>
+        <chmod perm="u+w">
+            <fileset dir="${build.target-data}"/>
+        </chmod>
         <delete dir="${build.target-data}"/>
         
         <mkdir dir="${build.target-jars}"/>
@@ -599,10 +602,6 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
 
     <target name="create-zip" depends="set-build-version-info">
-    <echo message="CHMOD ${build.target-dir}"/>
-        <chmod perm="a-w" type="both">
-            <fileset dir="${build.target-dir}"/>
-        </chmod>
         <zip destfile="${build.target-zip}">
             <fileset dir="${build.target-dir}"/>
             <fileset file="${build.target-file}"/>

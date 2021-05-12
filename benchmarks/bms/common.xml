@@ -149,6 +149,11 @@
 		<copy todir="${bm-out-jar}/..">
             <fileset dir="${bm-jars}/.."/>
         </copy>
+
+		<!-- ensure files are read only -->
+		<chmod perm="ugo-w" type="file">
+			<fileset dir="${bm-dat}"/>
+		</chmod>
 	</target>
 
 	<target name="benchmark" depends="bm-build, jar, data-copy-checksum"/>
