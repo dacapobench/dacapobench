@@ -576,9 +576,6 @@ See ${log.build.report} for a summary of benchmark build status.
         <property name="build.target-data" value="${build.target-dir}/dat"/>
 
         <delete dir="${build.target-jars}"/>
-        <chmod perm="u+w">
-            <fileset dir="${build.target-data}"/>
-        </chmod>
         <delete dir="${build.target-data}"/>
         
         <mkdir dir="${build.target-jars}"/>
