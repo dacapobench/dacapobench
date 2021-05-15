@@ -44,19 +44,29 @@ public class Jython extends Benchmark {
      }
   }
 
+  @Override
+  public void preIteration(String size) throws Exception {
+    super.preIteration(size);
+    Path dat = Paths.get(fileInData("dat"+File.separator+"jython"+File.separator+"pybench"));
+    Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"pybench");
+    Files.walkFileTree(dat, new FileCopy(dat, tmp));
+  }
+
   /**
    * jython.main doesn't expect to be called multiple times, so we've hacked
    * Py.setArgv to allow us to reset the command line arguments that the python
    * script sees. Hence the Py.setArgv call, followed by the jython.main call.
    */
   public void iterate(String size) throws Exception {
-    Path dat = Paths.get(fileInData("dat"+File.separator+"jython"+File.separator+"pybench"));
-    Path tmp = Paths.get(scratch.getAbsolutePath()+File.separator+"pybench");
-    Files.walkFileTree(dat, new FileCopy(dat, tmp));
-
     String[] args = config.preprocessArgs(size, scratch, data);
     pySetArgsMethod.invoke(null, (Object) args);
     method.invoke(null, (Object) args);
+  }
+
+  @Override
+  public void postIteration(String size) throws Exception {
+    super.postIteration(size);
+    deleteTree(new File(scratch, "pybench"));
   }
 
   public void cleanup() {

@@ -151,7 +151,7 @@
         </copy>
 
 		<!-- ensure files are read only -->
-		<chmod perm="ugo-w" type="file">
+		<chmod perm="ugo-w" type="both">
 			<fileset dir="${bm-dat}"/>
 		</chmod>
 	</target>

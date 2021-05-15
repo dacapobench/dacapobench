@@ -571,12 +571,21 @@ See ${log.build.report} for a summary of benchmark build status.
         <build.bm benchmark="zxing"/>
     </target>
 
-    <target name="create-zip-directory" depends="set-build-version-info">
+    <target name="set-delete-zip-dir-property">
+        <available file="${build.target-dir}" property="delete-zip-dir"/>
+        <echo message="In SDZ ${build.target-dir}-${delete-zip-dir}-"/>
+    </target>
+
+    <target name="delete-zip-directory" if="${delete-zip-dir}">
+        <chmod perm="u+w">
+            <dirset dir="${build.target-dir}"/>
+        </chmod>
+        <delete dir="${build.target-dir}"/>
+    </target>
+
+    <target name="create-zip-directory" depends="set-build-version-info,set-delete-zip-dir-property,delete-zip-directory">
         <property name="build.target-jars" value="${build.target-dir}/jar"/>
         <property name="build.target-data" value="${build.target-dir}/dat"/>
-
-        <delete dir="${build.target-jars}"/>
-        <delete dir="${build.target-data}"/>
         
         <mkdir dir="${build.target-jars}"/>
         <mkdir dir="${build.target-data}"/>
