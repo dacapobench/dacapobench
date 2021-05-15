@@ -1,6 +1,6 @@
 diff -ur ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java
 --- ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2020-06-13 15:24:42.000000000 +1000
-+++ ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2021-04-24 17:43:51.026214265 +1000
++++ ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2021-05-14 15:16:52.900325862 +1000
 @@ -587,7 +587,8 @@
  
        return Status.OK;
@@ -11,9 +11,21 @@ diff -ur ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.jav
      }
  
      return Status.ERROR;
+diff -ur ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java
+--- ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2021-05-14 15:16:52.900325862 +1000
+@@ -56,7 +56,7 @@
+  */
+ public class CassandraCQLClientTest {
+   // Change the default Cassandra timeout from 10s to 120s for slow CI machines
+-  private final static long timeout = 120000L;
++  private final static long timeout = 120000L; // FIXME
+ 
+   private final static String TABLE = "usertable";
+   private final static String HOST = "localhost";
 diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2020-06-13 15:24:43.000000000 +1000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2021-04-24 17:32:05.039418968 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2021-05-14 15:16:52.900325862 +1000
 @@ -33,6 +33,9 @@
  import java.util.concurrent.CountDownLatch;
  import java.util.concurrent.TimeUnit;
@@ -75,7 +87,7 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
            }
          }
 -
-+        System.err.println("...done.");
++        System.err.println("\r    100%");
          workload.cleanup();
        }
      } catch (WorkloadException e) {
@@ -84,7 +96,8 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
        System.exit(-1);
      }
 +  }
-+
+ 
+-    System.exit(0);
 +  private static Method dacapoInitialize;
 +  private static Method dacapoStart;
 +  private static Method dacapoEnd;
@@ -119,8 +132,7 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
 +      System.err.println("Failed to access DaCapo latency reporter: "+e);
 +    }
 +  }
- 
--    System.exit(0);
++
 +  public static void dacapoEnd(int threadID) {
 +    try {
 +      dacapoEnd.invoke(null, threadID);  // only one reporter object
@@ -159,13 +171,15 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
        for (int threadid = 0; threadid < threadcount; threadid++) {
          DB db;
          try {
-@@ -506,13 +556,11 @@
+@@ -506,13 +556,13 @@
      try {
        Properties projectProp = new Properties();
        projectProp.load(classLoader.getResourceAsStream("project.properties"));
 -      System.err.println("YCSB Client " + projectProp.getProperty("version"));
-+      System.err.println("    YCSB Client " + projectProp.getProperty("version"));
-+      System.err.println("    workload: "+props.getProperty(WORKLOAD_PROPERTY));
++      if (props.getProperty(DO_TRANSACTIONS_PROPERTY).equals(String.valueOf(false))) {
++        System.err.println("    YCSB Client " + projectProp.getProperty("version"));
++        System.err.println("    workload: "+props.getProperty(WORKLOAD_PROPERTY));
++      }
      } catch (IOException e) {
        System.err.println("Unable to retrieve client version.");
      }
@@ -175,7 +189,7 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
      try {
        Class workloadclass = classLoader.loadClass(props.getProperty(WORKLOAD_PROPERTY));
  
-@@ -528,15 +576,8 @@
+@@ -528,15 +578,8 @@
  
    private static Properties parseArguments(String[] args) {
      Properties props = new Properties();
@@ -191,7 +205,7 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
      if (args.length == 0) {
        usageMessage();
        System.out.println("At least one argument specifying a workload is required.");
-@@ -565,9 +606,11 @@
+@@ -565,9 +608,11 @@
          props.setProperty(TARGET_PROPERTY, String.valueOf(ttarget));
          argindex++;
        } else if (args[argindex].compareTo("-load") == 0) {
@@ -205,8 +219,16 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
        } else if (args[argindex].compareTo("-s") == 0) {
 diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2020-06-13 15:24:42.000000000 +1000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2021-04-24 17:32:05.039418968 +1000
-@@ -62,6 +62,7 @@
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2021-05-14 15:32:20.023674100 +1000
+@@ -44,6 +44,7 @@
+   private Properties props;
+   private long targetOpsTickNs;
+   private final Measurements measurements;
++  private int fivepercent;
+ 
+   /**
+    * Constructor.
+@@ -62,6 +63,7 @@
      this.dotransactions = dotransactions;
      this.workload = workload;
      this.opcount = opcount;
@@ -214,11 +236,18 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycs
      opsdone = 0;
      if (targetperthreadperms > 0) {
        targetOpsPerMs = targetperthreadperms;
-@@ -116,13 +117,15 @@
-     try {
-       if (dotransactions) {
-         long startTimeNanos = System.nanoTime();
-+        
+@@ -103,6 +105,10 @@
+       return;
+     }
+ 
++    if (threadid == 0 && opcount*threadcount > 5000) {
++      fivepercent = opcount/20;
++    }
++
+     //NOTE: Switching to using nanoTime and parkNanos for time management here such that the measurements
+     // and the client thread have the same view on time.
+ 
+@@ -119,12 +125,13 @@
  
          while (((opcount == 0) || (opsdone < opcount)) && !workload.isStopRequested()) {
  
@@ -229,11 +258,41 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycs
 -
 +          Client.dacapoEnd(threadid);
            opsdone++;
- 
+-
++          progress();
            throttleNanos(startTimeNanos);
+         }
+       } else {
+@@ -135,9 +142,8 @@
+           if (!workload.doInsert(db, workloadstate)) {
+             break;
+           }
+-
+           opsdone++;
+-
++          progress();
+           throttleNanos(startTimeNanos);
+         }
+       }
+@@ -158,6 +164,15 @@
+     }
+   }
+ 
++  private void progress() {
++    if (fivepercent > 0 && opsdone % fivepercent == 0) {
++      int pct = 5*opsdone/fivepercent;
++      if (pct < 100) {
++        System.err.print("\r    "+pct+"%");
++      }
++    }
++  }
++
+   private static void sleepUntil(long deadline) {
+     while (System.nanoTime() < deadline) {
+       if (!spinSleep) {
 diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2020-06-13 15:24:42.000000000 +1000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2021-04-24 17:32:05.039418968 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2021-05-14 15:16:52.900325862 +1000
 @@ -97,9 +97,11 @@
          }
        }
@@ -251,7 +310,7 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/ycsb-0
  
 diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2020-06-13 15:24:42.000000000 +1000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2021-04-24 17:32:05.039418968 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2021-05-14 15:16:52.900325862 +1000
 @@ -617,9 +617,9 @@
  
        } else {
@@ -264,3 +323,29 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java ..
        }
      } while (true);
  
+diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java
+--- ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2020-06-13 15:24:42.000000000 +1000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2021-05-14 15:16:52.900325862 +1000
+@@ -309,11 +309,11 @@
+   
+   /** Name and default value for the timestamp key property. */
+   public static final String TIMESTAMP_KEY_PROPERTY = "timestampkey";
+-  public static final String TIMESTAMP_KEY_PROPERTY_DEFAULT = "YCSBTS";
++  public static final String TIMESTAMP_KEY_PROPERTY_DEFAULT = "field4";
+   
+   /** Name and default value for the value key property. */
+   public static final String VALUE_KEY_PROPERTY = "valuekey";
+-  public static final String VALUE_KEY_PROPERTY_DEFAULT = "YCSBV";
++  public static final String VALUE_KEY_PROPERTY_DEFAULT = "field5";
+   
+   /** Name and default value for the timestamp interval property. */    
+   public static final String TIMESTAMP_INTERVAL_PROPERTY = "timestampinterval";    
+@@ -1014,7 +1014,7 @@
+     }
+ 
+     for (int i = 0; i < tagPairs; ++i) {
+-      tagKeys[i] = tagKeyGenerator.nextString();
++      tagKeys[i] = "field"+i;
+     }
+     
+     for (int i = 0; i < maxCardinality; i++) {

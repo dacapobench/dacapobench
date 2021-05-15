@@ -113,9 +113,8 @@
     </target>
 
     <target name="data">
-        <unzip dest="${bm-data}" src="${bm-downloads}/cassandra-data.zip"/>
         <copy todir="${bm-data}">
-            <fileset dir="${bm-data}/"/>
+            <fileset dir="${bm-files}/workloads/"/>
         </copy>
         <copy todir="${bm-data}/conf">
             <fileset dir="${cassandra-build-top}/conf/"/>
