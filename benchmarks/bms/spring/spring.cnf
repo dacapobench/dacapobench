@@ -1,0 +1,25 @@
+benchmark spring
+  class org.dacapo.harness.Spring
+  thread-model per_cpu;
+
+size small args "simple_produce_bench-small.json", "10000"
+  output stdout digest 0xca268696026dadc9c68b10c9e659658704b2a320,
+         stderr digest 0x355bcc577d7183bf81865d36b24f975a3a0f8e5b;
+         
+size default args "simple_produce_bench.json", "1000000"
+  output stdout digest 0xa1a026ca8169bad513ee24f8eedea4875c2bd1eb,
+         stderr digest 0x355bcc577d7183bf81865d36b24f975a3a0f8e5b;
+         
+size large args "simple_produce_bench-large.json", "10000000"
+  output stdout digest 0xb8e8613d28ebbb8a76169e4971af73027d913fa5,
+         stderr digest 0x355bcc577d7183bf81865d36b24f975a3a0f8e5b;
+
+description
+  short	     "PetClinic application running as a Spring microservice.",
+  long       "The PetClinic demonstrator application using the H2 in-memory database, connecting to clients running within the same process.",
+  copyright	 "Copyright (c) VMWare, the Apache Software Foundation, and the original authors.",
+  author	   "VMWare and Apache Software Foundation",
+  license    "Apache License, Version 2.0",
+  url        "https://github.com/spring-projects/spring-petclinic",
+  version    "2.4.5",
+  threads    "Explicitly multi-threaded, scaled to available processors.";

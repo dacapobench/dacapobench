@@ -1,0 +1,74 @@
+<!--
+ * Copyright (c) 2019 The Australian National University.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0.
+ * You may obtain the license at
+ *
+ *    http://www.opensource.org/licenses/apache2.0.php
+ -->
+
+<project name="spring" default="all" basedir="../..">
+    <description>Dacapo spring benchmark</description>
+    <property file="local.properties"/>
+    <property file="dacapo.properties"/>
+
+    <property name="bm-name" value="spring"/>
+    <property name="bm-version" value="2.4.5"/>
+    <property name="bm-src" value="${bm-name}-${bm-version}-src.tgz"/>
+    <property name="git-group" value="spring-projects"/>
+    <property name="git-project" value="spring-petclinic"/>
+    <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
+    <property name="bm-git-commit" value="e7c879ed3abe10e446ff103887ad665ca6acf04e"/>
+
+    <import file="../common.xml"/>
+
+    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+    <property name="mvn-exe" value="${mvn-home}/mvn"/>
+    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
+        <os family="windows"/>
+    </condition>
+
+    <target name="unpack" depends="untar"/>
+
+    <condition property="build-script" value="${bm-build-dir}/mvnw.cmd">
+        <os family="windows"/>
+    </condition>
+    <property name="build-script" value="${bm-build-dir}/mvnw"/>
+
+    <target name="bm-build">
+        <antcall target="make-executable">
+            <param name="target-filename" value="${build-script}"/>
+        </antcall>
+        <exec executable="${build-script}" dir="${bm-build-dir}">
+            <arg line="package"/>
+        </exec>
+
+        <!-- <exec executable="${kafka-build-dir}/gradlew" dir="${kafka-build-dir}">
+            <arg value="jar"/>
+        </exec> -->
+    </target>
+
+    <target name="data">
+        <!-- <copy todir="${bm-data}">
+            <fileset dir="${kafka-build-dir}/config" includes="*"/>
+            <fileset dir="${kafka-build-dir}/tests/spec" includes="*"/>
+        </copy> -->
+    </target>
+
+    <target name="jar">
+        <copy todir="${bm-jars}" flatten="true">
+            <fileset dir="${bm-build-dir}/" includes="**/*.jar"/>
+        </copy>
+
+        <!-- <javac srcdir="${bm-src-dir}"  destdir="${kafka-build-dir}"
+               sourcepath="${bm-src-dir}"
+               classpath="${harness-classpath}"
+               source="1.8">
+        </javac> -->
+        <!-- <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" update="true">
+            <fileset dir="${kafka-build-dir}">
+                <include name="org/dacapo/kafka/**"/>
+            </fileset>
+        </jar> -->
+    </target>
+</project>

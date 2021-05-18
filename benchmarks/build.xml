@@ -349,7 +349,7 @@
     <!-- ================================= 
          target: compile  all sources
          ================================= -->
-    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,jython,kafka,luindex,lusearch,pmd,sunflow,tomcat,tradebeans,tradesoap,xalan,zxing">
+    <target name="compile" depends="avrora,batik,biojava,cassandra,eclipse,fop,graphchi,h2,h2o,jme,jython,kafka,luindex,lusearch,pmd,spring,sunflow,tomcat,tradebeans,tradesoap,xalan,zxing">
         <antcall target="build.status.fail" />
         <antcall target="build.status.pass" />
     </target>
@@ -435,6 +435,7 @@
         <clean.bm benchmark="luindex"/>
         <clean.bm benchmark="lusearch"/>
         <clean.bm benchmark="pmd"/>
+        <clean.bm benchmark="spring"/>
         <clean.bm benchmark="sunflow"/>
         <clean.bm benchmark="tomcat"/>
         <clean.bm benchmark="tradebeans"/>
@@ -540,7 +541,7 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="jython" depends="init,harness,update-externdata-info">
         <build.bm benchmark="jython"/>
     </target>
-     <target name="kafka" depends="init,harness,update-externdata-info">
+    <target name="kafka" depends="init,harness,update-externdata-info">
         <build.bm benchmark="kafka"/>
     </target>
    <target name="luindex" depends="init,harness,update-externdata-info">
@@ -551,6 +552,9 @@ See ${log.build.report} for a summary of benchmark build status.
     </target>
     <target name="pmd" depends="init,harness,update-externdata-info">
         <build.bm benchmark="pmd"/>
+    </target>
+    <target name="spring" depends="init,harness,update-externdata-info">
+        <build.bm benchmark="spring"/>
     </target>
     <target name="sunflow" depends="init,harness,update-externdata-info">
         <build.bm benchmark="sunflow"/>
