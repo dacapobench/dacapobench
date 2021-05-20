@@ -8,7 +8,7 @@
  -->
 
 <project name="spring" default="all" basedir="../..">
-    <description>Dacapo spring benchmark</description>
+    <description>Dacapo Spring Benchmark</description>
     <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
@@ -35,7 +35,8 @@
     </condition>
     <property name="build-script" value="${bm-build-dir}/mvnw"/>
 
-    <target name="bm-build">
+    <target name="bm-build" depends="commons-httpclient">
+        <!-- <property name="bm-harness-classpath" value="${commons-httpclient-jar}"/> -->
         <antcall target="make-executable">
             <param name="target-filename" value="${build-script}"/>
         </antcall>
@@ -58,17 +59,18 @@
     <target name="jar">
         <copy todir="${bm-jars}" flatten="true">
             <fileset dir="${bm-build-dir}/" includes="**/*.jar"/>
+            <fileset file="${commons-httpclient-jar}"/>
         </copy>
 
-        <!-- <javac srcdir="${bm-src-dir}"  destdir="${kafka-build-dir}"
+        <javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"
                sourcepath="${bm-src-dir}"
-               classpath="${harness-classpath}"
+               classpath="${harness-classpath}:${commons-httpclient-jar}"
                source="1.8">
-        </javac> -->
-        <!-- <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" update="true">
-            <fileset dir="${kafka-build-dir}">
-                <include name="org/dacapo/kafka/**"/>
+        </javac>
+        <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" update="true">
+            <fileset dir="${bm-build-dir}">
+                <include name="org/dacapo/spring/**"/>
             </fileset>
-        </jar> -->
+        </jar>
     </target>
 </project>
