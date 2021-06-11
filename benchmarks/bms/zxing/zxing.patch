@@ -1,0 +1,80 @@
+diff -ur ../tmp/javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java
+--- ../tmp/javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java	2020-07-15 12:58:35.000000000 +1000
++++ javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java	2020-07-15 14:10:46.059914690 +1000
+@@ -99,7 +99,7 @@
+       successful += new DecodeWorker(config, syncInputs).call();
+     }
+ 
+-    if (!config.brief && numInputs > 1) {
++    if (numInputs > 1) {
+       System.out.println("\nDecoded " + successful + " files out of " + numInputs +
+           " successfully (" + (successful * 100 / numInputs) + "%)\n");
+     }
+diff -ur ../tmp/javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java
+--- ../tmp/javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java	2020-07-15 12:58:35.000000000 +1000
++++ javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java	2020-07-15 14:10:16.023997248 +1000
+@@ -22,9 +22,9 @@
+ import com.google.zxing.MultiFormatReader;
+ import com.google.zxing.NotFoundException;
+ import com.google.zxing.Result;
+-import com.google.zxing.ResultPoint;
+-import com.google.zxing.client.result.ParsedResult;
+-import com.google.zxing.client.result.ResultParser;
++// import com.google.zxing.ResultPoint;
++// import com.google.zxing.client.result.ParsedResult;
++// import com.google.zxing.client.result.ResultParser;
+ import com.google.zxing.common.BitArray;
+ import com.google.zxing.common.BitMatrix;
+ import com.google.zxing.common.HybridBinarizer;
+@@ -34,7 +34,7 @@
+ import javax.imageio.ImageIO;
+ import java.awt.image.BufferedImage;
+ import java.io.IOException;
+-import java.io.StringWriter;
++// import java.io.StringWriter;
+ import java.net.URI;
+ import java.nio.charset.StandardCharsets;
+ import java.nio.file.Files;
+@@ -148,40 +148,10 @@
+         results = new Result[]{multiFormatReader.decode(bitmap, hints)};
+       }
+     } catch (NotFoundException ignored) {
+-      System.out.println(uri + ": No barcode found");
++      // System.out.println(uri + ": No barcode found");
+       return null;
+     }
+ 
+-    if (config.brief) {
+-      System.out.println(uri + ": Success");
+-    } else {
+-      StringWriter output = new StringWriter();
+-      for (Result result : results) {
+-        ParsedResult parsedResult = ResultParser.parseResult(result);
+-        output.write(uri +
+-            " (format: " + result.getBarcodeFormat() +
+-            ", type: " + parsedResult.getType() + "):\n" +
+-            "Raw result:\n" +
+-            result.getText() + "\n" +
+-            "Parsed result:\n" +
+-            parsedResult.getDisplayResult() + "\n");
+-        ResultPoint[] resultPoints = result.getResultPoints();
+-        int numResultPoints = resultPoints.length;
+-        output.write("Found " + numResultPoints + " result points.\n");
+-        for (int pointIndex = 0; pointIndex < numResultPoints; pointIndex++) {
+-          ResultPoint rp = resultPoints[pointIndex];
+-          if (rp != null) {
+-            output.write("  Point " + pointIndex + ": (" + rp.getX() + ',' + rp.getY() + ')');
+-            if (pointIndex != numResultPoints - 1) {
+-              output.write('\n');
+-            }
+-          }
+-        }
+-        output.write('\n');
+-      }
+-      System.out.println(output);
+-    }
+-
+     return results;
+   }
+ 
+Only in javase: target
