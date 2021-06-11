@@ -15,15 +15,12 @@
 
     <import file="../common.xml"/>
 
-    <target name="source">
+    <target name="data" depends="batik">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
             <param name="target-url" value="${dacapo.src.url}/batik"/>
             <param name="target-file" value="batik-data.zip"/>
         </antcall>
-    </target>
-
-    <target name="data" depends="batik">
         <unzip dest="${bm-data}" src="${bm-downloads}/batik-data.zip"/>
     </target>
 
