@@ -23,7 +23,7 @@ import java.util.List;
 */
 public class Launcher {
   // Geronimo configuration
-  private final static String VERSION = "20.0.1";
+  private final static String VERSION = "23.0.2";
   private final static String TYPE = "Final";
   private final static String DIRECTORY = "wildfly-" + VERSION + "." + TYPE;
   private final static String EAR = "daytrader-ear-3.0-SNAPSHOT.ear";

@@ -22,6 +22,11 @@
     <target name="unpack" depends="unzip, patch"/>
 
     <target name="source">
+    	<antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${bm-url}"/>
+			<param name="target-file" value="${bm-src}"/>
+		</antcall>
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
             <param name="target-url" value="${dacapo.src.url}/sunflow"/>
