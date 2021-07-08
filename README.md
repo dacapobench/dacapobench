@@ -20,7 +20,7 @@ strongly request that:
 
 * All command line options used be reported.  For example, if you explicitly override the number of threads or set the number of iterations, you must report this when you publish results. 
 
-For more information see the [DaCapo Benchmark web page](http://dacapobench.org).
+For more information see the [DaCapo Benchmark web page](http://dacapo-bench.org/).
 
 
 ## Building
