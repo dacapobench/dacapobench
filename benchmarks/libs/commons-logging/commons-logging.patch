@@ -4,7 +4,7 @@
      - Running this target will download all the necessary dependencies into the "lib" subdirectory.
      -->
    <property name="getlibs.base" value="http://repo1.maven.org/maven"/>
-+  <property name="maven.central" value="http://central.maven.org/maven2"/>
++  <property name="maven.central" value="https://repo.maven.apache.org/maven2/"/>
    <target name="getlibs">
      <mkdir dir="lib"/>
 -    <get dest="lib/junit-3.8.1.jar" src="${getlibs.base}/junit/jars/junit-3.8.1.jar"/>

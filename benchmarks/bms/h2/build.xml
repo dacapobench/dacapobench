@@ -8,6 +8,7 @@
  -->
 <project name="h2" default="all" basedir="../..">
     <description>DaCapo h2 benchmark</description>
+    <property file="local.properties"/>
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="h2"/>

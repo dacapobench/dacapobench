@@ -1,3 +1,42 @@
+diff -urNw derby-b/db-derby-10.14.1.0-src/java/build/org/apache/derbyBuild/build.xml derby-a/db-derby-10.14.1.0-src/java/build/org/apache/derbyBuild/build.xml
+--- derby-b/db-derby-10.14.1.0-src/java/build/org/apache/derbyBuild/build.xml	2017-09-19 04:39:23.000000000 +0300
++++ derby-a/db-derby-10.14.1.0-src/java/build/org/apache/derbyBuild/build.xml	2021-09-11 12:27:25.398351326 +0300
+@@ -39,8 +39,9 @@
+     <copy file="${derby.build.src.dir}/org/apache/derbyBuild/odbcgen_fragments.properties" tofile="${out.dir}/org/apache/derbyBuild/odbcgen_fragments.properties"/>
+ 
+     <javac
+-      source="${min.version}"
+-      target="${min.version}"
++      source="1.8"
++      target="1.8"
++      bootclasspath="${jdk8home}/lib/rt.jar"
+       nowarn="on"
+       debug="${debug}"
+       depend="${depend}"
+@@ -51,7 +52,7 @@
+       srcdir="${derby.build.src.dir}"
+       destdir="${out.dir}">
+       <classpath>
+-        <pathelement path="${java.home}/../lib/tools.jar"/>
++        <pathelement path="${jdk8home}/lib/tools.jar"/>
+         <pathelement path="${ant.core.lib}"/>
+       </classpath>
+       <include name="org/apache/derbyBuild/**"/>
+diff -urNw derby-b/db-derby-10.14.1.0-src/java/build/org/apache/derbyPreBuild/build.xml derby-a/db-derby-10.14.1.0-src/java/build/org/apache/derbyPreBuild/build.xml
+--- derby-b/db-derby-10.14.1.0-src/java/build/org/apache/derbyPreBuild/build.xml	2017-09-19 04:39:23.000000000 +0300
++++ derby-a/db-derby-10.14.1.0-src/java/build/org/apache/derbyPreBuild/build.xml	2021-09-11 12:27:36.186354889 +0300
+@@ -31,8 +31,9 @@
+ 
+   <target name="compile">
+     <javac
+-      source="1.6"
+-      target="1.6"
++      source="1.8"
++      target="1.8"
++      bootclasspath="${jdk8home}/lib/rt.jar"
+       nowarn="on"
+       debug="true"
+       depend="${depend}"
 diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java derby-a/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java
 --- derby-b/db-derby-10.14.1.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2009-03-24 01:49:58.000000000 +1100
 
