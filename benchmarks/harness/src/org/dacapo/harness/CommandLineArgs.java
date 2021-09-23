@@ -75,7 +75,7 @@ public class CommandLineArgs {
   private static final String OPT_SIZES = "sizes";
   private static final String OPT_SCRATCH_DIRECTORY = "scratch-directory";
   private static final String OPT_DATA_INSTALL = "data-install";
-  private static final String OPT_DATA_SETLOC = "data-setloc";
+  private static final String OPT_DATA_SETLOC = "data-set-location";
   private static final String OPT_CONVERGE = "converge";
   private static final String OPT_MAX_ITERATIONS = "max-iterations";
   private static final String OPT_VARIANCE = "variance";
@@ -173,7 +173,7 @@ public class CommandLineArgs {
       }
       if (line.hasOption(OPT_DATA_SETLOC)) {
         String impver = TestHarness.getManifestAttribute("Implementation-Version");
-        File pathVersioned = new File(line.getOptionValue(OPT_DATA_SETLOC), impver);
+        File pathVersioned = new File(line.getOptionValue(OPT_DATA_SETLOC), "dacapo-"+impver);
         Data.setLocation(pathVersioned, true);
         reportAndExitOk = true;
       }

@@ -259,6 +259,7 @@ public abstract class Benchmark {
 
   private void initialize() throws Exception {
     savedSystemProperties = System.getProperties();
+    Data.checkData(data);
 
     System.setProperty("java.util.logging.config.file", fileInScratch(config.name + ".log"));
     synchronized (System.out) {
@@ -283,11 +284,6 @@ public abstract class Benchmark {
     prepare();
   }
 
-  private boolean checkData() {
-    return false;
-  }
-
-
   /**
    * Take a benchmark's list of dependencies and:
    *  - check that the specified files exist
@@ -311,6 +307,10 @@ public abstract class Benchmark {
       String filePath = l.substring(33);
       try {
         File f = new File(data, filePath);
+        if (!f.exists()) {
+          System.out.println("Missing data file: "+data+File.separator+filePath);
+          return false;
+        }
 
         if (filePath.startsWith("jar")) {
           jarDeps.add(f.toURI().toURL());

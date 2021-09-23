@@ -70,30 +70,35 @@ public class Data {
     }
   }
 
+  public static void checkData(File path) {
+    if (!path.exists())
+      failDataNotFound(path);
+  }
+
   /**
    * Fail function when data not found.
    */
   public static void failDataNotFound(File path) {
-    System.err.println("ERROR: failed to find data.");
-    System.err.printf("Please ensure that you have installed the data properly (current: %s)\n", path == null ? "null" : path.getAbsolutePath());
+    System.err.printf("FATAL ERROR: Failed to find data at %s"+System.lineSeparator(), path == null ? "null" : path.getAbsolutePath());
+    System.err.println();
     System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the data yet, run DaCapo with --data-install <dir-name>");
-    System.err.println("  2) If you have already installed the data, run DaCapo with --data-set-location <dir-name> to correctly identify the location of the data.");
+    System.err.println("  1) If you have not installed the data yet, run DaCapo with --data-install <parent-dir-name>");
+    System.err.println("  2) If you have already installed the data, run DaCapo with --data-set-location <parent-dir-name> to set the location of the parent directory.");
     System.exit(-1);
   }
 
   public static void setLocation(File path, boolean md5Check) {
-    if (md5Check) {
-      downloadChecksum();
-      // MD5 check
-      System.out.printf("Checking MD5 at %s...", path.toString());
-      if (!checkExtDataDirMD5(path)) {
-        System.out.println("failed!");
-        System.err.println("WARNING: MD5 check failed. Your data does not match expected release.");
-        System.err.println("Please download and install the latest data using --extdata-install flag.");
-      } else
-        System.out.println("done!");
-    }
+    // if (md5Check) {
+    //   downloadChecksum();
+    //   // MD5 check
+    //   System.out.printf("Checking MD5 at %s...", path.toString());
+    //   if (!checkExtDataDirMD5(path)) {
+    //     System.out.println("failed!");
+    //     System.err.println("WARNING: MD5 check failed. Your data does not match expected release.");
+    //     System.err.println("Please download and install the latest data using --extdata-install flag.");
+    //   } else
+    //     System.out.println("done!");
+    // }
 
     File fileProperties  = new File(DEFAULT_LOCAL_DACAPO_CONFIG.toString());
     Properties props = new Properties();
