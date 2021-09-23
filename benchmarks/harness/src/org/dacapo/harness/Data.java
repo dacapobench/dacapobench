@@ -29,15 +29,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class ExternData {
+public class Data {
   /**
-   * Helper functions managing big data sets.
-   * Using a "data installation directory" to keep
-   * large data sets.
+   * Helper functions managing data.
    */
   public static final String WORKING_DIRE = Paths.get("").toAbsolutePath().toString();
   public static final Path DEFAULT_LOCAL_DACAPO_CONFIG = Paths.get(System.getProperty("user.home"), ".dacapo-config.properties");
-  public static final String CONFIG_KEY_EXTERN_DATA_LOC = "Extern-Data-Location";
+  public static final String CONFIG_KEY_DATA_LOC = "Data-Location";
   public static final String DACAPO_DL_URL_LFS = "DaCapo-DL-URL-LFS";
   public static final String DACAPO_DL_URL_RAW = "DaCapo-DL-URL-RAW";
   public static final String DACAPO_CHECKSUM_RE_PATH = "META-INF" + File.separator + "huge-data-md5s.list";
@@ -48,7 +46,7 @@ public class ExternData {
 
   private static String getDefaultLocation() {
     try {
-      String jar =  new File(ExternData.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
+      String jar =  new File(Data.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
       return jar.replace(".jar","");
     } catch (Exception e) {
       e.printStackTrace();
@@ -66,31 +64,21 @@ public class ExternData {
     Properties props = new Properties();
     try {
       props.load(new FileReader(fileProperties));
-      return props.getProperty(CONFIG_KEY_EXTERN_DATA_LOC, getDefaultLocation());
+      return props.getProperty(CONFIG_KEY_DATA_LOC, getDefaultLocation());
     } catch (IOException ioe) {
       return getDefaultLocation();
     }
   }
 
   /**
-   * Fail function when external data not found.
+   * Fail function when data not found.
    */
-  public static void failExtDataNotFound(String size, File extdata, String file, String cfg) {
-    System.err.println("ERROR: failed to find external data for size "+size);
-    System.err.println("Expected to find: " + file);
-    System.err.println("For config entry: " + cfg);
-    System.err.printf("Please check that you have installed the external data properly (current: %s)\n", extdata == null ? "null" : extdata.getAbsolutePath());
+  public static void failDataNotFound(File path) {
+    System.err.println("ERROR: failed to find data.");
+    System.err.printf("Please ensure that you have installed the data properly (current: %s)\n", path == null ? "null" : path.getAbsolutePath());
     System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
-    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
-    System.exit(-1);
-  }
-  public static void failExtJarNotFound(File extjar, File extdata) {
-    System.err.printf("ERROR: failed to find jar: %s.\n", extjar.getName());
-    System.err.printf("Please check that you have installed the external jar package properly (current: %s)\n", extdata == null ? "null" : extdata.getAbsolutePath());
-    System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the large data, run DaCapo with [benchmark name] --extdata-install <dir-name>");
-    System.err.println("  2) If you have already installed the large data, run DaCapo with --extdata-set-location <dir-name> to correctly identify the location of the external data.");
+    System.err.println("  1) If you have not installed the data yet, run DaCapo with --data-install <dir-name>");
+    System.err.println("  2) If you have already installed the data, run DaCapo with --data-set-location <dir-name> to correctly identify the location of the data.");
     System.exit(-1);
   }
 
@@ -112,9 +100,9 @@ public class ExternData {
     try {
       fileProperties.createNewFile();  // create new if does not exist
       props.load(new FileReader(fileProperties));
-      props.setProperty(CONFIG_KEY_EXTERN_DATA_LOC, path.getAbsolutePath());
+      props.setProperty(CONFIG_KEY_DATA_LOC, path.getAbsolutePath());
       props.store(new FileWriter(fileProperties), "");
-      System.out.printf("External data location has been set at %s.\n", path.getAbsolutePath());
+      System.out.printf("Data location has been set at %s.\n", path.getAbsolutePath());
     } catch (IOException e) {
       System.err.printf("IOException when creating/reading file %s: %s\n",
         fileProperties.toString(), e.toString());
@@ -124,7 +112,7 @@ public class ExternData {
 
   private static boolean downloadChecksum() {
     try {
-      DataDownload.Download("META-INF"+File.separator+"huge-data-md5s.list", new File(WORKING_DIRE).getAbsolutePath(), "dat");
+      DataDownload.download("META-INF"+File.separator+"huge-data-md5s.list", new File(WORKING_DIRE).getAbsolutePath(), "dat");
     } catch (Exception e) {
       return false;
     }
@@ -160,7 +148,7 @@ public class ExternData {
   }
 
   /**
-   * Download and install external data
+   * Download and install data
    */
   public static void downloadAndInstall(File path, String bench) {
     try {
@@ -178,10 +166,10 @@ public class ExternData {
           if(bench.length() == 0 || s.startsWith("dat/"+bench) || s.startsWith("jar/"+bench)) {
             executor.submit(() -> {
               if (s.startsWith("jar")) {
-                DataDownload.Download(s.split("/")[1], path.getAbsolutePath(), "jar");
+                DataDownload.download(s.split("/")[1], path.getAbsolutePath(), "jar");
               }
               if (s.startsWith("dat")) {
-                DataDownload.Download(s.split("/")[1], path.getAbsolutePath(), "dat");
+                DataDownload.download(s.split("/")[1], path.getAbsolutePath(), "dat");
               }
 
               File fileLocalItem = new File(path, s);
@@ -215,7 +203,7 @@ public class ExternData {
     // Create the directory
     path.mkdir();
     // download
-    DataDownload.Download(itemRelPath, path.getAbsolutePath());
+    DataDownload.download(itemRelPath, path.getAbsolutePath());
   }
 
   private static String getMD5(File file) throws Exception{

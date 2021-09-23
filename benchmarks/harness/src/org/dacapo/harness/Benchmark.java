@@ -283,6 +283,11 @@ public abstract class Benchmark {
     prepare();
   }
 
+  private boolean checkData() {
+    return false;
+  }
+
+
   /**
    * Take a benchmark's list of dependencies and:
    *  - check that the specified files exist

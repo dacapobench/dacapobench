@@ -22,20 +22,16 @@ import javax.sound.sampled.SourceDataLine;
 
 public class DataDownload {
 
-    private static final String propertiesFile = "https://raw.githubusercontent.com/dacapobench/dacapobench/master/benchmarks/dacapo.properties";
-    private static final String urlRegex = "dacapo.s3.url=(http.*)\\s";
-
-    /** Put your bucket name here **/
-    private static final String dataBucketName = "dacapo-evaluation-2020-dat";
-    private static final String jarBucketName = "dacapo-evaluation-2020-jar";
+    private static final String propertiesFile = "https://github.com/dacapobench/dacapobench/blob/dev-chopin/benchmarks/dacapo.properties";
+    private static final String urlRegex = "dacapo.zip.url=(https:.*)\\s";
     
     /**
      * Run all the included samples. Before running the samples, you need to
      * specify the bucket name, region name and your credentials.
      */
-    public static void Download(String fileKey, String targetDir) {
-        Download(fileKey, targetDir+File.separator+"dat", "dat");
-        Download(fileKey, targetDir+File.separator+"jar", "jar");
+    public static void download(String fileKey, String targetDir) {
+        download(fileKey, targetDir+File.separator+"dat", "dat");
+        download(fileKey, targetDir+File.separator+"jar", "jar");
     }
 
     /**
@@ -43,14 +39,14 @@ public class DataDownload {
      * @param fileKey dependencies name
      * @param targetDir target directory
      */
-    public static void Download(String fileName, String path, String kind) {
+    public static void download(String fileName, String path, String kind) {
         String urlstr = "";
         try {
             File tgtdir = new File(path);
             tgtdir.mkdir();
             String dst = tgtdir.getAbsolutePath()+File.separator+fileName;
-            String bkt = kind.equals("jar") ? jarBucketName : dataBucketName;
-            urlstr = getURLFromPropertiesFile()+"/"+bkt+"/"+fileName;
+         //   String bkt = kind.equals("jar") ? jarBucketName : dataBucketName;
+            urlstr = getURLFromPropertiesFile()+"/"+fileName;
             URL url = new URL(urlstr);
             ReadableByteChannel rbc = Channels.newChannel(url.openStream());
             FileOutputStream fos = new FileOutputStream(dst);

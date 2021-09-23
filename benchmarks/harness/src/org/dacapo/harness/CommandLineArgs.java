@@ -74,8 +74,8 @@ public class CommandLineArgs {
   private static final String OPT_SIZE = "size";
   private static final String OPT_SIZES = "sizes";
   private static final String OPT_SCRATCH_DIRECTORY = "scratch-directory";
-  private static final String OPT_EXTDATA_INSTALL = "extdata-install";
-  private static final String OPT_EXTDATA_SETLOC = "extdata-set-location";
+  private static final String OPT_DATA_INSTALL = "data-install";
+  private static final String OPT_DATA_SETLOC = "data-setloc";
   private static final String OPT_CONVERGE = "converge";
   private static final String OPT_MAX_ITERATIONS = "max-iterations";
   private static final String OPT_VARIANCE = "variance";
@@ -96,26 +96,32 @@ public class CommandLineArgs {
 
   private static final Option[] OPTIONS = { 
     makeOption("c",  OPT_CALLBACK,            "Use class <callback> to bracket benchmark runs", "callback"),
-    makeOption("h",  OPT_HELP,                "Print this help", null), makeOption("r", OPT_RELEASE_NOTES, "Print the release notes", null),
-    makeOption("l",  OPT_LIST_BENCHMARKS,     "List available benchmarks", null), makeOption("i", OPT_INFORMATION, "Display benchmark information", null),
-    makeOption("s",  OPT_SIZE,                "Size of input data", "SIZE"), makeOption(null, OPT_SCRATCH_DIRECTORY, "Specify an alternate scratch directory <dir>", "dir"),
+    makeOption("h",  OPT_HELP,                "Print this help", null),
+    makeOption("r",  OPT_RELEASE_NOTES,       "Print the release notes", null),
+    makeOption("l",  OPT_LIST_BENCHMARKS,     "List available benchmarks", null),
+    makeOption("i",  OPT_INFORMATION,         "Display benchmark information", null),
+    makeOption("s",  OPT_SIZE,                "Size of input data", "SIZE"),
+    makeOption(null, OPT_SCRATCH_DIRECTORY,   "Specify an alternate scratch directory <dir>", "dir"),
     makeOption(null, OPT_SIZES,               "Report the valid sizes for the specified benchmarks", null),
     makeOption("C",  OPT_CONVERGE,            "Allow benchmark times to converge before timing", null),
     makeOption(null, OPT_MAX_ITERATIONS,      "Run a max of <max_iterations> iterations (default 20)", "max_iterations"),
     makeOption(null, OPT_VARIANCE,            "Target coefficient of variation <pct> (default 3.0)", "pct"),
     makeOption(null, OPT_WINDOW,              "Measure variance over <window> runs (default 3)", "window"),
-    makeOption("n",  OPT_ITERATIONS,          "Run the benchmark <iter> times", "iter"), makeOption("d", OPT_DEBUG, "Verbose debugging information", null),
+    makeOption("n",  OPT_ITERATIONS,          "Run the benchmark <iter> times", "iter"),
+    makeOption("d",  OPT_DEBUG,               "Verbose debugging information", null),
     makeOption(null, OPT_IGNORE_VALIDATION,   "Don't halt on validation failure", null),
     makeOption(null, OPT_NO_DIGEST_OUTPUT,    "Turn off SHA1 digest of stdout/stderr", null),
-    makeOption(null, OPT_NO_VALIDATION,       "Don't validate at all", null), makeOption(null, OPT_PRESERVE, "Preserve output files (debug)", null),
-    makeOption(null, OPT_VALIDATION_REPORT,   "Report digests, line counts etc", "report_file"), makeOption(null, OPT_CONFIG, null, "config_file"),
+    makeOption(null, OPT_NO_VALIDATION,       "Don't validate at all", null),
+    makeOption(null, OPT_PRESERVE,            "Preserve output files (debug)", null),
+    makeOption(null, OPT_VALIDATION_REPORT,   "Report digests, line counts etc", "report_file"),
+    makeOption(null, OPT_CONFIG,              null, "config_file"),
     makeOption(null, OPT_NO_PRE_ITERATION_GC, "Skip performing System.gc() before the start of each iteration", null),
     makeOption("t",  OPT_THREAD_COUNT,        "Set the thread count to drive the workload (mutually exclusive -k)", "thread_count"),
     makeOption("k",  OPT_THREAD_FACTOR,       "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
     makeOption("f",  OPT_TIMEOUT_DIALATION,   "Set the time dialation of the timeouts in the benchmark by the given integer factor.", "timeout_dialation"),
     makeOption("v",  OPT_VERBOSE,             "Verbose output", null),
-    makeOption(null, OPT_EXTDATA_INSTALL,     "Download and install external data.", "intall_path"),
-    makeOption(null, OPT_EXTDATA_SETLOC,      "Path to external data location. Note: this directory should contain \"data\" and \"jar\" sub-directories.", "ext_data_loc")
+    makeOption(null, OPT_DATA_INSTALL,        "Download and install workload data sets and jars.", "install_path"),
+    makeOption(null, OPT_DATA_SETLOC,         "Path to workload data and jar location.", "ext_data_loc")
   };
 
   private static CommandLineParser parser = new PosixParser();
@@ -159,16 +165,16 @@ public class CommandLineArgs {
         printUsage();
         reportAndExitOk = true;
       }
-      if (line.hasOption(OPT_EXTDATA_INSTALL)) {
+      if (line.hasOption(OPT_DATA_INSTALL)) {
         String impver = TestHarness.getManifestAttribute("Implementation-Version");
-        File pathVersioned = new File(line.getOptionValue(OPT_EXTDATA_INSTALL), impver);
-        ExternData.downloadAndInstall(pathVersioned, bench);
+        File pathVersioned = new File(line.getOptionValue(OPT_DATA_INSTALL), impver);
+        Data.downloadAndInstall(pathVersioned, bench);
         reportAndExitOk = true;
       }
-      if (line.hasOption(OPT_EXTDATA_SETLOC)) {
+      if (line.hasOption(OPT_DATA_SETLOC)) {
         String impver = TestHarness.getManifestAttribute("Implementation-Version");
-        File pathVersioned = new File(line.getOptionValue(OPT_EXTDATA_SETLOC), impver);
-        ExternData.setLocation(pathVersioned, true);
+        File pathVersioned = new File(line.getOptionValue(OPT_DATA_SETLOC), impver);
+        Data.setLocation(pathVersioned, true);
         reportAndExitOk = true;
       }
       if (line.hasOption(OPT_THREAD_FACTOR) && line.hasOption(OPT_THREAD_COUNT)) {

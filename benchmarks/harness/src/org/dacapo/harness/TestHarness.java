@@ -102,7 +102,7 @@ public class TestHarness {
 
       File scratch = new File(commandLineArgs.getScratchDir());
       makeCleanScratch(scratch);
-      File data = new File(ExternData.getLocation());
+      File data = new File(Data.getLocation());
 
       // this is not right
       Benchmark.setCommandLineOptions(commandLineArgs);

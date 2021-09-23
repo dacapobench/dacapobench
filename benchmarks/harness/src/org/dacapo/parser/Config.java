@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.dacapo.harness.ExternData;
+import org.dacapo.harness.Data;
 
 /**
  * Container class for all options specified in a benchmark's configuration
@@ -757,10 +757,10 @@ public class Config {
    * size
    * </ul>
    */
-  public String[] preprocessArgs(String size, File scratch, File extdata) throws FileNotFoundException {
+  public String[] preprocessArgs(String size, File scratch, File data) throws FileNotFoundException {
     String[] raw = getArgs(size);
     String[] cooked = new String[raw.length];
-    String dataPath = new File(extdata, "dat").getAbsolutePath();
+    String dataPath = new File(data, "dat").getAbsolutePath();
     for (int i = 0; i < raw.length; i++) {
       String tmp = raw[i];
       tmp = tmp.replace("${SCRATCH}", scratch.getAbsolutePath());
@@ -769,7 +769,7 @@ public class Config {
         tmp = tmp.replace("${DATA}", dataPath);
         File argFile = new File(tmp);
         if (!argFile.exists()) {
-          ExternData.failExtDataNotFound(size, extdata, tmp, raw[i]);
+          Data.failDataNotFound(data);
         }
       }
       cooked[i] = tmp;
