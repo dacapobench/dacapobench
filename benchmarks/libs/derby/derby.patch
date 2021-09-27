@@ -232,13 +232,16 @@ diff -urNw derby-b/db-derby-10.5.3.0-src/java/testing/org/apache/derbyTesting/sy
 -                + "C_PAYMENT_CNT, C_DELIVERY_CNT, C_DATA)  "
 +                + "C_PAYMENT_CNT, C_DELIVERY_CNT, C_DATA, C_DATA_INITIAL)  "
                  + "VALUES (?, ?, ?, ?, 'OE', ?, ?, ?, ?, ?, ?, ?, "
-                 + " CURRENT TIMESTAMP ,?, 50000.00, ?, -10.0, 10.0,"
+-                + " CURRENT TIMESTAMP ,?, 50000.00, ?, -10.0, 10.0,"
 -                + " 1, 0, ?)");
+# Does not work without underscore since 1.4.198. http://www.h2database.com/html/functions.html#current_timestamp
++                + " CURRENT_TIMESTAMP ,?, 50000.00, ?, -10.0, 10.0,"
 +                + " 1, 0, ?, ?)");
  
          PreparedStatement psH = conn
 -                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA) VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, 10.00, ?)");
-+                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA, H_INITIAL) VALUES (?, ?, ?, ?, ?, CURRENT TIMESTAMP, 10.00, ?, TRUE)");
+# Does not work without underscore since 1.4.198. http://www.h2database.com/html/functions.html#current_timestamp
++                .prepareStatement("INSERT INTO HISTORY (H_C_ID, H_C_D_ID, H_C_W_ID, H_D_ID, H_W_ID, H_DATE, H_AMOUNT, H_DATA, H_INITIAL) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 10.00, ?, TRUE)");
  
          psC.setShort(2, d); // c_d_id
          psC.setShort(3, w); // c_w_id
