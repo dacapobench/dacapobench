@@ -54,7 +54,7 @@ The suite is built using ant 1.10.  You will need the following tools:
 
 2. Copy `default.properties` to `local.properties` and edit it for your environment.
 
-  * Specifically, you must set `jdk7home` to point to a Java 7 installation.
+  * Specifically, you must set `jdk7home` to point to a Java 7 installation and `jdk8home` to point to a Java 8 installation.
 
 
 For more information, run `ant -p` in the benchmarks directory.
