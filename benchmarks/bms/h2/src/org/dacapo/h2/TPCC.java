@@ -303,6 +303,10 @@ public class TPCC {
         e.printStackTrace();
       }
     }
+    // Without COMMIT this connection does not see changes made by other connections
+    // This is probably related to transaction isolation with MVStore
+    // https://github.com/h2database/h2database/releases/tag/version-1.4.200
+    getConnection().commit();
     // done running the submitters
 
     System.out.println();
