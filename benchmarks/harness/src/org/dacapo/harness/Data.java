@@ -82,8 +82,8 @@ public class Data {
     System.err.printf("FATAL ERROR: Failed to find data at %s"+System.lineSeparator(), path == null ? "null" : path.getAbsolutePath());
     System.err.println();
     System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the data yet, run DaCapo with --data-install <parent-dir-name>");
-    System.err.println("  2) If you have already installed the data, run DaCapo with --data-set-location <parent-dir-name> to set the location of the parent directory.");
+    System.err.println("  1) If you have not installed the data yet, run DaCapo with --data-install <parent-dir-name> to download the data and install it.");
+    System.err.println("  2) If you have already installed the data, run DaCapo with --data-set-location <parent-dir-name> to reset the location of the parent directory.");
     System.exit(-1);
   }
 
