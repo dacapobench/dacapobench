@@ -30,7 +30,8 @@ public class LatencyReporter {
   private long start;
   private double max;
 
-  static double[] latency;
+  static float[] txbegin;
+  static float[] txend;
   static double fileMax;
   static LatencyReporter[] reporters;
   private static long timerBase = 0;  // used to improve precision (when using floats)
@@ -59,7 +60,8 @@ public class LatencyReporter {
       java.lang.Thread.dumpStack();
       System.exit(-1);
     } else {
-      latency = new double[transactions];
+      txbegin = new float[transactions];
+      txend = new float[transactions];
       reporters = new LatencyReporter[threads];
       for (int i = 0; i < threads; i++) {
         reporters[i] = new LatencyReporter(i, threads, transactions, batchSize);
@@ -86,10 +88,6 @@ public class LatencyReporter {
     }
   }
 
-  private static String latency(int numerator, int denominator) {
-    double usecs = (latency[latency.length - 1 - (latency.length * numerator) / denominator])/US_DIVISOR;
-    return ""+Math.round(usecs)+" usec";
-  }
 
   /*
    * We explicitly track the max only because it is necessary to do so in cases
@@ -116,32 +114,61 @@ public class LatencyReporter {
         for (int i = 0; i < reporters.length; i++)
           events += (reporters[i].idx-reporters[i].idxOffset);
 
-        // check values were correctly added to latency array
+        // check values were correctly added to txbegin and txend arrays
         for (int i = 0; i < reporters.length; i++) {
-          int tgt = (i == reporters.length - 1) ? latency.length : reporters[i+1].idxOffset;
+          int tgt = (i == reporters.length - 1) ? txbegin.length : reporters[i+1].idxOffset;
           if (reporters[i].idx != tgt) {
-            System.err.println("Warning: latency report disagreement for thread "+i+".  Expected to fill to offset "+tgt+" but filled to "+reporters[i].idx+" ... "+(reporters[i].idx-tgt)+" "+(latency.length / reporters. length));
+            System.err.println("Warning: latency report disagreement for thread "+i+".  Expected to fill to offset "+tgt+" but filled to "+reporters[i].idx+" ... "+(reporters[i].idx-tgt)+" "+(txbegin.length / reporters.length));
           }
         }
       }
-      
-      Arrays.sort(latency);
-      String report = "===== DaCapo tail latency: ";
-      report += "50% " + latency(50, 100);
-      int precision = 10;
-      String precstr = "90";
-      while (precision <= TAIL_PRECISION) {
-        report += ", " + precstr + "% " + latency(1, precision);
-        precision *= 10;
-        if (precstr.equals("90"))
-          precstr = "99";
-        else
-          precstr += precstr.equals("99") ? ".9" : "9";
+
+      // raw latency numbers
+      int[] latency = new int[txbegin.length];
+      for(int i = 0; i < txbegin.length; i++) {
+        latency[i] = (int) ((txend[i] - txbegin[i])/1000);
       }
-      report += ", max "+((int) getMax())+" usec";
-      report += ", measured over "+events+" events =====";
-      System.out.println(report);
+      printLatency(latency, events, "simple ");
+
+      // synthetically metered --- each query start is evenly spaced, so delays will compound
+      float[] sorted = Arrays.copyOf(txbegin, txbegin.length);
+      Arrays.sort(sorted);
+      double len = sorted[sorted.length-1]-sorted[0];
+      double synthstart = 0;
+      for(int i = 0; i < txbegin.length; i++) {
+        int pos = Arrays.binarySearch(sorted, txbegin[i]);
+        synthstart = sorted[0] + (len*(double) pos / (double) txbegin.length);
+        int actual = (int) ((txend[i] - txbegin[i])/1000);
+        int synth = (int) ((txend[i] - synthstart)/1000);
+        latency[i] = (synth > actual) ? synth : actual;
+      }
+      printLatency(latency, events, "metered ");
     }
+  }
+
+  private static String latency(int[] latency, int numerator, int denominator) {
+    int usecs = (latency[latency.length - 1 - (latency.length * numerator) / denominator]);
+    return ""+usecs+" usec";
+  }
+
+
+  public static void printLatency(int[] latency, int events, String kind) {
+    Arrays.sort(latency);
+    String report = "===== DaCapo "+kind+"tail latency: ";
+    report += "50% " + latency(latency, 50, 100);
+    int precision = 10;
+    String precstr = "90";
+    while (precision <= TAIL_PRECISION) {
+      report += ", " + precstr + "% " + latency(latency, 1, precision);
+      precision *= 10;
+      if (precstr.equals("90"))
+        precstr = "99";
+      else
+        precstr += precstr.equals("99") ? ".9" : "9";
+    }
+    report += ", max "+((int) latency[latency.length-1])+" usec";
+    report += ", measured over "+events+" events =====";
+    System.out.println(report);
   }
 
   public int start() {
@@ -152,11 +179,12 @@ public class LatencyReporter {
 
   private void _start(int index) {
       start = (System.nanoTime() - timerBase)/NS_COARSENING;
-      latency[index] = (double) -start;
-      long start_cast = Double.valueOf(-latency[index]).longValue();
-      if (start_cast != start) {
-        System.err.println("WARNING: Timing precision error: "+start+" != "+start_cast);
-      }
+      txbegin[index] = (float) start;
+      txend[index] = -1;
+      // long start_cast = Double.valueOf(txbegin[index]).longValue();
+      // if (start_cast != start) {
+      //   System.err.println("WARNING: Timing precision error: "+start+" != "+start_cast);
+      // }
   }
 
   public static int start(int threadID) {
@@ -177,8 +205,8 @@ public class LatencyReporter {
 
   public void endI(int index) {
     long end = (System.nanoTime() - timerBase)/NS_COARSENING;
-    latency[index] += (double) end;
-    if (latency[index] > max) max = latency[index];
+    txend[index] = (float) end;
+    if (txend[index] > max) max = txend[index];
   }
 
   private static int readLatencyFile() {
@@ -189,17 +217,22 @@ public class LatencyReporter {
 
       String line = latencyFile.readLine();
       int entries = Integer.valueOf(line.trim());
-      latency = new double[entries];
+      txbegin = new float[entries];
+      txend = new float[entries];
       fileMax = 0;
 
       line = latencyFile.readLine();
       while(line != null) {
-        double v = Double.valueOf(line.trim());
-        latency[idx++] = v;
-        if (v > fileMax) fileMax = v;
+        String[] v = line.split(", ");
+        txbegin[idx] = Float.valueOf(v[0]);
+        txend[idx] = Float.valueOf(v[1]);
+        float l = txend[idx]-txbegin[idx];
+        if (l > fileMax) fileMax = l;
         line = latencyFile.readLine();
+        idx++;
       }
       latencyFile.close();
+
     } catch(IOException ioe) {
       ioe.printStackTrace();
     }
