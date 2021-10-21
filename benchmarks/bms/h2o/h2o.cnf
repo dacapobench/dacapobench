@@ -24,7 +24,7 @@ size large args "${DATA}/h2o", "citibiketripdata201908l.csv", "drf" , "tripdurat
 size huge args "${DATA}/h2o", "citibiketripdata201908h.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
-  output stdout digest 0xcae20123ccf6c587480902d0b3f1f831f1d59ed7,
+  output stdout digest 0xf7333758241d1f0934939f35320fd51b3181941c,
          stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
 
 description

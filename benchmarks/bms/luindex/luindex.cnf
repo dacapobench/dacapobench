@@ -1,7 +1,6 @@
 benchmark luindex
   class org.dacapo.harness.Luindex
-  thread-model single
-  jars "dacapo-luindex.jar", "lucene-core-7.1.0-SNAPSHOT.jar", "lucene-demo-7.1.0-SNAPSHOT.jar";
+  thread-model single;
 
 size small args "--linedoc", "${DATA}/luindex/enwiki-anarchism-abydos.md"
   output stdout  digest 0x6ab9062dd4eba0940d2646062c01013b17103d3d,
@@ -13,10 +12,10 @@ size default args "--linedoc", "${DATA}/luindex/enwiki-anarchism-abydos.md", "${
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/segments_1"  bytes 154;
 
-size huge args "--linedoc", "${DATA}/luindex/enwiki/enwiki-1.txt", "${DATA}/luindex/enwiki/enwiki-2.txt"
-  output stdout  digest 0x3067fa0a00d9311e95cf963dab1dfea1fca4e993,
+size huge args "--linedoc", "${DATA}/luindex/enwiki-1.txt", "${DATA}/luindex/enwiki-2.txt"
+  output stdout  digest 0xc2f7d6a63fb4699fa65891e9d6f979338f13dc47,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-	 "index/segments_1"  bytes 154;
+	 "index/segments_1"  bytes 156;
 
 description
   short		"A text indexing tool",
