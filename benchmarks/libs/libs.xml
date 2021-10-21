@@ -9,6 +9,11 @@
 <project name="libs">
     <property name="lib-base" value="${basedir}/libs"/>
 
+    <!-- dacapo-digest -->
+    <target name="dacapo-digest">
+        <ant antfile="${lib-base}/dacapo-digest/build.xml"/>
+    </target>
+
     <!-- bcel -->
     <property name="bcel-jar" value="${lib-base}/bcel/dist/jar/bcel-5.2.jar"/>
     <target name="bcel">
@@ -20,12 +25,6 @@
     <property name="batik-jar" value="${lib-base}/batik/dist/jar/batik-all-${batik-version}.jar"/>
     <target name="batik">
         <ant antfile="${lib-base}/batik/build.xml"/>
-    </target>
-
-    <!-- dacapo-digest -->
-    <property name="dacapo-digest-jar" value="${lib-base}/dacapo-digest/dist/jar/dacapo-digest.jar"/>
-    <target name="dacapo-digest">
-        <ant antfile="${lib-base}/dacapo-digest/build.xml"/>
     </target>
 
     <!-- daytrader -->

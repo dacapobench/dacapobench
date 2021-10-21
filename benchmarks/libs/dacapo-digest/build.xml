@@ -6,11 +6,11 @@
  * 
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
-<project name="bcel" default="all" basedir="../..">
+<project name="dacapo-digest" default="all" basedir="../..">
     <description>DaCapo Digest Library</description>
 
     <property environment="env"/>
-
+    <property name="dacapo-digest-jar" value="libs/dacapo-digest/dist/jar/dacapo-digest.jar"/>
     <property file="ant/dacapo.properties"/>
 
     <property name="lib-name" value="dacapo-digest"/>
