@@ -95,6 +95,11 @@ public abstract class Benchmark {
   private static PrintWriter valRepFile = null;
 
   /**
+   * Shall we dump latency to scratch?
+   */
+  private static boolean dumpLatency = false;
+
+  /**
    *
    */
   private static boolean validationReport = false;
@@ -278,7 +283,7 @@ public abstract class Benchmark {
     if (!getDeps("META-INF/md5/" + config.name  + ".MD5"))
       System.exit(-1);
       
-    latencyFileBasePath = new File(scratch, "dacapo.latency").getAbsolutePath();
+    latencyFileBasePath = dumpLatency ? new File(scratch, "dacapo-latency").getAbsolutePath() : null;
 
     loader = DacapoClassLoader.create(config, scratch, data, jarDeps);
     prepare();
@@ -378,8 +383,6 @@ public abstract class Benchmark {
       System.out.println();
     }
   
-    System.setProperty("dacapo.latency.csv", latencyFileBasePath+"-"+(iteration-1)+".csv");
-
     /*
      * Allow those benchmarks that can't tolerate overwriting prior output to
      * run in the face of the '-preserve' flag.
@@ -603,44 +606,12 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
-    if (System.getProperty("dacapo.latency.csv") != null)
-      tailLatencyStats();
-    LatencyReporter.reportLatency();
+    LatencyReporter.reportLatency(latencyFileBasePath);
     if (!preserve) {
       postIterationCleanup(size);
     }
   }
-
-  private void tailLatencyStats() {
-    try {
-      if (new File(System.getProperty("dacapo.latency.csv")).exists()) {
-        List<Long> lats = new ArrayList();
-        BufferedReader csv = new BufferedReader(new FileReader(System.getProperty("dacapo.latency.csv")));
-        String row;
-        while ((row = csv.readLine()) != null) {
-          if (!row.startsWith("#")) {
-            String[] data = row.split(", ");
-            long start = Long.parseLong(data[1]);
-            long end = Long.parseLong(data[2]);
-            lats.add((end-start)/1000);
-          }
-        }
-        csv.close();
-        Collections.sort(lats);
-        int n = lats.size();
-        long p50 = lats.get((int) (0.5 * n)-1);
-        long p90 = lats.get((int) (0.9 * n)-1);
-        long p99 = lats.get((int) (0.99 * n)-1);
-        long p999 = lats.get((int) (0.999 * n)-1);
-        long p9999 = lats.get((int) (0.9999 * n)-1);
-        long p100 = lats.get(n - 1);
-        System.out.println("===== Tail latency: 50% "+p50+" usec, 90% "+p90+" usec, 99% "+p99+" usec, 99.9% "+p999+" usec, 99.99% "+p9999+" usec, max "+p100+" usec =====");
-      }
-    } catch (IOException e) {
-      System.out.println("Exception trying to read latency stats from "+System.getProperty("dacapo.latency.csv")+": "+e);
-    }
-  }
-
+ 
   /**
    * Perform post-iteration cleanup.
    * 
@@ -808,6 +779,7 @@ public abstract class Benchmark {
     validateOutput = line.getValidateOutput();
     preIterationGC = line.getPreIterationGC();
     timeoutDialation = line.getTimeoutDialation();
+    dumpLatency = line.getDumpLatency();
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());
   }

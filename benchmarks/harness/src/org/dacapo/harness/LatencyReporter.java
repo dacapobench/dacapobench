@@ -11,8 +11,10 @@ package org.dacapo.harness;
 import java.util.Arrays;
 import java.lang.reflect.Method;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.NoSuchMethodException;
 /**
@@ -104,7 +106,7 @@ public class LatencyReporter {
     return max/US_DIVISOR;
   }
 
-  public static void reportLatency() {
+  public static void reportLatency(String latencyBaseFile) {
     if (timerBase != 0) {
       int events = 0;
 
@@ -128,7 +130,7 @@ public class LatencyReporter {
       for(int i = 0; i < txbegin.length; i++) {
         latency[i] = (int) ((txend[i] - txbegin[i])/1000);
       }
-      printLatency(latency, events, "simple ");
+      printLatency(latency, txbegin, events, "simple", latencyBaseFile);
 
       // synthetically metered --- each query start is evenly spaced, so delays will compound
       float[] sorted = Arrays.copyOf(txbegin, txbegin.length);
@@ -142,7 +144,7 @@ public class LatencyReporter {
         int synth = (int) ((txend[i] - synthstart)/1000);
         latency[i] = (synth > actual) ? synth : actual;
       }
-      printLatency(latency, events, "metered ");
+      printLatency(latency, txbegin, events, "metered", latencyBaseFile);
     }
   }
 
@@ -151,10 +153,23 @@ public class LatencyReporter {
     return ""+usecs+" usec";
   }
 
-
-  public static void printLatency(int[] latency, int events, String kind) {
+  public static void printLatency(int[] latency, float[] txbegin, int events, String kind, String baseFilename) {
+    if (baseFilename != null) {
+      String filename = baseFilename+"-usec-"+kind+".csv";
+      try {
+        File file = new File(filename);
+        BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
+        for (int i = 0; i < latency.length; i++) {
+          int start = (int) (txbegin[i]/1000);
+          latencyFile.write(start+", "+(start+latency[i])+System.lineSeparator());
+        }
+        latencyFile.close();
+      } catch (IOException e) {
+        System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
+      }
+    }
     Arrays.sort(latency);
-    String report = "===== DaCapo "+kind+"tail latency: ";
+    String report = "===== DaCapo "+kind+" tail latency: ";
     report += "50% " + latency(latency, 50, 100);
     int precision = 10;
     String precstr = "90";

@@ -76,6 +76,7 @@ public class CommandLineArgs {
   private static final String OPT_SCRATCH_DIRECTORY = "scratch-directory";
   private static final String OPT_DATA_INSTALL = "data-install";
   private static final String OPT_DATA_SETLOC = "data-set-location";
+  private static final String OPT_DUMP_LATENCY = "dump-latency";
   private static final String OPT_CONVERGE = "converge";
   private static final String OPT_MAX_ITERATIONS = "max-iterations";
   private static final String OPT_VARIANCE = "variance";
@@ -121,7 +122,8 @@ public class CommandLineArgs {
     makeOption("f",  OPT_TIMEOUT_DIALATION,   "Set the time dialation of the timeouts in the benchmark by the given integer factor.", "timeout_dialation"),
     makeOption("v",  OPT_VERBOSE,             "Verbose output", null),
     makeOption(null, OPT_DATA_INSTALL,        "Download and install workload data sets and jars.", "install_path"),
-    makeOption(null, OPT_DATA_SETLOC,         "Path to workload data and jar location.", "ext_data_loc")
+    makeOption(null, OPT_DATA_SETLOC,         "Path to workload data and jar location.", "ext_data_loc"),
+    makeOption(null, OPT_DUMP_LATENCY,         "Dump latency data to file in scratch", null)
   };
 
   private static CommandLineParser parser = new PosixParser();
@@ -393,6 +395,10 @@ public class CommandLineArgs {
   
   public String getTimeoutDialation() {
 	  return line.getOptionValue(OPT_TIMEOUT_DIALATION, DEFAULT_TIMEOUT_DIALATION);
+  }
+
+  public boolean getDumpLatency() {
+    return line.hasOption(OPT_DUMP_LATENCY);
   }
 
   public List<String> getArgList() {
