@@ -12,7 +12,7 @@
      <property file="dacapo.properties"/>
 
     <property name="bm-name" value="cassandra"/>
-    <property name="bm-version" value="3.11.10"/>
+    <property name="bm-version" value="4.0.1"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="https://gitbox.apache.org/repos/asf/cassandra.git"/>
     <property name="bm-git-commit" value="cassandra-${bm-version}"/>
@@ -59,7 +59,9 @@
     <target name="cassandra-build">    
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
-
+        <!-- replace the build-rat file to skip rat check -->
+        <delete file="${cassandra-build-top}/.build/build-rat.xml"/>
+        <copy file="${bm-build-dir}/../cassandra-build-rat.xml" tofile="${cassandra-build-top}/.build/build-rat.xml"/>
         <exec executable="ant" dir="${cassandra-build-top}"/>
     </target>
 
@@ -103,13 +105,13 @@
         </copy>
         <get src="${maven.url}/com/github/stephenc/high-scale-lib/high-scale-lib/1.1.4/high-scale-lib-1.1.4.jar"
              dest="${bm-jars}"/>
+        <!-- delete the 3.0.0 jar as we want to load classes from the 3.11.0 jar  -->
+        <delete file="${bm-jars}/cassandra-driver-core-3.0.0.jar"/>
     </target>
 
     <target name="jar" depends="libs">
         <copy file="${cassandra-build-top}/build/apache-cassandra-${bm-version}-SNAPSHOT.jar"
             tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
-        <copy file="${cassandra-build-top}/build/apache-cassandra-thrift-${bm-version}-SNAPSHOT.jar"
-            tofile="${bm-jars}/cassandra-thrift-${bm-version}.jar"/>
     </target>
 
     <target name="data">
