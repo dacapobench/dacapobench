@@ -21,6 +21,9 @@
     <property name="cli-basename" value="${cli}-${cli-version}"/>
     <property name="cli-name" value="${cli-basename}-bin.tar.gz"/>
 
+    <property name="JavaBeans-Activation-version" value="1.2.0"/>
+    <property name="JavaBeans-Activation-url" value="${maven.url}/com/sun/activation/javax.activation/${JavaBeans-Activation-version}"/>
+    <property name="JavaBeans-Activation-name" value="javax.activation-${JavaBeans-Activation-version}.jar"/>
 
     <property name="jaxb-version" value="2.3.0"/>
     <property name="jaxb-url" value="${maven.url}/javax/xml/bind/jaxb-api/${jaxb-version}"/>
@@ -68,6 +71,12 @@
 
         <antcall target="check-source">
             <param name="target-dir" value="${harness-downloads}"/>
+            <param name="target-url" value="${JavaBeans-Activation-url}"/>
+            <param name="target-file" value="${JavaBeans-Activation-name}"/>
+        </antcall>
+
+        <antcall target="check-source">
+            <param name="target-dir" value="${harness-downloads}"/>
             <param name="target-url" value="${jaxb-core-url}"/>
             <param name="target-file" value="${jaxb-core-name}"/>
         </antcall>
@@ -85,6 +94,9 @@
         <unjar src="${build-dir}/${cli-basename}/${cli-basename}.jar" dest="${output-dir}">
             <fileset dir="/" includes="org/apache/commons/**" />
         </unjar>
+
+        <!-- unjar from JavaBeans-Activation-<version>.jar into ${output-dir} -->
+        <unjar src="${harness-downloads}/${JavaBeans-Activation-name}" dest="${output-dir}"/>
 
         <!-- unjar from jaxb-api-<version>.jar into ${output-dir} -->
         <unjar src="${harness-downloads}/${jaxb-name}" dest="${output-dir}"/>

@@ -29,7 +29,6 @@ public class Kafka extends Benchmark {
 
     public Kafka(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false, true);
-        assertJavaVersionEQ(8, "Kafka currently requires Java 8 due to 'java.lang.NoClassDefFoundError: javax/activation/DataSource' error for more recent Java releases.");
         Class launcher = Class.forName("org.dacapo.kafka.Launcher", true, this.loader);
         lc = launcher.getConstructor(File.class, File.class, String[].class);
         launching = launcher.getMethod("launching");
