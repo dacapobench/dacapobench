@@ -106,7 +106,7 @@ public class LatencyReporter {
     return max/US_DIVISOR;
   }
 
-  public static void reportLatency(String latencyBaseFile) {
+  public static void reportLatency(String latencyBaseFile, int iteration) {
     if (timerBase != 0) {
       int events = 0;
 
@@ -130,7 +130,7 @@ public class LatencyReporter {
       for(int i = 0; i < txbegin.length; i++) {
         latency[i] = (int) ((txend[i] - txbegin[i])/1000);
       }
-      printLatency(latency, txbegin, events, "simple", latencyBaseFile);
+      printLatency(latency, txbegin, events, "simple", latencyBaseFile, iteration);
 
       // synthetically metered --- each query start is evenly spaced, so delays will compound
       float[] sorted = Arrays.copyOf(txbegin, txbegin.length);
@@ -144,7 +144,7 @@ public class LatencyReporter {
         int synth = (int) ((txend[i] - synthstart)/1000);
         latency[i] = (synth > actual) ? synth : actual;
       }
-      printLatency(latency, txbegin, events, "metered", latencyBaseFile);
+      printLatency(latency, txbegin, events, "metered", latencyBaseFile, iteration);
     }
   }
 
@@ -153,9 +153,9 @@ public class LatencyReporter {
     return ""+usecs+" usec";
   }
 
-  public static void printLatency(int[] latency, float[] txbegin, int events, String kind, String baseFilename) {
+  public static void printLatency(int[] latency, float[] txbegin, int events, String kind, String baseFilename, int iteration) {
     if (baseFilename != null) {
-      String filename = baseFilename+"-usec-"+kind+".csv";
+      String filename = baseFilename+"-usec-"+kind+"-"+(iteration-1)+".csv";
       try {
         File file = new File(filename);
         BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));

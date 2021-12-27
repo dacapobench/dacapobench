@@ -606,7 +606,7 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
-    LatencyReporter.reportLatency(latencyFileBasePath);
+    LatencyReporter.reportLatency(latencyFileBasePath, iteration);
     if (!preserve) {
       postIterationCleanup(size);
     }
