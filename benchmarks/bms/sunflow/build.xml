@@ -13,7 +13,7 @@
 
     <property name="bm-name" value="sunflow"/>
     <property name="bm-version" value="0.07.2"/>
-    <property name="bm-url" value="${dacapo.src.url}/sunflow"/>
+    <property name="bm-url" value="${dacapo.src.url}"/>
     <property name="bm-bin-url" value="${bm-url}/${bm-name}-src-v${bm-version}.zip"/>
     <property name="bm-src" value="${bm-name}-src-v${bm-version}.zip"/>
 
@@ -29,7 +29,7 @@
 		</antcall>
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${dacapo.src.url}/sunflow"/>
+            <param name="target-url" value="${dacapo.src.url}"/>
             <param name="target-file" value="sunflow-data.zip"/>
         </antcall>
     </target>
