@@ -95,9 +95,9 @@ public abstract class Benchmark {
   private static PrintWriter valRepFile = null;
 
   /**
-   * Shall we dump latency to scratch?
+   * Shall we dump a latency csv to scratch?
    */
-  private static boolean dumpLatency = false;
+  private static boolean latencyCSV = false;
 
   /**
    *
@@ -180,7 +180,7 @@ public abstract class Benchmark {
   private Set<URL> jarDeps = new HashSet();
   private Set<URL> datDeps = new HashSet();
 
-  private String latencyFileBasePath;
+  private String baseCSVlatencyFile;
 
   /**
    * Run a benchmark. This is final because individual benchmarks should not
@@ -283,7 +283,7 @@ public abstract class Benchmark {
     if (!getDeps("META-INF/md5/" + config.name  + ".MD5"))
       System.exit(-1);
       
-    latencyFileBasePath = dumpLatency ? new File(scratch, "dacapo-latency").getAbsolutePath() : null;
+    baseCSVlatencyFile = latencyCSV ? new File(scratch, "dacapo-latency").getAbsolutePath() : null;
 
     loader = DacapoClassLoader.create(config, scratch, data, jarDeps);
     prepare();
@@ -606,7 +606,7 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
-    LatencyReporter.reportLatency(latencyFileBasePath, iteration);
+    LatencyReporter.reportLatency(baseCSVlatencyFile, iteration);
     if (!preserve) {
       postIterationCleanup(size);
     }
@@ -779,7 +779,7 @@ public abstract class Benchmark {
     validateOutput = line.getValidateOutput();
     preIterationGC = line.getPreIterationGC();
     timeoutDialation = line.getTimeoutDialation();
-    dumpLatency = line.getDumpLatency();
+    latencyCSV = line.getLatencyCSV();
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());
   }

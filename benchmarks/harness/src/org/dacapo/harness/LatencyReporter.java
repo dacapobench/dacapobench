@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.NoSuchMethodException;
+
 /**
  * Thread-local latency reporter used to generate tail-latency stats in
  * a resource-sensitive, contention-free, statistically-robust way.
@@ -106,11 +107,11 @@ public class LatencyReporter {
     return max/US_DIVISOR;
   }
 
-  public static void reportLatency(String latencyBaseFile, int iteration) {
+  public static void reportLatency(String baseCSVlatencyFile, int iteration) {
     if (timerBase != 0) {
       int events = 0;
 
-      if (System.getProperty("dacapo.latency.file") != null) {
+      if (System.getProperty("dacapo.latency.file") != null) { // case where benchmark saves latency to file
         events = readLatencyFile();
       } else {
         for (int i = 0; i < reporters.length; i++)
@@ -130,7 +131,9 @@ public class LatencyReporter {
       for(int i = 0; i < txbegin.length; i++) {
         latency[i] = (int) ((txend[i] - txbegin[i])/1000);
       }
-      printLatency(latency, txbegin, events, "simple", latencyBaseFile, iteration);
+      if (baseCSVlatencyFile != null)
+        dumpLatencyCSV(latency, txbegin, "simple", baseCSVlatencyFile, iteration);
+      printLatency(latency, txbegin, events, "simple", iteration);
 
       // synthetically metered --- each query start is evenly spaced, so delays will compound
       float[] sorted = Arrays.copyOf(txbegin, txbegin.length);
@@ -144,7 +147,9 @@ public class LatencyReporter {
         int synth = (int) ((txend[i] - synthstart)/1000);
         latency[i] = (synth > actual) ? synth : actual;
       }
-      printLatency(latency, txbegin, events, "metered", latencyBaseFile, iteration);
+      if (baseCSVlatencyFile != null)
+        dumpLatencyCSV(latency, txbegin, "metered", baseCSVlatencyFile, iteration);
+      printLatency(latency, txbegin, events, "metered", iteration);
     }
   }
 
@@ -153,21 +158,7 @@ public class LatencyReporter {
     return ""+usecs+" usec";
   }
 
-  public static void printLatency(int[] latency, float[] txbegin, int events, String kind, String baseFilename, int iteration) {
-    if (baseFilename != null) {
-      String filename = baseFilename+"-usec-"+kind+"-"+(iteration-1)+".csv";
-      try {
-        File file = new File(filename);
-        BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
-        for (int i = 0; i < latency.length; i++) {
-          int start = (int) (txbegin[i]/1000);
-          latencyFile.write(start+", "+(start+latency[i])+System.lineSeparator());
-        }
-        latencyFile.close();
-      } catch (IOException e) {
-        System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
-      }
-    }
+  public static void printLatency(int[] latency, float[] txbegin, int events, String kind, int iteration) {
     Arrays.sort(latency);
     String report = "===== DaCapo "+kind+" tail latency: ";
     report += "50% " + latency(latency, 50, 100);
@@ -184,6 +175,21 @@ public class LatencyReporter {
     report += ", max "+((int) latency[latency.length-1])+" usec";
     report += ", measured over "+events+" events =====";
     System.out.println(report);
+  }
+
+  private static void dumpLatencyCSV(int[] latency, float[] txbegin, String kind, String baseFilename, int iteration) {
+    String filename = baseFilename+"-usec-"+kind+"-"+(iteration-1)+".csv";
+    try {
+      File file = new File(filename);
+      BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
+      for (int i = 0; i < latency.length; i++) {
+        int start = (int) (txbegin[i]/1000);
+        latencyFile.write(start+", "+(start+latency[i])+System.lineSeparator());
+      }
+      latencyFile.close();
+    } catch (IOException e) {
+      System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
+    }
   }
 
   public int start() {
