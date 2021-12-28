@@ -18,6 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.NoSuchMethodException;
 
+import org.HdrHistogram.*;
+
 /**
  * Thread-local latency reporter used to generate tail-latency stats in
  * a resource-sensitive, contention-free, statistically-robust way.
@@ -107,7 +109,7 @@ public class LatencyReporter {
     return max/US_DIVISOR;
   }
 
-  public static void reportLatency(String baseCSVlatencyFile, int iteration) {
+  public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
     if (timerBase != 0) {
       int events = 0;
 
@@ -131,8 +133,10 @@ public class LatencyReporter {
       for(int i = 0; i < txbegin.length; i++) {
         latency[i] = (int) ((txend[i] - txbegin[i])/1000);
       }
-      if (baseCSVlatencyFile != null)
-        dumpLatencyCSV(latency, txbegin, "simple", baseCSVlatencyFile, iteration);
+      if (dumpLatencyCSV)
+        dumpLatencyCSV(latency, txbegin, "simple", baseLatencyFileName, iteration);
+      if (dumpLatencyHDR)
+        dumpLatencyHDR(latency, txbegin, "simple", baseLatencyFileName, iteration);
       printLatency(latency, txbegin, events, "simple", iteration);
 
       // synthetically metered --- each query start is evenly spaced, so delays will compound
@@ -147,8 +151,10 @@ public class LatencyReporter {
         int synth = (int) ((txend[i] - synthstart)/1000);
         latency[i] = (synth > actual) ? synth : actual;
       }
-      if (baseCSVlatencyFile != null)
-        dumpLatencyCSV(latency, txbegin, "metered", baseCSVlatencyFile, iteration);
+      if (dumpLatencyCSV)
+        dumpLatencyCSV(latency, txbegin, "metered", baseLatencyFileName, iteration);
+      if (dumpLatencyHDR)
+        dumpLatencyHDR(latency, txbegin, "metered", baseLatencyFileName, iteration);
       printLatency(latency, txbegin, events, "metered", iteration);
     }
   }
@@ -187,6 +193,23 @@ public class LatencyReporter {
         latencyFile.write(start+", "+(start+latency[i])+System.lineSeparator());
       }
       latencyFile.close();
+    } catch (IOException e) {
+      System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
+    }
+  }
+
+  private static void dumpLatencyHDR(int[] latency, float[] txbegin, String kind, String baseFilename, int iteration) {
+    Histogram histogram = new Histogram(60000000, 4);  // 1usec -> 1min, 4 decimal places
+    for (int i = 0; i < latency.length; i++)
+      histogram.recordValue(latency[i]);
+
+    String filename = baseFilename+"-usec-"+kind+"-"+(iteration-1)+".hdr";
+    try {
+      HistogramLogWriter hlw = new HistogramLogWriter(filename);
+      final double start = txbegin[0]/1000000000;
+      final double end = (txbegin[txbegin.length-1]/1000000000)+(latency[txbegin.length-1]/1000000);
+
+      hlw.outputIntervalHistogram(start, end, histogram);
     } catch (IOException e) {
       System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
     }

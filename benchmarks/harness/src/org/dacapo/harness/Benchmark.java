@@ -107,9 +107,19 @@ public abstract class Benchmark {
   private static String timeoutDialation = "1";
   
   /**
-   * If dumping latency csv, this will be set to the base file name;
+   * Should we dump latency stats to csv file
    */
-  private static String latencyCSVBaseFile = null;
+  private static boolean dumpLatencyCSV = false;
+
+  /**
+   * Should we dump latency stats to hdr file
+   */
+  private static boolean dumpLatencyHDR = false;
+
+  /**
+   * Base name for latency files
+   */
+  private static String latencyBaseFileName = null;
 
   /**
    * Saved System.out while redirected to the digest stream
@@ -602,7 +612,7 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
-    LatencyReporter.reportLatency(latencyCSVBaseFile, iteration);
+    LatencyReporter.reportLatency(latencyBaseFileName, dumpLatencyCSV, dumpLatencyHDR, iteration);
     if (!preserve) {
       postIterationCleanup(size);
     }
@@ -775,7 +785,9 @@ public abstract class Benchmark {
     validateOutput = line.getValidateOutput();
     preIterationGC = line.getPreIterationGC();
     timeoutDialation = line.getTimeoutDialation();
-    latencyCSVBaseFile = line.getLatencyCSV() ? new File(line.getLogDirectory(), "dacapo-latency").getAbsolutePath() : null;
+    latencyBaseFileName = new File(line.getLogDirectory(), "dacapo-latency").getAbsolutePath();
+    dumpLatencyCSV = line.getLatencyCSV();
+    dumpLatencyHDR = line.getLatencyHDR();
 
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());

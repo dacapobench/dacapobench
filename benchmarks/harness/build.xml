@@ -32,6 +32,10 @@
     <property name="jaxb-impl-url" value="${maven.url}/com/sun/xml/bind/jaxb-impl/${jaxb-version}"/>
     <property name="jaxb-impl-name" value="jaxb-impl-${jaxb-version}.jar"/>
 
+    <property name="hdrhistogram-version" value="2.1.12"/>
+    <property name="hdrhistogram-url" value="https://github.com/HdrHistogram/HdrHistogram/archive/refs/tags/"/>
+    <property name="hdrhistogram-name" value="HdrHistogram-${hdrhistogram-version}.zip"/>
+
     <property name="bm-out-jar" value="${base-dir}/tmp"/>
 
     <target name="all" depends="clean,init,harness,jar"/>
@@ -97,8 +101,31 @@
 
         <delete file="${output-dir}/module-info.class"/>
     </target>
+
+    <target name="hdrhist">
+        <antcall target="check-source">
+            <param name="target-dir" value="${harness-downloads}"/>
+            <param name="target-url" value="${hdrhistogram-url}"/>
+            <param name="target-file" value="${hdrhistogram-name}"/>
+        </antcall>
+
+        <unzip src="${harness-downloads}/${hdrhistogram-name}" dest="${build-dir}"/>
+
+        <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+        <property name="mvn-exe" value="${mvn-home}/mvn"/>
+        <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
+            <os family="windows"/>
+        </condition>
+        <exec executable="${mvn-exe}" dir="${build-dir}/HdrHistogram-HdrHistogram-${hdrhistogram-version}" failonerror="yes">
+            <arg value="clean"/>
+            <arg value="package"/>
+            <arg value="-Dmaven.test.skip=true"/>
+        </exec>
+
+        <unjar src="${build-dir}/HdrHistogram-HdrHistogram-${hdrhistogram-version}/target/HdrHistogram-${hdrhistogram-version}.jar" dest="${output-dir}"/>
+    </target>
     
-    <target name="harness" depends="init,dependency,parser">
+    <target name="harness" depends="init,dependency,parser,hdrhist">
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source" classpath="${output-dir}"/>
         <javadoc sourcepath="${src}" destdir="${output-doc-dir}" classpath="${output-dir}"
                 additionalparam="-Xdoclint:none"/>
