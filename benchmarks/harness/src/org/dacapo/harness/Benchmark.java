@@ -95,11 +95,6 @@ public abstract class Benchmark {
   private static PrintWriter valRepFile = null;
 
   /**
-   * Shall we dump a latency csv to scratch?
-   */
-  private static boolean latencyCSV = false;
-
-  /**
    *
    */
   private static boolean validationReport = false;
@@ -111,6 +106,11 @@ public abstract class Benchmark {
    */
   private static String timeoutDialation = "1";
   
+  /**
+   * If dumping latency csv, this will be set to the base file name;
+   */
+  private static String latencyCSVBaseFile = null;
+
   /**
    * Saved System.out while redirected to the digest stream
    */
@@ -179,8 +179,6 @@ public abstract class Benchmark {
 
   private Set<URL> jarDeps = new HashSet();
   private Set<URL> datDeps = new HashSet();
-
-  private String baseCSVlatencyFile;
 
   /**
    * Run a benchmark. This is final because individual benchmarks should not
@@ -282,8 +280,6 @@ public abstract class Benchmark {
     }
     if (!getDeps("META-INF/md5/" + config.name  + ".MD5"))
       System.exit(-1);
-      
-    baseCSVlatencyFile = latencyCSV ? new File(scratch, "dacapo-latency").getAbsolutePath() : null;
 
     loader = DacapoClassLoader.create(config, scratch, data, jarDeps);
     prepare();
@@ -606,7 +602,7 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
-    LatencyReporter.reportLatency(baseCSVlatencyFile, iteration);
+    LatencyReporter.reportLatency(latencyCSVBaseFile, iteration);
     if (!preserve) {
       postIterationCleanup(size);
     }
@@ -779,7 +775,8 @@ public abstract class Benchmark {
     validateOutput = line.getValidateOutput();
     preIterationGC = line.getPreIterationGC();
     timeoutDialation = line.getTimeoutDialation();
-    latencyCSV = line.getLatencyCSV();
+    latencyCSVBaseFile = line.getLatencyCSV() ? new File(line.getLogDirectory(), "dacapo-latency").getAbsolutePath() : null;
+
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());
   }
