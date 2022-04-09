@@ -229,7 +229,7 @@ public abstract class Benchmark {
 
     boolean valid = validate(size);
     callback.complete(config.name, valid);
-    postIteration(size);
+    postIteration(size, callback.isWarmup());
     return valid;
   }
 
@@ -605,8 +605,8 @@ public abstract class Benchmark {
    * 
    * @param size Argument to the benchmark iteration.
    */
-  public void postIteration(String size) throws Exception {
-    LatencyReporter.reportLatency(latencyFileBasePath);
+  public void postIteration(String size, boolean isWarmup) throws Exception {
+    LatencyReporter.reportLatency(isWarmup ? null : latencyFileBasePath);
     if (!preserve) {
       postIterationCleanup(size);
     }
