@@ -529,3 +529,16 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/P
          doneFuture.complete("");
          executor.shutdownNow();
          executor.awaitTermination(1, TimeUnit.DAYS);
+
+diff -ur kafka-2.8.0-src/gradle/buildscript.gradle ../build/kafka-2.8.0-src/gradle/buildscript.gradle
+--- kafka-2.8.0-src/gradle/buildscript.gradle   2022-02-06 15:33:12.201653673 -0500
++++ ../build/kafka-2.8.0-src/gradle/buildscript.gradle  2022-02-06 15:33:36.249556669 -0500
+@@ -17,7 +17,7 @@
+   repositories {
+     // For license plugin.
+     maven {
+-      url 'https://dl.bintray.com/content/netflixoss/external-gradle-plugins/'
++      url "https://plugins.gradle.org/m2/"
+     }
+   }
+ }
