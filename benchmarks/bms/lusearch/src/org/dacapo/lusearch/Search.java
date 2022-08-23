@@ -260,6 +260,7 @@ public class Search {
         if (line.length() == 0)
           break;
 
+        reporter.start();
         if (line.equals("OR") || line.equals("AND") || line.equals("NOT") || line.equals("TO"))
           line = line.toLowerCase();
 
@@ -270,7 +271,6 @@ public class Search {
           System.err.println("Failed to process query: '"+line+"'");
           e.printStackTrace();
         }
-        reporter.start();
         searcher.search(query, 10);
 
         doPagingSearch(query);
