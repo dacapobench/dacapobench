@@ -313,9 +313,6 @@
          target: bootstrap for running harness
          ================================= -->
     <target name="bootstrap" depends="init">
-        <!-- create the digest jar -->
-        <ant antfile="libs/libs.xml" target="dacapo-digest"/>
-
     	<!-- construct the bootstrap -->
         <javac srcdir="${dacapo.src.dir}" destdir="${dacapo.build.dir}"/>
 

@@ -45,7 +45,7 @@
                debug="true" debuglevel="lines,vars,source">
             <classpath>
                 <pathelement path="${commons-httpclient-jar}"/>
-                <pathelement path="${dacapo-digest-jar}"/>
+                <pathelement path="${lib-base}/dacapo-digest/build"/>
                 <fileset dir="${bm-build-top}/output/dist/lib">
                     <include name="**/*.jar"/>
                 </fileset>

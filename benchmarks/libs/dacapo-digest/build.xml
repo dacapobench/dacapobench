@@ -17,14 +17,6 @@
 
     <import file="../common.xml"/>
 
-    <target name="jar" depends="build">
-        <jar destfile="${lib-jars}/${lib-name}.jar" basedir="${lib-build-dir}"/>
-        <!--
-        <copy file="${lib-build-dir}/${lib-name}-${lib-version}/lib/${lib-jar}" tofile="${lib-output-dir}/jar/${lib-jar}" />
-        <copy file="${lib-build-dir}/${lib-name}-${lib-version}/lib/${lib-commons-jar}" tofile="${lib-output-dir}/jar/${lib-commons-jar}" />
-    -->
-    </target>
-
     <target name="build" depends="build.init">
         <javac srcdir="${lib-src-dir}" destdir="${lib-build-dir}" debug="true" debuglevel="lines,vars,source"/>
     </target>
