@@ -1,6 +1,6 @@
 # The DaCapo Benchmark Suite
 
-Last updated 2019-06-06
+Last updated 2022-08-18
 
 This benchmark suite is intend as a tool for the research community.
 It consists of a set of open source, real world applications with
@@ -55,36 +55,11 @@ The suite is built using ant 1.10.  You will need the following tools:
 
 * *[npm](https://www.npmjs.com/get-npm)*
 
-##### System requirement:
-
-Building DaCapo requires latest JDK 11.
-
-If building __cassandra__, __graphchi__, __jython__, and/or __xalan__,
-make sure JDK 8 is also installed and
-its path set in local.properties file.
-
-Building the whole suite at once on macOS **may** have problem with max filehandle limits.
-You may want to set it to a larger value, and launch ant with:
-`export JAVA_OPTS="-XX:-MaxFDLimit"`
-
-Set your JAVA_HOME environment variable appropriately:
-On Mac OS X something like:
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.3.jdk/Contents/Home/
-On Ubuntu 16.04 something like:
-`export JAVA_HOME=/usr/lib/jvm/jdk1.11.0/`
-
-Set __ant__ and __maven__ environment variables if necessary.  In particular,
-for some jvms it is necessary to explicitly request a larger heap size.
-It is necessary to set the maven options because the trade benchmarks
-are built by maven (called by ant).  As another example, you may wish
-for ant to use a proxy when downloading (there is a lot to be
-downloaded).   Some examples:
-`export ANT_OPTS="-Xms512M -Xmx512M"`
-`export MAVEN_OPTS="-Xms512M -Xmx512M"`
-or
-`export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"`
 
 ##### Run ant:
+
+`ant -p`      [prints out description, including configuration and environment variable settings]
+
 `ant`         [builds all benchmarks]
 
 `ant dist`    [builds all benchmarks, this is the default]

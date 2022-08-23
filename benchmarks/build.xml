@@ -25,7 +25,7 @@
         - hg (https://www.mercurial-scm.org)
         - npm (https://www.npmjs.com/get-npm)
         - node.js (https://nodejs.org/en/)
-        - python (https://www.python.org/)
+        - python2 (https://www.python.org/)
         python libraries:
         - colorama (https://pypi.org/project/colorama/)
         - future (https://pypi.org/project/future/)
@@ -34,6 +34,10 @@
         - wheel (https://pypi.org/project/wheel/)
         For convinience, javacc and maven are included in the tools directory:
         ${toolsdir}
+
+	For Debian-based systems:
+	    sudo apt-get install npm python python-pip
+            pip2 install requests
 
         BUILDING:
         0. System requirement:
