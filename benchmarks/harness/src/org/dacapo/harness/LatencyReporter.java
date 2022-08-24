@@ -9,6 +9,7 @@
 package org.dacapo.harness;
 
 import java.util.Arrays;
+
 import java.lang.reflect.Method;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -40,6 +41,7 @@ public class LatencyReporter {
   static double fileMax;
   static LatencyReporter[] reporters;
   private static long timerBase = 0;  // used to improve precision (when using floats)
+  private static Callback callback = null;
 
   public LatencyReporter(int threadID, int threads, int transactions) {
     this(threadID, threads, transactions, 1);
@@ -48,6 +50,10 @@ public class LatencyReporter {
     idx = idxOffset = getBaseIdx(threadID, threads, transactions, batchSize);
     max = 0;
     reporters[threadID] = this;
+  }
+
+  public static void setCallback(Callback cb) {
+    callback = cb;
   }
 
   public static void initialize(int threads) {
@@ -215,42 +221,57 @@ public class LatencyReporter {
     }
   }
 
-  public int start() {
+  private int start() {
     int index = idx++;
     _start(index);
     return index;
   }
 
   private void _start(int index) {
-      start = (System.nanoTime() - timerBase)/NS_COARSENING;
-      txbegin[index] = (float) start;
-      txend[index] = -1;
-      // long start_cast = Double.valueOf(txbegin[index]).longValue();
-      // if (start_cast != start) {
-      //   System.err.println("WARNING: Timing precision error: "+start+" != "+start_cast);
-      // }
+    if (callback != null) callback.requestStart();
+    start = (System.nanoTime() - timerBase)/NS_COARSENING;
+    txbegin[index] = (float) start;
+    txend[index] = -1;
   }
 
+  /**
+   * A request is about to start.
+   * 
+   * @param threadID the thread in which the request will start.
+   * @return a unique index into a thread-local result table.
+   */
   public static int start(int threadID) {
     return reporters[threadID].start();
   }
   
+  /**
+   * A request has just completed.
+   * 
+   * @param threadID the thread in which the request ran.
+   */
   public static void end(int threadID) {
     reporters[threadID].end();
   }
   
+  /**
+   * A request has just completed.
+   * 
+   * @param threadID the thread in which the request ran.
+   * @param index the thread-local index for the request that completed.
+   */
   public static void end(int threadID, int index) {
     reporters[threadID].endI(index);
   }
 
-  public void end() {
+  private void end() {
     endI(idx-1);
   }
 
-  public void endI(int index) {
+  private void endI(int index) {
     long end = (System.nanoTime() - timerBase)/NS_COARSENING;
     txend[index] = (float) end;
     if (txend[index] > max) max = txend[index];
+    if (callback != null) callback.requestEnd();
   }
 
   private static int readLatencyFile() {

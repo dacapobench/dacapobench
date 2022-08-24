@@ -40,4 +40,12 @@ public class MyCallback extends Callback {
     System.err.println("my hook " + (valid ? "PASSED " : "FAILED ") + (isWarmup() ? "warmup " : "") + benchmark);
     System.err.flush();
   };
+
+  /* Called immediately before a request begins */
+  @Override
+  public void requestStart() { /* your code here */}
+
+  /* Called immediately after a request completes */
+  @Override
+  public void requestEnd() { /* your code here */}
 }

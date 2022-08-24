@@ -444,6 +444,11 @@ public class CommandLineArgs {
       }
     }
 
+    // (only) if a custom callback was defined, set the LatencyReporter's callback
+    if (callback != null) {
+      LatencyReporter.setCallback(callback);
+    }
+
     // set the default callback class if no callback is defined
     if (getCallback() == null) {
       callback = new Callback(this);

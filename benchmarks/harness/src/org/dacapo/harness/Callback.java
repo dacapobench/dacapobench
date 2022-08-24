@@ -188,4 +188,17 @@ public class Callback {
     System.err.flush();
   }
 
+  /**
+   * Announce that a request is about to start (called at
+   * the start of each request within request-based
+   * workloads).
+   */
+  public void requestStart() {}
+
+  /**
+   * Announce that a request has just ended (called at
+   * the completion of each request within request-based
+   * workloads).
+   */
+  public void requestEnd() {}
 }
