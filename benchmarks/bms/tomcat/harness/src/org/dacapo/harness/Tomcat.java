@@ -52,7 +52,7 @@ public class Tomcat extends Benchmark {
     /* Create a constructor for the tomcat client */
     @SuppressWarnings("unchecked")
     Class<Runnable> clientClass = (Class<Runnable>) Class.forName("org.dacapo.tomcat.Client", true, loader);
-    this.clientConstructor = clientClass.getConstructor(File.class, int.class, int.class, boolean.class, int.class, org.dacapo.harness.LatencyReporter.class);
+    this.clientConstructor = clientClass.getConstructor(File.class, int.class, int.class, boolean.class, int.class);
   }
 
   /**
@@ -170,8 +170,7 @@ public class Tomcat extends Benchmark {
     System.out.println("Creating client threads to issue "+iterations+" rounds of 41 requests ("+(41*iterations)+").");
     LatencyReporter.initialize(41*iterations, threadCount);
     for (int i = 0; i < threadCount; i++) {
-      LatencyReporter lr = new LatencyReporter(i, threadCount, (41*iterations), 41);
-      Runnable client = clientConstructor.newInstance(scratch, i, iterationsPerClient + (i < oddIterations ? 1 : 0), getVerbose(), PORT, lr);
+      Runnable client = clientConstructor.newInstance(scratch, i, iterationsPerClient + (i < oddIterations ? 1 : 0), getVerbose(), PORT);
       threads[i] = new Thread(client);
       threads[i].start();
     }

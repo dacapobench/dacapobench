@@ -32,7 +32,6 @@ public class Client implements Runnable {
   private final int pageCount;
   private final boolean verbose;
   private final int port;
-  private final LatencyReporter reporter;
 
   /**
    * The pages to iterate through
@@ -122,13 +121,12 @@ public class Client implements Runnable {
    * @param port TCP port for the tomcat server
    * @throws IOException From creation of the client log file
    */
-  public Client(File logDir, int ordinal, int pageCount, boolean verbose, int port, LatencyReporter reporter) throws IOException {
+  public Client(File logDir, int ordinal, int pageCount, boolean verbose, int port) throws IOException {
     this.logDir = logDir;
     this.ordinal = ordinal;
     this.pageCount = pageCount;
     this.verbose = verbose;
     this.port = port;
-    this.reporter = reporter;
   }
 
   /**
@@ -140,9 +138,9 @@ public class Client implements Runnable {
       for (int i = 0; i < pageCount; i++) {
         for (int p = 0; p < pages.size(); p++) {
           Page page = pages.get(p);
-          reporter.start();
+          LatencyReporter.start(ordinal);
           boolean result = page.fetch(session, null, verbose);
-          reporter.end();
+          LatencyReporter.end(ordinal);
         }
       }
     } catch (Exception e) {
