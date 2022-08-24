@@ -141,8 +141,7 @@ public class Search {
     LatencyReporter.initialize(totalQueries, threads, querySetSize);
 
     for (int j = 0; j < threads; j++) {
-      LatencyReporter lr = new LatencyReporter(j, threads, totalQueries, querySetSize*iterations);
-      new QueryThread(this, "Query" + j, j, threads, totalQuerieSets, index, outBase, queryBase, field, normsField, raw, hitsPerPage, iterations, lr).start();
+      new QueryThread(this, "Query" + j, j, threads, totalQuerieSets, index, outBase, queryBase, field, normsField, raw, hitsPerPage, iterations).start();
     }
     synchronized (this) {
       while (completed != totalQuerieSets*iterations) {
@@ -158,7 +157,7 @@ public class Search {
   class QueryThread extends Thread {
 
     Search parent;
-    int id;
+    int threadID;
     int threadCount;
     int totalQueries;
     String name;
@@ -170,13 +169,12 @@ public class Search {
     boolean raw;
     int hitsPerPage;
     int iterations;
-    LatencyReporter reporter;
 
-    public QueryThread(Search parent, String name, int id, int threadCount, int totalQueries, String index, String outBase, String queryBase, String field,
-        String normsField, boolean raw, int hitsPerPage, int iterations, LatencyReporter reporter) {
+    public QueryThread(Search parent, String name, int threadID, int threadCount, int totalQueries, String index, String outBase, String queryBase, String field,
+        String normsField, boolean raw, int hitsPerPage, int iterations) {
       super(name);
       this.parent = parent;
-      this.id = id;
+      this.threadID = threadID;
       this.threadCount = threadCount;
       this.totalQueries = totalQueries;
       this.name = name;
@@ -188,16 +186,15 @@ public class Search {
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
       this.iterations = iterations;
-      this.reporter = reporter;
     }
 
     public void run() {
       try {
-        int count = totalQueries / threadCount + (id < (totalQueries % threadCount) ? 1 : 0);
+        int count = totalQueries / threadCount + (threadID < (totalQueries % threadCount) ? 1 : 0);
         for (int r = 0; r < iterations; r++) {
-          for (int i = 0, queryId = id; i < count; i++, queryId += threadCount) {
+          for (int i = 0, queryId = threadID; i < count; i++, queryId += threadCount) {
             // make and run query
-            new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage, totalQueries, iterations, reporter).run();
+            new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage, totalQueries, iterations, threadID).run();
           }
         }
       } catch (Exception e) {
@@ -208,39 +205,36 @@ public class Search {
   }
 
   public class QueryProcessor {
-
     Search parent;
     String field;
     int hitsPerPage;
     boolean raw;
-
     DirectoryReader reader;
     IndexSearcher searcher;
     BufferedReader in;
     PrintWriter out;
     int iterations;
     int fivePercent;
-    LatencyReporter reporter;
+    int threadID;
 
-    public QueryProcessor(Search parent, String name, int id, String index, String outBase, String queryBase, String field, String normsField, boolean raw,
-        int hitsPerPage, int totalQueries, int iterations, LatencyReporter reporter) {
+    public QueryProcessor(Search parent, String name, int queryID, String index, String outBase, String queryBase, String field, String normsField, boolean raw,
+        int hitsPerPage, int totalQueries, int iterations, int threadID) {
       this.parent = parent;
+      this.threadID = threadID;
       this.field = field;
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
       this.fivePercent = iterations*totalQueries/20;
       this.iterations = iterations;
-      this.reporter = reporter;
       try {
         reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
         /*if (normsField != null)
           reader = new OneNormsReader(reader, normsField);*/
         searcher = new IndexSearcher(reader);
 
-        String query = queryBase + File.separator + "query" + (id < 10 ? "000" : (id < 100 ? "00" : (id < 1000 ? "0" : ""))) + id + ".txt";
+        String query = queryBase + File.separator + "query" + (queryID < 10 ? "000" : (queryID < 100 ? "00" : (queryID < 1000 ? "0" : ""))) + queryID + ".txt";
         in = new BufferedReader(new FileReader(query));
-        out = new PrintWriter(new BufferedWriter(new FileWriter(outBase + id)));
-
+        out = new PrintWriter(new BufferedWriter(new FileWriter(outBase + queryID)));
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -260,7 +254,7 @@ public class Search {
         if (line.length() == 0)
           break;
 
-        reporter.start();
+        LatencyReporter.start(threadID);
         if (line.equals("OR") || line.equals("AND") || line.equals("NOT") || line.equals("TO"))
           line = line.toLowerCase();
 
@@ -274,7 +268,7 @@ public class Search {
         searcher.search(query, 10);
 
         doPagingSearch(query);
-        reporter.end();
+        LatencyReporter.end(threadID);
       }
 
       reader.close();
