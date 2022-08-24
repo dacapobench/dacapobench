@@ -99,7 +99,7 @@
 	<property name="dacapo.src.dir" value="${basedir}/src"/>
 
     <target name="check-dependencies">
-        <fail message="JDK version 8 is required to build DaCapo.  You appear to be using ${java.specification.version} (${java.version}). Please set JAVA_HOME and your path accordingly.">
+        <fail message="JDK version 8 is required to build DaCapo.  You appear to be using ${java.specification.version} (${java.version}). Please set your path accordingly.">
             <condition>
                 <not>
                     <equals arg1="${java.specification.version}" arg2="1.8"/>
