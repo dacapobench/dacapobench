@@ -37,6 +37,17 @@ public class ExampleCallback extends Callback {
     System.err.flush();
   };
 
+  /**
+   * The workload is about to start issuing requests
+   */
+  public void requestsStarting() {}
+
+    /**
+   * The workload has finished issuing requests.
+   */
+  public void requestsFinished() {}
+
+
   /* let's count the number of requests we observe */
   private int requests = 0;
   synchronized

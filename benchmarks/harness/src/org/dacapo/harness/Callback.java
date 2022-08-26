@@ -189,6 +189,20 @@ public class Callback {
   }
 
   /**
+   * The workload is about to start issuing requests.
+   * 
+   * Some workloads do substantial work prior (e.g. building a
+   * database) prior to issuing requests.  This call brackets
+   * the begining of the request-based behavior.
+   */
+  public void requestsStarting() {}
+
+  /**
+   * The workload has finished issuing requests.
+   */
+  public void requestsFinished() {}
+
+  /**
    * Announce that a request is about to start (called at
    * the start of each request within request-based
    * workloads).
