@@ -9,20 +9,16 @@
 import org.dacapo.harness.Callback;
 import org.dacapo.harness.CommandLineArgs;
 
-/**
- * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * id: $Id: MyCallback.java 738 2009-12-24 00:19:36Z steveb-oss $
- */
-public class MyCallback extends Callback {
+public class ExampleCallback extends Callback {
 
-  public MyCallback(CommandLineArgs args) {
+  public ExampleCallback(CommandLineArgs args) {
     super(args);
   }
 
   /* Immediately prior to start of the benchmark */
   @Override
   public void start(String benchmark) {
-    System.err.println("my hook starting " + (isWarmup() ? "warmup " : "") + benchmark);
+    System.err.println("Example callback starting " + (isWarmup() ? "warmup " : "") + benchmark);
     super.start(benchmark);
   };
 
@@ -30,20 +26,27 @@ public class MyCallback extends Callback {
   @Override
   public void stop(long duration) {
     super.stop(duration);
-    System.err.println("my hook stopped " + (isWarmup() ? "warmup" : ""));
+    System.err.println("Example callback stopping " + (isWarmup() ? "warmup" : ""));
     System.err.flush();
   };
 
   @Override
   public void complete(String benchmark, boolean valid) {
     super.complete(benchmark, valid);
-    System.err.println("my hook " + (valid ? "PASSED " : "FAILED ") + (isWarmup() ? "warmup " : "") + benchmark);
+    System.err.println("Example callback " + (valid ? "PASSED " : "FAILED ") + (isWarmup() ? "warmup " : "") + benchmark + (requests > 0 ? (", observed "+requests+" requests") : ""));
     System.err.flush();
   };
 
+  /* let's count the number of requests we observe */
+  private int requests = 0;
+  synchronized
+  private void inc() {
+    requests++;
+  }
+
   /* Called immediately before a request begins */
   @Override
-  public void requestStart() { /* your code here */}
+  public void requestStart() { inc(); /* your code here */}
 
   /* Called immediately after a request completes */
   @Override
