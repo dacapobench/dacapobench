@@ -98,16 +98,16 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
 +  }
  
 -    System.exit(0);
-+  private static Method dacapoInitialize;
-+  private static Method dacapoStart;
-+  private static Method dacapoEnd;
-+  private static void dacapoInitialize(int transactions, int threads) {
++  private static Method dacapoInitializeLR;
++  private static Method dacapoStartRequest;
++  private static Method dacapoEndRequest;
++  private static void dacapoInitializeLR(int transactions, int threads) {
 +    try {
 +      Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter",
 +          true, Client.class.getClassLoader());
-+      dacapoInitialize = clazz.getMethod("initialize", int.class, int.class);
-+      dacapoStart = clazz.getMethod("start", int.class);
-+      dacapoEnd = clazz.getMethod("end", int.class);
++      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class);
++      dacapoStartRequest = clazz.getMethod("start", int.class);
++      dacapoEndRequest = clazz.getMethod("end", int.class);
 +    } catch (ClassNotFoundException e) {
 +      System.err.println("Failed to access DaCapo latency reporter: "+e);
 +    } catch (NoSuchMethodException e) {
@@ -115,7 +115,7 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
 +    }
 +
 +    try {
-+      dacapoInitialize.invoke(null, transactions, threads);  // only one reporter object
++      dacapoInitializeLR.invoke(null, transactions, threads);  // only one reporter object
 +    } catch (IllegalAccessException e) {
 +      System.err.println("Failed to access DaCapo latency reporter: "+e);
 +    } catch (InvocationTargetException e) {
@@ -123,9 +123,9 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
 +    }
 +  }
 +
-+  public static void dacapoStart(int threadID) {
++  public static void dacapoStartRequest(int threadID) {
 +    try {
-+      dacapoStart.invoke(null, threadID);  // only one reporter object
++      dacapoStartRequest.invoke(null, threadID);  // only one reporter object
 +    } catch (IllegalAccessException e) {
 +      System.err.println("Failed to access DaCapo latency reporter: "+e);
 +    } catch (InvocationTargetException e) {
@@ -133,9 +133,9 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
 +    }
 +  }
 +
-+  public static void dacapoEnd(int threadID) {
++  public static void dacapoEndRequest(int threadID) {
 +    try {
-+      dacapoEnd.invoke(null, threadID);  // only one reporter object
++      dacapoEndRequest.invoke(null, threadID);  // only one reporter object
 +    } catch (IllegalAccessException e) {
 +      System.err.println("Failed to access DaCapo latency reporter: "+e);
 +    } catch (InvocationTargetException e) {
@@ -153,7 +153,7 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17
          opcount = Integer.parseInt(props.getProperty(OPERATION_COUNT_PROPERTY, "0"));
 +        System.err.println("    operations: "+opcount);
 +
-+        dacapoInitialize(opcount, threadcount);
++        dacapoInitializeLR(opcount, threadcount);
 +
        } else {
          if (props.containsKey(INSERT_COUNT_PROPERTY)) {
@@ -251,12 +251,12 @@ diff -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycs
  
          while (((opcount == 0) || (opsdone < opcount)) && !workload.isStopRequested()) {
  
-+          Client.dacapoStart(threadid);
++          Client.dacapoStartRequest(threadid);
            if (!workload.doTransaction(db, workloadstate)) {
              break;
            }
 -
-+          Client.dacapoEnd(threadid);
++          Client.dacapoEndRequest(threadid);
            opsdone++;
 -
 +          progress();
