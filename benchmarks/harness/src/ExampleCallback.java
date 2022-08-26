@@ -40,12 +40,12 @@ public class ExampleCallback extends Callback {
   /**
    * The workload is about to start issuing requests
    */
-  public void requestsStarting() {}
+  public void requestsStarting() { /* your code here */}
 
     /**
    * The workload has finished issuing requests.
    */
-  public void requestsFinished() {}
+  public void requestsFinished() { /* your code here */}
 
 
   /* let's count the number of requests we observe */

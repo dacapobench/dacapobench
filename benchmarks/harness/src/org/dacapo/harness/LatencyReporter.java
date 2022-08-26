@@ -234,6 +234,14 @@ public class LatencyReporter {
     txend[index] = -1;
   }
 
+  public static void requestsStarting() {
+    if (callback != null) callback.requestsStarting();
+  }
+
+  public static void requestsFinished() {
+    if (callback != null) callback.requestsFinished();
+  }
+
   /**
    * A request is about to start.
    * 
