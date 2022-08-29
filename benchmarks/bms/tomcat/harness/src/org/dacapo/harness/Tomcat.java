@@ -169,6 +169,7 @@ public class Tomcat extends Benchmark {
     final Thread[] threads = new Thread[threadCount];
     System.out.println("Creating client threads to issue "+iterations+" rounds of 41 requests ("+(41*iterations)+").");
     LatencyReporter.initialize(41*iterations, threadCount);
+    LatencyReporter.requestsStarting();
     for (int i = 0; i < threadCount; i++) {
       Runnable client = clientConstructor.newInstance(scratch, i, iterationsPerClient + (i < oddIterations ? 1 : 0), getVerbose(), PORT);
       threads[i] = new Thread(client);
@@ -178,7 +179,7 @@ public class Tomcat extends Benchmark {
     for (int i = 0; i < threadCount; i++) {
       threads[i].join();
     }
-    System.out.println();
+    LatencyReporter.requestsFinished();
     System.out.println("Client threads complete ... unloading web application");
     method.invoke(controller, "stopIteration");
   }

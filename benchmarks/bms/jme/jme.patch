@@ -1,6 +1,6 @@
-diff -ur ./build.gradle ../build/build.gradle
---- ./build.gradle	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/build.gradle	2021-04-29 15:45:41.349834432 +1000
+diff '--color=auto' -ur ./build.gradle ../build/build.gradle
+--- ./build.gradle	2022-08-19 09:57:26.000000000 +0000
++++ ../build/build.gradle	2022-08-30 11:52:16.184890908 +0000
 @@ -115,33 +115,10 @@
      into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
  }
@@ -36,9 +36,19 @@ diff -ur ./build.gradle ../build/build.gradle
  clean.dependsOn('cleanMergedJavadoc')
  task cleanMergedJavadoc(type: Delete) {
      delete file('dist/javadoc')
-diff -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
---- ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2021-04-29 15:44:19.633692625 +1000
+Binary files ./.gradle/5.6.4/executionHistory/executionHistory.lock and ../build/.gradle/5.6.4/executionHistory/executionHistory.lock differ
+Binary files ./.gradle/5.6.4/fileHashes/fileHashes.lock and ../build/.gradle/5.6.4/fileHashes/fileHashes.lock differ
+Binary files ./.gradle/buildOutputCleanup/buildOutputCleanup.lock and ../build/.gradle/buildOutputCleanup/buildOutputCleanup.lock differ
+diff '--color=auto' -ur ./.gradle/buildOutputCleanup/cache.properties ../build/.gradle/buildOutputCleanup/cache.properties
+--- ./.gradle/buildOutputCleanup/cache.properties	2022-08-30 11:25:12.495424767 +0000
++++ ../build/.gradle/buildOutputCleanup/cache.properties	2022-08-30 11:52:19.232886244 +0000
+@@ -1,2 +1,2 @@
+-#Tue Aug 30 11:25:12 UTC 2022
++#Tue Aug 30 11:52:19 UTC 2022
+ gradle.version=5.6.4
+diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
+--- ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2022-08-19 09:57:26.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2022-08-30 11:52:16.184890908 +0000
 @@ -463,7 +463,7 @@
       * @param contextType the type of context to create
       */
@@ -48,9 +58,9 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/
      }
  
      /**
-diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
---- ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2021-04-29 16:33:58.875567011 +1000
+diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
+--- ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2022-08-19 09:57:26.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2022-08-30 11:54:27.800689521 +0000
 @@ -47,7 +47,14 @@
  import com.jme3.scene.Spatial.CullHint;
  import com.jme3.system.AppSettings;
@@ -66,17 +76,19 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
  
  /**
   * <code>SimpleApplication</code> is the base class for all jME3 Applications.
-@@ -70,6 +77,9 @@
+@@ -70,6 +77,11 @@
      public static final String INPUT_MAPPING_MEMORY = DebugKeysAppState.INPUT_MAPPING_MEMORY;
      public static final String INPUT_MAPPING_HIDE_STATS = "SIMPLEAPP_HideStats";
  
-+    Method dacapoStart;
-+    Method dacapoEnd;
++    private Method dacapoRequestsStarting;
++    private Method dacapoRequestsFinished;
++    private Method dacapoRequestStart;
++    private Method dacapoRequestEnd;
 +
      protected Node rootNode = new Node("Root Node");
      protected Node guiNode = new Node("Gui Node");
      protected BitmapText fpsText;
-@@ -77,6 +87,8 @@
+@@ -77,6 +89,8 @@
      protected FlyByCamera flyCam;
      protected boolean showSettings = true;
      final private AppActionListener actionListener = new AppActionListener();
@@ -85,14 +97,16 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
  
      private class AppActionListener implements ActionListener {
  
-@@ -103,6 +115,15 @@
+@@ -103,6 +117,17 @@
  
      public SimpleApplication( AppState... initialStates ) {
          super(initialStates);
 +        try {
 +            Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter", true, SimpleApplication.class.getClassLoader());
-+            dacapoStart = clazz.getMethod("start", int.class);
-+            dacapoEnd = clazz.getMethod("end", int.class);
++            dacapoRequestStart = clazz.getMethod("start", int.class);
++            dacapoRequestEnd = clazz.getMethod("end", int.class);
++            dacapoRequestsStarting = clazz.getDeclaredMethod("requestsStarting", null);
++            dacapoRequestsFinished = clazz.getDeclaredMethod("requestsFinished", null);
 +        } catch (ClassNotFoundException e) {
 +            System.err.println("Failed to access DaCapo latency reporter: "+e);
 +        } catch (NoSuchMethodException e) {
@@ -101,7 +115,7 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
      }
  
      @Override
-@@ -123,6 +144,7 @@
+@@ -123,6 +148,7 @@
          }
          //re-setting settings they can have been merged from the registry.
          setSettings(settings);
@@ -109,27 +123,47 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
          super.start();
      }
          
-@@ -240,11 +262,32 @@
+@@ -240,11 +266,52 @@
          simpleInitApp();
      }
  
++    public void dacapoStarting() {
++        try {
++          dacapoRequestsStarting.invoke(null);
++        } catch (IllegalAccessException e) {
++          System.err.println("Failed to access DaCapo latency reporter: "+e);
++        } catch (InvocationTargetException e) {
++          System.err.println("Failed to invoke LatencyReporter.requestsStarting(): "+e);
++        }
++    }
++    
++    public void dacapoFinished() {
++        try {
++          dacapoRequestsFinished.invoke(null);
++        } catch (IllegalAccessException e) {
++          System.err.println("Failed to access DaCapo latency reporter: "+e);
++        } catch (InvocationTargetException e) {
++          System.err.println("Failed to invoke LatencyReporter.requestsFinished(): "+e);
++        }
++    }
++
 +    public void dacapoStart() {
 +        try {
-+            dacapoStart.invoke(null, 0);  // only one reporter object
++            dacapoRequestStart.invoke(null, 0);  // only one reporter object
 +        } catch (IllegalAccessException e) {
 +            System.err.println("Failed to access DaCapo latency reporter: "+e);
 +        } catch (InvocationTargetException e) {
-+            System.err.println("Failed to access DaCapo latency reporter: "+e);
++            System.err.println("Failed to invoke LatencyReporter.start(): "+e);
 +        }
 +    }
 +
 +    public void dacapoEnd() {
 +        try {
-+            dacapoEnd.invoke(null, 0);  // only one reporter object
++            dacapoRequestEnd.invoke(null, 0);  // only one reporter object
 +        } catch (IllegalAccessException e) {
 +            System.err.println("Failed to access DaCapo latency reporter: "+e);
 +        } catch (InvocationTargetException e) {
-+            System.err.println("Failed to access DaCapo latency reporter: "+e);
++            System.err.println("Failed to invoke LatencyReporter.end(): "+e);
 +        }
 +    }
 +
@@ -142,7 +176,7 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
          if (speed == 0 || paused) {
              return;
          }
-@@ -256,7 +299,8 @@
+@@ -256,7 +323,8 @@
          stateManager.update(tpf);
  
          // simple update and root node
@@ -152,7 +186,7 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
  
          if (prof!=null) prof.appStep(AppStep.SpatialUpdate);
          rootNode.updateLogicalState(tpf);
-@@ -291,6 +335,29 @@
+@@ -291,6 +359,30 @@
  
      public abstract void simpleInitApp();
  
@@ -168,6 +202,7 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
 +            /* we're done; terminate */
 +            synchronized (context){
 +                System.out.println();
++                dacapoFinished();
 +                System.out.println("Rendered "+frameCount+" frames for "+this.getClass().getSimpleName());
 +                context.notify();
 +                this.stop();
@@ -182,9 +217,9 @@ diff -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/
      public void simpleUpdate(float tpf) {
      }
  
-diff -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
---- ./jme3-core/src/main/java/com/jme3/system/AppSettings.java	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2021-04-29 15:44:19.633692625 +1000
+diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
+--- ./jme3-core/src/main/java/com/jme3/system/AppSettings.java	2022-08-19 09:57:26.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2022-08-30 11:52:16.184890908 +0000
 @@ -266,8 +266,8 @@
      public static final String JOAL = "JOAL";
  
@@ -196,9 +231,9 @@ diff -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme
          defaults.put("BitsPerPixel", 24);
          defaults.put("Frequency", 60);
          defaults.put("DepthBits", 24);
-diff -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
---- ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2021-04-29 16:35:08.399554029 +1000
+diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
+--- ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2022-08-19 09:57:24.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2022-08-30 11:52:16.184890908 +0000
 @@ -46,6 +46,7 @@
      private long previousTime;
      private float tpf;
@@ -224,9 +259,9 @@ diff -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-
      }
      
      @Override
-diff -ur ./jme3-examples/build.gradle ../build/jme3-examples/build.gradle
---- ./jme3-examples/build.gradle	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-examples/build.gradle	2021-04-29 16:36:18.687550462 +1000
+diff '--color=auto' -ur ./jme3-examples/build.gradle ../build/jme3-examples/build.gradle
+--- ./jme3-examples/build.gradle	2022-08-19 09:57:26.000000000 +0000
++++ ../build/jme3-examples/build.gradle	2022-08-30 11:52:16.184890908 +0000
 @@ -4,6 +4,7 @@
      ext.mainClass = 'jme3test.TestChooser'
  }
@@ -246,9 +281,9 @@ diff -ur ./jme3-examples/build.gradle ../build/jme3-examples/build.gradle
      compile project(':jme3-networking')
      compile project(':jme3-niftygui')
      compile project(':jme3-plugins')
-diff -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
---- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2021-04-29 16:54:18.652110832 +1000
+diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
+--- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2022-08-19 09:57:26.000000000 +0000
++++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2022-08-30 11:52:16.184890908 +0000
 @@ -48,26 +48,21 @@
  import java.net.URL;
  import java.net.URLConnection;
@@ -508,9 +543,9 @@ diff -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-e
      }
  
      protected void addDisplayedClasses(Vector<Class> classes) {
-diff -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
---- ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2021-04-29 16:39:57.775588637 +1000
+diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
+--- ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2022-08-19 09:57:24.000000000 +0000
++++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2022-08-30 11:52:16.184890908 +0000
 @@ -44,6 +44,7 @@
  import com.jme3.scene.Node;
  import com.jme3.scene.Spatial;
@@ -537,26 +572,27 @@ diff -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ..
  //      setDisplayFps(false);
  //      setDisplayStatView(false);
  
-@@ -156,6 +156,9 @@
+@@ -156,6 +156,10 @@
          fpp.addFilter(water3);
  
          viewPort.addProcessor(fpp);
 +        System.out.println("...done.");
 +
++        dacapoStarting();
 +        dacapoStart();
  
          //fpp.setNumSamples(4);
      }
-@@ -212,5 +215,6 @@
+@@ -212,5 +216,6 @@
  
      @Override
      public void simpleUpdate(float tpf) {
 +        super.simpleUpdate(tpf);
      }
  }
-diff -ur ./jme3-networking/build.gradle ../build/jme3-networking/build.gradle
---- ./jme3-networking/build.gradle	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-networking/build.gradle	2021-04-29 15:44:19.637692630 +1000
+diff '--color=auto' -ur ./jme3-networking/build.gradle ../build/jme3-networking/build.gradle
+--- ./jme3-networking/build.gradle	2022-08-19 09:57:26.000000000 +0000
++++ ../build/jme3-networking/build.gradle	2022-08-30 11:52:16.184890908 +0000
 @@ -4,6 +4,7 @@
  
  dependencies {
@@ -565,9 +601,9 @@ diff -ur ./jme3-networking/build.gradle ../build/jme3-networking/build.gradle
  }
  
  javadoc {
-diff -ur ./jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
---- ./jme3-plugins/build.gradle	2021-04-29 14:10:04.000000000 +1000
-+++ ../build/jme3-plugins/build.gradle	2021-04-29 15:44:19.637692630 +1000
+diff '--color=auto' -ur ./jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
+--- ./jme3-plugins/build.gradle	2022-08-19 09:57:26.000000000 +0000
++++ ../build/jme3-plugins/build.gradle	2022-08-30 11:52:16.184890908 +0000
 @@ -17,4 +17,8 @@
      compile project(':jme3-core')
      compile 'com.google.code.gson:gson:2.8.1'

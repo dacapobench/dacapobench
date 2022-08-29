@@ -76,7 +76,6 @@ public class Launcher {
 
   private static void setProperties(File data, File scratch, int threads) {
     System.setProperty("dacapo.client.threads", Integer.toString(threads));
-    System.setProperty("dacapo.latency.file", scratch.getAbsolutePath()+File.separator+"latency.out");
     System.setProperty("dacapo.daytrader.ops", new File(root, "operations.csv").getPath());
 
     System.setProperty("jboss.home.dir", new File(root, DIRECTORY).getPath());

@@ -30,24 +30,22 @@ public class LatencyReporter {
   static final int LATENCY_BUFFER_SIZE = 1000 * TAIL_PRECISION;
   static final int NS_COARSENING = 1;   // measure at this precision
   static final int US_DIVISOR = 1000/NS_COARSENING;
-
+  
   private int idxOffset;
   private int idx;
-  private long start;
   private double max;
 
   static float[] txbegin;
   static float[] txend;
+  private static Integer globalIdx = 0;
+  private static int batchSize = 0;
   static double fileMax;
   static LatencyReporter[] reporters;
   private static long timerBase = 0;  // used to improve precision (when using floats)
   private static Callback callback = null;
 
   public LatencyReporter(int threadID, int threads, int transactions) {
-    this(threadID, threads, transactions, 1);
-  }
-  public LatencyReporter(int threadID, int threads, int transactions, int batchSize) {
-    idx = idxOffset = getBaseIdx(threadID, threads, transactions, batchSize);
+    idx = idxOffset = getBaseIdx(threadID, threads, transactions);
     max = 0;
     reporters[threadID] = this;
   }
@@ -55,16 +53,13 @@ public class LatencyReporter {
   public static void setCallback(Callback cb) {
     callback = cb;
   }
-
-  public static void initialize(int threads) {
-    timerBase = System.nanoTime();
-  }
   
   public static void initialize(int transactions, int threads) {
     initialize(transactions, threads, 1);
   }
 
-  public static void initialize(int transactions, int threads, int batchSize) {
+  public static void initialize(int transactions, int threads, int batch) {
+    batchSize = batch;
     timerBase = System.nanoTime();
     if (transactions > LATENCY_BUFFER_SIZE) {
       System.err.println("Too many transactions. "+transactions+" > LATENCY_BUFFER_SIZE ("+LATENCY_BUFFER_SIZE+")");
@@ -75,7 +70,7 @@ public class LatencyReporter {
       txend = new float[transactions];
       reporters = new LatencyReporter[threads];
       for (int i = 0; i < threads; i++) {
-        reporters[i] = new LatencyReporter(i, threads, transactions, batchSize);
+        reporters[i] = new LatencyReporter(i, threads, transactions);
       }
     }
   }
@@ -84,7 +79,7 @@ public class LatencyReporter {
     return reporters;
   }
 
-  private static int getBaseIdx(int threadID, int threads, int transactions, int batchSize) {
+  private static int getBaseIdx(int threadID, int threads, int transactions) {
     int batches = transactions / batchSize;
     if (transactions % batchSize != 0) {
       System.out.println("Number of transactions is not multiple of batch size");
@@ -99,33 +94,19 @@ public class LatencyReporter {
     }
   }
 
-
-  /*
-   * We explicitly track the max only because it is necessary to do so in cases
-   * where we need to sample (otherwise we can trivially find the max as the
-   * highest value in our array of latencies).
-   */
-  private static double getMax() {
-    if (System.getProperty("dacapo.latency.file") != null)
-      return fileMax/US_DIVISOR;
-    
-    double max = 0;
-    for (LatencyReporter r : reporters)
-      if (r.max > max) max = r.max;
-    return max/US_DIVISOR;
-  }
-
   public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
     if (timerBase != 0) {
-      int events = 0;
+      int events = txbegin.length;
 
-      if (System.getProperty("dacapo.latency.file") != null) { // case where benchmark saves latency to file
-        events = readLatencyFile();
-      } else {
+      // check values were correctly added to txbegin and txend arrays
+      if (batchSize > 1) {
+        int e = 0;
         for (int i = 0; i < reporters.length; i++)
-          events += (reporters[i].idx-reporters[i].idxOffset);
+          e += (reporters[i].idx-reporters[i].idxOffset);
+        if (e != events) {
+          System.err.println("Warning: latency report event count disagreement.  Allocated "+events+" but used "+e);
+        }
 
-        // check values were correctly added to txbegin and txend arrays
         for (int i = 0; i < reporters.length; i++) {
           int tgt = (i == reporters.length - 1) ? txbegin.length : reporters[i+1].idxOffset;
           if (reporters[i].idx != tgt) {
@@ -135,8 +116,8 @@ public class LatencyReporter {
       }
 
       // raw latency numbers
-      int[] latency = new int[txbegin.length];
-      for(int i = 0; i < txbegin.length; i++) {
+      int[] latency = new int[events];
+      for(int i = 0; i < events; i++) {
         latency[i] = (int) ((txend[i] - txbegin[i])/1000);
       }
       if (dumpLatencyCSV)
@@ -146,11 +127,11 @@ public class LatencyReporter {
       printLatency(latency, txbegin, events, "simple", iteration);
 
       // synthetically metered --- each query start is evenly spaced, so delays will compound
-      float[] sorted = Arrays.copyOf(txbegin, txbegin.length);
+      float[] sorted = Arrays.copyOf(txbegin, events);
       Arrays.sort(sorted);
       double len = sorted[sorted.length-1]-sorted[0];
       double synthstart = 0;
-      for(int i = 0; i < txbegin.length; i++) {
+      for(int i = 0; i < events; i++) {
         int pos = Arrays.binarySearch(sorted, txbegin[i]);
         synthstart = sorted[0] + (len*(double) pos / (double) txbegin.length);
         int actual = (int) ((txend[i] - txbegin[i])/1000);
@@ -221,37 +202,55 @@ public class LatencyReporter {
     }
   }
 
-  private int start() {
-    int index = idx++;
-    _start(index);
-    return index;
-  }
 
-  private void _start(int index) {
-    if (callback != null) callback.requestStart();
-    start = (System.nanoTime() - timerBase)/NS_COARSENING;
-    txbegin[index] = (float) start;
-    txend[index] = -1;
-  }
+
 
   public static void requestsStarting() {
+    System.err.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
   }
 
   public static void requestsFinished() {
+    System.err.println("Completed requests");
     if (callback != null) callback.requestsFinished();
   }
 
   /**
-   * A request is about to start.
+   * Start a request (using a global index).
+   * 
+   * @return the index
+   */
+  public static int start() {
+    int index = 0;
+    synchronized (globalIdx) {
+      index = globalIdx++;
+    }
+    _start(index);
+    return index;
+  }
+
+  /**
+   * Start a request (using a thread-local index). This avoids the
+   * synchronization of the global index, but only works when the
+   * workload has exactly the same number of requests per thread.
    * 
    * @param threadID the thread in which the request will start.
    * @return a unique index into a thread-local result table.
    */
   public static int start(int threadID) {
-    return reporters[threadID].start();
+    int index = 0;
+    index = reporters[threadID].idx++;
+    _start(index);
+    return index;
   }
-  
+
+  private static void _start(int index) {
+    if (callback != null) callback.requestStart(index);
+    long start = (System.nanoTime() - timerBase)/NS_COARSENING;
+    txbegin[index] = (float) start;
+    txend[index] = -1;
+  }
+
   /**
    * A request has just completed.
    * 
@@ -264,51 +263,22 @@ public class LatencyReporter {
   /**
    * A request has just completed.
    * 
-   * @param threadID the thread in which the request ran.
-   * @param index the thread-local index for the request that completed.
+   * @param index the global index for the request that completed.
    */
-  public static void end(int threadID, int index) {
-    reporters[threadID].endI(index);
+  public static void endIdx(int index) {
+    _end(index);
   }
 
   private void end() {
-    endI(idx-1);
+    float end = _end(idx - 1);
+    if (end > max) max = end;
   }
 
-  private void endI(int index) {
+  private static float _end(int index) {
     long end = (System.nanoTime() - timerBase)/NS_COARSENING;
     txend[index] = (float) end;
-    if (txend[index] > max) max = txend[index];
-    if (callback != null) callback.requestEnd();
-  }
 
-  private static int readLatencyFile() {
-    int idx = 0;
-    try {
-      File file = new File(System.getProperty("dacapo.latency.file"));
-      BufferedReader latencyFile = new BufferedReader(new FileReader(file));
-
-      String line = latencyFile.readLine();
-      int entries = Integer.valueOf(line.trim());
-      txbegin = new float[entries];
-      txend = new float[entries];
-      fileMax = 0;
-
-      line = latencyFile.readLine();
-      while(line != null) {
-        String[] v = line.split(", ");
-        txbegin[idx] = Float.valueOf(v[0]);
-        txend[idx] = Float.valueOf(v[1]);
-        float l = txend[idx]-txbegin[idx];
-        if (l > fileMax) fileMax = l;
-        line = latencyFile.readLine();
-        idx++;
-      }
-      latencyFile.close();
-
-    } catch(IOException ioe) {
-      ioe.printStackTrace();
-    }
-    return idx;
+    if (callback != null) callback.requestEnd(index);
+    return txend[index];
   }
 }

@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java
 --- ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2022-08-26 08:43:33.883597181 +0000
++++ ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2022-08-26 09:29:25.268760499 +0000
 @@ -587,7 +587,8 @@
  
        return Status.OK;
@@ -13,7 +13,7 @@ diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/Cassand
      return Status.ERROR;
 diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java
 --- ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2022-08-26 08:43:33.883597181 +0000
++++ ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2022-08-26 09:29:25.268760499 +0000
 @@ -56,7 +56,7 @@
   */
  public class CassandraCQLClientTest {
@@ -25,7 +25,7 @@ diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/Cassand
    private final static String HOST = "localhost";
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2022-08-26 08:45:56.611311314 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2022-08-26 09:35:45.768307718 +0000
 @@ -33,6 +33,9 @@
  import java.util.concurrent.CountDownLatch;
  import java.util.concurrent.TimeUnit;
@@ -171,14 +171,13 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
    }
  
    private static List<ClientThread> initDb(String dbname, Properties props, int threadcount,
-@@ -409,19 +479,26 @@
+@@ -409,19 +479,25 @@
      final List<ClientThread> clients = new ArrayList<>(threadcount);
      try (final TraceScope span = tracer.newScope(CLIENT_INIT_SPAN)) {
        int opcount;
 +
        if (dotransactions) {
          opcount = Integer.parseInt(props.getProperty(OPERATION_COUNT_PROPERTY, "0"));
-+        System.err.println("    operations: "+opcount);
 +
 +        dacapoInitializeLR(opcount, threadcount);
 +        dacapoRequestsStarting();
@@ -198,7 +197,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
        for (int threadid = 0; threadid < threadcount; threadid++) {
          DB db;
          try {
-@@ -506,13 +583,13 @@
+@@ -506,13 +582,13 @@
      try {
        Properties projectProp = new Properties();
        projectProp.load(classLoader.getResourceAsStream("project.properties"));
@@ -216,7 +215,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
      try {
        Class workloadclass = classLoader.loadClass(props.getProperty(WORKLOAD_PROPERTY));
  
-@@ -528,15 +605,8 @@
+@@ -528,15 +604,8 @@
  
    private static Properties parseArguments(String[] args) {
      Properties props = new Properties();
@@ -232,7 +231,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
      if (args.length == 0) {
        usageMessage();
        System.out.println("At least one argument specifying a workload is required.");
-@@ -565,9 +635,11 @@
+@@ -565,6 +634,7 @@
          props.setProperty(TARGET_PROPERTY, String.valueOf(ttarget));
          argindex++;
        } else if (args[argindex].compareTo("-load") == 0) {
@@ -240,13 +239,9 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
          props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(false));
          argindex++;
        } else if (args[argindex].compareTo("-t") == 0) {
-+        System.err.println("Running transactions... ");
-         props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(true));
-         argindex++;
-       } else if (args[argindex].compareTo("-s") == 0) {
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2022-08-26 08:43:33.883597181 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2022-08-26 09:29:25.268760499 +0000
 @@ -44,6 +44,7 @@
    private Properties props;
    private long targetOpsTickNs;
@@ -319,7 +314,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.ja
        if (!spinSleep) {
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2022-08-26 08:43:33.883597181 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2022-08-26 09:29:25.268760499 +0000
 @@ -97,9 +97,11 @@
          }
        }
@@ -337,7 +332,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java 
  
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2022-08-26 08:43:33.883597181 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2022-08-26 09:29:25.268760499 +0000
 @@ -617,9 +617,9 @@
  
        } else {
@@ -352,7 +347,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreW
  
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2022-08-26 08:43:33.883597181 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2022-08-26 09:29:25.268760499 +0000
 @@ -309,11 +309,11 @@
    
    /** Name and default value for the timestamp key property. */

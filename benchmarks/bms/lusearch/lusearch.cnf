@@ -11,7 +11,7 @@ size small args "-index","${DATA}/lusearch/index-default",
   thread-limit 8
   output 
     stdout digest 0x6c9ba3e8f57e1cfd67b7e9d193e4f5f961c48fd4,
-    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    stderr digest 0x7caa3edffd820188daa7f10f840b0f876b823ba9,
     "lusearch.out0" digest(text) 0x7e2ecfa31dd989dcbb03561163f3582947e669c0,
     "lusearch.out1" digest(text) 0x840627a9597bec1b9b0476847973126211926670,
     "lusearch.out2" digest(text) 0x1ad7bd7ee94e952ed4dec761480a70a39ce8c09e,
@@ -30,7 +30,7 @@ size default args "-index","${DATA}/lusearch/index-default",
   thread-limit 2048
   output 
     stdout     digest 0x76ab115e7bd1e9a45c7dafa5f3008710b858389e,
-    stderr     digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    stderr     digest 0x82a0a47a9fbccbbfd3aa4e95fd3804ca67dd7c30,
     "lusearch.out0" digest(text) 0x7e2ecfa31dd989dcbb03561163f3582947e669c0,
     "lusearch.out265" digest(text) 0xd519bbc1ab2f1136f68235092fe39eae012f64e4,
     "lusearch.out511" digest(text) 0xb5c8ad5365dc0e5f44bb2f0239571b8963851b7b,
@@ -51,28 +51,7 @@ size large args "-index","${DATA}/lusearch/index-default",
   thread-limit 2048
   output 
     stdout     digest 0x76ab115e7bd1e9a45c7dafa5f3008710b858389e,
-    stderr     digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-    "lusearch.out0" digest(text) 0x7e2ecfa31dd989dcbb03561163f3582947e669c0,
-    "lusearch.out265" digest(text) 0xd519bbc1ab2f1136f68235092fe39eae012f64e4,
-    "lusearch.out511" digest(text) 0xb5c8ad5365dc0e5f44bb2f0239571b8963851b7b,
-    "lusearch.out767" digest(text) 0xf523869f626f0478ed4bd73c5f01ebc503de82f9,
-    "lusearch.out1023" digest(text) 0xb1e145ce251d37fc681e571b92887f7ea39122b5,
-    "lusearch.out1279" digest(text) 0x8fa42713ecbdde3b3999ece834dabec6a4bbbb83,
-    "lusearch.out1535" digest(text) 0xad41051b2320b36daf083f46b2d2826ab1b23db9,
-    "lusearch.out1791" digest(text) 0x85c71a631171d7e301b1d21bb0d536da90463c40,
-    "lusearch.out2047" digest(text) 0xcd7e95aaf059ee46e6cb67550d2d6c1326c1cd76;
-
-size xlarge args "-index","${DATA}/lusearch/index-default",
-                "-queries", "${DATA}/lusearch/queries",
-                "-output", "${SCRATCH}/lusearch.out",
-                "-totalquerysets", "2048",
-                "-querySetSize", "256",
-                "-iterations", "100",
-                "-threads", "${THREADS}"
-  thread-limit 2048
-  output 
-    stdout     digest 0x76ab115e7bd1e9a45c7dafa5f3008710b858389e,
-    stderr     digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    stderr     digest 0xd0400350f3cacaf7dc75427e6ac0a86a905c99a0,
     "lusearch.out0" digest(text) 0x7e2ecfa31dd989dcbb03561163f3582947e669c0,
     "lusearch.out265" digest(text) 0xd519bbc1ab2f1136f68235092fe39eae012f64e4,
     "lusearch.out511" digest(text) 0xb5c8ad5365dc0e5f44bb2f0239571b8963851b7b,
@@ -93,7 +72,7 @@ size huge args "-index","${DATA}/lusearch/index-enwiki",
   thread-limit 2048
   output 
     stdout     digest 0x76ab115e7bd1e9a45c7dafa5f3008710b858389e,
-    stderr     digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    stderr     digest 0xd0400350f3cacaf7dc75427e6ac0a86a905c99a0,
     "lusearch.out0" digest(text) 0x1c22ebd3f8828969d694014499aadd62a777117b,
     "lusearch.out265" digest(text) 0xbbcbed1d0bc6115d09d992265833f59d8fedff30,
     "lusearch.out511" digest(text) 0x494989d87e055892f5202d1f1505667c9ef1e657,
@@ -103,7 +82,6 @@ size huge args "-index","${DATA}/lusearch/index-enwiki",
     "lusearch.out1535" digest(text) 0xd216d873b8c7ead7d505a716b124455bfd7bd026,
     "lusearch.out1791" digest(text) 0x26c156d9172734bfaece621807f4e3436ea4dc70,
     "lusearch.out2047" digest(text) 0x4d4216dc13cbecb2b5bcd4119a8226ad688cd1e5;
-
 
 
 description

@@ -57,7 +57,6 @@ public class Tradebeans extends Benchmark {
     // Hide server starting messages
     emptyOutput();
 
-    LatencyReporter.initialize(threads);
     initializeMethod.invoke(null, data, scratch, threads, logNumSessions, timeoutms, true);
 
     // stdout for iterate

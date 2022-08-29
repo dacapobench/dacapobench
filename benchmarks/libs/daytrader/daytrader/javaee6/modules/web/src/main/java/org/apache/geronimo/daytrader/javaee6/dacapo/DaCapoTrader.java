@@ -21,7 +21,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.lang.ClassLoader;
 
 import org.apache.geronimo.daytrader.javaee6.core.api.*;
 import org.apache.geronimo.daytrader.javaee6.core.direct.*;
@@ -118,6 +117,7 @@ public class DaCapoTrader extends Thread {
         consumed[1] = 0;
         System.out.println(DaCapoDBBuilder.maker + "Finished repopulating database");
         System.out.println(DaCapoDBBuilder.maker + "Running " + tradeSessions.length + " trade sessions " + (soap ? "from client via soap" : "directly on server"));
+        LatencyReporter.starting();
       }
       if (VERBOSE) System.err.println("[" + threadID + "] reached barrier: " + ordinal);
       consumed.notify();
@@ -163,8 +163,10 @@ public class DaCapoTrader extends Thread {
         available = true;
       } else {              // we're done
         consumed[0]++;
-        if (alreadyConsumed == tradeSessions.length + threads - 1)
+        if (alreadyConsumed == tradeSessions.length + threads - 1) {
+          LatencyReporter.finished();
           printReport();
+        }
       }
       consumed.notify();
     }
@@ -198,8 +200,6 @@ public class DaCapoTrader extends Thread {
       if (i != OP_NQ)
         System.out.print(DaCapoDBBuilder.maker + "\t" + OP_NAMES[i] + " " + dots.substring(OP_NAMES[i].length()) + " " + String.format("%5d", opCount[i]) + " " + String.format("(%4.1f%%)%n",  100 * ((float) opCount[i] / (total - nested))));
     }
-    LatencyReporter.report();
-//    System.out.flush();
   }
 
   public static void initializeTrade(final int logNumSessions) {

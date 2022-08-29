@@ -139,6 +139,7 @@ public class Search {
     completed = 0;
     int totalQueries = totalQuerieSets * iterations * querySetSize;
     LatencyReporter.initialize(totalQueries, threads, querySetSize);
+    LatencyReporter.requestsStarting();
 
     for (int j = 0; j < threads; j++) {
       new QueryThread(this, "Query" + j, j, threads, totalQuerieSets, index, outBase, queryBase, field, normsField, raw, hitsPerPage, iterations).start();
@@ -152,6 +153,7 @@ public class Search {
       }
       System.out.println();
     }
+    LatencyReporter.requestsFinished();
   }
 
   class QueryThread extends Thread {

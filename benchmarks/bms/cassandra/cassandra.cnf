@@ -4,16 +4,16 @@ benchmark cassandra
 
 size small args "workload-small", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0xfef0afc5055321c9f8118deefa917724eabe5064;
+           stderr digest 0x2ccb6dd6b92a231f04c43f82988dd9277a278b72;
 size default args "workload-default", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0x8e4d5fdaaffcfb8bebcb240bb5a194e8da3b923c;
+           stderr digest 0x889ff68348c2eca934e601276986fca1e2bc418d;
 size large args "workload-large", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0xddfb36e1e394a8845b03de0a7d51d1f899dcfa42;
+           stderr digest 0xe58b5849c24e61627a4d1adad3ee7b6b70a86be3;
 size huge args "workload-huge", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0x64897a634a4b770e77f1e930176601fbab236a3b;
+           stderr digest 0x32d8e0440dbdbaa1d1e353c0253cb41dde1340a3;
 
 description
   short	     "Apache Cassandra is a highly-scalable partitioned row store.",

@@ -6,25 +6,25 @@ size small args "3", "5"
   threads 1      // per available processor
   thread-limit 32
   output stdout  digest 0x221b968a54790b9e2b807274467ea82b6617e5e5,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stderr  digest 0x335f0e66cf39d71f444de34ee490a02d80ac5772;
 
 size default args "10", "100"
   threads 1      // per available processor
   thread-limit 2048
   output stdout  digest 0xd1e7a1569682ab8843c7cd2193df6453a6a6d9b3,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stderr  digest 0xa6ee2fb028e29c2431f375e86b1d4199246eded8;
 
 size large args "13", "200"
   threads 1      // per available processor
   thread-limit 8192
   output stdout  digest 0x284c9a2ed2446ec4bf41bf69bf89fea5b091aeab,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stderr  digest 0x9091250ce46ff1ad0f8c4b141b2ea34acac9fc0e;
 
 size huge args "15", "600"
   threads 1      // per available processor
   thread-limit 32768
   output stdout  digest 0x1f68c051324dd7bf4a666391fe2fe491517eb2bf,
-         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stderr  digest 0x512d925c000fddf629d46c89d640f4f217901a9b;
 
 description
   short		"Tradebeans EJB Daytrader benchmark",

@@ -206,13 +206,17 @@ public class Callback {
    * Announce that a request is about to start (called at
    * the start of each request within request-based
    * workloads).
+   * 
+   * @param id A unique ID for the request.
    */
-  public void requestStart() {}
+  public void requestStart(int id) {}
 
   /**
    * Announce that a request has just ended (called at
    * the completion of each request within request-based
    * workloads).
+   * 
+   * @param id A unique ID for the request.
    */
-  public void requestEnd() {}
+  public void requestEnd(int id) {}
 }

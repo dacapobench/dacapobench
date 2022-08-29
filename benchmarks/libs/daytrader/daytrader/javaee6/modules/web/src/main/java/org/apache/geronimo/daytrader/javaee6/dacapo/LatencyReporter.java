@@ -7,52 +7,87 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.lang.ClassLoader;
+import java.net.URLClassLoader;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
 public class LatencyReporter {
+  private static Method dacapoInitializeLR;
+  private static Method dacapoRequestsStarting;
+  private static Method dacapoRequestsFinished;
+  private static Method dacapoRequestStart;
+  private static Method dacapoRequestEnd;
+
   static final int NS_COARSENING = 1; // measure at this precision
 
-  private static float[] txbegin;
-  private static float[] txend;
-  private static Integer globalIdx = 0;
-  private static long timerBase;
+  static void initialize(int threads, int logNumSessions) {
+    int transactions = getOperations(logNumSessions);
 
-  static void initialize(int logNumSessions) {
-    int operations = getOperations(logNumSessions);
-    txbegin = new float[operations];
-    txend = new float[operations];
-    timerBase = System.nanoTime();
-    globalIdx = 0;
+    /* Get references to each of the latency reporter methods */
+    try {
+      Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter",
+          true, ClassLoader.getSystemClassLoader());
+      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class);
+      dacapoRequestStart = clazz.getDeclaredMethod("start", null);
+      dacapoRequestEnd = clazz.getMethod("endIdx", int.class);
+      dacapoRequestsStarting = clazz.getDeclaredMethod("requestsStarting", null);
+      dacapoRequestsFinished = clazz.getDeclaredMethod("requestsFinished", null);
+    } catch (ClassNotFoundException e) {
+      System.err.println("Failed to resolve DaCapo latency reporter class: "+e);
+    } catch (NoSuchMethodException e) {
+      System.err.println("Failed to resolve methods within DaCapo latency reporter: "+e);
+    }
+
+    /* Initialize the latency reporter */
+    try {
+      dacapoInitializeLR.invoke(null, transactions, threads);
+    } catch (IllegalAccessException e) {
+      System.err.println("Failed to access DaCapo latency reporter: "+e);
+    } catch (InvocationTargetException e) {
+      System.err.println("Failed to invoke LatencyReporter.initialize(): "+e);
+    }
+  }
+
+  static void starting() {
+    try {
+      dacapoRequestsStarting.invoke(null);
+    } catch (IllegalAccessException e) {
+      System.err.println("Failed to access DaCapo latency reporter: "+e);
+    } catch (InvocationTargetException e) {
+      System.err.println("Failed to invoke LatencyReporter.requestsStarting(): "+e);
+    }
+  }
+
+  static void finished() {
+    try {
+      dacapoRequestsFinished.invoke(null);
+    } catch (IllegalAccessException e) {
+      System.err.println("Failed to access DaCapo latency reporter: "+e);
+    } catch (InvocationTargetException e) {
+      System.err.println("Failed to invoke LatencyReporter.requestsFinished(): "+e);
+    }
   }
 
   static int start() {
-    int index = 0;
-    synchronized (globalIdx) {
-      index = globalIdx++;
-    }
-    double start = (System.nanoTime() - timerBase) / NS_COARSENING;
-    txbegin[index] = (float) start;
-    // long start_cast = Double.valueOf(txbegin[index]).longValue();
-    // if (start_cast != start) {
-    //   System.err.println("WARNING: Timing precision error: " + start + " != " + start_cast);
-    // }
-    return index;
-  }
-
-  static void end(int index) {
-    long end = (System.nanoTime() - timerBase) / NS_COARSENING;
-    txend[index] = (float) end;
-  }
-
-  static void report() {
     try {
-      File file = new File(System.getProperty("dacapo.latency.file"));
-      BufferedWriter output = new BufferedWriter(new FileWriter(file));
-      output.write(Integer.toString(txbegin.length)+System.lineSeparator());
-      for (int i = 0; i < txbegin.length; i++) {
-        output.write(Float.toString(txbegin[i])+", "+Float.toString(txend[i])+System.lineSeparator());
-      }
-      output.close();
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
+      Object idx = dacapoRequestStart.invoke(null);
+      return (Integer) idx;
+    } catch (IllegalAccessException e) {
+      System.err.println("Failed to access DaCapo latency reporter: "+e);
+    } catch (InvocationTargetException e) {
+      System.err.println("Failed to invoke LatencyReporter.start(): "+e);
+    }
+    return -1;
+  }
+
+  static void end(int idx) {
+    try {
+      dacapoRequestEnd.invoke(null, idx);
+    } catch (IllegalAccessException e) {
+      System.err.println("Failed to access DaCapo latency reporter: "+e);
+    } catch (InvocationTargetException e) {
+      System.err.println("Failed to invoke LatencyReporter.end("+idx+"): "+e);
     }
   }
 

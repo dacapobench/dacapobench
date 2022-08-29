@@ -57,9 +57,9 @@ public class ExampleCallback extends Callback {
 
   /* Called immediately before a request begins */
   @Override
-  public void requestStart() { inc(); /* your code here */}
+  public void requestStart(int id) { inc(); /* your code here */}
 
   /* Called immediately after a request completes */
   @Override
-  public void requestEnd() { /* your code here */}
+  public void requestEnd(int id) { /* your code here */}
 }

@@ -53,7 +53,6 @@ public class Tradesoap extends Benchmark {
     // Hide server starting messages
     emptyOutput();
 
-    LatencyReporter.initialize(threads);
     initializeMethod.invoke(null, data, scratch, threads, logNumSessions, timeoutms, false);
 
     // stdout for iterate

@@ -7,32 +7,32 @@ size small args
 		"--scale","2",
 		"--cleanup-in-iteration"
   thread-limit 400
-  output stdout digest 0xa5dbdb28110bae4c62990b79063137e71b3f55dc,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout digest 0xa234339d02e31ac793e3d8a5b1cf17f6c33fb916,
+         stderr digest 0xcf2894f2ad60a686300152c79149a18848b46f28;
   
 size default args
 		"--total-transactions","32000",
 		"--scale","16",
 		"--cleanup-in-iteration"
   thread-limit 16000
-  output stdout digest 0xff917af244ed92ba50dcab7687748a2590189413,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout digest 0xd14244a5f65f96a1e46899279726d9ce7c4d9b08,
+         stderr digest 0x962fbee007ed6e6ee577a91fe605e5bd30496e72;
 
 size large args 
 		"--total-transactions","128000",
 		"--scale","16",
 		"--cleanup-in-iteration"
   thread-limit 64000
-  output stdout digest 0xecfab96f3eda669af91f4b47f2b840a1c9b84faa,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout digest 0x9fed314a7866e49ecc419e9b4d86201e75cef2c5,
+         stderr digest 0xc14ed995d39c8a681058d71e10217937ce2982c2;
 
 size huge args 
 		"--total-transactions","256000",
 		"--scale","32",
 		"--cleanup-in-iteration"
   thread-limit 256000
-  output stdout digest 0xcf381152aae6716c1b09cb7765cca3f83ce47c19,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+  output stdout digest 0x651fc9ad6c2bf54ec5267017011227b4a556dc0f,
+         stderr digest 0x22509e9391b12f905d33c82564f611ac490f8d1c;
 
 
 description

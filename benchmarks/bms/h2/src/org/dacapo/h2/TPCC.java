@@ -294,6 +294,7 @@ public class TPCC {
       submitters[i].clearTransactionCount();
       threads[i] = newThread(i, submitters[i], transactionsPerTerminal[i]);
     }
+    LatencyReporter.requestsStarting();
 
     for (int i = 0; i < threads.length; i++)
       threads[i].start();
@@ -309,7 +310,7 @@ public class TPCC {
     // done running the submitters
 
     System.out.println();
-
+    LatencyReporter.requestsFinished();
     report(System.out);
 
     if (inMemoryDB && cleanupInIteration) {
@@ -366,7 +367,6 @@ public class TPCC {
         total += subTx[j];
       }
     }
-    System.out.println("Completed " + total + " transactions");
     String dots = "........................";
     for (int i = 0; i < transactions.length; i++) {
       System.out.format("\t" + TPCCSubmitter.TX_NAME[i] + " " + dots.substring(TPCCSubmitter.TX_NAME[i].length()) + "%6d (%4.1f%%)%n", transactions[i],
