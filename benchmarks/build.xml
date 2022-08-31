@@ -25,7 +25,7 @@
         - hg (https://www.mercurial-scm.org)
         - npm (https://www.npmjs.com/get-npm)
         - node.js (https://nodejs.org/en/)
-        - python2 (https://www.python.org/)
+        - python3 (https://www.python.org/)
         python libraries:
         - colorama (https://pypi.org/project/colorama/)
         - future (https://pypi.org/project/future/)
@@ -36,8 +36,7 @@
         ${toolsdir}
 
 	For Debian-based systems:
-	    sudo apt-get install npm python python-pip
-            pip2 install requests
+	    sudo apt-get install npm python3 python-is-python3
 
         BUILDING:
         0. System requirement:
@@ -153,7 +152,7 @@
         <!-- checking python modules -->
         <exec executable="python" failonerror="yes">
             <arg value="-c"/>
-            <arg value="import colorama${line.separator}import future${line.separator}import tabulate${line.separator}import requests${line.separator}import wheel"/>
+            <arg value="import requests"/>
         </exec>
     </target>
 
