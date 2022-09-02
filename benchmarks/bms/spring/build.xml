@@ -28,7 +28,9 @@
         <os family="windows"/>
     </condition>
 
-    <target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar, patch">
+
+    </target>
 
     <condition property="build-script" value="${bm-build-dir}/mvnw.cmd">
         <os family="windows"/>
@@ -50,11 +52,17 @@
     </target>
 
     <target name="data">
-        <!-- <copy todir="${bm-data}">
-            <fileset dir="${kafka-build-dir}/config" includes="*"/>
-            <fileset dir="${kafka-build-dir}/tests/spec" includes="*"/>
-        </copy> -->
+     <!---  <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${dacapo.dat.url}/"/>
+            <param name="target-file" value="spring-data.zip"/>
+        </antcall>
+        <unzip dest="${bm-data}" src="${bm-downloads}/spring-data.zip"/>
+
+        -->
+        <copy file="${bm-files}/loadgen/requests.txt" todir="${bm-data}"/>
     </target>
+
 
     <target name="jar">
         <copy todir="${bm-jars}" flatten="true">

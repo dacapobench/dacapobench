@@ -95,6 +95,7 @@ public class LatencyReporter {
   }
 
   public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
+    globalIdx = 0;
     if (timerBase != 0) {
       int events = txbegin.length;
 
@@ -201,9 +202,6 @@ public class LatencyReporter {
       System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
     }
   }
-
-
-
 
   public static void requestsStarting() {
     System.err.println("Starting "+txbegin.length+" requests...");

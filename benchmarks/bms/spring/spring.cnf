@@ -2,21 +2,21 @@ benchmark spring
   class org.dacapo.harness.Spring
   thread-model per_cpu;
 
-size small args "simple_produce_bench-small.json", "10000"
+size small args "32", "2"
   output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+         stderr digest 0x8209cf393ab6d7b12d9a8184aac8316d34f93197;
          
-size default args "simple_produce_bench.json", "1000000"
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+size default args "4096", "8"
+  output stdout digest 0x3d667eb33ec98f18caf9fb13954b49402d64f249,
+         stderr digest 0x55eddbfb34f548346399c055968b0199857317d8;
          
-size large args "simple_produce_bench-large.json", "10000000"
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+size large args "131072", "16"
+  output stdout digest 0x3d667eb33ec98f18caf9fb13954b49402d64f249,
+         stderr digest 0x42b54b435d585776e37a38519c5f46f028ed1e49;
 
 description
   short	     "PetClinic application running as a Spring microservice.",
-  long       "The PetClinic demonstrator application using the H2 in-memory database, connecting to clients running within the same process.",
+  long       "The PetClinic demonstrator application using the H2 in-memory database, connecting to clients running within the same process.  Apache Tomcat/9.0.45",
   copyright	 "Copyright (c) VMWare, the Apache Software Foundation, and the original authors.",
   author	   "VMWare and Apache Software Foundation",
   license    "Apache License, Version 2.0",

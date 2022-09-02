@@ -12,23 +12,10 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.io.IOException;
-// import java.io.File;
 import java.net.Socket;
-// import java.util.concurrent.CountDownLatch;
-// import java.util.concurrent.locks.Condition;
-// import java.util.concurrent.locks.ReentrantLock;
+
 
 public class Launcher {
-
-    // private File configZookeeper;
-    // private File serverKafka;
-    // private File log4jProperties;
-    // private File agentConfig;
-    // private File produceBench;
-    // private File scratch;
-    // private File data;
-    // private ClientRunner cli;
-    // private int transactions;
 
     public Launcher(File scratch, File data, String[] bench) {
 

@@ -50,4 +50,23 @@ public class Digest {
     }
     return result.toString();
   }
+
+  /**
+   * Calculate the md5 digest of a given string, and return a string
+   * representation thereof
+   * 
+   * @param str
+   * @return
+   */
+  public static String stringDigest(String str) {
+    return stringDigest(str, Integer.MAX_VALUE);
+  }
+  public static String stringDigest(String str, int max) {
+    final MessageDigest md = create();
+    byte[] buf = str.getBytes();
+    for (int i = 0; i < Math.min(max,str.length()); i++) {
+      md.update(buf[i]);
+    }
+    return toString(md.digest()); // Must only ever call digest() once!
+  }
 }

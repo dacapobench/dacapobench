@@ -15,10 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.security.MessageDigest;
 
 import org.apache.commons.httpclient.HttpMethod;
-import org.dacapo.digest.Digest;
+import org.dacapo.harness.Digest;
 
 /**
  * Interact with an Http page
@@ -77,22 +76,6 @@ public abstract class Page {
   }
 
   /**
-   * Calculate the md5 digest of a given string, and return a string
-   * representation thereof
-   * 
-   * @param str
-   * @return
-   */
-  protected String stringDigest(String str) {
-    final MessageDigest md = Digest.create();
-    byte[] buf = str.getBytes();
-    for (int i = 0; i < str.length(); i++) {
-      md.update(buf[i]);
-    }
-    return Digest.toString(md.digest()); // Must only ever call digest() once!
-  }
-
-  /**
    * Sub-classes must override this
    * @param logFile
    * @return
@@ -138,7 +121,7 @@ public abstract class Page {
       return true;
     }
 
-    String digestString = stringDigest(strGetResponseBody);
+    String digestString = Digest.stringDigest(strGetResponseBody);
     boolean digestMatch = digestString.equals(expectedDigest);
 
     // Deal with the fact that from Java 15 the response contains more info,
