@@ -18,7 +18,6 @@ import java.net.Socket;
 public class Launcher {
 
     public Launcher(File scratch, File data, String[] bench) {
-
     }
 
     public static void launch(String pathToJar) throws Exception {
@@ -40,20 +39,17 @@ public class Launcher {
             && jarEntryName.endsWith(".class") == true) {
             
                 int endIndex = jarEntryName.lastIndexOf(".class");
-                
                 String className = jarEntryName.substring(0, endIndex).replace('/', '.');
-                
                 try {
                     final Class<?> loadedClass = urlClassLoader.loadClass(className);
                     classMap.put(loadedClass.getName(), loadedClass);
                 }
-                catch (final ClassNotFoundException ex) {
-                
+                catch (final ClassNotFoundException e) {
+                    System.err.println("Problem launching server for classname '"+className+"': "+e);
                 }
             }
         }
         jarFile.close();
-
 
         // Create JarFileArchive(File) object, needed for JarLauncher.
         final Class<?> jarFileArchiveClass = classMap.get("org.springframework.boot.loader.archive.JarFileArchive");
@@ -75,63 +71,8 @@ public class Launcher {
 
         final Method launchMethod = launcherClass.getDeclaredMethod("launch", String[].class);
         launchMethod.setAccessible(true);
+
+        System.out.println("Launching the server");
 		launchMethod.invoke(jarLauncher, new Object[]{new String[0]});
     }
-
-    public void launching() throws Exception{
-        // setUpData();
-        // setSystemProperty();
-
-        // ZookeeperStarter zoo = new ZookeeperStarter(configZookeeper.getPath());
-        // zoo.initialize();
-        // while (!hostUsed("127.0.0.1", 2181)) Thread.sleep(100);
-
-        // ServerStarter kafka = new ServerStarter(serverKafka.getPath());
-        // kafka.initialize();
-        // while (!hostUsed("127.0.0.1", 9092)) Thread.sleep(100);
-
-        // AgentStarter agent = new AgentStarter(agentConfig.getPath());
-        // agent.initialize();
-        // while (!hostUsed("127.0.0.1", 8888)) Thread.sleep(100);
-
-        // CoordinatorStarter cs = new CoordinatorStarter(agentConfig.getPath());
-        // cs.initialize();
-        // while (!hostUsed("127.0.0.1", 8889)) Thread.sleep(100);
-    }
-
-    public void performIteration() throws Exception {
-        // cli = new ClientRunner(transactions);
-        // cli.runClient(produceBench.getPath());
-    }
-
-    public void shutdown() throws Exception {
-        // cli.finishUp();
-    }
-
-    private boolean hostUsed(String host, int port){
-        boolean used = false;
-        try {
-            Socket socket = new Socket(host, port);
-            used = true;
-        } catch (Exception ignored) {
-        }
-        return used;
-    }
-
-    private void setUpData() {
-        // this.configZookeeper = new File(data, "zookeeper.properties");
-        // this.serverKafka = new File(data, "server.properties");
-        // this.log4jProperties = new File(data, "tools-log4j.properties");
-        // this.agentConfig = new File(data, "trogdor.conf");
-    }
-
-    private void setSystemProperty() {
-//         System.setProperty("log4j.configuration", "file:" + this.log4jProperties.getPath());
-// //        System.setProperty("com.sun.management.jmxremote");
-//         System.setProperty("com.sun.management.jmxremote.authenticate", "false");
-//         System.setProperty("com.sun.management.jmxremote.ssl", "false");
-//         System.setProperty("kafka.logs.dir", this.scratch.getPath());
-//         System.setProperty("TaskState", "TODO");
-    }
-
 }

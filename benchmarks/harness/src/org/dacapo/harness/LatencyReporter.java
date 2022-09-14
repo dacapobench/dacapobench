@@ -34,6 +34,7 @@ public class LatencyReporter {
   private int idxOffset;
   private int idx;
   private double max;
+  private int stride;
 
   static float[] txbegin;
   static float[] txend;
@@ -46,6 +47,14 @@ public class LatencyReporter {
 
   public LatencyReporter(int threadID, int threads, int transactions) {
     idx = idxOffset = getBaseIdx(threadID, threads, transactions);
+    max = 0;
+    stride = 1;
+    reporters[threadID] = this;
+  }
+
+  public LatencyReporter(int threadID, int threads, int transactions, int stride) {
+    this.stride = stride;
+    idx = -1;
     max = 0;
     reporters[threadID] = this;
   }
@@ -95,7 +104,6 @@ public class LatencyReporter {
   }
 
   public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
-    globalIdx = 0;
     if (timerBase != 0) {
       int events = txbegin.length;
 
@@ -213,18 +221,36 @@ public class LatencyReporter {
     if (callback != null) callback.requestsFinished();
   }
 
+
+  public static void resetIndex(int stride) {
+    globalIdx = -stride;
+  }
+
   /**
    * Start a request (using a global index).
    * 
    * @return the index
    */
   public static int start() {
-    int index = 0;
+    int idx = inc(1);
+    startIdx(idx);
+    return idx;
+  }
+
+  public int stridedStart() {
+    idx++;
+    if (idx % stride == 0)
+      idx = inc(stride);
+    startIdx(idx);
+    return idx;
+  }
+
+  private static int inc(int stride) {
+    int rtn;
     synchronized (globalIdx) {
-      index = globalIdx++;
+       rtn = globalIdx += stride;
     }
-    _start(index);
-    return index;
+    return rtn;
   }
 
   /**
@@ -238,11 +264,11 @@ public class LatencyReporter {
   public static int start(int threadID) {
     int index = 0;
     index = reporters[threadID].idx++;
-    _start(index);
+    startIdx(index);
     return index;
   }
 
-  private static void _start(int index) {
+  public static void startIdx(int index) {
     if (callback != null) callback.requestStart(index);
     long start = (System.nanoTime() - timerBase)/NS_COARSENING;
     txbegin[index] = (float) start;

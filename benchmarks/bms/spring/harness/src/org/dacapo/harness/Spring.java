@@ -65,10 +65,8 @@ public class Spring extends Benchmark {
         try {
             BufferedReader in = new BufferedReader(new FileReader(filename));
             try {
-                for (int i = 0; i < requests.length; i++) {
+                for (int i = 0; i < requests.length; i++) 
                     requests[i] = in.readLine();
-                  //  System.err.println("-->"+requests[i]);
-                }
             } catch (java.io.IOException e) {
                 System.err.println("Exception while reading from "+filename+":"+e);
             }
@@ -82,10 +80,12 @@ public class Spring extends Benchmark {
     public void iterate(String size) throws Exception { 
         int threadCount = config.getThreadCount(size);
         final Thread[] threads = new Thread[threadCount];
+        int stride = Integer.parseInt(args[1]);
         LatencyReporter.initialize(requests.length, threadCount);
+        LatencyReporter.resetIndex(stride);
         LatencyReporter.requestsStarting();
         for (int i = 0; i < threadCount; i++) {
-            LatencyReporter lr = new LatencyReporter(i, threadCount, requests.length);
+            LatencyReporter lr = new LatencyReporter(i, threadCount, requests.length, stride);
             Runnable client = clientConstructor.newInstance(i, lr);
             threads[i] = new Thread(client);
             threads[i].start();

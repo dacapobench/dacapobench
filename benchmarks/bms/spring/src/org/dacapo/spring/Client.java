@@ -40,6 +40,7 @@ public class Client implements Runnable {
 
   private final int ordinal;
   private final LatencyReporter reporter;
+  private int lrIdx;
 
   private MultiThreadedHttpConnectionManager connectionManager;
   private HttpClient httpClient;
@@ -115,7 +116,7 @@ public class Client implements Runnable {
   }
 
   private void request(HttpMethodBase rq, String request, int expectedLength, String expectedDigest) {
-    int idx = reporter.start();
+    lrIdx = reporter.stridedStart();
     try {
       boolean get = rq instanceof GetMethod;
       final int result = httpClient.executeMethod(rq);
@@ -136,7 +137,7 @@ public class Client implements Runnable {
       } catch (IOException e) { 
       System.err.println("IOException: "+e);
     }
-    reporter.endIdx(idx);
+    reporter.endIdx(lrIdx);
   }
 
   protected static String readStream(InputStream responseStream) throws IOException {
