@@ -17,8 +17,8 @@
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz" />
 
     <import file="../common.xml" />
+    <property name="bm-version-str" value="fop ${bm-version} batik ${batik-version}"/>
 
-    <!-- <property name="bm-harness-classpath" value="${bm-jars}/fop.jar" /> -->
     <property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}/fop" />
 
     <target name="unpack" depends="untar, patch" />

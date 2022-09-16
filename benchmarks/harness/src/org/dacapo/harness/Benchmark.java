@@ -360,6 +360,7 @@ public abstract class Benchmark {
    * Perform pre-benchmark preparation.
    */
   protected void prepare() throws Exception {
+    System.out.println("Version: "+config.getDesc("version"));
   }
 
   /**

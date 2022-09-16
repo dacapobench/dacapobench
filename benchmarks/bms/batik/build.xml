@@ -10,10 +10,10 @@
     <description>DaCapo Batik benchmark</description>
     <property file="local.properties"/>
     <property file="dacapo.properties"/>
-
     <property name="bm-name" value="batik"/>
 
     <import file="../common.xml"/>
+    <property name="bm-version-str" value="batik ${batik-version}"/>
 
     <target name="data" depends="batik">
         <antcall target="check-source">

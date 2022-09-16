@@ -14,6 +14,7 @@
     <property name="bm-name" value="tradebeans"/>
 
     <import file="../common.xml"/>
+    <property name="bm-version-str" value="daytrader svn-${daytrader-svn-revision} wildfly ${wildfly-version}"/>
 
     <target name="bm-harness">
         <javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}" includes="**" debug="true" debuglevel="lines,vars,source"/>

@@ -162,6 +162,7 @@
 
 	<target name="config">
 		<copy file="${bm-files}/${bm-name}.cnf" todir="${bm-cnf}"/>
+		<concat destfile="${bm-cnf}/${bm-name}.cnf" append="true">  version "${bm-version-str}";</concat>
 	</target>
 
 	<target name="harness" depends="bm-harness-with,bm-harness-without"/>

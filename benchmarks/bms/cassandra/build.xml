@@ -34,6 +34,8 @@
     <property name="datastax-driver-url" value="${maven.url}/com/datastax/oss/java-driver-core/${datastax-driver-version}"/>
     <property name="datastax-driver-jar" value="java-driver-core-${datastax-driver-version}.jar"/>
 
+    <property name="bm-version-str" value="cassandra ${bm-version} ycsb ${ycsb-version} datastax ${datastax-driver-version}"/>
+
     <target name="source">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>

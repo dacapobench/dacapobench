@@ -14,6 +14,7 @@
     <property name="bm-name" value="h2"/>
 
     <import file="../common.xml"/>
+    <property name="bm-version-str" value="h2 ${h2-version} derby ${derby-version}"/>
 
     <target name="bm-build" depends="junit,h2,derby">
         <javac srcdir="${bm-src-dir}"  destdir="${bm-build-dir}"

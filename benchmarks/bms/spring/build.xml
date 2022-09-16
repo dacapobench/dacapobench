@@ -14,11 +14,8 @@
 
     <property name="bm-name" value="spring"/>
     <property name="bm-version" value="2.4.5"/>
+    <property name="bm-version-str" value="springboot ${bm-version} petclinic ${bm-version} hibernate 5.4.30 tomcat 9.0.45"/>
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tgz"/>
-    <property name="git-group" value="spring-projects"/>
-    <property name="git-project" value="spring-petclinic"/>
-    <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
-    <property name="bm-git-commit" value="e7c879ed3abe10e446ff103887ad665ca6acf04e"/>
 
     <import file="../common.xml"/>
 
@@ -28,9 +25,7 @@
         <os family="windows"/>
     </condition>
 
-    <target name="unpack" depends="untar, patch">
-
-    </target>
+    <target name="unpack" depends="untar, patch"/>
 
     <condition property="build-script" value="${bm-build-dir}/mvnw.cmd">
         <os family="windows"/>
@@ -38,31 +33,17 @@
     <property name="build-script" value="${bm-build-dir}/mvnw"/>
 
     <target name="bm-build" depends="commons-httpclient">
-        <!-- <property name="bm-harness-classpath" value="${commons-httpclient-jar}"/> -->
         <antcall target="make-executable">
             <param name="target-filename" value="${build-script}"/>
         </antcall>
         <exec executable="${build-script}" dir="${bm-build-dir}">
             <arg line="package"/>
         </exec>
-
-        <!-- <exec executable="${kafka-build-dir}/gradlew" dir="${kafka-build-dir}">
-            <arg value="jar"/>
-        </exec> -->
     </target>
 
     <target name="data">
-     <!---  <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${dacapo.dat.url}/"/>
-            <param name="target-file" value="spring-data.zip"/>
-        </antcall>
-        <unzip dest="${bm-data}" src="${bm-downloads}/spring-data.zip"/>
-
-        -->
         <copy file="${bm-files}/loadgen/requests.txt" todir="${bm-data}"/>
     </target>
-
 
     <target name="jar">
         <copy todir="${bm-jars}" flatten="true">

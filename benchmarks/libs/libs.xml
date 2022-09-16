@@ -28,6 +28,8 @@
     </target>
 
     <!-- daytrader -->
+    <property name="daytrader-svn-revision" value="1895391"/>
+    <property name="wildfly-version" value="23.0.2"/>
     <target name="daytrader">
         <ant antfile="${lib-base}/daytrader/build.xml"/>
     </target>
@@ -74,6 +76,7 @@
     </target>
 
     <!-- derby -->
+    <property name="derby-version" value="10.14.2.0"/>
     <property name="derby-jar" value="${lib-base}/derby/dist/jar/derby.jar"/>
     <property name="derbyclient-jar" value="${lib-base}/derby/dist/jar/derbyclient.jar"/>
     <property name="derbynet-jar" value="${lib-base}/derby/dist/jar/derbynet.jar"/>
