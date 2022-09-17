@@ -12,13 +12,12 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="eclipse"/>
-    <property name="bm-version" value="4.19"/>
+    <property name="bm-version" value="4.25"/> <!-- must update bundles-*.lst, plugin.xml, eclipse.patch, and references in plugin/build.xml when updating versions -->
     <property name="bm-version-str" value="eclipse ${bm-version}"/>
-    <property name="bm-drop" value="202103031800"/>
+    <property name="bm-drop" value="202208311800"/>
     <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops4/R-${bm-version}-${bm-drop}"/>
     <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa-x86_64.tar.gz"/>
-    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.16.200.v20210226-1447.jar"/> <!-- this value must be consistent with constant in org.dacapo.harness.Eclipse.java -->
-
+    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.18.100.v20220817-1601.jar"/> <!-- this value must be consistent with constant in org.dacapo.harness.Eclipse.java -->
     <import file="../common.xml"/>
     <property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
     <property name="bm-src-at" value="eclipse-Automated-Tests-${bm-version}.zip"/>
@@ -81,7 +80,7 @@
         <zip destfile="${bm-data}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
             <patternset includesfile="${bm-files}/bundles-default.lst"/>
         </zip>
-        <zip destfile="${bm-data}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace"/>
+        <zip destfile="${bm-data}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace" excludes="**/HTMLParser.jj, **/javaBin/.classpath"/>
         
         <delete dir="${bm-build-dir}/eclipse-testing"/>
     </target>
@@ -112,14 +111,15 @@
         <copy todir="${bm-data}">
             <!-- The eclipse runtime.  We just include as little as we can, -->
             <!-- using an empirically derived list of what we really need.  -->
-            <!-- Use scratch/workspace/.metadata/.log to identify missing   -->
-            <!-- bundles.                                                   -->
+            <!-- Use scratch/configuration/*.log and/or scratch/workspace/.metadata/*.log --> 
+            <!--- to identify missing bundles.                                            -->
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </copy>
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-dir}">
-                <exclude name="eclipse/plugins/**"/>
+                <!-- remove this exlusion to debug whether the above bundle lists are a problem-->
+               <exclude name="eclipse/plugins/**"/>
             </fileset>
         </copy>
     </target>

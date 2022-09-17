@@ -25,7 +25,7 @@ public class Eclipse extends Benchmark {
 
   static final String WKSP_DIRECTORY_RELATIVE_TO_SCRATCH = "workspace";
   static final String PLUGIN_ID = "org.dacapo.eclipse.Harness";
-  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.16.200.v20210226-1447.jar";
+  static final String OSGI_BOOTSTRAP_JAR = "eclipse" + File.separator + "plugins" + File.separator + "org.eclipse.osgi_3.18.100.v20220817-1601.jar";
 
   static String oldJavaHome = null;
   static Eclipse eclipse;
@@ -37,6 +37,7 @@ public class Eclipse extends Benchmark {
 
   public Eclipse(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
+    assertJavaVersionGE(11, "Eclipse requires Java 11 or newer.");
     Class<?> clazz = Class.forName("org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
     this.method = clazz.getMethod("startup", String[].class, Runnable.class);
     this.isRunning = clazz.getMethod("isRunning");

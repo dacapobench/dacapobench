@@ -16,8 +16,8 @@
     <property name="javacVerbose" value="false"/>
     <property name="logExtension" value=".log"/>
     <property name="compilerArg" value=""/>
-    <property name="javacSource" value="1.8"/>
-    <property name="javacTarget" value="1.8"/>
+    <property name="javacSource" value="11"/>
+    <property name="javacTarget" value="11"/>
     <!--condition property="dir_bootclasspath" value="${java.home}/../Classes">
         <os family="mac"/>
     </condition-->
@@ -74,37 +74,39 @@
         <delete dir="${build.result.folder}/@dot"/>
         <mkdir dir="${build.result.folder}/@dot"/>
         <path id="@dot.classpath">
-            <pathelement path="${basedir}/../build/eclipse/plugins/com.ibm.icu_67.1.0.v20200706-1749.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.ant.core_3.5.800.v20200608-1251.jar"/> <!--not in bundles-required.lst-->
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.commands_3.9.800.v20201021-1339.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.contenttype_3.7.900.v20210111-0918.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.expressions_3.7.100.v20210203-1000.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem_1.7.700.v20200110-1734.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem.macosx_1.3.200.v20190903-0945.jar"/> <!--not in bundles-required.lst-->
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.jobs_3.10.1100.v20210111-0815.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.resources_3.14.0.v20210215-0934.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime_3.20.100.v20210111-0815.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.variables_3.4.800.v20200120-1101.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.debug.core_3.18.0.v20210222-1101.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.app_1.5.100.v20210212-1143.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.common_3.14.100.v20210212-1143.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.preferences_3.8.200.v20210212-1143.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.registry_3.10.100.v20210212-1143.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.simpleconfigurator_1.3.600.v20200721-1308.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.apt_1.3.1200.v20200916-0645.jar"/> <!--not in bundles-required.lst-->
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.tool_1.2.1100.v20200916-0645.jar"/> <!--not in bundles-required.lst-->
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.core_3.25.0.v20210223-0522.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.launching_3.19.100.v20210217-1644.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi_3.16.200.v20210226-1447.jar"/>
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi.services_3.10.0.v20210212-1137.jar"/> <!--not in bundles-required.lst-->
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.team.core_3.8.1100.v20200806-0621.jar"/> <!--not in bundles-required.lst-->
-            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.text_3.11.0.v20210203-1022.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/com.ibm.icu_67.1.0.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.ant.core_3.6.500.v20220718-1722.jar"/> <!--not in bundles-required.lst-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.commands_3.10.200.v20220512-0851.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.contenttype_3.8.200.v20220817-1539.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.expressions_3.8.200.v20220613-1047.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem_1.9.500.v20220817-1539.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.filesystem.macosx_1.3.400.v20220812-1420.jar"/> <!--not in bundles-required.lst-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.jobs_3.13.100.v20220817-1539.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.resources_3.18.0.v20220828-0546.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.runtime_3.26.0.v20220813-0916.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.core.variables_3.5.100.v20210721-1355.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.debug.core_3.20.0.v20220811-0741.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.app_1.6.200.v20220720-2012.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.common_3.16.200.v20220817-1601.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.preferences_3.10.100.v20220710-1223.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.registry_3.11.200.v20220817-1601.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.equinox.simpleconfigurator_1.4.100.v20220620-1617.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.apt_1.4.200.v20220802-0458.jar"/> <!--not in bundles-required.lst-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.compiler.tool_1.3.200.v20220802-0458.jar"/> <!--not in bundles-required.lst-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.core_3.31.0.v20220831-1439.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.jdt.launching_3.19.700.v20220730-1850.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi_3.18.100.v20220817-1601.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.osgi.services_3.11.0.v20220618-0838.jar"/> <!--not in bundles-required.lst-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.team.core_3.9.500.v20220817-1539.jar"/> <!--not in bundles-required.lst-->
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.eclipse.text_3.12.200.v20220817-1340.jar"/>
+            <pathelement path="${basedir}/../build/eclipse/plugins/org.osgi.service.prefs_1.1.2.202109301733.jar"/>
         </path>
         <!-- compile the source code -->
-        <javac destdir="${build.result.folder}/@dot" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no">
+        <loadproperties srcFile="../../../local.properties"/>
+        <javac fork="yes" executable="${jdk.11.home}/bin/javac" destdir="${build.result.folder}/@dot" release="11" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no">
             <compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
             <classpath refid="@dot.classpath" />
-            <src path="src/"            />
+            <src path="src/"/>
             <compilerarg value="@${basedir}/javaCompiler...args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
             <compilerarg line="-log '${build.result.folder}/@dot${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         </javac>
