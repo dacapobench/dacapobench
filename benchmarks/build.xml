@@ -39,8 +39,8 @@
 	    sudo apt-get install npm python3 python-is-python3
 
         BUILDING:
-        0. System requirement:
-        Building DaCapo requires latest JDK 11.
+        1. System requirement:
+        Building DaCapo requires both JDK 11 and JDK 8.
         If building cassandra, graphchi, jython, and/or xalan, make sure to
         create the local.properties file (using default.properties as a
         templcate), and be sure to set the path to JDK 8 in that file.
@@ -49,12 +49,6 @@
         with max filehandle limits.  You may want to set it to a larger value,
         and launch ant with:
         $ JAVA_OPTS="-XX:-MaxFDLimit" ant
-
-        1. Set your JAVA_HOME environment variable appropriately:
-        On Mac OS X something like:
-        export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.3.jdk/Contents/Home
-        On Ubuntu 16.04 something like:
-        export JAVA_HOME=/usr/lib/jvm/jdk1.11.0/
 
         2. Set ant and maven environment variables if necessary.  In particular,
         for some jvms it is necessary to explicitly request a larger heap size.
