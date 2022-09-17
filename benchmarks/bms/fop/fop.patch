@@ -1,7 +1,7 @@
 Only in ../build/fop-2.6/fop: build
-diff -ur fop-2.6/fop-core/src/main/java/org/apache/fop/cli/Main.java ../build/fop-2.6/fop-core/src/main/java/org/apache/fop/cli/Main.java
---- fop-2.6/fop-core/src/main/java/org/apache/fop/cli/Main.java	2021-01-12 23:15:01.000000000 +1100
-+++ ../build/fop-2.6/fop-core/src/main/java/org/apache/fop/cli/Main.java	2021-04-24 15:20:43.017622834 +1000
+diff -ur fop-2.7/fop-core/src/main/java/org/apache/fop/cli/Main.java ../build/fop-2.7/fop-core/src/main/java/org/apache/fop/cli/Main.java
+--- fop-2.7/fop-core/src/main/java/org/apache/fop/cli/Main.java	2021-01-12 23:15:01.000000000 +1100
++++ ../build/fop-2.7/fop-core/src/main/java/org/apache/fop/cli/Main.java	2021-04-24 15:20:43.017622834 +1000
 @@ -191,9 +191,9 @@
              // System.exit(0) called to close AWT/SVG-created threads, if any.
              // AWTRenderer closes with window shutdown, so exit() should not

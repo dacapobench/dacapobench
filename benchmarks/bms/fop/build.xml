@@ -12,12 +12,12 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="fop" />
-    <property name="bm-version" value="2.6" />
+    <property name="bm-version" value="2.7" />
+    <property name="bm-version-str" value="fop ${bm-version} batik 1.14"/>
     <property name="bm-url" value="${apache.dl.url}/xmlgraphics/fop/source" />
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz" />
 
     <import file="../common.xml" />
-    <property name="bm-version-str" value="fop ${bm-version} batik ${batik-version}"/>
 
     <property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}/fop" />
 
@@ -27,15 +27,11 @@
         <ant dir="${bm-build-top}" target="package" inheritall="false" />
     </target>
 
-    <target name="jar" depends="batik">
+    <target name="jar">
         <copy file="${bm-build-top}/build/fop.jar" todir="${bm-jars}" />
         <copy todir="${bm-jars}">
-            <!-- copy selectively so as not to overwrite batik libraries -->
             <fileset dir="${bm-build-top}/lib/">
-                <include name="**/commons*.jar"/>
-                <include name="**/fontbox*.jar"/>
-                <include name="**/servlet*.jar"/>
-                <include name="**/xml-apis-1.*.jar"/>
+                <include name="**/*.jar"/>
             </fileset>
         </copy>
     </target>
