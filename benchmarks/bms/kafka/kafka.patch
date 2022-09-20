@@ -1,6 +1,6 @@
-diff -ur kafka-2.8.0-src/config/log4j.properties ../build/kafka-2.8.0-src/config/log4j.properties
---- kafka-2.8.0-src/config/log4j.properties	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/config/log4j.properties	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/config/log4j.properties ../build/kafka-3.2.3-src/config/log4j.properties
+--- ./kafka-3.2.3-src/config/log4j.properties	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/config/log4j.properties	2022-09-20 11:06:50.397718378 +0000
 @@ -14,8 +14,8 @@
  # limitations under the License.
  
@@ -61,10 +61,10 @@ diff -ur kafka-2.8.0-src/config/log4j.properties ../build/kafka-2.8.0-src/config
 +log4j.logger.kafka.authorizer.logger=ERROR, authorizerAppender
  log4j.additivity.kafka.authorizer.logger=false
  
-diff -ur kafka-2.8.0-src/config/server.properties ../build/kafka-2.8.0-src/config/server.properties
---- kafka-2.8.0-src/config/server.properties	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/config/server.properties	2021-04-29 21:43:11.305447303 +1000
-@@ -57,7 +57,7 @@
+diff '--color=auto' -ur ./kafka-3.2.3-src/config/server.properties ../build/kafka-3.2.3-src/config/server.properties
+--- ./kafka-3.2.3-src/config/server.properties	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/config/server.properties	2022-09-20 11:06:50.397718378 +0000
+@@ -59,7 +59,7 @@
  ############################# Log Basics #############################
  
  # A comma separated list of directories under which to store log files
@@ -73,9 +73,9 @@ diff -ur kafka-2.8.0-src/config/server.properties ../build/kafka-2.8.0-src/confi
  
  # The default number of log partitions per topic. More partitions allow greater
  # parallelism for consumption, but this will also result in more files across
-diff -ur kafka-2.8.0-src/config/tools-log4j.properties ../build/kafka-2.8.0-src/config/tools-log4j.properties
---- kafka-2.8.0-src/config/tools-log4j.properties	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/config/tools-log4j.properties	2021-04-29 21:52:11.506283716 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/config/tools-log4j.properties ../build/kafka-3.2.3-src/config/tools-log4j.properties
+--- ./kafka-3.2.3-src/config/tools-log4j.properties	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/config/tools-log4j.properties	2022-09-20 11:06:50.397718378 +0000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -85,9 +85,9 @@ diff -ur kafka-2.8.0-src/config/tools-log4j.properties ../build/kafka-2.8.0-src/
  
  log4j.appender.stderr=org.apache.log4j.ConsoleAppender
  log4j.appender.stderr.layout=org.apache.log4j.PatternLayout
-diff -ur kafka-2.8.0-src/config/zookeeper.properties ../build/kafka-2.8.0-src/config/zookeeper.properties
---- kafka-2.8.0-src/config/zookeeper.properties	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/config/zookeeper.properties	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/config/zookeeper.properties ../build/kafka-3.2.3-src/config/zookeeper.properties
+--- ./kafka-3.2.3-src/config/zookeeper.properties	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/config/zookeeper.properties	2022-09-20 11:06:50.397718378 +0000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -97,10 +97,10 @@ diff -ur kafka-2.8.0-src/config/zookeeper.properties ../build/kafka-2.8.0-src/co
  # the port at which the clients will connect
  clientPort=2181
  # disable the per-ip limit on the number of connections since this is a non-production config
-diff -ur kafka-2.8.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala ../build/kafka-2.8.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
---- kafka-2.8.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2021-04-29 21:43:11.305447303 +1000
-@@ -229,7 +229,7 @@
+diff '--color=auto' -ur ./kafka-3.2.3-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala ../build/kafka-3.2.3-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
+--- ./kafka-3.2.3-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2022-09-20 11:06:50.397718378 +0000
+@@ -236,7 +236,7 @@
          Some(Utils.loadProps(absolutePath))
        } catch {
          case _: NoSuchFileException =>
@@ -109,9 +109,9 @@ diff -ur kafka-2.8.0-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoi
            None
          case e: Exception =>
            error(s"Failed to read meta.properties file under dir $absolutePath", e)
-diff -ur kafka-2.8.0-src/tests/spec/simple_produce_bench.json ../build/kafka-2.8.0-src/tests/spec/simple_produce_bench.json
---- kafka-2.8.0-src/tests/spec/simple_produce_bench.json	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tests/spec/simple_produce_bench.json	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/tests/spec/simple_produce_bench.json ../build/kafka-3.2.3-src/tests/spec/simple_produce_bench.json
+--- ./kafka-3.2.3-src/tests/spec/simple_produce_bench.json	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/tests/spec/simple_produce_bench.json	2022-09-20 11:06:50.397718378 +0000
 @@ -23,8 +23,8 @@
    "durationMs": 10000000,
    "producerNode": "node0",
@@ -123,9 +123,9 @@ diff -ur kafka-2.8.0-src/tests/spec/simple_produce_bench.json ../build/kafka-2.8
    "activeTopics": {
      "foo[1-3]": {
        "numPartitions": 10,
-diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
---- kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
+--- ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2022-09-20 11:06:50.401718367 +0000
 @@ -250,7 +250,7 @@
          final Agent agent = new Agent(platform, Scheduler.SYSTEM, restServer, resource);
          restServer.start(resource);
@@ -135,9 +135,9 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/agent/Agen
              try {
                  agent.beginShutdown();
                  agent.waitForShutdown();
-diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
---- kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
+--- ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2022-09-20 11:06:50.401718367 +0000
 @@ -195,6 +195,15 @@
          return resp.body();
      }
@@ -211,9 +211,9 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinato
                  break;
              }
              case "shutdown": {
-diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
---- kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
+--- ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2022-09-20 11:06:50.401718367 +0000
 @@ -129,6 +129,10 @@
          taskManager.waitForShutdown();
      }
@@ -234,9 +234,9 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinato
              try {
                  coordinator.beginShutdown(false);
                  coordinator.waitForShutdown();
-diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
---- kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
+--- ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2022-09-20 11:06:50.401718367 +0000
 @@ -137,6 +137,13 @@
          return response;
      }
@@ -251,9 +251,9 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinato
      @PUT
      @Path("/shutdown")
      public Empty beginShutdown(CoordinatorShutdownRequest request) throws Throwable {
-diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java
---- kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java
+--- ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2022-09-20 11:06:50.401718367 +0000
 @@ -235,7 +235,7 @@
                  if (worker == null) {
                      // Identify tasks which are running, but which we don't know about.
@@ -263,9 +263,9 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinato
                      workers.put(workerId, new ManagedWorker(workerId, state.taskId(),
                          state.spec(), false, state));
                  } else {
-diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
---- kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
+--- ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2022-09-20 11:06:50.401718367 +0000
 @@ -49,6 +49,8 @@
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
@@ -380,9 +380,9 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/coordinato
       * Get information about a single task being managed.
       *
       * Returns #{@code null} if the task does not exist
-diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
---- kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2021-04-15 00:28:09.000000000 +1000
-+++ ../build/kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2021-04-29 21:43:11.305447303 +1000
+diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
+--- ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2022-09-13 08:12:22.000000000 +0000
++++ ../build/kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2022-09-20 11:13:13.256727556 +0000
 @@ -55,6 +55,9 @@
  import java.util.concurrent.atomic.AtomicBoolean;
  import java.util.concurrent.atomic.AtomicLong;
@@ -393,12 +393,14 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/P
  public class ProduceBenchWorker implements TaskWorker {
      private static final Logger log = LoggerFactory.getLogger(ProduceBenchWorker.class);
      
-@@ -72,6 +75,12 @@
+@@ -72,6 +75,14 @@
  
      private KafkaFutureImpl<String> doneFuture;
  
 +    Method dacapoStart;
 +    Method dacapoEnd;
++    Method dacapoStarting;
++    Method dacapoFinished;
 +    private int tx = 0;
 +    private static int txCount = 0;
 +    public static void setTxCount(int count) { txCount = count; }
@@ -406,35 +408,57 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/P
      public ProduceBenchWorker(String id, ProduceBenchSpec spec) {
          this.id = id;
          this.spec = spec;
-@@ -91,6 +100,27 @@
-         this.status = status;
-         this.doneFuture = doneFuture;
-         executor.submit(new Prepare());
+@@ -79,7 +90,19 @@
+ 
+     @Override
+     public void start(Platform platform, WorkerStatusTracker status,
+-                      KafkaFutureImpl<String> doneFuture) {
++        KafkaFutureImpl<String> doneFuture) {
 +        try {
 +            Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter", true, ProduceBenchWorker.class.getClassLoader());
-+            dacapoStart = clazz.getMethod("start", int.class);
-+            dacapoEnd = clazz.getMethod("end", int.class, int.class);
++            dacapoStart = clazz.getMethod("start");
++            dacapoEnd = clazz.getMethod("endIdx", int.class);
++            dacapoStarting = clazz.getMethod("requestsStarting");
++            dacapoFinished = clazz.getMethod("requestsFinished");
 +        } catch (ClassNotFoundException e) {
 +            System.err.println("Failed to access DaCapo latency reporter: "+e);
 +        } catch (NoSuchMethodException e) {
 +            System.err.println("Failed trying to create latency stats: "+e);
 +        }
++        dacapoStarting();
+         if (!running.compareAndSet(false, true)) {
+             throw new IllegalStateException("ProducerBenchWorker is already running.");
+         }
+@@ -91,6 +114,28 @@
+         this.status = status;
+         this.doneFuture = doneFuture;
+         executor.submit(new Prepare());
++
++        
 +    }
 +
-+    public int dacapoStart() {
-+        int rtn = 0;
++    public void dacapoStarting() {
 +        try {
-+            rtn = (Integer) dacapoStart.invoke(null, 0);  // only one reporter object
++            dacapoStarting.invoke(null);
 +        } catch (IllegalAccessException e) {
-+            System.err.println("Failed to access DaCapo latency reporter: "+e);
++            System.err.println("Failed to invoke DaCapo latency reporter requestsStarting(): "+e);
 +        } catch (InvocationTargetException e) {
-+            System.err.println("Failed to access DaCapo latency reporter: "+e);
++            System.err.println("Failed to invoke DaCapo latency reporter requestsStarting(): "+e);
 +        }
-+        return rtn;
++    }
++
++    public void dacapoFinished() {
++        try {
++            dacapoFinished.invoke(null);
++        } catch (IllegalAccessException e) {
++            System.err.println("Failed to invoke DaCapo latency reporter requestsFinished(): "+e);
++        } catch (InvocationTargetException e) {
++            System.err.println("Failed to invoke DaCapo latency reporter requestsFinished(): "+e);
++        }
      }
  
      public class Prepare implements Runnable {
-@@ -131,23 +161,57 @@
+@@ -131,23 +176,61 @@
      private static class SendRecordsCallback implements Callback {
          private final SendRecords sendRecords;
          private final long startMs;
@@ -468,22 +492,26 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/P
 +        public int dacapoStart() {
 +            int rtn = 0;
 +            try {
-+                rtn = (Integer) dacapoStart.invoke(null, 0);  // only one reporter object
++                rtn = (Integer) dacapoStart.invoke(null);  // only one reporter object
 +            } catch (IllegalAccessException e) {
-+                System.err.println("Failed to access DaCapo latency reporter: "+e);
++                System.err.println("Failed to invoke DaCapo latency reporter StartIdx(): "+e);
++                e.printStackTrace();
 +            } catch (InvocationTargetException e) {
-+                System.err.println("Failed to access DaCapo latency reporter: "+e);
++                System.err.println("Failed to invoke DaCapo latency reporter StartIdx(): "+e);
++                e.printStackTrace();
 +            }
 +            return rtn;
 +        }
 +
 +        public void dacapoEnd(int idx) {
 +            try {
-+                dacapoEnd.invoke(null, 0, idx);  // only one reporter object
++                dacapoEnd.invoke(null, idx);  // only one reporter object
 +            } catch (IllegalAccessException e) {
-+                System.err.println("Failed to access DaCapo latency reporter: "+e);
++                System.err.println("Failed to invoke DaCapo latency reporter endIdx(): "+e);
++                e.printStackTrace();
 +            } catch (InvocationTargetException e) {
-+                System.err.println("Failed to access DaCapo latency reporter: "+e);
++                System.err.println("Failed to invoke DaCapo latency reporter endIdx(): "+e);
++                e.printStackTrace();
 +            }
 +        }
      }
@@ -493,7 +521,7 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/P
      /**
       * A subclass of Throttle which flushes the Producer right before the throttle injects a delay.
       * This avoids including throttling latency in latency measurements.
-@@ -293,6 +357,7 @@
+@@ -293,6 +376,7 @@
          }
  
          private void sendMessage() throws InterruptedException {
@@ -501,7 +529,7 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/P
              if (!partitionsIterator.hasNext())
                  partitionsIterator = activePartitions.iterator();
  
-@@ -306,11 +371,18 @@
+@@ -306,11 +390,18 @@
                      partition.topic(), partition.partition(), keys.next(), values.next());
              }
              sendFuture = producer.send(record,
@@ -521,11 +549,12 @@ diff -ur kafka-2.8.0-src/tools/src/main/java/org/apache/kafka/trogdor/workload/P
              histogram.add(durationMs);
          }
      }
-@@ -411,6 +483,7 @@
+@@ -407,6 +498,8 @@
+ 
+     @Override
+     public void stop(Platform platform) throws Exception {
++        dacapoFinished();
++
+         if (!running.compareAndSet(true, false)) {
              throw new IllegalStateException("ProduceBenchWorker is not running.");
          }
-         log.info("{}: Deactivating ProduceBenchWorker.", id);
-+        System.out.println("Completed "+tx+" transactions.");
-         doneFuture.complete("");
-         executor.shutdownNow();
-         executor.awaitTermination(1, TimeUnit.DAYS);

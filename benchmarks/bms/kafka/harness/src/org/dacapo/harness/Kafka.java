@@ -28,7 +28,7 @@ public class Kafka extends Benchmark {
     private String[] args;
 
     public Kafka(Config config, File scratch, File data) throws Exception {
-        super(config, scratch, data, false, true);
+        super(config, scratch, data, false, false);
         Class launcher = Class.forName("org.dacapo.kafka.Launcher", true, this.loader);
         lc = launcher.getConstructor(File.class, File.class, String[].class);
         launching = launcher.getMethod("launching");
@@ -49,6 +49,7 @@ public class Kafka extends Benchmark {
     @Override
     public void iterate(String size) throws Exception {
         LatencyReporter.initialize(Integer.parseInt(args[1]), 1);
+        LatencyReporter.resetIndex(1);
         System.setProperty("TaskState", "Waiting");
         performIteration.invoke(launcherInstance);
     }
