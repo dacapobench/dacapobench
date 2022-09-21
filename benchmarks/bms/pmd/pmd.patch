@@ -1,33 +1,24 @@
-diff -ur ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java
---- ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2021-05-01 17:48:26.000000000 +1000
-+++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2021-05-01 19:49:18.828533975 +1000
-@@ -519,6 +519,8 @@
-         int status = PMDCommandLineInterface.NO_ERRORS_STATUS;
-         final PMDConfiguration configuration = params.toConfiguration();
+diff '--color=auto' -ur ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java
+--- ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2022-09-21 06:58:14.000000000 +0000
++++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2022-09-21 08:36:57.196547708 +0000
+@@ -492,6 +492,8 @@
+             TimeTracker.startGlobalTracking();
+         }
  
 +        configuration.setThreads(Runtime.getRuntime().availableProcessors());
 +
-         final Level logLevel = params.isDebug() ? Level.FINER : Level.INFO;
+         final Level logLevel = configuration.isDebug() ? Level.FINER : Level.INFO;
          final ScopedLogHandlersManager logHandlerManager = new ScopedLogHandlersManager(logLevel, new ConsoleHandler());
          final Level oldLogLevel = LOG.getLevel();
-diff -ur ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
---- ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2021-05-01 17:48:26.000000000 +1000
-+++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2021-05-01 19:49:18.828533975 +1000
-@@ -9,8 +9,6 @@
- import java.util.Collections;
- import java.util.List;
- 
--import org.apache.commons.io.IOUtils;
--
- import net.sourceforge.pmd.PMDConfiguration;
- import net.sourceforge.pmd.annotation.Experimental;
- import net.sourceforge.pmd.cli.PMDParameters;
-@@ -107,8 +105,6 @@
+diff '--color=auto' -ur ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
+--- ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2022-09-21 06:58:14.000000000 +0000
++++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2022-09-21 08:39:49.932299796 +0000
+@@ -105,8 +105,6 @@
              this.writer.flush();
          } catch (IOException e) {
              throw new IllegalStateException(e);
 -        } finally {
--            IOUtils.closeQuietly(writer);
+-            IOUtil.closeQuietly(writer);
          }
      }
  
