@@ -267,6 +267,7 @@ public abstract class Benchmark {
     this.data = data;
     this.config = config;
     this.dataSet = dataSet;
+    javaVersionCheck();
     initialize();
   }
 
@@ -294,6 +295,8 @@ public abstract class Benchmark {
     loader = DacapoClassLoader.create(config, scratch, data, jarDeps);
     prepare();
   }
+
+  protected void javaVersionCheck() {}
 
   /**
    * Take a benchmark's list of dependencies and:

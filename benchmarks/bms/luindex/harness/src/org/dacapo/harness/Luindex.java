@@ -37,6 +37,12 @@ public class Luindex extends Benchmark {
     }
   }
 
+  @Override
+  protected void javaVersionCheck() {
+    assertJavaVersionGE(11, "Luindex requires Java 11 or newer.");
+  }
+
+
   public void cleanup() {
     if (!getPreserve()) {
       deleteTree(new File(scratch, "luindex"));

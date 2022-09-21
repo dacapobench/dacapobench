@@ -37,12 +37,16 @@ public class Eclipse extends Benchmark {
 
   public Eclipse(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
-    assertJavaVersionGE(11, "Eclipse requires Java 11 or newer.");
     Class<?> clazz = Class.forName("org.eclipse.core.runtime.adaptor.EclipseStarter", true, loader);
     this.method = clazz.getMethod("startup", String[].class, Runnable.class);
     this.isRunning = clazz.getMethod("isRunning");
     this.run = clazz.getMethod("run", Object.class);
     this.shutdown = clazz.getMethod("shutdown");
+  }
+
+  @Override
+  protected void javaVersionCheck() {
+    assertJavaVersionGE(11, "Eclipse requires Java 11 or newer.");
   }
 
   public void preIteration(String size) throws Exception {

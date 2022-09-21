@@ -21,26 +21,34 @@
 
   <target name="unpack" depends="untar"/>
 
-    <target name="build">
-        <ant antfile="common-build.xml" target="ivy-bootstrap" dir="${lib-build-top}" inheritall="false"/>
-        <typedef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpath="${user.home}/.ant/lib/ivy-2.4.0.jar"/>
-        <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
-        <ant antfile="build.xml" target="default" dir="${lib-build-top}/demo/" inheritall="false"/>
+    <target name="make-exe">
+        <antcall target="make-executable">
+            <param name="target-filename" value="${lib-build-top}/gradlew"/>
+        </antcall>
+    </target>
+
+    <target name="build" depends="make-exe">
+        <exec executable="${lib-build-top}/gradlew" dir="${lib-build-top}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg value=":lucene:core:jar"/>
+            <arg value=":lucene:queryparser:jar"/>
+            <arg value=":lucene:demo:jar"/>
+        </exec>
     </target>
 
     <target name="jar">
         <copy todir="${lib-jars}">
-            <fileset dir="${lib-build-top}/build/core">
+            <fileset dir="${lib-build-top}/lucene/core/build/libs">
                 <include name="lucene-core-*.jar"/>
             </fileset>
         </copy>
         <copy todir="${lib-jars}">
-            <fileset dir="${lib-build-top}/build/demo">
+            <fileset dir="${lib-build-top}/lucene/demo/build/libs">
                 <include name="lucene-demo-*.jar"/>
             </fileset>
         </copy>
         <copy todir="${lib-jars}">
-            <fileset dir="${lib-build-top}/build/queryparser/">
+            <fileset dir="${lib-build-top}/lucene/queryparser/build/libs">
                 <include name="lucene-queryparser-*.jar"/>
             </fileset>
         </copy>

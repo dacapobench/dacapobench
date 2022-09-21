@@ -18,7 +18,7 @@
 
     <target name="bm-build" depends="lucene">
         <mkdir dir="${bm-build-dir}"/>
-        <javac srcdir="${bm-src-dir}" source="1.8"
+        <javac fork="yes" executable="${jdk.11.home}/bin/javac" srcdir="${bm-src-dir}"
            classpath="${harness-classpath}:${lucene-jars}/${lucene-core-jar-name}:${lucene-jars}/${lucene-demos-jar-name}" 
            destdir="${bm-build-dir}" 
            includes="org/dacapo/luindex/*" debug="true" debuglevel="lines,vars,source"/>

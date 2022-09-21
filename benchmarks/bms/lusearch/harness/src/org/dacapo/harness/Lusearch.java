@@ -34,6 +34,11 @@ public class Lusearch extends org.dacapo.harness.Benchmark {
   }
 
   @Override
+  protected void javaVersionCheck() {
+    assertJavaVersionGE(11, "Lusearch requires Java 11 or newer.");
+  }
+
+  @Override
   public void iterate(String size) throws Exception {
     method.invoke(benchmark, (Object) (config.preprocessArgs(size, scratch, data)));
   }
