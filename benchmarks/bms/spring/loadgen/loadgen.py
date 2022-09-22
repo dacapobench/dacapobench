@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
-# Generate a load for PetClinic app within spring workload.
+# Generate a load for PetClinic app within spring workload.    The load is based
+# loosely on the jmeter script at src/test/jmeter/petclinic_test_plan.jmx
 #
 # Creates two files:
 #    requests.txt  (which will be included in downloads/spring-data.zip)
@@ -53,10 +54,11 @@ def random_street_address():
 
 
 def random_date(start, end, dash):
-    fmt = '%Y-%m-%d' if dash else '%Y/%m/%d'  # '-' for sql, '/' for http
+    fmt = '%Y-%m-%d'
     s = mktime(strptime(start, fmt))
     e = mktime(strptime(end, fmt))
     date = s + random() * (e - s)
+    fmt = '%Y-%m-%d' if dash else '%Y/%m/%d'  # '-' for sql, '/' for http
     return strftime(fmt, localtime(date))
 
 class Owner:
@@ -94,7 +96,7 @@ class Visit:
 
 def gen_session(owner_id, owners, pet_id, pets, idx):
     dummy_digest = "     0 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX "
-    generic = ["G/resources/css/petclinic.css","G/resources/images/favicon.png","G/resources/images/pets.png","G/webjars/jquery/2.2.4/jquery.min.js","G/vets.html","G/owners/find"]
+    generic = ["G/resources/css/petclinic.css","G/resources/images/favicon.png","G/resources/images/pets.png","G/webjars/bootstrap/dist/js/bootstrap.bundle.min.js","G/vets.html","G/owners/find"]
     match idx:
         case 0:
             return dummy_digest+"G/\n" + dummy_digest + choice(generic)
@@ -113,7 +115,10 @@ def gen_session(owner_id, owners, pet_id, pets, idx):
         case 5:
             ses = dummy_digest + "G/owners/"+str(owner_id)+"/edit\n"
             ses = ses + dummy_digest + "P/owners/"+str(owner_id)+"/edit/"
-            ses = ses + "&firstName="+choice(given_names)+"&lastName="+owners[owner_id-1].family+"&address="+random_street_address()+"&telephone="+str(owners[owner_id-1].phone)
+            old = owners[owner_id-1].street
+            idx = randrange(1,len(old))
+            newAddress = old[:idx]+"Z"+old[idx + 1:]
+            ses = ses + "&firstName="+owners[owner_id-1].given+"&lastName="+owners[owner_id-1].family+"&address="+newAddress+"&telephone="+str(owners[owner_id-1].phone)
             return ses
             """
 generic:

@@ -13,20 +13,23 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="spring"/>
-    <property name="bm-version" value="2.4.5"/>
-    <property name="bm-version-str" value="springboot ${bm-version} petclinic ${bm-version} hibernate 5.4.30 tomcat 9.0.45"/>
+    <property name="bm-version" value="2.7.3"/>
+    <property name="bm-version-str" value="springboot ${bm-version} petclinic ${bm-version} h2 2.1.214 hibernate 5.6.10 tomcat 9.0.65"/>
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tgz"/>
+    <property name="git-group" value="spring-projects"/>
+    <property name="git-project" value="spring-petclinic"/>
+    <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
+    <property name="bm-git-commit" value="bff9b3924ffb042c67612d8617110edd6f680917"/>
 
     <import file="../common.xml"/>
+
+    <target name="unpack" depends="untar, patch"/>
 
     <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
     <property name="mvn-exe" value="${mvn-home}/mvn"/>
     <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
         <os family="windows"/>
     </condition>
-
-    <target name="unpack" depends="untar, patch"/>
-
     <condition property="build-script" value="${bm-build-dir}/mvnw.cmd">
         <os family="windows"/>
     </condition>

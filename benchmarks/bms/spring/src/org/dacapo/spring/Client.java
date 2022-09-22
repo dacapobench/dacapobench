@@ -67,7 +67,7 @@ public class Client implements Runnable {
       cursor += stride;
     }
     int batches = (rtn  / stride);
-    if (fivePercent > 0 && batches % fivePercent == 0) {
+    if (fivePercent > 0 && batches % fivePercent == 0 && !GEN_DIGESTS) {
       int percentage = 5 * (batches / fivePercent);
       if (percentage <= 100)
         System.out.print("Completing query batches: "+percentage+"%\r");
@@ -120,7 +120,7 @@ public class Client implements Runnable {
     try {
       boolean get = rq instanceof GetMethod;
       final int result = httpClient.executeMethod(rq);
-      if (result != 200)
+      if (!(result == 200 || (!get && result == 302))) // redirect on post is OK
         System.err.println("Unexpected response. Got "+result+" for request "+(get ? "GET " : "POST ")+request);
       else {
         final String response = readStream(rq.getResponseBodyAsStream());
