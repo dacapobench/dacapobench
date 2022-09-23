@@ -7,18 +7,18 @@ benchmark tomcat
 
 size small args "4"
   thread-limit 4
-  output stdout digest 0x0890d1b13d75b260f2d44c367914c4755465e56e,
-         stderr digest 0x7593ad95d711d65ecff11966c36e589152c0e616;
+  output stdout digest 0xe76c7ddecf08e2df8473f8ae11e8ed152118288c,
+         stderr digest 0xed8dee5d047d5a592fc65cdf800a83d74ebc5952;
 
 size default args "2000"
   thread-limit 512
-  output stdout digest 0x1d5b763b0c62c166ac60cd1c5d2d0e07df8c745f,
-         stderr digest 0xbb051db2c58368403bf9961db23c6a29047cf59c;
+  output stdout digest 0xe76c7ddecf08e2df8473f8ae11e8ed152118288c,
+         stderr digest 0x9e3bf6dd352112a5d95adcaa8069a8016cba2160;
 
 size large args "20000"
   thread-limit 4096
-  output stdout digest 0xa4154402b4ff0e6aba350b40574b6f75f2b39774,
-         stderr digest 0xda0fe44ff5c8852cb0d3a39f2b72a8e17f1c0c7a;
+  output stdout digest 0xe76c7ddecf08e2df8473f8ae11e8ed152118288c,
+         stderr digest 0x26042bff1002ee71320f7181e501c95d18693a7d;
 
 description
   short		"Tomcat servlet container",

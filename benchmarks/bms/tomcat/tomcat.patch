@@ -1,0 +1,32 @@
+diff -ur ../orig-dist/conf/catalina.properties apache-tomcat-9.0.19-src/output/dist/conf/catalina.properties
+--- ../orig-dist/conf/catalina.properties	2020-07-08 15:44:06.162809295 +1000
++++ apache-tomcat-9.0.19-src/output/dist/conf/catalina.properties	2020-07-08 16:11:39.777156418 +1000
+@@ -50,7 +50,7 @@
+ #       ${catalina.base} path or the ${catalina.home} path contains a comma.
+ #       Because double quotes are used for quoting, the double quote character
+ #       may not appear in a path.
+-common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"
++common.loader=${catalina.cl.repo}
+ 
+ #
+ # List of comma-separated paths defining the contents of the "server"
+diff -ur ../orig-dist/conf/tomcat-users.xml apache-tomcat-9.0.19-src/output/dist/conf/tomcat-users.xml
+--- ../orig-dist/conf/tomcat-users.xml	2020-07-08 15:44:06.162809295 +1000
++++ apache-tomcat-9.0.19-src/output/dist/conf/tomcat-users.xml	2020-07-08 16:11:39.777156418 +1000
+@@ -34,11 +34,9 @@
+   examples web application, do not forget to remove the <!.. ..> that surrounds
+   them. You will also need to set the passwords to something appropriate.
+ -->
+-<!--
+-  <role rolename="tomcat"/>
+-  <role rolename="role1"/>
+-  <user username="tomcat" password="<must-be-changed>" roles="tomcat"/>
+-  <user username="both" password="<must-be-changed>" roles="tomcat,role1"/>
+-  <user username="role1" password="<must-be-changed>" roles="role1"/>
+--->
++<role rolename="manager-gui"/>
++<role rolename="manager-status"/>
++<role rolename="manager-script"/>
++<role rolename="manager-jmx"/>
++<user username="tomcat" password="s3cret" roles="manager-gui,manager-status,manager-script,manager-jmx"/>
+ </tomcat-users>

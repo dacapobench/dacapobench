@@ -12,10 +12,10 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="tomcat"/>
-    <property name="bm-major-version" value="9"/>
-    <property name="bm-version" value="${bm-major-version}.0.55"/>
+    <property name="bm-major-version" value="10"/>
+    <property name="bm-version" value="${bm-major-version}.0.23"/>
     <property name="bm-version-str" value="tomcat ${bm-version}"/>
-    <property name="bm-url" value="${apache.dl.url}/${bm-name}/${bm-name}-9/v${bm-version}/src"/>
+    <property name="bm-url" value="${apache.dl.url}/${bm-name}/${bm-name}-${bm-major-version}/v${bm-version}/src"/>
     <property name="bm-src-basename" value="apache-${bm-name}-${bm-version}-src"/>
     <property name="bm-src" value="${bm-src-basename}.tar.gz"/>
 
@@ -25,7 +25,7 @@
 
     <import file="../common.xml"/>
 
-    <target name="unpack" depends="untar,patch"/>
+    <target name="unpack" depends="untar"/>
 
     <target name="bm-build" depends="build-properties,commons-httpclient,dacapo-digest">
         <ant dir="${bm-build-top}" target="download-compile"/>
@@ -58,7 +58,7 @@
     </target>
 
     <target name="data">
-        <patch patchfile="${bm-files}/tomcat-dist.patch" strip="1" dir="${bm-build-top}"/>
+        <patch patchfile="${bm-files}/tomcat.patch" strip="1" dir="${bm-build-top}"/>
 
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}/output/dist">

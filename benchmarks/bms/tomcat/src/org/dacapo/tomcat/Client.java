@@ -32,11 +32,12 @@ public class Client implements Runnable {
   private final int pageCount;
   private final boolean verbose;
   private final int port;
+  private final int fivePercent;
 
   /**
    * The pages to iterate through
    */
-  private final List<Page> pages = Arrays.asList(
+  public static final List<Page> pages = Arrays.asList(
       new HttpGet("/examples/jsp/jsp2/el/basic-arithmetic.jsp","dc3db1fb460a427ad6aef0b71d42319213a81f67"),
       new HttpGet("/examples/jsp/jsp2/el/basic-comparisons.jsp","7ea08cc03fe9ff5d3cdd7cec7ae5dc1badc2da60"),
       new HttpGet("/examples/jsp/jsp2/el/implicit-objects.jsp?foo=bar","3f8a13e109a21ebf947c8cba40c077ba7c90e0e5"),
@@ -102,7 +103,6 @@ public class Client implements Runnable {
       new HttpGet("/examples/jsp/forward/forward.jsp",200),
 
       // Just shows the "plugin not accepted' response
-      new HttpGet("/examples/jsp/plugin/plugin.jsp",200,"032d12a8e82f26b1495ff0c7a26876b951b78d3f"),
       new HttpGet("/examples/jsp/jsptoserv/jsptoservlet.jsp",200,"e3546b90c41561db4f0fca4ca7115112a11d0506"),
 
       // Writes the date
@@ -127,20 +127,41 @@ public class Client implements Runnable {
     this.pageCount = pageCount;
     this.verbose = verbose;
     this.port = port;
+    fivePercent = pageCount/20;
   }
 
+
+  static Integer count = 0;
+
+  private int inc() {
+    int rtn;
+    synchronized(count) {
+      rtn = count++;
+      if (fivePercent != 0 ) {
+        if (rtn < pageCount) {
+          if (count % fivePercent == 0) {
+            int percentage = 5 * (count / fivePercent);
+            System.err.print("Completing requests: "+percentage+"%\r");
+          }
+        } else if (rtn == pageCount) {
+          System.err.println();
+        }
+      }
+    }
+    return rtn;
+  }
   /**
    * @see java.lang.Runnable#run()
    */
   public void run() {
     final Session session = Session.create(port);
     try {
-      for (int i = 0; i < pageCount; i++) {
+      while (inc() < pageCount) {
         for (int p = 0; p < pages.size(); p++) {
           Page page = pages.get(p);
-          LatencyReporter.start(ordinal);
+          int idx = LatencyReporter.stridedStart(ordinal);
           boolean result = page.fetch(session, null, verbose);
-          LatencyReporter.end(ordinal);
+          LatencyReporter.endIdx(idx);
         }
       }
     } catch (Exception e) {

@@ -68,6 +68,10 @@ public class LatencyReporter {
   }
 
   public static void initialize(int transactions, int threads, int batch) {
+    initialize(transactions, threads, batch, 1);
+  }
+
+  public static void initialize(int transactions, int threads, int batch, int stride) {
     batchSize = batch;
     timerBase = System.nanoTime();
     if (transactions > LATENCY_BUFFER_SIZE) {
@@ -79,7 +83,7 @@ public class LatencyReporter {
       txend = new float[transactions];
       reporters = new LatencyReporter[threads];
       for (int i = 0; i < threads; i++) {
-        reporters[i] = new LatencyReporter(i, threads, transactions);
+        reporters[i] = new LatencyReporter(i, threads, transactions, stride);
       }
     }
   }
@@ -237,6 +241,9 @@ public class LatencyReporter {
     return idx;
   }
 
+  public static int stridedStart(int threadID) {
+    return reporters[threadID].stridedStart();
+  }
   public int stridedStart() {
     idx++;
     if (idx % stride == 0)

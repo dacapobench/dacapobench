@@ -15,6 +15,7 @@ import java.lang.reflect.Constructor;
 
 import sun.misc.Unsafe;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
@@ -159,23 +160,19 @@ public class Tomcat extends Benchmark {
     String[] args = config.getArgs(size);
     final int iterations = Integer.parseInt(args[0]);
 
-    /*
-     * In case the # iterations doesn't evenly divide among the processors, we
-     * ensure that some threads do one more iteration than others
-     */
-    final int iterationsPerClient = iterations / threadCount;
-    final int oddIterations = iterations - (iterationsPerClient * threadCount);
+    Field f = Class.forName("org.dacapo.tomcat.Client", true, loader).getField("pages");
+    int stride = ((List) (f.get(null))).size();
+    int requests = iterations * stride;
 
     final Thread[] threads = new Thread[threadCount];
-    System.out.println("Creating client threads to issue "+iterations+" rounds of 41 requests ("+(41*iterations)+").");
-    LatencyReporter.initialize(41*iterations, threadCount);
+    LatencyReporter.initialize(requests, threadCount, 1, stride);
+    LatencyReporter.resetIndex(stride);
     LatencyReporter.requestsStarting();
     for (int i = 0; i < threadCount; i++) {
-      Runnable client = clientConstructor.newInstance(scratch, i, iterationsPerClient + (i < oddIterations ? 1 : 0), getVerbose(), PORT);
+      Runnable client = clientConstructor.newInstance(scratch, i, iterations, getVerbose(), PORT);
       threads[i] = new Thread(client);
       threads[i].start();
     }
-    System.out.println("Waiting for clients to complete");
     for (int i = 0; i < threadCount; i++) {
       threads[i].join();
     }
