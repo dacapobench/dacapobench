@@ -21,7 +21,7 @@
     </target>
 
     <!-- batik-->
-    <property name="batik-version" value="1.14"/>
+    <property name="batik-version" value="1.15"/>
     <property name="batik-jar" value="${lib-base}/batik/dist/jar/batik-all-${batik-version}.jar"/>
     <target name="batik">
         <ant antfile="${lib-base}/batik/build.xml"/>
