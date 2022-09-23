@@ -1,8 +1,8 @@
-diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/wildfly-23.0.2.Final/standalone/configuration/standalone.xml
---- wildfly-23.0.2.Final/standalone/configuration/standalone.xml	2021-04-27 13:25:06.000000000 +1000
-+++ ../build/wildfly-23.0.2.Final/standalone/configuration/standalone.xml	2021-05-02 21:10:35.392635113 +1000
+diff '--color=auto' -ur ./wildfly-26.1.2.Final/standalone/configuration/standalone.xml ../build/wildfly-26.1.2.Final/standalone/configuration/standalone.xml
+--- ./wildfly-26.1.2.Final/standalone/configuration/standalone.xml	2022-08-28 22:28:48.000000000 +0000
++++ ../build/wildfly-26.1.2.Final/standalone/configuration/standalone.xml	2022-09-23 06:27:23.455520899 +0000
 @@ -31,6 +31,7 @@
-         <extension module="org.wildfly.extension.elytron"/>
+         <extension module="org.wildfly.extension.elytron-oidc-client"/>
          <extension module="org.wildfly.extension.health"/>
          <extension module="org.wildfly.extension.io"/>
 +        <extension module="org.wildfly.extension.messaging-activemq"/>
@@ -16,8 +16,8 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
 +        <extension module="org.wildfly.iiop-openjdk"/>
      </extensions>
      <management>
-         <security-realms>
-@@ -144,16 +146,20 @@
+         <audit-log>
+@@ -119,16 +121,20 @@
              </job-repository>
              <thread-pool name="batch">
                  <max-threads count="10"/>
@@ -27,7 +27,7 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
          </subsystem>
          <subsystem xmlns="urn:jboss:domain:bean-validation:1.0"/>
          <subsystem xmlns="urn:jboss:domain:core-management:1.0"/>
-         <subsystem xmlns="urn:jboss:domain:datasources:6.0">
+         <subsystem xmlns="urn:jboss:domain:datasources:7.0">
              <datasources>
 -                <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true" statistics-enabled="${wildfly.datasources.statistics-enabled:${wildfly.statistics-enabled:false}}">
 +                <datasource jndi-name="java:/jdbc/TradeDataSource" pool-name="trader" enabled="true" use-java-context="true" statistics-enabled="true">
@@ -40,7 +40,7 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
                      <security>
                          <user-name>sa</user-name>
                          <password>sa</password>
-@@ -193,7 +199,6 @@
+@@ -168,7 +174,6 @@
                      <managed-scheduled-executor-service name="default" jndi-name="java:jboss/ee/concurrency/scheduler/default" context-service="default" hung-task-termination-period="0" hung-task-threshold="60000" keepalive-time="3000"/>
                  </managed-scheduled-executor-services>
              </concurrent>
@@ -48,7 +48,7 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
          </subsystem>
          <subsystem xmlns="urn:jboss:domain:ee-security:1.0"/>
          <subsystem xmlns="urn:jboss:domain:ejb3:9.0">
-@@ -204,6 +209,10 @@
+@@ -179,6 +184,10 @@
                  <stateful default-access-timeout="5000" cache-ref="simple" passivation-disabled-cache-ref="simple"/>
                  <singleton default-access-timeout="5000"/>
              </session-bean>
@@ -59,7 +59,7 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
              <pools>
                  <bean-instance-pools>
                      <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
-@@ -225,15 +234,17 @@
+@@ -200,15 +209,17 @@
              </timer-service>
              <remote cluster="ejb" connectors="http-remoting-connector" thread-pool-name="default">
                  <channel-creation-options>
@@ -76,21 +76,21 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
              </thread-pools>
 +            <iiop enable-by-default="false" use-qualified-name="false"/>
              <default-security-domain value="other"/>
-             <default-missing-method-permissions-deny-access value="true"/>
-             <statistics enabled="${wildfly.ejb3.statistics-enabled:${wildfly.statistics-enabled:false}}"/>
-@@ -357,6 +368,11 @@
-             </tls>
+             <application-security-domains>
+                 <application-security-domain name="other" security-domain="ApplicationDomain"/>
+@@ -344,6 +355,11 @@
          </subsystem>
+         <subsystem xmlns="urn:wildfly:elytron-oidc-client:1.0"/>
          <subsystem xmlns="urn:wildfly:health:1.0" security-enabled="false"/>
 +        <subsystem xmlns="urn:jboss:domain:iiop-openjdk:2.1">
 +            <orb socket-binding="iiop"/>
 +            <initializers security="identity" transactions="spec"/>
 +            <security server-requires-ssl="false" client-requires-ssl="false"/>
 +        </subsystem>
-         <subsystem xmlns="urn:jboss:domain:infinispan:12.0">
-             <cache-container name="ejb" default-cache="passivation" aliases="sfsb" modules="org.wildfly.clustering.ejb.infinispan">
+         <subsystem xmlns="urn:jboss:domain:infinispan:13.0">
+             <cache-container name="ejb" default-cache="passivation" marshaller="PROTOSTREAM" aliases="sfsb" modules="org.wildfly.clustering.ejb.infinispan">
                  <local-cache name="passivation">
-@@ -400,13 +416,13 @@
+@@ -395,13 +411,13 @@
                      <core-threads count="50"/>
                      <queue-length count="50"/>
                      <max-threads count="50"/>
@@ -106,7 +106,7 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
                  </long-running-threads>
              </default-workmanager>
              <cached-connection-manager/>
-@@ -427,6 +443,37 @@
+@@ -422,6 +438,37 @@
              </mail-session>
          </subsystem>
          <subsystem xmlns="urn:wildfly:metrics:1.0" security-enabled="false" exposed-subsystems="*" prefix="${wildfly.metrics.prefix:wildfly}"/>
@@ -141,10 +141,10 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
 +                <pooled-connection-factory name="activemq-ra" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="in-vm" transaction="xa"/>
 +            </server>
 +        </subsystem>
-         <subsystem xmlns="urn:wildfly:microprofile-config-smallrye:1.0"/>
+         <subsystem xmlns="urn:wildfly:microprofile-config-smallrye:2.0"/>
          <subsystem xmlns="urn:wildfly:microprofile-jwt-smallrye:1.0"/>
          <subsystem xmlns="urn:wildfly:microprofile-opentracing-smallrye:3.0" default-tracer="jaeger">
-@@ -530,6 +577,9 @@
+@@ -496,6 +543,9 @@
          <interface name="public">
              <inet-address value="${jboss.bind.address:127.0.0.1}"/>
          </interface>
@@ -154,7 +154,7 @@ diff -ur wildfly-23.0.2.Final/standalone/configuration/standalone.xml ../build/w
      </interfaces>
      <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
          <socket-binding name="ajp" port="${jboss.ajp.port:8009}"/>
-@@ -539,6 +589,8 @@
+@@ -505,6 +555,8 @@
          <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9993}"/>
          <socket-binding name="txn-recovery-environment" port="4712"/>
          <socket-binding name="txn-status-manager" port="4713"/>

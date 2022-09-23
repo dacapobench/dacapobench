@@ -21,7 +21,6 @@
     <property name="lib-version" value="svn-${daytrader-svn-revision}"/>
     <property name="lib-src" value="daytrader-${lib-version}-src.tar.gz"/>
 
-    <property name="wildfly-version" value="23.0.2"/>
     <property name="wildfly" value="wildfly-${wildfly-version}.Final.zip"/>
 
     <import file="../common.xml"/>
@@ -38,7 +37,7 @@
     <target name="url-source">
         <antcall target="check-source">
             <param name="target-dir" value="${lib-downloads}"/>
-            <param name="target-url" value="https://download.jboss.org/wildfly/${wildfly-version}.Final"/>
+            <param name="target-url" value="${github.url}/wildfly/wildfly/releases/download/${wildfly-version}.Final"/>
             <param name="target-file" value="${wildfly}"/>
         </antcall>
     </target>
