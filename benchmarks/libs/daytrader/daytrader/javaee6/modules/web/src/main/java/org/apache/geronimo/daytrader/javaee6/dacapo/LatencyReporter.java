@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class LatencyReporter {
   private static Method dacapoInitializeLR;
+  private static Method dacapoRequestsReset;
   private static Method dacapoRequestsStarting;
   private static Method dacapoRequestsFinished;
   private static Method dacapoRequestStart;
@@ -31,6 +32,7 @@ public class LatencyReporter {
       dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class);
       dacapoRequestStart = clazz.getDeclaredMethod("start", null);
       dacapoRequestEnd = clazz.getMethod("endIdx", int.class);
+      dacapoRequestsReset = clazz.getDeclaredMethod("resetIndex", int.class);
       dacapoRequestsStarting = clazz.getDeclaredMethod("requestsStarting", null);
       dacapoRequestsFinished = clazz.getDeclaredMethod("requestsFinished", null);
     } catch (ClassNotFoundException e) {
@@ -51,6 +53,7 @@ public class LatencyReporter {
 
   static void starting() {
     try {
+      dacapoRequestsReset.invoke(null, 1);
       dacapoRequestsStarting.invoke(null);
     } catch (IllegalAccessException e) {
       System.err.println("Failed to access DaCapo latency reporter: "+e);

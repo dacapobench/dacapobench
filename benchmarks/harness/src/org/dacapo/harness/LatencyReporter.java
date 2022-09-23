@@ -225,7 +225,6 @@ public class LatencyReporter {
     if (callback != null) callback.requestsFinished();
   }
 
-
   public static void resetIndex(int stride) {
     globalIdx = -stride;
   }
