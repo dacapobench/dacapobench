@@ -22,8 +22,7 @@ import java.util.List;
 * id: $Id: Launcher.java 738 2009-12-24 00:19:36Z steveb-oss $
 */
 public class Launcher {
-  // Geronimo configuration
-  private final static String VERSION = "23.0.2";
+  private final static String VERSION = "26.1.2";
   private final static String TYPE = "Final";
   private final static String DIRECTORY = "wildfly-" + VERSION + "." + TYPE;
   private final static String EAR = "daytrader-ear-3.0-SNAPSHOT.ear";

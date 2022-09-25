@@ -67,7 +67,7 @@ public class Tradesoap extends Benchmark {
     }
     System.out.println("Shutting down Wildfly...");
     if (!getPreserve()) {
-      deleteTree(new File(scratch, "wildfly-20.0.1.Final"));
+      deleteTree(new File(scratch, "wildfly-26.1.2.Final"));
       deleteTree(new File(scratch, "jar"));
     }
   }
