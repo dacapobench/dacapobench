@@ -131,7 +131,7 @@ public class Client implements Runnable {
   }
 
 
-  static Integer count = 0;
+  public static Integer count = 0;
 
   private int inc() {
     int rtn;
