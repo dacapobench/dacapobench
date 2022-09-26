@@ -34,7 +34,7 @@ public class LatencyReporter {
   private int idxOffset;
   private int idx;
   private double max;
-  private int stride;
+  private static int stride;
 
   static float[] txbegin;
   static float[] txend;
@@ -48,12 +48,10 @@ public class LatencyReporter {
   public LatencyReporter(int threadID, int threads, int transactions) {
     idx = idxOffset = getBaseIdx(threadID, threads, transactions);
     max = 0;
-    stride = 1;
     reporters[threadID] = this;
   }
 
   public LatencyReporter(int threadID, int threads, int transactions, int stride) {
-    this.stride = stride;
     idx = -1;
     max = 0;
     reporters[threadID] = this;
@@ -71,7 +69,8 @@ public class LatencyReporter {
     initialize(transactions, threads, batch, 1);
   }
 
-  public static void initialize(int transactions, int threads, int batch, int stride) {
+  public static void initialize(int transactions, int threads, int batch, int _stride) {
+    stride = _stride;
     batchSize = batch;
     timerBase = System.nanoTime();
     if (transactions > LATENCY_BUFFER_SIZE) {
@@ -216,6 +215,7 @@ public class LatencyReporter {
   }
 
   public static void requestsStarting() {
+    resetIndex();
     System.err.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
   }
@@ -225,7 +225,11 @@ public class LatencyReporter {
     if (callback != null) callback.requestsFinished();
   }
 
-  public static void resetIndex(int stride) {
+  public static void _resetIndex(int stride) {
+    globalIdx = -stride;
+  }
+
+  public static void resetIndex() {
     globalIdx = -stride;
   }
 
@@ -235,9 +239,18 @@ public class LatencyReporter {
    * @return the index
    */
   public static int start() {
-    int idx = inc(1);
+    int idx = inc();
     startIdx(idx);
     return idx;
+  }
+
+
+  private static int inc() {
+    int rtn;
+    synchronized (globalIdx) {
+       rtn = globalIdx += stride;
+    }
+    return rtn;
   }
 
   public static int stridedStart(int threadID) {
@@ -246,18 +259,19 @@ public class LatencyReporter {
   public int stridedStart() {
     idx++;
     if (idx % stride == 0)
-      idx = inc(stride);
-    startIdx(idx);
+      idx = inc();
+    if (idx < txbegin.length)
+      startIdx(idx);
     return idx;
   }
 
-  private static int inc(int stride) {
-    int rtn;
-    synchronized (globalIdx) {
-       rtn = globalIdx += stride;
-    }
-    return rtn;
+  public static void stridedEnd(int threadID) {
+    reporters[threadID].stridedEnd();
   }
+  public void stridedEnd() {
+    _end(idx);
+  }
+
 
   /**
    * Start a request (using a thread-local index). This avoids the
@@ -267,7 +281,7 @@ public class LatencyReporter {
    * @param threadID the thread in which the request will start.
    * @return a unique index into a thread-local result table.
    */
-  public static int start(int threadID) {
+  public static int _start(int threadID) {
     int index = 0;
     index = reporters[threadID].idx++;
     startIdx(index);
@@ -295,7 +309,7 @@ public class LatencyReporter {
    * 
    * @param index the global index for the request that completed.
    */
-  public static void endIdx(int index) {
+  public static void _endIdx(int index) {
     _end(index);
   }
 

@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java
 --- ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2022-08-26 09:29:25.268760499 +0000
++++ ../build/ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/CassandraCQLClient.java	2022-09-26 06:58:00.338665332 +0000
 @@ -587,7 +587,8 @@
  
        return Status.OK;
@@ -13,7 +13,7 @@ diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/main/java/site/ycsb/db/Cassand
      return Status.ERROR;
 diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java
 --- ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2022-08-26 09:29:25.268760499 +0000
++++ ../build/ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/CassandraCQLClientTest.java	2022-09-26 06:58:00.338665332 +0000
 @@ -56,7 +56,7 @@
   */
  public class CassandraCQLClientTest {
@@ -25,7 +25,7 @@ diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/Cassand
    private final static String HOST = "localhost";
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2022-08-26 09:35:45.768307718 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java	2022-09-26 06:58:45.950641130 +0000
 @@ -33,6 +33,9 @@
  import java.util.concurrent.CountDownLatch;
  import java.util.concurrent.TimeUnit;
@@ -94,39 +94,41 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
          workload.cleanup();
        }
      } catch (WorkloadException e) {
-@@ -396,8 +399,75 @@
+@@ -396,8 +399,78 @@
        e.printStackTrace();
        System.exit(-1);
      }
 +  }
  
 -    System.exit(0);
++  private static int transactions;
 +  private static Method dacapoInitializeLR;
 +  private static Method dacapoRequestsStarting;
 +  private static Method dacapoRequestsFinished;
 +  private static Method dacapoRequestStart;
 +  private static Method dacapoRequestEnd;
-+  private static void dacapoInitializeLR(int transactions, int threads) {
++  private static void dacapoInitializeLR(int tx, int threads) {
++    transactions = tx;
 +    try {
 +      Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter",
 +          true, Client.class.getClassLoader());
-+      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class);
-+      dacapoRequestStart = clazz.getMethod("start", int.class);
-+      dacapoRequestEnd = clazz.getMethod("end", int.class);
++      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class, int.class, int.class);
++      dacapoRequestStart = clazz.getMethod("stridedStart", int.class);
++      dacapoRequestEnd = clazz.getMethod("stridedEnd", int.class);
 +      dacapoRequestsStarting = clazz.getDeclaredMethod("requestsStarting", null);
 +      dacapoRequestsFinished = clazz.getDeclaredMethod("requestsFinished", null);
 +    } catch (ClassNotFoundException e) {
-+      System.err.println("Failed to resolve DaCapo latency reporter class: "+e);
++      System.err.println("Failed to resolve DaCapo latency reporter class: "+e); e.printStackTrace();
 +    } catch (NoSuchMethodException e) {
-+      System.err.println("Failed to resolve methods within DaCapo latency reporter: "+e);
++      System.err.println("Failed to resolve methods within DaCapo latency reporter: "+e); e.printStackTrace();
 +    }
 +
 +    try {
-+      dacapoInitializeLR.invoke(null, transactions, threads);
++      dacapoInitializeLR.invoke(null, transactions, threads, 1, 100);
 +    } catch (IllegalAccessException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to access DaCapo LatencyReporter.initialize(): "+e); e.printStackTrace();
 +    } catch (InvocationTargetException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to invoke DaCapo LatencyReporter.initialize(): "+e); e.printStackTrace();
 +    }
 +  }
 +
@@ -134,9 +136,9 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
 +    try {
 +      dacapoRequestsStarting.invoke(null);
 +    } catch (IllegalAccessException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to access DaCapo LatencyReporter.requestsStarting(): "+e); e.printStackTrace();
 +    } catch (InvocationTargetException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to invoke DaCapo LatencyReporter.requestsStarting(): "+e); e.printStackTrace();
 +    }
 +  }
 +
@@ -144,34 +146,35 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
 +    try {
 +      dacapoRequestsFinished.invoke(null);
 +    } catch (IllegalAccessException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to access DaCapo LatencyReporter.requestsFinished(): "+e); e.printStackTrace();
 +    } catch (InvocationTargetException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to invoke DaCapo LatencyReporter.requestsFinished(): "+e); e.printStackTrace();
 +    }
 +  }
 +
-+  public static void dacapoRequestStart(int threadID) {
++  public static boolean dacapoRequestStart(int threadID) {
 +    try {
-+      dacapoRequestStart.invoke(null, threadID);
++      return ((Integer) dacapoRequestStart.invoke(null, threadID) < transactions);
 +    } catch (IllegalAccessException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to access DaCapo LatencyReporter.stridedStart(): "+e); e.printStackTrace();
 +    } catch (InvocationTargetException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to invoke DaCapo LatencyReporter.stridedStart(): "+e); e.printStackTrace();
 +    }
++    return false;
 +  }
 +
 +  public static void dacapoRequestEnd(int threadID) {
 +    try {
 +      dacapoRequestEnd.invoke(null, threadID);  // only one reporter object
 +    } catch (IllegalAccessException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to access DaCapo LatencyReporter.stridedEnd(): "+e); e.printStackTrace();
 +    } catch (InvocationTargetException e) {
-+      System.err.println("Failed to access DaCapo latency reporter: "+e);
++      System.err.println("Failed to invoke DaCapo LatencyReporter.stridedEnd(): "+e); e.printStackTrace();
 +    }
    }
  
    private static List<ClientThread> initDb(String dbname, Properties props, int threadcount,
-@@ -409,19 +479,25 @@
+@@ -409,19 +482,25 @@
      final List<ClientThread> clients = new ArrayList<>(threadcount);
      try (final TraceScope span = tracer.newScope(CLIENT_INIT_SPAN)) {
        int opcount;
@@ -197,7 +200,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
        for (int threadid = 0; threadid < threadcount; threadid++) {
          DB db;
          try {
-@@ -506,13 +582,13 @@
+@@ -506,13 +585,13 @@
      try {
        Properties projectProp = new Properties();
        projectProp.load(classLoader.getResourceAsStream("project.properties"));
@@ -215,7 +218,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
      try {
        Class workloadclass = classLoader.loadClass(props.getProperty(WORKLOAD_PROPERTY));
  
-@@ -528,15 +604,8 @@
+@@ -528,15 +607,8 @@
  
    private static Properties parseArguments(String[] args) {
      Properties props = new Properties();
@@ -231,7 +234,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
      if (args.length == 0) {
        usageMessage();
        System.out.println("At least one argument specifying a workload is required.");
-@@ -565,6 +634,7 @@
+@@ -565,6 +637,7 @@
          props.setProperty(TARGET_PROPERTY, String.valueOf(ttarget));
          argindex++;
        } else if (args[argindex].compareTo("-load") == 0) {
@@ -241,7 +244,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
        } else if (args[argindex].compareTo("-t") == 0) {
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2022-08-26 09:29:25.268760499 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.java	2022-09-26 06:58:00.338665332 +0000
 @@ -44,6 +44,7 @@
    private Properties props;
    private long targetOpsTickNs;
@@ -269,11 +272,13 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.ja
      //NOTE: Switching to using nanoTime and parkNanos for time management here such that the measurements
      // and the client thread have the same view on time.
  
-@@ -119,12 +125,13 @@
+@@ -117,14 +123,14 @@
+       if (dotransactions) {
+         long startTimeNanos = System.nanoTime();
  
-         while (((opcount == 0) || (opsdone < opcount)) && !workload.isStopRequested()) {
+-        while (((opcount == 0) || (opsdone < opcount)) && !workload.isStopRequested()) {
++        while (Client.dacapoRequestStart(threadid) && !workload.isStopRequested()) {
  
-+          Client.dacapoRequestStart(threadid);
            if (!workload.doTransaction(db, workloadstate)) {
              break;
            }
@@ -285,7 +290,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.ja
            throttleNanos(startTimeNanos);
          }
        } else {
-@@ -135,9 +142,8 @@
+@@ -135,9 +141,8 @@
            if (!workload.doInsert(db, workloadstate)) {
              break;
            }
@@ -296,7 +301,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.ja
            throttleNanos(startTimeNanos);
          }
        }
-@@ -158,6 +164,15 @@
+@@ -158,6 +163,15 @@
      }
    }
  
@@ -314,7 +319,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.ja
        if (!spinSleep) {
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2022-08-26 09:29:25.268760499 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java	2022-09-26 06:58:00.338665332 +0000
 @@ -97,9 +97,11 @@
          }
        }
@@ -332,7 +337,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/DBWrapper.java 
  
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2022-08-26 09:29:25.268760499 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreWorkload.java	2022-09-26 06:58:00.338665332 +0000
 @@ -617,9 +617,9 @@
  
        } else {
@@ -347,7 +352,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/CoreW
  
 diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java
 --- ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2022-08-19 08:10:57.000000000 +0000
-+++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2022-08-26 09:29:25.268760499 +0000
++++ ../build/ycsb-0.17.0/core/src/main/java/site/ycsb/workloads/TimeSeriesWorkload.java	2022-09-26 06:58:00.338665332 +0000
 @@ -309,11 +309,11 @@
    
    /** Name and default value for the timestamp key property. */
