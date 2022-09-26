@@ -251,7 +251,8 @@ public class TPCC {
   public void preIteration(String size) throws Exception {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
-    LatencyReporter.initialize(totalTransactions, submitters.length);
+
+    LatencyReporter.initialize(totalTransactions, submitters.length, 1, 25);
     reporter.reset(totalTransactions);
 
     long start = System.currentTimeMillis();
