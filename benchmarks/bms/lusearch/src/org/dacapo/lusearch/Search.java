@@ -138,7 +138,8 @@ public class Search {
     }
     completed = 0;
     int totalQueries = totalQuerieSets * iterations * querySetSize;
-    LatencyReporter.initialize(totalQueries, threads, querySetSize);
+    LatencyReporter.initialize(totalQueries, threads, 1, querySetSize);
+    LatencyReporter.resetIndex();
     LatencyReporter.requestsStarting();
 
     for (int j = 0; j < threads; j++) {
@@ -256,7 +257,7 @@ public class Search {
         if (line.length() == 0)
           break;
 
-        LatencyReporter.start(threadID);
+        LatencyReporter.stridedStart(threadID);
         if (line.equals("OR") || line.equals("AND") || line.equals("NOT") || line.equals("TO"))
           line = line.toLowerCase();
 
@@ -270,7 +271,7 @@ public class Search {
         searcher.search(query, 10);
 
         doPagingSearch(query);
-        LatencyReporter.end(threadID);
+        LatencyReporter.stridedEnd(threadID);
       }
 
       reader.close();
