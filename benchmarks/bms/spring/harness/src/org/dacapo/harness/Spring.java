@@ -81,8 +81,8 @@ public class Spring extends Benchmark {
         int threadCount = config.getThreadCount(size);
         final Thread[] threads = new Thread[threadCount];
         int stride = Integer.parseInt(args[1]);
-        LatencyReporter.initialize(requests.length, threadCount);
-        LatencyReporter.resetIndex(stride);
+        LatencyReporter.initialize(requests.length, threadCount, 1, stride);
+        LatencyReporter.resetIndex();
         LatencyReporter.requestsStarting();
         for (int i = 0; i < threadCount; i++) {
             LatencyReporter lr = new LatencyReporter(i, threadCount, requests.length, stride);
