@@ -48,8 +48,8 @@ public class Kafka extends Benchmark {
 
     @Override
     public void iterate(String size) throws Exception {
-        LatencyReporter.initialize(Integer.parseInt(args[1]), 1);
-        LatencyReporter.resetIndex(1);
+        LatencyReporter.initialize(Integer.parseInt(args[1]), 1, 1, 100);
+        LatencyReporter.resetIndex();
         System.setProperty("TaskState", "Waiting");
         performIteration.invoke(launcherInstance);
     }

@@ -309,7 +309,7 @@ public class LatencyReporter {
    * 
    * @param index the global index for the request that completed.
    */
-  public static void _endIdx(int index) {
+  public static void endIdx(int index) {
     _end(index);
   }
 
