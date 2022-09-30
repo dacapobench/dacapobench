@@ -68,6 +68,10 @@ public class H2 extends Benchmark {
     }
   }
 
+  @Override
+  protected void javaVersionCheck() {
+    assertJavaVersionGE(11, "Lusearch requires Java 11 or newer.");
+  }
   
   /**
    * The benchmark run 

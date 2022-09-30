@@ -29,9 +29,11 @@
             </fileset>
         </copy>
         <exec executable="ant" dir="${lib-build-top}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg value="all"/>
         </exec>
         <exec executable="ant" dir="${lib-build-top}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg value="buildjars"/>
         </exec>
     </target>

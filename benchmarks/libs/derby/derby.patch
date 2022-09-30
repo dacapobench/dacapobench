@@ -1,6 +1,6 @@
-diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java
---- ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2018-03-11 03:30:56.000000000 +1100
-+++ ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Load.java	2019-06-25 11:45:35.000000000 +1000
+diff '--color=auto' -ur ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java
+--- ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java	2018-03-10 16:30:56.000000000 +0000
++++ ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Load.java	2022-09-30 12:29:01.939875945 +0000
 @@ -44,11 +44,11 @@
       * 
       * see section 1.2.1 of TPC-C specification
@@ -16,9 +16,9 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
  
      public static final int NEWORDERS_COUNT_W = (CUSTOMER_COUNT_W * 9) / 30;
  
-diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java
---- ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java	2018-03-11 03:30:56.000000000 +1100
-+++ ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/client/Submitter.java	2019-06-25 11:45:35.000000000 +1000
+diff '--color=auto' -ur ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java
+--- ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java	2018-03-10 16:30:56.000000000 +0000
++++ ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/client/Submitter.java	2022-09-30 12:29:01.939875945 +0000
 @@ -84,7 +84,26 @@
       * arrays with run information.
       */
@@ -56,9 +56,9 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
      
      /**
       * Generate a new random number generator
-diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java
---- ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2018-03-11 03:30:56.000000000 +1100
-+++ ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/direct/Standard.java	2019-06-25 11:51:00.000000000 +1000
+diff '--color=auto' -ur ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java
+--- ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java	2018-03-10 16:30:56.000000000 +0000
++++ ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/direct/Standard.java	2022-09-30 12:29:01.939875945 +0000
 @@ -20,11 +20,7 @@
  package org.apache.derbyTesting.system.oe.direct;
  
@@ -256,11 +256,11 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
 -                "UPDATE ORDERLINE SET OL_DELIVERY_D = CURRENT TIMESTAMP " +
 +                "UPDATE ORDERLINE SET OL_DELIVERY_D = CURRENT_TIMESTAMP " +
                  "WHERE OL_W_ID = ? AND OL_D_ID = ? AND OL_O_ID = ?");
-
-
-diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java
---- ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2018-03-11 03:30:56.000000000 +1100
-+++ ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2019-06-25 12:19:35.000000000 +1000
+             
+             
+diff '--color=auto' -ur ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java
+--- ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2018-03-10 16:30:56.000000000 +0000
++++ ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/load/SimpleInsert.java	2022-09-30 12:29:01.939875945 +0000
 @@ -228,14 +228,16 @@
                  + "(S_I_ID, S_W_ID, S_QUANTITY,S_DIST_01, S_DIST_02,"
                  + " S_DIST_03,S_DIST_04,S_DIST_05,"
@@ -354,9 +354,9 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
                      psOL.setString(9, random.randomDecimalString(1, 999999, 2));
                  }
                  psOL.setInt(8, 5);
-diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql
---- ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2018-03-11 03:30:56.000000000 +1100
-+++ ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/schema/schema.sql	2019-06-25 11:45:35.000000000 +1000
+diff '--color=auto' -ur ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql
+--- ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql	2018-03-10 16:30:56.000000000 +0000
++++ ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/schema/schema.sql	2022-09-30 12:29:01.939875945 +0000
 @@ -71,7 +71,8 @@
   C_YTD_PAYMENT  DECIMAL(12,2) NOT NULL,
   C_PAYMENT_CNT  INTEGER       NOT NULL,
@@ -417,9 +417,9 @@ diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/o
 + S_QUANTITY_INITIAL   INTEGER     NOT NULL
  );
 \ No newline at end of file
-diff -urN ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java
---- ./db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java	2018-03-11 03:30:56.000000000 +1100
-+++ ../build-new/db-derby-10.14.2.0-src/java/testing/org/apache/derbyTesting/system/oe/util/OERandom.java	2019-06-25 11:45:35.000000000 +1000
+diff '--color=auto' -ur ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java
+--- ./db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java	2018-03-10 16:30:56.000000000 +0000
++++ ../build/db-derby-10.15.2.0-src/java/org.apache.derby.tests/org/apache/derbyTesting/system/oe/util/OERandom.java	2022-09-30 12:29:01.939875945 +0000
 @@ -32,7 +32,7 @@
   */
  public class OERandom {
