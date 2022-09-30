@@ -309,7 +309,7 @@ public class DaCapoTrader extends Thread {
     String uid = entries[0];
     String passwd = entries[1];
 
-    idx = LatencyReporter.start();
+    idx = LatencyReporter.start(threadID);
     doLogin(uid, passwd);
     LatencyReporter.end(idx);
 
@@ -318,7 +318,7 @@ public class DaCapoTrader extends Thread {
       char op = entries[tx].charAt(0);
       String request = (entries[tx].length() > 1) ? entries[tx].substring(2) : null;
 
-      idx = LatencyReporter.start();
+      idx = LatencyReporter.start(threadID);
       switch (op) {
         case 'h':
           doHome(uid);
@@ -349,7 +349,7 @@ public class DaCapoTrader extends Thread {
       tx++;
       LatencyReporter.end(idx);
     }
-    idx = LatencyReporter.start();
+    idx = LatencyReporter.start(threadID);
     doLogout(uid);
     LatencyReporter.end(idx);
     return idx;
@@ -628,7 +628,7 @@ public class DaCapoTrader extends Thread {
         trade.logout(uid);
         localOpCount[OP_O]++;
         LatencyReporter.end(idx);
-        idx = LatencyReporter.start();
+        idx = LatencyReporter.start(threadID);
         break;
       } catch (Exception e) {
         if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_O] - 1) {

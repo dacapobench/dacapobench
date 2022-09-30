@@ -29,10 +29,9 @@ public class LatencyReporter {
     try {
       Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter",
           true, ClassLoader.getSystemClassLoader());
-      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class);
-      dacapoRequestStart = clazz.getDeclaredMethod("start", null);
+      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class, int.class, int.class);
+      dacapoRequestStart = clazz.getDeclaredMethod("stridedStart", int.class);
       dacapoRequestEnd = clazz.getMethod("endIdx", int.class);
-      dacapoRequestsReset = clazz.getDeclaredMethod("resetIndex", int.class);
       dacapoRequestsStarting = clazz.getDeclaredMethod("requestsStarting", null);
       dacapoRequestsFinished = clazz.getDeclaredMethod("requestsFinished", null);
     } catch (ClassNotFoundException e) {
@@ -43,7 +42,7 @@ public class LatencyReporter {
 
     /* Initialize the latency reporter */
     try {
-      dacapoInitializeLR.invoke(null, transactions, threads);
+      dacapoInitializeLR.invoke(null, transactions, threads, 1, 1);
     } catch (IllegalAccessException e) {
       System.err.println("Failed to access DaCapo latency reporter: "+e);
     } catch (InvocationTargetException e) {
@@ -53,7 +52,6 @@ public class LatencyReporter {
 
   static void starting() {
     try {
-      dacapoRequestsReset.invoke(null, 1);
       dacapoRequestsStarting.invoke(null);
     } catch (IllegalAccessException e) {
       System.err.println("Failed to access DaCapo latency reporter: "+e);
@@ -72,9 +70,9 @@ public class LatencyReporter {
     }
   }
 
-  static int start() {
+  static int start(int threadID) {
     try {
-      Object idx = dacapoRequestStart.invoke(null);
+      Object idx = dacapoRequestStart.invoke(null, threadID);
       return (Integer) idx;
     } catch (IllegalAccessException e) {
       System.err.println("Failed to access DaCapo latency reporter: "+e);
