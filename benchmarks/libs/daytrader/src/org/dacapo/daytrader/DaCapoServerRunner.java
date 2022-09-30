@@ -29,7 +29,7 @@ public class DaCapoServerRunner {
   public static void initialize() {
     try {
 
-      Main.main(new String[] {"org.jboss.as.standalone"});
+      Main.main(new String[] {"org.jboss.as.standalone", "-c", "standalone-full.xml"});
 
       // Checking if server started
       URL url = new URL("http://localhost:8080/daytrader");

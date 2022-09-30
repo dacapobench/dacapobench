@@ -1,23 +1,7 @@
-diff '--color=auto' -ur ./wildfly-26.1.2.Final/standalone/configuration/standalone.xml ../build/wildfly-26.1.2.Final/standalone/configuration/standalone.xml
---- ./wildfly-26.1.2.Final/standalone/configuration/standalone.xml	2022-08-28 22:28:48.000000000 +0000
-+++ ../build/wildfly-26.1.2.Final/standalone/configuration/standalone.xml	2022-09-23 06:27:23.455520899 +0000
-@@ -31,6 +31,7 @@
-         <extension module="org.wildfly.extension.elytron-oidc-client"/>
-         <extension module="org.wildfly.extension.health"/>
-         <extension module="org.wildfly.extension.io"/>
-+        <extension module="org.wildfly.extension.messaging-activemq"/>
-         <extension module="org.wildfly.extension.metrics"/>
-         <extension module="org.wildfly.extension.microprofile.config-smallrye"/>
-         <extension module="org.wildfly.extension.microprofile.jwt-smallrye"/>
-@@ -38,6 +39,7 @@
-         <extension module="org.wildfly.extension.request-controller"/>
-         <extension module="org.wildfly.extension.security.manager"/>
-         <extension module="org.wildfly.extension.undertow"/>
-+        <extension module="org.wildfly.iiop-openjdk"/>
-     </extensions>
-     <management>
-         <audit-log>
-@@ -119,16 +121,20 @@
+diff '--color=auto' -ur wildfly-26.1.2.Final/standalone/configuration/standalone-full.xml ../build/wildfly-26.1.2.Final/standalone/configuration/standalone-full.xml
+--- wildfly-26.1.2.Final/standalone/configuration/standalone-full.xml	2022-08-28 22:28:50.000000000 +0000
++++ ../build/wildfly-26.1.2.Final/standalone/configuration/standalone-full.xml	2022-09-30 05:16:59.680809808 +0000
+@@ -122,16 +122,20 @@
              </job-repository>
              <thread-pool name="batch">
                  <max-threads count="10"/>
@@ -40,26 +24,15 @@ diff '--color=auto' -ur ./wildfly-26.1.2.Final/standalone/configuration/standalo
                      <security>
                          <user-name>sa</user-name>
                          <password>sa</password>
-@@ -168,7 +174,6 @@
+@@ -171,7 +175,6 @@
                      <managed-scheduled-executor-service name="default" jndi-name="java:jboss/ee/concurrency/scheduler/default" context-service="default" hung-task-termination-period="0" hung-task-threshold="60000" keepalive-time="3000"/>
                  </managed-scheduled-executor-services>
              </concurrent>
--            <default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/datasources/ExampleDS" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
+-            <default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/datasources/ExampleDS" jms-connection-factory="java:jboss/DefaultJMSConnectionFactory" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
          </subsystem>
          <subsystem xmlns="urn:jboss:domain:ee-security:1.0"/>
          <subsystem xmlns="urn:jboss:domain:ejb3:9.0">
-@@ -179,6 +184,10 @@
-                 <stateful default-access-timeout="5000" cache-ref="simple" passivation-disabled-cache-ref="simple"/>
-                 <singleton default-access-timeout="5000"/>
-             </session-bean>
-+            <mdb>
-+                <resource-adapter-ref resource-adapter-name="${ejb.resource-adapter-name:activemq-ra.rar}"/>
-+                <bean-instance-pool-ref pool-name="mdb-strict-max-pool"/>
-+            </mdb>
-             <pools>
-                 <bean-instance-pools>
-                     <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
-@@ -200,15 +209,17 @@
+@@ -207,13 +210,14 @@
              </timer-service>
              <remote cluster="ejb" connectors="http-remoting-connector" thread-pool-name="default">
                  <channel-creation-options>
@@ -74,23 +47,8 @@ diff '--color=auto' -ur ./wildfly-26.1.2.Final/standalone/configuration/standalo
 +                    <keepalive-time time="300" unit="seconds"/>
                  </thread-pool>
              </thread-pools>
-+            <iiop enable-by-default="false" use-qualified-name="false"/>
-             <default-security-domain value="other"/>
-             <application-security-domains>
-                 <application-security-domain name="other" security-domain="ApplicationDomain"/>
-@@ -344,6 +355,11 @@
-         </subsystem>
-         <subsystem xmlns="urn:wildfly:elytron-oidc-client:1.0"/>
-         <subsystem xmlns="urn:wildfly:health:1.0" security-enabled="false"/>
-+        <subsystem xmlns="urn:jboss:domain:iiop-openjdk:2.1">
-+            <orb socket-binding="iiop"/>
-+            <initializers security="identity" transactions="spec"/>
-+            <security server-requires-ssl="false" client-requires-ssl="false"/>
-+        </subsystem>
-         <subsystem xmlns="urn:jboss:domain:infinispan:13.0">
-             <cache-container name="ejb" default-cache="passivation" marshaller="PROTOSTREAM" aliases="sfsb" modules="org.wildfly.clustering.ejb.infinispan">
-                 <local-cache name="passivation">
-@@ -395,13 +411,13 @@
+             <iiop enable-by-default="false" use-qualified-name="false"/>
+@@ -408,13 +412,13 @@
                      <core-threads count="50"/>
                      <queue-length count="50"/>
                      <max-threads count="50"/>
@@ -106,60 +64,12 @@ diff '--color=auto' -ur ./wildfly-26.1.2.Final/standalone/configuration/standalo
                  </long-running-threads>
              </default-workmanager>
              <cached-connection-manager/>
-@@ -422,6 +438,37 @@
-             </mail-session>
-         </subsystem>
-         <subsystem xmlns="urn:wildfly:metrics:1.0" security-enabled="false" exposed-subsystems="*" prefix="${wildfly.metrics.prefix:wildfly}"/>
-+        <subsystem xmlns="urn:jboss:domain:messaging-activemq:6.0">
-+            <server name="default">
-+                <statistics enabled="${wildfly.messaging-activemq.statistics-enabled:${wildfly.statistics-enabled:false}}"/>
-+                <security-setting name="#">
-+                    <role name="guest" send="true" consume="true" create-non-durable-queue="true" delete-non-durable-queue="true"/>
-+                </security-setting>
-+                <address-setting name="#" dead-letter-address="jms.queue.DLQ" expiry-address="jms.queue.ExpiryQueue" max-size-bytes="10485760" page-size-bytes="2097152" message-counter-history-day-limit="10"/>
-+                <http-connector name="http-connector" socket-binding="http" endpoint="http-acceptor"/>
-+                <http-connector name="http-connector-throughput" socket-binding="http" endpoint="http-acceptor-throughput">
-+                    <param name="batch-delay" value="50"/>
-+                </http-connector>
-+                <in-vm-connector name="in-vm" server-id="0">
-+                    <param name="buffer-pooling" value="false"/>
-+                </in-vm-connector>
-+                <http-acceptor name="http-acceptor" http-listener="default"/>
-+                <http-acceptor name="http-acceptor-throughput" http-listener="default">
-+                    <param name="batch-delay" value="50"/>
-+                    <param name="direct-deliver" value="false"/>
-+                </http-acceptor>
-+                <in-vm-acceptor name="in-vm" server-id="0">
-+                    <param name="buffer-pooling" value="false"/>
-+                </in-vm-acceptor>
-+                <jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
-+                <jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
+@@ -460,6 +464,8 @@
+                 </in-vm-acceptor>
+                 <jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
+                 <jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
 +                <jms-queue name="TradeBrokerQueue" entries="java:/queue/TradeBrokerQueue"/>
 +                <jms-topic name="TradeStreamerTopic" entries="java:/topic/TradeStreamerTopic"/>
-+                <connection-factory name="InVmConnectionFactory" entries="java:/ConnectionFactory" connectors="in-vm"/>
-+                <connection-factory name="RemoteConnectionFactory" entries="java:jboss/exported/jms/RemoteConnectionFactory" connectors="http-connector"/>
-+                <pooled-connection-factory name="activemq-ra" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="in-vm" transaction="xa"/>
-+            </server>
-+        </subsystem>
-         <subsystem xmlns="urn:wildfly:microprofile-config-smallrye:2.0"/>
-         <subsystem xmlns="urn:wildfly:microprofile-jwt-smallrye:1.0"/>
-         <subsystem xmlns="urn:wildfly:microprofile-opentracing-smallrye:3.0" default-tracer="jaeger">
-@@ -496,6 +543,9 @@
-         <interface name="public">
-             <inet-address value="${jboss.bind.address:127.0.0.1}"/>
-         </interface>
-+        <interface name="unsecure">
-+            <inet-address value="${jboss.bind.address.unsecure:127.0.0.1}"/>
-+        </interface>
-     </interfaces>
-     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
-         <socket-binding name="ajp" port="${jboss.ajp.port:8009}"/>
-@@ -505,6 +555,8 @@
-         <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9993}"/>
-         <socket-binding name="txn-recovery-environment" port="4712"/>
-         <socket-binding name="txn-status-manager" port="4713"/>
-+        <socket-binding name="iiop" interface="unsecure" port="3528"/>
-+        <socket-binding name="iiop-ssl" interface="unsecure" port="3529"/>
-         <outbound-socket-binding name="mail-smtp">
-             <remote-destination host="${jboss.mail.server.host:localhost}" port="${jboss.mail.server.port:25}"/>
-         </outbound-socket-binding>
+                 <connection-factory name="InVmConnectionFactory" entries="java:/ConnectionFactory" connectors="in-vm"/>
+                 <connection-factory name="RemoteConnectionFactory" entries="java:jboss/exported/jms/RemoteConnectionFactory" connectors="http-connector"/>
+                 <pooled-connection-factory name="activemq-ra" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="in-vm" transaction="xa"/>
