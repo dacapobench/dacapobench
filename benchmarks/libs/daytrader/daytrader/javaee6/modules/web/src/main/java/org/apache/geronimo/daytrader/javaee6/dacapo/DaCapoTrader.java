@@ -54,7 +54,6 @@ public class DaCapoTrader extends Thread {
   private int sessionBound = -1;
   private int threadID = -1;
   private int localCount;
-  private int idx;
 
   static {
     int maxInitializationWaitCycless = 120;
@@ -141,9 +140,8 @@ public class DaCapoTrader extends Thread {
     if (VERBOSE) System.err.println("[" + threadID + "] starting trading");
     String tradeSession;
 
-    int idx = 0;
     while ((tradeSession = getNextTradeSession()) != null) {
-      idx = runTradeSession(tradeSession);
+      runTradeSession(tradeSession);
     }
   }
 
@@ -303,22 +301,22 @@ public class DaCapoTrader extends Thread {
   }
 
 
-  private int runTradeSession(String session) {
+  private void runTradeSession(String session) {
     String[] entries = session.split("\t");
     if (VERBOSE) System.err.println("["+threadID+"] Session: "+entries.length+" --> "+session);
     String uid = entries[0];
     String passwd = entries[1];
 
-    idx = LatencyReporter.start(threadID);
+    LatencyReporter.start(threadID);
     doLogin(uid, passwd);
-    LatencyReporter.end(idx);
+    LatencyReporter.end(threadID);
 
     int tx = 2;
     while (tx < entries.length) {
       char op = entries[tx].charAt(0);
       String request = (entries[tx].length() > 1) ? entries[tx].substring(2) : null;
 
-      idx = LatencyReporter.start(threadID);
+      LatencyReporter.start(threadID);
       switch (op) {
         case 'h':
           doHome(uid);
@@ -338,8 +336,8 @@ public class DaCapoTrader extends Thread {
         case 'r':
           uid = doRegister(uid, request);
           if (uid == null) { 
-            LatencyReporter.end(idx);
-            return idx;
+            LatencyReporter.end(threadID);
+            return;
           }
           break;
         case 's':
@@ -347,12 +345,11 @@ public class DaCapoTrader extends Thread {
           break;
       }
       tx++;
-      LatencyReporter.end(idx);
+      LatencyReporter.end(threadID);
     }
-    idx = LatencyReporter.start(threadID);
+    LatencyReporter.start(threadID);
     doLogout(uid);
-    LatencyReporter.end(idx);
-    return idx;
+    LatencyReporter.end(threadID);
   }
 
   private int doLogin(String uid, String password) {
@@ -627,8 +624,8 @@ public class DaCapoTrader extends Thread {
       try {
         trade.logout(uid);
         localOpCount[OP_O]++;
-        LatencyReporter.end(idx);
-        idx = LatencyReporter.start(threadID);
+        LatencyReporter.end(threadID);
+        LatencyReporter.start(threadID);
         break;
       } catch (Exception e) {
         if (VERBOSE || i == MAX_OP_ATTEMPTS[OP_O] - 1) {

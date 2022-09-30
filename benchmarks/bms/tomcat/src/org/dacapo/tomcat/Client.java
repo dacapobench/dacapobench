@@ -159,9 +159,9 @@ public class Client implements Runnable {
       while (inc() < pageCount) {
         for (int p = 0; p < pages.size(); p++) {
           Page page = pages.get(p);
-          int idx = LatencyReporter.stridedStart(ordinal);
+          LatencyReporter.start(ordinal);
           boolean result = page.fetch(session, null, verbose);
-          LatencyReporter.endIdx(idx);
+          LatencyReporter.end(ordinal);
         }
       }
     } catch (Exception e) {

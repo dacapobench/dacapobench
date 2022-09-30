@@ -39,17 +39,10 @@ public class LatencyReporter {
   static float[] txbegin;
   static float[] txend;
   private static Integer globalIdx = 0;
-  private static int batchSize = 0;
   static double fileMax;
   static LatencyReporter[] reporters;
   private static long timerBase = 0;  // used to improve precision (when using floats)
   private static Callback callback = null;
-
-  public LatencyReporter(int threadID, int threads, int transactions) {
-    idx = idxOffset = getBaseIdx(threadID, threads, transactions);
-    max = 0;
-    reporters[threadID] = this;
-  }
 
   public LatencyReporter(int threadID, int threads, int transactions, int stride) {
     idx = -1;
@@ -65,13 +58,8 @@ public class LatencyReporter {
     initialize(transactions, threads, 1);
   }
 
-  public static void initialize(int transactions, int threads, int batch) {
-    initialize(transactions, threads, batch, 1);
-  }
-
-  public static void initialize(int transactions, int threads, int batch, int _stride) {
+  public static void initialize(int transactions, int threads, int _stride) {
     stride = _stride;
-    batchSize = batch;
     timerBase = System.nanoTime();
     if (transactions > LATENCY_BUFFER_SIZE) {
       System.err.println("Too many transactions. "+transactions+" > LATENCY_BUFFER_SIZE ("+LATENCY_BUFFER_SIZE+")");
@@ -91,41 +79,68 @@ public class LatencyReporter {
     return reporters;
   }
 
-  private static int getBaseIdx(int threadID, int threads, int transactions) {
-    int batches = transactions / batchSize;
-    if (transactions % batchSize != 0) {
-      System.out.println("Number of transactions is not multiple of batch size");
-      System.exit(-1);
+  /**
+   * Start a request
+   * 
+   *   * @param threadID the thread in which the request ran.
+   * 
+   * @return the index
+   */
+  public static int start(int threadID) {
+    return reporters[threadID].start();
+  }
+  public int start() {
+    idx++;
+    if (idx % stride == 0)
+      idx = inc();
+    if (idx < txbegin.length)
+      startIdx(idx);
+    return idx;
+  }
+  private static void startIdx(int index) {
+    if (callback != null) 
+      callback.requestStart(index);
+    long start = (System.nanoTime() - timerBase)/NS_COARSENING;
+    txbegin[index] = (float) start;
+    txend[index] = -1;
+  }
+
+  private static int inc() {
+    int rtn;
+    synchronized (globalIdx) {
+       rtn = globalIdx += stride;
     }
-    int batchesPerThread = batches / threads;
-    int extra = batches % threads;
-    if (threadID < extra) {
-        return batchSize * threadID * (batchesPerThread + 1);
-    } else {
-        return batchSize * (extra + (threadID * batchesPerThread));
-    }
+    return rtn;
+  }
+
+  /**
+   * A request has just completed.
+   * 
+   * @param threadID the thread in which the request ran.
+   */
+  public static void end(int threadID) {
+    reporters[threadID].end();
+  }
+  public void end() {
+    endIdx(idx);
+  }
+
+  /**
+   * A request has just completed.
+   * 
+   * @param index the global index for the request that completed.
+   */
+  private static float endIdx(int index) {
+    long end = (System.nanoTime() - timerBase)/NS_COARSENING;
+    txend[index] = (float) end;
+
+    if (callback != null) callback.requestEnd(index);
+    return txend[index];
   }
 
   public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
     if (timerBase != 0) {
       int events = txbegin.length;
-
-      // check values were correctly added to txbegin and txend arrays
-      if (batchSize > 1) {
-        int e = 0;
-        for (int i = 0; i < reporters.length; i++)
-          e += (reporters[i].idx-reporters[i].idxOffset);
-        if (e != events) {
-          System.err.println("Warning: latency report event count disagreement.  Allocated "+events+" but used "+e);
-        }
-
-        for (int i = 0; i < reporters.length; i++) {
-          int tgt = (i == reporters.length - 1) ? txbegin.length : reporters[i+1].idxOffset;
-          if (reporters[i].idx != tgt) {
-            System.err.println("Warning: latency report disagreement for thread "+i+".  Expected to fill to offset "+tgt+" but filled to "+reporters[i].idx+" ... "+(reporters[i].idx-tgt)+" "+(txbegin.length / reporters.length));
-          }
-        }
-      }
 
       // raw latency numbers
       int[] latency = new int[events];
@@ -215,7 +230,7 @@ public class LatencyReporter {
   }
 
   public static void requestsStarting() {
-    resetIndex();
+    globalIdx = -stride;
     System.err.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
   }
@@ -225,104 +240,4 @@ public class LatencyReporter {
     if (callback != null) callback.requestsFinished();
   }
 
-  public static void _resetIndex(int stride) {
-    globalIdx = -stride;
-  }
-
-  public static void resetIndex() {
-    globalIdx = -stride;
-  }
-
-  /**
-   * Start a request (using a global index).
-   * 
-   * @return the index
-   */
-  public static int start() {
-    int idx = inc();
-    startIdx(idx);
-    return idx;
-  }
-
-
-  private static int inc() {
-    int rtn;
-    synchronized (globalIdx) {
-       rtn = globalIdx += stride;
-    }
-    return rtn;
-  }
-
-  public static int stridedStart(int threadID) {
-    return reporters[threadID].stridedStart();
-  }
-  public int stridedStart() {
-    idx++;
-    if (idx % stride == 0)
-      idx = inc();
-    if (idx < txbegin.length)
-      startIdx(idx);
-    return idx;
-  }
-
-  public static void stridedEnd(int threadID) {
-    reporters[threadID].stridedEnd();
-  }
-  public void stridedEnd() {
-    _end(idx);
-  }
-
-
-  /**
-   * Start a request (using a thread-local index). This avoids the
-   * synchronization of the global index, but only works when the
-   * workload has exactly the same number of requests per thread.
-   * 
-   * @param threadID the thread in which the request will start.
-   * @return a unique index into a thread-local result table.
-   */
-  public static int _start(int threadID) {
-    int index = 0;
-    index = reporters[threadID].idx++;
-    startIdx(index);
-    return index;
-  }
-
-  public static void startIdx(int index) {
-    if (callback != null) callback.requestStart(index);
-    long start = (System.nanoTime() - timerBase)/NS_COARSENING;
-    txbegin[index] = (float) start;
-    txend[index] = -1;
-  }
-
-  /**
-   * A request has just completed.
-   * 
-   * @param threadID the thread in which the request ran.
-   */
-  public static void end(int threadID) {
-    reporters[threadID].end();
-  }
-  
-  /**
-   * A request has just completed.
-   * 
-   * @param index the global index for the request that completed.
-   */
-  public static void endIdx(int index) {
-    _end(index);
-  }
-
-  private void end() {
-    float end = _end(idx - 1);
-    if (end > max) max = end;
-  }
-
-  private static float _end(int index) {
-    long end = (System.nanoTime() - timerBase)/NS_COARSENING;
-    txend[index] = (float) end;
-
-    if (callback != null) callback.requestEnd(index);
-    return txend[index];
-  }
 }

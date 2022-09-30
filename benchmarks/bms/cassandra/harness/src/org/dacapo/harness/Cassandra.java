@@ -203,7 +203,6 @@ public class Cassandra extends Benchmark {
     }
 
     public void iterate(String size) throws Exception {
-        // LatencyReporter.initialize(transactions, config.getThreadCount(size));
         System.setOut(logStream);
 
         // load workload

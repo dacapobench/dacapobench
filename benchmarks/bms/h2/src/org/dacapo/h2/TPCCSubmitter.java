@@ -70,7 +70,7 @@ public class TPCCSubmitter extends Submitter {
     for (int i = 0; i < count; i++) {
       rand.setSeed(getNextSeed());
 
-      LatencyReporter.stridedStart(tid);
+      LatencyReporter.start(tid);
       int txType = getTransactionType();
       boolean success = false;
       while (!success) {
@@ -80,7 +80,7 @@ public class TPCCSubmitter extends Submitter {
         }
       }
       transactionCount[txType]++;
-      LatencyReporter.stridedEnd(tid);
+      LatencyReporter.end(tid);
       long end = System.nanoTime();
       reporter.done();
       start = end;

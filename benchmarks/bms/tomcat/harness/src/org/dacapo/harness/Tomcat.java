@@ -165,8 +165,7 @@ public class Tomcat extends Benchmark {
     int requests = iterations * stride;
 
     final Thread[] threads = new Thread[threadCount];
-    LatencyReporter.initialize(requests, threadCount, 1, stride);
-    LatencyReporter.resetIndex();
+    LatencyReporter.initialize(requests, threadCount, stride);
     LatencyReporter.requestsStarting();
     for (int i = 0; i < threadCount; i++) {
       Runnable client = clientConstructor.newInstance(scratch, i, iterations, getVerbose(), PORT);

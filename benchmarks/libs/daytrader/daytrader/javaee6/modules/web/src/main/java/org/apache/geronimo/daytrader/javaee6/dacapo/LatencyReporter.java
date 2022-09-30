@@ -29,9 +29,9 @@ public class LatencyReporter {
     try {
       Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter",
           true, ClassLoader.getSystemClassLoader());
-      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class, int.class, int.class);
-      dacapoRequestStart = clazz.getDeclaredMethod("stridedStart", int.class);
-      dacapoRequestEnd = clazz.getMethod("endIdx", int.class);
+      dacapoInitializeLR = clazz.getMethod("initialize", int.class, int.class, int.class);
+      dacapoRequestStart = clazz.getDeclaredMethod("start", int.class);
+      dacapoRequestEnd = clazz.getMethod("end", int.class);
       dacapoRequestsStarting = clazz.getDeclaredMethod("requestsStarting", null);
       dacapoRequestsFinished = clazz.getDeclaredMethod("requestsFinished", null);
     } catch (ClassNotFoundException e) {
@@ -42,7 +42,7 @@ public class LatencyReporter {
 
     /* Initialize the latency reporter */
     try {
-      dacapoInitializeLR.invoke(null, transactions, threads, 1, 1);
+      dacapoInitializeLR.invoke(null, transactions, threads, 1);
     } catch (IllegalAccessException e) {
       System.err.println("Failed to access DaCapo latency reporter: "+e);
     } catch (InvocationTargetException e) {
@@ -77,18 +77,18 @@ public class LatencyReporter {
     } catch (IllegalAccessException e) {
       System.err.println("Failed to access DaCapo latency reporter: "+e);
     } catch (InvocationTargetException e) {
-      System.err.println("Failed to invoke LatencyReporter.start(): "+e);
+      System.err.println("Failed to invoke LatencyReporter.start("+threadID+"): "+e);
     }
     return -1;
   }
 
-  static void end(int idx) {
+  static void end(int threadID) {
     try {
-      dacapoRequestEnd.invoke(null, idx);
+      dacapoRequestEnd.invoke(null, threadID);
     } catch (IllegalAccessException e) {
       System.err.println("Failed to access DaCapo latency reporter: "+e);
     } catch (InvocationTargetException e) {
-      System.err.println("Failed to invoke LatencyReporter.end("+idx+"): "+e);
+      System.err.println("Failed to invoke LatencyReporter.end("+threadID+"): "+e);
     }
   }
 

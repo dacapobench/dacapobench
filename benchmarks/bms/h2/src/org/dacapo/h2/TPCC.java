@@ -252,7 +252,7 @@ public class TPCC {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
-    LatencyReporter.initialize(totalTransactions, submitters.length, 1, 25);
+    LatencyReporter.initialize(totalTransactions, submitters.length, 25);
     reporter.reset(totalTransactions);
 
     long start = System.currentTimeMillis();
