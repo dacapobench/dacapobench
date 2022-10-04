@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ./pom.xml ../build/pom.xml
---- ./pom.xml	2022-08-19 08:19:26.000000000 +0000
-+++ ../build/pom.xml	2022-09-30 09:33:52.085280132 +0000
+--- ./pom.xml	2022-10-04 01:31:41.000000000 +0000
++++ ../build/pom.xml	2022-10-04 10:52:17.638076777 +0000
 @@ -47,7 +47,7 @@
      <dependency>
        <groupId>org.scala-lang</groupId>
@@ -37,8 +37,8 @@ diff '--color=auto' -ur ./pom.xml ../build/pom.xml
      <testOutputDirectory>target/test-classes</testOutputDirectory>
      <testSourceDirectory>test</testSourceDirectory>
 diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java
---- ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-08-19 08:19:26.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-09-30 09:33:52.085280132 +0000
+--- ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-10-04 01:31:41.000000000 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-10-04 10:52:17.638076777 +0000
 @@ -155,7 +155,8 @@
           * so that each row contains one latent factor.
           */
@@ -133,14 +133,14 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactoriza
       * Output in matrix market format
       * @throws Exception
 diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java
---- ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-08-19 08:19:26.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-09-30 09:39:02.116965718 +0000
-@@ -114,12 +114,6 @@
+--- ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-10-04 01:31:41.000000000 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-10-04 10:54:35.201919732 +0000
+@@ -114,12 +114,7 @@
              vertexIdTranslate = VertexIdTranslate.identity();
          }
          chiContext.setVertexIdTranslate(vertexIdTranslate);
 -
--        memBudget = Runtime.getRuntime().maxMemory() / 4;
+         memBudget = Runtime.getRuntime().maxMemory() / 4;
 -        if (Runtime.getRuntime().maxMemory() < 256 * 1024 * 1024)
 -            throw new IllegalArgumentException("Java Virtual Machine has only " + memBudget + "bytes maximum memory." +
 -                    " Please run the JVM with at least 256 megabytes of memory using -Xmx256m. For better performance, use higher value");
@@ -149,8 +149,8 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.j
  
      /**
 diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java
---- ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-08-19 08:19:26.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-09-30 09:33:52.085280132 +0000
+--- ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-10-04 01:31:41.000000000 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-10-04 10:52:17.638076777 +0000
 @@ -115,7 +115,10 @@
          shovelStreams = new DataOutputStream[numShards];
          vertexShovelStreams = new DataOutputStream[numShards];
