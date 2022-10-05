@@ -18,14 +18,7 @@ size default args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/bavaria.
           stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
           "bavaria.png" exists;
 
-size large args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/simplex.svg","${DATA}/batik/mapVASR.svg","${DATA}/batik/bavaria.svg"
-  output  stdout  digest  0x0b050f6a8339a871eafab0015048cd897dfcb8de,
-          stderr  digest  0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-          "mapVASR.png" exists,
-          "bavaria.png" exists,
-          "simplex.png" exists;
-
-size huge args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/usMetro.svg", "${DATA}/batik/mapVASR.svg",
+size large args "-d","${SCRATCH}","-scriptSecurityOff","${DATA}/batik/usMetro.svg", "${DATA}/batik/mapVASR.svg",
                       "${DATA}/batik/bavaria.svg",
                       "${DATA}/batik/lakeTauca.svg", "${DATA}/batik/river.svg", "${DATA}/batik/tenerife.svg",
                       "${DATA}/batik/france.svg", "${DATA}/batik/nrwpTopography.svg",
