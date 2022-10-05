@@ -67,6 +67,7 @@ public class Jython extends Benchmark {
   public void postIteration(String size) throws Exception {
     super.postIteration(size);
     deleteTree(new File(scratch, "pybench"));
+    deleteTree(new File(scratch, "noop.py"));
   }
 
   public void cleanup() {
