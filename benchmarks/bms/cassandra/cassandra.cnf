@@ -8,10 +8,7 @@ size small args "workload-small", "-threads", "${THREADS}"
 size default args "workload-default", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
            stderr digest 0x889ff68348c2eca934e601276986fca1e2bc418d;
-size large args "workload-large", "-threads", "${THREADS}"
-    output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0xe58b5849c24e61627a4d1adad3ee7b6b70a86be3;
-size huge args "workload-huge", "-threads", "${THREADS}"
+size large args "workload-huge", "-threads", "${THREADS}"
     output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
            stderr digest 0x32d8e0440dbdbaa1d1e353c0253cb41dde1340a3;
 
