@@ -19,14 +19,6 @@ size default args
          stderr digest 0x962fbee007ed6e6ee577a91fe605e5bd30496e72;
 
 size large args 
-		"--total-transactions","128000",
-		"--scale","16",
-		"--cleanup-in-iteration"
-  thread-limit 64000
-  output stdout digest 0x316d9387157cf2b440f5e0d57e4493e0f1395c08,
-         stderr digest 0xc14ed995d39c8a681058d71e10217937ce2982c2;
-
-size huge args 
 		"--total-transactions","256000",
 		"--scale","32",
 		"--cleanup-in-iteration"
