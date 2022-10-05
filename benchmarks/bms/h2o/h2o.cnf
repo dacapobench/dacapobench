@@ -14,14 +14,8 @@ size default args "${DATA}/h2o", "citibiketripdata201908.csv", "drf" , "tripdura
   thread-limit 1024
   output stdout digest 0x1aab065a1376445d213907a200012d8bed338f45,
          stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
-  
-size large args "${DATA}/h2o", "citibiketripdata201908l.csv", "drf" , "tripduration"
-  threads 1      // per available processor
-  thread-limit 1024
-  output stdout digest 0xe40deffc2c2ab923c1aa99a27b9da9aad57b71ae,
-         stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
 
-size huge args "${DATA}/h2o", "citibiketripdata201908h.csv", "drf" , "tripduration"
+size large args "${DATA}/h2o", "citibiketripdata201908h.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
   output stdout digest 0xf7333758241d1f0934939f35320fd51b3181941c,
