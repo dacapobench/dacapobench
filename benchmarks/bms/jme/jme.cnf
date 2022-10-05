@@ -14,17 +14,11 @@ size default args "TestMultiPostWater", "400"
       stdout digest 0x3689acff0669d2036f16586f193a1275e97c0cbc,
       stderr digest 0xcf2894f2ad60a686300152c79149a18848b46f28;
 
-size large args "TestMultiPostWater", "2000"
+size large args "TestMultiPostWater", "8000"
   threads 1      // per available processor
   output
-      stdout digest 0x4afa838217f312c1b2c266a7169847a598a77a1a,
-      stderr digest 0x8d60a136e46093011f741c90f3639363627cde9e;
-
-size xlong args "TestMultiPostWater", "120000"
-  threads 1      // per available processor
-  output
-      stdout digest 0x94bfced25ab5864467ea8a7e6eab05a6cb428594,
-      stderr digest 0x1c8abdfe9e70f5a15d4f7db609b153baf2b97a70;
+      stdout digest 0xc6367d78c6d287197db2e3e30d126c0d574c9131,
+      stderr digest 0x2e91d021d5a79c4f1c5b42fd3da7a948f78305a6;
 
 description
   short	     "A complete 3D game development suite written purely in Java.",
