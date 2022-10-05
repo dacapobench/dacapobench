@@ -1,7 +1,18 @@
 diff '--color=auto' -ur ./pom.xml ../build/pom.xml
 --- ./pom.xml	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/pom.xml	2022-10-04 10:52:17.638076777 +0000
-@@ -47,7 +47,7 @@
++++ ../build/pom.xml	2022-10-05 08:40:34.764326071 +0000
+@@ -41,13 +41,18 @@
+       <artifactId>metrics-core</artifactId>
+       <version>2.2.0</version>
+     </dependency>
++    <dependency>
++      <groupId>org.slf4j</groupId>
++      <artifactId>slf4j-nop</artifactId>
++      <version>1.7.30</version>
++    </dependency>
+ 
+     <!-- Scala version is very important. Luckily the plugin warns you if you don't specify:
+       [WARNING] you don't define org.scala-lang:scala-library as a dependency of the project -->
      <dependency>
        <groupId>org.scala-lang</groupId>
        <artifactId>scala-library</artifactId>
@@ -10,7 +21,7 @@ diff '--color=auto' -ur ./pom.xml ../build/pom.xml
      </dependency>
      <dependency>
        <groupId>mysql</groupId>
-@@ -76,11 +76,6 @@
+@@ -76,11 +81,6 @@
      <dependency>
        <groupId>org.apache.commons</groupId>
        <artifactId>commons-math</artifactId>
@@ -22,7 +33,7 @@ diff '--color=auto' -ur ./pom.xml ../build/pom.xml
        <version>2.1</version>
      </dependency>
      <dependency>
-@@ -174,6 +169,13 @@
+@@ -174,6 +174,13 @@
            </execution>
          </executions>
        </plugin>
@@ -38,7 +49,7 @@ diff '--color=auto' -ur ./pom.xml ../build/pom.xml
      <testSourceDirectory>test</testSourceDirectory>
 diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java
 --- ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-10-04 10:52:17.638076777 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-10-05 08:40:34.764326071 +0000
 @@ -155,7 +155,8 @@
           * so that each row contains one latent factor.
           */
@@ -49,24 +60,22 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactoriza
              vertexValueMatrix = new HugeDoubleMatrix(ctx.getNumVertices(), D);
  
              /* Fill with random data */
-@@ -217,9 +218,8 @@
-             D = Integer.parseInt(args[2]);
-         }
+@@ -219,7 +220,8 @@
          ALSMatrixFactorization als = computeALS(baseFilename, nShards, D, 5);
--
--
+ 
+ 
 -        als.writeOutputMatrices();
-+       // als.writeOutputMatrices();
++        // als.writeOutputMatrices();
 +       als.checksumMatrices();
      }
  
  
-@@ -239,12 +239,14 @@
+@@ -239,12 +241,14 @@
                  !new File(baseFilename + ".matrixinfo").exists()) {
              sharder.shard(new FileInputStream(new File(baseFilename)), FastSharder.GraphInputFormat.MATRIXMARKET);
          } else {
 -            logger.info("Found shards -- no need to preprocess");
-+            //logger.info("Found shards -- no need to preprocess");
++            // logger.info("Found shards -- no need to preprocess");
 +            System.out.println("Found shards -- no need to preprocess");
          }
  
@@ -78,7 +87,7 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactoriza
  
          /* Run GraphChi */
          GraphChiEngine<Integer, Float> engine = new GraphChiEngine<Integer, Float>(baseFilename, nShards);
-@@ -258,7 +260,8 @@
+@@ -258,7 +262,8 @@
  
          /* Output RMSE */
          double trainRMSE = Math.sqrt(als.rmse / (1.0 * engine.numEdges()));
@@ -88,7 +97,7 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactoriza
          return als;
      }
  
-@@ -293,6 +296,43 @@
+@@ -293,6 +298,43 @@
          }
      }
  
@@ -134,23 +143,43 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactoriza
       * @throws Exception
 diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java
 --- ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-10-04 10:54:35.201919732 +0000
-@@ -114,12 +114,7 @@
++++ ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-10-05 08:52:57.136630220 +0000
+@@ -19,6 +19,7 @@
+ import java.util.concurrent.*;
+ import java.util.concurrent.atomic.AtomicInteger;
+ import java.util.logging.Logger;
++import java.util.logging.Level;
+ 
+ /**
+  * Copyright [2012] [Aapo Kyrola, Guy Blelloch, Carlos Guestrin / Carnegie Mellon University]
+@@ -114,12 +115,9 @@
              vertexIdTranslate = VertexIdTranslate.identity();
          }
          chiContext.setVertexIdTranslate(vertexIdTranslate);
 -
-         memBudget = Runtime.getRuntime().maxMemory() / 4;
+-        memBudget = Runtime.getRuntime().maxMemory() / 4;
 -        if (Runtime.getRuntime().maxMemory() < 256 * 1024 * 1024)
 -            throw new IllegalArgumentException("Java Virtual Machine has only " + memBudget + "bytes maximum memory." +
 -                    " Please run the JVM with at least 256 megabytes of memory using -Xmx256m. For better performance, use higher value");
 -
++        int base = 96*1024*1024;
++        memBudget = (nShards*nShards)*base;  // DaCapo holds this constant (origionally it was sized according to specified max heap size)   A larger number means a larger heap footprint.
++        logger.setLevel(Level.SEVERE);
+     }
+ 
+     /**
+@@ -142,7 +140,7 @@
+      * @param mb
+      */
+     public void setMemoryBudgetMb(long mb) {
+-        memBudget = mb * 1024 * 1024;
++        // memBudget = mb * 1024 * 1024;   // Benchmarking principles say this should be held constant, so make it a noop.
      }
  
      /**
 diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java
 --- ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-10-04 10:52:17.638076777 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-10-05 08:40:34.764326071 +0000
 @@ -115,7 +115,10 @@
          shovelStreams = new DataOutputStream[numShards];
          vertexShovelStreams = new DataOutputStream[numShards];

@@ -3,16 +3,16 @@ benchmark graphchi
   thread-model per_cpu;
 
 size small args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm_10K", "2"
-  output stdout digest 0xce90a8af938806c984cdafa69732ecd6045aa4d3;
+  output stdout digest 0xce90a8af938806c984cdafa69732ecd6045aa4d3,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm_1M", "2"
-  output stdout digest 0x48680a70e04a8fb5629bf016aa88a30442bf665a;
+  output stdout digest 0x48680a70e04a8fb5629bf016aa88a30442bf665a,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size large args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm_10M", "2"
-  output stdout digest 0x705be48d73fc0d6da09ac62807cf3bae10ca9272;
-
-size huge args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm", "4"
-  output stdout digest 0x99e6eadec56afcb180f48d1e09ae8aea4ddf9a88;
+size large args "ALSMatrixFactorization", "${DATA}/graphchi/netflix_mm", "4"
+  output stdout digest 0x1557d3e587cf7a157c4b3ea731a0ba55e26f6432,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	     "ALS matrix factorization with GraphChi.",
