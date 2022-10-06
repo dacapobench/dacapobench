@@ -124,8 +124,7 @@ public class TPCC {
   // A random seed for initializing the database and the OLTP terminals.
   final static long SEED = 897523978813691l;
   final static int SEED_STEP = 100000;
-
-  
+  final static int STRIDE_SIZE = 25; // do batches of 25
      
   public static TPCC make(TreeMap<String,String> threadMap, TreeMap<String,String[]> argMap, File scratch, Boolean verbose, Boolean preserve) throws Exception {
     return new TPCC(threadMap, argMap, scratch, verbose, preserve);
@@ -169,11 +168,12 @@ public class TPCC {
     transactionsPerTerminal = new int[numberOfTerminals];
 
     // set up the transactions for each terminal
-    final int iterationsPerClient = totalTransactions / numberOfTerminals;
-    final int oddIterations = totalTransactions - (iterationsPerClient * numberOfTerminals);
+    final int batchesPerClient = (totalTransactions / STRIDE_SIZE) / numberOfTerminals;
+    final int oddIterations = (totalTransactions/STRIDE_SIZE) - (batchesPerClient * numberOfTerminals);
 
+    int t = 0;
     for (int i = 0; i < numberOfTerminals; i++)
-      transactionsPerTerminal[i] = iterationsPerClient + (i < oddIterations ? 1 : 0);
+      transactionsPerTerminal[i] = STRIDE_SIZE*(batchesPerClient + (i < oddIterations ? 1 : 0));
   }
 
   private void preIterationDiskDB() throws Exception {
@@ -257,7 +257,7 @@ public class TPCC {
     // we can't change size after the initial prepare(size)
     assert this.size.equalsIgnoreCase(size);
 
-    LatencyReporter.initialize(totalTransactions, submitters.length, 25);
+    LatencyReporter.initialize(totalTransactions, submitters.length, STRIDE_SIZE);
     reporter.reset(totalTransactions);
 
     long start = System.currentTimeMillis();
