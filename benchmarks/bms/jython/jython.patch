@@ -1,6 +1,6 @@
-diff -ur ./Python-2.7/Tools/pybench/CommandLine.py ../build/Python-2.7/Tools/pybench/CommandLine.py
---- ./Python-2.7/Tools/pybench/CommandLine.py	2006-06-14 04:56:56.000000000 +1000
-+++ ../build/Python-2.7/Tools/pybench/CommandLine.py	2021-05-15 14:40:04.573579909 +1000
+diff '--color=auto' -ur ./Python-2.7/Tools/pybench/CommandLine.py ../build/Python-2.7/Tools/pybench/CommandLine.py
+--- ./Python-2.7/Tools/pybench/CommandLine.py	2006-06-13 18:56:56.000000000 +0000
++++ ../build/Python-2.7/Tools/pybench/CommandLine.py	2022-10-06 00:04:38.964491084 +0000
 @@ -367,7 +367,7 @@
              print
              rc = 1
@@ -10,9 +10,9 @@ diff -ur ./Python-2.7/Tools/pybench/CommandLine.py ../build/Python-2.7/Tools/pyb
  
      def add_option(self, option):
  
-diff -ur ./Python-2.7/Tools/pybench/pybench.py ../build/Python-2.7/Tools/pybench/pybench.py
---- ./Python-2.7/Tools/pybench/pybench.py	2009-10-10 01:32:19.000000000 +1100
-+++ ../build/Python-2.7/Tools/pybench/pybench.py	2021-05-15 14:40:04.573579909 +1000
+diff '--color=auto' -ur ./Python-2.7/Tools/pybench/pybench.py ../build/Python-2.7/Tools/pybench/pybench.py
+--- ./Python-2.7/Tools/pybench/pybench.py	2009-10-09 14:32:19.000000000 +0000
++++ ../build/Python-2.7/Tools/pybench/pybench.py	2022-10-06 04:35:42.646464688 +0000
 @@ -325,9 +325,9 @@
          t = timer()
          test()
@@ -48,7 +48,7 @@ diff -ur ./Python-2.7/Tools/pybench/pybench.py ../build/Python-2.7/Tools/pybench
  
          # Switch off garbage collection
          if not withgc:
-@@ -931,14 +929,14 @@
+@@ -931,17 +929,17 @@
              print '*** KeyboardInterrupt -- Aborting'
              print
              return
@@ -70,11 +70,15 @@ diff -ur ./Python-2.7/Tools/pybench/pybench.py ../build/Python-2.7/Tools/pybench
 +        #                           limitnames=limitnames)
  
          # Ring bell
-         sys.stderr.write('\007')
-diff -ur ./src/org/python/core/PySystemState.java ../build/src/org/python/core/PySystemState.java
---- ./src/org/python/core/PySystemState.java	2020-07-01 20:40:08.000000000 +1000
-+++ ../build/src/org/python/core/PySystemState.java	2021-05-15 14:40:04.573579909 +1000
-@@ -1288,6 +1288,11 @@
+-        sys.stderr.write('\007')
++        # sys.stderr.write('\007')
+ 
+         if reportfile:
+             try:
+diff '--color=auto' -ur ./src/org/python/core/PySystemState.java ../build/src/org/python/core/PySystemState.java
+--- ./src/org/python/core/PySystemState.java	2022-10-04 01:41:18.000000000 +0000
++++ ../build/src/org/python/core/PySystemState.java	2022-10-06 00:04:38.964491084 +0000
+@@ -1296,6 +1296,11 @@
          packageManager = new SysPackageManager(pkgdir, props);
      }
  
