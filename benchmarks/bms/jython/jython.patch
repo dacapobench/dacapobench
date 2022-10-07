@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ./Python-2.7/Tools/pybench/CommandLine.py ../build/Python-2.7/Tools/pybench/CommandLine.py
 --- ./Python-2.7/Tools/pybench/CommandLine.py	2006-06-13 18:56:56.000000000 +0000
-+++ ../build/Python-2.7/Tools/pybench/CommandLine.py	2022-10-06 00:04:38.964491084 +0000
++++ ../build/Python-2.7/Tools/pybench/CommandLine.py	2022-10-07 02:49:13.903598391 +0000
 @@ -367,7 +367,7 @@
              print
              rc = 1
@@ -12,7 +12,7 @@ diff '--color=auto' -ur ./Python-2.7/Tools/pybench/CommandLine.py ../build/Pytho
  
 diff '--color=auto' -ur ./Python-2.7/Tools/pybench/pybench.py ../build/Python-2.7/Tools/pybench/pybench.py
 --- ./Python-2.7/Tools/pybench/pybench.py	2009-10-09 14:32:19.000000000 +0000
-+++ ../build/Python-2.7/Tools/pybench/pybench.py	2022-10-06 04:35:42.646464688 +0000
++++ ../build/Python-2.7/Tools/pybench/pybench.py	2022-10-07 02:49:13.903598391 +0000
 @@ -325,9 +325,9 @@
          t = timer()
          test()
@@ -75,9 +75,50 @@ diff '--color=auto' -ur ./Python-2.7/Tools/pybench/pybench.py ../build/Python-2.
  
          if reportfile:
              try:
+diff '--color=auto' -ur ./src/org/python/core/imp.java ../build/src/org/python/core/imp.java
+--- ./src/org/python/core/imp.java	2022-10-04 01:41:18.000000000 +0000
++++ ../build/src/org/python/core/imp.java	2022-10-07 04:46:52.513807937 +0000
+@@ -923,10 +923,16 @@
+                 long pyTime = sourceFile.lastModified();
+ 
+                 if (haveCompiled) {
+-                    // We have the compiled file and will use that if it is not out of date
+-                    logger.log(Level.FINE, "# trying precompiled {0}", compiledFile.getPath());
+-                    long classTime = compiledFile.lastModified();
+-                    if (classTime >= pyTime) {
++                    // // We have the compiled file and will use that if it is not out of date
++                    //
++                    // DaCapo: skip this check since: a) we have precompiled things, b) we checksum
++                    // the source and class files, c) we don't want to write new class files, and 
++                    // d) the DaCapo files may have been copied with the reult that a given class file 
++                    // may have a (slightly) older timestamp than the source file.
++                    //
++                    // logger.log(Level.FINE, "# trying precompiled {0}", compiledFile.getPath());
++                    // long classTime = compiledFile.lastModified();
++                    // if (classTime >= pyTime) {
+                         // The compiled file does not appear out of date relative to the source.
+                         PyObject ret = createFromPyClass(modName, makeStream(compiledFile), //
+                                 true, // OK to fail here as we have the source
+@@ -934,11 +940,11 @@
+                         if (ret != null) {
+                             return ret;
+                         }
+-                    } else {
+-                        logger.log(Level.FINE,
+-                                "# {0} dated ({1,date} {1,time,long}) < ({2,date} {2,time,long})",
+-                                new Object[] {name, new Date(classTime), new Date(pyTime)});
+-                    }
++                    // } else {
++                    //     logger.log(Level.FINE,
++                    //             "# {0} dated ({1,date} {1,time,long}) < ({2,date} {2,time,long})",
++                    //             new Object[] {name, new Date(classTime), new Date(pyTime)});
++                    // }
+                 }
+ 
+                 // The compiled class is not present, is out of date, or using it failed somehow.
 diff '--color=auto' -ur ./src/org/python/core/PySystemState.java ../build/src/org/python/core/PySystemState.java
 --- ./src/org/python/core/PySystemState.java	2022-10-04 01:41:18.000000000 +0000
-+++ ../build/src/org/python/core/PySystemState.java	2022-10-06 00:04:38.964491084 +0000
++++ ../build/src/org/python/core/PySystemState.java	2022-10-07 02:49:13.903598391 +0000
 @@ -1296,6 +1296,11 @@
          packageManager = new SysPackageManager(pkgdir, props);
      }
