@@ -111,6 +111,7 @@ public class Client implements Runnable {
       new HttpGet("/examples/jsp/tagplugin/foreach.jsp",200,"7380ee5da006fe29df4baca0e38b6f754cc5303f"),
       new HttpGet("/examples/jsp/tagplugin/choose.jsp",200,"e4a24b5eb600085105a532105f104cf0b8cad48d")
   );
+  public static final int BATCH_SIZE = pages.size();
 
   /**
    * A benchmark client, one per client thread.
@@ -127,41 +128,27 @@ public class Client implements Runnable {
     this.pageCount = pageCount;
     this.verbose = verbose;
     this.port = port;
-    fivePercent = pageCount/20;
+    fivePercent = BATCH_SIZE*(pageCount/20);
   }
 
-
-  public static Integer count = 0;
-
-  private int inc() {
-    int rtn;
-    synchronized(count) {
-      rtn = count++;
-      if (fivePercent != 0 ) {
-        if (rtn < pageCount) {
-          if (count % fivePercent == 0) {
-            int percentage = 5 * (count / fivePercent);
-            System.err.print("Completing requests: "+percentage+"%\r");
-          }
-        } else if (rtn == pageCount) {
-          System.err.println();
-        }
-      }
-    }
-    return rtn;
-  }
   /**
    * @see java.lang.Runnable#run()
    */
   public void run() {
     final Session session = Session.create(port);
+    final int totalRequests = pageCount * BATCH_SIZE;
     try {
-      while (inc() < pageCount) {
-        for (int p = 0; p < pages.size(); p++) {
-          Page page = pages.get(p);
-          LatencyReporter.start(ordinal);
-          boolean result = page.fetch(session, null, verbose);
-          LatencyReporter.end(ordinal);
+      int idx = 0;
+      while ((idx = LatencyReporter.start(ordinal)) < totalRequests) {
+        Page page = pages.get(idx % BATCH_SIZE);
+        page.fetch(session, null, verbose);
+        LatencyReporter.end(ordinal);
+        int done = idx + 1;
+        if (fivePercent > 0 && (done % fivePercent == 0)) {
+          int percentage = 5 * (done / fivePercent);
+          System.err.print("Completing requests: "+percentage+"%\r");
+          if (done == totalRequests)
+            System.err.println();
         }
       }
     } catch (Exception e) {

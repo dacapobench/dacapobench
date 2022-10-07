@@ -54,7 +54,6 @@ public class Control {
     if (function.equals("prepare")) {
       Bootstrap.main(new String[] { "startd" });
     } else if (function.equals("startIteration")) {
-      Client.count = 0;
       startServer();
     } else if (function.equals("stopIteration")) {
       stopServer();

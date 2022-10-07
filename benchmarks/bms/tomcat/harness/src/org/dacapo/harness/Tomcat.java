@@ -42,7 +42,7 @@ public class Tomcat extends Benchmark {
    * @throws Exception When something goes wrong
    */
   public Tomcat(Config config, File scratch, File data) throws Exception {
-    super(config, scratch, data, false);
+    super(config, scratch, data, false, false);
     this.clazz = Class.forName("org.dacapo.tomcat.Control", true, loader);
     this.method = clazz.getMethod("exec", String.class);
 
@@ -160,12 +160,12 @@ public class Tomcat extends Benchmark {
     String[] args = config.getArgs(size);
     final int iterations = Integer.parseInt(args[0]);
 
-    Field f = Class.forName("org.dacapo.tomcat.Client", true, loader).getField("pages");
-    int stride = ((List) (f.get(null))).size();
-    int requests = iterations * stride;
+    Field f = Class.forName("org.dacapo.tomcat.Client", true, loader).getField("BATCH_SIZE");
+    final int BATCH_SIZE = (int) f.get(null);
+    int requests = iterations * BATCH_SIZE;
 
     final Thread[] threads = new Thread[threadCount];
-    LatencyReporter.initialize(requests, threadCount, stride);
+    LatencyReporter.initialize(requests, threadCount, BATCH_SIZE);
     LatencyReporter.requestsStarting();
     for (int i = 0; i < threadCount; i++) {
       Runnable client = clientConstructor.newInstance(scratch, i, iterations, getVerbose(), PORT);
