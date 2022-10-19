@@ -22,6 +22,10 @@
 
     <target name="bm-build" depends="daytrader"/>
 
+    <target name="data-perms">
+        <ant antfile="${lib-base}/daytrader/build.xml" target="data-perms"/>
+    </target>
+
     <target name="data"/>
     <target name="jar"/>
 </project>

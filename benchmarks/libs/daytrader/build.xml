@@ -94,12 +94,6 @@
         <copy todir="${lib-build-dir}/wildfly-${wildfly-version}.Final/standalone/deployments"
               file="${dt-build}/javaee6/assemblies/daytrader-ear/target/daytrader-ear-3.0-SNAPSHOT.ear"/>
 
-        <!-- <zip destfile="${lib-dat}/daytrader.zip" basedir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/> -->
-        <!-- <copy todir="${lib-dat}" basedir="${lib-build-dir}" includes="wildfly-${wildfly-version}.Final/**"/>  -->
-
-
-        <echo message="----${lib-dat}----" />
-
         <copy todir="${lib-dat}">
             <fileset dir="${lib-build-dir}">
                 <include name="wildfly-${wildfly-version}.Final/**"/>
@@ -111,4 +105,14 @@
         </copy>
         <delete file="${lib-dat}/wildfly-${wildfly-version}.Final/standalone/configuration/logging.properties"/>
     </target>
+
+    <target name="data-perms">
+        <!-- ant unzip and copy tasks do not restore file permisions, so we need to do this explicitly -->
+        <chmod perm="755">
+            <fileset dir="${build.target-data}/lib/daytrader/wildfly-${wildfly-version}.Final/bin">
+                <include name="*.sh"/>
+            </fileset>
+        </chmod>
+    </target>
+
 </project>

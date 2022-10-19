@@ -156,7 +156,9 @@
 		</chmod>
 	</target>
 
-	<target name="benchmark" depends="bm-build, jar, data-copy-checksum"/>
+	<target name="benchmark" depends="bm-build, jar, data-copy-checksum, data-perms"/>
+
+	<target name="data-perms"/>
 
 	<target name="bm-build"/>
 
