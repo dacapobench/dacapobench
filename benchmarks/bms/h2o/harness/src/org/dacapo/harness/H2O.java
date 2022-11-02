@@ -36,6 +36,7 @@ public class H2O extends Benchmark{
         super(config, scratch, data, false);
         Class<?> clazz = Class.forName("water.H2OApp", true, loader);
         this.method = clazz.getMethod("main", String[].class);
+        warnJavaVersionLE(7, "H2O "+config.getDesc("version")+" is only supported for Java versions <= 17."+System.lineSeparator()+"H2O allows you to override its checks by adding '-Dsys.ai.h2o.debug.allowJavaVersions=<MV>' to your command line, where <MV> is the major version you wish to use.");
     }
 
     @Override

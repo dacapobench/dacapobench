@@ -13,14 +13,14 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="h2o"/>
-    <property name="bm-version" value="3.38.0.2"/>
+    <property name="bm-version" value="3.38.0.2"/> <!-- Be sure to update the git-commit when updating verison! -->
     <property name="bm-version-str" value="h2o ${bm-version}"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
 
     <property name="git-group" value="h2oai"/>
     <property name="git-project" value="h2o-3"/>
     <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
-    <property name="bm-git-commit" value="79e01be9bbf5f96b6be770c5589a4a32ecd2c2f0"/>
+    <property name="bm-git-commit" value="60105fb386ab8a72e5625ba0d3277ea5ef22c076"/>
 
     <import file="../common.xml"/>
 
