@@ -12,14 +12,21 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <asm.version>9.3</asm.version>
+    <asm.version>9.4</asm.version>
     <maven-shade-plugin.version>3.3.0</maven-shade-plugin.version>
     <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
   </properties>
 
   <dependencies>
+    <dependency>
+	    <groupId>org.dacapo</groupId>
+	      <artifactId>dacapo</artifactId>
+	      <version>1.0</version>
+	      <scope>system</scope>
+	    <systemPath>${basedir}/../../../benchmarks/dacapo-evaluation-git-c7c2a17b.jar</systemPath>
+    </dependency>
     <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm</artifactId>
@@ -60,7 +67,7 @@
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
                     <Premain-Class>
-                      org.dacapo.BCCAgent
+                      org.dacapo.analysis.BCCAgent
                     </Premain-Class>
                     <Can-Retransform-Classes>true</Can-Retransform-Classes>
                     <Can-Redefine-Classes>true</Can-Redefine-Classes>
