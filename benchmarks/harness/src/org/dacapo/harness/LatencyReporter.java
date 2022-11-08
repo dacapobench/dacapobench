@@ -130,7 +130,7 @@ public class LatencyReporter {
    * 
    * @param index the global index for the request that completed.
    */
-  private static float endIdx(int index) {
+  public static float endIdx(int index) {
     long end = (System.nanoTime() - timerBase)/NS_COARSENING;
     txend[index] = (float) end;
 

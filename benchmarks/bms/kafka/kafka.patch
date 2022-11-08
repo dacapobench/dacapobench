@@ -417,7 +417,7 @@ diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka
 +        try {
 +            Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter", true, ProduceBenchWorker.class.getClassLoader());
 +            dacapoStart = clazz.getMethod("start", int.class);
-+            dacapoEnd = clazz.getMethod("end", int.class);
++            dacapoEnd = clazz.getMethod("endIdx", int.class);
 +            dacapoStarting = clazz.getMethod("requestsStarting");
 +            dacapoFinished = clazz.getMethod("requestsFinished");
 +        } catch (ClassNotFoundException e) {
@@ -505,7 +505,7 @@ diff '--color=auto' -ur ./kafka-3.2.3-src/trogdor/src/main/java/org/apache/kafka
 +
 +        public void dacapoEnd(int idx) {
 +            try {
-+                dacapoEnd.invoke(null, 0);
++                dacapoEnd.invoke(null, idx);
 +            } catch (IllegalAccessException e) {
 +                System.err.println("Failed to invoke DaCapo latency reporter end(): "+e);
 +                e.printStackTrace();
