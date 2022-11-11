@@ -5,10 +5,23 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 public class Transformer implements ClassFileTransformer {
+
+    boolean booted = false;
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-      System.err.println(className);
-      BCCAnalysis.classLoaded(className);
-      byte[] result = new Rewriter(className, classfileBuffer).rewrite();
-      return result;
+
+        String dontskip = System.getProperty("skip.exception");
+    
+        boolean ok = (dontskip != null && className.startsWith(dontskip));
+
+        if (loader != null &&
+          !loader.toString().startsWith("jdk.internal.loader.ClassLoaders$PlatformClassLoader") &&
+          !loader.toString().startsWith("jdk.internal.reflect.DelegatingClassLoader") &&
+          !className.startsWith("org/dacapo/analysis")) {
+            BCCAnalysis.classTransformed(className);
+            return new Rewriter(className, classfileBuffer).rewrite();
+        } else {
+    //       System.err.println("skipped class: " + loader + " " + className);
+        }
+        return null;
     }
 }
