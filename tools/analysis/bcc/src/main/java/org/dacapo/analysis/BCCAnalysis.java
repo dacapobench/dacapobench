@@ -6,15 +6,19 @@ public class BCCAnalysis {
 
     /* Benchmark Callback hooks */
     public static void iterationStart(boolean warmup) {
-
+        reset();
     }
-    public static void iterationStop(boolean warmup) {
 
+    public static void iterationStop(boolean warmup) {
     }
 
     public static void benchmarkComplete(boolean valid) {
         System.err.println("Transformed "+        classesTransformed++
         +" classes,  "+bytecodesTransformed+" bytecodes, executed "+bytecodesExecuted+" bytecodes, "+executed.size()+" unique");
+        for (int i = 0; i < 255; i++) {
+            System.err.print(" "+opcodes[i]+",");
+        }
+        System.err.println();
     }
 
     public static long classesTransformed= 0;
@@ -22,6 +26,16 @@ public class BCCAnalysis {
     public static long bytecodesExecuted = 0;
 
     public static HashMap<Integer, Integer> executed = new HashMap();
+    public static int[] opcodes = new int[255];
+
+
+    private static void reset() {
+        bytecodesExecuted = 0;
+        executed = new HashMap();
+        for (int i = 0; i < 255; i++) {
+            opcodes[i] = 0;
+        }
+    }
 
     static void preMainClassLoaded(Class clazz) {
     }
@@ -44,6 +58,7 @@ public class BCCAnalysis {
     }
 
     public static void bytecodeExecuted(int opcode, int id) {
+        opcodes[opcode]++;
         if (executed.containsKey(id)) {
             int old = executed.get(id);
             executed.put(id, ++old);
