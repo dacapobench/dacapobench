@@ -362,7 +362,7 @@
 
     <target name="bytecode-transformer">
         <property name="bcc-dir" value="${toolsdir}/analysis/bcc"/>
-        <exec executable="${mvn-exe}" dir="${bcc-dir}">
+        <exec executable="${mvn-exe}" dir="${bcc-dir}" failonerror="true">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line="install"/>
         </exec>
