@@ -353,10 +353,26 @@
         <antcall target="build.status.pass" />
     </target>
 	
+
+    <property name="mvn-home" location="${toolsdir}/apache-maven-${mvn.version}/bin"/>
+    <property name="mvn-exe" value="${mvn-home}/mvn"/>
+    <condition property="mvn-exe" value="${mvn-home}/mvn.bat">
+        <os family="windows"/>
+    </condition>
+
+    <target name="bytecode-transformer">
+        <property name="bcc-dir" value="${toolsdir}/analysis/bcc"/>
+        <exec executable="${mvn-exe}" dir="${bcc-dir}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line="install"/>
+        </exec>
+        <copy file="${toolsdir}/analysis/bcc/target/BCCAgent-1.0-SNAPSHOT.jar" tofile="${build.target-jars}/bccagent.jar"/>
+    </target>
+
     <!-- ================================= 
          target: harness           
          ================================= -->
-    <target name="harness" depends="init,bootstrap" description="compile the source ">
+    <target name="harness" depends="init,bootstrap,bytecode-transformer" description="compile the source ">
         <ant antfile="harness/build.xml"/>
     </target>
 	
