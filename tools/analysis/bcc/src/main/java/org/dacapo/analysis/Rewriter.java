@@ -14,8 +14,6 @@ public class Rewriter {
     private final ClassWriter classWriter;
     private final ClassVisitor classVisitor;
 
-    private static int allocation_site = 0;
-
     public Rewriter(String className, byte[] classfileBuffer) {
         this.classReader = new ClassReader(classfileBuffer);
         this.classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
