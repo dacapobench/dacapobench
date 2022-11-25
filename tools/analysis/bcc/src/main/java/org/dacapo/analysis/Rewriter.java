@@ -53,13 +53,92 @@ public class Rewriter {
 
         @Override
         public void visitInsn(int opcode) {
-            BCCAnalysis.bytecodeTransformed();
+            instrumentInsn(opcode);
+            mv.visitInsn(opcode);
+        }
+
+        @Override
+        public void visitIntInsn(int opcode, int operand) {
+            instrumentInsn(opcode);
+            mv.visitIntInsn(opcode, operand);
+        }
+
+        @Override
+        public void visitVarInsn(int opcode, int var) {
+            instrumentInsn(opcode);
+            mv.visitVarInsn(opcode, var);
+        }
+
+        @Override
+        public void visitTypeInsn(int opcode, String type) {
+            instrumentInsn(opcode);
+            mv.visitTypeInsn(opcode, type);
+        }
+
+        @Override
+        public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+            instrumentInsn(opcode);
+            mv.visitFieldInsn(opcode, owner, name, desc);
+        }
+
+        @Override
+        public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
+            instrumentInsn(opcode);
+            mv.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
+        }
+
+        @Override
+        public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
+            Object... bsmArgs) {
+            instrumentInsn(Opcodes.INVOKEDYNAMIC);
+            mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+        }
+        
+        @Override
+        public void visitJumpInsn(int opcode, Label label) {
+            instrumentInsn(opcode);
+            mv.visitJumpInsn(opcode, label);
+        }
+
+        @Override
+        public void visitLdcInsn(Object cst) {
+            instrumentInsn(Opcodes.LDC);
+            mv.visitLdcInsn(cst);
+        }
+
+        @Override
+        public void visitIincInsn(int var, int increment) {
+            instrumentInsn(Opcodes.IINC);
+            mv.visitIincInsn(var, increment);
+        }
+
+        @Override
+        public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
+            instrumentInsn(Opcodes.TABLESWITCH);
+            mv.visitTableSwitchInsn(min, max, dflt, labels);
+        }
+
+        @Override
+        public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+            instrumentInsn(Opcodes.LOOKUPSWITCH);
+            mv.visitLookupSwitchInsn(dflt, keys, labels);
+        }
+
+        @Override
+        public void visitMultiANewArrayInsn(String desc, int dims) {
+            instrumentInsn(Opcodes.MULTIANEWARRAY);
+            mv.visitMultiANewArrayInsn(desc, dims);
+        }
+
+        void instrumentInsn(int opcode) {
+            bcid++;
+            int id = BCCAnalysis.bytecodeTransformed();
+
             mv.visitInsn(NOP);
             push(opcode);
-            mv.visitInsn(NOP);
-            push(++bcid);
-            mv.visitMethodInsn(INVOKESTATIC, "org/dacapo/analysis/BCCAnalysis", "bytecodeExecuted", "(II)V");
-            mv.visitInsn(opcode);
+            mv.visitInsn(NOP);            
+            push(id);
+            mv.visitMethodInsn(INVOKESTATIC, "org/dacapo/analysis/BCCAnalysis", "bytecodeExecuted", "(II)V", false);
         }
 
         void push(final int value) {

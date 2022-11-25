@@ -1,6 +1,10 @@
 package org.dacapo.analysis;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
 
 public class BCCAnalysis {
 
@@ -27,11 +31,27 @@ public class BCCAnalysis {
     }
 
     public static void benchmarkComplete(boolean valid) {
-        if (check()) {
+        check();
+    //    if (check()) {
+
+        List<Integer> bytecodefreq = new ArrayList<Integer>(executed.values());
+        Collections.sort(bytecodefreq);
+        int uniq = bytecodefreq.size();
+        int p90 = bytecodefreq.get((uniq-1)-(uniq/10));
+        int p99 = bytecodefreq.get((uniq-1)-(uniq/100));
+        int p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
+        int p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
+
             System.out.println("transformed-classes: "+ classesTransformed);
             System.out.println("transformed-bytecodes: "+ bytecodesTransformed);
             System.out.println("executed-bytecodes: "+ bytecodesExecuted);
             System.out.println("executed-bytecodes-unique: "+ executed.size());
+            System.out.println("executed-bytecodes-p90: "+ p90);
+            System.out.println("executed-bytecodes-p99: "+ p99);
+            System.out.println("executed-bytecodes-p999: "+ p999);
+            System.out.println("executed-bytecodes-p9999: "+ p9999);
+            System.out.println("executed-calls: "+ callsExecuted);
+            System.out.println("executed-calls-unique: "+ called.size());
 
             System.out.print("opcodes: {");
             boolean start = true;
@@ -42,20 +62,25 @@ public class BCCAnalysis {
                 }
             }
             System.out.println(" }");
-        }
+   //     }
     }
 
     public static long classesTransformed= 0;
-    public static long bytecodesTransformed = 0;
+    public static Long bytecodesTransformed = new Long(0);
     public static long bytecodesExecuted = 0;
+    public static long callsExecuted = 0;
 
     public static HashMap<Integer, Integer> executed = new HashMap();
+    public static HashMap<Integer, Integer> called = new HashMap();
+
     public static int[] opcodes = new int[255];
 
 
     private static void reset() {
         bytecodesExecuted = 0;
+        callsExecuted = 0;
         executed = new HashMap();
+        called = new HashMap();
         for (int i = 0; i < 255; i++) {
             opcodes[i] = 0;
         }
@@ -68,21 +93,31 @@ public class BCCAnalysis {
         classesTransformed++;
     }
 
-    public static void bytecodeTransformed() {
-        bytecodesTransformed++;
-      }
-
-      
-    public static void bytecodeExecuted() {
-      //  bytecodesExecuted++;
-    }
-
-    public static void bytecodeExecuted(int opcode) {
-      //  bytecodesExecuted++;
+    public static int bytecodeTransformed() {
+        synchronized (bytecodesTransformed) {
+            bytecodesTransformed++;
+        }
+        if (bytecodesTransformed >= Integer.MAX_VALUE) {
+            System.err.println("WARNING: overflow on bytecode ID");
+            return Integer.MAX_VALUE;
+        } else 
+            return bytecodesTransformed.intValue();
     }
 
     public static void bytecodeExecuted(int opcode, int id) {
         opcodes[opcode]++;
+
+        /* calls */
+        if (opcode >= 182 && opcode <= 186) { // invokevirtual, invokespecial, invokestatic, invokeinterface, invokedynamic
+            callsExecuted++;
+            if (called.containsKey(id)) {
+                int old = called.get(id);
+                called.put(id, ++old);
+            } else {
+                called.put(id, 1);
+            }
+        }
+
         if (executed.containsKey(id)) {
             int old = executed.get(id);
             executed.put(id, ++old);
