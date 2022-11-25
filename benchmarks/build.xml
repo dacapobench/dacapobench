@@ -297,7 +297,7 @@
     <!-- ================================= 
          target: dist              
          ================================= -->
-    <target name="dist" depends="harness,compile,update-externdata-info,create-zip"/>
+    <target name="dist" depends="harness,bytecode-transformer,compile,update-externdata-info,create-zip"/>
 
     <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation"/>
 
@@ -360,24 +360,28 @@
         <os family="windows"/>
     </condition>
 
-    <target name="bytecode-transformer">
-        <property name="bcc-dir" value="${toolsdir}/analysis/bcc"/>
+    <!-- ================================= 
+         target: harness           
+         ================================= -->
+    <target name="harness" depends="bytecode-transformer" description="build harness and bytecode transformer"/>
+
+    <property name="bcc-dir" value="${toolsdir}/analysis/bcc"/>
+
+    <target name="harness-jar" depends="init,bootstrap" description="compile harness and create jar for use by maven when compiling bytecode transformer">
+        <ant antfile="harness/build.xml"/>
+        <jar destfile="${bcc-dir}/dacapo-harness.jar" basedir="harness/dist" update="true"/>
+    </target>
+
+    <target name="clean-harness" depends="init">
+        <ant antfile="harness/build.xml" target="clean"/>
+    </target>
+
+    <target name="bytecode-transformer" depends="harness-jar">
         <exec executable="${mvn-exe}" dir="${bcc-dir}" failonerror="true">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line="install"/>
         </exec>
         <copy file="${toolsdir}/analysis/bcc/target/BCCAgent-1.0-SNAPSHOT.jar" tofile="${build.target-jars}/bccagent.jar"/>
-    </target>
-
-    <!-- ================================= 
-         target: harness           
-         ================================= -->
-    <target name="harness" depends="init,bootstrap,bytecode-transformer" description="compile the source ">
-        <ant antfile="harness/build.xml"/>
-    </target>
-	
-    <target name="clean-harness" depends="init">
-        <ant antfile="harness/build.xml" target="clean"/>
     </target>
 
     <!-- *************************************************************************** -->
