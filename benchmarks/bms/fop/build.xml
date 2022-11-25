@@ -13,7 +13,8 @@
 
     <property name="bm-name" value="fop" />
     <property name="bm-version" value="2.7" />
-    <property name="bm-version-str" value="fop ${bm-version} batik 1.14"/>
+    <import file="../common.xml"/>
+    <property name="bm-version-str" value="fop ${bm-version} batik ${batik-version}"/>
     <property name="bm-url" value="${apache.dl.url}/xmlgraphics/fop/source" />
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tar.gz" />
 
