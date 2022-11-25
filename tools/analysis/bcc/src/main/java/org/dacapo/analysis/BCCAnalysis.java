@@ -31,16 +31,15 @@ public class BCCAnalysis {
     }
 
     public static void benchmarkComplete(boolean valid) {
-        check();
-    //    if (check()) {
 
-        List<Integer> bytecodefreq = new ArrayList<Integer>(executed.values());
-        Collections.sort(bytecodefreq);
-        int uniq = bytecodefreq.size();
-        int p90 = bytecodefreq.get((uniq-1)-(uniq/10));
-        int p99 = bytecodefreq.get((uniq-1)-(uniq/100));
-        int p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
-        int p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
+        if (check()) {
+            List<Integer> bytecodefreq = new ArrayList<Integer>(executed.values());
+            Collections.sort(bytecodefreq);
+            int uniq = bytecodefreq.size();
+            int p90 = bytecodefreq.get((uniq-1)-(uniq/10));
+            int p99 = bytecodefreq.get((uniq-1)-(uniq/100));
+            int p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
+            int p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
 
             System.out.println("transformed-classes: "+ classesTransformed);
             System.out.println("transformed-bytecodes: "+ bytecodesTransformed);
@@ -62,7 +61,7 @@ public class BCCAnalysis {
                 }
             }
             System.out.println(" }");
-   //     }
+        }
     }
 
     public static long classesTransformed= 0;
