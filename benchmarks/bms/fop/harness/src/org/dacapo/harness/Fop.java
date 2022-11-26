@@ -27,7 +27,7 @@ public class Fop extends Benchmark {
   private String[] outputs;
 
   public Fop(Config config, File scratch, File data) throws Exception {
-    super(config, scratch, data);
+    super(config, scratch, data, false, false);
     Class<?> clazz = Class.forName("org.apache.fop.cli.Main", true, loader);
     this.method = clazz.getMethod("startFOP", new Class[] { String[].class });
   }
