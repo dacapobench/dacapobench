@@ -12,7 +12,7 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="fop" />
-    <property name="bm-version" value="2.7" />
+    <property name="bm-version" value="2.8" />
     <import file="../common.xml"/>
     <property name="bm-version-str" value="fop ${bm-version} batik ${batik-version}"/>
     <property name="bm-url" value="${apache.dl.url}/xmlgraphics/fop/source" />
@@ -22,7 +22,14 @@
 
     <property name="bm-build-top" value="${bm-build-dir}/${bm-name}-${bm-version}/fop" />
 
-    <target name="unpack" depends="untar, patch" />
+    <target name="unpack" depends="untar, patch">
+            <antcall target="check-source">
+            <!-- explicitly include xalan jar to ensure a suitable TransformerFactory is present, even in old JVMs -->
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="https://dlcdn.apache.org/xalan/xalan-j/binaries"/>
+            <param name="target-file" value="xalan-j_2_7_2-bin.zip"/>
+        </antcall>
+    </target>
 
     <target name="bm-build">
         <ant dir="${bm-build-top}" target="package" inheritall="false" />
@@ -35,6 +42,13 @@
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
+        <unzip src="${bm-downloads}/xalan-j_2_7_2-bin.zip" dest="${bm-jars}">
+            <patternset>
+                <include name="xalan-j_2_7_2/xalan.jar"/>
+                <include name="xalan-j_2_7_2/xercesImpl.jar"/>
+            </patternset>
+            <mapper type="flatten"/>
+        </unzip>
     </target>
 
     <target name="data">
