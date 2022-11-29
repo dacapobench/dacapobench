@@ -36,17 +36,6 @@ diff '--color=auto' -ur ./build.gradle ../build/build.gradle
  clean.dependsOn('cleanMergedJavadoc')
  task cleanMergedJavadoc(type: Delete) {
      delete file('dist/javadoc')
-Binary files ./.gradle/6.9.2/executionHistory/executionHistory.lock and ../build/.gradle/6.9.2/executionHistory/executionHistory.lock differ
-Binary files ./.gradle/6.9.2/fileHashes/fileHashes.lock and ../build/.gradle/6.9.2/fileHashes/fileHashes.lock differ
-Binary files ./.gradle/buildOutputCleanup/buildOutputCleanup.lock and ../build/.gradle/buildOutputCleanup/buildOutputCleanup.lock differ
-diff '--color=auto' -ur ./.gradle/buildOutputCleanup/cache.properties ../build/.gradle/buildOutputCleanup/cache.properties
---- ./.gradle/buildOutputCleanup/cache.properties	2022-09-19 06:47:36.002950751 +0000
-+++ ../build/.gradle/buildOutputCleanup/cache.properties	2022-09-20 08:48:00.529056230 +0000
-@@ -1,2 +1,2 @@
--#Mon Sep 19 06:47:36 UTC 2022
-+#Tue Sep 20 08:48:00 UTC 2022
- gradle.version=6.9.2
-Binary files ./.gradle/checksums/checksums.lock and ../build/.gradle/checksums/checksums.lock differ
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
 --- ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2022-09-17 11:07:26.000000000 +0000
 +++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2022-09-20 08:54:34.720484246 +0000
