@@ -1,7 +1,7 @@
-diff -ur ./build.gradle ../build/build.gradle
---- ./build.gradle	2021-04-28 16:33:56.000000000 +1000
-+++ ../build/build.gradle	2021-04-28 19:59:17.618708751 +1000
-@@ -131,13 +131,13 @@
+diff '--color=auto' -ur ./build.gradle ../build/build.gradle
+--- ./build.gradle	2022-11-29 02:43:26.000000000 +0000
++++ ../build/build.gradle	2022-11-29 02:43:44.529476069 +0000
+@@ -149,13 +149,13 @@
        project(':h2o-clustering')
      ]
  
@@ -22,7 +22,7 @@ diff -ur ./build.gradle ../build/build.gradle
  
      // The project which need to be run under CI only
      testNeedsCiProject = [
-@@ -244,9 +244,9 @@
+@@ -262,9 +262,9 @@
  
      // Publish artifacts - we should filter subproject in future but now apply publisher plugin
      // to all projects
@@ -33,9 +33,9 @@ diff -ur ./build.gradle ../build/build.gradle
 +//      apply from: "$rootDir/gradle/publish.gradle"
 +//    }
  
-     // Note: this is deprecated and will be removed in the future
-     apply from: "$rootDir/gradle/makeSupport.gradle"
-@@ -278,19 +278,19 @@
+     // Copy all jars and remove version number from the name
+     apply from: "$rootDir/gradle/copyJars.gradle"
+@@ -300,19 +300,19 @@
          
      }
  
@@ -68,9 +68,9 @@ diff -ur ./build.gradle ../build/build.gradle
  }
  
  // Include support for S3 syncing
-diff -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
---- ./h2o-algos/build.gradle	2021-04-28 16:33:55.000000000 +1000
-+++ ../build/h2o-algos/build.gradle	2021-04-28 19:59:17.618708751 +1000
+diff '--color=auto' -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
+--- ./h2o-algos/build.gradle	2022-11-29 02:43:26.000000000 +0000
++++ ../build/h2o-algos/build.gradle	2022-11-29 02:43:44.533476065 +0000
 @@ -53,7 +53,7 @@
    testRuntimeOnly project(":${defaultWebserverModule}")
    testCompileOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
@@ -80,22 +80,11 @@ diff -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-diff -ur ./h2o-assemblies/main/build.gradle ../build/h2o-assemblies/main/build.gradle
---- ./h2o-assemblies/main/build.gradle	2021-04-28 16:33:55.000000000 +1000
-+++ ../build/h2o-assemblies/main/build.gradle	2021-04-28 19:59:17.618708751 +1000
-@@ -163,6 +163,6 @@
- // Include licences
- shadowJar.dependsOn(licenseReport)
- // Execute always copyJar
--shadowJar.finalizedBy copyJar
-+//shadowJar.finalizedBy copyJar
- // Run shadowJar as part of build
- jar.finalizedBy shadowJar
-diff -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
---- ./h2o-extensions/target-encoder/build.gradle	2021-04-28 16:33:56.000000000 +1000
-+++ ../build/h2o-extensions/target-encoder/build.gradle	2021-04-28 20:03:54.826555193 +1000
+diff '--color=auto' -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
+--- ./h2o-extensions/target-encoder/build.gradle	2022-11-29 02:43:27.000000000 +0000
++++ ../build/h2o-extensions/target-encoder/build.gradle	2022-11-29 02:43:44.533476065 +0000
 @@ -12,7 +12,7 @@
-     testCompile 'com.pholser:junit-quickcheck-generators:0.9'
+     testImplementation 'com.pholser:junit-quickcheck-generators:0.9'
      testRuntimeOnly project(":${defaultWebserverModule}")
      
 -    jmh project(":${defaultWebserverModule}") 
@@ -103,9 +92,9 @@ diff -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/ta
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-diff -ur ./settings.gradle ../build/settings.gradle
---- ./settings.gradle	2021-04-28 16:33:56.000000000 +1000
-+++ ../build/settings.gradle	2021-04-28 19:59:17.618708751 +1000
+diff '--color=auto' -ur ./settings.gradle ../build/settings.gradle
+--- ./settings.gradle	2022-11-29 02:43:27.000000000 +0000
++++ ../build/settings.gradle	2022-11-29 02:43:44.533476065 +0000
 @@ -7,8 +7,8 @@
  include 'h2o-algos'
  include 'h2o-web'
@@ -115,5 +104,5 @@ diff -ur ./settings.gradle ../build/settings.gradle
 +//include 'h2o-r'
 +//include 'h2o-py'
  include 'h2o-assemblies:main'
- include 'h2o-assemblies:genmodel'
- include 'h2o-persist-gcs'
+ include 'h2o-assemblies:minimal'
+ include 'h2o-assemblies:steam'
