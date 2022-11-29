@@ -7,14 +7,14 @@ size small args "-d", "${DATA}/pmd/pmd-core/src/main/java/net/sourceforge/pmd/cl
 								"-shortnames", "-failOnViolation", "false", "-rulesets", "java-comments", "-r", "${SCRATCH}/pmd-report.txt"
   output 
     stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-    "pmd-report.txt" digest(text) 0x0d67dd1782ace91c5cc925ce5222c107b7a2f5b0;
+    "pmd-report.txt" digest(text) 0x175491e4a7bd736654181c23cc9740248e3ac87f;
 
 size default args "-d", "${DATA}/pmd/pmd-core", "-f", "text", "-language", "java",
 								"-shortnames", "-failOnViolation", "false", "-rulesets",
 								"java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations", "-r", "${SCRATCH}/pmd-report.txt"
   output 
     stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-    "pmd-report.txt" digest(text) 0x81c6659f11ac38b900f2f1c91da8895746dccd94;
+    "pmd-report.txt" digest(text) 0x140ecf048da0129dbbc47d518f0e59a5b5996c0d;
 
 size large args "-d", "${DATA}/pmd/eclipse", "-f", "text", "-language", "java",
 								"-shortnames", "-failOnViolation", "false", "-rulesets",

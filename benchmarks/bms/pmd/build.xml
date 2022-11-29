@@ -12,12 +12,12 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="pmd"/>
-    <property name="bm-version" value="6.49.0"/>
+    <property name="bm-version" value="6.52.0"/> <!-- Be sure to update the git-commit when updating verison! -->
     <property name="bm-version-str" value="pmd ${bm-version}"/>
 
     <property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
-    <property name="bm-git-commit" value="4b4ebabc2d5ed534c2657882b23d4ba2dd9da8d3"/>
+    <property name="bm-git-commit" value="e90bf0f11b5458593358f6b36f88815218b5c9f7"/>
 
     <!-- use eclipse JDT as input to large tests -->
     <property name="jdt-url" value="${dacapo.src.url}"/>
