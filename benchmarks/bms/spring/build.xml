@@ -39,7 +39,7 @@
         <antcall target="make-executable">
             <param name="target-filename" value="${build-script}"/>
         </antcall>
-        <exec executable="${build-script}" dir="${bm-build-dir}">
+        <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="true">
             <arg line="package"/>
         </exec>
     </target>
