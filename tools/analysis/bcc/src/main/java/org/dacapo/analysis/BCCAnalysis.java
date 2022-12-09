@@ -31,37 +31,36 @@ public class BCCAnalysis {
     }
 
     public static void benchmarkComplete(boolean valid) {
+        check();
 
-        if (check()) {
-            List<Integer> bytecodefreq = new ArrayList<Integer>(executed.values());
-            Collections.sort(bytecodefreq);
-            int uniq = bytecodefreq.size();
-            int p90 = bytecodefreq.get((uniq-1)-(uniq/10));
-            int p99 = bytecodefreq.get((uniq-1)-(uniq/100));
-            int p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
-            int p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
+        List<Integer> bytecodefreq = new ArrayList<Integer>(executed.values());
+        Collections.sort(bytecodefreq);
+        int uniq = bytecodefreq.size();
+        int p90 = bytecodefreq.get((uniq-1)-(uniq/10));
+        int p99 = bytecodefreq.get((uniq-1)-(uniq/100));
+        int p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
+        int p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
 
-            System.out.println("transformed-classes: "+ classesTransformed);
-            System.out.println("transformed-bytecodes: "+ bytecodesTransformed);
-            System.out.println("executed-bytecodes: "+ bytecodesExecuted);
-            System.out.println("executed-bytecodes-unique: "+ executed.size());
-            System.out.println("executed-bytecodes-p90: "+ p90);
-            System.out.println("executed-bytecodes-p99: "+ p99);
-            System.out.println("executed-bytecodes-p999: "+ p999);
-            System.out.println("executed-bytecodes-p9999: "+ p9999);
-            System.out.println("executed-calls: "+ callsExecuted);
-            System.out.println("executed-calls-unique: "+ called.size());
+        System.out.println("transformed-classes: "+ classesTransformed);
+        System.out.println("transformed-bytecodes: "+ bytecodesTransformed);
+        System.out.println("executed-bytecodes: "+ bytecodesExecuted);
+        System.out.println("executed-bytecodes-unique: "+ executed.size());
+        System.out.println("executed-bytecodes-p90: "+ p90);
+        System.out.println("executed-bytecodes-p99: "+ p99);
+        System.out.println("executed-bytecodes-p999: "+ p999);
+        System.out.println("executed-bytecodes-p9999: "+ p9999);
+        System.out.println("executed-calls: "+ callsExecuted);
+        System.out.println("executed-calls-unique: "+ called.size());
 
-            System.out.print("opcodes: {");
-            boolean start = true;
-            for (int i = 0; i < 255; i++) {
-                if (opcodes[i] != 0) {
-                    System.out.print((start ? " " : ", ")+mnemonic[i]+": "+opcodes[i]);
-                    start = false;
-                }
+        System.out.print("opcodes: {");
+        boolean start = true;
+        for (int i = 0; i < 255; i++) {
+            if (opcodes[i] != 0) {
+                System.out.print((start ? " " : ", ")+mnemonic[i]+": "+opcodes[i]);
+                start = false;
             }
-            System.out.println(" }");
         }
+        System.out.println(" }");
     }
 
     public static long classesTransformed= 0;
@@ -104,25 +103,27 @@ public class BCCAnalysis {
     }
 
     public static void bytecodeExecuted(int opcode, int id) {
-        opcodes[opcode]++;
+        synchronized (bytecodesTransformed) {
+            opcodes[opcode]++;
 
-        /* calls */
-        if (opcode >= 182 && opcode <= 186) { // invokevirtual, invokespecial, invokestatic, invokeinterface, invokedynamic
-            callsExecuted++;
-            if (called.containsKey(id)) {
-                int old = called.get(id);
-                called.put(id, ++old);
-            } else {
-                called.put(id, 1);
+            /* calls */
+            if (opcode >= 182 && opcode <= 186) { // invokevirtual, invokespecial, invokestatic, invokeinterface, invokedynamic
+                callsExecuted++;
+                if (called.containsKey(id)) {
+                    int old = called.get(id);
+                    called.put(id, ++old);
+                } else {
+                    called.put(id, 1);
+                }
             }
-        }
 
-        if (executed.containsKey(id)) {
-            int old = executed.get(id);
-            executed.put(id, ++old);
-        } else {
-            executed.put(id, 1);
+            if (executed.containsKey(id)) {
+                int old = executed.get(id);
+                executed.put(id, ++old);
+            } else {
+                executed.put(id, 1);
+            }
+            bytecodesExecuted++;
         }
-        bytecodesExecuted++;
     }
 }
