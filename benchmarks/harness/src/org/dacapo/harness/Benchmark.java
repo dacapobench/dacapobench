@@ -21,8 +21,13 @@ import java.util.zip.ZipInputStream;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import org.yaml.snakeyaml.Yaml;
 
 import org.dacapo.parser.Config;
 
@@ -189,6 +194,7 @@ public abstract class Benchmark {
 
   private Set<URL> jarDeps = new HashSet();
   private Set<URL> datDeps = new HashSet();
+  private Map<String, Integer> stats = new HashMap();
 
   /**
    * Run a benchmark. This is final because individual benchmarks should not
@@ -292,6 +298,9 @@ public abstract class Benchmark {
     if (!getDeps("META-INF/md5/" + config.name  + ".MD5"))
       System.exit(-1);
 
+    if (!loadStats("META-INF/yml/" + config.name  + ".yml"))
+      System.exit(-1);
+
     loader = DacapoClassLoader.create(config, scratch, data, jarDeps);
     prepare();
   }
@@ -364,6 +373,31 @@ public abstract class Benchmark {
    */
   protected void prepare() throws Exception {
     System.out.println("Version: "+config.getDesc("version"));
+    System.out.println("Nominal stats: "+getStats());
+  }
+
+  private boolean loadStats(String ymlFile) {
+    InputStream in = Benchmark.class.getClassLoader().getResourceAsStream(ymlFile);
+    Yaml yaml = new Yaml();
+    Map<String, Object> data = yaml.load(in);
+
+    if (data.containsKey("stats")) {
+      stats = (Map<String,Integer>) data.get("stats");
+      return true;
+    }
+
+    System.out.println("Failed to load stats file from yml "+ymlFile);
+
+    return false;
+  }
+
+  private String getStats() {
+    String rtn = "";
+    for (String key : new TreeSet<>(stats.keySet())) {
+      if (rtn.length() != 0) { rtn += ", "; }
+      rtn += key+": "+stats.get(key);
+    }
+    return rtn;
   }
 
   /**

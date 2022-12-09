@@ -38,6 +38,7 @@
 	<property name="bm-dat" value="${bm-out-dat}"/>
 	<property name="bm-cnf" value="${bm-output-dir}/META-INF/cnf"/>
 	<property name="bm-md5" value="${bm-output-dir}/META-INF/md5"/>
+	<property name="bm-yml" value="${bm-output-dir}/META-INF/yml"/>
 
 	<property name="harness-classpath" value="harness/dist/"/>
 
@@ -128,7 +129,7 @@
 
 	<target name="unpack"/>
 
-	<target name="build" depends="dacapo-harness, benchmark, config, harness"/>
+	<target name="build" depends="dacapo-harness, benchmark, config, yml, harness"/>
 
 	<target name="data-copy-checksum" depends="data">
 		<property name="bm-md5-tmp" value="${bm-files}/data/md5"/>
@@ -161,6 +162,10 @@
 	<target name="data-perms"/>
 
 	<target name="bm-build"/>
+
+	<target name="yml">
+		<copy file="${bm-files}/${bm-name}.yml" todir="${bm-yml}"/>
+	</target>
 
 	<target name="config">
 		<copy file="${bm-files}/${bm-name}.cnf" todir="${bm-cnf}"/>

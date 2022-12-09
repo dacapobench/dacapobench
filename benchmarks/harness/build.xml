@@ -39,6 +39,10 @@
     <property name="hdrhistogram-url" value="https://github.com/HdrHistogram/HdrHistogram/archive/refs/tags/"/>
     <property name="hdrhistogram-name" value="HdrHistogram-${hdrhistogram-version}.zip"/>
 
+    <property name="snakeyaml-version" value="1.33"/>
+    <property name="snakeyaml-url" value="${maven.url}/org/yaml/snakeyaml/${snakeyaml-version}"/>
+    <property name="snakeyaml-name" value="snakeyaml-${snakeyaml-version}.jar"/>
+
     <property name="bm-out-jar" value="${base-dir}/tmp"/>
 
     <target name="all" depends="clean,init,harness,jar"/>
@@ -91,6 +95,12 @@
             <param name="target-file" value="${jaxb-impl-name}"/>
         </antcall>
 
+        <antcall target="check-source">
+            <param name="target-dir" value="${harness-downloads}"/>
+            <param name="target-url" value="${snakeyaml-url}"/>
+            <param name="target-file" value="${snakeyaml-name}"/>
+        </antcall>
+
         <!-- untar it into build -->
         <untar src="${harness-downloads}/${cli-name}" dest="${build-dir}" compression="gzip"/>
         
@@ -110,6 +120,9 @@
 
         <!-- unjar from jaxb-core-<version>.jar into ${output-dir} -->
         <unjar src="${harness-downloads}/${jaxb-impl-name}" dest="${output-dir}"/>
+
+        <!-- unjar from snakeyaml-<version>.jar into ${output-dir} -->
+        <unjar src="${harness-downloads}/${snakeyaml-name}" dest="${output-dir}"/>
 
         <delete file="${output-dir}/module-info.class"/>
     </target>
