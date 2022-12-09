@@ -33,13 +33,13 @@ public class BCCAnalysis {
     public static void benchmarkComplete(boolean valid) {
         check();
 
-        List<Integer> bytecodefreq = new ArrayList<Integer>(executed.values());
+        List<Long> bytecodefreq = new ArrayList<Long>(executed.values());
         Collections.sort(bytecodefreq);
         int uniq = bytecodefreq.size();
-        int p90 = bytecodefreq.get((uniq-1)-(uniq/10));
-        int p99 = bytecodefreq.get((uniq-1)-(uniq/100));
-        int p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
-        int p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
+        long p90 = bytecodefreq.get((uniq-1)-(uniq/10));
+        long p99 = bytecodefreq.get((uniq-1)-(uniq/100));
+        long p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
+        long p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
 
         System.out.println("transformed-classes: "+ classesTransformed);
         System.out.println("transformed-bytecodes: "+ bytecodesTransformed);
@@ -68,10 +68,10 @@ public class BCCAnalysis {
     public static long bytecodesExecuted = 0;
     public static long callsExecuted = 0;
 
-    public static HashMap<Integer, Integer> executed = new HashMap();
-    public static HashMap<Integer, Integer> called = new HashMap();
+    public static HashMap<Integer, Long> executed = new HashMap();
+    public static HashMap<Integer, Long> called = new HashMap();
 
-    public static int[] opcodes = new int[255];
+    public static long[] opcodes = new long[255];
 
 
     private static void reset() {
@@ -110,18 +110,18 @@ public class BCCAnalysis {
             if (opcode >= 182 && opcode <= 186) { // invokevirtual, invokespecial, invokestatic, invokeinterface, invokedynamic
                 callsExecuted++;
                 if (called.containsKey(id)) {
-                    int old = called.get(id);
+                    long old = called.get(id);
                     called.put(id, ++old);
                 } else {
-                    called.put(id, 1);
+                    called.put(id, 1L);
                 }
             }
 
             if (executed.containsKey(id)) {
-                int old = executed.get(id);
+                long old = executed.get(id);
                 executed.put(id, ++old);
             } else {
-                executed.put(id, 1);
+                executed.put(id, 1L);
             }
             bytecodesExecuted++;
         }
