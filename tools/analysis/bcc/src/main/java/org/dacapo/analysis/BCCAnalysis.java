@@ -19,12 +19,16 @@ public class BCCAnalysis {
     }
 
     private static boolean check() {
-        int sum = 0;
+        long esum = 0;
         for (int id : executed.keySet()) {
-            sum += executed.get(id);
+            esum += executed.get(id);
         }
-        if (sum != bytecodesExecuted) {
-            System.err.println("WARNING: inconsistent count of bytecodes executed ("+sum+" != "+bytecodesExecuted+")");
+        long osum = 0;
+        for (int i = 0; i < opcodes.length; i++) {
+            osum += opcodes[i];
+        }
+        if (esum != bytecodesExecuted || osum != bytecodesExecuted) {
+            System.err.println("WARNING: inconsistent count of bytecodes executed ("+esum+", "+osum+", "+bytecodesExecuted+")");
             return false;
         }
         return true;
