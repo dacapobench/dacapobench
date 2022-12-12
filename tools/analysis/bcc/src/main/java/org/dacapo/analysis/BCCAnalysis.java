@@ -35,36 +35,38 @@ public class BCCAnalysis {
     }
 
     public static void benchmarkComplete(boolean valid) {
-        check();
+        synchronized (bytecodesTransformed) {
+            check();
 
-        List<Long> bytecodefreq = new ArrayList<Long>(executed.values());
-        Collections.sort(bytecodefreq);
-        int uniq = bytecodefreq.size();
-        long p90 = bytecodefreq.get((uniq-1)-(uniq/10));
-        long p99 = bytecodefreq.get((uniq-1)-(uniq/100));
-        long p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
-        long p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
+            List<Long> bytecodefreq = new ArrayList<Long>(executed.values());
+            Collections.sort(bytecodefreq);
+            int uniq = bytecodefreq.size();
+            long p90 = bytecodefreq.get((uniq-1)-(uniq/10));
+            long p99 = bytecodefreq.get((uniq-1)-(uniq/100));
+            long p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
+            long p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
 
-        System.out.println("transformed-classes: "+ classesTransformed);
-        System.out.println("transformed-bytecodes: "+ bytecodesTransformed);
-        System.out.println("executed-bytecodes: "+ bytecodesExecuted);
-        System.out.println("executed-bytecodes-unique: "+ executed.size());
-        System.out.println("executed-bytecodes-p90: "+ p90);
-        System.out.println("executed-bytecodes-p99: "+ p99);
-        System.out.println("executed-bytecodes-p999: "+ p999);
-        System.out.println("executed-bytecodes-p9999: "+ p9999);
-        System.out.println("executed-calls: "+ callsExecuted);
-        System.out.println("executed-calls-unique: "+ called.size());
+            System.out.println("transformed-classes: "+ classesTransformed);
+            System.out.println("transformed-bytecodes: "+ bytecodesTransformed);
+            System.out.println("executed-bytecodes: "+ bytecodesExecuted);
+            System.out.println("executed-bytecodes-unique: "+ executed.size());
+            System.out.println("executed-bytecodes-p90: "+ p90);
+            System.out.println("executed-bytecodes-p99: "+ p99);
+            System.out.println("executed-bytecodes-p999: "+ p999);
+            System.out.println("executed-bytecodes-p9999: "+ p9999);
+            System.out.println("executed-calls: "+ callsExecuted);
+            System.out.println("executed-calls-unique: "+ called.size());
 
-        System.out.print("opcodes: {");
-        boolean start = true;
-        for (int i = 0; i < 255; i++) {
-            if (opcodes[i] != 0) {
-                System.out.print((start ? " " : ", ")+mnemonic[i]+": "+opcodes[i]);
-                start = false;
+            System.out.print("opcodes: {");
+            boolean start = true;
+            for (int i = 0; i < 255; i++) {
+                if (opcodes[i] != 0) {
+                    System.out.print("\n  "+mnemonic[i]+": "+opcodes[i]);
+                    start = false;
+                }
             }
+            System.out.println("\n}");
         }
-        System.out.println(" }");
     }
 
     public static long classesTransformed= 0;
@@ -79,12 +81,14 @@ public class BCCAnalysis {
 
 
     private static void reset() {
-        bytecodesExecuted = 0;
-        callsExecuted = 0;
-        executed = new HashMap();
-        called = new HashMap();
-        for (int i = 0; i < 255; i++) {
-            opcodes[i] = 0;
+        synchronized (bytecodesTransformed) {
+            bytecodesExecuted = 0;
+            callsExecuted = 0;
+            executed = new HashMap();
+            called = new HashMap();
+            for (int i = 0; i < 255; i++) {
+                opcodes[i] = 0;
+            }
         }
     }
 
