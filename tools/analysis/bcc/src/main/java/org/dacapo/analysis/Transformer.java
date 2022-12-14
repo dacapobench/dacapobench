@@ -9,19 +9,16 @@ public class Transformer implements ClassFileTransformer {
     boolean booted = false;
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 
-        String dontskip = System.getProperty("skip.exception");
-    
-        boolean ok = (dontskip != null && className.startsWith(dontskip));
-
-        if (loader != null &&
-          !loader.toString().startsWith("jdk.internal.loader.ClassLoaders$PlatformClassLoader") &&
-          !loader.toString().startsWith("jdk.internal.reflect.DelegatingClassLoader") &&
-          !className.startsWith("org/dacapo/analysis")) {
-            BCCAnalysis.classTransformed(className);
-            return new Rewriter(className, classfileBuffer).rewrite();
-        } else {
-    //       System.err.println("skipped class: " + loader + " " + className);
+        for (ClassLoader curLoader = loader; ; curLoader = curLoader.getParent()) {
+            if (curLoader == null) {
+                if (loader != null) {
+                    BCCAnalysis.classSkipped("Skipped '" + className + "' for non-null loader " + loader);
+                }
+                return null;
+             } else if (curLoader == BCCAnalysis.class.getClassLoader())
+                 break;
         }
-        return null;
+        BCCAnalysis.classTransformed(className);
+        return new Rewriter(className, classfileBuffer).rewrite();
     }
 }
