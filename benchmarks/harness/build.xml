@@ -43,6 +43,10 @@
     <property name="snakeyaml-url" value="${maven.url}/org/yaml/snakeyaml/${snakeyaml-version}"/>
     <property name="snakeyaml-name" value="snakeyaml-${snakeyaml-version}.jar"/>
 
+    <property name="allocation-instrumenter-version" value="3.3.0"/>
+    <property name="allocation-instrumenter-url" value="https://github.com/google/allocation-instrumenter/releases/download/java-allocation-instrumenter-${allocation-instrumenter-version}/"/>
+    <property name="allocation-instrumenter-name" value="java-allocation-instrumenter-${allocation-instrumenter-version}.jar"/>
+
     <property name="bm-out-jar" value="${base-dir}/tmp"/>
 
     <target name="all" depends="clean,init,harness,jar"/>
@@ -101,6 +105,12 @@
             <param name="target-file" value="${snakeyaml-name}"/>
         </antcall>
 
+        <antcall target="check-source">
+            <param name="target-dir" value="${harness-downloads}"/>
+            <param name="target-url" value="${allocation-instrumenter-url}"/>
+            <param name="target-file" value="${allocation-instrumenter-name}"/>
+        </antcall>
+
         <!-- untar it into build -->
         <untar src="${harness-downloads}/${cli-name}" dest="${build-dir}" compression="gzip"/>
         
@@ -123,6 +133,8 @@
 
         <!-- unjar from snakeyaml-<version>.jar into ${output-dir} -->
         <unjar src="${harness-downloads}/${snakeyaml-name}" dest="${output-dir}"/>
+
+        <copy file="${harness-downloads}/${allocation-instrumenter-name}" todir="${build.target-jars}"/>
 
         <delete file="${output-dir}/module-info.class"/>
     </target>
@@ -151,7 +163,7 @@
     </target>
     
     <target name="harness" depends="init,dependency,parser,hdrhist">
-        <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source" classpath="${output-dir}"/>
+        <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source" classpath="${output-dir}:${build.target-jars}/${allocation-instrumenter-name}"/>
         <javadoc sourcepath="${src}" destdir="${output-doc-dir}" classpath="${output-dir}"
                 additionalparam="-Xdoclint:none"/>
         <delete file="${bm-out-jar}"/>
