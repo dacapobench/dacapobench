@@ -1,6 +1,6 @@
-diff '--color=auto' -ur daytrader/javaee6/assemblies/daytrader-ear/pom.xml ../build/daytrader/javaee6/assemblies/daytrader-ear/pom.xml
---- daytrader/javaee6/assemblies/daytrader-ear/pom.xml	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/assemblies/daytrader-ear/pom.xml	2022-12-21 04:45:30.433396095 +0000
+diff -urN daytrader/javaee6/assemblies/daytrader-ear/pom.xml /home/ruic/daytrader/javaee6/assemblies/daytrader-ear/pom.xml
+--- daytrader/javaee6/assemblies/daytrader-ear/pom.xml	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/assemblies/daytrader-ear/pom.xml	2019-06-03 16:21:50.164662921 +1000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -22,9 +22,26 @@ diff '--color=auto' -ur daytrader/javaee6/assemblies/daytrader-ear/pom.xml ../bu
  <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <modelVersion>4.0.0</modelVersion>
-diff '--color=auto' -ur daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml ../build/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml
---- daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2022-12-21 04:45:30.433396095 +0000
+diff -urN daytrader/javaee6/assemblies/daytrader-ear/src/main/java/org/apache/geronimo/daytrader/javaee6/App.java /home/ruic/daytrader/javaee6/assemblies/daytrader-ear/src/main/java/org/apache/geronimo/daytrader/javaee6/App.java
+--- daytrader/javaee6/assemblies/daytrader-ear/src/main/java/org/apache/geronimo/daytrader/javaee6/App.java	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/assemblies/daytrader-ear/src/main/java/org/apache/geronimo/daytrader/javaee6/App.java	1970-01-01 10:00:00.000000000 +1000
+@@ -1,13 +0,0 @@
+-package org.apache.geronimo.daytrader.javaee6;
+-
+-/**
+- * Hello world!
+- *
+- */
+-public class App 
+-{
+-    public static void main( String[] args )
+-    {
+-        System.out.println( "Hello World!" );
+-    }
+-}
+diff -urN daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml /home/ruic/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml
+--- daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2019-06-03 16:21:50.192662674 +1000
 @@ -1,14 +1,26 @@
  <?xml version="1.0" encoding="UTF-8"?>
 -<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd" version="6">
@@ -61,10 +78,9 @@ diff '--color=auto' -ur daytrader/javaee6/assemblies/daytrader-ear/src/main/reso
 \ No newline at end of file
 +  <library-directory>lib</library-directory>
 +</application>
-Only in ../build/daytrader/javaee6/assemblies/daytrader-ear: target
-diff '--color=auto' -ur daytrader/javaee6/assemblies/pom.xml ../build/daytrader/javaee6/assemblies/pom.xml
---- daytrader/javaee6/assemblies/pom.xml	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/assemblies/pom.xml	2022-12-21 04:45:30.433396095 +0000
+diff -urN daytrader/javaee6/assemblies/pom.xml /home/ruic/daytrader/javaee6/assemblies/pom.xml
+--- daytrader/javaee6/assemblies/pom.xml	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/assemblies/pom.xml	2019-06-03 16:21:50.140663135 +1000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -93,10 +109,9 @@ diff '--color=auto' -ur daytrader/javaee6/assemblies/pom.xml ../build/daytrader/
 -</project>
 \ No newline at end of file
 +</project>
-Only in ../build/daytrader/javaee6/assemblies: target
-diff '--color=auto' -ur daytrader/javaee6/modules/entities/pom.xml ../build/daytrader/javaee6/modules/entities/pom.xml
---- daytrader/javaee6/modules/entities/pom.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/entities/pom.xml	2022-12-21 04:45:30.433396095 +0000
+diff -urN daytrader/javaee6/modules/entities/pom.xml /home/ruic/daytrader/javaee6/modules/entities/pom.xml
+--- daytrader/javaee6/modules/entities/pom.xml	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/entities/pom.xml	2019-06-03 16:21:57.272600103 +1000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -174,9 +189,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/entities/pom.xml ../build/dayt
          <!--  <plugins>
              <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
-diff '--color=auto' -ur daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml ../build/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml
---- daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2022-12-21 04:45:30.433396095 +0000
+diff -urN daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml /home/ruic/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml
+--- daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2019-06-03 16:21:57.312599750 +1000
 @@ -1,4 +1,5 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +
@@ -234,10 +249,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/entities/src/main/resources/ME
          </properties>
      </persistence-unit>
  </persistence>
-Only in ../build/daytrader/javaee6/modules/entities: target
-diff '--color=auto' -ur daytrader/javaee6/modules/pom.xml ../build/daytrader/javaee6/modules/pom.xml
---- daytrader/javaee6/modules/pom.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/pom.xml	2022-12-21 04:45:30.433396095 +0000
+diff -urN daytrader/javaee6/modules/pom.xml /home/ruic/daytrader/javaee6/modules/pom.xml
+--- daytrader/javaee6/modules/pom.xml	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/pom.xml	2019-06-03 16:21:57.116601483 +1000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -266,10 +280,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/pom.xml ../build/daytrader/jav
 -</project>
 \ No newline at end of file
 +</project>
-Only in ../build/daytrader/javaee6/modules: target
-diff '--color=auto' -ur daytrader/javaee6/modules/utils/pom.xml ../build/daytrader/javaee6/modules/utils/pom.xml
---- daytrader/javaee6/modules/utils/pom.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/utils/pom.xml	2022-12-21 04:45:30.433396095 +0000
+diff -urN daytrader/javaee6/modules/utils/pom.xml /home/ruic/daytrader/javaee6/modules/utils/pom.xml
+--- daytrader/javaee6/modules/utils/pom.xml	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/utils/pom.xml	2019-06-03 16:21:57.124601411 +1000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -291,9 +304,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/utils/pom.xml ../build/daytrad
  <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <modelVersion>4.0.0</modelVersion>
-diff '--color=auto' -ur daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java ../build/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java
---- daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java /home/ruic/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java
+--- daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2019-06-03 16:21:57.208600671 +1000
 @@ -80,7 +80,7 @@
      public static int cachingType = NO_CACHING;
      
@@ -303,10 +316,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/utils/src/main/java/org/apache
      private static int MAX_QUOTES = 1000;
  
      /* Trade Database specific paramters */
-Only in ../build/daytrader/javaee6/modules/utils: target
-diff '--color=auto' -ur daytrader/javaee6/modules/web/pom.xml ../build/daytrader/javaee6/modules/web/pom.xml
---- daytrader/javaee6/modules/web/pom.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/pom.xml	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/pom.xml /home/ruic/daytrader/javaee6/modules/web/pom.xml
+--- daytrader/javaee6/modules/web/pom.xml	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/pom.xml	2019-06-03 16:21:50.300661718 +1000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -426,9 +438,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/pom.xml ../build/daytrader
              </plugins> 
      </build>
  </project>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2019-06-03 16:21:56.300608696 +1000
 @@ -60,7 +60,7 @@
  
      private static String dsName = TradeConfig.DATASOURCE;
@@ -438,9 +450,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
  
      private static BigDecimal ZERO = new BigDecimal(0.0);
  
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2019-06-03 16:21:56.272608944 +1000
 @@ -19,7 +19,7 @@
  import java.math.BigDecimal;
  import java.util.Collection;
@@ -552,9 +564,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
          } catch (Exception e) {
              Log
                  .error("TradeDirect:init  Unable to locate TradeStreamerTopic.\n\t -- Asynchronous mode will not work correctly and Quote Price change publishing will be disabled");
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2019-06-03 16:21:56.316608556 +1000
 @@ -717,8 +717,8 @@
          Query query = entityManager.createNamedQuery("holdingejb.holdingsByUserID");
          query.setParameter("userID", userID);
@@ -574,10 +586,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
      }
  
      /*
-Only in ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6: dacapo
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2019-06-03 16:21:56.976602720 +1000
 @@ -27,7 +27,7 @@
  import javax.ejb.*;
  
@@ -587,9 +598,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
  @EJB(name="java:global/DirectSLSBBean", beanInterface=DirectSLSBRemote.class)
  @TransactionAttribute(TransactionAttributeType.REQUIRED)
  @TransactionManagement(TransactionManagementType.CONTAINER)
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2019-06-03 16:21:57.000602508 +1000
 @@ -43,14 +43,12 @@
  import javax.ejb.*;
  import javax.jms.*;
@@ -624,9 +635,119 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
              entityManager.persist(account);
          }
          
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Entity.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Entity.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Entity.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Entity.java	1970-01-01 10:00:00.000000000 +1000
+@@ -1,105 +0,0 @@
+-/**
+- *  Licensed to the Apache Software Foundation (ASF) under one or more
+- *  contributor license agreements.  See the NOTICE file distributed with
+- *  this work for additional information regarding copyright ownership.
+- *  The ASF licenses this file to You under the Apache License, Version 2.0
+- *  (the "License"); you may not use this file except in compliance with
+- *  the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- *  Unless required by applicable law or agreed to in writing, software
+- *  distributed under the License is distributed on an "AS IS" BASIS,
+- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- *  See the License for the specific language governing permissions and
+- *  limitations under the License.
+- */
+-package org.apache.geronimo.daytrader.javaee6.web.prims.ejb3;
+-
+-import java.io.*;
+-import javax.servlet.*;
+-import javax.servlet.http.*;
+-import javax.servlet.annotation.WebServlet;
+-
+-import javax.persistence.EntityManager;
+-import javax.persistence.PersistenceContext;
+-import javax.ejb.EJB;
+-
+-
+-import org.apache.geronimo.daytrader.javaee6.entities.QuoteDataBean;
+-import org.apache.geronimo.daytrader.javaee6.utils.Log;
+-import org.apache.geronimo.daytrader.javaee6.utils.TradeConfig;
+-
+-/**
+- * 
+- * Primitive designed to run within the TradeApplication and makes use of
+- * {@link trade_client.TradeConfig} for config parameters and random stock
+- * symbols. Servlet will generate a random stock symbol and get the price of
+- * that symbol using a {@link trade.Quote} Entity EJB This tests the common path
+- * of a Servlet calling an Entity EJB to get data
+- * 
+- */
+-@WebServlet("/ejb3/PingServlet2Entity")
+-public class PingServlet2Entity extends HttpServlet {
+-    private static String initTime;
+-
+-    private static int hitCount;
+-    
+-    private @EJB QuoteDataBean quote;
+-
+-    @PersistenceContext(unitName = "daytrader")
+-    private EntityManager em;
+-
+-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+-        doGet(req, res);
+-    }
+-
+-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+-
+-        res.setContentType("text/html");
+-        java.io.PrintWriter out = res.getWriter();
+-
+-        String symbol = null;
+-
+-        StringBuffer output = new StringBuffer(100);
+-        output.append("<html><head><title>Servlet2Entity</title></head>" + "<body><HR><FONT size=\"+2\" color=\"#000066\">PingServlet2Entity<BR></FONT>" + "<FONT size=\"-1\" color=\"#000066\"><BR>PingServlet2Entity accesses an EntityManager"
+-                + " using a PersistenceContext annotaion and then gets the price of a random symbol (generated by TradeConfig)" + " through the EntityManager find method");
+-        try {
+-            // generate random symbol
+-            try {
+-                int iter = TradeConfig.getPrimIterations();
+-                for (int ii = 0; ii < iter; ii++) {
+-                    // get a random symbol to look up and get the key to that
+-                    // symbol.
+-                    symbol = TradeConfig.rndSymbol();
+-                    // find the EntityInstance.
+-                    quote = (QuoteDataBean) em.find(QuoteDataBean.class, symbol);
+-                }
+-            } catch (Exception e) {
+-                Log.error("web_primtv.PingServlet2Entity.doGet(...): error performing find");
+-                throw e;
+-            }
+-            // get the price and print the output.
+-            output.append("<HR>initTime: " + initTime + "<BR>Hit Count: ").append(hitCount++);
+-            output.append("<HR>Quote Information<BR><BR> " + quote.toHTML());
+-            output.append("</font><HR></body></html>");
+-            out.println(output.toString());
+-        } catch (Exception e) {
+-            Log.error(e, "PingServlet2Entity.doGet(...): error");
+-            // this will send an Error to teh web applications defined error
+-            // page.
+-            res.sendError(500, "PingServlet2Entity.doGet(...): error" + e.toString());
+-
+-        }
+-    }
+-
+-    public String getServletInfo() {
+-        return "web primitive, tests Servlet to Entity EJB path";
+-    }
+-
+-    public void init(ServletConfig config) throws ServletException {
+-        super.init(config);
+-        hitCount = 0;
+-        initTime = new java.util.Date().toString();
+-    }
+-}
+\ No newline at end of file
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2Many.java	2019-06-03 16:21:56.616605903 +1000
 @@ -98,4 +98,4 @@
          hitCount = 0;
          initTime = new java.util.Date().toString();
@@ -634,9 +755,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
 -}
 \ No newline at end of file
 +}
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2CMROne2One.java	2019-06-03 16:21:56.660605514 +1000
 @@ -89,4 +89,4 @@
          hitCount = 0;
          initTime = new java.util.Date().toString();
@@ -644,9 +765,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
 -}
 \ No newline at end of file
 +}
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2EntityCollection.java	2019-06-03 16:21:56.680605337 +1000
 @@ -105,4 +105,4 @@
          hitCount = 0;
          initTime = new java.util.Date().toString();
@@ -654,9 +775,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
 -}
 \ No newline at end of file
 +}
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java	2022-12-21 04:45:30.437396095 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session2Entity.java	2019-06-03 16:21:56.628605797 +1000
 @@ -96,4 +96,4 @@
          hitCount = 0;
          initTime = new java.util.Date().toString();
@@ -664,9 +785,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
 -}
 \ No newline at end of file
 +}
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Session.java	2019-06-03 16:21:56.696605196 +1000
 @@ -103,4 +103,4 @@
          initTime = new java.util.Date().toString();
  
@@ -674,9 +795,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
 -}
 \ No newline at end of file
 +}
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2TwoPhase.java	2019-06-03 16:21:56.668605443 +1000
 @@ -98,4 +98,4 @@
          hitCount = 0;
          initTime = new java.util.Date().toString();
@@ -684,9 +805,115 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
 -}
 \ No newline at end of file
 +}
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java	2019-06-03 16:21:56.424607600 +1000
+@@ -0,0 +1,21 @@
++/**
++ *  Licensed to the Apache Software Foundation (ASF) under one or more
++ *  contributor license agreements.  See the NOTICE file distributed with
++ *  this work for additional information regarding copyright ownership.
++ *  The ASF licenses this file to You under the Apache License, Version 2.0
++ *  (the "License"); you may not use this file except in compliance with
++ *  the License.  You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ *  Unless required by applicable law or agreed to in writing, software
++ *  distributed under the License is distributed on an "AS IS" BASIS,
++ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ *  See the License for the specific language governing permissions and
++ *  limitations under the License.
++ */
++package org.apache.geronimo.daytrader.javaee6.web;
++
++public class ServiceImpl implements Service {
++
++}
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java.rej /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java.rej
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java.rej	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ServiceImpl.java.rej	2019-06-03 16:21:56.396607848 +1000
+@@ -0,0 +1,24 @@
++***************
++*** 0 ****
++--- 1,21 ----
+++ /**
+++  *  Licensed to the Apache Software Foundation (ASF) under one or more
+++  *  contributor license agreements.  See the NOTICE file distributed with
+++  *  this work for additional information regarding copyright ownership.
+++  *  The ASF licenses this file to You under the Apache License, Version 2.0
+++  *  (the "License"); you may not use this file except in compliance with
+++  *  the License.  You may obtain a copy of the License at
+++  *
+++  *     http://www.apache.org/licenses/LICENSE-2.0
+++  *
+++  *  Unless required by applicable law or agreed to in writing, software
+++  *  distributed under the License is distributed on an "AS IS" BASIS,
+++  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+++  *  See the License for the specific language governing permissions and
+++  *  limitations under the License.
+++  */
+++ package org.apache.geronimo.daytrader.javaee6.web;
+++ 
+++ public class ServiceImpl implements Service {
+++ 
+++ }
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java	2019-06-03 16:21:56.736604842 +1000
+@@ -0,0 +1,21 @@
++/**
++ *  Licensed to the Apache Software Foundation (ASF) under one or more
++ *  contributor license agreements.  See the NOTICE file distributed with
++ *  this work for additional information regarding copyright ownership.
++ *  The ASF licenses this file to You under the Apache License, Version 2.0
++ *  (the "License"); you may not use this file except in compliance with
++ *  the License.  You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ *  Unless required by applicable law or agreed to in writing, software
++ *  distributed under the License is distributed on an "AS IS" BASIS,
++ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ *  See the License for the specific language governing permissions and
++ *  limitations under the License.
++ */
++package org.apache.geronimo.daytrader.javaee6.web;
++
++public interface Service {
++
++}
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java.rej /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java.rej
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java.rej	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/Service.java.rej	2019-06-03 16:21:56.928603145 +1000
+@@ -0,0 +1,24 @@
++***************
++*** 0 ****
++--- 1,21 ----
+++ /**
+++  *  Licensed to the Apache Software Foundation (ASF) under one or more
+++  *  contributor license agreements.  See the NOTICE file distributed with
+++  *  this work for additional information regarding copyright ownership.
+++  *  The ASF licenses this file to You under the Apache License, Version 2.0
+++  *  (the "License"); you may not use this file except in compliance with
+++  *  the License.  You may obtain a copy of the License at
+++  *
+++  *     http://www.apache.org/licenses/LICENSE-2.0
+++  *
+++  *  Unless required by applicable law or agreed to in writing, software
+++  *  distributed under the License is distributed on an "AS IS" BASIS,
+++  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+++  *  See the License for the specific language governing permissions and
+++  *  limitations under the License.
+++  */
+++ package org.apache.geronimo.daytrader.javaee6.web;
+++ 
+++ public interface Service {
+++ 
+++ }
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2019-06-03 16:21:56.892603463 +1000
 @@ -86,6 +86,7 @@
                      } catch (Exception ex) {
                          Log.error("TradeAction:createTrade - Lookup of TradeSLSBRemote failed!!!");
@@ -712,9 +939,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
              }
              catch (Exception e) {
                  Log.error("TradeAction:TradeAction() Creation of Trade JDBC Direct failed\n" + e);
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2019-06-03 16:21:56.940603038 +1000
 @@ -1,11 +1,32 @@
 +/**
 + *  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -860,9 +1087,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
      }
  }
 -
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2019-06-03 16:21:56.908603321 +1000
 @@ -23,13 +23,16 @@
  
  import org.apache.geronimo.daytrader.javaee6.core.direct.*;
@@ -937,9 +1164,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
              doConfigDisplay(req, resp, result + "Current DayTrader Configuration:");
          }
          catch (Exception e)
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java
+--- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2019-06-03 16:21:56.876603604 +1000
 @@ -30,6 +30,7 @@
  import java.util.Collection;
  import java.util.Iterator;
@@ -975,9 +1202,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
                  // ignore, for the non-JavaEE web-only assemblies
              }
              
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl
---- daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl /home/ruic/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl
+--- daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2019-06-03 16:21:54.752622380 +1000
 @@ -15,12 +15,12 @@
  
  -- Each SQL statement in this file should terminate with a semicolon (;)
@@ -997,9 +1224,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscrip
  
  CREATE TABLE holdingejb
    (PURCHASEPRICE DECIMAL(14, 2),
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl
---- daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl /home/ruic/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl
+--- daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2019-06-03 16:21:54.704622804 +1000
 @@ -93,13 +93,6 @@
  ALTER TABLE ORDEREJB
    ADD CONSTRAINT PK_ORDEREJB PRIMARY KEY (ORDERID);
@@ -1014,12 +1241,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscrip
  CREATE INDEX ACCOUNT_USERID ON ACCOUNTEJB(PROFILE_USERID);
  CREATE INDEX HOLDING_ACCOUNTID ON HOLDINGEJB(ACCOUNT_ACCOUNTID);
  CREATE INDEX ORDER_ACCOUNTID ON ORDEREJB(ACCOUNT_ACCOUNTID);
-Only in ../build/daytrader/javaee6/modules/web/src/main/resources: stocks.txt
-Only in ../build/daytrader/javaee6/modules/web/src/main/resources: users.txt
-Only in ../build/daytrader/javaee6/modules/web/src/main/resources: workload.txt
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/account.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/account.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/account.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/account.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2019-06-03 16:21:56.120610288 +1000
 @@ -40,7 +40,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Account</FONT></B></TD>
@@ -1046,9 +1270,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/account.js
                  OrderDataBean orderData = (OrderDataBean) it.next();
  
                  %>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl
---- daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl
+--- daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2019-06-03 16:21:56.036611031 +1000
 @@ -15,12 +15,12 @@
  
  # Each SQL statement in this file should terminate with a semicolon (;)
@@ -1068,9 +1292,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/
  
  CREATE TABLE holdingejb
    (PURCHASEPRICE DECIMAL(14, 2),
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl
---- daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl
+--- daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2019-06-03 16:21:55.980611527 +1000
 @@ -93,13 +93,6 @@
  ALTER TABLE ORDEREJB
    ADD CONSTRAINT PK_ORDEREJB PRIMARY KEY (ORDERID);
@@ -1085,9 +1309,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/
  CREATE INDEX ACCOUNT_USERID ON ACCOUNTEJB(PROFILE_USERID);
  CREATE INDEX HOLDING_ACCOUNTID ON HOLDINGEJB(ACCOUNT_ACCOUNTID);
  CREATE INDEX ORDER_ACCOUNTID ON ORDEREJB(ACCOUNT_ACCOUNTID);
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/header.html ../build/daytrader/javaee6/modules/web/src/main/webapp/header.html
---- daytrader/javaee6/modules/web/src/main/webapp/header.html	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/header.html	2022-12-21 04:45:30.441396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/header.html /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/header.html
+--- daytrader/javaee6/modules/web/src/main/webapp/header.html	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/header.html	2019-06-03 16:21:56.108610394 +1000
 @@ -20,6 +20,7 @@
  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
  </head>
@@ -1105,9 +1329,52 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/header.htm
  							onmouseover="window.status='Select this tab to log on and trade portfolios.  Users are u:n and passwords are xxx';  return true;"
  							onmouseout="window.status='';  return true;">
  							<img src="images/tradingAndPortfolios.gif" width="140" height="29" border="0" alt=""></a></td>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/order.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/order.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf
+--- daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf	2019-06-03 16:21:56.144610075 +1000
+@@ -0,0 +1,16 @@
++<!--
++ Licensed to the Apache Software Foundation (ASF) under one or more
++  contributor license agreements.  See the NOTICE file distributed with
++  this work for additional information regarding copyright ownership.
++  The ASF licenses this file to You under the Apache License, Version 2.0
++  (the "License"); you may not use this file except in compliance with
++  the License.  You may obtain a copy of the License at
++
++      http://www.apache.org/licenses/LICENSE-2.0
++
++  Unless required by applicable law or agreed to in writing, software
++  distributed under the License is distributed on an "AS IS" BASIS,
++  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  See the License for the specific language governing permissions and
++  limitations under the License.
++--><div style="background: yellow;">Hostname: <%= java.net.InetAddress.getLocalHost().getHostName() %></div>
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf.rej /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf.rej
+--- daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf.rej	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/hostname.jspf.rej	2019-06-03 16:21:55.856612621 +1000
+@@ -0,0 +1,19 @@
++***************
++*** 0 ****
++--- 1,16 ----
+++ <!--
+++  Licensed to the Apache Software Foundation (ASF) under one or more
+++   contributor license agreements.  See the NOTICE file distributed with
+++   this work for additional information regarding copyright ownership.
+++   The ASF licenses this file to You under the Apache License, Version 2.0
+++   (the "License"); you may not use this file except in compliance with
+++   the License.  You may obtain a copy of the License at
+++ 
+++       http://www.apache.org/licenses/LICENSE-2.0
+++ 
+++   Unless required by applicable law or agreed to in writing, software
+++   distributed under the License is distributed on an "AS IS" BASIS,
+++   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+++   See the License for the specific language governing permissions and
+++   limitations under the License.
+++ --><div style="background: yellow;">Hostname: <%= java.net.InetAddress.getLocalHost().getHostName() %></div>
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/order.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/order.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2019-06-03 16:21:55.844612728 +1000
 @@ -31,7 +31,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader New Orders</FONT></B></TD>
@@ -1117,9 +1384,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/order.jsp 
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2019-06-03 16:21:54.836621638 +1000
 @@ -32,7 +32,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Portfolio</FONT></B></TD>
@@ -1129,9 +1396,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/portfolio.
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2019-06-03 16:21:55.880612410 +1000
 @@ -33,7 +33,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Quotes</FONT></B></TD>
@@ -1141,9 +1408,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quoteImg.j
          </TR>
          <TR align="left">
              <TD><A href="app?action=home"><IMG src="images/menuHome.gif" width="80"
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quote.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/quote.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2019-06-03 16:21:54.816621814 +1000
 @@ -31,7 +31,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Quotes</FONT></B></TD>
@@ -1153,9 +1420,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quote.jsp 
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/register.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/register.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/register.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/register.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2019-06-03 16:21:55.896612268 +1000
 @@ -38,7 +38,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10"><B><FONT
                  color="#ffffff">DayTrader Register</FONT></B></TD>
@@ -1165,9 +1432,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/register.j
          </TR>
      </TBODY>
  </TABLE>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2019-06-03 16:21:54.936620754 +1000
 @@ -37,7 +37,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Home</FONT></B></TD>
@@ -1177,9 +1444,333 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/tradehome.
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml ../build/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml
---- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/geronimo-web.xml /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/geronimo-web.xml
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/geronimo-web.xml	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/geronimo-web.xml	1970-01-01 10:00:00.000000000 +1000
+@@ -1,147 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<!--
+-    Licensed to the Apache Software Foundation (ASF) under one or more
+-    contributor license agreements.  See the NOTICE file distributed with
+-    this work for additional information regarding copyright ownership.
+-    The ASF licenses this file to You under the Apache License, Version 2.0
+-    (the "License"); you may not use this file except in compliance with
+-    the License.  You may obtain a copy of the License at
+-
+-       http://www.apache.org/licenses/LICENSE-2.0
+-
+-    Unless required by applicable law or agreed to in writing, software
+-    distributed under the License is distributed on an "AS IS" BASIS,
+-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-    See the License for the specific language governing permissions and
+-    limitations under the License.
+--->
+-
+-    <web-app xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-2.0.1"
+-             xmlns:naming="http://geronimo.apache.org/xml/ns/naming-1.2"
+-             xmlns:sys="http://geronimo.apache.org/xml/ns/deployment-1.2">
+-        
+-        <sys:environment>
+-            <sys:moduleId>
+-                <sys:groupId>${project.groupId}</sys:groupId>
+-                <sys:artifactId>${project.artifactId}</sys:artifactId>
+-                <sys:version>${project.version}</sys:version>
+-                <sys:type>car</sys:type>
+-            </sys:moduleId>
+-        
+-            <!--<sys:dependencies>
+-                <sys:dependency>
+-                    <sys:groupId>org.apache.geronimo.samples.daytrader.plugins</sys:groupId>
+-                    <sys:artifactId>daytrader-derby-datasource</sys:artifactId>
+-                    <sys:version>${project.version}</sys:version>
+-                    <sys:type>car</sys:type>
+-                </sys:dependency>
+-            </sys:dependencies>-->
+-        </sys:environment>
+-    
+-    <context-root>/${project.artifactId}</context-root>
+-
+-    <naming:resource-ref>
+-        <naming:ref-name>jdbc/TradeDataSource</naming:ref-name>
+-        <naming:resource-link>jdbc/TradeDataSource</naming:resource-link>
+-    </naming:resource-ref>
+-
+-    <naming:resource-ref>
+-        <naming:ref-name>jdbc/NoTxTradeDataSource</naming:ref-name>
+-        <naming:resource-link>jdbc/NoTxTradeDataSource</naming:resource-link>
+-    </naming:resource-ref>
+-
+-    <gbean name="DBInitialization" class="org.apache.geronimo.connector.wrapper.DatabaseInitializationGBean">
+-        <!--sql override path
+-        <attribute name="sql">
+-create table OPENJPASEQ
+-(ID SMALLINT NOT NULL PRIMARY KEY,
+-SEQUENCE_VALUE BIGINT);
+-
+-CREATE TABLE HOLDINGEJB
+-  (PURCHASEPRICE DECIMAL(14, 2),
+-   HOLDINGID INTEGER NOT NULL,
+-   QUANTITY DOUBLE NOT NULL,
+-   PURCHASEDATE TIMESTAMP,
+-   ACCOUNT_ACCOUNTID INTEGER,
+-   QUOTE_SYMBOL VARCHAR(250));
+-
+-ALTER TABLE HOLDINGEJB
+-  ADD CONSTRAINT PK_HOLDINGEJB PRIMARY KEY (HOLDINGID);
+-
+-CREATE TABLE ACCOUNTPROFILEEJB
+-  (ADDRESS VARCHAR(250),
+-   PASSWD VARCHAR(250),
+-   USERID VARCHAR(250) NOT NULL,
+-   EMAIL VARCHAR(250),
+-   CREDITCARD VARCHAR(250),
+-   FULLNAME VARCHAR(250));
+-
+-ALTER TABLE ACCOUNTPROFILEEJB
+-  ADD CONSTRAINT PK_ACCOUNTPROFILE2 PRIMARY KEY (USERID);
+-
+-CREATE TABLE QUOTEEJB
+-  (LOW DECIMAL(14, 2),
+-   OPEN1 DECIMAL(14, 2),
+-   VOLUME DOUBLE NOT NULL,
+-   PRICE DECIMAL(14, 2),
+-   HIGH DECIMAL(14, 2),
+-   COMPANYNAME VARCHAR(250),
+-   SYMBOL VARCHAR(250) NOT NULL,
+-   CHANGE1 DOUBLE NOT NULL);
+-
+-ALTER TABLE QUOTEEJB
+-  ADD CONSTRAINT PK_QUOTEEJB PRIMARY KEY (SYMBOL);
+-
+-CREATE TABLE KEYGENEJB
+-  (KEYVAL INTEGER NOT NULL,
+-   KEYNAME VARCHAR(250) NOT NULL);
+-
+-ALTER TABLE KEYGENEJB
+-  ADD CONSTRAINT PK_KEYGENEJB PRIMARY KEY (KEYNAME);
+-
+-CREATE TABLE ACCOUNTEJB
+-  (CREATIONDATE TIMESTAMP,
+-   OPENBALANCE DECIMAL(14, 2),
+-   LOGOUTCOUNT INTEGER NOT NULL,
+-   BALANCE DECIMAL(14, 2),
+-   ACCOUNTID INTEGER NOT NULL,
+-   LASTLOGIN TIMESTAMP,
+-   LOGINCOUNT INTEGER NOT NULL,
+-   PROFILE_USERID VARCHAR(250));
+-
+-ALTER TABLE ACCOUNTEJB
+-  ADD CONSTRAINT PK_ACCOUNTEJB PRIMARY KEY (ACCOUNTID);
+-
+-CREATE TABLE ORDEREJB
+-  (ORDERFEE DECIMAL(14, 2),
+-   COMPLETIONDATE TIMESTAMP,
+-   ORDERTYPE VARCHAR(250),
+-   ORDERSTATUS VARCHAR(250),
+-   PRICE DECIMAL(14, 2),
+-   QUANTITY DOUBLE NOT NULL,
+-   OPENDATE TIMESTAMP,
+-   ORDERID INTEGER NOT NULL,
+-   ACCOUNT_ACCOUNTID INTEGER,
+-   QUOTE_SYMBOL VARCHAR(250),
+-   HOLDING_HOLDINGID INTEGER);
+-
+-ALTER TABLE ORDEREJB
+-  ADD CONSTRAINT PK_ORDEREJB PRIMARY KEY (ORDERID);
+-
+-CREATE INDEX ACCOUNT_USERID ON ACCOUNTEJB(PROFILE_USERID);
+-CREATE INDEX HOLDING_ACCOUNTID ON HOLDINGEJB(ACCOUNT_ACCOUNTID);
+-CREATE INDEX ORDER_ACCOUNTID ON ORDEREJB(ACCOUNT_ACCOUNTID);
+-CREATE INDEX ORDER_HOLDINGID ON ORDEREJB(HOLDING_HOLDINGID);
+-CREATE INDEX CLOSED_ORDERS ON ORDEREJB(ACCOUNT_ACCOUNTID,ORDERSTATUS);
+-        </attribute>-->
+-        <!-- According to your database vendor, you can put these values: db2, oracle, informix, mysql, sqlserver, postgre, other(means any other vendor)-->
+-        <attribute name="path">/dbscripts/derby/Table.ddl</attribute>
+-        <reference name="DataSource">
+-            <name>jdbc/NoTxTradeDataSource</name>
+-        </reference>
+-    </gbean>
+-
+-</web-app>
+-
+-
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xmi /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xmi
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xmi	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xmi	1970-01-01 10:00:00.000000000 +1000
+@@ -1,26 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<!--
+-    Licensed to the Apache Software Foundation (ASF) under one or more
+-    contributor license agreements.  See the NOTICE file distributed with
+-    this work for additional information regarding copyright ownership.
+-    The ASF licenses this file to You under the Apache License, Version 2.0
+-    (the "License"); you may not use this file except in compliance with
+-    the License.  You may obtain a copy of the License at
+-
+-       http://www.apache.org/licenses/LICENSE-2.0
+-
+-    Unless required by applicable law or agreed to in writing, software
+-    distributed under the License is distributed on an "AS IS" BASIS,
+-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-    See the License for the specific language governing permissions and
+-    limitations under the License.
+--->
+-<webappbnd:WebAppBinding xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webappbnd="webappbnd.xmi" xmi:id="WebAppBinding_1253388157906" virtualHostName="default_host">
+-  <webapp href="WEB-INF/web.xml#WebApp_ID"/>
+-  <resRefBindings xmi:id="ResourceRefBinding_1253420979765">
+-    <bindingResourceRef href="WEB-INF/web.xml#ResourceRef_1253420979765"/>
+-  </resRefBindings>
+-  <resRefBindings xmi:id="ResourceRefBinding_1254017954671">
+-    <bindingResourceRef href="WEB-INF/web.xml#ResourceRef_1254017954671"/>
+-  </resRefBindings>
+-</webappbnd:WebAppBinding>
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xml /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xml
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xml	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-bnd.xml	1970-01-01 10:00:00.000000000 +1000
+@@ -1,30 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<!--
+-
+-    Licensed to the Apache Software Foundation (ASF) under one or more
+-    contributor license agreements.  See the NOTICE file distributed with
+-    this work for additional information regarding copyright ownership.
+-    The ASF licenses this file to You under the Apache License, Version 2.0
+-    (the "License"); you may not use this file except in compliance with
+-    the License.  You may obtain a copy of the License at
+-
+-       http://www.apache.org/licenses/LICENSE-2.0
+-
+-    Unless required by applicable law or agreed to in writing, software
+-    distributed under the License is distributed on an "AS IS" BASIS,
+-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-    See the License for the specific language governing permissions and
+-    limitations under the License.
+-
+--->
+-<web-bnd 
+-    xmlns="http://websphere.ibm.com/xml/ns/javaee"
+-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-    xsi:schemaLocation="http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-web-bnd_1_0.xsd"
+-    version="1.0">
+-
+-    <virtual-host name="default_host" />
+-
+-    <resource-ref name="jdbc/TradeDataSource" binding-name="jdbc/TradeDataSource"></resource-ref>
+-
+-</web-bnd>
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-ext.xmi /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-ext.xmi
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-ext.xmi	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/ibm-web-ext.xmi	1970-01-01 10:00:00.000000000 +1000
+@@ -1,20 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<!--
+-    Licensed to the Apache Software Foundation (ASF) under one or more
+-    contributor license agreements.  See the NOTICE file distributed with
+-    this work for additional information regarding copyright ownership.
+-    The ASF licenses this file to You under the Apache License, Version 2.0
+-    (the "License"); you may not use this file except in compliance with
+-    the License.  You may obtain a copy of the License at
+-
+-       http://www.apache.org/licenses/LICENSE-2.0
+-
+-    Unless required by applicable law or agreed to in writing, software
+-    distributed under the License is distributed on an "AS IS" BASIS,
+-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-    See the License for the specific language governing permissions and
+-    limitations under the License.
+--->
+-<webappext:WebAppExtension xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webappext="webappext.xmi" xmi:id="WebAppExtension_1253388157890" reloadInterval="3" reloadingEnabled="true" additionalClassPath="" fileServingEnabled="true" directoryBrowsingEnabled="false" serveServletsByClassnameEnabled="true">
+-  <webApp href="WEB-INF/web.xml#WebApp_ID"/>
+-</webappext:WebAppExtension>
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml	2019-06-03 16:21:55.804613081 +1000
+@@ -0,0 +1,36 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++    Licensed to the Apache Software Foundation (ASF) under one or more
++    contributor license agreements.  See the NOTICE file distributed with
++    this work for additional information regarding copyright ownership.
++    The ASF licenses this file to You under the Apache License, Version 2.0
++    (the "License"); you may not use this file except in compliance with
++    the License.  You may obtain a copy of the License at
++    
++    http://www.apache.org/licenses/LICENSE-2.0
++    
++    Unless required by applicable law or agreed to in writing, software
++    distributed under the License is distributed on an "AS IS" BASIS,
++    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++    See the License for the specific language governing permissions and
++    limitations under the License.
++-->
++<!DOCTYPE jbosscmp-jdbc PUBLIC "-//JBoss//DTD JBOSSCMP-JDBC 4.0//EN" "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc_4_0.dtd">
++<jbosscmp-jdbc>
++
++    <defaults>
++        <datasource>java:IS346DS</datasource>
++        <datasource-mapping>mySQL</datasource-mapping>
++    </defaults>
++
++    <enterprise-beans>
++        <entity>
++            <ejb-name>Track</ejb-name>
++            <cmp-field>
++                <field-name>id</field-name>
++                <auto-increment />
++            </cmp-field>
++            <entity-command name="get-generated-keys" class="org.jboss.ejb.plugins.cmp.jdbc.keygen.JDBC30GeneratedKeysCreateCommand" />
++        </entity>
++    </enterprise-beans>
++</jbosscmp-jdbc>
+\ No newline at end of file
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml.rej /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml.rej
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml.rej	1970-01-01 10:00:00.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/jbosscmp-jdbc.xml.rej	2019-06-03 16:21:55.768613399 +1000
+@@ -0,0 +1,39 @@
++***************
++*** 0 ****
++--- 1,36 ----
+++ <?xml version="1.0" encoding="UTF-8"?>
+++ <!--
+++     Licensed to the Apache Software Foundation (ASF) under one or more
+++     contributor license agreements.  See the NOTICE file distributed with
+++     this work for additional information regarding copyright ownership.
+++     The ASF licenses this file to You under the Apache License, Version 2.0
+++     (the "License"); you may not use this file except in compliance with
+++     the License.  You may obtain a copy of the License at
+++     
+++     http://www.apache.org/licenses/LICENSE-2.0
+++     
+++     Unless required by applicable law or agreed to in writing, software
+++     distributed under the License is distributed on an "AS IS" BASIS,
+++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+++     See the License for the specific language governing permissions and
+++     limitations under the License.
+++ -->
+++ <!DOCTYPE jbosscmp-jdbc PUBLIC "-//JBoss//DTD JBOSSCMP-JDBC 4.0//EN" "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc_4_0.dtd">
+++ <jbosscmp-jdbc>
+++ 
+++     <defaults>
+++         <datasource>java:IS346DS</datasource>
+++         <datasource-mapping>mySQL</datasource-mapping>
+++     </defaults>
+++ 
+++     <enterprise-beans>
+++         <entity>
+++             <ejb-name>Track</ejb-name>
+++             <cmp-field>
+++                 <field-name>id</field-name>
+++                 <auto-increment />
+++             </cmp-field>
+++             <entity-command name="get-generated-keys" class="org.jboss.ejb.plugins.cmp.jdbc.keygen.JDBC30GeneratedKeysCreateCommand" />
+++         </entity>
+++     </enterprise-beans>
+++ </jbosscmp-jdbc>
+\ No newline at end of file
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml
+--- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2019-06-03 16:21:55.796613152 +1000
 @@ -19,25 +19,22 @@
  <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
@@ -1232,10 +1823,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/we
      </resource-ref>
      <resource-ref>
          <res-ref-name>jms/TopicConnectionFactory</res-ref-name>
--        <res-type>javax.jms.TopicConnectionFactory</res-type>
+         <res-type>javax.jms.TopicConnectionFactory</res-type>
 -        <res-auth>Application</res-auth>
 -        <res-sharing-scope>Shareable</res-sharing-scope>
-+        <res-type>jakarta.jms.TopicConnectionFactory</res-type>
 +        <res-auth>Container</res-auth>
 +	<mapped-name>TopicConnectionFactory</mapped-name>
 +	<lookup-name>java:/ConnectionFactory</lookup-name>
@@ -1272,9 +1862,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/we
      <!--  <service-ref>
          <description>WSDL Service Trade</description>
          <service-ref-name>service/Trade</service-ref-name>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp
+--- daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2019-06-03 16:21:55.684614142 +1000
 @@ -28,7 +28,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10"><B><FONT
                  color="#ffffff">DayTrader Login</FONT></B></TD>
@@ -1284,58 +1874,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/welcome.js
          </TR>
      </TBODY>
  </TABLE>
-Only in ../build/daytrader/javaee6/modules/web: target
-diff '--color=auto' -ur daytrader/javaee6/plans/src/main/resources/daytrader-derby-xa-plan.xml ../build/daytrader/javaee6/plans/src/main/resources/daytrader-derby-xa-plan.xml
---- daytrader/javaee6/plans/src/main/resources/daytrader-derby-xa-plan.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/plans/src/main/resources/daytrader-derby-xa-plan.xml	2022-12-21 04:45:30.445396094 +0000
-@@ -152,10 +152,10 @@
-                 <!-- defines a ConnectionFactory -->
-                 <outbound-resourceadapter>
- 	                    <connection-definition>
--                        <connectionfactory-interface>javax.jms.ConnectionFactory</connectionfactory-interface>
-+                        <connectionfactory-interface>jakarta.jms.ConnectionFactory</connectionfactory-interface>
-                         <connectiondefinition-instance>
-                             <name>jms/QueueConnectionFactory</name>
--                            <implemented-interface>javax.jms.QueueConnectionFactory</implemented-interface>
-+                            <implemented-interface>jakarta.jms.QueueConnectionFactory</implemented-interface>
-                             <connectionmanager>
-                                 <xa-transaction>
-                                     <transaction-caching/>
-@@ -171,10 +171,10 @@
-                         </connectiondefinition-instance>
-                     </connection-definition>
-                     <connection-definition>
--                        <connectionfactory-interface>javax.jms.ConnectionFactory</connectionfactory-interface>
-+                        <connectionfactory-interface>jakarta.jms.ConnectionFactory</connectionfactory-interface>
-                         <connectiondefinition-instance>
-                             <name>jms/TopicConnectionFactory</name>
--                            <implemented-interface>javax.jms.TopicConnectionFactory</implemented-interface>
-+                            <implemented-interface>jakarta.jms.TopicConnectionFactory</implemented-interface>
-                             <connectionmanager>
-                                 <xa-transaction>
-                                     <transaction-caching/>
-@@ -193,7 +193,7 @@
-             </resourceadapter>
-            
-             <adminobject>
--                <adminobject-interface>javax.jms.Topic</adminobject-interface>
-+                <adminobject-interface>jakarta.jms.Topic</adminobject-interface>
-                 <adminobject-class>org.activemq.message.ActiveMQTopic</adminobject-class>
-                 <adminobject-instance>
-                     <message-destination-name>jms/TradeStreamerTopic</message-destination-name>
-@@ -202,7 +202,7 @@
-             </adminobject>
-             
-             <adminobject>
--                <adminobject-interface>javax.jms.Queue</adminobject-interface>
-+                <adminobject-interface>jakarta.jms.Queue</adminobject-interface>
-                 <adminobject-class>org.activemq.message.ActiveMQQueue</adminobject-class>
-                 <adminobject-instance>
-                     <message-destination-name>jms/TradeBrokerQueue</message-destination-name>
-Only in ../build/daytrader/javaee6/plans: target
-diff '--color=auto' -ur daytrader/javaee6/pom.xml ../build/daytrader/javaee6/pom.xml
---- daytrader/javaee6/pom.xml	2022-11-29 11:38:29.000000000 +0000
-+++ ../build/daytrader/javaee6/pom.xml	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/javaee6/pom.xml /home/ruic/daytrader/javaee6/pom.xml
+--- daytrader/javaee6/pom.xml	2019-06-03 16:20:59.000000000 +1000
++++ /home/ruic/daytrader/javaee6/pom.xml	2019-06-03 16:21:50.132663204 +1000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -1364,185 +1905,9 @@ diff '--color=auto' -ur daytrader/javaee6/pom.xml ../build/daytrader/javaee6/pom
 -</project>
 \ No newline at end of file
 +</project>
-Only in ../build/daytrader/javaee6: target
-diff '--color=auto' -ur daytrader/plugins/daytrader-jms/src/main/plan/plan.xml ../build/daytrader/plugins/daytrader-jms/src/main/plan/plan.xml
---- daytrader/plugins/daytrader-jms/src/main/plan/plan.xml	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/plugins/daytrader-jms/src/main/plan/plan.xml	2022-12-21 04:45:30.445396094 +0000
-@@ -33,10 +33,10 @@
-         <!-- defines a ConnectionFactory -->
-         <outbound-resourceadapter>
-                     <connection-definition>
--                <connectionfactory-interface>javax.jms.ConnectionFactory</connectionfactory-interface>
-+                <connectionfactory-interface>jakarta.jms.ConnectionFactory</connectionfactory-interface>
-                 <connectiondefinition-instance>
-                     <name>jms/QueueConnectionFactory</name>
--                    <implemented-interface>javax.jms.QueueConnectionFactory</implemented-interface>
-+                    <implemented-interface>jakarta.jms.QueueConnectionFactory</implemented-interface>
-                     <connectionmanager>
-                         <xa-transaction>
-                             <transaction-caching/>
-@@ -52,10 +52,10 @@
-                 </connectiondefinition-instance>
-             </connection-definition>
-             <connection-definition>
--                <connectionfactory-interface>javax.jms.ConnectionFactory</connectionfactory-interface>
-+                <connectionfactory-interface>jakarta.jms.ConnectionFactory</connectionfactory-interface>
-                 <connectiondefinition-instance>
-                     <name>jms/TopicConnectionFactory</name>
--                    <implemented-interface>javax.jms.TopicConnectionFactory</implemented-interface>
-+                    <implemented-interface>jakarta.jms.TopicConnectionFactory</implemented-interface>
-                     <connectionmanager>
-                         <xa-transaction>
-                             <transaction-caching/>
-diff '--color=auto' -ur daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml ../build/daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml
---- daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/plugins/daytrader-tomcat/src/main/plan/plan.xml	2022-12-21 04:51:50.005274421 +0000
-@@ -41,142 +41,4 @@
-         </web-app>
-     </module>
- 
--
--    <!--
--     **
--     **  DayTrader EJB Jar Module Definition
--     **
--    
--    <module>
--        <ejb>dt-ejb.jar</ejb>
--        <openejb-jar xmlns="http://openejb.apache.org/xml/ns/openejb-jar-2.2">
--
--            <enterprise-beans>
--                <message-driven>
--                    <ejb-name>DTBroker3MDB</ejb-name>
--                    <resource-adapter>
--                        <resource-link>TradeJMSResources</resource-link>
--                    </resource-adapter>
--                </message-driven>
--                <message-driven>
--                    <ejb-name>DTStreamer3MDB</ejb-name>
--                    <resource-adapter>
--                        <resource-link>TradeJMSResources</resource-link>
--                    </resource-adapter>
--                </message-driven>
--            </enterprise-beans>-->
--
--            <!--
--             **
--             ** The following section can be used to override the settings in the
--             ** persistence.xml file. For instance, if you choose to deploy DayTrader
--             ** against a DB2 database, the DBDictionary can be specified here.
--             **
--            -->
--
--            <!--<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
--                <persistence-unit name="daytrader">
--                    <properties>
--                        <property name="openjpa.jdbc.DBDictionary" value="db2" />
--                        <property name="openjpa.jdbc.DBDictionary" value="derby" />
--                    </properties>
--                </persistence-unit>
--            </persistence>
--        </openejb-jar>
--    </module>-->
--
--
--    <!--<module>
--        <java>streamer.jar</java>
--        <application-client xmlns="http://geronimo.apache.org/xml/ns/j2ee/application-client-2.0">
--            <client-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
--                <moduleId>
--                    <groupId>org.apache.geronimo.daytrader</groupId>
--                    <artifactId>daytrader-streamer-client</artifactId>
--                    <version>2.2.1-SNAPSHOT</version>
--                    <type>car</type>
--                </moduleId>
--            </client-environment>
--            <server-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
--                <moduleId>
--                    <groupId>org.apache.geronimo.daytrader</groupId>
--                    <artifactId>daytrader-streamer-client-server</artifactId>
--                    <version>2.2.1-SNAPSHOT</version>
--                    <type>car</type>
--                </moduleId>
--            </server-environment>
--            <resource>
--                <external-rar xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.2">
--                    <dep:groupId>org.apache.geronimo.modules</dep:groupId>
--                    <dep:artifactId>geronimo-activemq-ra</dep:artifactId>
--                    <dep:type>rar</dep:type>
--                </external-rar>
--                <connector xmlns="http://geronimo.apache.org/xml/ns/j2ee/connector-1.2">
--                    <resourceadapter>
--                        <resourceadapter-instance>
--                            <resourceadapter-name>ActiveMQ RA</resourceadapter-name>
--                            <config-property-setting name="ServerUrl">tcp://localhost:61616</config-property-setting>
--                            <config-property-setting name="UserName">geronimo</config-property-setting>
--                            <config-property-setting name="Password">geronimo</config-property-setting>
--                            <workmanager>
--                                <gbean-link>DefaultWorkManager</gbean-link>
--                            </workmanager>
--                        </resourceadapter-instance>
--                        <outbound-resourceadapter>
--                            <connection-definition>
--                                <connectionfactory-interface>javax.jms.ConnectionFactory</connectionfactory-interface>
--                                <connectiondefinition-instance>
--                                    <name>jms/TopicConnectionFactory</name>
--                                    <implemented-interface>javax.jms.QueueConnectionFactory</implemented-interface>
--                                    <implemented-interface>javax.jms.TopicConnectionFactory</implemented-interface>
--                                    <connectionmanager>
--                                        <xa-transaction>
--                                            <transaction-caching/>
--                                        </xa-transaction>
--                                        <single-pool>
--                                            <max-size>10</max-size>
--                                            <blocking-timeout-milliseconds>5000</blocking-timeout-milliseconds>
--                                            <match-one/>
--                                        </single-pool>
--                                    </connectionmanager>
--                                </connectiondefinition-instance>
--                            </connection-definition>
--                        </outbound-resourceadapter>
--                    </resourceadapter>
--
--                    <adminobject>
--                        <adminobject-interface>javax.jms.Topic</adminobject-interface>
--                        <adminobject-class>org.activemq.message.ActiveMQTopic</adminobject-class>
--                        <adminobject-instance>
--                            <message-destination-name>jms/TradeStreamerTopic</message-destination-name>
--                            <config-property-setting name="PhysicalName">TradeStreamerTopic</config-property-setting>
--                        </adminobject-instance>
--                    </adminobject>
--                </connector>
--            </resource>
--        </application-client>
--    </module>
--
--    <module>
--        <java>wsappclient.jar</java>
--        <application-client xmlns="http://geronimo.apache.org/xml/ns/j2ee/application-client-2.0">
--            <client-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
--                <moduleId>
--                    <groupId>org.apache.geronimo.daytrader</groupId>
--                    <artifactId>daytrader-ws-client</artifactId>
--                    <version>2.2.1-SNAPSHOT</version>
--                    <type>car</type>
--                </moduleId>
--            </client-environment>
--            <server-environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.2">
--                <moduleId>
--                    <groupId>org.apache.geronimo.daytrader</groupId>
--                    <artifactId>daytrader-ws-client-server</artifactId>
--                    <version>2.2.1-SNAPSHOT</version>
--                    <type>car</type>
--                </moduleId>
--            </server-environment>
--        </application-client>
--    </module>-->
--
- </application>
-diff '--color=auto' -ur daytrader/pom.xml ../build/daytrader/pom.xml
---- daytrader/pom.xml	2022-11-29 11:38:28.000000000 +0000
-+++ ../build/daytrader/pom.xml	2022-12-21 04:45:30.445396094 +0000
+diff -urN daytrader/pom.xml /home/ruic/daytrader/pom.xml
+--- daytrader/pom.xml	2019-06-03 16:20:58.000000000 +1000
++++ /home/ruic/daytrader/pom.xml	2019-06-03 16:21:49.944664865 +1000
 @@ -20,8 +20,8 @@
  
      <parent>
@@ -1617,4 +1982,3 @@ diff '--color=auto' -ur daytrader/pom.xml ../build/daytrader/pom.xml
 -</project>
 \ No newline at end of file
 +</project>
-Only in ../build/daytrader: target
