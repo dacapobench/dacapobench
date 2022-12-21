@@ -27,8 +27,6 @@ import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.yaml.snakeyaml.Yaml;
-
 import org.dacapo.parser.Config;
 
 /**
@@ -376,18 +374,29 @@ public abstract class Benchmark {
     System.out.println("Nominal stats: "+getStats());
   }
 
+  /* read yml by hand for now since snakeyml (introduced in ed3b413b) led to inexplicable failures of trade benchmarks */
   private boolean loadStats(String ymlFile) {
-    InputStream in = Benchmark.class.getClassLoader().getResourceAsStream(ymlFile);
-    Yaml yaml = new Yaml();
-    Map<String, Object> data = yaml.load(in);
-
-    if (data.containsKey("stats")) {
-      stats = (Map<String,Integer>) data.get("stats");
-      return true;
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(Benchmark.class.getClassLoader().getResourceAsStream(ymlFile)))) {
+      String line;
+      if (in.ready()) {
+        line = in.readLine();
+        if (line.startsWith("stats:")) {
+          while (in.ready()) {
+            line = in.readLine();
+            String[] tokens = line.trim().split(": ");
+            try {
+              stats.put(tokens[0], Integer.parseInt(tokens[1]));
+            } catch (NumberFormatException nfe) {
+              System.err.println("Badly formatted line '"+line+"' in file "+ymlFile);
+              break;
+            }
+          }
+          return true; // successfully parsed
+        }
+      }
+    } catch (Exception e) {
+      System.err.println("Failed to load stats file from yml "+ymlFile+" "+e);
     }
-
-    System.out.println("Failed to load stats file from yml "+ymlFile);
-
     return false;
   }
 
