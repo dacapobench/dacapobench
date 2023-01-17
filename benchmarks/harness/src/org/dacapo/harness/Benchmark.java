@@ -61,6 +61,10 @@ public abstract class Benchmark {
    */
   private static boolean verbose = false;
 
+  /**
+   * How many iterations will run
+   */
+  protected static int iterations = 1;
 
   /**
    * Display stdout from the benchmark ?
@@ -107,7 +111,7 @@ public abstract class Benchmark {
    * Note that it's impact is dependent on the particular benchmark
    * utilizing this timeout.dialation property.
    */
-  private static String timeoutDialation = "1";
+  protected static String timeoutDialation = "1";
   
   /**
    * Should we dump latency stats to csv file
@@ -827,6 +831,7 @@ public abstract class Benchmark {
   public static void setCommandLineOptions(CommandLineArgs line) {
     silentOut = line.getSilent();
     silentErr = line.getSilent();
+    iterations = line.getIterations();
     preserve = line.getPreserve();
     validate = line.getValidate();
     validateOutput = line.getValidateOutput();

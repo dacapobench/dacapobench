@@ -43,12 +43,13 @@ public class Tradesoap extends Benchmark {
     final int threads = config.getThreadCount(size);
     if (args.length == 2) {
       logNumSessions = Integer.parseInt(args[0]);
-      timeoutms = 1000*Integer.parseInt(args[1]);
+      timeoutms = 1000*Integer.parseInt(args[1])*iterations;
+      timeoutms = (int) (timeoutms*Float.parseFloat(timeoutDialation));
     } else {
       System.err.println("Quitting.   Bad arguments: "+args);
       System.exit(1);
     }
-    System.out.println("Launching the server");
+    System.out.println("Launching the server with timeout of "+(timeoutms/1000)+" seconds (use -f to adjust timeout dialation).");
     PrintStream stdout = System.out;
     // Hide server starting messages
     emptyOutput();
