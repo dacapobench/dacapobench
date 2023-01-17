@@ -59,12 +59,15 @@ public class Session {
     return result;
   }
 
+  static final int DEFAULT_TIMEOUT_MS = 30000;  // 10X more generous than normal default
+
   /**
    * Set connection manager parameters.
    * @param params
    */
   protected void setConnectionManagerParams(HttpConnectionManagerParams params) {
-    params.setConnectionTimeout(30000);
+    int timeoutms = (int) (DEFAULT_TIMEOUT_MS * Float.parseFloat(System.getProperty("dacapo.timeout.dialation")));
+    params.setConnectionTimeout(timeoutms);
   }
 
   protected void setClientParams(HttpClientParams params) {
