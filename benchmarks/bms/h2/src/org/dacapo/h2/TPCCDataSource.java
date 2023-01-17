@@ -66,7 +66,7 @@ public class TPCCDataSource implements DataSource {
   }
 
   public int getLoginTimeout() throws SQLException {
-    return 100;
+    return (int) (loginTimeout * Float.parseFloat(System.getProperty("dacapo.timeout.dialation")));
   }
 
   public void setLogWriter(PrintWriter logWriter) throws SQLException {
