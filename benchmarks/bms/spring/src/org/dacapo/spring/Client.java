@@ -104,10 +104,13 @@ public class Client implements Runnable {
     shutdownSession();
   }
 
+  static final int DEFAULT_TIMEOUT_MS = 30000;  // 10X more generous than normal default
+
   private void startSession() {
     connectionManager = new MultiThreadedHttpConnectionManager();
     httpClient = new HttpClient(connectionManager);
-    httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(30000);
+    int timeoutms = (int) (DEFAULT_TIMEOUT_MS * Float.parseFloat(System.getProperty("dacapo.timeout.dialation")));
+    httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(timeoutms);
   }
 
   private void shutdownSession() {
