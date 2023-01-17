@@ -315,6 +315,8 @@
         <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
         <!-- This is necessary when running cassandra with JAVA >= 9 -->
         <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Add-Exports: java.base/jdk.internal.ref${line.separator}</echo>
+        <!-- This is necessary when running h2o with JAVA > 11 -->
+        <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Add-Opens: java.base/java.lang${line.separator}</echo>
 
     	<!-- form the top level info -->
         <copy file="${basedir}/../LICENSE" todir="${dacapo.build.dir}"/>
