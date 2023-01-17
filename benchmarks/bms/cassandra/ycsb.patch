@@ -19,7 +19,7 @@ diff '--color=auto' -ur ycsb-0.17.0/cassandra/src/test/java/site/ycsb/db/Cassand
  public class CassandraCQLClientTest {
    // Change the default Cassandra timeout from 10s to 120s for slow CI machines
 -  private final static long timeout = 120000L;
-+  private final static long timeout = 120000L; // FIXME
++  private final static long timeout = (long) (120000L * Float.parseFloat(System.getProperty("dacapo.timeout.dialation")));
  
    private final static String TABLE = "usertable";
    private final static String HOST = "localhost";
