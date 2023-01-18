@@ -1,20 +1,23 @@
 benchmark xalan
   class org.dacapo.harness.Xalan
-  thread-model per_cpu
-  jars "dacapo-xalan.jar", "xalan.jar", "xercesImpl.jar", "xml-apis.jar", "serializer.jar";
+  thread-model per_cpu;
 
-size small args "10"
-  threads 1
-  thread-limit 10
+size small args "2"
+  thread-limit 2048
   output
     stdout digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
-size default args "1600"
-  threads 1
-  thread-limit 320
+size default args "500"
+  thread-limit 2048
   output
-    stdout digest 0xd31deba48b76595f822b43217afefd6fec3aefb9,
+    stdout digest 0x7eddbe00af5eef755bc9ae8d5a84ba4f29c6ec7c,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
+
+size large args "10000"
+  thread-limit 2048
+  output
+    stdout digest 0x7eddbe00af5eef755bc9ae8d5a84ba4f29c6ec7c,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

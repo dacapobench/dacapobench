@@ -26,117 +26,37 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-/**
- * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * id: $Id: XSLTBench.java 738 2009-12-24 00:19:36Z steveb-oss $
- */
 public class XSLTBench {
 
-  final boolean verbose = false;
+  private static final boolean VERBOSE = false;
+  private static final String XALAN_VERSION = "Xalan Java 2.7.2";
+  private static final String[] FILE_LIST = {
+    "xalan/acks.xml",
+    "xalan/binding.xml",
+    "xalan/changes.xml",
+    "xalan/concepts.xml",
+    "xalan/controls.xml",
+    "xalan/datatypes.xml",
+    "xalan/expr.xml",
+    "xalan/intro.xml",
+    "xalan/model.xml",
+    "xalan/prod-notes.xml",
+    "xalan/references.xml",
+    "xalan/rpm.xml",
+    "xalan/schema.xml",
+    "xalan/structure.xml",
+    "xalan/template.xml",
+    "xalan/terms.xml",
+    "xalan/ui.xml"
+  };
 
-  // What version of XALAN should we have
-  private final String XALAN_VERSION = "Xalan Java 2.7.2";
+  private static Integer index = 0;  // counter of files processed, synchronize on this
+
   private final File scratch;
   private final File data;
-
-  int workers;
-
-  /*
-   * A simple queue of filenames that the worker threads pull jobs from.
-   */
-  class WorkQueue {
-    LinkedList<String> _queue = new LinkedList<String>();
-
-    public synchronized void push(String filename) {
-      if (verbose)
-        System.out.println("workQueue.push");
-      _queue.add(filename);
-      notify();
-    }
-
-    public synchronized String pop() {
-      while (_queue.isEmpty()) {
-        try {
-          wait();
-        } catch (InterruptedException e) {
-        }
-        if (verbose)
-          System.out.println("workQueue.pop");
-      }
-      return _queue.removeFirst();
-    }
-  }
-
-  /*
-   * Worker thread. Provided with a queue that input files can be selected from
-   * and a template object that can be used to perform a transform from. Results
-   * of the transfrom are saved in the scratch directory as normal.
-   */
-  class XalanWorker extends Thread implements ErrorListener {
-
-    // Where are we going to get jobs from
-    WorkQueue _queue;
-
-    // A unique identifier for the worker
-    int _id;
-
-    public XalanWorker(WorkQueue queue, int id) {
-      _queue = queue;
-      _id = id;
-    }
-
-    public void run() {
-      try {
-        if (verbose)
-          System.out.println("Worker thread starting");
-        FileOutputStream outputStream = new FileOutputStream(new File(scratch, "xalan.out." + _id));
-        Result outFile = new StreamResult(outputStream);
-        while (true) {
-          String fileName = _queue.pop();
-          // An empty string is the end of life signal
-          if (fileName.equals(""))
-            break;
-          Transformer transformer = _template.newTransformer();
-          transformer.setErrorListener(this);
-          FileInputStream inputStream = new FileInputStream(new File(data, fileName));
-          Source inFile = new StreamSource(inputStream);
-          transformer.transform(inFile, outFile);
-          inputStream.close();
-        }
-      } catch (TransformerConfigurationException e) {
-        e.printStackTrace();
-      } catch (TransformerException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      if (verbose)
-        System.out.println("Worker thread exiting");
-    }
-
-    // Provide an ErrorListener so that stderr warnings can be surpressed
-    public void error(TransformerException exception) throws TransformerException {
-      throw exception;
-    }
-
-    public void fatalError(TransformerException exception) throws TransformerException {
-      throw exception;
-    }
-
-    public void warning(TransformerException exception) throws TransformerException {
-      // Ignore warnings, the test transforms create some
-    }
-  }
-
-  // The rather inappropriatly named 'Templates' object for storing
-  // a handle to a 'compiled' transformation stylesheet
-  Templates _template = null;
-
-  // The queue used to hold jobs to be processed
-  WorkQueue _workQueue = null;
-
-  // An array for the workers
-  XalanWorker[] _workers = null;
+  private int tasks;   // number of files to process
+  private Templates template = null;  // object for storing a handle to a 'compiled' transformation stylesheet
+  private XalanWorker[] workers = null;  // An array for the workers
 
   public XSLTBench(File data, File scratch) throws Exception {
     // Check Xalan version, this is easy to get wrong because its
@@ -165,65 +85,113 @@ public class XSLTBench {
     // Compile the test stylesheet for later use
     Source stylesheet = new StreamSource(new File(data, "xalan/xmlspec.xsl"));
     TransformerFactory factory = TransformerFactory.newInstance();
-    _template = factory.newTemplates(stylesheet);
-
-    // Create the work queue for jobs
-    _workQueue = new WorkQueue();
-
+    template = factory.newTemplates(stylesheet);
   }
 
   /**
-   * This method is called before the start of a benchmark iteration
+   * Called before the start of a benchmark iteration
    * 
-   * @param workers
+   * @param threads Number of worker threads
    */
-  public void createWorkers(int workers) {
-    this.workers = workers;
-    // Setup the workers ready to roll
-    if (_workers == null)
-      _workers = new XalanWorker[workers];
-    for (int i = 0; i < workers; i++) {
-      _workers[i] = new XalanWorker(_workQueue, i);
-      _workers[i].start();
+  public void createWorkers(int threads) {
+    // Set up the workers
+    if (workers == null)
+      workers = new XalanWorker[threads];
+    for (int i = 0; i < threads; i++) {
+      workers[i] = new XalanWorker(i);
     }
   }
 
   /**
-   * This method is the heart of a benchmark iteration
+   * The heart of a benchmark iteration
    * 
-   * @param nRuns
+   * @param runs Number of times the files will be processed
    * @throws InterruptedException
    */
-  public void doWork(int nRuns) throws InterruptedException {
-    // Post the work
-    for (int iRun = 0; iRun < nRuns; iRun++) {
-      _workQueue.push("xalan/acks.xml");
-      _workQueue.push("xalan/binding.xml");
-      _workQueue.push("xalan/changes.xml");
-      _workQueue.push("xalan/concepts.xml");
-      _workQueue.push("xalan/controls.xml");
-      _workQueue.push("xalan/datatypes.xml");
-      _workQueue.push("xalan/expr.xml");
-      _workQueue.push("xalan/intro.xml");
-      _workQueue.push("xalan/model.xml");
-      _workQueue.push("xalan/prod-notes.xml");
-      _workQueue.push("xalan/references.xml");
-      _workQueue.push("xalan/rpm.xml");
-      _workQueue.push("xalan/schema.xml");
-      _workQueue.push("xalan/structure.xml");
-      _workQueue.push("xalan/template.xml");
-      _workQueue.push("xalan/terms.xml");
-      _workQueue.push("xalan/ui.xml");
+  public void doWork(int runs) throws InterruptedException {
+    this.tasks = runs * FILE_LIST.length;
+    index = 0;
+
+    for (int i = 0; i < workers.length; i++) 
+      workers[i].start();
+
+    for (int i = 0; i < workers.length; i++) {
+      if (VERBOSE)
+        System.out.println("Waiting for thread " + i);
+      workers[i].join();
+    }
+  }
+
+  /**
+   * Synchronize threads accessing next available work item
+   *
+   * @return the new task number
+   */
+  private int getNextTask() {
+    int rtn;
+    synchronized(index) {
+      rtn = index++;
+      int fivePercent = tasks/20;
+      if (fivePercent > 5 && rtn < tasks && rtn % fivePercent == 0) {
+        int percentage = 5 * (rtn / fivePercent);
+        System.out.print("Processing: "+percentage+"%\r");
+        System.out.flush();
+      }
+    }
+    return rtn;
+  }
+
+  /*
+   * Worker thread. Provided with a queue that input files can be selected from
+   * and a template object that can be used to perform a transform from. Results
+   * of the transfrom are saved in the scratch directory as normal.
+   */
+  class XalanWorker extends Thread implements ErrorListener {
+
+    private int id;
+
+    XalanWorker(int id) {
+      this.id = id;
     }
 
-    // Kill workers and wait for death
-    for (int i = 0; i < workers; i++) {
-      _workQueue.push(""); // "" is a thread die signal
+    public void run() {
+      try {
+        if (VERBOSE)
+          System.out.println("Worker thread starting");
+        FileOutputStream outputStream = new FileOutputStream(new File(scratch, "xalan.out." + id));
+        Result outFile = new StreamResult(outputStream);
+        int task;
+        while ((task = getNextTask()) < tasks) {
+          String fileName = FILE_LIST[task % FILE_LIST.length];
+          Transformer transformer = template.newTransformer();
+          transformer.setErrorListener(this);
+          FileInputStream inputStream = new FileInputStream(new File(data, fileName));
+          Source inFile = new StreamSource(inputStream);
+          transformer.transform(inFile, outFile);
+          inputStream.close();
+        }
+      } catch (TransformerConfigurationException e) {
+        e.printStackTrace();
+      } catch (TransformerException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      if (VERBOSE)
+        System.out.println("Worker thread exiting");
     }
-    for (int i = 0; i < workers; i++) {
-      if (verbose)
-        System.out.println("Waiting for thread " + i);
-      _workers[i].join();
+
+    // Provide an ErrorListener so that stderr warnings can be surpressed
+    public void error(TransformerException exception) throws TransformerException {
+      throw exception;
+    }
+
+    public void fatalError(TransformerException exception) throws TransformerException {
+      throw exception;
+    }
+
+    public void warning(TransformerException exception) throws TransformerException {
+      // Ignore warnings, the test transforms create some
     }
   }
 }
