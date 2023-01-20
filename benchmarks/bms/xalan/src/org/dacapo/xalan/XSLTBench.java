@@ -54,7 +54,6 @@ public class XSLTBench {
 
   private final File scratch;
   private final File data;
-  private int tasks;   // number of files to process
   private Templates template = null;  // object for storing a handle to a 'compiled' transformation stylesheet
   private XalanWorker[] workers = null;  // An array for the workers
 
@@ -92,26 +91,24 @@ public class XSLTBench {
    * Called before the start of a benchmark iteration
    * 
    * @param threads Number of worker threads
+   * @param runs Number of times to process each file
    */
-  public void createWorkers(int threads) {
-    // Set up the workers
+  public void createWorkers(int threads, int runs) {
     if (workers == null)
       workers = new XalanWorker[threads];
-    for (int i = 0; i < threads; i++) {
-      workers[i] = new XalanWorker(i);
+    for (int id = 0; id < threads; id++) {
+      int extra = (id < runs % threads) ? 1 : 0;
+      int tasks = FILE_LIST.length * (extra + runs / threads);
+      workers[id] = new XalanWorker(id, tasks);
     }
   }
 
   /**
    * The heart of a benchmark iteration
    * 
-   * @param runs Number of times the files will be processed
    * @throws InterruptedException
    */
-  public void doWork(int runs) throws InterruptedException {
-    this.tasks = runs * FILE_LIST.length;
-    index = 0;
-
+  public void doWork() throws InterruptedException {
     for (int i = 0; i < workers.length; i++) 
       workers[i].start();
 
@@ -122,47 +119,35 @@ public class XSLTBench {
     }
   }
 
-  /**
-   * Synchronize threads accessing next available work item
-   *
-   * @return the new task number
-   */
-  private int getNextTask() {
-    int rtn;
-    synchronized(index) {
-      rtn = index++;
-      int fivePercent = tasks/20;
-      if (fivePercent > 5 && rtn < tasks && rtn % fivePercent == 0) {
-        int percentage = 5 * (rtn / fivePercent);
-        System.out.print("Processing: "+percentage+"%\r");
-        System.out.flush();
-      }
-    }
-    return rtn;
-  }
-
   /*
-   * Worker thread. Provided with a queue that input files can be selected from
+   * Worker thread. Provided with a list that input files can be selected from
    * and a template object that can be used to perform a transform from. Results
    * of the transfrom are saved in the scratch directory as normal.
    */
   class XalanWorker extends Thread implements ErrorListener {
 
     private int id;
+    private int tasks;
 
-    XalanWorker(int id) {
+    XalanWorker(int id, int tasks) {
       this.id = id;
+      this.tasks = tasks;
     }
 
     public void run() {
       try {
         if (VERBOSE)
           System.out.println("Worker thread starting");
+
+        int fivePercent = tasks/20;
         FileOutputStream outputStream = new FileOutputStream(new File(scratch, "xalan.out." + id));
         Result outFile = new StreamResult(outputStream);
-        int task;
-        while ((task = getNextTask()) < tasks) {
-          String fileName = FILE_LIST[task % FILE_LIST.length];
+        for (int task = 0; task < tasks; task++) {
+          if (id == 0 && fivePercent > 1 && task < tasks && task % fivePercent == 0) {
+            int percentage = 5 * (task / fivePercent);
+            System.out.print("Processing: "+percentage+"%\r");
+          }
+          String fileName = FILE_LIST[(task + id) % FILE_LIST.length];
           Transformer transformer = template.newTransformer();
           transformer.setErrorListener(this);
           FileInputStream inputStream = new FileInputStream(new File(data, fileName));

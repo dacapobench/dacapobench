@@ -31,8 +31,8 @@ public class Xalan extends Benchmark {
   public Xalan(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
     Class<?> clazz = Class.forName("org.dacapo.xalan.XSLTBench", true, loader);
-    this.method = clazz.getMethod("doWork", int.class);
-    createWorkersMethod = clazz.getMethod("createWorkers", int.class);
+    this.method = clazz.getMethod("doWork");
+    createWorkersMethod = clazz.getMethod("createWorkers", int.class, int.class);
     Constructor<?> constructor = clazz.getConstructor(File.class, File.class);
     useBenchmarkClassLoader();
 
@@ -48,9 +48,12 @@ public class Xalan extends Benchmark {
   public void preIteration(String size) throws Exception {
     super.preIteration(size);
 
+    String[] harnessArgs = config.getArgs(size);
+    int iterations = Integer.parseInt(harnessArgs[0]);
+
     useBenchmarkClassLoader();
     try {
-      createWorkersMethod.invoke(benchmark, new Object[] { config.getThreadCount(size) });
+      createWorkersMethod.invoke(benchmark, new Object[] { config.getThreadCount(size), iterations });
     } finally {
       revertClassLoader();
     }
@@ -63,10 +66,7 @@ public class Xalan extends Benchmark {
    * @see org.dacapo.harness.Benchmark#iterate(java.lang.String)
    */
   public void iterate(String size) throws Exception {
-    String[] harnessArgs = config.getArgs(size);
-    int nRuns = Integer.parseInt(harnessArgs[0]);
-
-    method.invoke(benchmark, new Object[] { nRuns });
+    method.invoke(benchmark);
     System.out.println("Normal completion.");
   }
 }
