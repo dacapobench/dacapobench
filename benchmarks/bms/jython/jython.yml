@@ -1,2 +1,19 @@
 stats:
-  NMH: 17
+  NMH: 37		# nominal minimum heap size
+  NOM: 32		# nominal median object size (bytes)
+  NOS: 16		# nominal 10-percentile object size (bytes)
+  NOL: 48		# nominal 90-percentile object size (bytes)
+  NOA: 43		# nominal average object size (bytes)
+  NMR: 1480		# nominal allocation rate (bytes / usec)
+  NMT: 112		# nominal memory turnover total alloc / min heap
+  NMS: 13		# nominal execution time heap size sensitivity
+  NML: 0		# nominal memory leakage
+  NET: 3		# nominal execution time (sec)
+  NEW: 9		# nominal iterations to warm up
+  NUB: 150		# nominal thousands of unique bytecodes executed
+  NEF: 8		# nominal execution focus / dominance of hot code
+  NUC: 29		# nominal thousands of unique function calls
+  NPF: 70		# nominal putfield per usec
+  NGF: 217		# nominal getfield per usec
+  NAS: 11		# nominal aastore per usec
+  NAL: 33		# nominal aaload per usec
