@@ -387,6 +387,9 @@ public abstract class Benchmark {
         if (line.startsWith("stats:")) {
           while (in.ready()) {
             line = in.readLine();
+            int idx = line.indexOf('#');
+            if (idx != -1)
+              line = line.substring(0,idx);
             String[] tokens = line.trim().split(": ");
             try {
               stats.put(tokens[0], Integer.parseInt(tokens[1]));
