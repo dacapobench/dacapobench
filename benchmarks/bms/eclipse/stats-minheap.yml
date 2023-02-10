@@ -1,6 +1,12 @@
-open-jdk-11.ms.s.hotspot_gc-Parallel: 471
-open-jdk-11.ms.s.hotspot_gc-Parallel.t-1: 471
-open-jdk-11.ms.s.hotspot_gc-Parallel.n-10: 473
-open-jdk-11.ms.s.hotspot_gc-G1: 436
-open-jdk-17.ms.s.hotspot_gc-Parallel: 399
-open-jdk-17.ms.s.hotspot_gc-G1: 353
+#
+# Minimum heap sizes in which benchmark will run to completion, using 
+# -Xms<x> -Xmx<x> for various x and various configuarations.  Discovered
+# by bisection search.  Numbers below are in MB and reflect results of
+# three trials.
+#
+open-jdk-11.s.cp.gc-G1.t-8.f-10.n-1: [ 346, 346, 345 ]        # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar eclipse -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 343, 345, 346 ]        # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar eclipse -t 1 -f 10 -n 1
+open-jdk-11.s.up.gc-G1.t-8.f-10.n-1: [ 424, 425, 423 ]        # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar eclipse -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-Parallel.t-8.f-10.n-1: [ 383, 384, 383 ]  # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-0d047f55.jar eclipse -t 8 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-8.f-10.n-1: [ 301, 300, 299 ]        # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar eclipse -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-8.f-10.n-10: [ 345, 344, 346 ]       # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar eclipse -t 8 -f 10 -n 10

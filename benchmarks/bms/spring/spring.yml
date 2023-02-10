@@ -1,7 +1,8 @@
 stats:
-  NMH: 65		# nominal minimum heap size
   NMS: 19		# nominal execution time heap size sensitivity
-  NML: 0		# nominal memory leakage
+  NMH: 47		# nominal minimum heap size (MB)
+  NMU: 63		# nominal minimum heap size (MB) without compressed pointers
+  NML: 4		# nominal percent memory leakage (10 iterations / 1 iterations) (49/47)
   NET: 3		# nominal execution time (sec)
   NEW: 5		# nominal iterations to warm up
   NUB: 175		# nominal thousands of unique bytecodes executed

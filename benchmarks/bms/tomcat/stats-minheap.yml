@@ -1,6 +1,12 @@
-open-jdk-11.ms.s.hotspot_gc-Parallel: 21
-open-jdk-11.ms.s.hotspot_gc-Parallel.t-1: 21
-open-jdk-11.ms.s.hotspot_gc-Parallel.n-10: 22
-open-jdk-11.ms.s.hotspot_gc-G1: 19
-open-jdk-17.ms.s.hotspot_gc-Parallel: 21
-open-jdk-17.ms.s.hotspot_gc-G1: 19
+#
+# Minimum heap sizes in which benchmark will run to completion, using 
+# -Xms<x> -Xmx<x> for various x and various configuarations.  Discovered
+# by bisection search.  Numbers below are in MB and reflect results of
+# three trials.
+#
+open-jdk-11.s.cp.gc-G1.t-8.f-10.n-1: [ 17, 17, 17 ]        # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar tomcat -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 17, 17, 17 ]        # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar tomcat -t 1 -f 10 -n 1
+open-jdk-11.s.up.gc-G1.t-8.f-10.n-1: [ 19, 19, 19 ]        # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar tomcat -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-Parallel.t-8.f-10.n-1: [ 18, 17, 17 ]  # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-0d047f55.jar tomcat -t 8 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-8.f-10.n-1: [ 17, 17, 17 ]        # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar tomcat -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-8.f-10.n-10: [ 17, 17, 17 ]       # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar tomcat -t 8 -f 10 -n 10

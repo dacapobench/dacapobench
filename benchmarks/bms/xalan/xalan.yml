@@ -1,13 +1,14 @@
 stats:
-  NMH: 11		# nominal minimum heap size
   NOM: 40		# nominal median object size (bytes)
   NOS: 24		# nominal 10-percentile object size (bytes)
   NOL: 48		# nominal 90-percentile object size (bytes)
   NOA: 82		# nominal average object size (bytes)
   NMR: 1998		# nominal allocation rate (bytes / usec)
-  NMT: 1275		# nominal memory turnover total alloc / min heap
+  NMT: 1559		# nominal memory turnover (total alloc bytes / min heap bytes)
   NMS: 325		# nominal execution time heap size sensitivity
-  NML: 0		# nominal memory leakage
+  NMH: 9		# nominal minimum heap size (MB)
+  NMU: 11		# nominal minimum heap size (MB) without compressed pointers
+  NML: 22		# nominal percent memory leakage (10 iterations / 1 iterations) (11/9)
   NET: 8		# nominal execution time (sec)
   NEW: 1		# nominal iterations to warm up
   NUB: 21		# nominal thousands of unique bytecodes executed
