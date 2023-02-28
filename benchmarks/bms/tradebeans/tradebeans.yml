@@ -1,7 +1,9 @@
 stats:
-  NMS: None		# nominal execution time heap size sensitivity
+  NMS: 0		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
   NMH: 101		# nominal minimum heap size (MB)
   NMU: 141		# nominal minimum heap size (MB) without compressed pointers
   NML: 33		# nominal percent memory leakage (10 iterations / 1 iterations) (135/101)
-  NET: None		# nominal execution time (sec)
-  NEW: None		# nominal iterations to warm up
+  NET: 21		# nominal execution time (sec)
+  NEW: 0		# nominal iterations to warm up to within 2.5% of best
+  NEP: 8		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
+  NES: 4		# nominal standard deviation among invocations at peak performance (as percentage of performance)

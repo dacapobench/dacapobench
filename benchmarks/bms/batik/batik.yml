@@ -3,18 +3,20 @@ stats:
   NOS: 24		# nominal 10-percentile object size (bytes)
   NOL: 72		# nominal 90-percentile object size (bytes)
   NOA: 59		# nominal average object size (bytes)
-  NMR: 318		# nominal allocation rate (bytes / usec)
+  NMR: 411		# nominal allocation rate (bytes / usec)
   NMT: 2		# nominal memory turnover (total alloc bytes / min heap bytes)
-  NMS: 4		# nominal execution time heap size sensitivity
+  NMS: 40		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
   NMH: 192		# nominal minimum heap size (MB)
   NMU: 252		# nominal minimum heap size (MB) without compressed pointers
   NML: 5		# nominal percent memory leakage (10 iterations / 1 iterations) (202/192)
   NET: 2		# nominal execution time (sec)
-  NEW: 1		# nominal iterations to warm up
+  NEW: 6		# nominal iterations to warm up to within 2.5% of best
+  NEP: 20		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
+  NES: 1		# nominal standard deviation among invocations at peak performance (as percentage of performance)
   NUB: 33		# nominal thousands of unique bytecodes executed
   NEF: 4		# nominal execution focus / dominance of hot code
   NUC: 4		# nominal thousands of unique function calls
-  NPF: 17		# nominal putfield per usec
-  NGF: 76		# nominal getfield per usec
+  NPF: 22		# nominal putfield per usec
+  NGF: 99		# nominal getfield per usec
   NAS: 0		# nominal aastore per usec
-  NAL: 25		# nominal aaload per usec
+  NAL: 32		# nominal aaload per usec
