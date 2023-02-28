@@ -274,6 +274,7 @@ public class Search {
       }
 
       reader.close();
+      in.close();
       out.flush();
       out.close();
       synchronized (parent) {
