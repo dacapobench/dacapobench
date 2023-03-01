@@ -326,7 +326,7 @@ public abstract class Benchmark {
       System.exit(20);
     }
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-    return reader.lines().map(l -> {
+    boolean success = reader.lines().map(l -> {
 
       String md5Expected = l.substring(0, 32).toLowerCase();
       String filePath = l.substring(33);
@@ -354,6 +354,14 @@ public abstract class Benchmark {
       }
       return true;
     }).reduce(true, (a, b) -> a & b);
+
+    try {
+      reader.close();
+      in.close();
+    } catch (Exception e) {
+      System.out.println("Error closing dependency file '"+dependencyFile+"': "+e);
+    }
+    return success;
   }
 
   /**
@@ -367,6 +375,7 @@ public abstract class Benchmark {
     while ((bytesRead = stream.read(buffer)) != -1) {
       md.update(buffer, 0, bytesRead);
     }
+    stream.close();
     return DatatypeConverter.printHexBinary(md.digest());
   }
 
@@ -398,6 +407,7 @@ public abstract class Benchmark {
               break;
             }
           }
+          in.close();
           return true; // successfully parsed
         }
       }
