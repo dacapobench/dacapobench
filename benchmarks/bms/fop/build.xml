@@ -26,7 +26,7 @@
             <antcall target="check-source">
             <!-- explicitly include xalan jar to ensure a suitable TransformerFactory is present, even in old JVMs -->
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="https://dlcdn.apache.org/xalan/xalan-j/binaries"/>
+            <param name="target-url" value="https://archive.apache.org/dist/xalan/xalan-j/binaries/"/>
             <param name="target-file" value="xalan-j_2_7_2-bin.zip"/>
         </antcall>
     </target>
