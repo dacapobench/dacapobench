@@ -16,17 +16,17 @@
     <property name="lib-name" value="commons-collections"/>
 
     <!-- Downloading from sourceforge -->
-    <property name="lib-version" value="3.2.2"/>
-    <property name="lib-src" value="${lib-name}-${lib-version}-bin.tar.gz"/>
-    <property name="lib-url" value="${apache.mirror}/commons/collections/binaries"/>
-    <property name="lib-jar" value="${lib-name}-${lib-version}.jar"/>
+    <property name="lib-version" value="4-4.4"/>
+    <property name="lib-src" value="${lib-name}${lib-version}-bin.tar.gz"/>
+    <property name="lib-url" value="${apache.dl.url}/commons/collections/binaries"/>
+    <property name="lib-jar" value="${lib-name}${lib-version}.jar"/>
 
     <import file="../common.xml"/>
 
     <target name="unpack" depends="untar"/>
 
     <target name="jar">
-        <copy file="${lib-build-dir}/${lib-name}-${lib-version}/${lib-jar}" todir="${lib-jars}"/>
+        <copy file="${lib-build-dir}/${lib-name}${lib-version}/${lib-jar}" todir="${lib-jars}"/>
     </target>
 
 </project>
