@@ -12,7 +12,7 @@
      <property file="dacapo.properties"/>
 
     <property name="bm-name" value="cassandra"/>
-    <property name="bm-version" value="4.0.7"/>
+    <property name="bm-version" value="4.1.1"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="https://gitbox.apache.org/repos/asf/cassandra.git"/>
     <property name="bm-git-commit" value="cassandra-${bm-version}"/>
@@ -61,10 +61,9 @@
     <target name="cassandra-build">    
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
-        <!-- replace the build-rat file to skip rat check -->
-        <delete file="${cassandra-build-top}/.build/build-rat.xml"/>
-        <copy file="${bm-build-dir}/../cassandra-build-rat.xml" tofile="${cassandra-build-top}/.build/build-rat.xml"/>
-        <exec executable="ant" dir="${cassandra-build-top}"/>
+        <exec executable="ant" dir="${cassandra-build-top}">
+            <arg line="-Drat.skip=true"/>
+        </exec>
     </target>
 
     <target name="ycsb-build">
@@ -95,6 +94,7 @@
                 <fileset dir="${ycsb-dir}/cassandra/target/dependency" includes="*.jar">
                     <exclude name="guava-16.0.1.jar"/>
                     <exclude name="slf4j-simple-1.7.21.jar"/>
+                    <exclude name="snakeyaml-1.11.jar"/>
                 </fileset>
                 <file file="${ycsb-dir}/core/target/core-${ycsb-version}.jar"/>
                 <fileset dir="${ycsb-dir}/core/target/dependency">
