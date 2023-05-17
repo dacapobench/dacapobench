@@ -1,0 +1,90 @@
+includes:
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
+  - "openjdk.yml"
+
+overrides:
+  "remote_host": null
+
+suites:
+  dacapo-0d047f55:
+    type: DaCapo
+    release: evaluation
+    path: /usr/local/google/home/steveblackburn/devel/dacapobench/dacapo-evaluation-git-0d047f55.jar
+    timing_iteration: 10
+    timeout: 1800
+    minheap: min
+    minheap_values:
+      min:
+        avrora: 7
+        batik: 202
+        biojava: 97
+        cassandra: 88
+        eclipse: 346
+        fop: 17
+        graphchi: 181
+        h2: 770
+        h2o: 107
+        jme: 29
+        jython: 29
+        kafka: 207
+        luindex: 48
+        lusearch: 19
+        pmd: 118
+        spring: 49
+        sunflow: 37
+        tomcat: 17
+        tradebeans: 135
+        tradesoap: 105
+        xalan: 11
+        zxing: 66
+
+
+benchmarks:
+  dacapo-0d047f55:
+    - avrora
+    - batik
+    - biojava
+    - cassandra
+    - eclipse
+    - fop
+    - graphchi
+    - h2
+    - h2o
+    - jme
+    - jython
+    - kafka
+    - luindex
+    - lusearch
+    - pmd
+    - spring
+    - sunflow
+    - tomcat
+    - tradebeans
+    - tradesoap
+    - xalan
+    - zxing
+
+modifiers:
+  t:
+    type: ProgramArg
+    val: "-t {0}"
+  f:
+    type: ProgramArg
+    val: "-f {0}"
+  gc:
+    type: JVMArg
+    val: "-XX:+Use{0}GC"
+  cp:
+    type: JVMArg
+    val: "-XX:+UseCompressedOops"
+  up:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops"
+  taskset:
+    type: Wrapper
+    val: taskset -c {0}
+    
+configs:
+  - "open-jdk-11|s|cp|gc-G1|t-12|f-40"
+#  - "open-jdk-11|s|cp|gc-G1|taskset-0|f-40"
+

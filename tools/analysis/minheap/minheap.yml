@@ -1,0 +1,63 @@
+includes:
+  - "$RUNNING_NG_PACKAGE_DATA/base/minheap.yml"
+  - "openjdk.yml"
+
+suites:
+  dacapo-04132797:
+    type: DaCapo
+    release: evaluation
+    path: /usr/local/google/home/steveblackburn/devel/dacapobench/benchmarks/dacapo-evaluation-git-04132797.jar
+    timing_iteration: 1
+    timeout: 300
+
+benchmarks:
+  dacapo-04132797:
+    - avrora
+    - batik
+    - biojava
+    - cassandra
+    - eclipse
+    - fop
+    - graphchi
+    - h2
+    - h2o
+    - jme
+    - jython
+    - kafka
+    - luindex
+    - lusearch
+    - pmd
+    - spring
+    - sunflow
+    - tomcat
+    - tradesoap
+    - tradebeans
+    - xalan
+    - zxing
+
+modifiers:
+  n:
+    type: ProgramArg
+    val: "-n {0}"
+  t:
+    type: ProgramArg
+    val: "-t {0}"
+  f:
+    type: ProgramArg
+    val: "-f {0}"
+  gc:
+    type: JVMArg
+    val: "-XX:+Use{0}GC"
+  cp:
+    type: JVMArg
+    val: "-XX:+UseCompressedOops"
+  up:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops"
+    
+configs:
+  - "open-jdk-11|s|cp|gc-G1|t-8|f-10"
+  - "open-jdk-11|s|cp|gc-G1|t-1|f-10"
+  - "open-jdk-11|s|up|gc-G1|t-8|f-10"
+  - "open-jdk-11|s|cp|gc-Parallel|t-8|f-10"
+  - "open-jdk-17|s|cp|gc-G1|t-8|f-10"
