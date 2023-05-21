@@ -7,7 +7,6 @@ LINES=24 # number of benchmarks plus header (needed to parse output)
 BASE=`pwd`/../../..
 OUT=stats-minheap.yml
 CFGS=("open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1" "open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1" "open-jdk-11.s.up.gc-G1.t-32.f-10.n-1" "open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1" "open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1" "open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10")
-CMDS=("java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 1 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1" "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 10")
 
 printf -v HEADER '#
 # Minimum heap sizes in which benchmark will run to completion, using
@@ -18,6 +17,7 @@ printf -v HEADER '#
 BMS=$BASE/benchmarks/bms
 
 for bm in `cd $BMS; ls`; do
+    CMDS=("java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar $bm -t 32 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar $bm -t 1 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar $bm -t 32 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-78bcea0f.jar $bm -t 32 -f 10 -n 1" "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar $bm -t 32 -f 10 -n 1" "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar $bm -t 32 -f 10 -n 10")
     if [ "$bm" != "common.xml" ]; then
 	echo $bm
 	out=$BMS/$bm/$OUT

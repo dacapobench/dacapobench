@@ -4,9 +4,9 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 187, 187, 189 ]          # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 187, 188, 189 ]           # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 1 -f 10 -n 1
-open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 247, 249, 252 ]          # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
-open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 189, 189, 189 ]    # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 180, 181, 179 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 195, 195, 196 ]         # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 10
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 187, 187, 189 ]          # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar batik -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 187, 188, 189 ]           # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar batik -t 1 -f 10 -n 1
+open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 247, 249, 252 ]          # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar batik -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 189, 189, 189 ]    # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-78bcea0f.jar batik -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 180, 181, 179 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar batik -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 195, 195, 196 ]         # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar batik -t 32 -f 10 -n 10
