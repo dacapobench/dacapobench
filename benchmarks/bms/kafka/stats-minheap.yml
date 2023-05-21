@@ -1,12 +1,12 @@
 #
-# Minimum heap sizes in which benchmark will run to completion, using 
+# Minimum heap sizes in which benchmark will run to completion, using
 # -Xms<x> -Xmx<x> for various x and various configuarations.  Discovered
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-11.s.cp.gc-G1.t-8.f-10.n-1: [ 207, 207, 205 ]        # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar kafka -t 8 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 205, 205, 205 ]        # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar kafka -t 1 -f 10 -n 1
-open-jdk-11.s.up.gc-G1.t-8.f-10.n-1: [ 215, 217, 217 ]        # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar kafka -t 8 -f 10 -n 1
-open-jdk-11.s.cp.gc-Parallel.t-8.f-10.n-1: [ 243, 244, 227 ]  # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-0d047f55.jar kafka -t 8 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-8.f-10.n-1: [ 206, 207, 201 ]        # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar kafka -t 8 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-8.f-10.n-10: [ 205, 206, 205 ]       # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar kafka -t 8 -f 10 -n 10
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 203, 196, 203 ]          # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 201, 201, 193 ]           # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 1 -f 10 -n 1
+open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 212, 214, 211 ]          # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 217, 229, 209 ]    # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 194, 200, 197 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 205, 197, 198 ]         # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar fop -t 8 -f 10 -n 10

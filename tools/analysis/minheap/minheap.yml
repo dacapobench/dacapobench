@@ -3,15 +3,15 @@ includes:
   - "openjdk.yml"
 
 suites:
-  dacapo-04132797:
+  dacapo-78bcea0f:
     type: DaCapo
     release: evaluation
-    path: /usr/local/google/home/steveblackburn/devel/dacapobench/benchmarks/dacapo-evaluation-git-04132797.jar
-    timing_iteration: 1
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-78bcea0f.jar
+    timing_iteration: 10
     timeout: 300
 
 benchmarks:
-  dacapo-04132797:
+  dacapo-78bcea0f:
     - avrora
     - batik
     - biojava
@@ -56,8 +56,8 @@ modifiers:
     val: "-XX:-UseCompressedOops"
     
 configs:
-  - "open-jdk-11|s|cp|gc-G1|t-8|f-10"
-  - "open-jdk-11|s|cp|gc-G1|t-1|f-10"
-  - "open-jdk-11|s|up|gc-G1|t-8|f-10"
-  - "open-jdk-11|s|cp|gc-Parallel|t-8|f-10"
-  - "open-jdk-17|s|cp|gc-G1|t-8|f-10"
+  - "open-jdk-11|s|cp|gc-G1|t-32|f-10"
+#  - "open-jdk-11|s|cp|gc-G1|t-1|f-10"
+#  - "open-jdk-11|s|up|gc-G1|t-32|f-10"
+#  - "open-jdk-11|s|cp|gc-Parallel|t-32|f-10"
+#  - "open-jdk-17|s|cp|gc-G1|t-32|f-10"
