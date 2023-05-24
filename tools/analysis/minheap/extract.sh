@@ -28,7 +28,7 @@ for bm in `cd $BMS; ls`; do
             bc=$(echo $cfg | cut -d'.' -f1-6)
 	    n=$(echo $cfg | cut -d'.' -f7 | cut -c3-10)
 	    for j in 0 1 2; do
-		v=$(grep -A24 $bc ./minheap-out-$n-$j.yml | grep $bm | cut -d' ' -f6 )
+		v=$(grep -A24 $bc ./minheap-out-$n-$j.yml | grep "$bm:" | cut -d' ' -f6 )
 		line="$line$v"
 		if [ "$j" != "2" ]; then
 		    line="$line, "

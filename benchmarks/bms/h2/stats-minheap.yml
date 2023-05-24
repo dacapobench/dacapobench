@@ -4,27 +4,9 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 501
-81, 501
-76, 501
-75 ] # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 504
-98, 506
-98, 501
-75 ]  # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 1 -f 10 -n 1
-open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 754
-88, 756
-88, 748
-88 ] # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 565
-91, 571
-92, 570
-93 ] # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 503
-82, 503
-71, 506
-73 ] # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 744
-122, 743
-122, 745
-123 ] # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar h2 -t 32 -f 10 -n 10
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 501, 501, 501 ]          # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 504, 506, 501 ]           # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 1 -f 10 -n 1
+open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 754, 756, 748 ]          # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 565, 571, 570 ]    # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 503, 503, 506 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar h2 -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 744, 743, 745 ]         # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar h2 -t 32 -f 10 -n 10
