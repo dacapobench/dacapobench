@@ -18,6 +18,7 @@ alloc = {}       # allocation stats
 bytecode = {}    # bytecode execution stats
 minheap = {}     # min heap size stats
 perf = {}        # performance stats
+gc = {}          # GC stats
 
 nom = {}         # nominal stats
 desc = {}        # description of nominal stats
@@ -28,11 +29,12 @@ def usage(errno):
     print ('usage: ',sys.argv[0], '-b <path to benchmark>')
     sys.exit(errno)
 
-def loadyml(bmpath):
+def load_yml(bmpath):
     global alloc
     global bytecode
     global minheap
     global perf
+    global gc
 
     yml = bmpath + '/stats-alloc.yml'
     if os.path.exists(yml):
@@ -53,6 +55,12 @@ def loadyml(bmpath):
     if os.path.exists(yml):
         with open(yml, 'r') as y:
             perf = yaml.load(y, Loader=yaml.Loader)
+
+    yml = bmpath + '/stats-gc.yml'
+    if os.path.exists(yml):
+        with open(yml, 'r') as y:
+            gc = yaml.load(y, Loader=yaml.Loader)
+
 def aggregate(results):
     std = []
     mean = []
@@ -71,7 +79,7 @@ def aggregate(results):
 
     return std, mean, mini;
 
-def getperfstats():
+def get_perf_stats():
     global perf
 
     if perf is None:
@@ -126,30 +134,6 @@ def getperfstats():
     std_one, mean_one, mini_one  = aggregate(one)
     pa = int(100*mean_one[wu]/(par_threads*mean[par_hf][wu]))
 
-
-    # pa = 0 # Fix
-
-    # vm = 'open-jdk-17.ms.s.hotspot_gc-Parallel.t-12'
-    # if (not vm in perf):
-    #     vm = 'open-jdk-11.ms.s.hotspot_gc-Parallel.t-12'
-    # elif (not '4000' in perf[vm]):
-    #     vm = 'open-jdk-11.ms.s.hotspot_gc-Parallel.t-12'
-
-    # ap = perf[vm][4000][9]
-    # # nominal perf (ms -> sec)
-    # np = math.ceil(ap/1000)
-
-    # # heap sensitivity
-    # hs = int(100*(perf[vm][2000][9]-perf[vm][4000][9])/perf[vm][4000][9])
-    # if (hs < 0):
-    #     hs = 0
-
-    # # warmup
-    # tgt = 1.05*perf[vm][4000][9]
-    # wu = 0
-    # while perf[vm][4000][wu] > tgt:
-    #     wu = wu + 1
-
     return best, np, hs, wu, st, pa;
 
 def objectsizehisto():
@@ -163,7 +147,7 @@ def objectsizehisto():
     
     return histo, total;
 
-def getpercentile(histo, total, percentile):
+def get_percentile(histo, total, percentile):
     global alloc
 
     target = total * percentile
@@ -176,20 +160,42 @@ def getpercentile(histo, total, percentile):
 
     return None; # should not reach here
 
+def get_gc_stats():
+    summary = {}
+    for hf in gc:
+        gctime = 0
+        last = 0
+        end = 0
+        hs = []
+        total_hs = 0
+        for val in gc[hf]:
+            end = val[0]    # we'll use the start time of last GC as the end point
+            hs.append(val[1])
+            total_hs = total_hs + val[1]
+            last = val[2]   # we'll subtract the last pause, since it is after the nominal end
+            gctime = gctime + last
+        avg_hs = int(total_hs / len(hs))
+        hs = sorted(hs)
+        med_hs = hs[int(len(hs)/2)]
+        totms = int(end * 1000)
+        gcms = int(gctime - last)
+        summary[hf] = [len(hs), totms, gcms, avg_hs, med_hs]
+    return summary
+
 def nominal():
-    ap, np, hs, wu, st, pa = getperfstats()
+    ap, np, hs, wu, st, pa = get_perf_stats()
 
 
     if (not alloc is None):
         histo, total = objectsizehisto()
 
-        nom['OSM'] = int(getpercentile(histo, total, 0.5))
+        nom['OSM'] = int(get_percentile(histo, total, 0.5))
         desc['OSM'] = 'nominal median object size (bytes)'
 
-        nom['OSS'] = int(getpercentile(histo, total, 0.1))
+        nom['OSS'] = int(get_percentile(histo, total, 0.1))
         desc['OSS'] = 'nominal 10-percentile object size (bytes)'
 
-        nom['OSL'] = int(getpercentile(histo, total, 0.9))
+        nom['OSL'] = int(get_percentile(histo, total, 0.9))
         desc['OSL'] = 'nominal 90-percentile object size (bytes)'
 
         nom['OSA'] = int(alloc['bytes-allocated']/alloc['objects-allocated'])
@@ -253,7 +259,19 @@ def nominal():
         nom['ALR'] = int(bytecode['opcodes']['aaload']/(1000*ap))
         desc['ALR'] = 'nominal aaload per usec'
 
+    gc_summary = get_gc_stats()
+    
+    nom['GCC'] = gc_summary[2.0][0]
+    desc['GCC'] = 'nominal GC count at 2X heap size (G1)'
 
+    nom['GCP'] = int(100*(gc_summary[2.0][2]/gc_summary[2.0][1]))
+    desc['GCP'] = 'nominal percentage of time spent in GC at 2X heap size (G1)'
+
+    nom['GCA'] = gc_summary[1.0][3]
+    desc['GCA'] = 'nominal average post-GC heap size (when run at 1X min heap with G1)'
+
+    nom['GCM'] = gc_summary[1.0][3]
+    desc['GCM'] = 'nominal median post-GC heap size (when run at 1X min heap with G1)'
 
     print("stats:")
     for x in sorted(nom):
@@ -287,7 +305,7 @@ def main(argv):
         print ('ERROR: You must specify a valid path to a benchmark')
         usage(2)
     else:
-        loadyml(bmpath)
+        load_yml(bmpath)
         nominal()
 
     exit(0)
