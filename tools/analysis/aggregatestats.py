@@ -265,13 +265,13 @@ def nominal():
     desc['GCC'] = 'nominal GC count at 2X heap size (G1)'
 
     nom['GCP'] = int(100*(gc_summary[2.0][2]/gc_summary[2.0][1]))
-    desc['GCP'] = 'nominal percentage of time spent in GC at 2X heap size (G1)'
+    desc['GCP'] = 'nominal percentage of time spent in GC at 2X heap size (G1) ('+str(gc_summary[2.0][2])+'/'+str(gc_summary[2.0][1])+')'
 
-    nom['GCA'] = gc_summary[1.0][3]
-    desc['GCA'] = 'nominal average post-GC heap size (when run at 1X min heap with G1)'
+    nom['GCA'] = int(100*(gc_summary[1.0][3]/ten))
+    desc['GCA'] = 'nominal average post-GC heap size as percent of min heap, when run at 1X min heap with G1 ('+str(gc_summary[1.0][3])+'/'+str(ten)+')'
 
-    nom['GCM'] = gc_summary[1.0][3]
-    desc['GCM'] = 'nominal median post-GC heap size (when run at 1X min heap with G1)'
+    nom['GCM'] = int(100*(gc_summary[1.0][4]/ten))
+    desc['GCM'] = 'nominal median post-GC heap size as percent of min heap, when run at 1X min heap with G1 ('+str(gc_summary[1.0][4])+'/'+str(ten)+')'
 
     print("stats:")
     for x in sorted(nom):

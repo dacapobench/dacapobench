@@ -1,9 +1,9 @@
 stats:
   EXT: 4		# nominal execution time (sec)
-  GCA: 110		# nominal average post-GC heap size (when run at 1X min heap with G1)
+  GCA: 81		# nominal average post-GC heap size as percent of min heap, when run at 1X min heap with G1 (110/135)
   GCC: 1191		# nominal GC count at 2X heap size (G1)
-  GCM: 110		# nominal median post-GC heap size (when run at 1X min heap with G1)
-  GCP: 4		# nominal percentage of time spent in GC at 2X heap size (G1)
+  GCM: 83		# nominal median post-GC heap size as percent of min heap, when run at 1X min heap with G1 (113/135)
+  GCP: 4		# nominal percentage of time spent in GC at 2X heap size (G1) (2468/50145)
   HSS: 84		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
   LKG: 28		# nominal percent memory leakage (10 iterations / 1 iterations) (135/105)
   MHC: 105		# nominal minimum heap size (MB) (with compressed pointers)

@@ -5,10 +5,10 @@ stats:
   BCF: 23		# nominal execution focus / dominance of hot code
   BCU: 10		# nominal thousands of unique bytecodes executed
   EXT: 8		# nominal execution time (sec)
-  GCA: 229		# nominal average post-GC heap size (when run at 1X min heap with G1)
+  GCA: 65		# nominal average post-GC heap size as percent of min heap, when run at 1X min heap with G1 (229/348)
   GCC: 769		# nominal GC count at 2X heap size (G1)
-  GCM: 229		# nominal median post-GC heap size (when run at 1X min heap with G1)
-  GCP: 2		# nominal percentage of time spent in GC at 2X heap size (G1)
+  GCM: 64		# nominal median post-GC heap size as percent of min heap, when run at 1X min heap with G1 (223/348)
+  GCP: 2		# nominal percentage of time spent in GC at 2X heap size (G1) (2201/88117)
   GFR: 3		# nominal getfield per usec
   HSS: 5		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
   LKG: 0		# nominal percent memory leakage (10 iterations / 1 iterations) (348/347)
