@@ -1,22 +1,21 @@
 stats:
-  NOM: 24		# nominal median object size (bytes)
-  NOS: 24		# nominal 10-percentile object size (bytes)
-  NOL: 96		# nominal 90-percentile object size (bytes)
-  NOA: 76		# nominal average object size (bytes)
-  NMR: 5155		# nominal allocation rate (bytes / usec)
-  NMT: 1235		# nominal memory turnover (total alloc bytes / min heap bytes)
-  NMS: 141		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
-  NMH: 19		# nominal minimum heap size (MB)
-  NMU: 19		# nominal minimum heap size (MB) without compressed pointers
-  NML: 0		# nominal percent memory leakage (10 iterations / 1 iterations) (19/19)
-  NET: 5		# nominal execution time (sec)
-  NEW: 4		# nominal iterations to warm up to within 2.5% of best
-  NEP: 91		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
-  NES: 1		# nominal standard deviation among invocations at peak performance (as percentage of performance)
-  NUB: 25		# nominal thousands of unique bytecodes executed
-  NEF: 14		# nominal execution focus / dominance of hot code
-  NUC: 2		# nominal thousands of unique function calls
-  NPF: 350		# nominal putfield per usec
-  NGF: 2709		# nominal getfield per usec
-  NAS: 27		# nominal aastore per usec
-  NAL: 58		# nominal aaload per usec
+  AAR: 85		# nominal aastore per usec
+  ALR: 183		# nominal aaload per usec
+  BCC: 2		# nominal thousands of unique function calls
+  BCF: 14		# nominal execution focus / dominance of hot code
+  BCU: 25		# nominal thousands of unique bytecodes executed
+  EXT: 2		# nominal execution time (sec)
+  GFR: 8574		# nominal getfield per usec
+  HSS: 1632		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
+  LKG: 10		# nominal percent memory leakage (10 iterations / 1 iterations) (21/19)
+  MHC: 19		# nominal minimum heap size (MB) (with compressed pointers)
+  MHU: 17		# nominal minimum heap size (MB) without compressed pointers
+  MTO: 1235		# nominal memory turnover (total alloc bytes / min heap bytes)
+  OSA: 76		# nominal average object size (bytes)
+  OSL: 96		# nominal 90-percentile object size (bytes)
+  OSM: 24		# nominal median object size (bytes)
+  OSS: 24		# nominal 10-percentile object size (bytes)
+  PAR: 109		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
+  PFR: 1109		# nominal putfield per usec
+  STD: 1		# nominal standard deviation among invocations at peak performance (as percentage of performance)
+  WRM: 4		# nominal iterations to warm up to within 2.5% of best

@@ -1,15 +1,15 @@
 stats:
-  NOM: 16		# nominal median object size (bytes)
-  NOS: 16		# nominal 10-percentile object size (bytes)
-  NOL: 152		# nominal 90-percentile object size (bytes)
-  NOA: 142		# nominal average object size (bytes)
-  NMR: 1212		# nominal allocation rate (bytes / usec)
-  NMT: 100		# nominal memory turnover (total alloc bytes / min heap bytes)
-  NMS: 20		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
-  NMH: 102		# nominal minimum heap size (MB)
-  NMU: 130		# nominal minimum heap size (MB) without compressed pointers
-  NML: 1		# nominal percent memory leakage (10 iterations / 1 iterations) (104/102)
-  NET: 9		# nominal execution time (sec)
-  NEW: 1		# nominal iterations to warm up to within 2.5% of best
-  NEP: 2		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
-  NES: 3		# nominal standard deviation among invocations at peak performance (as percentage of performance)
+  ALR: 4409		# nominal allocation rate (bytes / usec)
+  EXT: 3		# nominal execution time (sec)
+  HSS: 100		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
+  LKG: 51		# nominal percent memory leakage (10 iterations / 1 iterations) (123/81)
+  MHC: 81		# nominal minimum heap size (MB) (with compressed pointers)
+  MHU: 88		# nominal minimum heap size (MB) without compressed pointers
+  MTO: 126		# nominal memory turnover (total alloc bytes / min heap bytes)
+  OSA: 142		# nominal average object size (bytes)
+  OSL: 152		# nominal 90-percentile object size (bytes)
+  OSM: 16		# nominal median object size (bytes)
+  OSS: 16		# nominal 10-percentile object size (bytes)
+  PAR: 20		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
+  STD: 3		# nominal standard deviation among invocations at peak performance (as percentage of performance)
+  WRM: 4		# nominal iterations to warm up to within 2.5% of best

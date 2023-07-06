@@ -1,16 +1,16 @@
 stats:
-  NMS: 51		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
-  NMH: 74		# nominal minimum heap size (MB)
-  NMU: 82		# nominal minimum heap size (MB) without compressed pointers
-  NML: 17		# nominal percent memory leakage (10 iterations / 1 iterations) (87/74)
-  NET: 9		# nominal execution time (sec)
-  NEW: 2		# nominal iterations to warm up to within 2.5% of best
-  NEP: 68		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
-  NES: 1		# nominal standard deviation among invocations at peak performance (as percentage of performance)
-  NUB: 123		# nominal thousands of unique bytecodes executed
-  NEF: 1		# nominal execution focus / dominance of hot code
-  NUC: 19		# nominal thousands of unique function calls
-  NPF: 39		# nominal putfield per usec
-  NGF: 217		# nominal getfield per usec
-  NAS: 1		# nominal aastore per usec
-  NAL: 8		# nominal aaload per usec
+  AAR: 2		# nominal aastore per usec
+  ALR: 13		# nominal aaload per usec
+  BCC: 19		# nominal thousands of unique function calls
+  BCF: 1		# nominal execution focus / dominance of hot code
+  BCU: 123		# nominal thousands of unique bytecodes executed
+  EXT: 6		# nominal execution time (sec)
+  GFR: 348		# nominal getfield per usec
+  HSS: 44		# nominal heap size sensitivity (slowdown with tight heap, as a percentage)
+  LKG: 8		# nominal percent memory leakage (10 iterations / 1 iterations) (117/108)
+  MHC: 108		# nominal minimum heap size (MB) (with compressed pointers)
+  MHU: 131		# nominal minimum heap size (MB) without compressed pointers
+  PAR: 59		# nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)
+  PFR: 63		# nominal putfield per usec
+  STD: 1		# nominal standard deviation among invocations at peak performance (as percentage of performance)
+  WRM: 1		# nominal iterations to warm up to within 2.5% of best
