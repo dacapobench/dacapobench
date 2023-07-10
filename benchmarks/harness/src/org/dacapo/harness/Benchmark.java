@@ -391,26 +391,32 @@ public abstract class Benchmark {
   private boolean loadStats(String ymlFile) {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(Benchmark.class.getClassLoader().getResourceAsStream(ymlFile)))) {
       String line;
-      if (in.ready()) {
+      while (in.ready()) {
         line = in.readLine();
-        if (line.startsWith("stats:")) {
-          while (in.ready()) {
-            line = in.readLine();
-            int idx = line.indexOf('#');
-            if (idx != -1)
-              line = line.substring(0,idx);
-            String[] tokens = line.trim().split(": ");
-            try {
-              stats.put(tokens[0], Integer.parseInt(tokens[1]));
-            } catch (NumberFormatException nfe) {
-              System.err.println("Badly formatted line '"+line+"' in file "+ymlFile);
-              break;
-            }
-          }
-          in.close();
-          return true; // successfully parsed
+        int idx = line.indexOf(':');
+        String key = line.substring(0, idx).trim(); // extract the key
+        int start = line.indexOf('[');
+        int end = line.indexOf(']');
+        String list = line.substring(start + 1, end); // extract the list
+        String[] tokens = list.trim().split(", ");
+        String value = tokens[0];
+        String rank = tokens[1];
+        String median = tokens[2];
+        String desc = tokens[3];
+        if (desc.contains("'")) {
+          start = list.indexOf('\'');
+          end = list.indexOf('\'', start + 1);
+          desc = list.substring(start + 1, end);
+        }
+        try {
+          stats.put(key, Integer.parseInt(value));
+        } catch (NumberFormatException nfe) {
+          System.err.println("Badly formatted line '" + line + "' in file " + ymlFile);
+          break;
         }
       }
+      in.close();
+      return true; // successfully parsed
     } catch (Exception e) {
       System.err.println("Failed to load stats file from yml "+ymlFile+" "+e);
     }

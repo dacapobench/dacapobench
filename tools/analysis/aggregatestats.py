@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 #
-# Create summary nominal statistics for a given benchmark
-#
-# The script uses the various stats-*.yml statistics files
-# to derive summary statistics, which printed to std-out.
+# Take the nominal stats of all benchmarks and for each statistic
+# find the median result and the rank of a given benchmark among
+# the set (so we can see, for example, what the median min heap is,
+# and rank the benchmarks according to their min heap).
 #
 # Author: Steve Blackburn 2023
 #
@@ -79,6 +79,9 @@ def aggregate(results):
 
     return std, mean, mini;
 
+par_hf = 2000
+par_threads = 32
+
 def get_perf_stats():
     global perf
 
@@ -88,8 +91,6 @@ def get_perf_stats():
     vm_base = 'open-jdk-11.s.cp.gc-G1'
     vm = vm_base+'.t-32'
     vm_one = vm_base+'.taskset-0'
-    par_hf = 2000
-    par_threads = 8
 
     std = {}
     mean = {}
@@ -115,9 +116,9 @@ def get_perf_stats():
 
     # heap sensitivity
     tight = min(mean[tightest_hf])
-    hs = int(100*(tight-best)/best)
-    if (hs < 0):
-        hs = 0
+    # hs = int(100*(tight-best)/best)
+    # if (hs < 0):
+    #     hs = 0
 
     # warmup (iteration by which the mean is within 2.5% of the best mean)
     tgt = 1.025*best
@@ -132,9 +133,9 @@ def get_perf_stats():
     xone = perf[vm][par_hf]
     one = perf[vm_one][par_hf]
     std_one, mean_one, mini_one  = aggregate(one)
-    pa = int(100*mean_one[wu]/(par_threads*mean[par_hf][wu]))
+    pa = int(100*mean_one[wu]/(par_threads*mean[par_hf][wu]))  # perfect scaling -> 100
 
-    return best, np, hs, wu, st, pa;
+    return best, np, wu, st, pa, tight;
 
 def objectsizehisto():
     if alloc is None:
@@ -183,38 +184,41 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, hs, wu, st, pa = get_perf_stats()
+    ap, np, wu, st, pa, tight = get_perf_stats()
 
 
     if (not alloc is None):
         histo, total = objectsizehisto()
 
-        nom['OSM'] = int(get_percentile(histo, total, 0.5))
-        desc['OSM'] = 'nominal median object size (bytes)'
+        nom['AOM'] = int(get_percentile(histo, total, 0.5))
+        desc['AOM'] = 'nominal median object size (bytes)'
 
-        nom['OSS'] = int(get_percentile(histo, total, 0.1))
-        desc['OSS'] = 'nominal 10-percentile object size (bytes)'
+        nom['AOS'] = int(get_percentile(histo, total, 0.1))
+        desc['AOS'] = 'nominal 10-percentile object size (bytes)'
 
-        nom['OSL'] = int(get_percentile(histo, total, 0.9))
-        desc['OSL'] = 'nominal 90-percentile object size (bytes)'
+        nom['AOL'] = int(get_percentile(histo, total, 0.9))
+        desc['AOL'] = 'nominal 90-percentile object size (bytes)'
 
-        nom['OSA'] = int(alloc['bytes-allocated']/alloc['objects-allocated'])
-        desc['OSA'] = 'nominal average object size (bytes)'
+        nom['AOA'] = int(alloc['bytes-allocated']/alloc['objects-allocated'])
+        desc['AOA'] = 'nominal average object size (bytes)'
         
-        nom['ALR'] = int(alloc['bytes-allocated']/(1000*ap))
-        desc['ALR'] = 'nominal allocation rate (bytes / usec)'
+        nom['ARA'] = int(alloc['bytes-allocated']/(1000*ap))
+        desc['ARA'] = 'nominal allocation rate (bytes / usec) ('+str(alloc['bytes-allocated'])+'/'+str(1000*ap)+')'
 
-        nom['MTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1']))))
-        desc['MTO'] = 'nominal memory turnover (total alloc bytes / min heap bytes)'
+        nom['GTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1']))))
+        desc['GTO'] = 'nominal memory turnover (total alloc bytes / min heap bytes)'
 
-    nom['HSS'] = hs
-    desc['HSS'] = 'nominal heap size sensitivity (slowdown with tight heap, as a percentage)'
+    hs = int(100*(tight-ap)/ap)
+    if (hs < 0):
+        hs = 0
+    nom['GSS'] = hs
+    desc['GSS'] = 'nominal heap size sensitivity (slowdown with tight heap, as a percentage) ('+str(tight)+'/'+str(ap)+')'
 
-    nom['MHC'] = max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1'])
-    desc['MHC'] = 'nominal minimum heap size (MB) (with compressed pointers)'
+    nom['GMH'] = max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1'])
+    desc['GMH'] = 'nominal minimum heap size (MB) (with compressed pointers)'
 
-    nom['MHU'] = max(minheap['open-jdk-11.s.up.gc-G1.t-32.f-10.n-1'])
-    desc['MHU'] = 'nominal minimum heap size (MB) without compressed pointers'
+    nom['GMU'] = max(minheap['open-jdk-11.s.up.gc-G1.t-32.f-10.n-1'])
+    desc['GMU'] = 'nominal minimum heap size (MB) without compressed pointers'
 
     one = max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1'])
     ten = max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10'])
@@ -222,42 +226,42 @@ def nominal():
         leakage = int(100*((ten/one)-1))
         if (leakage < 0):
             leakage = 0
-        nom['LKG'] = leakage
-        desc['LKG'] = 'nominal percent memory leakage (10 iterations / 1 iterations) ('+str(ten)+'/'+str(one)+')'
+        nom['GLK'] = leakage
+        desc['GLK'] = 'nominal percent memory leakage (10 iterations / 1 iterations) ('+str(ten)+'/'+str(one)+')'
 
-    nom['EXT'] = np
-    desc['EXT'] = 'nominal execution time (sec)'
+    nom['PET'] = np
+    desc['PET'] = 'nominal execution time (sec)'
 
-    nom['WRM'] = wu
-    desc['WRM'] = 'nominal iterations to warm up to within 2.5% of best'
+    nom['PWU'] = wu
+    desc['PWU'] = 'nominal iterations to warm up to within 2.5% of best'
 
-    nom['PAR'] = pa
-    desc['PAR'] = 'nominal parallel efficiency (speedup as percentage of ideal speedup for 8 threads)'
+    nom['PPE'] = pa
+    desc['PPE'] = 'nominal parallel efficiency (speedup as percentage of ideal speedup for '+str(par_threads)+' threads)'
 
-    nom['STD'] = st
-    desc['STD'] = 'nominal standard deviation among invocations at peak performance (as percentage of performance)'
+    nom['PSD'] = st
+    desc['PSD'] = 'nominal standard deviation among invocations at peak performance (as percentage of performance)'
 
     if (not bytecode is None):
-        nom['BCU'] = int(bytecode['executed-bytecodes-unique']/1000)
-        desc['BCU'] = 'nominal thousands of unique bytecodes executed'
+        nom['BUB'] = int(bytecode['executed-bytecodes-unique']/1000)
+        desc['BUB'] = 'nominal thousands of unique bytecodes executed'
 
-        nom['BCF'] = int(1000*bytecode['executed-bytecodes-p9999']/bytecode['executed-bytecodes'])
-        desc['BCF'] = 'nominal execution focus / dominance of hot code'
+        nom['BEF'] = int(1000*bytecode['executed-bytecodes-p9999']/bytecode['executed-bytecodes'])
+        desc['BEF'] = 'nominal execution focus / dominance of hot code'
 
-        nom['BCC'] = int(bytecode['executed-calls-unique']/1000)
-        desc['BCC'] = 'nominal thousands of unique function calls'
+        nom['BUF'] = int(bytecode['executed-calls-unique']/1000)
+        desc['BUF'] = 'nominal thousands of unique function calls'
 
-        nom['PFR'] = int(bytecode['opcodes']['putfield']/(1000*ap))
-        desc['PFR'] = 'nominal putfield per usec'
+        nom['BPF'] = int(bytecode['opcodes']['putfield']/(1000*ap))
+        desc['BPF'] = 'nominal putfield per usec'
     
-        nom['GFR'] = int(bytecode['opcodes']['getfield']/(1000*ap))
-        desc['GFR'] = 'nominal getfield per usec'
+        nom['BGF'] = int(bytecode['opcodes']['getfield']/(1000*ap))
+        desc['BGF'] = 'nominal getfield per usec'
 
-        nom['AAR'] = int(bytecode['opcodes']['aastore']/(1000*ap))
-        desc['AAR'] = 'nominal aastore per usec'
+        nom['BAS'] = int(bytecode['opcodes']['aastore']/(1000*ap))
+        desc['BAS'] = 'nominal aastore per usec'
 
-        nom['ALR'] = int(bytecode['opcodes']['aaload']/(1000*ap))
-        desc['ALR'] = 'nominal aaload per usec'
+        nom['BAL'] = int(bytecode['opcodes']['aaload']/(1000*ap))
+        desc['BAL'] = 'nominal aaload per usec'
 
     gc_summary = get_gc_stats()
     
@@ -273,9 +277,9 @@ def nominal():
     nom['GCM'] = int(100*(gc_summary[1.0][4]/ten))
     desc['GCM'] = 'nominal median post-GC heap size as percent of min heap, when run at 1X min heap with G1 ('+str(gc_summary[1.0][4])+'/'+str(ten)+')'
 
-    print("stats:")
+    print("# [value, mean, benchmark rank, description]")
     for x in sorted(nom):
-        print("  "+x+": "+str(nom[x])+"\t\t# "+desc[x])
+        print(x+": ["+str(nom[x])+", '"+desc[x]+"']")
   
     # scalability (1 thread v N threads)
     # heap leakage (minheap 1 it v minheap 10 it)

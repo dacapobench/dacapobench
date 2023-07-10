@@ -164,7 +164,7 @@
 	<target name="bm-build"/>
 
 	<target name="yml">
-		<copy file="${bm-files}/${bm-name}.yml" todir="${bm-yml}"/>
+		<copy file="${bm-files}/stats-nominal.yml" tofile="${bm-yml}/${bm-name}.yml"/>
 	</target>
 
 	<target name="config">
