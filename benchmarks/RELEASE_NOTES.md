@@ -76,11 +76,11 @@ All benchmarks updated to reflect recent versions:
 
 **zxing**: Zxing is a multi-format 1D/2D barcode image processing library
 
-### 3.1.3. Benchmark deletions due to 29.07
+### 3.1.3. Benchmark deletions due to 23.07
 
 **lusearch-fix**:  This is no longer needed as we've moved to a much more recent version of Lucene.
        
-### 3.1.4. Other Notable Changes due to 29.07
+### 3.1.4. Other Notable Changes due to 23.07
 
 Latency metrics are now reported for each of the request based workloads  (cassandra, h2, kafka, lusearch, spring, tomcat, tradebeans and tradesoap) and jme, which is a rendering workload (game engine).  The benchmark harness internally records the period of each request (or frame render), and at the end of each benchmark iteration outputs percentile statistics for request latencies. We report two metrics. Simple latency just reports the raw percentile latencies that were observed. Metered latency reports latencies as seen via an emulated request queue and a continuous stream of requests. Simple latency is unrealistic in that the rate at which requests are accepted is a function of the rate at which they are processed. In real systems requests will be enqueued and some of the user-observed latency is due to requests waiting in the request queue.
 
@@ -194,7 +194,7 @@ In preparing the 23.07 release we received guidance and assistance from a number
 * Sichao Li, Australian National University
 * Yiyi Shao, Australian National University
 * Enming Zhang, Australian National University
-* Leaandro Watanabe, University of Utah
+* Leandro Watanabe, University of Utah
 * JC Beylor, Google
 * Kathryn McKinley, Google
 * Wessam Hassanein, Google
