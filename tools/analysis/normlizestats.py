@@ -12,8 +12,6 @@ import sys
 import getopt
 import os.path
 from os import walk
-import math
-import statistics
 
 stats = {}        # summary stats
 keys = {}
@@ -21,6 +19,9 @@ median = {}
 mean = {}
 count = {}
 vals = {}
+
+# metrics where lower is 'more interesting', so rank these the other way
+lower_is_better = [ 'BEF', 'GCA', 'GCC', 'GCM', 'PSD', 'PWU' ]
 
 def usage(errno):
     print ('usage: ',sys.argv[0], '-p <path to benchmark root>')
@@ -58,13 +59,23 @@ def normalize():
     for bm in sorted(stats.keys()):
         print(bm)
         for k in stats[bm].keys():
+            max = vals[k][0]
+            min = vals[k][len(keys[k])-1]
+            # score = int( 10 * (stats[bm][k][0] - min) / (max - min))
             r = 1
             for v in vals[k]:
                 if v == stats[bm][k][0]:
                     break
                 r = r + 1
-            rank = str(r)+'/'+str(len(keys[k]))
-            l = [stats[bm][k][0], rank, median[k], stats[bm][k][1]]
+            if (k in lower_is_better):
+                print (k, r, score)
+                r = (len(vals[k])-1)-r  # invert the ranking
+                # score = 10 - score
+                print (k, r, score)
+            rank = str(r+1)+'/'+str(len(keys[k]))
+            score = 10 - int(10 * r / len(keys[k]))
+
+            l = [score, stats[bm][k][0], rank, min, median[k], max, stats[bm][k][1]]
             stats[bm][k] = l
 
 

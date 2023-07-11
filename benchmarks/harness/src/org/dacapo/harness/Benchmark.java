@@ -196,8 +196,8 @@ public abstract class Benchmark {
 
   private Set<URL> jarDeps = new HashSet();
   private Set<URL> datDeps = new HashSet();
-  private Map<String, Integer> stats = new HashMap();
-
+  private Map<String, Integer> statsVal = new HashMap();
+  private Map<String, Integer> statsScore = new HashMap();
   /**
    * Run a benchmark. This is final because individual benchmarks should not
    * interfere with the flow of control.
@@ -399,17 +399,20 @@ public abstract class Benchmark {
         int end = line.indexOf(']');
         String list = line.substring(start + 1, end); // extract the list
         String[] tokens = list.trim().split(", ");
-        String value = tokens[0];
-        String rank = tokens[1];
-        String median = tokens[2];
-        String desc = tokens[3];
+        String score = tokens[0];
+        String value = tokens[1];
+        String rank = tokens[2];
+        String min = tokens[3];
+        String max = tokens[4];
+        String desc = tokens[5];
         if (desc.contains("'")) {
           start = list.indexOf('\'');
           end = list.indexOf('\'', start + 1);
           desc = list.substring(start + 1, end);
         }
         try {
-          stats.put(key, Integer.parseInt(value));
+          statsVal.put(key, Integer.parseInt(value));
+          statsScore.put(key, Integer.parseInt(score));
         } catch (NumberFormatException nfe) {
           System.err.println("Badly formatted line '" + line + "' in file " + ymlFile);
           break;
@@ -425,9 +428,9 @@ public abstract class Benchmark {
 
   private String getStats() {
     String rtn = "";
-    for (String key : new TreeSet<>(stats.keySet())) {
+    for (String key : new TreeSet<>(statsVal.keySet())) {
       if (rtn.length() != 0) { rtn += ", "; }
-      rtn += key+": "+stats.get(key);
+      rtn += key+": "+statsScore.get(key)+"|"+statsVal.get(key);
     }
     return rtn;
   }
