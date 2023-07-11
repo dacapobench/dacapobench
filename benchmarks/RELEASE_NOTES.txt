@@ -26,23 +26,23 @@ These notes are structured as follows:
 1. Overview
 -----------
 
-The 19.07 release is the second major update of the suite, and the
-first in ten years.  It is strictly incompatible with previous
-releases: new benchmarks have been added, old benchmarks have been
-removed, all other benchmarks have been substantially updated and the
-inputs have changed for every program. It is for this reason that in
-any published use of the suite, the version of the suite must be
+The 23.07 release is the third major update of the suite.  It is strictly
+incompatible with previous releases: new benchmarks have been added, old
+benchmarks have been removed, all other benchmarks have been substantially
+updated and the inputs have changed for every program. It is for this reason
+that in any published use of the suite, the version of the suite must be
 explicitly stated.
 
 The release sees the retirement of a number of benchmarks (TODO), the
 move from Geronimo to JBoss Wildfly for the trade benchmarks, the
-addition of seven completely new benchmarks: biojava, cassandra,
-graphchi, h2o, jme, kafka, and zxing, and the upgrade of all other
+addition of eight completely new benchmarks: biojava, cassandra,
+graphchi, h2o, jme, kafka, spring, and zxing, and the upgrade of all other
 benchmarks to reflect the current release state of the applications
-from which the benchmarks were derived. These changes are consistent
-with the original goals of the DaCapo project, which include the
-desire for the suite to remain relevant and reflect the current state
-of deployed Java applications.
+from which the benchmarks were derived.  This version introduces latency
+metrics for the request-based workloads, and basic statistics that characterize
+each benchmark.  These changes are consistent with the original goals of the
+DaCapo project, which include the desire for the suite to remain relevant and
+reflect the current state of deployed Java applications.
 
 
 2. Usage
@@ -50,15 +50,7 @@ of deployed Java applications.
 
 2.1 Downloading
 
-  o Download the binary jar and/or source zip from:
-      https://sourceforge.net/projects/dacapobench/files/
-
-      Note that as of 9.12-MR1, there are two binary releases; the
-      default, and one for Java 6 JVMs.   The default is built on Java 8
-      and runs on Java 8 (with the exception of tomcat, see note
-      below).   The Java 6 jar is built on Java 6 for Java 6.
-
-  o Access the source from git via
+  o Download from git via
       https://github.com/dacapobench/dacapobench
 
 2.2 Running
@@ -91,26 +83,26 @@ of deployed Java applications.
 
     All benchmarks updatred to reflect recent versions:
         - avrora:    20091224 -> 20131011
-        - batik:     1.7      -> 1.9
-        - eclipse:   3.5.1    -> 4.7.2
-        - fop:       0.95     -> 2.2
-        - h2:        1.5      -> 1.8
-        - jython:    2.5.2    -> 2.7.1
-        - pmd:       4.2.5    -> 6.1.0
-        - tomcat:    6.0.2    -> 9.0.2
+        - batik:     1.7      -> 1.16
+        - eclipse:   3.5.1    -> 4.25
+        - fop:       0.95     -> 2.8
+        - h2:        1.5      -> 2.1.214
+        - jython:    2.5.2    -> 2.7.3
+        - pmd:       4.2.5    -> 6.52.0
+        - tomcat:    6.0.2    -> 10.0.27
         - daytrader: 2.4.1    -> 3.0-SNAPSHOT
-            - Apache Geronimo: 2.4.1 -> 3.0.1
+            - Wildfly: 26.1.3
         - xalan:     2.7.1    -> 2.7.2
-        - lucene:    2.4.1    -> 7.1
+        - lucene:    2.4.1    -> 9.4
 
     Shipped tooling update:
         - Maven:     2.1.0    -> 3.5.2
 	
-3.1.2 Benchmark additions due to 19.07
+3.1.2 Benchmark additions due to 23.07
 
       biojava: BioJava is an open-source project dedicated to
             providing a Java framework for processing biological data.
-	    It provides analytical and statistical routines, parsers
+	        It provides analytical and statistical routines, parsers
             for common file formats, reference implementations of
             popular algorithms, and allows the manipulation of
             sequences and 3D structures.
@@ -135,13 +127,37 @@ of deployed Java applications.
       kafka: Apache Kafka aims to provide a unified, high-throughput,
             low-latency platform for handling real-time data feeds.
 
+      spring: A Spring Boot application that models a 'pet clinic'
+            which allows users to book pets into a ficticous vetenary
+            clinic via a web server.
+
       zxing: Zxing is a multi-format 1D/2D barcode image processing library
 
-3.1.3. Benchmark deletions due to 19.07
+3.1.3. Benchmark deletions due to 29.07
 
-       TODO
+       none
        
-3.1.4. Other Notable Changes due to 19.07
+3.1.4. Other Notable Changes due to 29.07
+
+Latency metrics are now reported for each of the request based workloads 
+(cassandra, h2, kafka, lusearch, spring, tomcat, tradebeans and tradesoap)
+and jme, which is a rendering workload.  The benchmark harness internally
+records the period of each request (or frame render), and at the end of
+each benchmark iteration outputs percentile statistics for request latencies.
+We report two metrics. Simple latency just reports the raw percentile 
+latencies that were observed. Metered latency reports latencies as seen via an
+emulated request queue and a continuous stream of requests. Simple latency is
+unrealistic in that the rate at which requests are accepted is a function of
+the rate at which they are processed. In real systems requests will be 
+enqueued and some of the user-observed latency is due to requests waiting in
+the request queue.
+
+Each of the workloads has been measured against a variety of metrics, and
+the statistics are recorded in the project's git repository at 
+benchmarks/bm/*/stats-*.yml. When benchmarks are invoked some summary metrics
+are displayed giving a score (out of 10) and an absolute value for each 
+metric for each benchmark.  This allows some level of benchmark characterization
+and benchmark comparison to be done.
 
 
 3.2 Changes introduced by 9.12-MR1
@@ -362,19 +378,21 @@ DaCapo benchmark suite.
 -------------------------------------
 
 The support of the Australian National University, Oracle, Google, and
-Huawei was crucial to the successful completeion of the 19.07 and
+Huawei was crucial to the successful completeion of the 23.07 and
 9.12-MR1 releases.
 
-The 19.07 and 9.12-MR1 releases were led by Steve Blackburn of ANU and
-Kathryn McKinley of Google, and developed primarily by:
+The 23.07 release was led by Steve Blackburn of ANU and Google, and
+developed primarily by:
 
-     Rui Chen, Australian National University
-     John Zhang, Australian National University
+    Steve Blackburn, Google and Australian National University
+    Rui Chen, Australian National University
+    John Zhang, Australian National University
 
-In preparing the 19.07 release we receieved guidance and assistance
+In preparing the 23.07 release we receieved guidance and assistance
 from a number of people including:
 
      Xi Yang, Australian National University and Confluent
+     Zixian Cai, Australian National University
      Qiqi Chang, Australian National University
      Aditya Chilukuri, Australian National University
      Sichao Li, Australian National University
@@ -382,6 +400,7 @@ from a number of people including:
      Enming Zhang, Australian National University
      Leaandro Watanabe, University of Utah
      JC Beylor, Google
+     Kathryn McKinley, Google
      Wessam Hassanein, Google
      Ryan Rose, Google
      Cliff Click

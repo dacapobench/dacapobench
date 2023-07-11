@@ -1,6 +1,6 @@
 # The DaCapo Benchmark Suite
 
-Last updated 2022-08-18
+Last updated 2023-07-11
 
 This benchmark suite is intend as a tool for the research community.
 It consists of a set of open source, real world applications with
@@ -16,7 +16,7 @@ strongly request that:
 
 * The suite be cited in accordance with the usual standards of acknowledging credit in academic research.
 
-* Please cite the [2006 OOPSLA paper](http://doi.acm.org/10.1145/1167473.1167488)
+* Please cite the [2006 OOPSLA paper](http://doi.acm.org/10.1145/1167473.1167488) or a more recent paper by the DaCapo authors providing an up-to-date description of the suite, if and when such a paper becomes available.
 
 * All command line options used be reported.  For example, if you explicitly override the number of threads or set the number of iterations, you must report this when you publish results. 
 
@@ -84,7 +84,7 @@ is created when a full build is performed.
 
 1. Set your `JAVA_HOME` environment variable appropriately (it must be set and be consistent with the VM that will be used to build the suite).
 
-2. You must set `jdk8home`, in the `default.properties`, to point to a Java s installation.
+2. You must set `jdk8home`, in the `default.properties`, to point to a Java installation.
 
 
 For more information, run `ant -p` in the benchmarks directory.
@@ -112,6 +112,7 @@ This directory includes all of the source code for the DaCapo harness, which is 
 * `bms/<bm>/data` Directory containing any data used to drive the benchmark
 * `bms/<bm>/<bm>.cnf`	Configuration file for `<bm>`
 * `bms/<bm>/<bm>.patch`	Patches against the orginal sources (if any)
+* `bms/<bm>/stats-*.yml`	Workload statistics for `<bm>`
 * `bms/<bm>/build.xml`	Local build file for <bm>
 * `bms/<bm>/build` _Directory where building occurs.  This is only created at build time._
 * `bms/<bm>/dist` _Directory where the result of the build goes.  This is only created at build time._
@@ -122,7 +123,6 @@ This directory includes all of the source code for the DaCapo harness, which is 
 Each of these directories more or less mirror the `bm` directories.
 
 
-
 ## License
 
 The DaCapo Benchmark Suite conmprises several open source or public
@@ -131,10 +131,11 @@ benchmarks to run under the test harness, and a packaging process. The
 benchmarks are distributed under their own licenses and the remaining
 component is distributed under the Apache License, version 2.0.
 
-   Copyright 2009 The DaCapo Project,
-   Department of Computer Science
-   University of Massachusetts,
-   Amherst MA. 01003, USA
+   Copyright 2023 The DaCapo Project,
+   Schoool of Computer Sciences
+   Australian National University
+   Acton, ACT 2601
+   Australia
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
