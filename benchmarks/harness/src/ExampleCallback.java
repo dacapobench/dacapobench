@@ -38,14 +38,15 @@ public class ExampleCallback extends Callback {
   };
 
   /**
-   * The workload is about to start issuing requests
+   * The workload is about to start issuing requests (request-based workloads only).
    */
-  public void requestsStarting() { /* your code here */}
+  public void requestsStarting() { /* your code here */ }
 
-    /**
-   * The workload has finished issuing requests.
+  /**
+   * The workload has finished issuing requests (request-based workloads only).
+   *
    */
-  public void requestsFinished() { /* your code here */}
+  public void requestsFinished() { /* your code here */ }
 
 
   /* let's count the number of requests we observe */
@@ -55,11 +56,11 @@ public class ExampleCallback extends Callback {
     requests++;
   }
 
-  /* Called immediately before a request begins */
+  /* Called immediately before each request begins (request-based workloads only) */
   @Override
-  public void requestStart(int id) { inc(); /* your code here */}
+  public void requestStart(int id) { inc(); /* your code here */ }
 
-  /* Called immediately after a request completes */
+  /* Called immediately after each request ends (request-based workloads only) */
   @Override
-  public void requestEnd(int id) { /* your code here */}
+  public void requestEnd(int id) { /* your code here */ }
 }
