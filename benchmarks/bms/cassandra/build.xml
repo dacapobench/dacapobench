@@ -12,10 +12,12 @@
      <property file="dacapo.properties"/>
 
     <property name="bm-name" value="cassandra"/>
-    <property name="bm-version" value="4.1.2"/>
+    <property name="git-hash" value="2a458ba"/>
+    <property name="version" value="5.0"/>
+    <property name="bm-version" value="${git-hash}-pre-${version}"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="https://gitbox.apache.org/repos/asf/cassandra.git"/>
-    <property name="bm-git-commit" value="cassandra-${bm-version}"/>
+    <property name="bm-git-commit" value="{git-hash}"/>
 
     <import file="../common.xml"/>
 
@@ -62,6 +64,7 @@
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
         <exec executable="ant" dir="${cassandra-build-top}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line="-Drat.skip=true"/>
         </exec>
     </target>
@@ -93,6 +96,7 @@
                 <file file="${ycsb-dir}/cassandra/target/cassandra-binding-${ycsb-version}.jar"/>
                 <fileset dir="${ycsb-dir}/cassandra/target/dependency" includes="*.jar">
                     <exclude name="guava-16.0.1.jar"/>
+                    <exclude name="jamm-0.3.0.jar"/>
                     <exclude name="slf4j-simple-1.7.21.jar"/>
                     <exclude name="snakeyaml-1.11.jar"/>
                 </fileset>
@@ -112,7 +116,7 @@
     </target>
 
     <target name="jar" depends="libs">
-        <copy file="${cassandra-build-top}/build/apache-cassandra-${bm-version}-SNAPSHOT.jar"
+        <copy file="${cassandra-build-top}/build/apache-cassandra-${version}-SNAPSHOT.jar"
             tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
     </target>
 

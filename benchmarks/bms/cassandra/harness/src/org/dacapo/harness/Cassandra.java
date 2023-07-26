@@ -42,9 +42,10 @@ public class Cassandra extends Benchmark {
 
     public Cassandra(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
-        assertJavaVersionLE(14, "Cassandra currently requires Java < 15.  See https://issues.apache.org/jira/browse/CASSANDRA-16895.");
+        assertJavaVersionGE(11, "Cassandra currently requires Java versions between 11 and 17 inclusive.");
+        assertJavaVersionLE(17, "Cassandra currently requires Java versions between 11 and 17 inclusive.");
+        warnJavaVersionEQ(17, "JDK 17 will issue (harmless) deprecation warnings when executing cassandra.");
     }
-
 
     private void setupData() {
         String path =  "dat"+File.separator+"cassandra"+File.separator;
@@ -85,31 +86,6 @@ public class Cassandra extends Benchmark {
     protected void prepare(String size) throws Exception {
         super.prepare(size);
         args = config.preprocessArgs(size, scratch, data);
-
-        /*
-         *  FIXME
-         * 
-         *  This workaround silences JDK11 warnings relating to use of
-         *  reflection.
-         *
-         *  Specifically, cassandra generates the following warning:
-         * 
-         *  WARNING: Illegal reflective access by org.apache.cassandra.utils.FBUtilities (file:/[...]/cassandra/cassandra-3.11.6.jar) to field java.io.FileDescriptor.fd
-         *
-         * Fixing the underlying issue means changing the upstream library,
-         * which is beyond the scope of this benchmarking suite.
-         */
-        try {
-            Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
-            theUnsafe.setAccessible(true);
-            Unsafe u = (Unsafe) theUnsafe.get(null);
-      
-            Class cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
-            Field logger = cls.getDeclaredField("logger");
-            u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
-        } catch (Exception e) {
-            // ignore
-        }
 
         setupData();
         setupScratch();

@@ -928,6 +928,11 @@ public abstract class Benchmark {
       System.err.println("WARNING: the Java version string provided by this JVM is '"+System.getProperty("java.version")+"'. "+message);
   }
 
+  public void warnJavaVersionEQ(int version, String message) {
+    if (getJavaVersion() == version)
+      System.err.println("WARNING: the Java version string provided by this JVM is '"+System.getProperty("java.version")+"'. "+message);
+  }
+
   private void incorrectJavaVersion(String message) {
     if (getJavaVersion() == UNPARSABLE_VERSION) {
       System.err.println("WARNING: "+config.name+" will only run with specific Java versions.   However the Java version string provided by this JVM ('"+System.getProperty("java.version")+"') could not be parsed.  It is therefore unclear whether this JVM is compatable.  The particular requirement for "+config.name+" is as follows: '"+message+"'");
