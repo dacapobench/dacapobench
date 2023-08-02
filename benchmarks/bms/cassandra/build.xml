@@ -17,7 +17,7 @@
     <property name="bm-version" value="${git-hash}-pre-${version}"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="https://gitbox.apache.org/repos/asf/cassandra.git"/>
-    <property name="bm-git-commit" value="{git-hash}"/>
+    <property name="bm-git-commit" value="${git-hash}"/>
 
     <import file="../common.xml"/>
 

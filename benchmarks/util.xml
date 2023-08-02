@@ -347,10 +347,10 @@
 	<target name="get-git-source" unless="target-valid-md5">
 		<property name="git-tmp" value="git-${build.time}"/>
 		<!-- set the input string to "p" to get around a bug where git asks about unknown certificates -->
-		<exec executable="git" failonerror="${fail-on-error}">
+		<exec executable="git" failonerror="true">
 			<arg line="clone ${git-url} ${git-tmp}"/>
 		</exec>
-		<exec executable="git" failonerror="${fail-on-error}" dir="${git-tmp}">
+		<exec executable="git" failonerror="true" dir="${git-tmp}">
 			<arg line="checkout ${git-commit}"/>
 		</exec>
 		<!-- since timestamps are kept in tar balls we force to a date before the dacapo project start -->
