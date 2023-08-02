@@ -1,7 +1,7 @@
 diff '--color=auto' -ur ./build.gradle ../build/build.gradle
---- ./build.gradle	2022-11-29 02:43:26.000000000 +0000
-+++ ../build/build.gradle	2022-11-29 02:43:44.529476069 +0000
-@@ -149,13 +149,13 @@
+--- ./build.gradle	2023-08-02 10:09:23.000000000 +0000
++++ ../build/build.gradle	2023-08-02 10:20:18.285695765 +0000
+@@ -151,14 +151,14 @@
        project(':h2o-clustering')
      ]
  
@@ -10,19 +10,21 @@ diff '--color=auto' -ur ./build.gradle ../build/build.gradle
 -    ]
 -
 -    pythonProjects = [
--      project(':h2o-py')
+-      project(':h2o-py'),
+-      project(':h2o-py-cloud-extensions')
 -    ]
 +    // rProjects = [
 +    //   project(':h2o-r')
 +    // ]
 +
 +    // pythonProjects = [
-+    //   project(':h2o-py')
++    //   project(':h2o-py'),
++    //   project(':h2o-py-cloud-extensions')
 +    // ]
  
      // The project which need to be run under CI only
      testNeedsCiProject = [
-@@ -262,9 +262,9 @@
+@@ -268,9 +268,9 @@
  
      // Publish artifacts - we should filter subproject in future but now apply publisher plugin
      // to all projects
@@ -35,7 +37,7 @@ diff '--color=auto' -ur ./build.gradle ../build/build.gradle
  
      // Copy all jars and remove version number from the name
      apply from: "$rootDir/gradle/copyJars.gradle"
-@@ -300,19 +300,19 @@
+@@ -306,19 +306,19 @@
          
      }
  
@@ -69,8 +71,8 @@ diff '--color=auto' -ur ./build.gradle ../build/build.gradle
  
  // Include support for S3 syncing
 diff '--color=auto' -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
---- ./h2o-algos/build.gradle	2022-11-29 02:43:26.000000000 +0000
-+++ ../build/h2o-algos/build.gradle	2022-11-29 02:43:44.533476065 +0000
+--- ./h2o-algos/build.gradle	2023-08-02 10:09:23.000000000 +0000
++++ ../build/h2o-algos/build.gradle	2023-08-02 10:20:18.285695765 +0000
 @@ -53,7 +53,7 @@
    testRuntimeOnly project(":${defaultWebserverModule}")
    testCompileOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
@@ -80,9 +82,14 @@ diff '--color=auto' -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
+Only in ./h2o-extensions/jython-cfunc: bin
+Only in ./h2o-extensions/krbstandalone: bin
+Only in ./h2o-extensions/mojo-pipeline: bin
+Only in ./h2o-extensions/steam: bin
+Only in ./h2o-extensions/target-encoder: bin
 diff '--color=auto' -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
---- ./h2o-extensions/target-encoder/build.gradle	2022-11-29 02:43:27.000000000 +0000
-+++ ../build/h2o-extensions/target-encoder/build.gradle	2022-11-29 02:43:44.533476065 +0000
+--- ./h2o-extensions/target-encoder/build.gradle	2023-08-02 10:09:24.000000000 +0000
++++ ../build/h2o-extensions/target-encoder/build.gradle	2023-08-02 10:20:18.285695765 +0000
 @@ -12,7 +12,7 @@
      testImplementation 'com.pholser:junit-quickcheck-generators:0.9'
      testRuntimeOnly project(":${defaultWebserverModule}")
@@ -92,17 +99,27 @@ diff '--color=auto' -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
+Only in ./h2o-extensions/xgboost: bin
+Only in ./h2o-genmodel-extensions/jgrapht: bin
+Only in ./h2o-genmodel-extensions/xgboost: bin
+Only in ./h2o-logging/impl-log4j2: bin
+Only in ./h2o-logging/safe4j: bin
+Only in ./h2o-parsers/h2o-orc-parser: bin
+Only in ./h2o-parsers/h2o-parquet-parser: bin
+Only in ./h2o-parsers/h2o-parquet-parser-tests: bin
 diff '--color=auto' -ur ./settings.gradle ../build/settings.gradle
---- ./settings.gradle	2022-11-29 02:43:27.000000000 +0000
-+++ ../build/settings.gradle	2022-11-29 02:43:44.533476065 +0000
-@@ -7,8 +7,8 @@
+--- ./settings.gradle	2023-08-02 10:09:24.000000000 +0000
++++ ../build/settings.gradle	2023-08-02 10:22:19.129295474 +0000
+@@ -7,9 +7,9 @@
  include 'h2o-algos'
  include 'h2o-web'
  include 'h2o-app'
 -include 'h2o-r'
 -include 'h2o-py'
-+//include 'h2o-r'
-+//include 'h2o-py'
+-include 'h2o-py-cloud-extensions'
++// include 'h2o-r'
++// include 'h2o-py'
++// include 'h2o-py-cloud-extensions'
  include 'h2o-assemblies:main'
  include 'h2o-assemblies:minimal'
  include 'h2o-assemblies:steam'
