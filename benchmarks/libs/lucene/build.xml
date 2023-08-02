@@ -33,6 +33,7 @@
             <arg value=":lucene:core:jar"/>
             <arg value=":lucene:queryparser:jar"/>
             <arg value=":lucene:demo:jar"/>
+            <arg value=":lucene:backward-codecs:jar"/>
         </exec>
     </target>
 
@@ -50,6 +51,11 @@
         <copy todir="${lib-jars}">
             <fileset dir="${lib-build-top}/lucene/queryparser/build/libs">
                 <include name="lucene-queryparser-*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${lib-jars}">
+            <fileset dir="${lib-build-top}/lucene/backward-codecs/build/libs">
+                <include name="lucene-backward-codecs-*.jar"/>
             </fileset>
         </copy>
     </target>
