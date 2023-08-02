@@ -12,11 +12,11 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="biojava"/>
-    <property name="bm-version" value="6.1.0"/>
+    <property name="bm-version" value="7.0.2"/>
     <property name="bm-version-str" value="biojava ${bm-version}"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
-    <property name="bm-git-commit" value="2792cd737b4bb0df4a7557e0aa47563ffad575ff"/>
+    <property name="bm-git-commit" value="a5170b02180d6724bf9bb8ffcda411cf2eb2ea20"/>
 
     <import file="../common.xml"/>
 
@@ -43,6 +43,7 @@
 
     <target name="bm-build">
         <exec executable="${mvn-exe}" dir="${bm-build-dir}" failonerror="yes">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg value="clean"/>
             <arg value="install"/>
             <arg value="-Dmaven.test.skip=true"/>

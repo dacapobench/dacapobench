@@ -1,6 +1,6 @@
-diff -ur ./biojava-aa-prop/pom.xml ../build/biojava-aa-prop/pom.xml
---- ./biojava-aa-prop/pom.xml	2021-04-24 15:38:44.000000000 +1000
-+++ ../build/biojava-aa-prop/pom.xml	2021-05-03 11:46:28.649896021 +1000
+diff '--color=auto' -ur ./biojava-aa-prop/pom.xml ../build/biojava-aa-prop/pom.xml
+--- ./biojava-aa-prop/pom.xml	2023-08-02 07:07:41.000000000 +0000
++++ ../build/biojava-aa-prop/pom.xml	2023-08-02 09:45:00.511120873 +0000
 @@ -40,6 +40,9 @@
  							<addClasspath>true</addClasspath>
  							<mainClass>org.biojava.nbio.aaproperties.CommandPrompt</mainClass>
@@ -11,43 +11,63 @@ diff -ur ./biojava-aa-prop/pom.xml ../build/biojava-aa-prop/pom.xml
  					</archive>
  					<descriptorRefs>
  						<descriptorRef>jar-with-dependencies</descriptorRef>
-diff -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
---- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2021-04-24 15:38:44.000000000 +1000
-+++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2021-05-03 11:44:57.405610317 +1000
-@@ -88,7 +88,7 @@
+diff '--color=auto' -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
+--- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2023-08-02 07:07:41.000000000 +0000
++++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2023-08-02 09:52:16.638386388 +0000
+@@ -84,10 +84,20 @@
+ 		printHeader(output, propertyList, specificList, delimiter);
+ 		LinkedHashMap<String, ProteinSequence> a = readInputFile(inputLocation, aaTable);
+ 		//Need for the last sequence
++		int count = 0;
++		int fivePercent = a.entrySet().size()/20;
+ 		for(Entry<String, ProteinSequence> entry:a.entrySet()){
  			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList,
  					decimalPlace);
++			count++;
++			if (fivePercent == 0)
++				System.out.print("Processing sequences: "+count+"\r");
++			else if (count % fivePercent == 0) {
++				int percentage = 5 * (count / fivePercent);
++				System.out.print("Processing sequences: "+percentage+"%\r");
++			}
  		}
--		output.close();
-+//		output.close();
++		System.out.println();
+ 		output.close();
  	}
  
- 	public static void run(String[] args) throws Exception{
-diff -ur ./pom.xml ../build/pom.xml
---- ./pom.xml	2021-04-24 15:38:44.000000000 +1000
-+++ ../build/pom.xml	2021-05-03 11:44:57.405610317 +1000
-@@ -670,16 +670,16 @@
- 		<module>biojava-core</module>
- 		<module>biojava-alignment</module>
- 		<module>biojava-structure</module>
--		<module>biojava-structure-gui</module>
--		<module>biojava-genome</module>
--		<module>biojava-modfinder</module>
--		<module>biojava-ws</module>
--		<module>biojava-protein-disorder</module>
-+		<!--<module>biojava-structure-gui</module>-->
-+		<!--<module>biojava-genome</module>-->
-+		<!--<module>biojava-modfinder</module>-->
-+		<!--<module>biojava-ws</module>-->
-+		<!--<module>biojava-protein-disorder</module>-->
- 		<module>biojava-aa-prop</module>
--		<module>biojava-survival</module>
--		<module>biojava-ontology</module>
-+		<!--<module>biojava-survival</module>-->
-+		<!--<module>biojava-ontology</module>-->
- 		<!-- Keep integration tests last  -->
--		<module>biojava-integrationtest</module>
-+		<!--<module>biojava-integrationtest</module>-->
- 	</modules>
- 	<inceptionYear>2000</inceptionYear>
- 	<issueManagement>
+diff '--color=auto' -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java
+--- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java	2023-08-02 07:07:41.000000000 +0000
++++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java	2023-08-02 09:45:00.511120873 +0000
+@@ -119,13 +119,13 @@
+ 		}
+ 
+ 		// TODO: Should be StringJoiner once JDK8 used
+-		StringBuilder stringBuilder = new StringBuilder();
+-		for(char c: invalidCharSet){
+-			stringBuilder.append("\'" + c + "\'");
+-		}
+-		stringBuilder.deleteCharAt(stringBuilder.length()-1);
+-		stringBuilder.append(" are being replaced with '-'");
+-		logger.warn(stringBuilder.toString());
++		// StringBuilder stringBuilder = new StringBuilder();
++		// for(char c: invalidCharSet){
++		// 	stringBuilder.append("\'" + c + "\'");
++		// }
++		// stringBuilder.deleteCharAt(stringBuilder.length()-1);
++		// stringBuilder.append(" are being replaced with '-'");
++		// logger.warn(stringBuilder.toString());
+ 
+ 		return cleanSeq.toString();
+ 	}
+@@ -167,9 +167,8 @@
+ 		}
+ 		if(containInvalid){
+ 			String cSeq = cleanSequence(sequence, cSet);
+-			logger.warn("There exists invalid characters in the sequence. Computed results might not be precise.");
+-			logger.warn("To remove this warning: Please use org.biojava.nbio.aaproperties.Utils.cleanSequence to clean sequence.");
+-
++			// logger.warn("There exists invalid characters in the sequence. Computed results might not be precise.");
++			// logger.warn("To remove this warning: Please use org.biojava.nbio.aaproperties.Utils.cleanSequence to clean sequence.");
+ 			return cSeq;
+ 		}
+ 		else{

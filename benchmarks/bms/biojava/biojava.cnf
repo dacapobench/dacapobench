@@ -2,17 +2,29 @@ benchmark biojava
   class org.dacapo.harness.BioJava
   thread-model per_cpu;
 
-size small args "${DATA}/biojava/PF00104_small.fasta"
+size small args "-i","${DATA}/biojava/PF00104_small.fasta",
+                "-o","${SCRATCH}/biojava.out",
+                "-a"
   output
-    stdout digest 0x1330c6773c114760d81e633da213064786bb41c8;
+    stdout digest 0x53c2759740da43303cc08b24e8f2650edd980f55,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    "biojava.out" digest(text) 0x1330c6773c114760d81e633da213064786bb41c8;
 
-size default args "${DATA}/biojava/human_assoc_gold_strains_gg16S_aligned.fasta"
+size default args "-i","${DATA}/biojava/human_assoc_gold_strains_gg16S_aligned.fasta",
+                  "-o","${SCRATCH}/biojava.out",
+                  "-a"
   output
-    stdout digest 0x33712d620cf1b49b83017fedf8bd3e5b4769ae62;
+    stdout digest 0x53c2759740da43303cc08b24e8f2650edd980f55,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    "biojava.out" digest(text) 0x33712d620cf1b49b83017fedf8bd3e5b4769ae62;
 
-size large args "${DATA}/biojava/slice_28f_519R_gg_norm_tax.fasta"
+size large args "-i","${DATA}/biojava/slice_28f_519R_gg_norm_tax.fasta",
+                "-o","${SCRATCH}/biojava.out",
+                "-a"
   output
-    stdout digest 0x87e28962ede52417ce67c796e4b3dc9fc7512785;
+    stdout digest 0x53c2759740da43303cc08b24e8f2650edd980f55,
+    stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
+    "biojava.out" digest(text) 0x87e28962ede52417ce67c796e4b3dc9fc7512785;
 
 description
   short	     "BioJava generates 10 physico-chemical properties of protein sequences.",
