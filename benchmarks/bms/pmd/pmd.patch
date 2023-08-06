@@ -1,24 +1,178 @@
-diff '--color=auto' -ur ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java
---- ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2022-09-21 06:58:14.000000000 +0000
-+++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2022-09-21 08:36:57.196547708 +0000
-@@ -492,6 +492,8 @@
-             TimeTracker.startGlobalTracking();
-         }
+diff '--color=auto' -ur ./pmd-cli/pom.xml ../build/pmd-cli/pom.xml
+--- ./pmd-cli/pom.xml	2023-08-03 00:48:34.000000000 +0000
++++ ../build/pmd-cli/pom.xml	2023-08-06 04:49:07.899734407 +0000
+@@ -106,6 +106,10 @@
+             <artifactId>slf4j-simple</artifactId>
+         </dependency>
+         <dependency>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-nop</artifactId>
++        </dependency>
++        <dependency>
+             <groupId>info.picocli</groupId>
+             <artifactId>picocli</artifactId>
+         </dependency>
+diff '--color=auto' -ur ./pmd-cli/src/main/java/net/sourceforge/pmd/cli/internal/ProgressBarListener.java ../build/pmd-cli/src/main/java/net/sourceforge/pmd/cli/internal/ProgressBarListener.java
+--- ./pmd-cli/src/main/java/net/sourceforge/pmd/cli/internal/ProgressBarListener.java	2023-08-03 00:48:33.000000000 +0000
++++ ../build/pmd-cli/src/main/java/net/sourceforge/pmd/cli/internal/ProgressBarListener.java	2023-08-06 05:13:25.071961484 +0000
+@@ -13,52 +13,27 @@
+ import net.sourceforge.pmd.reporting.GlobalAnalysisListener;
+ import net.sourceforge.pmd.reporting.ListenerInitializer;
  
-+        configuration.setThreads(Runtime.getRuntime().availableProcessors());
-+
-         final Level logLevel = configuration.isDebug() ? Level.FINER : Level.INFO;
-         final ScopedLogHandlersManager logHandlerManager = new ScopedLogHandlersManager(logLevel, new ConsoleHandler());
-         final Level oldLogLevel = LOG.getLevel();
-diff '--color=auto' -ur ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
---- ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2022-09-21 06:58:14.000000000 +0000
-+++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2022-09-21 08:39:49.932299796 +0000
-@@ -105,8 +105,6 @@
-             this.writer.flush();
-         } catch (IOException e) {
-             throw new IllegalStateException(e);
--        } finally {
--            IOUtil.closeQuietly(writer);
-         }
+-import me.tongfei.progressbar.PmdProgressBarFriend;
+-import me.tongfei.progressbar.ProgressBar;
+-import me.tongfei.progressbar.ProgressBarBuilder;
+-import me.tongfei.progressbar.ProgressBarStyle;
+-
+ /**
+  * Collects runtime analysis statistics and displays them live on command line output.
+  * Toggled off through --no-progress command line argument.
+  */
+ public final class ProgressBarListener implements GlobalAnalysisListener {
+-    private ProgressBar progressBar;
+     private final AtomicInteger numErrors = new AtomicInteger(0);
+     private final AtomicInteger numViolations = new AtomicInteger(0);
++    private int fivePercent = 0;
++    private int numChecked = 0;
++    private boolean completed = false;
+ 
+     @Override
+     public ListenerInitializer initializer() {
+         return new ListenerInitializer() {
+             @Override
+             public void setNumberOfFilesToAnalyze(int totalFiles) {
+-                // We need to delay initialization until we know how many files there are to avoid a first bogus render
+-                progressBar = new ProgressBarBuilder()
+-                        .setTaskName("Processing files")
+-                        .setStyle(ProgressBarStyle.ASCII)
+-                        .hideEta()
+-                        .continuousUpdate()
+-                        .setInitialMax(totalFiles)
+-                        .setConsumer(PmdProgressBarFriend.createConsoleConsumer(System.out))
+-                        .clearDisplayOnFinish()
+-                        .build();
+-                progressBar.setExtraMessage(extraMessage());
++                fivePercent = totalFiles / 20;
+             }
+         };
      }
  
+-    /**
+-     * Updates progress bar string and forces it to be output regardless of its update interval.
+-     */
+-    private void refreshProgressBar() {
+-        progressBar.setExtraMessage(extraMessage());
+-        progressBar.refresh();
+-    }
+-
+-    private String extraMessage() {
+-        return String.format("Violations:%d, Errors:%d", numViolations.get(), numErrors.get());
+-    }
+-
+     @Override
+     public FileAnalysisListener startFileAnalysis(TextFile file) {
+         return new FileAnalysisListener() {
+@@ -79,15 +54,26 @@
+ 
+             @Override
+             public void close() {
+-                // Refresh progress bar on file analysis end (or file was in cache)
+-                progressBar.step();
+-                refreshProgressBar();
++                synchronized (ProgressBarListener.this) {
++                    numChecked++;
++                    if (fivePercent > 0 && numChecked % fivePercent == 0) {
++                        int percentage = 5 * (numChecked / fivePercent);
++                        System.out.print("Checked: " + percentage + "%\r");
++                    }
++                    ProgressBarListener.this.notifyAll();
++                }
+             }
+         };
+     }
+ 
+     @Override
+     public void close() throws Exception {
+-        progressBar.close();
++        synchronized (this) {
++            if (!completed) {
++                System.out.println("Checked " + numChecked + " files. PMD found " + numErrors.get() + " errors and " + numViolations.get() + " violations.");
++                completed = true;
++            }
++            this.notifyAll();
++        }
+     }
+ }
+diff '--color=auto' -ur ./pmd-cli/src/main/java/net/sourceforge/pmd/cli/PmdCli.java ../build/pmd-cli/src/main/java/net/sourceforge/pmd/cli/PmdCli.java
+--- ./pmd-cli/src/main/java/net/sourceforge/pmd/cli/PmdCli.java	2023-08-03 00:48:33.000000000 +0000
++++ ../build/pmd-cli/src/main/java/net/sourceforge/pmd/cli/PmdCli.java	2023-08-06 04:49:07.899734407 +0000
+@@ -13,9 +13,8 @@
+     private PmdCli() { }
+ 
+     public static void main(String[] args) {
+-        final int exitCode = new CommandLine(new PmdRootCommand())
++        new CommandLine(new PmdRootCommand())
+                 .setCaseInsensitiveEnumValuesAllowed(true)
+                 .execute(args);
+-        System.exit(exitCode);
+     }
+ }
+diff '--color=auto' -ur ./pmd-core/pom.xml ../build/pmd-core/pom.xml
+--- ./pmd-core/pom.xml	2023-08-03 00:48:34.000000000 +0000
++++ ../build/pmd-core/pom.xml	2023-08-06 04:49:07.899734407 +0000
+@@ -43,6 +43,10 @@
+         </dependency>
+         <dependency>
+             <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-nop</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.slf4j</groupId>
+             <artifactId>jul-to-slf4j</artifactId>
+         </dependency>
+         <dependency>
+diff '--color=auto' -ur ./pmd-dist/pom.xml ../build/pmd-dist/pom.xml
+--- ./pmd-dist/pom.xml	2023-08-03 00:48:34.000000000 +0000
++++ ../build/pmd-dist/pom.xml	2023-08-06 04:49:07.899734407 +0000
+@@ -169,6 +169,11 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-nop</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.apache.commons</groupId>
+             <artifactId>commons-lang3</artifactId>
+         </dependency>
+diff '--color=auto' -ur ./pmd-dist/src/main/resources/conf/simplelogger.properties ../build/pmd-dist/src/main/resources/conf/simplelogger.properties
+--- ./pmd-dist/src/main/resources/conf/simplelogger.properties	2023-08-03 00:48:33.000000000 +0000
++++ ../build/pmd-dist/src/main/resources/conf/simplelogger.properties	2023-08-06 04:49:07.899734407 +0000
+@@ -14,9 +14,9 @@
+ # Default log level for all loggers
+ # Must be one of "trace", "debug", "info", "warn", "error" or "off"
+ # Will be changed by "--debug" command line option
+-org.slf4j.simpleLogger.defaultLogLevel=info
++org.slf4j.simpleLogger.defaultLogLevel=off
+ 
+ # configure logging detail level for a single logger.
+ # Must be one of "trace", "debug", "info", "warn", "error" or "off"
+-#org.slf4j.simpleLogger.log.net.sourceforge.pmd.PMD=debug
++org.slf4j.simpleLogger.log.net.sourceforge.pmd.PMD=off
+ #org.slf4j.simpleLogger.log.com.example.rules.MyRule=debug
+diff '--color=auto' -ur ./pom.xml ../build/pom.xml
+--- ./pom.xml	2023-08-03 00:48:34.000000000 +0000
++++ ../build/pom.xml	2023-08-06 04:49:07.899734407 +0000
+@@ -741,6 +741,11 @@
+                 <version>${slf4j.version}</version>
+             </dependency>
+             <dependency>
++                <groupId>org.slf4j</groupId>
++                <artifactId>slf4j-nop</artifactId>
++                <version>${slf4j.version}</version>
++            </dependency>
++            <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>jul-to-slf4j</artifactId>
+               <version>${slf4j.version}</version>
