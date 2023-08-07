@@ -13,13 +13,13 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="spring"/>
-    <property name="bm-version" value="2.7.3"/>
-    <property name="bm-version-str" value="springboot ${bm-version} petclinic ${bm-version} h2 2.1.214 hibernate 5.6.10 tomcat 9.0.65"/>
+    <property name="bm-version" value="2.7.3"/>  <!-- last release before 3.0, where JDK 17 is MSV -->
+    <property name="bm-version-str" value="springboot ${bm-version} petclinic git-9ecdc11 h2 2.1.214 hibernate 5.6.10 tomcat 9.0.65"/>
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tgz"/>
     <property name="git-group" value="spring-projects"/>
     <property name="git-project" value="spring-petclinic"/>
     <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
-    <property name="bm-git-commit" value="89f7b4ee96b8dd354d56ff2211bb1ffe762ba24c"/>
+    <property name="bm-git-commit" value="9ecdc1111e3da388a750ace41a125287d9620534"/>
 
     <import file="../common.xml"/>
 
