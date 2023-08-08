@@ -13,7 +13,7 @@
 
     <property name="bm-name" value="tomcat"/>
     <property name="bm-major-version" value="10"/>
-    <property name="bm-version" value="${bm-major-version}.0.27"/>
+    <property name="bm-version" value="${bm-major-version}.1.11"/>
     <property name="bm-version-str" value="tomcat ${bm-version}"/>
     <property name="bm-url" value="${apache.dl.url}/${bm-name}/${bm-name}-${bm-major-version}/v${bm-version}/src"/>
     <property name="bm-src-basename" value="apache-${bm-name}-${bm-version}-src"/>
@@ -28,22 +28,28 @@
     <target name="unpack" depends="untar"/>
 
     <target name="bm-build" depends="build-properties,commons-httpclient,dacapo-digest">
-        <ant dir="${bm-build-top}" target="download-compile"/>
+        <exec executable="ant" dir="${bm-build-top}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line="download-compile"/>
+        </exec>
         <ant dir="${bm-build-top}" target="download-compile">
             <property name="base.path" value="${bm-downloads}"/>
         </ant>
-        <ant dir="${bm-build-top}" target="deploy">
-            <property name="base.path" value="${bm-downloads}"/>
-        </ant>
-        <ant dir="${bm-build-top}" target="dist-static" inheritAll="false">
-            <property name="base.path" value="${bm-downloads}"/>
-        </ant>
+        <exec executable="ant" dir="${bm-build-top}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line="-Dbase.path=${bm-downloads} deploy"/>
+        </exec>
+        <exec executable="ant" dir="${bm-build-top}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line="-Dbase.path=${bm-downloads} dist-static"/>
+        </exec>
         <mkdir dir="${bm-build-dir}/benchmark"/>
-        <javac srcdir="${bm-src-dir}" destdir="${bm-build-dir}/benchmark"
-               source="1.8" target="1.8"
-               classpath="${harness-classpath}"
-               includes="org/dacapo/tomcat/*"
-               debug="true" debuglevel="lines,vars,source">
+        <javac fork="yes" srcdir="${bm-src-dir}" destdir="${bm-build-dir}/benchmark"
+                executable="${jdk.11.home}/bin/javac"
+                release="11"
+                classpath="${harness-classpath}"
+                includes="org/dacapo/tomcat/*"
+                debug="true" debuglevel="lines,vars,source">
             <classpath>
                 <pathelement path="${commons-httpclient-jar}"/>
                 <pathelement path="${lib-base}/dacapo-digest/build"/>

@@ -39,10 +39,13 @@ public class Tomcat extends Benchmark {
    * 
    * @param config Benchmark configuration object
    * @param scratch Scratch directory
+   * @param data Data directory
    * @throws Exception When something goes wrong
    */
   public Tomcat(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false, false);
+    assertJavaVersionGE(11, "Tomcat requires at least Java version 11.");
+
     this.clazz = Class.forName("org.dacapo.tomcat.Control", true, loader);
     this.method = clazz.getMethod("exec", String.class);
 
