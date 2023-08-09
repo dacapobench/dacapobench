@@ -7,7 +7,7 @@ suites:
     type: DaCapo
     release: evaluation
     path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-78bcea0f.jar
-    timing_iteration: 10
+    timing_iteration: 1
     timeout: 300
 
 benchmarks:
@@ -56,8 +56,8 @@ modifiers:
     val: "-XX:-UseCompressedOops"
     
 configs:
+  - "open-jdk-17|s|cp|gc-G1|t-32|f-10"
+  - "open-jdk-17|s|cp|gc-G1|t-1|f-10"
+  - "open-jdk-17|s|up|gc-G1|t-32|f-10"
+  - "open-jdk-17|s|cp|gc-Parallel|t-32|f-10"
   - "open-jdk-11|s|cp|gc-G1|t-32|f-10"
-#  - "open-jdk-11|s|cp|gc-G1|t-1|f-10"
-#  - "open-jdk-11|s|up|gc-G1|t-32|f-10"
-#  - "open-jdk-11|s|cp|gc-Parallel|t-32|f-10"
-#  - "open-jdk-17|s|cp|gc-G1|t-32|f-10"

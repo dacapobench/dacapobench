@@ -71,7 +71,7 @@
 
     <target name="build" depends="build.init,data">
         <mkdir dir="${launcher-build}/"/>
-        <javac srcdir="${lib-src-dir}" destdir="${launcher-build}"
+        <javac fork="yes" executable="${jdk.11.home}/bin/javac" srcdir="${lib-src-dir}" destdir="${launcher-build}"
                classpath="${lib-build-dir}/wildfly-${wildfly-version}.Final/jboss-modules.jar:${harness-classpath}"
                debug="true" debuglevel="lines,vars,source"/>
     </target>

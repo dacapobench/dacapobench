@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ./kafka-3.3.1-src/config/log4j.properties ../build/kafka-3.3.1-src/config/log4j.properties
 --- ./kafka-3.3.1-src/config/log4j.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/log4j.properties	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/config/log4j.properties	2023-08-01 11:22:57.901061211 +0000
 @@ -14,8 +14,8 @@
  # limitations under the License.
  
@@ -63,7 +63,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/config/log4j.properties ../build/kafka
  
 diff '--color=auto' -ur ./kafka-3.3.1-src/config/server.properties ../build/kafka-3.3.1-src/config/server.properties
 --- ./kafka-3.3.1-src/config/server.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/server.properties	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/config/server.properties	2023-08-01 11:27:37.164359663 +0000
 @@ -59,7 +59,7 @@
  ############################# Log Basics #############################
  
@@ -73,9 +73,31 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/config/server.properties ../build/kafk
  
  # The default number of log partitions per topic. More partitions allow greater
  # parallelism for consumption, but this will also result in more files across
+@@ -106,14 +106,18 @@
+ 
+ # A size-based retention policy for logs. Segments are pruned from the log unless the remaining
+ # segments drop below log.retention.bytes. Functions independently of log.retention.hours.
+-#log.retention.bytes=1073741824
++log.retention.bytes=33554432
+ 
+ # The maximum size of a log segment file. When this size is reached a new log segment will be created.
+-#log.segment.bytes=1073741824
++log.segment.bytes=33554432
++
++log.segment.delete.delay.ms=1
++file.delete.delay.ms=0
++log.cleaner.backoff.ms=10
+ 
+ # The interval at which log segments are checked to see if they can be deleted according
+ # to the retention policies
+-log.retention.check.interval.ms=300000
++log.retention.check.interval.ms=10
+ 
+ ############################# Zookeeper #############################
+ 
 diff '--color=auto' -ur ./kafka-3.3.1-src/config/tools-log4j.properties ../build/kafka-3.3.1-src/config/tools-log4j.properties
 --- ./kafka-3.3.1-src/config/tools-log4j.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/tools-log4j.properties	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/config/tools-log4j.properties	2023-08-01 11:22:57.901061211 +0000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -87,7 +109,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/config/tools-log4j.properties ../build
  log4j.appender.stderr.layout=org.apache.log4j.PatternLayout
 diff '--color=auto' -ur ./kafka-3.3.1-src/config/zookeeper.properties ../build/kafka-3.3.1-src/config/zookeeper.properties
 --- ./kafka-3.3.1-src/config/zookeeper.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/zookeeper.properties	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/config/zookeeper.properties	2023-08-01 11:22:57.901061211 +0000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -99,7 +121,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/config/zookeeper.properties ../build/k
  # disable the per-ip limit on the number of connections since this is a non-production config
 diff '--color=auto' -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala
 --- ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2023-08-01 11:22:57.901061211 +0000
 @@ -76,7 +76,7 @@
    import LogManager._
  
@@ -111,7 +133,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManag
    private val currentLogs = new Pool[TopicPartition, UnifiedLog]()
 diff '--color=auto' -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
 --- ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2023-08-01 11:22:57.901061211 +0000
 @@ -237,7 +237,7 @@
          Some(Utils.loadProps(absolutePath))
        } catch {
@@ -123,7 +145,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/server/Broke
            error(s"Failed to read meta.properties file under dir $absolutePath", e)
 diff '--color=auto' -ur ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json
 --- ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2023-08-01 11:01:37.264350377 +0000
++++ ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2023-08-01 11:22:57.901061211 +0000
 @@ -23,16 +23,16 @@
    "durationMs": 10000000,
    "producerNode": "node0",
@@ -147,7 +169,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json .
      }
 diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2023-08-01 11:22:57.901061211 +0000
 @@ -250,7 +250,7 @@
          final Agent agent = new Agent(platform, Scheduler.SYSTEM, restServer, resource);
          restServer.start(resource);
@@ -159,7 +181,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka
                  agent.waitForShutdown();
 diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorClient.java	2023-08-01 11:22:57.905061200 +0000
 @@ -195,6 +195,15 @@
          return resp.body();
      }
@@ -235,7 +257,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka
              case "shutdown": {
 diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/Coordinator.java	2023-08-01 11:22:57.905061200 +0000
 @@ -129,6 +129,10 @@
          taskManager.waitForShutdown();
      }
@@ -258,7 +280,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka
                  coordinator.waitForShutdown();
 diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2023-08-01 10:54:12.033287747 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/CoordinatorRestResource.java	2023-08-01 11:22:57.905061200 +0000
 @@ -137,6 +137,13 @@
          return response;
      }
@@ -275,7 +297,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka
      public Empty beginShutdown(CoordinatorShutdownRequest request) throws Throwable {
 diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2023-08-01 10:54:12.037287740 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/NodeManager.java	2023-08-01 11:22:57.905061200 +0000
 @@ -235,7 +235,7 @@
                  if (worker == null) {
                      // Identify tasks which are running, but which we don't know about.
@@ -287,7 +309,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka
                  } else {
 diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2023-08-01 10:54:12.037287740 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/coordinator/TaskManager.java	2023-08-01 11:22:57.905061200 +0000
 @@ -49,6 +49,8 @@
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
@@ -404,7 +426,7 @@ diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka
       * Returns #{@code null} if the task does not exist
 diff '--color=auto' -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2023-08-01 10:54:12.037287740 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2023-08-01 11:22:57.905061200 +0000
 @@ -55,6 +55,9 @@
  import java.util.concurrent.atomic.AtomicBoolean;
  import java.util.concurrent.atomic.AtomicLong;
