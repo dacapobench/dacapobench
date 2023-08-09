@@ -22,7 +22,7 @@ import java.util.List;
 * id: $Id: Launcher.java 738 2009-12-24 00:19:36Z steveb-oss $
 */
 public class Launcher {
-  private final static String VERSION = "28.0.1";
+  private final static String VERSION = "26.1.3";
   private final static String TYPE = "Final";
   private final static String DIRECTORY = "wildfly-" + VERSION + "." + TYPE;
   private final static String EAR = "daytrader-ear-3.0-SNAPSHOT.ear";
