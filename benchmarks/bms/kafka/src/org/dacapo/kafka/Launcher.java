@@ -37,19 +37,11 @@ public class Launcher {
         ServerStarter kafka = new ServerStarter(serverKafka.getPath());
         kafka.initialize();
         while (!hostUsed("127.0.0.1", 9092)) Thread.sleep(100);
-
-        AgentStarter agent = new AgentStarter(agentConfig.getPath());
-        agent.initialize();
-        while (!hostUsed("127.0.0.1", 8888)) Thread.sleep(100);
-
-        CoordinatorStarter cs = new CoordinatorStarter(agentConfig.getPath());
-        cs.initialize();
-        while (!hostUsed("127.0.0.1", 8889)) Thread.sleep(100);
     }
 
     public void performIteration() throws Exception {
         cli = new ClientRunner(transactions);
-        cli.runClient(produceBench.getPath());
+        cli.runClient(agentConfig.getPath(), produceBench.getPath());
     }
 
     public void shutdown() throws Exception {

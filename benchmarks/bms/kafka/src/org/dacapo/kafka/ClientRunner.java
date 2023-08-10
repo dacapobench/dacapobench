@@ -7,9 +7,9 @@ import java.io.*;
 
 public class ClientRunner{
 
-    private Method clientStarter;
-    private String pID = "producer";
+    private Method agentStarter;
     private Method setTxCount;
+    private Method topicCommand;
     long timerBase = 0;
     private int txCount;
 
@@ -21,30 +21,33 @@ public class ClientRunner{
     public void initialize() throws Exception{
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-        Class trogdorClient = Class.forName("org.apache.kafka.trogdor.coordinator.CoordinatorClient", true, loader);
-        clientStarter = trogdorClient.getMethod("main", String[].class);
-
         Class worker = Class.forName("org.apache.kafka.trogdor.workload.ProduceBenchWorker");
         setTxCount = worker.getMethod("setTxCount", int.class);
+
+        Class trogdorAgent = Class.forName("org.apache.kafka.trogdor.agent.Agent", true, loader);
+        agentStarter = trogdorAgent.getMethod("main", String[].class);
+
+        Class topicClass = Class.forName("kafka.admin.TopicCommand", true, loader);
+        topicCommand = topicClass.getMethod("main", String[].class);
     }
 
     /**
      *
      * @param produceBench information about the benchmark
      */
-    void runClient(String produceBench) throws Exception{
-        // Running the benchmark
+    void runClient(String agentConfig, String produceBench) throws Exception{
+        // Running the benchmark  
         System.out.println("Trogdor is running the workload....");
         timerBase = System.nanoTime();
         setTxCount.invoke(null, txCount);
-        clientStarter.invoke(null, (Object) new String[]{"createTask", "-t", "localhost:8889", "-i", pID, "--spec", produceBench});
-
-        // waiting for finishing
-        clientStarter.invoke(null, (Object) new String[]{"waitTask", "-t", "localhost:8889", "-i", pID});
+        // Using the Trogodr exec mode to send requests
+        agentStarter.invoke(null, (Object) new String[]{"-c", agentConfig, "-n", "node0", "--exec", produceBench});
+        topicCommand.invoke(null, (Object) new String[]{"--bootstrap-server", "localhost:9092", "--delete", "--topic", "dacapo-1,dacapo-2,dacapo-3,dacapo-4"});
+        // Sleep one second waiting for the Kafka broker to delete the topics
+        Thread.sleep(1000);
         System.err.println("Finished");
     }
 
     void finishUp() throws Exception{
-        clientStarter.invoke(null, (Object) new String[]{"destroyTask", "-t", "localhost:8889", "-i", pID});
     }
 }
