@@ -16,12 +16,21 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -276,32 +285,27 @@ public class CommandLineArgs {
     System.out.println();
   }
 
-  static List<String> extractBenchmarkSet() throws IOException {
-    List<String> benchmarks = new ArrayList<String>();
-    URL url = CommandLineArgs.class.getClassLoader().getResource("META-INF/cnf");
-    String protocol = url.getProtocol();
-    if (protocol.equals("jar")) {
-      JarURLConnection jarConnection = (JarURLConnection) url.openConnection();
-      for (Enumeration<?> entries = jarConnection.getJarFile().entries(); entries.hasMoreElements();) {
-        String entry = ((JarEntry) entries.nextElement()).getName();
-        if (entry.endsWith(".cnf")) {
-          entry = entry.replace("META-INF/cnf/", "").replace(".cnf", "");
-          benchmarks.add(entry);
-        }
+  public static List<String> extractBenchmarkSet() {
+    String benchFolder = "META-INF/cnf";
+    URL url = CommandLineArgs.class.getClassLoader().getResource(benchFolder);
+    try {
+      URI uri = url.toURI();
+      Path cnfPath = null;
+      if ("jar".equals(uri.getScheme()) || "resource".equals(uri.getScheme())) {
+        FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap(), null);
+        cnfPath = fileSystem.getPath(benchFolder);
+      } else {
+        cnfPath = Paths.get(uri);
       }
-    } else if (protocol.equals("file")) {
-      File dir = new File(url.getFile());
-      if (dir.isDirectory()) {
-        File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-          String entry = files[i].toString();
-          entry = entry.substring(entry.lastIndexOf('/') + 1, entry.length());
-          entry = entry.replace(".cnf", "");
-          benchmarks.add(entry);
-        }
-      }
+
+      return Files.walk(cnfPath)
+              .map(p -> p.getName(p.getNameCount() - 1).toString())
+              .filter(f -> f.toString().endsWith(".cnf"))
+              .map(f -> f.replace(".cnf", ""))
+              .collect(Collectors.toList());
+    } catch (URISyntaxException | java.io.IOException e) {
+      throw new RuntimeException(e);
     }
-    return benchmarks;
   }
 
   public Iterable<String> benchmarks() {
