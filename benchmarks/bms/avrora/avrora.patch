@@ -55,3 +55,54 @@ diff -urN avrora/src/cck/test/TestEngine.java ../src-new/cck/test/TestEngine.jav
                      }
                  }
                  synchronized(this) {
+diff -urN avrora/src/avrora/arch/msp430/MSP430Interpreter.java ../src-new/avrora/arch/msp430/MSP430Interpreter.java
+--- avrora/src/avrora/arch/msp430/MSP430Interpreter.java	2008-12-16 02:38:45.000000000 +0100
++++ ../src-new/avrora/arch/avr/MSP430Interpreter.java	2023-04-14 10:17:48.000000000 +0200
+@@ -80,9 +80,6 @@
+      */
+     public MSP430Interpreter(Simulator simulator, Program p, MSP430Properties pr) {
+         super(simulator);
+-        // this class and its methods are performance critical
+-        // observed speedup with this call on Hotspot
+-        Compiler.compileClass(this.getClass());
+
+         // if program will not fit onto hardware, error
+         if (p.program_end > MSP430DataSegment.DATA_SIZE)
+diff -urN avrora/src/avrora/arch/avr/AVRInterpreter.java ../src-new/avrora/arch/avr/AVRInterpreter.java
+--- avrora/src/avrora/arch/avr/AVRInterpreter.java	2013-02-04 19:31:13.000000000 +0100
++++ ../src-new/avrora/arch/avr/AVRInterpreter.java	2023-04-14 10:14:58.000000000 +0200
+@@ -125,9 +125,6 @@
+      * represent the SRAM, flash, interrupt table, IO registers, etc.
+      */
+     public AVRInterpreter(Simulator simulator, Program p, AVRProperties pr) {
+-        // this class and its methods are performance critical
+-        // observed speedup with this call on Hotspot
+-        Compiler.compileClass(this.getClass());
+
+         // set up the reference to the simulator
+         this.simulator = simulator;
+diff -urN avrora/src/avrora/arch/legacy/LegacyInterpreter.java ../src-new/avrora/arch/legacy/LegacyInterpreter.java
+--- avrora/src/avrora/arch/legacy/LegacyInterpreter.java	2012-05-21 17:59:25.000000000 +0200
++++ ../src-new/avrora/arch/legacy/LegacyInterpreter.java	2023-04-14 09:46:08.000000000 +0200
+@@ -72,9 +72,6 @@
+      */
+     protected LegacyInterpreter(Simulator s, Program p, AVRProperties pr) {
+         super(s, p, pr);
+-        // this class and its methods are performance critical
+-        // observed speedup with this call on Hotspot
+-        Compiler.compileClass(getClass());
+     }
+
+     protected void runLoop() {
+diff -urN avrora/src/avrora/sim/AtmelInterpreter.java ../src-new/avrora/sim/AtmelInterpreter.java
+--- avrora/src/avrora/sim/AtmelInterpreter.java	2012-05-21 17:59:25.000000000 +0200
++++ ../src-new/avrora/sim/AtmelInterpreter.java	2023-04-14 09:37:03.000000000 +0200
+@@ -319,9 +319,6 @@
+      */
+     protected AtmelInterpreter(Simulator simulator, Program p, AVRProperties pr) {
+         super(simulator);
+-        // this class and its methods are performance critical
+-        // observed speedup with this call on Hotspot
+-        Compiler.compileClass(getClass());
+
+         state = new StateImpl();
