@@ -12,12 +12,12 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="eclipse"/>
-    <property name="bm-version" value="4.25"/> <!-- must update bundles-*.lst, plugin.xml, eclipse.patch, and references in plugin/build.xml when updating versions -->
+    <property name="bm-version" value="4.27"/> <!-- Note: 4.27 is last that works with JDK11. --> <!-- Must update bundles-*.lst, plugin.xml, eclipse.patch, and references in plugin/build.xml when updating versions -->
     <property name="bm-version-str" value="eclipse ${bm-version}"/>
-    <property name="bm-drop" value="202208311800"/>
+    <property name="bm-drop" value="202303020300"/>
     <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops4/R-${bm-version}-${bm-drop}"/>
     <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa-x86_64.tar.gz"/>
-    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.18.100.v20220817-1601.jar"/> <!-- this value must be consistent with constant in org.dacapo.harness.Eclipse.java -->
+    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.18.300.v20230220-1352.jar"/> <!-- this value must be consistent with constant in org.dacapo.harness.Eclipse.java -->
     <import file="../common.xml"/>
     <property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
     <property name="bm-src-at" value="eclipse-Automated-Tests-${bm-version}.zip"/>
@@ -107,14 +107,13 @@
         <!--- This just contains jre/lib/rt.jar -->
         <unzip dest="${bm-data}" src="${bm-downloads}/dummyjre.zip"/>
 
-        <!-- Install the test data -->
-        <copy todir="${bm-data}">
+        <!-- Install the eclipse runtime -->
+       <copy todir="${bm-data}">
             <!-- The eclipse runtime.  We just include as little as we can, -->
             <!-- using an empirically derived list of what we really need.  -->
             <!-- Use scratch/configuration/*.log and/or scratch/workspace/.metadata/*.log --> 
             <!--- to identify missing bundles.                                            -->
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
-            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </copy>
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-dir}">
