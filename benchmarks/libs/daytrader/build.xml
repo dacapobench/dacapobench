@@ -44,9 +44,9 @@
     </target>
 
     <target name="unpack">
-
         <mkdir dir="${dt-build}"/>
         <untar src="${lib-downloads}/${lib-src}" dest="${dt-build}/" compression="gzip"/>
+        <delete file="${dt-build}/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Entity.java"/>
         <unzip src="${lib-downloads}/${wildfly}.zip" dest="${lib-build-dir}/"/>
 
         <copy file="${lib-data}/stocks.txt" todir="${dt-build}/javaee6/modules/web/src/main/resources/"/>
