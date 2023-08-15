@@ -29,7 +29,8 @@
 
     <!-- daytrader -->
     <property name="daytrader-svn-revision" value="1904225"/>
-    <property name="wildfly-version" value="26.1.3"/>
+    <!-- note: 26.1.3 is the last WildFly before moving to EE10, a major change -->
+    <property name="wildfly-version" value="26.1.3.Final"/>  <!-- Any change here must be reflected in org.dacapo.daytrader.Launcher -->
     <target name="daytrader">
         <ant antfile="${lib-base}/daytrader/build.xml"/>
     </target>
