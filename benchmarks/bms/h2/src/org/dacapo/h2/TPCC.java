@@ -375,7 +375,7 @@ public class TPCC {
     }
     String dots = "........................";
     for (int i = 0; i < transactions.length; i++) {
-      System.out.format("\t" + TPCCSubmitter.TX_NAME[i] + " " + dots.substring(TPCCSubmitter.TX_NAME[i].length()) + "%6d (%4.1f%%)%n", transactions[i],
+      System.out.format("\t" + TPCCSubmitter.TX_NAME[i] + " " + dots.substring(TPCCSubmitter.TX_NAME[i].length()) + "%7d (%4.1f%%)%n", transactions[i],
           100 * ((float) transactions[i] / total));
     }
   }
@@ -679,6 +679,7 @@ public class TPCC {
         this.createSuffix = args[++i];
       }
     }
+    System.out.println("TPCC configuration: scale: "+this.scale+", terminals: "+this.numberOfTerminals+", transactions: "+this.totalTransactions);
   }
 
   private File getBackupDir() {
