@@ -72,7 +72,7 @@ public class Tradebeans extends Benchmark {
     }
     System.out.println("Shutting down Wildfly...");
     if (!getPreserve()) {
-      deleteTree(new File(scratch, "wildfly-26.1.2.Final"));
+      deleteTree(new File(scratch, "wildfly-26.1.3.Final"));
       deleteTree(new File(scratch, "jar"));
     }
   }

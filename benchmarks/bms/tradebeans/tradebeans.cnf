@@ -14,7 +14,13 @@ size default args "10", "50"
   output stdout  digest 0xd1e7a1569682ab8843c7cd2193df6453a6a6d9b3,
          stderr  digest 0xa6ee2fb028e29c2431f375e86b1d4199246eded8;
 
-size large args "15", "1500"
+size large args "14", "1500"
+  threads 1      // per available processor
+  thread-limit 32768
+  output stdout  digest 0x7b7f8db35f1f934772c25e89a0df09d153246d39,
+         stderr  digest 0x3bc3eb9bafdf85db18530f1db5432532241e395b;
+
+size vlarge args "15", "1500"
   threads 1      // per available processor
   thread-limit 32768
   output stdout  digest 0x1f68c051324dd7bf4a666391fe2fe491517eb2bf,
