@@ -63,7 +63,7 @@ public class Launcher {
       method.invoke(null);
 
       // Create a client environment
-      DaCapoClientRunner.initialize(logNumSessions, numThreads, useBeans);
+      DaCapoClientRunner.initialize(logNumSessions, numThreads, false);
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
