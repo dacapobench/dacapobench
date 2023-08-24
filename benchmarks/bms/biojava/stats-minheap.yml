@@ -4,9 +4,11 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 95, 95, 95 ]             # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar biojava -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 95, 95, 95 ]              # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar biojava -t 1 -f 10 -n 1
-open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 183, 183, 183 ]          # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar biojava -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 97, 97, 97 ]       # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-78bcea0f.jar biojava -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 95, 95, 95 ]             # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar biojava -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 97, 97, 97 ]            # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar biojava -t 32 -f 10 -n 10
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 97, 97, 95 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar biojava -t 32 -f 10 -n 1
+open-jdk-17.sz-small.s.cp.gc-G1.t-1.f-10.n-1: [ 9, 9, 9 ]              # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar biojava -s small -t 32 -f 10 -n 1
+open-jdk-17.sz-large.s.cp.gc-G1.t-32.f-10.n-1: [ 1030, 1030, 1027 ]    # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar biojava -s large -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-Parallel.t-32.f-10.n-1: [ 99, 99, 99 ]             # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar biojava -t 1 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-1.f-10.n-1: [ 96, 95, 95 ]                    # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar biojava -t 32 -f 10 -n 1
+open-jdk-17.s.up.gc-G1.t-32.f-10.n-1: [ 183, 183, 183 ]                # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-744ef415.jar biojava -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10: [ 97, 97, 97 ]                  # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar biojava -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 95, 95, 95 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar biojava -t 32 -f 10 -n 10

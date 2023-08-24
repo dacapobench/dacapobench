@@ -4,9 +4,11 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 41, 43, 43 ]             # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar luindex -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 41, 41, 42 ]              # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar luindex -t 1 -f 10 -n 1
-open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 33, 36, 35 ]             # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar luindex -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 28, 30, 29 ]       # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-78bcea0f.jar luindex -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 37, 40, 37 ]             # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar luindex -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 45, 44, 45 ]            # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar luindex -t 32 -f 10 -n 10
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 37, 41, 38 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar luindex -t 32 -f 10 -n 1
+open-jdk-17.sz-small.s.cp.gc-G1.t-1.f-10.n-1: [ 15, 15, 15 ]           # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar luindex -s small -t 32 -f 10 -n 1
+open-jdk-17.sz-large.s.cp.gc-G1.t-32.f-10.n-1: [ 47, 45, 48 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar luindex -s large -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-Parallel.t-32.f-10.n-1: [ 29, 29, 29 ]             # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar luindex -t 1 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-1.f-10.n-1: [ 33, 33, 39 ]                    # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar luindex -t 32 -f 10 -n 1
+open-jdk-17.s.up.gc-G1.t-32.f-10.n-1: [ 38, 33, 38 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-744ef415.jar luindex -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10: [ 41, 41, 41 ]                  # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar luindex -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 44, 43, 46 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar luindex -t 32 -f 10 -n 10
