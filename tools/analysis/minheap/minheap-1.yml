@@ -5,19 +5,19 @@ overrides:
   maxheap: 16384
 
 suites:
-  dacapo-744ef415:
+  dacapo-7839b032:
     type: DaCapo
     release: evaluation
-    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-744ef415.jar
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-7839b032.jar
     timing_iteration: 1
-    timeout: 30 # for tomcat # 1800 # 30 min and h2 vlarge takes 5:45 with no heap limit (so this is ~5X the overhead)
+    timeout: 180 # for tomcat # 1800 # 30 min and h2 vlarge takes 5:45 with no heap limit (so this is ~5X the overhead)
 
 configs:
-  - "open-jdk-17|s|cp|gc-G1|t-32|f-10"
-  - "open-jdk-17|sz-small|s|cp|gc-G1|t-1|f-10"
-  - "open-jdk-17|sz-large|s|cp|gc-G1|t-32|f-10"
-  - "open-jdk-17|sz-vlarge|s|cp|gc-G1|t-32|f-10"
-  - "open-jdk-17|s|cp|gc-G1|t-1|f-10"
-  - "open-jdk-17|s|up|gc-G1|t-32|f-10"
-  - "open-jdk-17|s|cp|gc-Parallel|t-32|f-10"
-  - "open-jdk-11|s|cp|gc-G1|t-32|f-10"
+  - "open-jdk-17|ee|s|cp|gc-G1|t-32|f-10"
+  - "open-jdk-17|sz-small|ee|s|cp|gc-G1|t-1|f-10"
+  - "open-jdk-17|sz-large|ee|s|cp|gc-G1|t-32|f-10"
+  - "open-jdk-17|sz-vlarge|ee|s|cp|gc-G1|t-32|f-10"
+  - "open-jdk-17|ee|s|cp|gc-G1|t-1|f-10"
+  - "open-jdk-17|ee|s|up|gc-G1|t-32|f-10"
+  - "open-jdk-17|ee|s|cp|gc-Parallel|t-32|f-10"
+  - "open-jdk-11|ee|s|cp|gc-G1|t-32|f-10"

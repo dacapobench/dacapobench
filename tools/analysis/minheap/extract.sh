@@ -25,16 +25,16 @@ printf -v HEADER '#
 BMS=$BASE/benchmarks/bms
 
 for bm in `cd $BMS; ls`; do
-    CMDS=("java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
-          "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -s small -t 32 -f 10 -n 1"\
-          "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -s large -t 32 -f 10 -n 1"\
-          "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -s vlarge -t 32 -f 10 -n 1"\
-	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 1 -f 10 -n 1"\
-	  "java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
-	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
-	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
-	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 10"\
-	  "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1")
+    CMDS=("java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
+          "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -s small -t 32 -f 10 -n 1"\
+          "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -s large -t 32 -f 10 -n 1"\
+          "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -s vlarge -t 32 -f 10 -n 1"\
+	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 1 -f 10 -n 1"\
+	  "java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
+	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
+	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1"\
+	  "java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 10"\
+	  "java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar $bm -t 32 -f 10 -n 1")
     if [ "$bm" != "common.xml" ]; then
 	echo $bm
 	out=$BMS/$bm/$OUT
