@@ -1,18 +1,42 @@
 diff '--color=auto' -ur ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java
---- ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2022-09-21 06:58:14.000000000 +0000
-+++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2022-09-21 08:36:57.196547708 +0000
-@@ -492,6 +492,8 @@
+--- ./pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2023-08-25 00:27:38.000000000 +0000
++++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/PMD.java	2023-08-29 06:11:36.676900539 +0000
+@@ -507,7 +507,7 @@
              TimeTracker.startGlobalTracking();
          }
  
-+        configuration.setThreads(Runtime.getRuntime().availableProcessors());
-+
-         final Level logLevel = configuration.isDebug() ? Level.FINER : Level.INFO;
+-        final Level logLevel = configuration.isDebug() ? Level.FINER : Level.INFO;
++        final Level logLevel = Level.OFF;
          final ScopedLogHandlersManager logHandlerManager = new ScopedLogHandlersManager(logLevel, new ConsoleHandler());
          final Level oldLogLevel = LOG.getLevel();
+         // Need to do this, since the static logger has already been initialized
+diff '--color=auto' -ur ./pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java
+--- ./pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java	2023-08-25 00:27:38.000000000 +0000
++++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/processor/MultiThreadProcessor.java	2023-08-29 06:45:59.592976444 +0000
+@@ -45,10 +45,20 @@
+     @Override
+     protected void collectReports(List<Renderer> renderers) {
+         try {
++            int fivePercent = (int) (submittedTasks / 20);
+             for (int i = 0; i < submittedTasks; i++) {
+                 final Report report = completionService.take().get();
++                if (fivePercent > 1) {
++                    if (i % fivePercent == 0) {
++                        int percentage = 5 * (i / fivePercent);
++                        System.out.print("Checked: " + percentage + "%\r");
++                    }
++                } else {
++                    System.out.print("Checked: " + (i + 1) + " files\r");
++                }
+                 super.renderReports(renderers, report);
+             }
++            System.out.println("PMD checked " + submittedTasks + " files.");
+         } catch (final InterruptedException ie) {
+             Thread.currentThread().interrupt();
+         } catch (final ExecutionException ee) {
 diff '--color=auto' -ur ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java
---- ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2022-09-21 06:58:14.000000000 +0000
-+++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2022-09-21 08:39:49.932299796 +0000
+--- ./pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2023-08-25 00:27:38.000000000 +0000
++++ ../build/pmd-core/src/main/java/net/sourceforge/pmd/renderers/AbstractRenderer.java	2023-08-29 06:11:36.676900539 +0000
 @@ -105,8 +105,6 @@
              this.writer.flush();
          } catch (IOException e) {

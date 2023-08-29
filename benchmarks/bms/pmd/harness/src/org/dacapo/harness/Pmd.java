@@ -35,7 +35,7 @@ public class Pmd extends Benchmark {
   String reportFileName = null;
 
   public Pmd(Config config, File scratch, File data) throws Exception {
-    super(config, scratch, data);
+    super(config, scratch, data, false);
     Class<?> clazz = Class.forName("net.sourceforge.pmd.PMD", true, loader);
     this.method = clazz.getMethod("main", String[].class);
     
