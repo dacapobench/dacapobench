@@ -1,0 +1,10 @@
+includes:
+  - "runbms-base.yml"
+    
+configs:
+  - "open-jdk-17|s|cp|gc-G1|t-32|f-40|gclog"
+  - "open-jdk-17|s|cp|gc-G1|taskset-0|f-40"
+  - "open-jdk-17|s|cp|gc-Serial|f-40"
+  - "open-jdk-17|s|cp|gc-Parallel|f-40"
+  - "open-jdk-17|s|cp|gc-Z|f-40"
+  - "open-jdk-17|s|cp|gc-Shenandoah|f-40"

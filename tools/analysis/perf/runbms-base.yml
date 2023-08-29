@@ -1,0 +1,92 @@
+includes:
+  - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
+  - "openjdk.yml"
+
+overrides:
+  "remote_host": null
+
+suites:
+  dacapo-744ef415:
+    type: DaCapo
+    release: evaluation
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-744ef415.jar
+    timing_iteration: 10
+    timeout: 1800
+    minheap: min
+    minheap_values:
+      min:
+        avrora: 7
+        batik: 193
+        biojava: 97
+        cassandra: 129
+        eclipse: 347
+        fop: 15
+        graphchi: 184
+        h2: 1363
+        h2o: 238
+        jme: 29
+        jython: 29
+        kafka: 198
+        luindex: 41
+        lusearch: 25
+        pmd: 118
+        spring: 64
+        sunflow: 31
+        tomcat: 17
+        tradebeans: 135
+        tradesoap: 91
+        xalan: 17
+        zxing: 147
+
+
+benchmarks:
+  dacapo-744ef415:
+    - avrora
+    - batik
+    - biojava
+    - cassandra
+    - eclipse
+    - fop
+    - graphchi
+    - h2
+    - h2o
+    - jme
+    - jython
+    - kafka
+    - luindex
+    - lusearch
+#    - pmd
+    - spring
+    - sunflow
+#    - tomcat
+    - tradebeans
+    - tradesoap
+    - xalan
+    - zxing
+
+plugins:
+  collect_gclog:
+    type: CopyFile
+    patterns:
+      - "gc.log"
+
+modifiers:
+  t:
+    type: ProgramArg
+    val: "-t {0}"
+  f:
+    type: ProgramArg
+    val: "-f {0}"
+  gc:
+    type: JVMArg
+    val: "-XX:+Use{0}GC"
+  cp:
+    type: JVMArg
+    val: "-XX:+UseCompressedOops"
+  up:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops"
+  taskset:
+    type: Wrapper
+    val: taskset -c {0}
+ 

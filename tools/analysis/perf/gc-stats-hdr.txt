@@ -1,0 +1,17 @@
+# GC statistics
+#
+# The data summarizes GC logs gathered over 10 interations of the benchmark,
+# for different heap sizes.  For each heap size, a list of tuples is given.
+# Each tuple presents the start time (sec), the minimum heap size (MB),
+# and the pause time (ms) for the respective GC.
+#
+# For example, the tuple "[7.218, 16, 0.94]" reports a GC that started at
+# 7.218s into the program execution, that resulted in a post-GC heap size
+# of 16MB, and that took 0.94ms.
+#
+# The heap sizes are reported as mulitples of the minimum heap size for the
+# benchmkark (1.0 means 1.0 x the min heap).
+#
+#
+# The following options were used:  -server -XX:+UseCompressedOops -XX:+UseG1GC -Xlog:gc:file=gc.log -Xms<minheap> -Xmx<minheap> -n 10 -s default <bm> -t 32 -f 40
+#

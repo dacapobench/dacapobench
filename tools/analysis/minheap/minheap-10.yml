@@ -1,0 +1,13 @@
+includes:
+  - "minheap-base.yml"
+
+suites:
+  dacapo-744ef415:
+    type: DaCapo
+    release: evaluation
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-744ef415.jar
+    timing_iteration: 10
+    timeout: 80 # for tomcat # 900
+
+configs:
+  - "open-jdk-17|s|cp|gc-G1|t-32|f-10"

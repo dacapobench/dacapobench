@@ -1,0 +1,51 @@
+includes:
+  - "$RUNNING_NG_PACKAGE_DATA/base/minheap.yml"
+  - "openjdk.yml"
+
+benchmarks:
+  dacapo-744ef415:
+#    - avrora
+#    - batik
+#    - biojava
+#    - cassandra
+#    - eclipse
+#    - fop
+#    - graphchi
+#    - h2
+#    - h2o
+#    - jme
+#    - jython
+#    - kafka
+#    - luindex
+#    - lusearch
+#    - pmd
+#    - spring
+#    - sunflow
+    - tomcat
+#    - tradesoap
+#    - tradebeans
+#    - xalan
+#    - zxing
+
+modifiers:
+  sz:
+    type: ProgramArg
+    val: "-s {0}"
+  n:
+    type: ProgramArg
+    val: "-n {0}"
+  t:
+    type: ProgramArg
+    val: "-t {0}"
+  f:
+    type: ProgramArg
+    val: "-f {0}"
+  gc:
+    type: JVMArg
+    val: "-XX:+Use{0}GC"
+  cp:
+    type: JVMArg
+    val: "-XX:+UseCompressedOops"
+  up:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops"
