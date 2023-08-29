@@ -1,51 +1,50 @@
 benchmark pmd
   class org.dacapo.harness.Pmd
-  thread-model single
+  thread-model per_cpu
   jars "asm-7.1.jar", "commons-io-2.6.jar", "commons-lang3-3.8.1.jar", "jcommander-1.72.jar", "pmd-core-6.13.0.jar", "pmd-java-6.13.0.jar", "saxon-9.1.0.8-dom.jar", "saxon-9.1.0.8.jar", "xercesImpl.jar", "xml-apis.jar";
 
-size small args "check",
-                "-d", "${DATA}/pmd/pmd-cli/src/main/java/net/sourceforge/pmd/cli",
+size small args "-d", "${DATA}/pmd/pmd-core/src/main/java/net/sourceforge/pmd/cli",
+                "-t", "${THREADS}",
                 "-f", "text",
-                "--no-cache",
-                "--fail-on-violation", "false",
-                "--relativize-paths-with", "${DATA}",
-                "--rulesets", "java-comments",
-                "-r", "${SCRATCH}/pmd-report.txt",
-                "--threads", "${THREADS}"
+                "-language", "java",
+								"-shortnames",
+                "-failOnViolation", "false",
+                "-rulesets", "java-comments",
+                "-r", "${SCRATCH}/pmd-report.txt"
+  thread-limit 1024
   output 
-    stdout digest 0x8965391acb05eef005103bb1f13e99201616852c,
+    stdout digest 0x7052bebb84c7c447c674a96b43dc1d036ba5ea4d,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-    "pmd-report.txt" digest(text) 0xabe154262d26ff25357dc50c8c81775047818f77;
+    "pmd-report.txt" digest(text) 0xea2e1a48188add23c773aa6d01a562af829b29cf;
 
-size default args "check",
-                  "-d", "${DATA}/pmd/pmd-core",
+size default args "-d", "${DATA}/pmd/pmd-core",
+                  "-t", "${THREADS}",
                   "-f", "text",
-                  "--no-cache",
-                  "--fail-on-violation", "false",
-                  "--relativize-paths-with", "${DATA}",
-                  "--rulesets", "java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations",
-                  "-r", "${SCRATCH}/pmd-report.txt",
-                  "--threads", "${THREADS}"
+                  "-language", "java",
+								  "-shortnames",
+                  "-failOnViolation", "false",
+                  "-rulesets", "java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations",
+                  "-r", "${SCRATCH}/pmd-report.txt"
+  thread-limit 1024
   output 
-    stdout digest 0xf481f21087a2a635608d8b3b6f6864df7b2af3e3,
+    stdout digest 0x077687d8e9973f7028f08bc2c39e0cee67bb5b2a,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-    "pmd-report.txt" digest(text) 0x3c06050af601f187d5dbfdce48ec7ab088177cda;
+    "pmd-report.txt" digest(text) 0x9ac4266f6d867118bf6365f3c935b97526705c2c;
 
-size large args "check",
-                "-d", "${DATA}/pmd/eclipse",
-                "-d", "${DATA}/pmd/pmd-core",
-                "-d", "${DATA}/pmd/pmd-cli",
+size large args "-d", "${DATA}/pmd/eclipse",
+                "-t", "${THREADS}",
                 "-f", "text",
-                "--no-cache",
-                "--fail-on-violation", "false",
-                "--relativize-paths-with", "${DATA}",
-                "--rulesets", "java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations",
-                "-r", "${SCRATCH}/pmd-report.txt",
-                "--threads", "${THREADS}"
+                "-language", "java",
+								"-shortnames",
+                "-failOnViolation", "false",
+                "-rulesets",
+                "java-basic,java-braces,java-clone,java-codesize,java-comments,java-controversial,java-design,java-empty,java-finalizers,java-imports,java-naming,java-optimizations",
+                "-r", "${SCRATCH}/pmd-report.txt"
+  thread-limit 1024
   output 
-    stdout digest 0x04f6c173eca6c0e66d5255cb40f72c9876ea1e60,
+    stdout digest 0xee1a101f70d3e27f9aa2bb8e2ed9cb71b0a15af3,
     stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-    "pmd-report.txt" digest(text) 0x89b7bfb0941da1422e678bcf24886a0ada387deb;
+    "pmd-report.txt" digest(text) 0x38f073cf66d7da60fef23346de5b1bc2f5fbd0b6;
 
 description
   short		"A source code analyzer for Java",

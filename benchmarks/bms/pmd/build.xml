@@ -12,12 +12,12 @@
     <property file="dacapo.properties"/>
 
     <property name="bm-name" value="pmd"/>
-    <property name="bm-version" value="7.0.0-rc3"/> <!-- Be sure to update the git-commit when updating verison! -->
+    <property name="bm-version" value="6.55.0"/> <!-- Be sure to update the git-commit when updating verison! -->
     <property name="bm-version-str" value="pmd ${bm-version}"/>
 
     <property name="bm-src" value="${bm-name}-src-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="${github.url}/${bm-name}/${bm-name}"/>
-    <property name="bm-git-commit" value="7d6d303488c1da2f796125569f4db78c6a85a873"/>
+    <property name="bm-git-commit" value="ef3455348603aa25f86894b9930f05f141f44d20"/>
 
     <!-- use eclipse JDT as input to large tests -->
     <property name="jdt-url" value="${dacapo.src.url}"/>
@@ -58,35 +58,31 @@
             <arg value="-DskipTests"/>
         </exec>
 
-        <!-- unpack produced zip file -->
-        <property name="pmd-dist-target" value="${bm-build-top}/pmd-dist/target"/>
-        <property name="pmd-dist-zip" value="${pmd-dist-target}/pmd-dist-${bm-version}-bin.zip"/>
-        <unzip src="${pmd-dist-zip}" dest="${pmd-dist-target}"/>
-        <property name="pmd-dist-lib" value="${pmd-dist-target}/pmd-bin-${bm-version}/lib"/>
+        <!-- unpacks produced zip file -->
+        <property name="pmd-dist-target" value="${bm-build-top}/pmd-dist/target/pmd-bin-${bm-version}"/>
+        <unzip src="${pmd-dist-target}.zip" dest="${bm-build-top}/pmd-dist/target"/>
     </target>
 
     <target name="jar" depends="libs">
         <copy todir="${bm-jars}">
             <resources>
-                <file file="${bm-build-top}/pmd-cli/target/pmd-cli-${bm-version}.jar"/>
-                <file file="${bm-build-top}/pmd-core/target/pmd-core-${bm-version}.jar"/>
-                <file file="${bm-build-top}/pmd-java/target/pmd-java-${bm-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/pmd-core-${bm-version}.jar"/>
+                <file file="${pmd-dist-target}/lib/pmd-java-${bm-version}.jar"/>
             </resources>
         </copy>
     </target>
 
     <target name="data">
-        <!-- inputs for small and default, taken from the pmd sources -->
+        <!-- inputs for small and default -->
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}">
                 <include name="pmd-core/**/*.java"/>
-                <include name="pmd-cli/**/*.java"/>
                 <exclude name="**/file_with_ISO-8859-1_encoding.java"/>
                 <exclude name="**/file_with_utf8_bom.java"/>
             </fileset>
         </copy>
 
-        <!-- inputs for large, taken from eclipse -->
+        <!-- inputs for large -->
         <unzip src="${bm-downloads}/${jdt-src}" dest="${bm-data}/eclipse">
             <patternset>
                 <include name="**/ASTConverte*Test*.java"/>
@@ -108,20 +104,13 @@
 
     <target name="libs">
         <copy todir="${bm-jars}">
-            <fileset dir="${pmd-dist-lib}">
+            <fileset dir="${pmd-dist-target}/lib">
                 <include name="**/asm-*.jar"/>
+                <include name="**/commons-io-*.jar"/>
                 <include name="**/commons-lang3-*.jar"/>
-                <include name="**/gson-*.jar"/>
                 <include name="**/jcommander-*.jar"/>
-                <include name="**/jline-*.jar"/>
-                <include name="**/jul-to-slf4j-*.jar"/>
-                <include name="**/nice-xml-messages-*.jar"/>
-                <include name="**/pcollections-*.jar"/>
-                <include name="**/picocli-*.jar"/>
-                <include name="**/progressbar-*.jar"/>
-                <include name="**/slf4j-api-*.jar"/>
-                <include name="**/slf4j-nop-*.jar"/>
-                <include name="**/Saxon-HE-*.jar"/>
+                <include name="**/saxon-*.jar"/>
+                <include name="**/saxon-*-dom.jar"/>
             </fileset>
         </copy>
     </target>

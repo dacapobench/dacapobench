@@ -36,7 +36,7 @@ public class Pmd extends Benchmark {
 
   public Pmd(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
-    Class<?> clazz = Class.forName("net.sourceforge.pmd.cli.PmdCli", true, loader);
+    Class<?> clazz = Class.forName("net.sourceforge.pmd.PMD", true, loader);
     this.method = clazz.getMethod("main", String[].class);
     
     /*
@@ -49,6 +49,10 @@ public class Pmd extends Benchmark {
      * set.
      */
     System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+
+    // Set System property so that PMD won't call System.exit() after run.
+    Class pmdcli = Class.forName("net.sourceforge.pmd.cli.PMDCommandLineInterface", true, loader);
+    System.setProperty((String)pmdcli.getField("NO_EXIT_AFTER_RUN").get(null), "true");
   }
 
   private void sortReport() {
