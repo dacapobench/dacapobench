@@ -112,8 +112,6 @@ public abstract class Page {
 
     if (iGetResultCode != expectedStatus) {
       System.err.printf("URL %s returned status %d (expected %d)%n", address, iGetResultCode, expectedStatus);
-      if (!keep)
-        writeLog(logFile, strGetResponseBodyLocalized);
       return false;
     }
 

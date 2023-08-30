@@ -25,7 +25,7 @@
 
     <import file="../common.xml"/>
 
-    <target name="unpack" depends="untar"/>
+    <target name="unpack" depends="untar,patch"/>
 
     <target name="bm-build" depends="build-properties,commons-httpclient,dacapo-digest">
         <exec executable="ant" dir="${bm-build-top}">
@@ -64,8 +64,6 @@
     </target>
 
     <target name="data">
-        <patch patchfile="${bm-files}/tomcat.patch" strip="1" dir="${bm-build-top}"/>
-
         <copy todir="${bm-data}">
             <fileset dir="${bm-build-top}/output/dist">
                 <!-- this can probably be further optimized -->
