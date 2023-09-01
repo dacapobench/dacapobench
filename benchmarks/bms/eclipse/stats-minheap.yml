@@ -4,9 +4,11 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 347, 345, 345 ]          # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar eclipse -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-1.f-10.n-1: [ 343, 347, 348 ]           # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar eclipse -t 1 -f 10 -n 1
-open-jdk-11.s.up.gc-G1.t-32.f-10.n-1: [ 436, 434, 427 ]          # java-11-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar eclipse -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-Parallel.t-32.f-10.n-1: [ 387, 387, 387 ]    # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-78bcea0f.jar eclipse -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 299, 299, 301 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-78bcea0f.jar eclipse -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10: [ 344, 347, 348 ]         # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-0d047f55.jar eclipse -t 32 -f 10 -n 10
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 135, 135, 135 ]                # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar eclipse -t 32 -f 10 -n 1
+open-jdk-17.sz-small.s.cp.gc-G1.t-1.f-10.n-1: [ 13, 13, 13 ]           # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar eclipse -s small -t 32 -f 10 -n 1
+open-jdk-17.sz-large.s.cp.gc-G1.t-32.f-10.n-1: [ 141, 141, 141 ]       # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar eclipse -s large -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-Parallel.t-32.f-10.n-1: [ 152, 149, 148 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar eclipse -t 1 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-1.f-10.n-1: [ 135, 135, 135 ]                 # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar eclipse -t 32 -f 10 -n 1
+open-jdk-17.s.up.gc-G1.t-32.f-10.n-1: [ 167, 167, 168 ]                # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-744ef415.jar eclipse -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10: [ 137, 137, 137 ]               # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar eclipse -t 32 -f 10 -n 1
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 135, 135, 135 ]                # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar eclipse -t 32 -f 10 -n 10
