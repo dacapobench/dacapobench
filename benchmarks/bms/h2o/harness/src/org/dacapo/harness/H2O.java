@@ -74,14 +74,14 @@ public class H2O extends Benchmark{
         // Launch the h2o server
         useBenchmarkClassLoader();
         // use these for debugging: "-log_level", "DEBUG", "-log_dir", scratch+File.separator+"h2o.log"
-        this.method.invoke(null,  (Object) new String[] {"-ip", ip, "-port", port});
+        this.method.invoke(null,  (Object) new String[] {"-ip", ip, "-port", port, "-log_dir", scratch.getAbsolutePath(), "-log_level", "ERROR"});
     }
 
     @Override
     public void iterate(String size) throws Exception {
 
         PrintStream savedOut = System.out;
-        PrintStream savedErr= System.err;
+        PrintStream savedErr = System.err;
         // Store the standard output
         emptyOutput();
 
