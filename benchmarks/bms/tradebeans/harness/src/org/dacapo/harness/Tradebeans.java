@@ -34,7 +34,8 @@ public class Tradebeans extends Benchmark {
 
   public Tradebeans(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
-
+    assertJavaVersionGE(11, "Tradebeans requires at least Java version 11.");
+  
     // Find the launcher
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
     this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE});

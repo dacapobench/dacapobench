@@ -32,6 +32,8 @@ public class Tradesoap extends Benchmark {
 
   public Tradesoap(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
+    assertJavaVersionGE(11, "Tradesoap requires at least Java version 11.");
+
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
     this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE});
     this.method = clazz.getMethod("performIteration", new Class[] {});
