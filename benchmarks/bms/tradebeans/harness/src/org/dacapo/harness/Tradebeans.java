@@ -14,6 +14,9 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 
+import sun.misc.Unsafe;
+import java.lang.reflect.Field;
+
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
 
@@ -41,6 +44,30 @@ public class Tradebeans extends Benchmark {
 
   @Override
   protected void prepare(String size) throws Exception {
+    /*
+     * FIXME
+     *
+     * This workaround silences JDK11+ warnings relating to use of
+     * reflection.
+     *
+     * Specifically, catalina generates the following warning:
+     *
+     *  WARNING: Illegal reflective access by org.wildfly.extension.elytron.SSLDefinitions (jar:file:[...]/dat/lib/daytrader/wildfly-26.1.3.Final/modules/system/layers/base/org/wildfly/extension/elytron/main/wildfly-elytron-integration-18.1.2.Final.jar!/) to method com.sun.net.ssl.internal.ssl.Provider.isFIPS()
+     *
+     * Fixing the underlying issue means changing the upstream library,
+     * which is beyond the scope of this benchmarking suite.
+     */
+    try {
+      Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+      theUnsafe.setAccessible(true);
+      Unsafe u = (Unsafe) theUnsafe.get(null);
+      Class cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
+      Field logger = cls.getDeclaredField("logger");
+      u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
+    } catch (Exception e) {
+        // ignore
+    }
+
     String[] args = config.preprocessArgs(size, scratch, data);
     int logNumSessions = 3;
     int timeoutms = 0;
