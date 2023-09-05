@@ -211,17 +211,6 @@
 	<target name="jar"/>
 
 	<target name="complete">
-		<unjar src="${build.target-jar}" dest="${bm-output-dir}" overwrite="yes">
-			<patternset>
-				<include name="doc/menu.html"/>
-			</patternset>
-		</unjar>
-		<tempfile property="temp.file" destdir="${bm-output-dir}/doc"/>
-		<java jar="${toolsdir}/transformer/bin/transformer.jar" fork="yes">
-			<arg value="${bm-output-dir}/doc/menu.html"/>
-			<arg value="${bm-name}"/>
-			<arg value="${temp.file}"/>
-		</java>
 		<jar jarfile="${build.target-jar}" basedir="${bm-output-dir}" update="true"/>
 	</target>
 </project>
