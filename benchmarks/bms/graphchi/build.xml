@@ -34,7 +34,7 @@
     <target name="source">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${dacapo.dat.url}/"/>
+            <param name="target-url" value="${dacapo.dat.url}"/>
             <param name="target-file" value="graphchi-data.zip"/>
         </antcall>
     </target>

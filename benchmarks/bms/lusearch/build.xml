@@ -27,7 +27,7 @@
     <target name="data">
         <antcall target="check-source">
             <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${dacapo.dat.url}/"/>
+            <param name="target-url" value="${dacapo.dat.url}"/>
             <param name="target-file" value="lusearch-data.zip"/>
         </antcall>
         <unzip dest="${bm-data}" src="${bm-downloads}/lusearch-data.zip"/>
