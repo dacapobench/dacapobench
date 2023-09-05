@@ -51,6 +51,7 @@ public class Spring extends Benchmark {
         // https://www.toptal.com/spring-boot/spring-boot-application-programmatic-launch
 
         String pathToJar = data+File.separator+"jar"+File.separator+"spring"+File.separator+"spring-petclinic-2.7.3.jar";
+        System.getProperties().setProperty("server.tomcat.basedir", scratch.getCanonicalPath() + File.separator + "tomcat");
 
         Thread.currentThread().setContextClassLoader(loader);
         launch.invoke(null, pathToJar);
