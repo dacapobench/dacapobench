@@ -222,8 +222,6 @@
 			<arg value="${bm-name}"/>
 			<arg value="${temp.file}"/>
 		</java>
-		<copy file="${temp.file}" tofile="${bm-output-dir}/doc/menu.html"/>
-		<delete file="${temp.file}"/>
 		<jar jarfile="${build.target-jar}" basedir="${bm-output-dir}" update="true"/>
 	</target>
 </project>

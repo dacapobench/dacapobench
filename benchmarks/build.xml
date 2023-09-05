@@ -297,7 +297,7 @@
     <!-- ================================= 
          target: dist              
          ================================= -->
-    <target name="dist" depends="harness,bytecode-transformer,compile,update-externdata-info,create-zip"/>
+    <target name="dist" depends="harness,bytecode-transformer,compile,create-zip"/>
 
     <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation"/>
 
@@ -529,71 +529,71 @@ See ${log.build.report} for a summary of benchmark build status.
         </sequential>
     </macrodef>
 
-    <target name="avrora" depends="init,harness,update-externdata-info">
+    <target name="avrora" depends="init,harness">
         <build.bm benchmark="avrora"/>
     </target>
-    <target name="batik" depends="init,harness,update-externdata-info">
+    <target name="batik" depends="init,harness">
         <build.bm benchmark="batik"/>
     </target>
-    <target name="biojava" depends="init,harness,update-externdata-info">
+    <target name="biojava" depends="init,harness">
         <build.bm benchmark="biojava"/>
     </target>
-    <target name="cassandra" depends="init,harness,update-externdata-info">
+    <target name="cassandra" depends="init,harness">
         <build.bm benchmark="cassandra"/>
     </target>
     <target name="daytrader" depends="tradebeans, tradesoap"/>
-    <target name="eclipse" depends="init,harness,update-externdata-info">
+    <target name="eclipse" depends="init,harness">
         <build.bm benchmark="eclipse"/>
     </target>
-    <target name="fop" depends="init,harness,update-externdata-info">
+    <target name="fop" depends="init,harness">
         <build.bm benchmark="fop"/>
     </target>
-    <target name="graphchi" depends="init,harness,update-externdata-info">
+    <target name="graphchi" depends="init,harness">
         <build.bm benchmark="graphchi"/>
     </target>
-    <target name="h2" depends="init,harness,update-externdata-info">
+    <target name="h2" depends="init,harness">
         <build.bm benchmark="h2"/>
     </target>
-    <target name="h2o" depends="init,harness,update-externdata-info">
+    <target name="h2o" depends="init,harness">
         <build.bm benchmark="h2o"/>
     </target>
-    <target name="jme" depends="init,harness,update-externdata-info">
+    <target name="jme" depends="init,harness">
         <build.bm benchmark="jme"/>
     </target>
-    <target name="jython" depends="init,harness,update-externdata-info">
+    <target name="jython" depends="init,harness">
         <build.bm benchmark="jython"/>
     </target>
-    <target name="kafka" depends="init,harness,update-externdata-info">
+    <target name="kafka" depends="init,harness">
         <build.bm benchmark="kafka"/>
     </target>
-   <target name="luindex" depends="init,harness,update-externdata-info">
+   <target name="luindex" depends="init,harness">
         <build.bm benchmark="luindex"/>
     </target>
-    <target name="lusearch" depends="init,harness,update-externdata-info">
+    <target name="lusearch" depends="init,harness">
         <build.bm benchmark="lusearch"/>
     </target>
-    <target name="pmd" depends="init,harness,update-externdata-info">
+    <target name="pmd" depends="init,harness">
         <build.bm benchmark="pmd"/>
     </target>
-    <target name="spring" depends="init,harness,update-externdata-info">
+    <target name="spring" depends="init,harness">
         <build.bm benchmark="spring"/>
     </target>
-    <target name="sunflow" depends="init,harness,update-externdata-info">
+    <target name="sunflow" depends="init,harness">
         <build.bm benchmark="sunflow"/>
     </target>
-    <target name="tomcat" depends="init,harness,update-externdata-info">
+    <target name="tomcat" depends="init,harness">
         <build.bm benchmark="tomcat"/>
     </target>
-    <target name="tradebeans" depends="init,harness,update-externdata-info">
+    <target name="tradebeans" depends="init,harness">
         <build.bm benchmark="tradebeans"/>
     </target>
-    <target name="tradesoap" depends="init,harness,update-externdata-info">
+    <target name="tradesoap" depends="init,harness">
         <build.bm benchmark="tradesoap"/>
     </target>
-    <target name="xalan" depends="init,harness,update-externdata-info">
+    <target name="xalan" depends="init,harness">
         <build.bm benchmark="xalan"/>
     </target>
-    <target name="zxing" depends="init,harness,update-externdata-info">
+    <target name="zxing" depends="init,harness">
         <build.bm benchmark="zxing"/>
     </target>
 
@@ -615,22 +615,6 @@ See ${log.build.report} for a summary of benchmark build status.
         
         <mkdir dir="${build.target-jars}"/>
         <mkdir dir="${build.target-data}"/>
-    </target>
-
-    <target name="update-externdata-info" depends="set-build-version-info">
-        <copy file="${basedir}/resources/huge-data-md5s.list" todir="${dacapo.build.dir}"/>
-        <copy file="${basedir}/resources/dlfiles.list" todir="${dacapo.build.dir}"/>
-        <echo message="setting DaCapo-DL-URL-LFS, DaCapo-DL-URL-RAW DaCapo-DL-Commit in manifest"/>
-        <jar destfile="${build.target-jar}" update="true">
-            <manifest>
-                <attribute name="DaCapo-DL-URL-LFS" value="${dacapo-dl.url.lfs}"/>
-                <attribute name="DaCapo-DL-URL-RAW" value="${dacapo-dl.url.raw}"/>
-            </manifest>
-            <metainf dir="${dacapo.build.dir}">
-				<include name="huge-data-md5s.list"/>
-                <include name="dlfiles.list"/>
-			</metainf>
-        </jar>
     </target>
 
     <target name="create-zip" depends="set-build-version-info">
