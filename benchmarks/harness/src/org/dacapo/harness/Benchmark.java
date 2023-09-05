@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
@@ -129,6 +130,11 @@ public abstract class Benchmark {
   private static String latencyBaseFileName = null;
 
   /**
+   * Do we print out benchmark stats at startup
+   */
+  private static boolean printStats = false;
+
+  /**
    * Saved System.out while redirected to the digest stream
    */
   private static final PrintStream savedOut = System.out;
@@ -196,8 +202,8 @@ public abstract class Benchmark {
 
   private Set<URL> jarDeps = new HashSet();
   private Set<URL> datDeps = new HashSet();
-  private Map<String, Integer> statsVal = new HashMap();
-  private Map<String, Integer> statsScore = new HashMap();
+  private Map<String, ArrayList> stats;
+
   /**
    * Run a benchmark. This is final because individual benchmarks should not
    * interfere with the flow of control.
@@ -383,14 +389,31 @@ public abstract class Benchmark {
    * Perform pre-benchmark preparation.
    */
   protected void prepare() throws Exception {
-    System.out.println("Version: "+config.getDesc("version"));
-    System.out.println("Nominal stats: "+getStats());
+    System.out.println("Version: " + config.getDesc("version") + (printStats ? "" : " (use -s for nominal benchmark stats)"));
+    if (printStats) {
+      System.out.println(getStats());
+    }
   }
 
+  /*
+  private boolean loadStats(String ymlFile) {
+    InputStream in = Benchmark.class.getClassLoader().getResourceAsStream(ymlFile);
+    Yaml yaml = new Yaml();
+    stats = yaml.load(in);
+    if (stats.size() != 0 ) {
+      return true;
+    }
+
+    System.out.println("Failed to load stats file from yml "+ymlFile);
+
+    return false;
+  }
+  */
   /* read yml by hand for now since snakeyml (introduced in ed3b413b) led to inexplicable failures of trade benchmarks */
   private boolean loadStats(String ymlFile) {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(Benchmark.class.getClassLoader().getResourceAsStream(ymlFile)))) {
       String line;
+      stats = new HashMap<String, ArrayList>();
       while (in.ready()) {
         line = in.readLine();
         int idx = line.indexOf(':');
@@ -399,24 +422,12 @@ public abstract class Benchmark {
         int end = line.indexOf(']');
         String list = line.substring(start + 1, end); // extract the list
         String[] tokens = list.trim().split(", ");
-        String score = tokens[0];
-        String value = tokens[1];
-        String rank = tokens[2];
-        String min = tokens[3];
-        String max = tokens[4];
-        String desc = tokens[5];
-        if (desc.contains("'")) {
+        if (tokens[6].contains("'")) {
           start = list.indexOf('\'');
           end = list.indexOf('\'', start + 1);
-          desc = list.substring(start + 1, end);
+          tokens[6] = list.substring(start + 1, end);
         }
-        try {
-          statsVal.put(key, Integer.parseInt(value));
-          statsScore.put(key, Integer.parseInt(score));
-        } catch (NumberFormatException nfe) {
-          System.err.println("Badly formatted line '" + line + "' in file " + ymlFile);
-          break;
-        }
+        stats.put(key, new ArrayList<>(Arrays.asList(tokens)));
       }
       in.close();
       return true; // successfully parsed
@@ -426,12 +437,19 @@ public abstract class Benchmark {
     return false;
   }
 
+
+
   private String getStats() {
-    String rtn = "";
-    for (String key : new TreeSet<>(statsVal.keySet())) {
-      if (rtn.length() != 0) { rtn += ", "; }
-      rtn += key+": "+statsScore.get(key)+"|"+statsVal.get(key);
+    String rtn = System.lineSeparator() + "Nominal statistics" + System.lineSeparator() + "Key Score  Rank Value Description" + System.lineSeparator();
+    for (String k : new TreeSet<>(stats.keySet())) {
+      ArrayList v = stats.get(k);
+      rtn += k + ": ";
+      rtn += String.format("%1$4s", v.get(0)) + " ";  // score
+      rtn += String.format("%1$5s", v.get(2)) + " ";  // rank
+      rtn += String.format("%1$5s", v.get(1)) + " ";  // value
+      rtn += v.get(6) + System.lineSeparator();  // description
     }
+
     return rtn;
   }
 
@@ -862,6 +880,7 @@ public abstract class Benchmark {
     latencyBaseFileName = new File(line.getLogDirectory(), "dacapo-latency").getAbsolutePath();
     dumpLatencyCSV = line.getLatencyCSV();
     dumpLatencyHDR = line.getLatencyHDR();
+    printStats = line.getStats();
 
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());

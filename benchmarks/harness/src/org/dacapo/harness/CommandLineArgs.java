@@ -105,6 +105,8 @@ public class CommandLineArgs {
   private static final String OPT_THREAD_COUNT = "thread-count";
   private static final String OPT_THREAD_FACTOR = "thread-factor";
   private static final String OPT_TIMEOUT_DIALATION = "timeout-dialation";
+  private static final String OPT_PRINT_STATS = "print-stats";
+
 
   private static final Option[] OPTIONS = { 
     makeOption("c",  OPT_CALLBACK,            "Use class <callback> to bracket benchmark runs", "callback"),
@@ -136,7 +138,8 @@ public class CommandLineArgs {
     makeOption(null, OPT_DATA_SETLOC,         "Path to workload data and jar location.", "ext_data_loc"),
     makeOption(null, OPT_LATENCY_CSV,         "Dump latency data to csv file in log directory", null),
     makeOption(null, OPT_LATENCY_HDR,         "Dump latency data to HDR histogram file in log directory", null),
-    makeOption(null, OPT_LOG_DIR,             "Directory in which log files will be written (default is scratch)", "log_dir")
+    makeOption(null, OPT_LOG_DIR,             "Directory in which log files will be written (default is scratch)", "log_dir"),
+    makeOption("s",  OPT_PRINT_STATS,         "Print nominal benchmark statistics", null),
   };
 
   private static CommandLineParser parser = new PosixParser();
@@ -415,6 +418,10 @@ public class CommandLineArgs {
 
   public boolean getLatencyHDR() {
     return line.hasOption(OPT_LATENCY_HDR);
+  }
+
+  public boolean getStats() {
+    return line.hasOption(OPT_PRINT_STATS);
   }
 
   public List<String> getArgList() {
