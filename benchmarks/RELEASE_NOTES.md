@@ -31,8 +31,14 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 * It is essential that you read and observe the usage guidelines that appear in README.md
 * Run a benchmark: `java -jar <dacapo-jar-name>.jar <benchmark>`
 * For usage information, run with no arguments.
-  
-## 2.3 Building
+
+## 2.3 Compatability
+
+* All benchmarks are compatable with Java 11 through Java 17.
+* All benchmarks aside from h2, luindex and lusearch are compatable with Java 8.
+* All benchmarks aside from cassandra are compatable with Java 21.
+
+## 2.4 Building from Source
 
 * You must have a working, recent version of ant installed. Change to the benchmarks directory and then run:  `ant -p` for instructions on how to build.
 
