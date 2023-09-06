@@ -2,22 +2,18 @@ RELEASE PROCEDURES
 
 0. Update and commit the release notes.
 
-1. Determine a version number and optionally a nickname, specify that in dacapo.properties file
-	dacapo.version=3.27
-	dacapo.nickname=uncalibrated
-	
-	Also determine the dacapo-dl remote git repository raw data access URL and commit:
-	dacapo-dl.url.raw=https://raw.githubusercontent.com/dacapobench/dacapo-dl/
-	dacapo-dl.commit=HEAD
-
-2. Make fresh git clone
+1. Make fresh git clone
    	git clone https://github.com/dacapobench/dacapobench.git
 
+2. Determine a version number and optionally a nickname, specify that in dacapobench/benchmarks/dacapo.properties file
+	dacapo.version=23.9
+	dacapo.nickname=chopin
+
 3. Produced a source build and rename it:
-        cd dacapobench/benchmarks
-		ant -Dbuild.is-official=true source
-		mv dacapo-${dacapo.version}-${dacapo.nickname}-src.zip ..
-		cd ..
+    cd dacapobench/benchmarks
+	ant -Dbuild.is-official=true source
+	mv dacapo-${dacapo.version}-${dacapo.nickname}-src.zip ../..
+	cd ../..
 
 4. Create a new directory and unzip the new source
 	mkdir release
@@ -25,25 +21,19 @@ RELEASE PROCEDURES
 	unzip ../dacapo-${dacapo.version}-${dacapo.nickname}-src.zip
 
 5. Build the new source (using a proxy if necessary)
+	<set up local.properties>
 	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home
-	export ANT_OPTS="-Xmx512M -Dhttp.proxyHost=150.203.163.152 -Dhttp.proxyPort=3128"
-	export MAVEN_OPTS="-Xmx512M"
-        cd benchmarks
+    cd benchmarks
 	ant -Dbuild.is-official=true
 
-6. Test the resulting jar
+6. Test the resulting zip
 
 7. Upload files
-	- Log into the sourceforge site as a developer
-	- Go to Develop tab
-	- Go to Project Admin -> File Manager tab
-	- Create a new folder with release name (right click on root folder)
-	- Select new folder for uploads
-	- Upload the files
-or
-	scp <filename> <sf-username>,dacapobench@frs.sourceforge.net:/home/frs/project/d/da/dacapobench/<release dir>
-	- set file properties via the file manager to identify release notes (left-click file names to set properties)
+	- rclone copy -P --tpslimit=5 --s3-chunk-size=256M -vv dacapo-*.zip r2:dacapo/chopin 
 
-8. Ensure default download is correct (use left click on file to make it default for a given platform / platforms)
-	- https://sourceforge.net/projects/dacapobench/ (see default download here)
-	- https://sourceforge.net/projects/dacapobench/files/
+8. Ensure download is working, and update web page 
+
+9. Create a git tag and release
+    - git tag -a v23.9-RC2-chopin -m "23.9-RC2-chopin release"
+	- git push origin --tags
+	- got to github and create a release
