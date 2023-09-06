@@ -1,6 +1,6 @@
 # The DaCapo Benchmark Suite
 
-Last updated 2023-07-11
+Last updated 2023-09-06
 
 This benchmark suite is intend as a tool for the research community.
 It consists of a set of open source, real world applications with
@@ -25,7 +25,7 @@ For more information see the [DaCapo Benchmark web page](http://dacapobench.org)
 
 ## Building
 
-The easiest way to obtain the benchmark suite is to download the pre-built jar file from the DaCapo Benchmark web site above.
+The easiest way to obtain the benchmark suite is to download the pre-built suite file from the DaCapo Benchmark web site above.
 
 If, however, you want to build from source read on...
 

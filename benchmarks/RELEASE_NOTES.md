@@ -1,6 +1,6 @@
-# dacapo-23.8-chopin  RC1 RELEASE NOTES  2023-07
+# dacapo-23.9-chopin  RC2 RELEASE NOTES  2023-09
 
-This is the first release candidate of the third major release of the DaCapo benchmark suite.
+This is the second release candidate of the third major release of the DaCapo benchmark suite.
 
 *We strongly welcome feedback, bug fixes and suggestions.   Please do this via [github](https://github.com/dacapobench/dacapobench)*
 
@@ -14,16 +14,17 @@ These notes are structured as follows:
 
 # 1. Overview
 
-The 23.8 release is the third major update of the suite.  It is strictly incompatible with previous releases: new benchmarks have been added, old benchmarks have been removed, all other benchmarks have been substantially updated and the inputs have changed for every program. It is for this reason that in any published use of the suite, the version of the suite must be explicitly stated.
+The 23.9 release is the third major update of the suite.  It is incompatible with previous releases: new benchmarks have been added, old benchmarks have been removed, all other benchmarks have been substantially updated and the inputs have changed for every program. It is for this reason that in any published use of the suite, the version of the suite must be explicitly stated.
 
-The release sees the move from Geronimo to JBoss Wildfly for the trade benchmarks, the addition of eight completely new benchmarks: biojava, cassandra, graphchi, h2o, jme, kafka, spring, and zxing, and the upgrade of all other benchmarks to reflect the current release state of the applications from which the benchmarks were derived.  This version introduces latency metrics for the request-based workloads, and basic statistics that characterize each benchmark.  These changes are consistent with the original goals of the DaCapo project, which include the desire for the suite to remain relevant and reflect the current state of deployed Java applications.
-
+The release sees: new packaging as a zip file containg a jar plus a read-only folder structure; the move from Geronimo to JBoss Wildfly for the trade benchmarks; the addition of eight completely new benchmarks: biojava, cassandra, graphchi, h2o, jme, kafka, spring, and zxing; the inclusion of six benchmarks with large (> 1 GB) heap footprints; the inclusion of nine latency-sensitive benchmarks; and the upgrade of all other benchmarks to reflect the current release state of the applications from which the benchmarks were derived.  This version introduces latency metrics for the request-based workloads, and basic statistics that characterize each benchmark.  These changes are consistent with the original goals of the DaCapo project, which include the desire for the suite to remain relevant and reflect the current state of deployed Java applications.
 
 # 2. Usage
 
 ## 2.1 Downloading
 
-* Download from git via ttps://github.com/dacapobench/dacapobench
+* DaCapo now ships as a zip file which contains a jar file and a folder which contains all data sources and jar files used by the respective workloads.
+* Download from https://www.dacapobench.org/chopin/dacapo-23.9-chopin-RC2.zip
+* Unzip the zip file
 
 ## 2.2 Running
 
@@ -37,28 +38,28 @@ The release sees the move from Geronimo to JBoss Wildfly for the trade benchmark
 
 # 3. Changes
 
-## 3.1 Changes introduced by 23.8
+## 3.1 Changes introduced by 23.9
 
-### 3.1.1 Version changes introduced by 23.8
+### 3.1.1 Version changes introduced by 23.9
 
 All benchmarks updated to reflect recent versions:
 
-| Benchmark | 9.12 | 23.8 |
+| Benchmark | 9.12 | 23.9 |
 |---|---|---|
 |avrora|    20091224 | 20131011 |
 | batik |    1.7     | 1.16 |
-| eclipse |   3.5.1   | 4.25 |
+| eclipse |   3.5.1   | 4.27 |
 | fop |      0.95     | 2.8 |
-| h2|        1.5      | 2.1.214 |
+| h2|        1.5      | 2.2.220 |
 | jython|   2.5.2   | 2.7.3 |
-| pmd|     4.2.5  | 6.52.0 |
-| tomcat| 6.0.2   | 10.0.27 |
+| pmd|     4.2.5  | 6.55.0 |
+| tomcat| 6.0.2   | 10.1.11 |
 | daytrader| 2.4.1   | 3.0-SNAPSHOT |
 | xalan|     2.7.1   |2.7.2 |
-| lucene|   2.4.1    | 9.4 |
+| lucene|   2.4.1    | 9.7.0 |
 
-	
-### 3.1.2 Benchmark additions due to 23.8
+
+### 3.1.2 Benchmark additions due to 23.9
 
 **biojava**: BioJava is an open-source project dedicated to   providing a Java framework for processing biological data.  It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures.
       
@@ -76,16 +77,16 @@ All benchmarks updated to reflect recent versions:
 
 **zxing**: Zxing is a multi-format 1D/2D barcode image processing library
 
-### 3.1.3. Benchmark deletions due to 23.8
+### 3.1.3. Benchmark deletions due to 23.9
 
 **lusearch-fix**:  This is no longer needed as we've moved to a much more recent version of Lucene.
        
-### 3.1.4. Other Notable Changes due to 23.8
+### 3.1.4. Other Notable Changes due to 23.9
 
-Latency metrics are now reported for each of the request based workloads  (cassandra, h2, kafka, lusearch, spring, tomcat, tradebeans and tradesoap) and jme, which is a rendering workload (game engine).  The benchmark harness internally records the period of each request (or frame render), and at the end of each benchmark iteration outputs percentile statistics for request latencies. We report two metrics. Simple latency just reports the raw percentile latencies that were observed. Metered latency reports latencies as seen via an emulated request queue and a continuous stream of requests. Simple latency is unrealistic in that the rate at which requests are accepted is a function of the rate at which they are processed. In real systems requests will be enqueued and some of the user-observed latency is due to requests waiting in the request queue.
+Latency metrics are now reported for each of the request-based workloads  (cassandra, h2, kafka, lusearch, spring, tomcat, tradebeans and tradesoap) and jme, which is a rendering workload (game engine).  The benchmark harness internally records the period of each request (or frame render), and at the end of each benchmark iteration outputs percentile statistics for request latencies. We report two metrics. Simple latency just reports the raw percentile latencies that were observed. Metered latency reports latencies as seen via an emulated request queue and a continuous stream of requests. Simple latency is unrealistic in that the rate at which requests are accepted is a function of the rate at which they are processed. In real systems requests will be enqueued and some of the user-observed latency is due to requests waiting in the request queue.
 
-Each of the workloads has been measured against a variety of metrics, and the statistics are recorded in the project's git repository at 
-benchmarks/bm/*/stats-*.yml. When benchmarks are invoked some summary metrics are displayed giving a score (out of 10) and an absolute value for each metric for each benchmark.  This allows some level of benchmark characterization and benchmark comparison to be done.
+Each of the workloads has been measured against a variety of metrics, and the statistics are recorded in the DaCapo git repository at 
+benchmarks/bm/*/stats-*.yml. When benchmarks are invoked some summary metrics are displayed giving a score (out of 10), an absolute value for each metric, its rank among the other benchmarks, and a short description.  This allows some level of benchmark characterization and benchmark comparison to be done.
 
 ## 3.2 Changes introduced by 9.12-MR1
 
@@ -177,15 +178,15 @@ should be able to include such a contribution in a maintenance release, rather t
 
 # 5. Contributions and Acknowledgements
 
-The support of the Australian National University, Oracle, Google, and Huawei was crucial to the successful completeion of the 23.8 and 9.12-MR1 releases.
+The support of the Australian National University, Oracle, Google, and Huawei was crucial to the successful completeion of the 23.9 and 9.12-MR1 releases.
 
-The 23.8 release was led by Steve Blackburn of ANU and Google, and developed primarily by:
+The 23.9 release was led by Steve Blackburn of ANU and Google, and developed primarily by:
 
 *  Steve Blackburn, Google and Australian National University
 *  Rui Chen, Australian National University
 *  John Zhang, Australian National University
 
-In preparing the 23.8 release we received guidance and assistance from a number of people including:
+In preparing the 23.9 release we received guidance and assistance from a number of people including:
 
 * Xi Yang, Australian National University, Confluent and Twitter
 * Zixian Cai, Australian National University
