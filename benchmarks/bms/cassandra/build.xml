@@ -122,7 +122,7 @@
 
     <target name="data">
         <copy todir="${bm-data}">
-            <fileset dir="${bm-files}/workloads/"/>
+            <fileset dir="${bm-files}/workload/"/>
         </copy>
         <copy todir="${bm-data}/conf">
             <fileset dir="${cassandra-build-top}/conf/"/>

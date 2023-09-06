@@ -261,11 +261,13 @@
                 <include name="benchmarks/bms/*/data/**"/>
                 <include name="benchmarks/bms/*/downloads/**.MD5"/>
                 <include name="benchmarks/bms/*/src/**"/>
-                <include name="benchmarks/bms/*/workloads/**"/>
                 <include name="benchmarks/bms/*/stats-*.yml"/>
 
-                <!-- add pmd toolchain setup script -->
+                <!-- benchmark-specific includes -->
+                <include name="benchmarks/bms/cassandra/workload/**"/>
                 <include name="benchmarks/bms/pmd/mvn_toolchain_setup.sh"/>
+                <include name="benchmarks/bms/spring/loadgen/**"/>
+                <include name="benchmarks/bms/xalan/workload/**"/>
 
                 <!-- add eclipse's plugin -->
                 <include name="benchmarks/bms/eclipse/plugin/META-INF/**"/>
