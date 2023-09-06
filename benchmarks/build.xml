@@ -219,8 +219,8 @@
             <zipfileset dir="${basedir}/.." defaultexcludes="yes">
                 <!-- add readme etc -->
                <include name="README.md"/>
-               <include name="RELEASE_NOTES.md"/>
                <include name="LICENSE"/>
+               <include name="benchmarks/RELEASE_NOTES.md"/>
                <include name="benchmarks/doc/*"/>
                <include name="benchmarks/bms/*/doc/*"/>
 
