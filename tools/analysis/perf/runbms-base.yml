@@ -6,10 +6,10 @@ overrides:
   "remote_host": null
 
 suites:
-  dacapo-744ef415:
+  dacapo-7839b032:
     type: DaCapo
     release: evaluation
-    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-744ef415.jar
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-7839b032.jar
     timing_iteration: 10
     timeout: 1800
     minheap: min
@@ -29,10 +29,10 @@ suites:
         kafka: 198
         luindex: 41
         lusearch: 25
-        pmd: 118
+        pmd: 202
         spring: 64
         sunflow: 31
-        tomcat: 17
+        tomcat: 21
         tradebeans: 135
         tradesoap: 91
         xalan: 17
@@ -40,7 +40,7 @@ suites:
 
 
 benchmarks:
-  dacapo-744ef415:
+  dacapo-7839b032:
     - avrora
     - batik
     - biojava
@@ -55,10 +55,10 @@ benchmarks:
     - kafka
     - luindex
     - lusearch
-#    - pmd
+    - pmd
     - spring
     - sunflow
-#    - tomcat
+    - tomcat
     - tradebeans
     - tradesoap
     - xalan
@@ -89,4 +89,6 @@ modifiers:
   taskset:
     type: Wrapper
     val: taskset -c {0}
- 
+  gclog:
+    type: JVMArg
+    val: "-Xlog:gc:file=gc.log" 

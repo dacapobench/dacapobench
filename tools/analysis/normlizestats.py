@@ -72,7 +72,7 @@ def normalize():
                 r = (len(vals[k])-1)-r  # invert the ranking
                 # score = 10 - score
                 print (k, r, score)
-            rank = str(r+1)+'/'+str(len(keys[k]))
+            rank = str(r)+'/'+str(len(keys[k]))
             score = 10 - int(10 * r / len(keys[k]))
 
             l = [score, stats[bm][k][0], rank, min, median[k], max, stats[bm][k][1]]
@@ -84,6 +84,7 @@ def save_yml(path):
     for bm in bms:
         yml = path + '/'+bm+'/stats-nominal.yml'
         with open(yml, 'w') as y:
+            y.write("# key: [score/10, value, rank, min, median, max, description]\n")
             yaml.dump(stats[bm], y, default_flow_style=None, width=10000)
 
 def main(argv):

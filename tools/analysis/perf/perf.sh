@@ -7,10 +7,10 @@
 #
 bm=$1    # benchmark name
 log=$2   # the name of the log directory containing the log files
+xlog=$3  # the name of the log directory containing the log files for the extra runs
 
-dacapo=78bcea0f
+dacapo=744ef415
 hfacs="1000 2000 3000 4000 5000 6000 7000 8000 9000 10000"
-d=log/$log
 hardware="AMD Ryzen 9 7950X 16/32 cores."
 os="Linux 5.15.0."
 
@@ -32,16 +32,22 @@ echo "# $hardware"
 echo "# $os"
 echo "#"
 
-cfg="open-jdk-11.s.cp.gc-G1.t-32"
+# main perf config
+d=log/$log
+cfg="open-jdk-17.s.cp.gc-G1.t-32"
 echo "$cfg:"
 for hf in $hfacs; do
     echo "  $hf:"
-    zcat $d/$bm\.$hf\.*.$cfg.f-*.dacapo-$dacapo.log.gz  | ./perflogtoyaml.py -i 4
+    zcat $d/$bm\.$hf\.*.$cfg.f-*.dacapo-*.log.gz  | ./perflogtoyml.py -i 4
 done
 
-cfg="open-jdk-11.s.cp.gc-G1.taskset-0"
-echo "$cfg:"
-for hf in 2000; do
-    echo "  $hf:"
-    zcat $d/$bm\.$hf\.*.$cfg.f-*.dacapo-$dacapo.log.gz  | ./perflogtoyaml.py -i 4
+# extra configs
+d=log/$xlog
+
+for cfg in open-jdk-17.s.cp.gc-G1.taskset-0 open-jdk-17.s.cp.gc-Serial open-jdk-17.s.cp.gc-Parallel open-jdk-17.s.cp.gc-Z open-jdk-17.s.cp.gc-Shenandoah ; do
+    echo "$cfg:"
+    for hf in 2000; do
+	echo "  $hf:"
+	zcat $d/$bm\.$hf\.*.$cfg.f-*.dacapo-*.log.gz  | ./perflogtoyml.py -i 4
+    done
 done

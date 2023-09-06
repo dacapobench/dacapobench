@@ -3,7 +3,7 @@ includes:
   - "openjdk.yml"
 
 benchmarks:
-  dacapo-744ef415:
+  dacapo-7839b032:
 #    - avrora
 #    - batik
 #    - biojava
@@ -18,7 +18,7 @@ benchmarks:
 #    - kafka
 #    - luindex
 #    - lusearch
-#    - pmd
+    - pmd
 #    - spring
 #    - sunflow
     - tomcat
@@ -43,6 +43,9 @@ modifiers:
   gc:
     type: JVMArg
     val: "-XX:+Use{0}GC"
+  ee:
+    type: JVMArg
+    val: "-XX:+ExitOnOutOfMemoryError"
   cp:
     type: JVMArg
     val: "-XX:+UseCompressedOops"

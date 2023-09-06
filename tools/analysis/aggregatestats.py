@@ -88,7 +88,7 @@ def get_perf_stats():
     if perf is None:
         return None, None, None, None, None, None;
 
-    vm_base = 'open-jdk-11.s.cp.gc-G1'
+    vm_base = 'open-jdk-17.s.cp.gc-G1'
     vm = vm_base+'.t-32'
     vm_one = vm_base+'.taskset-0'
 
@@ -205,7 +205,7 @@ def nominal():
         nom['ARA'] = int(alloc['bytes-allocated']/(1000*ap))
         desc['ARA'] = 'nominal allocation rate (bytes / usec) ('+str(alloc['bytes-allocated'])+'/'+str(1000*ap)+')'
 
-        nom['GTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1']))))
+        nom['GTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1']))))
         desc['GTO'] = 'nominal memory turnover (total alloc bytes / min heap bytes)'
 
     hs = int(100*(tight-ap)/ap)
@@ -214,14 +214,33 @@ def nominal():
     nom['GSS'] = hs
     desc['GSS'] = 'nominal heap size sensitivity (slowdown with tight heap, as a percentage) ('+str(tight)+'/'+str(ap)+')'
 
-    nom['GMH'] = max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1'])
-    desc['GMH'] = 'nominal minimum heap size (MB) (with compressed pointers)'
+    nom['GMD'] = max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1'])
+    desc['GMD'] = 'nominal minimum heap size (MB) for default size configuration (with compressed pointers)'
 
-    nom['GMU'] = max(minheap['open-jdk-11.s.up.gc-G1.t-32.f-10.n-1'])
+    sz='small'
+    hscfg='open-jdk-17.sz-'+sz+'.s.cp.gc-G1.t-1.f-10.n-1'
+    if hscfg in minheap:
+        nom['GMS'] = max(minheap[hscfg])
+        desc['GMS'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
+
+    sz='large'
+    hscfg='open-jdk-17.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
+    if hscfg in minheap:
+        nom['GML'] = max(minheap[hscfg])
+        desc['GML'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
+
+    sz='vlarge'
+    hscfg='open-jdk-17.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
+    if hscfg in minheap:
+        nom['GMV'] = max(minheap[hscfg])
+        desc['GMV'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
+
+       
+    nom['GMU'] = max(minheap['open-jdk-17.s.up.gc-G1.t-32.f-10.n-1'])
     desc['GMU'] = 'nominal minimum heap size (MB) without compressed pointers'
 
-    one = max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1'])
-    ten = max(minheap['open-jdk-11.s.cp.gc-G1.t-32.f-10.n-10'])
+    one = max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1'])
+    ten = max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10'])
     if (not ten is None):
         leakage = int(100*((ten/one)-1))
         if (leakage < 0):
@@ -271,11 +290,11 @@ def nominal():
     nom['GCP'] = int(100*(gc_summary[2.0][2]/gc_summary[2.0][1]))
     desc['GCP'] = 'nominal percentage of time spent in GC pauses at 2X heap size (G1) ('+str(gc_summary[2.0][2])+'/'+str(gc_summary[2.0][1])+')'
 
-    nom['GCA'] = int(100*(gc_summary[1.0][3]/ten))
-    desc['GCA'] = 'nominal average post-GC heap size as percent of min heap, when run at 1X min heap with G1 ('+str(gc_summary[1.0][3])+'/'+str(ten)+')'
+    nom['GCA'] = int(100*(gc_summary[2.0][3]/ten))
+    desc['GCA'] = 'nominal average post-GC heap size as percent of min heap, when run at 2X min heap with G1 ('+str(gc_summary[2.0][3])+'/'+str(ten)+')'
 
-    nom['GCM'] = int(100*(gc_summary[1.0][4]/ten))
-    desc['GCM'] = 'nominal median post-GC heap size as percent of min heap, when run at 1X min heap with G1 ('+str(gc_summary[1.0][4])+'/'+str(ten)+')'
+    nom['GCM'] = int(100*(gc_summary[2.0][4]/ten))
+    desc['GCM'] = 'nominal median post-GC heap size as percent of min heap, when run at 2X min heap with G1 ('+str(gc_summary[2.0][4])+'/'+str(ten)+')'
 
     print("# [value, mean, benchmark rank, description]")
     for x in sorted(nom):

@@ -416,18 +416,20 @@ public abstract class Benchmark {
       stats = new HashMap<String, ArrayList>();
       while (in.ready()) {
         line = in.readLine();
-        int idx = line.indexOf(':');
-        String key = line.substring(0, idx).trim(); // extract the key
-        int start = line.indexOf('[');
-        int end = line.indexOf(']');
-        String list = line.substring(start + 1, end); // extract the list
-        String[] tokens = list.trim().split(", ");
-        if (tokens[6].contains("'")) {
-          start = list.indexOf('\'');
-          end = list.indexOf('\'', start + 1);
-          tokens[6] = list.substring(start + 1, end);
-        }
-        stats.put(key, new ArrayList<>(Arrays.asList(tokens)));
+	if (line.charAt(0) != '#') {
+          int idx = line.indexOf(':');
+          String key = line.substring(0, idx).trim(); // extract the key
+          int start = line.indexOf('[');
+          int end = line.indexOf(']');
+          String list = line.substring(start + 1, end); // extract the list
+          String[] tokens = list.trim().split(", ");
+          if (tokens[6].contains("'")) {
+            start = list.indexOf('\'');
+            end = list.indexOf('\'', start + 1);
+            tokens[6] = list.substring(start + 1, end);
+          }
+          stats.put(key, new ArrayList<>(Arrays.asList(tokens)));
+	}
       }
       in.close();
       return true; // successfully parsed
