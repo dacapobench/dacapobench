@@ -219,6 +219,7 @@
             <zipfileset dir="${basedir}/.." defaultexcludes="yes">
                 <!-- add readme etc -->
                <include name="README.md"/>
+               <include name="RELEASE_NOTES.md"/>
                <include name="LICENSE"/>
                <include name="benchmarks/doc/*"/>
                <include name="benchmarks/bms/*/doc/*"/>
@@ -250,6 +251,9 @@
 
                 <!-- add benchmark xml -->
                 <include name="benchmarks/bms/*.xml"/>
+
+                <!-- add benchmark yml -->
+                <include name="benchmarks/bms/stats-*.yml"/>
 
                 <!-- add each benchmark -->
                 <include name="benchmarks/bms/*/*.cnf"/>
