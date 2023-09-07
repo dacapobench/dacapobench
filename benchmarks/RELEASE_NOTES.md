@@ -35,7 +35,7 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 ## 2.3 Compatability
 
 * All benchmarks are compatable with Java 11 through Java 17.
-* All benchmarks aside from h2, luindex and lusearch are compatable with Java 8.
+* All benchmarks aside from biojava, cassandra, eclipse, h2, luindex, lusearch, tomcat, tradebeans and tradesoap are compatable with Java 8.
 * All benchmarks aside from cassandra are compatable with Java 21.
 
 ## 2.4 Building from Source
