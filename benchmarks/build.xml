@@ -179,7 +179,7 @@
         <property name="build.nickname" value="${dacapo.nickname}"/>
         <!-- overwritable with -Dbuild.is-official=true on commandline-->
         <condition property="build.version"
-                    value="${dacapo.version}"
+                    value="${dacapo.version}-${dacapo.nickname}"
                     else="${dacapo.version}-git-${git.hash}">
             <isset property="build.is-official"/>
         </condition>
@@ -212,7 +212,7 @@
     <target name="source" depends="set-build-version-info">
         <echo file="SOURCE_VERSION.txt">This source distribution was built from DaCapo release ${build.version} "${build.nickname}"${line.separator}</echo>
 
-        <zip destfile="dacapo-${build.version}-${build.nickname}-src.zip" level="9" whenempty="create">
+        <zip destfile="dacapo-${build.version}-src.zip" level="9" whenempty="create">
             <zipfileset dir="${basedir}/.." defaultexcludes="yes" filemode="755">
                 <include name="tools/*/bin/**"/>
             </zipfileset>
