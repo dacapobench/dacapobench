@@ -1,6 +1,6 @@
-diff -u pybench/CommandLine.py tmp/pybench/CommandLine.py
---- pybench/CommandLine.py	2006-07-05 16:21:05.000000000 +1000
-+++ tmp/pybench/CommandLine.py	2006-07-05 16:14:00.000000000 +1000
+diff -ur pybench/CommandLine.py tmp/pybench/CommandLine.py
+--- pybench/CommandLine.py	2007-01-25 16:35:26.000000000 +1100
++++ tmp/pybench/CommandLine.py	2007-01-25 16:35:49.000000000 +1100
 @@ -367,7 +367,8 @@
              print
              rc = 1
@@ -11,9 +11,22 @@ diff -u pybench/CommandLine.py tmp/pybench/CommandLine.py
  
      def add_option(self, option):
  
-diff -u pybench/pybench.py tmp/pybench/pybench.py
---- pybench/pybench.py	2006-07-05 16:21:05.000000000 +1000
-+++ tmp/pybench/pybench.py	2006-07-05 16:21:32.000000000 +1000
+diff -ur pybench/pybench.py tmp/pybench/pybench.py
+--- pybench/pybench.py	2007-01-25 16:35:26.000000000 +1100
++++ tmp/pybench/pybench.py	2007-01-25 16:36:21.000000000 +1100
+@@ -324,9 +324,9 @@
+         t = timer()
+         test()
+         t = timer() - t
+-        if t < MIN_TEST_RUNTIME:
+-            raise ValueError('warp factor too high: '
+-                             'test times are < 10ms')
++#        if t < MIN_TEST_RUNTIME:
++#            raise ValueError('warp factor too high: '
++#                             'test times are < 10ms')
+         eff_time = t - min_overhead
+         if eff_time < 0:
+             raise ValueError('wrong calibration')
 @@ -437,7 +437,8 @@
          self.tests = {}
          if _debug:

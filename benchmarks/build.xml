@@ -11,10 +11,16 @@
  *                  including the 'results'
  * - sourceclean    remove all distribution files, and all downloadable
  *                  sources.  This prepares an "ip-clean" distribution.
+ * - depzip         generate a zip file containing two jars for every benchmark,
+ *                  <bm>.jar and <bm>-deps.jar, containing the core of the
+ *                  benchmark and its external dependencies respectively
  * - split-deps     use this target in combination with any of the others
  *                  to force external dependencies to be separated and placed
  *                  into a second generated jar file.
- *
+ * - release        create main jar, srczip and depzip, each appropriately named
+ *                  according to the property "release.tag", so must be called
+ *                  in conjunction with -Drelease.tag="<some-release-id-string>"
+ *                  on the command line
  * - <bmname>       will compile a given benchmark
  * - compile        will compile all benchmarks
  * - jar.quick      will build a jar (undated) based on whatever has been compiled already
@@ -32,8 +38,8 @@
  *     /usr/share/javacc/lib
  *   
  *   Author: Robin Garner, Australian National University
- *   $Date: 2006-12-15 10:55:13 +1100 (Fri, 15 Dec 2006) $
- *   $Id: build.xml 234 2006-12-14 23:55:13Z rgarner $
+ *   $Date: 2007-01-27 00:09:55 +0000 (Sat, 27 Jan 2007) $
+ *   $Id: build.xml 263 2007-01-27 00:09:55 +0000 (Sat, 27 Jan 2007) steveb-oss $
 -->
 
 <project name="DacapoBenchmarks" default="dist" basedir=".">
@@ -64,13 +70,6 @@
 	<target name="dist" depends="jar" description="--> Build the distribution from source"/>
 
 	<!-- ================================= 
-         target: deps        
-         ================================= -->
-	<target name="split-deps" description="--> Split the distribution into a core jar and a jar containting dependencies">
-		<property name="externalize.deps" value="true"/>
-	</target>
-
-	<!-- ================================= 
          target: sourcedist              
          ================================= -->
 	<target name="sourcedist" depends="sources,dist" 
@@ -88,20 +87,11 @@
 	<!-- ================================= 
          target: srczip              
          ================================= -->
-	<target name="srczip" depends="init,clean" description="--> Creates a source zip">
-		<zip destfile="dacapo-${DSTAMP}-src.zip">
-			<fileset dir=".." includes="extra/eclipse-plugin/*" excludes="**/CVS"/>
-			<fileset dir=".." includes="extra/eclipse-plugin/src/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="extra/eclipse-plugin/META-INF/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/LICENSE-2.0.txt"/>
-			<fileset dir=".." includes="benchmarks/README.txt"/>
-			<fileset dir=".." includes="benchmarks/bmsrc/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/build.xml"/>
-			<fileset dir=".." includes="benchmarks/cnf/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
-			<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
-		</zip>
+	<target name="srczip" depends="clean,init" description="--> Creates a source zip">
+		<antcall target="srczip.basic">
+			<param name="zip.suffix" value=""/>
+			<param name="zip.basename" value="dacapo"/>
+		</antcall>
 	</target>
 
 	<!-- ================================= 
@@ -110,10 +100,11 @@
 	<target name="clean" description="clean up after the build process">
         <delete failonerror="false" includeemptydirs="true">
           <fileset dir="${build}"/>
-          <fileset dir="${build_src}"/>
+          <fileset dir="${build.src}"/>
+          <fileset dir="${build.deps}"/>
           <fileset dir="${extra}/eclipse-plugin/@dot"/>
           <fileset dir="cachedir"/>
-          <fileset dir="${deps}"/>
+          <fileset dir="${dep.tmp}"/>
           <!-- Jython's mess -->
           <fileset dir="scratch"/>
         </delete>
@@ -141,11 +132,42 @@
 	</target>
 	
 	<!-- ================================= 
+         target: depzip        
+         ================================= -->
+	<target name="depzip" description="--> Create a zip file containing two jar files for each benchmark; one containing the benchmark, the other containing its dependencies">
+		<antcall target="depzip.basic">
+			<param name="zip.suffix" value=""/>
+			<param name="zip.basename" value="dacapo"/>
+		</antcall>
+	</target>
+	
+	<!-- ================================= 
+         target: split-deps        
+         ================================= -->
+	<target name="split-deps" description="--> Split the distribution into a core jar and a jar containting dependencies">
+		<property name="externalize.deps" value="true"/>
+	</target>
+
+	<!-- ================================= 
+          target: release              
+         ================================= -->
+	<target name="release" depends="srczip.release,jar.release,depzip.release" 
+            description="--> Perform full clean, download, and then create all files necessary for a release">
+	</target>
+	
+	<!-- ================================= 
+         target: jar              
+         ================================= -->
+	<target name="jar" depends="compile,jar.date" description="generate the distribution jar file"/>
+
+	<!-- ================================= 
          target: jar.quick            
          ================================= -->
 	<target name="jar.quick" depends="harness,init" description="generate a jar file" >
 		<antcall target="jar.basic">
 			<param name="jar.suffix" value=""/>
+			<param name="jar.basename" value="dacapo"/>
+			<param name="jar.subdir" value="."/>
 		</antcall>
 	</target>
 	
@@ -155,6 +177,8 @@
 	<target name="jar.date" depends="harness,init" description="generate a jar file" >
 		<antcall target="jar.basic">
 			<param name="jar.suffix" value="-${DSTAMP}"/>
+			<param name="jar.basename" value="dacapo"/>
+			<param name="jar.subdir" value="."/>
 		</antcall>
 	</target>
 	
@@ -166,15 +190,16 @@
 	<property name="extra" location="../extra"/>
 	<property name="bmsrc" location="bmsrc"/>
 	<property name="patches" location="patches"/>
-	<property name="build_src" location="build_src"/>
 	<property name="build" location="build"/>
+	<property name="build.src" location="build_src"/>
+	<property name="build.deps" location="build_deps"/>
 	<property name="originals" location="originals"/>
 	<property name="sources" location="sources"/>
 	<property name="data" location="data"/>
 	<property name="zipdata" location="${build}/data"/>
 	<property name="config" location="cnf"/>
 	<property name="prune" location="prune"/>
-	<property name="deps" location="build_deps"/>
+	<property name="dep.tmp" location="deps"/>
 	
 	<!-- constraints -->
 	<property name="constraints.gnuclasspath" value="true"/>
@@ -205,18 +230,18 @@
 	<property name="bloat.url" value="ftp://ftp.cs.purdue.edu/pub/hosking/bloat"/>
 	<property name="chart.url" value="${sourceforge.dl.url}/jfreechart"/>
 	<property name="eclipse.url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${eclipse.version}-${eclipse.drop}"/>
-	<property name="fop.url" value="${apache.dl.url}/xml/fop"/>
+	<property name="fop.url" value="${apache.dl.url}/xml/fop/source"/>
 	<property name="hsqldb.url" value="${sourceforge.dl.url}/hsqldb"/>
 	<property name="jython.url" value="${sourceforge.dl.url}/jython"/>
 	<property name="lucene.url" value="${apache.dl.url}/lucene/java"/>
 	<property name="pmd.url" value="${sourceforge.dl.url}/pmd"/>
-	<property name="xalan.url" value="${apache.dl.url}/xml/xalan-j"/>
+	<property name="xalan.url" value="${apache.dl.url}/xml/xalan-j/source"/>
 	<!-- auxilary downloads -->
 	<property name="ant.url" value="${apache.dl.url}/ant/binaries/"/>
 	<property name="itext.url" value="${sourceforge.dl.url}/itext"/>
 	<property name="junit.url" value="${sourceforge.dl.url}/junit"/>
 	<property name="python.url" value="http://www.python.org/ftp/python/2.5/"/>
-	<property name="xerces.url" value="${apache.dl.url}/xml/xerces-j/"/>
+	<property name="xerces.url" value="${apache.dl.url}/xml/xerces-j/binaries"/>
 	<!-- data downloads -->
 	<property name="sfdata.url" value="http://dacapobench.sourceforge.net/source-data"/>
 	<property name="shakespeare.url" value="${sfdata.url}/shakespeare.tgz"/>
@@ -233,10 +258,11 @@
 		<tstamp/>
 		<!-- Create the build directory structure used by compile -->
 		<mkdir dir="${build}"/>
+		<mkdir dir="${build.src}"/>
+		<mkdir dir="${build.deps}"/>
 		<mkdir dir="${build}/cnf"/>
 		<mkdir dir="${zipdata}"/>
-		<mkdir dir="${build_src}"/>
-		<mkdir dir="${deps}"/>
+		<mkdir dir="${dep.tmp}"/>
 	</target>	
 	
 	<!-- ================================= 
@@ -280,6 +306,37 @@
 
 	</target>
 
+	<!-- ================================= 
+         target: jar.release            
+         ================================= -->
+	<target name="jar.release" depends="compile,harness,init" description="generate a jar file" >
+		<antcall target="jar.basic">
+			<param name="jar.suffix" value="-${release.tag}"/>
+			<param name="jar.basename" value="dacapo"/>
+			<param name="jar.subdir" value="."/>
+		</antcall>
+	</target>
+	
+	<!-- ================================= 
+     	target: srczip.release              
+     	================================= -->
+	<target name="srczip.release" depends="clean,init,sources" description="--> Creates a source zip">
+		<antcall target="srczip.basic">
+			<param name="zip.suffix" value="-${release.tag}"/>
+			<param name="zip.basename" value="dacapo"/>
+		</antcall>
+	</target>
+
+	<!-- ================================= 
+         target: depzip.release        
+         ================================= -->
+	<target name="depzip.release" description="--> Create a zip file containing two jar files for each benchmark; one containing the benchmark, the other containing its dependencies">
+		<antcall target="depzip.basic">
+			<param name="zip.suffix" value="-${release.tag}"/>
+			<param name="zip.basename" value="dacapo"/>
+		</antcall>
+	</target>
+	
     <!-- ================================= 
          target: jar.basic            
          ================================= -->
@@ -289,7 +346,7 @@
 		</antcall>
 
 		<!-- Put everything in ${build} into the dacapo${jar.suffix}.jar file -->
-		<jar jarfile="dacapo${jar.suffix}.jar" basedir="${build}" index="true" manifest="${build}/META-INF/MANIFEST.MF"/>
+		<jar jarfile="${jar.subdir}/${jar.basename}${jar.suffix}.jar" basedir="${build}" index="true" manifest="${build}/META-INF/MANIFEST.MF"/>
 		<antcall target="jar.deps"/>
 	</target>
 	
@@ -297,15 +354,70 @@
          target: jar.deps           
          ================================= -->
 	<target name="jar.deps" if="externalize.deps" depends="harness,init" description="generate a jar file with suffix (may be null)" >
-		<!-- Put everything in ${deps} into the MyProject-build-deps${jar.suffix}.jar file -->
-		<jar jarfile="dacapo-build-deps${jar.suffix}.jar" basedir="${deps}" index="true" />
+		<!-- Put everything in ${build.deps} into the MyProject-build-deps${jar.suffix}.jar file -->
+		<jar jarfile="${jar.subdir}/${jar.basename}-deps${jar.suffix}.jar" basedir="${build.deps}" index="true" />
 	</target>
 
 	<!-- ================================= 
-         target: jar              
+         target: srczip.basic           
          ================================= -->
-	<target name="jar" depends="compile,jar.date" description="generate the distribution jar file"/>
+	<target name="srczip.basic" depends="clean,init" description="--> Creates a source zip">
+		<zip destfile="${zip.basename}${zip.suffix}-src.zip">
+			<fileset dir=".." includes="extra/eclipse-plugin/*" excludes="**/CVS"/>
+			<fileset dir=".." includes="extra/eclipse-plugin/src/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="extra/eclipse-plugin/META-INF/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/LICENSE-2.0.txt"/>
+			<fileset dir=".." includes="benchmarks/README.txt"/>
+			<fileset dir=".." includes="benchmarks/bmsrc/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/build.xml"/>
+			<fileset dir=".." includes="benchmarks/cnf/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/data/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/patches/**" excludes="**/CVS"/>
+			<fileset dir=".." includes="benchmarks/src/**" excludes="**/CVS"/>
+		</zip>
+	</target>
+	
 
+	<!-- ================================= 
+         target: depzip.basic        
+         ================================= -->
+	<target name="depzip.basic" depends="dep.jars" description="--> Create a zip file containing two jar files for each benchmark; one containing the benchmark, the other containing its dependencies">
+		<zip basedir="${dep.tmp}" includes="**" destfile="${zip.basename}${zip.suffix}-deps.zip"/>
+	</target>
+	
+	<!-- ================================= 
+         target: dep.jars        
+         ================================= -->
+	<target name="dep.jars" description="--> Create two jar files for each benchmark; one containing the benchmark, the other containing its dependencies">
+		<antcall target="dep.jar"><param name="bm" value="antlr" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="bloat" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="chart" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="eclipse" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="fop" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="hsqldb" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="jython" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="luindex" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="lusearch" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="pmd" /></antcall>
+		<antcall target="dep.jar"><param name="bm" value="xalan" /></antcall>
+	</target>
+	
+	<!-- ================================= 
+         target: dep.jar     
+         ================================= -->
+	<target name="dep.jar" depends="split-deps" description="--> Create two jar files for each benchmark; one containing the benchmark, the other containing its dependencies">
+        <delete failonerror="false" includeemptydirs="true">
+          <fileset dir="${build}"/>
+          <fileset dir="${build.deps}"/>
+        </delete>
+		<antcall target="${bm}"/>
+		<antcall target="jar.basic">
+			<param name="jar.basename" value="${bm}" />
+			<param name="jar.suffix" value="" />
+			<param name="jar.subdir" value="${dep.tmp}" />
+		</antcall>
+	</target>
+		
 	<!-- ================================= 
          target: meta-inf             
          ================================= -->
@@ -551,32 +663,32 @@
        ================================= -->
 	<target name="ant" description="--> The ant library - required by some other benchmarks">
 		<!-- Install the ant jar file -->
-		<unzip src="${sources}/apache-ant-${ant.dl.version}-bin.zip" dest="${build_src}/ant/">
+		<unzip src="${sources}/apache-ant-${ant.dl.version}-bin.zip" dest="${build.src}/ant/">
 			<patternset>
 				<include name="apache-ant-${ant.dl.version}/lib/ant.jar"/>
 				<include name="apache-ant-${ant.dl.version}/lib/ant-launcher.jar"/>
 			</patternset>
 		</unzip>
-		<move file="${build_src}/ant/apache-ant-${ant.dl.version}/lib/ant.jar" tofile="${build_src}/ant/ant.jar"/>
-		<move file="${build_src}/ant/apache-ant-${ant.dl.version}/lib/ant-launcher.jar" tofile="${build_src}/ant/ant-launcher.jar"/>
+		<move file="${build.src}/ant/apache-ant-${ant.dl.version}/lib/ant.jar" tofile="${build.src}/ant/ant.jar"/>
+		<move file="${build.src}/ant/apache-ant-${ant.dl.version}/lib/ant-launcher.jar" tofile="${build.src}/ant/ant-launcher.jar"/>
 	</target>
 
 	<!-- ================================= 
         target: antlr 
        ================================= -->
 	<target name="antlr" description="Build antlr" depends="harness">
-		<mkdir dir="${build_src}/antlr"/>
+		<mkdir dir="${build.src}/antlr"/>
 		<untar src="${sources}/antlr-${antlr.version}.tar.gz" 
-           dest="${build_src}/antlr/"
+           dest="${build.src}/antlr/"
          compression="gzip"/>
 
 		<!-- Apply the dacapo patch -->
 		<patch patchfile="${patches}/antlr.patch" 
-           dir="${build_src}"
+           dir="${build.src}"
            strip="0"/>
 
 		<!-- Build directly with javac, classfiles into the build directory -->
-		<javac srcdir="${build_src}/antlr/antlr-${antlr.version}/antlr/"
+		<javac srcdir="${build.src}/antlr/antlr-${antlr.version}/antlr/"
             classpath="${build}"
             destdir="${build}"
 			debug="true" debuglevel="lines,vars,source"/>
@@ -601,17 +713,17 @@
 			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<target name="batik.benchmark" description="Build batik" depends="harness,xerces">
-		<property name="batik-top" value="${build_src}/batik/xml-batik"/>
+		<property name="batik-top" value="${build.src}/batik/xml-batik"/>
 
-		<mkdir dir="${build_src}/batik"/>
+		<mkdir dir="${build.src}/batik"/>
 
 		<!-- unpack the source files -->
-		<unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build_src}/batik/"/>
+		<unzip src="${sources}/batik-src-${batik.version}.zip" dest="${build.src}/batik/"/>
 
 		<!-- Apply the dacapo patch -->
 		<fixcrlf srcdir="${batik-top}/sources" includes="**/*.java"/>
 		<patch patchfile="${patches}/batik.patch" 
-           dir="${build_src}"
+           dir="${build.src}"
            strip="0" ignorewhitespace="yes"/>
 
 		<!-- Build using the supplied build.xml -->
@@ -628,15 +740,15 @@
 			</fileset>
 		</copy>
 
-	    <!-- unjar dependencies into deps directory -->
-		<unjar src="${batik-top}/lib/build/ant_1_4_1.jar" dest="${deps}"/>
-		<unjar src="${batik-top}/lib/build/crimson-ant.jar" dest="${deps}"/>
-		<unjar src="${batik-top}/lib/build/stylebook-1.0-b3_xalan-2.jar" dest="${deps}"/>
-		<unjar src="${batik-top}/lib/build/xalan-2.0.1.jar" dest="${deps}"/>
-		<unjar src="${batik-top}/lib/js.jar" dest="${deps}"/>
-		<unjar src="${batik-top}/lib/pdf-transcoder.jar" dest="${deps}"/>
-		<unjar src="${batik-top}/lib/xerces_2_5_0.jar" dest="${deps}"/>
-		<unjar src="${batik-top}/lib/xml-apis.jar" dest="${deps}"/>
+	    <!-- unjar dependencies into build.deps directory -->
+		<unjar src="${batik-top}/lib/build/ant_1_4_1.jar" dest="${build.deps}"/>
+		<unjar src="${batik-top}/lib/build/crimson-ant.jar" dest="${build.deps}"/>
+		<unjar src="${batik-top}/lib/build/stylebook-1.0-b3_xalan-2.jar" dest="${build.deps}"/>
+		<unjar src="${batik-top}/lib/build/xalan-2.0.1.jar" dest="${build.deps}"/>
+		<unjar src="${batik-top}/lib/js.jar" dest="${build.deps}"/>
+		<unjar src="${batik-top}/lib/pdf-transcoder.jar" dest="${build.deps}"/>
+		<unjar src="${batik-top}/lib/xerces_2_5_0.jar" dest="${build.deps}"/>
+		<unjar src="${batik-top}/lib/xml-apis.jar" dest="${build.deps}"/>
 
 		<!-- Copy the batik resource files -->
 		<copy todir="${build}">
@@ -664,7 +776,7 @@
 	</target>
 	<!-- Build the bloat benchmark -->
 	<target name="bloat.benchmark" description="Build bloat" depends="harness">
-		<property name="bloat-top" value="${build_src}/bloat"/>
+		<property name="bloat-top" value="${build.src}/bloat"/>
 		<mkdir dir="${bloat-top}"/>
 
 		<!-- Un-tar the source distribution -->
@@ -695,17 +807,17 @@
 	<target name="chart" depends="chart.benchmark,chart.harness" description="--> build the jFreeChart benchmark"/>
 	<!-- Build the chart dacapo harness -->
 	<target name="chart.harness" depends="init" description="--> build the jFreeChart harness">
-		<javac srcdir="${bmsrc}" classpath="${build}:${deps}" destdir="${build}" 
+		<javac srcdir="${bmsrc}" classpath="${build}:${build.deps}" destdir="${build}" 
 			includes="dacapo/chart/*"
 			debug="true" debuglevel="lines,vars,source"/>
 	</target>
 	<!-- Build the chart benchmark -->
 	<target name="chart.benchmark" depends="init,harness" description="--> build the jFreeChart benchmark">
-		<property name="chart-top" value="${build_src}/chart/jfreechart-${chart.version}"/>
+		<property name="chart-top" value="${build.src}/chart/jfreechart-${chart.version}"/>
 
 		<!-- Untar the source distribution -->
-		<mkdir dir="${build_src}/chart/"/>
-		<untar src="${sources}/jfreechart-${chart.version}.tar.gz" dest="${build_src}/chart/" compression="gzip"/>
+		<mkdir dir="${build.src}/chart/"/>
+		<untar src="${sources}/jfreechart-${chart.version}.tar.gz" dest="${build.src}/chart/" compression="gzip"/>
 
 		<!-- Build it using jfreechart's build.xml -->
 		<ant antfile="${chart-top}/ant/build.xml" dir="${chart-top}" target="compile" inheritall="false"/>
@@ -725,10 +837,10 @@
     </target>
 	<!-- Add external libraries to the deps -->
 	<target name="chart.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-		<unjar src="${chart-top}/lib/gnujaxp.jar" dest="${deps}"/>
-		<unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${deps}"/>
-		<unjar src="${chart-top}/lib/servlet.jar" dest="${deps}"/>
-		<unjar src="${sources}/itext-1.02b.jar" dest="${deps}"/>
+		<unjar src="${chart-top}/lib/gnujaxp.jar" dest="${build.deps}"/>
+		<unjar src="${chart-top}/lib/jcommon-${chart.version}.jar" dest="${build.deps}"/>
+		<unjar src="${chart-top}/lib/servlet.jar" dest="${build.deps}"/>
+		<unjar src="${sources}/itext-1.02b.jar" dest="${build.deps}"/>
     </target>
 		
 
@@ -744,29 +856,29 @@
 				debug="true" debuglevel="lines,vars,source">
 			<classpath>
 		      	<pathelement path="${build}"/>
-				<pathelement path="${build_src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
-				<pathelement path="${build_src}/eclipse/eclipse/plugins/org.eclipse.core.runtime_${eclipse.version}.jar"/>
-				<pathelement path="${build_src}/eclipse/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
+				<pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
+				<pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.core.runtime_${eclipse.version}.jar"/>
+				<pathelement path="${build.src}/eclipse/eclipse/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
 			</classpath>
 		</javac>
 	</target>
 
 	<!-- Build the eclipse benchmark -->
 	<target name="eclipse.benchmark" depends="init" description="--> build the eclipse benchmark">
-		<property name="eclipse-top" value="${build_src}/eclipse/eclipse"/>
+		<property name="eclipse-top" value="${build.src}/eclipse/eclipse"/>
 
-		<untar src="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz" dest="${build_src}/eclipse/" compression="gzip"/>
-		<unzip src="${sources}/eclipse-Automated-Tests-${eclipse.version}.zip" dest="${build_src}/eclipse/">
+		<untar src="${sources}/eclipse-SDK-${eclipse.version}-linux.gtk.tar.gz" dest="${build.src}/eclipse/" compression="gzip"/>
+		<unzip src="${sources}/eclipse-Automated-Tests-${eclipse.version}.zip" dest="${build.src}/eclipse/">
 			<patternset>
 				<include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
 			</patternset>
 		</unzip>
-		<unzip dest="${build_src}/eclipse/">
-			<fileset dir="${build_src}/eclipse/eclipse-testing/">
+		<unzip dest="${build.src}/eclipse/">
+			<fileset dir="${build.src}/eclipse/eclipse-testing/">
 				<include name="eclipse-junit-tests-M*.zip"/>
 			</fileset>
 		</unzip>
-		<delete dir="${build_src}/eclipse/eclipse-testing"/>
+		<delete dir="${build.src}/eclipse/eclipse-testing"/>
 	</target>
 
 	<!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
@@ -786,7 +898,7 @@
 
 	<!-- gut org.eclipse.osgi_XXXX.jar of its classes, which will become part of the main jar -->
 	<target name="eclipse.osgiclasses" depends="eclipse.benchmark">
-		<property name="osgihack" value="${build_src}/eclipse/osgihack"/>
+		<property name="osgihack" value="${build.src}/eclipse/osgihack"/>
 		<!-- unzip the jar -->
 		<unzip dest="${osgihack}" src="${eclipse-top}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
 		<!-- copy out the class files -->
@@ -804,39 +916,39 @@
 	<!-- Create the eclipse data file -->
 	<target name="eclipse.data" depends="eclipse.benchmark,eclipse.plugin,eclipse.osgiclasses" description="--> build the eclipse data file">
 		<!-- Create the fake jre -->
-		<unzip dest="${build_src}/eclipse/dummyjre" src="${data}/eclipse/dummyjre.zip"/>
+		<unzip dest="${build.src}/eclipse/dummyjre" src="${data}/eclipse/dummyjre.zip"/>
 		
 		<!-- Install the test data -->
 		<zip destfile="${zipdata}/eclipse.zip">
 			<!-- The dummy jre -->
-			<fileset dir="${build_src}/eclipse/" includes="dummyjre/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="dummyjre/**"/>
 			
 			<!-- The eclipse runtime.  We just include as little as we can, -->
 			<!-- using an empirically derived list of what we really need.  -->
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/*"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/about_files/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/configuration/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/features/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/readme/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/dacapo.eclipse_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.apache.ant_*/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.expressions_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.resources_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime.compatibility_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.variables_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.debug.core_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.builder_*/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.compiler_*/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.performance_*/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.launching_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.debug_*/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.osgi_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.test.performance_*/**"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.text_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.eclipse.update.configurator_*.jar"/>
-			<fileset dir="${build_src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/*"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/about_files/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/configuration/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/features/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/readme/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/dacapo.eclipse_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.apache.ant_*/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.expressions_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.resources_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime.compatibility_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.runtime_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.core.variables_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.debug.core_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.builder_*/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.compiler_*/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core.tests.performance_*/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.core_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.launching_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.jdt.debug_*/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.osgi_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.test.performance_*/**"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.text_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.eclipse.update.configurator_*.jar"/>
+			<fileset dir="${build.src}/eclipse/" includes="eclipse/plugins/org.junit_*/**"/>
 		</zip>
 	</target>
 
@@ -853,11 +965,11 @@
 	</target>
 	<!-- Build the fop benchmark -->
 	<target name="fop.benchmark" depends="init,harness" description="--> Build the fop benchmark">
-		<mkdir dir="${build_src}/fop"/>
-		<property name="fop-top" value="${build_src}/fop/fop-${fop.version}/"/>
+		<mkdir dir="${build.src}/fop"/>
+		<property name="fop-top" value="${build.src}/fop/fop-${fop.version}/"/>
 		<!-- Expand the source distribution -->
 		<untar src="${sources}/fop-${fop.version}-src.tar.gz" 
-           dest="${build_src}/fop" compression="gzip"/>
+           dest="${build.src}/fop" compression="gzip"/>
 
 		<!-- Build it using fop's build.xml      
            Use 'exec' rather than 'ant' because of the brain-damaged way that fop's
@@ -886,12 +998,12 @@
     </target>
 	<!-- Add external libraries to the deps -->
 	<target name="fop.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-		<unjar src="${fop-top}/lib/batik.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/xalan-2.4.1.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/ant-1.5.1.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/xml-apis.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${deps}"/>
-		<unjar src="${fop-top}/lib/xercesImpl-2.2.1.jar" dest="${deps}"/>
+		<unjar src="${fop-top}/lib/batik.jar" dest="${build.deps}"/>
+		<unjar src="${fop-top}/lib/xalan-2.4.1.jar" dest="${build.deps}"/>
+		<unjar src="${fop-top}/lib/ant-1.5.1.jar" dest="${build.deps}"/>
+		<unjar src="${fop-top}/lib/xml-apis.jar" dest="${build.deps}"/>
+		<unjar src="${fop-top}/lib/avalon-framework-cvs-20020806.jar" dest="${build.deps}"/>
+		<unjar src="${fop-top}/lib/xercesImpl-2.2.1.jar" dest="${build.deps}"/>
     </target>
 
 	<!-- ================================= 
@@ -899,7 +1011,7 @@
        ================================= -->
 	<target name="junit" description="--> The junit library - required by some other benchmarks">
 		<!-- Install the junit jar file -->
-		<unzip src="${sources}/junit${junit.version}.zip" dest="${build_src}/junit/">
+		<unzip src="${sources}/junit${junit.version}.zip" dest="${build.src}/junit/">
 			<patternset>
 				<include name="junit${junit.version}/junit.jar"/>
 			</patternset>
@@ -919,12 +1031,12 @@
 	</target>
 	<!-- Build the hsqldb benchmark -->
 	<target name="hsqldb.benchmark" depends="harness,junit" description="--> The hsqldb benchmark">
-		<mkdir dir="${build_src}/hsqldb"/>
-		<property name="hsqldb-top" value="${build_src}/hsqldb/"/>
+		<mkdir dir="${build.src}/hsqldb"/>
+		<property name="hsqldb-top" value="${build.src}/hsqldb/"/>
 		<!-- Expand the source distribution -->
 		<unzip src="${sources}/hsqldb_${hsqldb.version}.zip" dest="${hsqldb-top}"/>
 
-		<copy file="${build_src}/junit/junit${junit.version}/junit.jar"
+		<copy file="${build.src}/junit/junit${junit.version}/junit.jar"
             todir="${hsqldb-top}/hsqldb/lib/"/>
 
 		<!-- Build it using hsqldb's build.xml -->
@@ -937,8 +1049,8 @@
 	</target>
 	<!-- Add external libraries to the deps -->
 	<target name="hsqldb.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-		<unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${deps}"/>
-		<unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${deps}"/>
+		<unjar src="${hsqldb-top}/hsqldb/lib/servlet.jar" dest="${build.deps}"/>
+		<unjar src="${hsqldb-top}/hsqldb/lib/junit.jar" dest="${build.deps}"/>
     </target>	
 	
 	<!-- ================================= 
@@ -953,7 +1065,7 @@
 	</target>
 	<!-- Build the jython benchmark -->
 	<target name="jython.benchmark" depends="init,ant" description="--> Build the Jython benchmark">
-		<property name="jython-top" value="${build_src}/jython/"/>
+		<property name="jython-top" value="${build.src}/jython/"/>
 		<mkdir dir="${jython-top}/jython_${jython.version}"/>
 
 		<unzip src="${sources}/jython_${jython.version}.jar" dest="${jython-top}/jython_${jython.version}"/>
@@ -1006,10 +1118,20 @@
 	</target>
 	<!-- Add external libraries to the deps -->
 	<target name="jython.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-		<unjar src="${build_src}/ant/ant.jar" dest="${deps}"/>
-		<unjar src="${build_src}/ant/ant-launcher.jar" dest="${deps}"/>
+		<unjar src="${build.src}/ant/ant.jar" dest="${build.deps}"/>
+		<unjar src="${build.src}/ant/ant-launcher.jar" dest="${build.deps}"/>
 	</target>	
 
+
+	<!-- ================================= 
+          target: luindex    
+         ================================= -->
+	<target name="luindex" depends="lucene"/>
+	
+	<!-- ================================= 
+          target: lusearch   
+         ================================= -->
+	<target name="lusearch" depends="lucene"/>
 
 	<!-- ================================= 
           target: lucene    
@@ -1022,7 +1144,7 @@
 	</target>
 	<!-- Build the lucene benchmark -->
 	<target name="lucene.benchmark" depends="init" description="--> Build the lucene benchmark">
-		<property name="lucene-top" value="${build_src}/lucene"/>
+		<property name="lucene-top" value="${build.src}/lucene"/>
 		<mkdir dir="${lucene-top}"/>
 		<untar src="${sources}/lucene-${lucene.version}-src.tar.gz" dest="${lucene-top}"
     	compression="gzip"/>
@@ -1079,19 +1201,19 @@
 	<!-- Build the pmd benchmark -->
 	<target name="pmd.benchmark" depends="init,ant,xerces,junit" description="--> Build the pmd benchmark">
 
-		<mkdir dir="${build_src}/pmd"/>
-		<property name="pmd-top" value="${build_src}/pmd/pmd-${pmd.version}"/>
+		<mkdir dir="${build.src}/pmd"/>
+		<property name="pmd-top" value="${build.src}/pmd/pmd-${pmd.version}"/>
 
 		<!-- Expand the pmd distribution zipfile -->
-		<unzip src="${sources}/pmd-src-${pmd.version}.zip" dest="${build_src}/pmd"/>
+		<unzip src="${sources}/pmd-src-${pmd.version}.zip" dest="${build.src}/pmd"/>
 
 		<!-- Apply the dacapo patch -->
-		<patch patchfile="${patches}/pmd.patch" dir="${build_src}" strip="0"/>
+		<patch patchfile="${patches}/pmd.patch" dir="${build.src}" strip="0"/>
 		
 		<!-- Build using Ant, setting the classpath appropriately -->
 		<exec dir="${pmd-top}/bin" executable="ant">
 			<arg value="compile"/>
-			<env key="CLASSPATH" value=".:${build_src}/junit/junit${junit.version}/junit.jar"/>
+			<env key="CLASSPATH" value=".:${build.src}/junit/junit${junit.version}/junit.jar"/>
 			<env key="ANT_HOME" value="${ant.install}"/>
 		</exec>
 
@@ -1130,17 +1252,17 @@
 	<!-- Add external libraries to the build -->
 	<target name="pmd.libs" unless="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
 		<unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build}"/>
-		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${build}"/>
+		<unjar src="${build.src}/junit/junit${junit.version}/junit.jar" dest="${build}"/>
     </target>
 	<!-- Add external libraries to the deps -->
 	<target name="pmd.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-	    <unjar src="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" dest="${deps}"/>
-	    <unjar src="${pmd-top}/lib/jakarta-oro-2.0.8.jar" dest="${deps}"/>
-	    <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${deps}"/>
-	    <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${deps}"/>
-		<unjar src="${build_src}/junit/junit${junit.version}/junit.jar" dest="${deps}"/>
-		<unjar src="${build_src}/ant/ant.jar" dest="${deps}"/>
-		<unjar src="${build_src}/ant/ant-launcher.jar" dest="${deps}"/>
+	    <unjar src="${pmd-top}/lib/xmlParserAPIs-2.6.2.jar" dest="${build.deps}"/>
+	    <unjar src="${pmd-top}/lib/jakarta-oro-2.0.8.jar" dest="${build.deps}"/>
+	    <unjar src="${pmd-top}/lib/jaxen-1.1-beta-7.jar" dest="${build.deps}"/>
+	    <unjar src="${pmd-top}/lib/xercesImpl-2.6.2.jar" dest="${build.deps}"/>
+		<unjar src="${build.src}/junit/junit${junit.version}/junit.jar" dest="${build.deps}"/>
+		<unjar src="${build.src}/ant/ant.jar" dest="${build.deps}"/>
+		<unjar src="${build.src}/ant/ant-launcher.jar" dest="${build.deps}"/>
     </target>
 
 	<!-- ================================= 
@@ -1166,7 +1288,7 @@
 	</target>
 	<!-- Build the xalan benchmark -->
 	<target name="xalan.benchmark" depends="init,xerces" description="Build xalan">
-		<property name="xalan-top" value="${build_src}/xalan/"/>
+		<property name="xalan-top" value="${build.src}/xalan/"/>
 		<property name="xalan-v" value="${xalan.version}"/>
 		<property name="xalan.xerces.jar" value="${xerces-top}/xerces-${xerces._version}/${xerces.jar}"/>
 		<property name="xalan.xercesxml.jar" value="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}"/>
@@ -1176,7 +1298,7 @@
 		<untar src="${sources}/xalan-j_${xalan-v}-src.tar.gz" dest="${xalan-top}" compression="gzip"/>
 
 		<!-- Apply the dacapo patch -->
-		<patch patchfile="${patches}/xalan.patch" dir="${build_src}" strip="0"/>
+		<patch patchfile="${patches}/xalan.patch" dir="${build.src}" strip="0"/>
 
 		<!-- Build using Ant, setting the classpath appropriately -->
 		<exec dir="${xalan-top}/xalan-j_${xalan-v}" executable="ant">
@@ -1190,13 +1312,13 @@
 		<unjar src="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" dest="${build}"/>
 	</target>
 	<!-- Copy a stand-alone xalan jar into the build -->
-	<target name="xalan.jar" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
+	<target name="xalan.jar" unless="externalize.deps" depends="xalan.benchmark" description="put a standalone xalan jar into the jar">
 		<copy file="${xalan-top}/xalan-j_${xalan-v}/build/xalan.jar" todir="${build}"/>
 	</target>
 	<!-- Add external libraries to the deps -->
 	<target name="xalan.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xml-apis.jar" dest="${deps}"/>
-	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xercesImpl.jar" dest="${deps}"/>
+	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xml-apis.jar" dest="${build.deps}"/>
+	    <unjar src="${xalan-top}/xalan-j_${xalan-v}/bin/xercesImpl.jar" dest="${build.deps}"/>
     </target>
 
 	<!-- ================================= 
@@ -1206,7 +1328,7 @@
   the benchmarks rely on.
        ================================= -->
 	<target name="xerces" description="Build xerces">
-		<property name="xerces-top" value="${build_src}/xerces/"/>
+		<property name="xerces-top" value="${build.src}/xerces/"/>
 		<mkdir dir="${xerces-top}"/>
 
 		<!-- Unpack the source distribution -->
@@ -1229,7 +1351,7 @@
     </target>
 	<!-- Add external libraries to the deps -->
 	<target name="xerces.deps" if="externalize.deps" depends="init,harness" description="--> add the chart libraries to the build">
-		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${deps}"/>
-		<unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${deps}"/>
+		<unjar src="${xerces-top}/xerces-${xerces._version}/${xerces.jar}" dest="${build.deps}"/>
+		<unjar src="${xerces-top}/xerces-${xerces._version}/${xercesxml.jar}" dest="${build.deps}"/>
     </target>
 </project>

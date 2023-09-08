@@ -22,8 +22,8 @@ import java.util.Vector;
  * file.
  * 
  * @author Robin Garner
- * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
- * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
+ * @date $Date: 2006-10-06 09:15:50 +0000 (Fri, 06 Oct 2006) $
+ * @id $Id: Config.java 142 2006-10-06 09:15:50 +0000 (Fri, 06 Oct 2006) rgarner $
  *
  */
 public class Config {
@@ -33,8 +33,8 @@ public class Config {
    * specified by a benchmark.
    * 
    * @author Robin Garner
-   * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
-   * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
+   * @date $Date: 2006-10-06 09:15:50 +0000 (Fri, 06 Oct 2006) $
+   * @id $Id: Config.java 142 2006-10-06 09:15:50 +0000 (Fri, 06 Oct 2006) rgarner $
    *
    */
   class OutputFile {
@@ -62,8 +62,8 @@ public class Config {
    * a benchmark.
    * 
    * @author Robin Garner
-   * @date $Date: 2006-10-06 19:15:50 +1000 (Fri, 06 Oct 2006) $
-   * @id $Id: Config.java 142 2006-10-06 09:15:50Z rgarner $
+   * @date $Date: 2006-10-06 09:15:50 +0000 (Fri, 06 Oct 2006) $
+   * @id $Id: Config.java 142 2006-10-06 09:15:50 +0000 (Fri, 06 Oct 2006) rgarner $
    *
    */
   class Size {
