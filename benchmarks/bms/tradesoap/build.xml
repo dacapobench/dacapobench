@@ -7,19 +7,21 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="tradesoap" default="all" basedir="../..">
-	<description>DaCapo tradesoap benchmark</description>
-	<property file="dacapo.properties"/>
+    <description>DaCapo tradesoap benchmark</description>
+    <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="tradesoap"/>
+    <property name="bm-name" value="tradesoap"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<target name="bm-harness">
-		<javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}"
+    <!--
+    <target name="bm-harness">
+        <javac srcdir="${bm-src-dir}" classpath="${harness-classpath}:${bm-harness-classpath}" destdir="${bm-output-dir}"
            includes="**"
            debug="true" debuglevel="lines,vars,source"/>
-	</target>
-
-	<target name="bm-build" depends="daytrader"/>
+    </target>
+    -->
+    
+    <target name="bm-build" depends="daytrader"/>
 
 </project>

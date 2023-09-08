@@ -1,12 +1,32 @@
-diff -N -u -r tomcat.orig/apache-tomcat-6.0.20-src/build.properties.default apache-tomcat-6.0.20-src/build.properties.default
---- tomcat.orig/apache-tomcat-6.0.20-src/build.properties.default	2008-07-22 10:01:29.000000000 +1000
-+++ apache-tomcat-6.0.20-src/build.properties.default	2009-07-27 14:38:43.000000000 +1000
+--- apache-tomcat-6.0.20-src/build.properties.default	2009-05-14 09:15:15.000000000 +1000
++++ ../build.properties.default	2017-12-15 15:13:11.136320083 +1100
 @@ -45,7 +45,7 @@
  
  base-commons.loc=http://archive.apache.org/dist/commons
  base-tomcat.loc=http://archive.apache.org/dist/tomcat
 -base-sf.loc=http://downloads.sourceforge.net
-+base-sf.loc=http://softlayer.dl.sourceforge.net
++base-sf.loc=https://ncu.dl.sourceforge.net
  
  # ----- Commons Logging, version 1.1 or later -----
  commons-logging-version=1.1.1
+@@ -90,8 +90,8 @@
+ nsis.installoptions.dll=${nsis.home}/Plugins/InstallOptions.dll
+ nsis.nsexec.dll=${nsis.home}/Plugins/nsExec.dll
+ nsis.nsisdl.dll=${nsis.home}/Plugins/NSISdl.dll
+-nsis.loc=${base-sf.loc}/nsis/nsis-2.37.zip
++nsis.loc=${base-sf.loc}/project/nsis/NSIS%202/2.37/nsis-2.37.zip
+ 
+ # ----- Commons Daemon, version 1.0-Alpha or later -----
+ commons-daemon.home=${base.path}/commons-daemon-1.0.1
+ 
+--- apache-tomcat-6.0.20-src/build.properties.default	2018-01-02 03:36:37.363894115 +1100
++++ ../build.properties.default	2018-01-02 03:43:20.926628287 +1100
+@@ -59,7 +59,7 @@
+ jdt.home=${base.path}/eclipse/plugins
+ jdt.lib=${jdt.home}
+ jdt.jar=${jdt.lib}/org.eclipse.jdt.core_3.3.1.v_780_R33x.jar
+-jdt.loc=http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.3.1-200709211145/eclipse-JDT-3.3.1.zip
++jdt.loc=http://archive.eclipse.org/eclipse/downloads/drops/R-3.3.1-200709211145/eclipse-JDT-3.3.1.zip
+ 
+ # ----- Tomcat native library -----
+ tomcat-native.version=1.1.16

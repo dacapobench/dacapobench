@@ -1,33 +1,37 @@
 <project name="harness" default="all" basedir="..">
     <description>DaCapo benchmark harness</description>
-	
+    
     <import file="../util.xml"/>
-	
+    <import file="../libs/libs.xml"/>
+    
     <property file="ant/local.properties"/>
     <property file="ant/dacapo.properties"/>
     
     <property name="base-dir" value="harness"/>
     <property name="src" value="${base-dir}/src"/>
-    <property name="output-dir" value="${base-dir}/dist"/>
+    <property name="output-parent-dir" value="${base-dir}/dist"/>
+    <property name="output-dir" value="${output-parent-dir}/harness"/>
+    <property name="output-doc-dir" value="${output-parent-dir}/doc/harness"/>
     <property name="build-dir" value="${base-dir}/build"/>
     
     <property name="harness-downloads" value="${base-dir}/downloads"/>
-	
+    
     <property name="cli" value="commons-cli"/>
     <property name="cli-version" value="1.2"/>
     <property name="cli-url" value="${apache.dl.url}/commons/cli/binaries"/>
     <property name="cli-basename" value="${cli}-${cli-version}"/>
     <property name="cli-name" value="${cli-basename}-bin.tar.gz"/>
-	
-    <target name="all" depends="clean, init, harness, jar"/>
+    
+    <target name="all" depends="clean,init,harness,jar"/>
     
     <target name="clean">
-        <delete dir="${output-dir}"/>
+        <delete dir="${output-parent-dir}"/>
         <delete dir="${build-dir}"/>
     </target>
     
     <target name="init">
         <mkdir dir="${output-dir}"/>
+        <mkdir dir="${output-doc-dir}"/>
         <mkdir dir="${build-dir}"/>
     </target>
     
@@ -45,25 +49,21 @@
 
         <!-- untar it into build -->
         <untar src="${harness-downloads}/${cli-name}" dest="${build-dir}" compression="gzip"/>
-		
+        
         <!-- unjar from commons-cli-<version>.jar org/apache/commons into ${output-dir} -->
         <unjar src="${build-dir}/${cli-basename}/${cli-basename}.jar" dest="${output-dir}">
             <fileset dir="/" includes="org/apache/commons/**" />
         </unjar>
     </target>
-	
-    <target name="manifest">
-        <copy file="${src}/META-INF/MANIFEST.MF" todir="${output-dir}"/>
-        <echo file="${output-dir}/MANIFEST.MF" append="yes">Specification-Version: ${build.nickname}${line.separator}</echo>
-        <echo file="${output-dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
-    </target>
-
-    <target name="harness" depends="init,cli,parser,manifest">
+    
+    <target name="harness" depends="init,dacapo-digest,cli,parser">
+        <!-- include digest --> 
+        <unjar src="${dacapo-digest-jar}" dest="${output-dir}" />
         <javac srcdir="${src}" destdir="${output-dir}" debug="true" debuglevel="lines,vars,source"/>
-        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${output-dir}" />
+        <javadoc sourcepath="${src}" destdir="${output-doc-dir}" />
     </target>
     
     <target name="jar">
-        <jar jarfile="${jar-target}" basedir="${output-dir}" update="false" manifest="${output-dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+        <jar jarfile="${jar-target}" basedir="${output-parent-dir}" update="true"/>
     </target>
 </project>

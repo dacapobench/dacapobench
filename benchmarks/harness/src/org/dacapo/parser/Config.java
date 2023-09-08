@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 /**
@@ -207,7 +208,7 @@ public class Config {
 
   public static Config parse(InputStream stream) {
     try {
-      ConfigFile parser = new ConfigFile(stream);
+      ConfigFile parser = new ConfigFile(stream, "UTF-8");
 
       return parser.configFile();
     } catch (ParseException e) {
@@ -253,14 +254,9 @@ public class Config {
   HashMap<String, String> desc = new HashMap<String, String>(6);
 
   /**
-   * The name of the jar containing this bm
-   */
-  public String jar;
-
-  /**
    * The list of jars upon which this bm depends
    */
-  public String[] libs;
+  public String[] jars;
 
   /**
    * Constructor. These are always constructed by the parser, and at time of
@@ -280,29 +276,16 @@ public class Config {
    */
 
   /**
-   * Set the jar from which this benchmark executes
-   * 
-   * @param jarName The name of the jar
-   * @throws ParseException
-   */
-  void setJar(String jarName) throws ParseException {
-    if (this.jar != null) {
-      throw new ParseException("Configuration file error - cannot set jar name twice");
-    }
-    this.jar = jarName;
-  }
-
-  /**
    * Set the list of libraries on which this benchmark depends
    * 
    * @param libs An array of strings (jar names)
    * @throws ParseException
    */
-  void setLibs(String[] libs) throws ParseException {
-    if (this.libs != null) {
+  void setJars(String[] jars) throws ParseException {
+    if (this.jars != null) {
       throw new ParseException("Configuration file error - cannot set libs twice");
     }
-    this.libs = libs;
+    this.jars = jars;
   }
 
   /**
@@ -627,6 +610,20 @@ public class Config {
   /*
    * Manage the description fields
    */
+  public void describeSizes(PrintStream str, boolean decorated, String trail) {
+    TreeSet<String> ts = new TreeSet<String>(this.sizes.keySet());
+    String list = null;
+    for(String s: ts) {
+      if (list==null) list = s;
+      else list += " " + s;
+    }
+    str.println(pad("sizes", 10) + list + (decorated ? trail : ""));
+  }
+
+  public void describeSizes(PrintStream str) {
+    describeSizes(str, false, ",");
+  }
+
   public void describe(PrintStream str, String size) {
     describe(str, size, false);
   }
@@ -634,7 +631,9 @@ public class Config {
   private void describe(PrintStream str, String size, boolean decorated, String desc, String trail) {
     if (decorated)
       str.print("  ");
-    str.println(pad(desc, 10) + this.desc.get(desc) + (decorated ? trail : ""));
+    if (desc.equals("sizes")) {
+      describeSizes(str, decorated, trail);
+    } else str.println(pad(desc, 10) + this.desc.get(desc) + (decorated ? trail : ""));
   }
 
   public void describe(PrintStream str, String size, boolean decorated) {
@@ -655,6 +654,7 @@ public class Config {
       describe(str, size, decorated, "version", ",");
       str.println(pad("size", 10) + sizeDesc + (decorated ? ";" : ""));
     }
+    describe(str, size, decorated, "sizes", ",");
   }
 
   public String getDesc(String item) {

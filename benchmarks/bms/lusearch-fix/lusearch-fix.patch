@@ -1,0 +1,37 @@
+--- libs/lucene/build.xml	2017-12-15 17:21:59.294405463 +1100
++++ bms/lusearch-fix/build-cmp.xml	2017-12-15 17:29:27.945796046 +1100
+@@ -20,7 +20,10 @@
+
+     <property name="lib-build-top" value="${lib-build-dir}/lucene-${lib-version}"/>
+
+-    <target name="unpack" depends="untar"/>
++    <target name="unpack" depends="untar">
++        <patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}/lucene-${lib-version}" strip="0" ignorewhitespace="yes"/>
++    </target>
++
+
+     <target name="build">
+         <ant antfile="build.xml" target="jar-core" dir="${lib-build-top}" inheritall="false"/>
+
+--- libs/lucene/lucene.patch	2017-12-15 17:54:32.680162962 +1100
++++ bms/lusearch-fix/lucene.patch	2017-12-15 17:54:28.000000000 +1100
+@@ -0,0 +1,19 @@
++--- src/java/org/apache/lucene/queryParser/QueryParser.java	2009-03-03 04:10:43.000000000 +1100
+++++ ../../QueryParser.java	2017-12-15 17:47:20.165965512 +1100
++@@ -506,8 +506,15 @@
++   protected Query getFieldQuery(String field, String queryText)  throws ParseException {
++     // Use the analyzer to get all the tokens, and then build a TermQuery,
++     // PhraseQuery, or nothing based on the term count
+++    //    TokenStream source = analyzer.tokenStream(field, new StringReader(queryText));\
+++    TokenStream source;
+++    try {
+++      source = analyzer.reusableTokenStream(field, new StringReader(queryText));
+++      source.reset();
+++    } catch (IOException e) {
+++      source = analyzer.tokenStream(field, new StringReader(queryText));
+++    }
++
++-    TokenStream source = analyzer.tokenStream(field, new StringReader(queryText));
++     List list = new ArrayList();
++     final org.apache.lucene.analysis.Token reusableToken = new org.apache.lucene.analysis.Token();
++     org.apache.lucene.analysis.Token nextToken;

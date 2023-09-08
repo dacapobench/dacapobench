@@ -7,60 +7,66 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="derby" default="all" basedir="../..">
-	<description>derby library required for h2 testing</description>
-	<property file="ant/dacapo.properties"/>
+    <description>derby library required for h2 testing</description>
+    <property file="ant/dacapo.properties"/>
 
-	<property name="lib-name" value="derby"/>
-	<property name="lib-version" value="10.5.3.0"/>
-	<property name="lib-url" value="${apache.dl.url}/db/derby/db-derby-${lib-version}"/>
-	<property name="lib-src" value="db-derby-${lib-version}-src.tar.gz"/>
+    <property name="lib-name" value="derby"/>
+    <property name="lib-version" value="10.5.3.0"/>
+    <property name="lib-url" value="${apache.dl.url}/db/derby/db-derby-${lib-version}"/>
+    <property name="lib-src" value="db-derby-${lib-version}-src.tar.gz"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<property name="lib-build-top" value="${lib-build-dir}/db-derby-${lib-version}-src"/>
+    <property name="lib-build-top" value="${lib-build-dir}/db-derby-${lib-version}-src"/>
 
-	<target name="unpack" depends="untar">
-		<patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" strip="1" ignorewhitespace="yes"/>
-	</target>
+    <target name="unpack" depends="untar">
+        <patch patchfile="libs/${lib-name}/${lib-name}.patch" dir="${lib-build-dir}" strip="1" ignorewhitespace="yes"/>
+    </target>
 
-	<target name="build">
-		<copy tofile="${lib-build-top}/tools/java/junit.jar">
-			<fileset dir="${basedir}/libs/junit/dist/jar">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
-		<ant antfile="build.xml" inheritall="false" dir="${lib-build-top}">
-			<target name="all"/>
-			<target name="buildjars"/>
-		</ant>
-	</target>
+    <target name="build">
+        <copy tofile="${lib-build-top}/tools/java/junit.jar">
+            <fileset dir="${basedir}/libs/junit/dist/jar">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <exec executable="${ant.home}/bin/ant" dir="${lib-build-top}" failonerror="yes">
+            <arg line="all"/>
+            <arg line="-Dj16lib=${j16lib}"/>
+            <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
+        <exec executable="${ant.home}/bin/ant" dir="${lib-build-top}" failonerror="yes">
+            <arg line="buildjars"/>
+            <arg line="-Dj16lib=${j16lib}"/>
+            <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
+    </target>
 
-	<target name="jar">
-		<copy tofile="${derby-jar}" flatten="true">
-			<fileset dir="${lib-build-top}">
-				<include name="jars/*/derby.jar"/>
-			</fileset>
-		</copy>
-		<copy tofile="${derbyclient-jar}" flatten="true">
-			<fileset dir="${lib-build-top}">
-				<include name="jars/*/derbyclient.jar"/>
-			</fileset>
-		</copy>
-		<copy tofile="${derbynet-jar}" flatten="true">
-			<fileset dir="${lib-build-top}">
-				<include name="jars/*/derbynet.jar"/>
-			</fileset>
-		</copy>
-		<copy tofile="${derbytools-jar}" flatten="true">
-			<fileset dir="${lib-build-top}">
-				<include name="jars/*/derbytools.jar"/>
-			</fileset>
-		</copy>
-		<copy tofile="${derbytesting-jar}" flatten="true">
-			<fileset dir="${lib-build-top}">
-				<include name="jars/*/derbyTesting.jar"/>
-			</fileset>
-		</copy>
-	</target>
+    <target name="jar">
+        <copy tofile="${derby-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derby.jar"/>
+            </fileset>
+        </copy>
+        <copy tofile="${derbyclient-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derbyclient.jar"/>
+            </fileset>
+        </copy>
+        <copy tofile="${derbynet-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derbynet.jar"/>
+            </fileset>
+        </copy>
+        <copy tofile="${derbytools-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derbytools.jar"/>
+            </fileset>
+        </copy>
+        <copy tofile="${derbytesting-jar}" flatten="true">
+            <fileset dir="${lib-build-top}">
+                <include name="jars/*/derbyTesting.jar"/>
+            </fileset>
+        </copy>
+    </target>
 
 </project>

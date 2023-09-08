@@ -7,37 +7,37 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="janino" default="all" basedir="../..">
-	<description>janino library, required by sunflow</description>
-	<property file="ant/dacapo.properties"/>
+    <description>janino library, required by sunflow</description>
+    <property file="ant/dacapo.properties"/>
 
-	<property name="lib-name" value="janino"/>
-	<property name="lib-version" value="2.5.15"/>
-	<property name="lib-url" value="http://www.janino.net/download"/>
-	<property name="lib-src" value="janino-${lib-version}.zip"/>
+    <property name="lib-name" value="janino"/>
+    <property name="lib-version" value="2.5.15"/>
+    <property name="lib-url" value="http://pkgs.fedoraproject.org/repo/pkgs/janino/janino-2.5.15.zip/087b6db3eabb6175f228a58958f816aa"/>
+    <property name="lib-src" value="janino-${lib-version}.zip"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<property name="lib-build-top" value="${lib-build-dir}/janino-${lib-version}"/>
+    <property name="lib-build-top" value="${lib-build-dir}/janino-${lib-version}"/>
 
-	<target name="unpack" depends="unzip"/>
+    <target name="unpack" depends="unzip"/>
 
-	<target name="build">
-		<condition property="build.dest" value="${build}" else="${build.deps}">
-			<not>
-				<equals arg1="${externalize.deps}" arg2="true"/>
-			</not>
-		</condition>
-		<condition property="jdk.home" value="${java.home}" else="${java.home}/..">
-			<not>
-				<contains string="${java.home}" substring="/jre"/>
-			</not>
-		</condition>
-		<ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
-			<property name="jdk_1_2_2_home" value="${jdk.home}"/>
-		</ant>
-	</target>
+    <target name="build">
+        <condition property="build.dest" value="${build}" else="${build.deps}">
+            <not>
+                <equals arg1="${externalize.deps}" arg2="true"/>
+            </not>
+        </condition>
+        <condition property="jdk.home" value="${java.home}" else="${java.home}/..">
+            <not>
+                <contains string="${java.home}" substring="/jre"/>
+            </not>
+        </condition>
+        <ant antfile="build.xml" dir="${lib-build-top}" inheritAll="false">
+            <property name="jdk_1_2_2_home" value="${jdk.home}"/>
+        </ant>
+    </target>
 
-	<target name="jar">
-		<copy file="${lib-build-top}/lib/janino.jar" tofile="${janino-jar}"/>
-	</target>
+    <target name="jar">
+        <copy file="${lib-build-top}/lib/janino.jar" tofile="${janino-jar}"/>
+    </target>
 </project>

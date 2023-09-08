@@ -1,8 +1,7 @@
 benchmark pmd
   class org.dacapo.harness.Pmd
   thread-model single
-  jar "pmd-4.2.5.jar"
-  libs "jaxen-1.1.1.jar", "asm-3.1.jar", "junit-3.8.1.jar", "xercesImpl.jar", "xml-apis.jar";
+  jars "pmd-4.2.5.jar", "jaxen-1.1.1.jar", "asm-3.1.jar", "junit-3.8.1.jar", "xercesImpl.jar", "xml-apis.jar";
 
 size xsmall args "@pmd/small.lst","xml","pmd/rulesets/imports.xml","-debug"
   output 

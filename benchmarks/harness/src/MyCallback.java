@@ -20,18 +20,21 @@ public class MyCallback extends Callback {
   }
 
   /* Immediately prior to start of the benchmark */
+  @Override
   public void start(String benchmark) {
     System.err.println("my hook starting " + (isWarmup() ? "warmup " : "") + benchmark);
     super.start(benchmark);
   };
 
   /* Immediately after the end of the benchmark */
-  public void stop() {
-    super.stop();
+  @Override
+  public void stop(long duration) {
+    super.stop(duration);
     System.err.println("my hook stopped " + (isWarmup() ? "warmup" : ""));
     System.err.flush();
   };
 
+  @Override
   public void complete(String benchmark, boolean valid) {
     super.complete(benchmark, valid);
     System.err.println("my hook " + (valid ? "PASSED " : "FAILED ") + (isWarmup() ? "warmup " : "") + benchmark);

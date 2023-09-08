@@ -18,7 +18,7 @@ import java.io.Writer;
 import java.security.MessageDigest;
 
 import org.apache.commons.httpclient.HttpMethod;
-import org.dacapo.harness.Digest;
+import org.dacapo.digest.Digest;
 
 /**
  * Interact with an Http page

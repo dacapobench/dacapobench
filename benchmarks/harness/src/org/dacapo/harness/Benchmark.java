@@ -11,6 +11,7 @@ package org.dacapo.harness;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -34,7 +35,11 @@ public abstract class Benchmark {
    * I/O buffer size for unzipping
    */
   private static final int BUFFER_SIZE = 2048;
-
+  /**
+   * Timeout Dialation property.
+   */
+  private static final String TIMEOUT_DIALATION_PROPERTY = "dacapo.timeout.dialation"; 
+  
   /*
    * Class variables
    */
@@ -80,6 +85,13 @@ public abstract class Benchmark {
   private static boolean validationReport = false;
 
   /**
+   * Factor used to increase the timeouts used in a benchmark.
+   * Note that it's impact is dependent on the particular benchmark
+   * utilizing this timeout.dialation property.
+   */
+  private static String timeoutDialation = "1";
+  
+  /**
    * Saved System.out while redirected to the digest stream
    */
   private static final PrintStream savedOut = System.out;
@@ -110,6 +122,13 @@ public abstract class Benchmark {
 
   /** Saved classloader across iterations */
   private ClassLoader savedClassLoader;
+
+  /**
+   * The system properties that were in effect when the harness was started.
+   * 
+   * @see System#getProperties()
+   */
+  private Properties savedSystemProperties;
 
   /**
    * Output stream for validating System.err
@@ -161,6 +180,8 @@ public abstract class Benchmark {
 
     callback.start(config.name);
 
+    final long start = System.currentTimeMillis();
+
     startIteration();
     try {
       iterate(size);
@@ -168,20 +189,14 @@ public abstract class Benchmark {
       stopIteration();
     }
 
-    callback.stop();
+    final long duration = System.currentTimeMillis() - start;
+
+    callback.stop(duration);
 
     boolean valid = validate(size);
     callback.complete(config.name, valid);
     postIteration(size);
     return valid;
-  }
-
-  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
-    // TODO this is very ugly
-    Benchmark.silent = silent;
-    this.scratch = scratch;
-    this.config = config;
-    initialize();
   }
 
   /**
@@ -194,8 +209,18 @@ public abstract class Benchmark {
     this(config, scratch, true);
   }
 
-  protected void initialize() throws Exception {
-    System.setProperty("java.util.logging.config.file", fileIn(scratch, config.name + ".log"));
+  public Benchmark(Config config, File scratch, boolean silent) throws Exception {
+    // TODO this is very ugly
+    Benchmark.silent = silent;
+    this.scratch = scratch;
+    this.config = config;
+    initialize();
+  }
+
+  private void initialize() throws Exception {
+    savedSystemProperties = System.getProperties();
+
+    System.setProperty("java.util.logging.config.file", fileInScratch(config.name + ".log"));
     synchronized (System.out) {
       if (out == null) {
         out = new TeePrintStream(System.out, new File(scratch, "stdout.log"));
@@ -222,11 +247,9 @@ public abstract class Benchmark {
     File file = new File(scratch + "/jar");
     if (!file.exists())
       file.mkdir();
-    if (config.jar != null)
-      extractFileResource("jar/" + config.jar, scratch);
-    if (config.libs != null) {
-      for (int i = 0; i < config.libs.length; i++) {
-        extractFileResource("jar/" + config.libs[i], scratch);
+    if (config.jars != null) {
+      for (int i = 0; i < config.jars.length; i++) {
+        extractFileResource("jar/" + config.jars[i], scratch);
       }
     }
   }
@@ -283,6 +306,12 @@ public abstract class Benchmark {
     if (verbose) {
       System.out.println("startIteration()");
     }
+    System.setProperty(TIMEOUT_DIALATION_PROPERTY, Benchmark.timeoutDialation);
+
+    final Properties augmentedSystemProperties = (Properties) savedSystemProperties.clone();
+    augmentSystemProperties(augmentedSystemProperties);
+    System.setProperties(augmentedSystemProperties);
+
     if (validateOutput) {
       System.setOut(out);
       System.setErr(err);
@@ -295,6 +324,15 @@ public abstract class Benchmark {
     }
     useBenchmarkClassLoader();
   }
+
+  /**
+   * Augments the system properties in case additional properties need to be in
+   * effect during the actual benchmark iteration.
+   * 
+   * @param systemProperties the system properties that need to be augmented.
+   *   (They may be modified freely.)
+   */
+  public void augmentSystemProperties(Properties systemProperties) { }
 
   /**
    * An actual iteration of the benchmark. This is what is timed.
@@ -316,6 +354,9 @@ public abstract class Benchmark {
       System.setOut(savedOut);
       System.setErr(savedErr);
     }
+
+    System.setProperties(savedSystemProperties);
+
     if (verbose) {
       System.out.println("stopIteration()");
     }
@@ -501,39 +542,6 @@ public abstract class Benchmark {
    */
 
   /**
-   * Copy a file to the specified directory
-   * 
-   * @param inputFile File to copy
-   * @param outputDir Destination directory
-   */
-  public static void copyFileTo(File inputFile, File outputDir) throws IOException {
-    copyFile(inputFile, new File(outputDir, inputFile.getName()));
-  }
-
-  /**
-   * Copy a file, specifying input and output file names.
-   * 
-   * @param inputFile Name of the input file.
-   * @param outputFile Name of the output file
-   * @throws IOException Any exception thrown by the java.io functions used to
-   * perform the copy.
-   */
-  public static void copyFile(File inputFile, File outputFile) throws IOException {
-    FileInputStream input = new FileInputStream(inputFile);
-    FileOutputStream output = new FileOutputStream(outputFile);
-    while (true) {
-      byte[] buffer = new byte[BUFFER_SIZE];
-      int read = input.read(buffer);
-      if (read == -1)
-        break;
-      output.write(buffer, 0, read);
-    }
-    input.close();
-    output.flush();
-    output.close();
-  }
-
-  /**
    * Translate a resource name into a URL.
    * 
    * @param fn
@@ -554,23 +562,7 @@ public abstract class Benchmark {
    * @return The path name of the file
    */
   public String fileInScratch(String name) {
-    return fileIn(scratch, name);
-  }
-
-  private static String fileIn(File scratch, String name) {
-    return (new File(scratch, name)).getPath();
-  }
-
-  /**
-   * Unpack a zip archive into the specified directory.
-   * 
-   * @param name Name of the zip file
-   * @param destination Directory to unpack into.
-   * @throws IOException
-   */
-  public static void unpackZipFile(String name, File destination) throws IOException, FileNotFoundException {
-    BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(name));
-    unpackZipStream(inputStream, destination);
+    return new File(scratch, name).getPath();
   }
 
   /**
@@ -654,22 +646,6 @@ public abstract class Benchmark {
       file.delete();
   }
 
-  public static void deleteFiles(File dir, final String pattern) {
-    FilenameFilter filter = new FilenameFilter() {
-      public boolean accept(File dir, String name) {
-        return name.matches(pattern);
-      }
-    };
-    File[] files = dir.listFiles(filter);
-    for (int i = 0; i < files.length; i++) {
-      deleteFile(files[i]);
-    }
-  }
-
-  public static int lineCount(String file) throws IOException {
-    return lineCount(new File(file));
-  }
-
   public static int lineCount(File file) throws IOException {
     int lines = 0;
     BufferedReader in = new BufferedReader(new FileReader(file));
@@ -677,10 +653,6 @@ public abstract class Benchmark {
       lines++;
     in.close();
     return lines;
-  }
-
-  public static long byteCount(String file) throws IOException {
-    return byteCount(new File(file));
   }
 
   public static long byteCount(File file) throws IOException {
@@ -693,6 +665,7 @@ public abstract class Benchmark {
     validate = line.getValidate();
     validateOutput = line.getValidateOutput();
     preIterationGC = line.getPreIterationGC();
+    timeoutDialation = line.getTimeoutDialation();
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());
   }

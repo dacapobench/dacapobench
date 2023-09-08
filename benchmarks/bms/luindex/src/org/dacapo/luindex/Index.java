@@ -45,9 +45,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.demo.FileDocument;
 
-import org.dacapo.harness.DacapoException;
-import org.dacapo.parser.Config;
-
 /**
  * @date $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
  * @id $Id: Index.java 738 2009-12-24 00:19:36Z steveb-oss $
@@ -63,13 +60,13 @@ public class Index {
   /**
    * Index all text files under a directory.
    */
-  public void main(final File INDEX_DIR, final String[] args) throws DacapoException, IOException {
+  public void main(final File INDEX_DIR, final String[] args) throws IOException {
     IndexWriter writer = new IndexWriter(INDEX_DIR, new StandardAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
     for (int arg = 0; arg < args.length; arg++) {
-      final File docDir = new File(scratch, args[arg]);
+      final File docDir = new File(args[arg]);
       if (!docDir.exists() || !docDir.canRead()) {
         System.out.println("Document directory '" + docDir.getAbsolutePath() + "' does not exist or is not readable, please check the path");
-        throw new DacapoException("Cannot read from document directory");
+        throw new IOException("Cannot read from document directory");
       }
 
       indexDocs(writer, docDir);
@@ -89,7 +86,7 @@ public class Index {
   void indexDocs(IndexWriter writer, File file) throws IOException {
 
     /* Strip the absolute part of the path name from file name output */
-    int scratchP = scratch.getPath().length() + 1;
+    int scratchP = scratch.getCanonicalPath().length() + 1;
 
     /* do not try to index files that cannot be read */
     if (file.canRead()) {
@@ -103,16 +100,14 @@ public class Index {
           }
         }
       } else {
-        System.out.println("adding " + file.getPath().substring(scratchP));
+        System.out.println("adding " + file.getCanonicalPath().substring(scratchP));
         try {
           writer.addDocument(FileDocument.Document(file));
         }
         // at least on windows, some temporary files raise this exception with
         // an "access denied" message
         // checking if the file can be read doesn't help
-        catch (FileNotFoundException fnfe) {
-          ;
-        }
+        catch (FileNotFoundException fnfe) { }
       }
     }
   }

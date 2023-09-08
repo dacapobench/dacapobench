@@ -1,7 +1,7 @@
 benchmark h2 
   class org.dacapo.harness.H2
   thread-model per_cpu
-  libs "derbyTesting.jar","junit-3.8.1.jar","h2-1.2.121.jar","tpcc.jar";
+  jars "dacapo-h2.jar","derbyTesting.jar","junit-3.8.1.jar","h2-1.2.121.jar";
 
 size small args 
 		"--total-transactions", "400",

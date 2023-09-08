@@ -7,18 +7,22 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="DacapoBenchmarks" default="dist" basedir=".">
-	<property name="toolsdir" location="../tools"/>
-	<property name="log.dir" value="${basedir}/log"/>
-	<tstamp>
-		<format property="build.time" pattern="yyyyMMdd-hhmm"/>
-	</tstamp>
-	<description>
+    <property name="toolsdir" location="../tools"/>
+    <property name="log.dir" value="${basedir}/log"/>
+    <property environment="env"/>
+    <tstamp>
+        <format property="build.time" pattern="yyyyMMdd-hhmm"/>
+    </tstamp>
+    <description>
             The DaCapo Benchmark Suite
 
 DEPENDENCIES:
         
    - javacc (http://javacc.dev.java.net/)
    - maven  (http://maven.apache.org/)
+   - ant1.9 (http://ant.apache.org)   # note that builds will fail if ant 1.10 or later are used
+   - csv (http:/www.nongnu.org/cvs/)
+   - svn (http://subversion.apache.org)
         
 For convinience, both are included in the tools directory:
     ${toolsdir}
@@ -26,287 +30,408 @@ For convinience, both are included in the tools directory:
         
 BUILDING:
 
-    1. Set your JAVA_HOME environment variable appropriately:
-        On Mac OS X:
-            export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home            
-        On Ubuntu 9.04:
-            export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun
-            
-    2. Set ant and maven environment variables if necessary.  In particular,
-       for some jvms it is necessary to explicitly request a larger heap size.
-       It is necessary to set the maven options because the trade benchmarks
-       are built by maven (called by ant).  As another example, you may wish
-       for ant to use a proxy when downloading (there is a lot to be
-       downloaded).   Some examples:
+        1. Set your JAVA_HOME environment variable appropriately:
+             On Mac OS X something like:
+                  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home/
+             On Ubuntu 16.04 something like:
+                   export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151/
+
+        2. Set ant and maven environment variables if necessary.  In particular,
+        for some jvms it is necessary to explicitly request a larger heap size.
+        It is necessary to set the maven options because the trade benchmarks
+        are built by maven (called by ant).  As another example, you may wish
+        for ant to use a proxy when downloading (there is a lot to be
+        downloaded).   Some examples:
             export ANT_OPTS="-Xms512M -Xmx512M"
             export MAVEN_OPTS="-Xms512M -Xmx512M"
-       or
+        or
             export ANT_OPTS="-Dhttp.proxyHost=xxx.xxx.xxx.xxx -Dhttp.proxyPort=3128"
 
-    3. Copy default.properties to local.properties and edit local.properties
-       for your environment.
+        When the Java6 runtime is invoked to build Tomcat, it may have incorrect/broken
+        cacerts, which stop files from being downloaded by ant.   This can be addressed
+        by pointing to cacerts in your 1.8 JVM:
+            export ANT_OPTS="-Djavax.net.ssl.trustStore=${JAVA-8-HOME}/jre/lib/security/cacerts"
 
-    4. Run ant:
-               ant         [builds all benchmarks]
-               ant dist    [builds all benchmarks, this is the default]
-               ant source  [builds a source distribution including benchmarks and tools]
-               ant bm      [builds a specific benchmark, bm]
+        3. Copy default.properties to local.properties and edit local.properties
+        for your environment.
 
-    5. A log of directory is created under this benchmark directory
-       for benchmark build status and build success or failure files
-       to be stored.  The directory log directory is normally of the
-       form
-           ${basedir}/log/${build.time}
-       and contains status.txt where each benchmark build status is recorded,
-       and either pass.txt if all benchmarks build, or fail.txt if one or
-       more benchmarks fail to build. Note: that either fail.txt or pass.txt
-       is created when a full build is performed.
+        4. You may need to modify your local maven settings in order to get the trade benchmarks
+        to build.   In particular, you may need to edit the file:
+        ~/.m2/repository/org/apache/geronimo/geronimo/2.1.4/geronimo-2.1.4.pom
+
+        and change the version numbers near line 2423:
+
+        from:
+        [1.5,1.6)
+        to:
+        [1.5,)
+
+        5. Run ant:
+        ant         [builds all benchmarks]
+        ant dist    [builds all benchmarks, this is the default]
+        ant source  [builds a source distribution including benchmarks and tools]
+        ant bm      [builds a specific benchmark, bm]
+
+        6. A log of each directory is created under this benchmark directory
+        for benchmark build status and build success or failure files
+        to be stored.  The directory log directory is normally of the
+        form
+        ${basedir}/log/${build.time}
+        and contains status.txt where each benchmark build status is recorded,
+        and either pass.txt if all benchmarks build, or fail.txt if one or
+        more benchmarks fail to build. Note: that either fail.txt or pass.txt
+        is created when a full build is performed.
+
 </description>
 
-	<property file="local.properties"/>
-	<property file="default.properties"/>
-	<property file="dacapo.properties"/>
-	<property name="log.build.dir" value="${log.dir}/${build.time}"/>
-	<property name="log.build.report" value="${log.dir}/${build.time}/status.txt"/>
-	<property name="log.build.pass" value="${log.dir}/${build.time}/pass.txt"/>
-	<property name="log.build.fail" value="${log.dir}/${build.time}/fail.txt"/>
+    <property file="local.properties"/>
+    <property file="default.properties"/>
+    <property file="dacapo.properties"/>
+    <property name="log.build.dir" value="${log.dir}/${build.time}"/>
+    <property name="log.build.report" value="${log.dir}/${build.time}/status.txt"/>
+    <property name="log.build.pass" value="${log.dir}/${build.time}/pass.txt"/>
+    <property name="log.build.fail" value="${log.dir}/${build.time}/fail.txt"/>
 
-	<target name="check-svn-present">
-		<available property="svn.present" file=".svn" type="dir"/>
-		<property name="svn.exe" value="svn"/>
-	</target>
+    <property name="dacapo.build.dir" value="${basedir}/build"/>
+	<property name="dacapo.build.doc.dir" value="${dacapo.build.dir}/doc"/>
+	<property name="dacapo.doc.dir" value="${basedir}/doc"/>
+	<property name="dacapo.src.dir" value="${basedir}/src"/>
 
-	<target name="extract-svn-revision" depends="check-svn-present" if="svn.present">
-		<exec executable="${svn.exe}" failonerror="no" failifexecutionfails="no">
-			<arg value="info"/>
-			<redirector outputproperty="svn.revision">
-				<outputfilterchain>
-					<linecontains>
-						<contains value="Revision: "/>
-					</linecontains>
-					<tokenfilter>
-						<replacestring from="Revision: " to=""/>
-					</tokenfilter>
-				</outputfilterchain>
-			</redirector>
-		</exec>
-	</target>
+    <target name="check-git-present">
+        <available property="git.present" file="../.git" type="dir"/>
+        <property name="git.exe" value="git"/>
+    </target>
 
-	<target name="get-svn-revision" depends="extract-svn-revision">
-		<!-- set property if not already set -->
-		<property name="svn.revision" value="unknown"/>
-	</target>
+    <target name="extract-git-revision" depends="check-git-present" if="git.present">
+        <exec executable="${git.exe}" failonerror="no" failifexecutionfails="no">
+            <arg line="show --abbrev-commit HEAD"/>
+            <redirector outputproperty="git.revision">
+                <outputfilterchain>
+                    <linecontainsregexp>
+                        <regexp pattern="^commit [a-z0-9]+$"/>
+                    </linecontainsregexp>
+                    <tokenfilter>
+                        <replacestring from="commit " to=""/>
+                    </tokenfilter>
+                </outputfilterchain>
+            </redirector>
+        </exec>
+    </target>
 
-	<target name="set-build-version-info" depends="get-svn-revision">
-		<property name="build.nickname" value="development"/>
-		<property name="build.version"  value="head-r${svn.revision}"/>
-	</target>
+    <target name="get-git-revision" depends="extract-git-revision" unless="git.revision">
+        <!-- set property if not already set -->
+        <property name="git.revision" value="unknown"/>
+    </target>
 
+    <target name="set-build-version-info" depends="get-git-revision">
+        <property name="build.nickname" value="development"/>
+        <property name="build.version"  value="head-r${git.revision}"/>
+    </target>
 
-	<!-- BEGIN PUBLIC TARGETS -->
+    <target name="init" depends="set-build-version-info">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <delete dir="${log.build.dir}" />
+        <delete dir="${dacapo.build.doc.dir}"/>
+        <delete dir="${dacapo.build.dir}" />
 
-	<!-- =================================
+        <mkdir dir="${log.build.dir}" />
+        <mkdir dir="${dacapo.build.dir}" />
+        <mkdir dir="${dacapo.build.doc.dir}"/>
+    	
+        <echo>build.nickname=${build.nickname}</echo>
+        <echo>build.version=${build.version}</echo>
+    </target>
+
+    <!-- BEGIN PUBLIC TARGETS -->
+
+    <!-- =================================
          target: source
          ================================= -->
-	<target name="source" depends="set-build-version-info">
-		<echo file="SOURCE_VERSION.txt">This source distribution was built from DaCapo release ${build.version} "${build.nickname}"${line.separator}</echo>
+    <target name="source" depends="set-build-version-info">
+        <echo file="SOURCE_VERSION.txt">This source distribution was built from DaCapo release ${build.version} "${build.nickname}"${line.separator}</echo>
 
-		<zip destfile="dacapo-src.zip" level="9" whenempty="create">
-			<zipfileset dir="${basedir}/.." defaultexcludes="yes" filemode="755">
-				<include name="tools/*/bin/**"/>
-			</zipfileset>
-			<zipfileset dir="${basedir}/.." defaultexcludes="yes">
-				<!-- add source readme indicating where this is from -->
-				<include name="benchmarks/SOURCE_VERSION.txt"/>
+        <zip destfile="dacapo-src.zip" level="9" whenempty="create">
+            <zipfileset dir="${basedir}/.." defaultexcludes="yes" filemode="755">
+                <include name="tools/*/bin/**"/>
+            </zipfileset>
+            <zipfileset dir="${basedir}/.." defaultexcludes="yes">
+                <!-- add readme etc -->
+               <include name="README.md"/>
+               <include name="LICENSE"/>
+               <include name="benchmarks/doc/*"/>
+               <include name="benchmarks/bms/*/doc/*"/>
 
-				<!-- benchmark top level source -->
-				<include name="benchmarks/*.xml"/>
-				<include name="benchmarks/dacapo.properties"/>
-				<include name="benchmarks/default.properties"/>
-				<include name="benchmarks/CHANGES.txt"/>
-				<include name="benchmarks/LICENSE-2.0.txt"/>
-				<include name="benchmarks/README.txt"/>
-				<include name="benchmarks/RELEASE_NOTES.txt"/>
+                <!-- add source readme indicating where this is from -->
+                <include name="benchmarks/SOURCE_VERSION.txt"/>
 
-				<!-- benchmark harness source -->
-				<include name="benchmarks/harness/*.xml"/>
-				<include name="benchmarks/harness/downloads/**.MD5"/>
-				<include name="benchmarks/harness/src/**"/>
+                <!-- benchmark top level source -->
+                <include name="benchmarks/*.xml"/>
+                <include name="benchmarks/dacapo.properties"/>
+                <include name="benchmarks/default.properties"/>
+                <include name="benchmarks/RELEASE_NOTES.txt"/>
 
-				<!-- libs source -->
-				<include name="benchmarks/libs/*.xml"/>
-				<include name="benchmarks/libs/*/*.xml"/>
-				<include name="benchmarks/libs/*/*.patch"/>
-				<include name="benchmarks/libs/*/*.pl"/>
-				<include name="benchmarks/libs/*/data/**"/>
-				<include name="benchmarks/libs/*/downloads/**.MD5"/>
-				<include name="benchmarks/libs/*/src/**"/>
+                <!-- benchmark harness source -->
+                <include name="benchmarks/src/**"/>
+                <include name="benchmarks/bms/*/harness/src/**"/>
+                <include name="benchmarks/harness/*.xml"/>
+                <include name="benchmarks/harness/downloads/**.MD5"/>
+                <include name="benchmarks/harness/src/**"/>
 
-				<!-- add benchmark xml -->
-				<include name="benchmarks/bms/*.xml"/>
+                <!-- libs source -->
+                <include name="benchmarks/libs/*.xml"/>
+                <include name="benchmarks/libs/*/*.xml"/>
+                <include name="benchmarks/libs/*/*.patch"/>
+                <include name="benchmarks/libs/*/*.pl"/>
+                <include name="benchmarks/libs/*/data/**"/>
+                <include name="benchmarks/libs/*/downloads/**.MD5"/>
+                <include name="benchmarks/libs/*/src/**"/>
 
-				<!-- add each benchmark -->
-				<include name="benchmarks/bms/*/*.cnf"/>
-				<include name="benchmarks/bms/*/*.patch"/>
-				<include name="benchmarks/bms/*/*.xml"/>
-				<include name="benchmarks/bms/*/*.properties"/>
-				<include name="benchmarks/bms/*/META-INF/**"/>
-				<include name="benchmarks/bms/*/data/**"/>
-				<include name="benchmarks/bms/*/downloads/**.MD5"/>
-				<include name="benchmarks/bms/*/src/**"/>
+                <!-- add benchmark xml -->
+                <include name="benchmarks/bms/*.xml"/>
 
-				<!-- add eclipse's plugin -->
-				<include name="benchmarks/bms/eclipse/plugin/META-INF/**"/>
-				<include name="benchmarks/bms/eclipse/plugin/src/**"/>
-				<include name="benchmarks/bms/eclipse/plugin/*.xml"/>
-				<include name="benchmarks/bms/eclipse/plugin/build.properties"/>
-				<include name="benchmarks/bms/eclipse/plugin/javaCompiler...args"/>
-				<include name="benchmarks/bms/eclipse/bundles-default.lst"/>
-				<include name="benchmarks/bms/eclipse/bundles-required.lst"/>
-				<include name="benchmarks/bms/eclipse/bundles-stub-required.lst"/>
+                <!-- add each benchmark -->
+                <include name="benchmarks/bms/*/*.cnf"/>
+                <include name="benchmarks/bms/*/*.patch"/>
+                <include name="benchmarks/bms/*/*.xml"/>
+                <include name="benchmarks/bms/*/*.properties"/>
+                <include name="benchmarks/bms/*/META-INF/**"/>
+                <include name="benchmarks/bms/*/data/**"/>
+                <include name="benchmarks/bms/*/downloads/**.MD5"/>
+                <include name="benchmarks/bms/*/src/**"/>
 
-				<!-- add tools -->
-				<include name="tools/**"/>
+                <!-- add eclipse's plugin -->
+                <include name="benchmarks/bms/eclipse/plugin/META-INF/**"/>
+                <include name="benchmarks/bms/eclipse/plugin/src/**"/>
+                <include name="benchmarks/bms/eclipse/plugin/*.xml"/>
+                <include name="benchmarks/bms/eclipse/plugin/build.properties"/>
+                <include name="benchmarks/bms/eclipse/plugin/javaCompiler...args"/>
+                <include name="benchmarks/bms/eclipse/bundles-default.lst"/>
+                <include name="benchmarks/bms/eclipse/bundles-required.lst"/>
+                <include name="benchmarks/bms/eclipse/bundles-stub-required.lst"/>
 
-				<!-- exclude svn -->
-				<exclude name="benchmarks/**/.svn"/>
+               <!-- add daytrader plugin -->
+                <include name="benchmarks/libs/daytrader/plugins/**"/>
+                <include name="benchmarks/libs/daytrader/daytrader/**"/>
 
-				<!-- exclude defunct benchmarks -->
-				<exclude name="benchmarks/bms/antlr/**"/>
-				<exclude name="benchmarks/bms/bloat/**"/>
-				<exclude name="benchmarks/bms/chart/**"/>
-				<exclude name="benchmarks/bms/hsqldb/**"/>
-				<exclude name="tools/*/bin/**"/>
-			</zipfileset>
-		</zip>
-	</target>
+                <!-- add tools -->
+                <include name="tools/**"/>
 
-	<!-- ================================= 
+                <!-- exclude svn -->
+                <exclude name="benchmarks/**/.svn"/>
+
+                <!-- exclude defunct benchmarks -->
+                <exclude name="benchmarks/bms/antlr/**"/>
+                <exclude name="benchmarks/bms/bloat/**"/>
+                <exclude name="benchmarks/bms/chart/**"/>
+                <exclude name="benchmarks/bms/hsqldb/**"/>
+                <exclude name="tools/*/bin/**"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <!-- ================================= 
          target: dist              
          ================================= -->
-	<target name="dist" depends="harness,compile">
-		<move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
-	</target>
+    <target name="dist" depends="harness,compile">
+        <move file="dacapo.jar" tofile="dacapo-${DSTAMP}.jar"/>
+    </target>
 
-	<target name="init" depends="set-build-version-info">
-		<!-- Create the time stamp -->
-		<tstamp/>
-		<delete dir="${log.build.dir}" />
-		<mkdir dir="${log.build.dir}" />
+    <target name="doc" depends="init,bootstrap,harness" description="make the top level documentation">
+    	
+    	<jar /> 
+    </target>
 
-		<echo>build.nickname=${build.nickname}</echo>
-		<echo>build.version=${build.version}</echo>
-	</target>
+	
+    <!-- =================================
+         target: bootstrap for running harness
+         ================================= -->
+    <target name="bootstrap" depends="init">
+    	<!-- construct the bootstrap -->
+        <javac srcdir="${dacapo.src.dir}" destdir="${dacapo.build.dir}"/>
 
-	<!-- ================================= 
+    	<!-- set the manifest for the jar -->
+        <copy file="${dacapo.src.dir}/META-INF/MANIFEST.MF" todir="${dacapo.build.dir}"/>
+        <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Specification-Version: ${build.nickname}${line.separator}</echo>
+        <echo file="${dacapo.build.dir}/MANIFEST.MF" append="yes">Implementation-Version: ${build.version}${line.separator}</echo>
+
+    	<!-- form the top level info -->
+        <copy file="${basedir}/../LICENSE" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/../README.md" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.dir}"/>
+
+    	<!-- this forms the base document section -->
+        <copy file="${basedir}/../LICENSE" todir="${dacapo.build.dir}"/>
+        <copy file="${basedir}/../README.md" todir="${dacapo.build.dir}"/>
+		<copy file="${basedir}/RELEASE_NOTES.txt" todir="${dacapo.build.doc.dir}" />
+
+		<copy todir="${dacapo.build.doc.dir}">
+			<fileset dir="${dacapo.doc.dir}"/>
+		</copy>
+
+    	<!-- construct the base jar -->
+        <jar jarfile="${jar-target}" basedir="${dacapo.build.dir}" update="false" manifest="${dacapo.build.dir}/MANIFEST.MF" excludes="MANIFEST.MF"/>
+    </target>
+
+    <target name="clean-bootstrap" depends="init">
+        <delete dir="${dacpao.build.doc.dir}"/>
+        <delete dir="${dacpao.build.dir}"/>
+    </target>
+
+    <!-- ================================= 
          target: compile  all sources
          ================================= -->
-	<target name="compile" depends="avrora,batik,h2,eclipse,fop,jython,luindex,lusearch,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
-		<antcall target="build.status.fail" />
-		<antcall target="build.status.pass" />
-	</target>
-
-	<!-- ================================= 
+    <target name="compile" depends="avrora,batik,h2,eclipse,fop,jython,luindex,lusearch,lusearch-fix,pmd,sunflow,tradebeans,tradesoap,tomcat,xalan">
+        <antcall target="build.status.fail" />
+        <antcall target="build.status.pass" />
+    </target>
+	
+    <!-- ================================= 
          target: harness           
          ================================= -->
-	<target name="harness" depends="init" description="compile the source ">
-		<ant antfile="harness/build.xml"/>
-	</target>
+    <target name="harness" depends="init,bootstrap" description="compile the source ">
+        <ant antfile="harness/build.xml"/>
+    </target>
+	
+    <target name="clean-harness" depends="init">
+        <ant antfile="harness/build.xml" target="clean"/>
+    </target>
 
-	<!-- *************************************************************************** -->
-	<!--                            Build                                            -->
-	<!-- *************************************************************************** -->
-	<target name="build.status.fail" if="build.failed">
-		<echo level="error">
+    <!-- *************************************************************************** -->
+    <!--                            Clean                                            -->
+    <!-- *************************************************************************** -->
+
+    <macrodef name="clean.bm">
+        <attribute name="benchmark"/>
+        <sequential>
+            <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="clean-@{benchmark}-status">
+                <arg value="-Dtoolsdir=${toolsdir}"/>
+                <arg value="-Dbuild.time=${build.time}"/>
+                <arg value="-Dlog.build.dir=${log.build.dir}"/>
+                <arg value="-buildfile"/>
+                <arg value="bms/@{benchmark}/build.xml"/>
+                <arg value="clean"/>
+            </exec>
+        </sequential>
+    </macrodef>
+ 
+    <target name="clean-benchmarks" depends="init">
+        <clean.bm benchmark="avrora"/>
+        <clean.bm benchmark="batik"/>
+        <clean.bm benchmark="h2"/>
+        <clean.bm benchmark="eclipse"/>
+        <clean.bm benchmark="fop"/>
+        <clean.bm benchmark="jython"/>
+        <clean.bm benchmark="luindex"/>
+        <clean.bm benchmark="lusearch"/>
+        <clean.bm benchmark="lusearch-fix"/>
+        <clean.bm benchmark="pmd"/>
+        <clean.bm benchmark="sunflow"/>
+        <clean.bm benchmark="tomcat"/>
+        <clean.bm benchmark="tradebeans"/>
+        <clean.bm benchmark="tradesoap"/>
+        <clean.bm benchmark="xalan"/>
+    </target>
+
+    <target name="clean" depends="clean-benchmarks,clean-harness,clean-bootstrap"/>
+  
+    <!-- *************************************************************************** -->
+    <!--                            Build                                            -->
+    <!-- *************************************************************************** -->
+    <target name="build.status.fail" if="build.failed">
+        <echo level="error">
 build: FAIL
 See ${log.build.report} for a summary of benchmark build status.
-	</echo>
-		<echo file="${log.build.fail}" level="error" message="build: FAIL${line.separator}"/>
-	</target>
+    </echo>
+        <echo file="${log.build.fail}" level="error" message="build: FAIL${line.separator}"/>
+    </target>
 
-	<target name="build.status.pass" unless="build.failed">
-		<echo level="error" message="build: PASS${line.separator}"/>
-		<echo file="${log.build.pass}" level="error" message="build: PASS${line.separator}"/>
-	</target>
+    <target name="build.status.pass" unless="build.failed">
+        <echo level="error" message="build: PASS${line.separator}"/>
+        <echo file="${log.build.pass}" level="error" message="build: PASS${line.separator}"/>
+    </target>
 
-	<macrodef name="build.bm">
-		<attribute name="benchmark"/>
-		<sequential>
-			<exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="@{benchmark}-status">
-				<arg value="-Dtoolsdir=${toolsdir}"/>
-				<arg value="-Dbuild.time=${build.time}"/>
-				<arg value="-Dlog.build.dir=${log.build.dir}"/>
-				<arg value="-buildfile"/>
-				<arg value="bms/@{benchmark}/build.xml"/>
-				<arg value="incremental"/>
-			</exec>
-			<condition property="@{benchmark}.failed">
-				<isfailure code="${@{benchmark}-status}"/>
-			</condition>
-			<condition property="@{benchmark}.message" value="FAIL" else="PASS">
-				<isset property="@{benchmark}.failed"/>
-			</condition>
-			<condition property="build.failed">
-				<and>
-					<not>
-						<isset property="build.failed"/>
-					</not>
-					<isset property="@{benchmark}.failed"/>
-				</and>
-			</condition>
-			<echo level="error" message="@{benchmark}: ${@{benchmark}.message}${line.separator}"/>
-			<echo file="${log.build.report}" append="true" level="error" message="@{benchmark}: ${@{benchmark}.message}${line.separator}"/>
-			<fail message="@{benchmark}: FAIL">
-				<condition>
-					<and>
-						<istrue value="${build.failonerror}"/>
-						<isset property="@{benchmark}.failed"/>
-					</and>
-				</condition>
-			</fail>
-		</sequential>
-	</macrodef>
+    <macrodef name="build.bm">
+        <attribute name="benchmark"/>
+        <sequential>
+            <exec executable="ant" failifexecutionfails="no" failonerror="no" resultproperty="@{benchmark}-status">
+                <arg value="-Dtoolsdir=${toolsdir}"/>
+                <arg value="-Dbuild.time=${build.time}"/>
+                <arg value="-Dlog.build.dir=${log.build.dir}"/>
+                <arg value="-buildfile"/>
+                <arg value="bms/@{benchmark}/build.xml"/>
+                <arg value="incremental"/>
+            </exec>
+            <condition property="@{benchmark}.failed">
+                <isfailure code="${@{benchmark}-status}"/>
+            </condition>
+            <condition property="@{benchmark}.message" value="FAIL" else="PASS">
+                <isset property="@{benchmark}.failed"/>
+            </condition>
+            <condition property="build.failed">
+                <and>
+                    <not>
+                        <isset property="build.failed"/>
+                    </not>
+                    <isset property="@{benchmark}.failed"/>
+                </and>
+            </condition>
+            <echo level="error" message="@{benchmark}: ${@{benchmark}.message}${line.separator}"/>
+            <echo file="${log.build.report}" append="true" level="error" message="@{benchmark}: ${@{benchmark}.message}${line.separator}"/>
+            <fail message="@{benchmark}: FAIL">
+                <condition>
+                    <and>
+                        <istrue value="${build.failonerror}"/>
+                        <isset property="@{benchmark}.failed"/>
+                    </and>
+                </condition>
+            </fail>
+        </sequential>
+    </macrodef>
 
-	<target name="avrora" depends="init,harness">
-		<build.bm benchmark="avrora"/>
-	</target>
-	<target name="batik" depends="init,harness">
-		<build.bm benchmark="batik"/>
-	</target>
-	<target name="h2" depends="init,harness">
-		<build.bm benchmark="h2"/>
-	</target>
-	<target name="eclipse" depends="init,harness">
-		<build.bm benchmark="eclipse"/>
-	</target>
-	<target name="fop" depends="init,harness">
-		<build.bm benchmark="fop"/>
-	</target>
-	<target name="jython" depends="init,harness">
-		<build.bm benchmark="jython"/>
-	</target>
-	<target name="luindex" depends="init,harness">
-		<build.bm benchmark="luindex"/>
-	</target>
-	<target name="lusearch" depends="init,harness">
-		<build.bm benchmark="lusearch"/>
-	</target>
-	<target name="pmd" depends="init,harness">
-		<build.bm benchmark="pmd"/>
-	</target>
-	<target name="sunflow" depends="init,harness">
-		<build.bm benchmark="sunflow"/>
-	</target>
-	<target name="tomcat" depends="init,harness">
-		<build.bm benchmark="tomcat"/>
-	</target>
-	<target name="tradebeans" depends="init,harness">
-		<build.bm benchmark="tradebeans"/>
-	</target>
-	<target name="tradesoap" depends="init,harness">
-		<build.bm benchmark="tradesoap"/>
-	</target>
-	<target name="xalan" depends="init,harness">
-		<build.bm benchmark="xalan"/>
-	</target>
+    <target name="avrora" depends="init,harness">
+        <build.bm benchmark="avrora"/>
+    </target>
+    <target name="batik" depends="init,harness">
+        <build.bm benchmark="batik"/>
+    </target>
+    <target name="h2" depends="init,harness">
+        <build.bm benchmark="h2"/>
+    </target>
+    <target name="eclipse" depends="init,harness">
+        <build.bm benchmark="eclipse"/>
+    </target>
+    <target name="fop" depends="init,harness">
+        <build.bm benchmark="fop"/>
+    </target>
+    <target name="jython" depends="init,harness">
+        <build.bm benchmark="jython"/>
+    </target>
+    <target name="luindex" depends="init,harness">
+        <build.bm benchmark="luindex"/>
+    </target>
+    <target name="lusearch" depends="init,harness">
+        <build.bm benchmark="lusearch"/>
+    </target>
+    <target name="lusearch-fix" depends="init,harness">
+        <build.bm benchmark="lusearch-fix"/>
+    </target>
+    <target name="pmd" depends="init,harness">
+        <build.bm benchmark="pmd"/>
+    </target>
+    <target name="sunflow" depends="init,harness">
+        <build.bm benchmark="sunflow"/>
+    </target>
+    <target name="tomcat" depends="init,harness">
+        <build.bm benchmark="tomcat"/>
+    </target>
+    <target name="tradebeans" depends="init,harness">
+        <build.bm benchmark="tradebeans"/>
+    </target>
+    <target name="tradesoap" depends="init,harness">
+        <build.bm benchmark="tradesoap"/>
+    </target>
+    <target name="xalan" depends="init,harness">
+        <build.bm benchmark="xalan"/>
+    </target>
 </project>

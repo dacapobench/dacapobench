@@ -1,8 +1,7 @@
 benchmark batik
   class org.dacapo.harness.Batik
   thread-model single
-  jar "batik-all.jar"
-  libs "xml-apis-ext.jar","xml-apis.jar", "crimson-1.1.3.jar", "xerces_2_5_0.jar", "xalan-2.6.0.jar";
+  jars "batik-all.jar", "xml-apis-ext.jar","xml-apis.jar", "crimson-1.1.3.jar", "xerces_2_5_0.jar", "xalan-2.6.0.jar";
 
 /*
  * Validation currently limited to checking existence of output file
@@ -10,21 +9,21 @@ benchmark batik
  * image files.
  */
 
-size small args "-d","${SCRATCH}","-scriptSecurityOff","batik/mapWaadt.svg"
+size small args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg"
   output stdout           digest 0xa8f2208c90a7e2223ff376e873fd7ddb0ece3db7,
     	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "mapWaadt.png"   /* digest 0xa0617ca6035d7eaeb6ea02f949759c48d869f15b */;
 
-size default args "-d","${SCRATCH}","-scriptSecurityOff","batik/mapWaadt.svg","batik/mapSpain.svg","batik/sydney.svg"
+size default args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg","${SCRATCH}/batik/mapSpain.svg","${SCRATCH}/batik/sydney.svg"
   output stdout           digest 0xc0ab3d5a06a755bdf7f758f1c656acbbc5aafc74,
     	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "mapWaadt.png"   /* digest 0xa0617ca6035d7eaeb6ea02f949759c48d869f15b */,
          "mapSpain.png"   /* digest 0x74fb77a00cf405ad334528cb15266da8d8660257 */,
          "sydney.png"     /* digest 0x3deba206f9a89a6798bf39af029e22c3f13efe00 */;
 
-size large args "-d","${SCRATCH}","-scriptSecurityOff","batik/mapWaadt.svg","batik/mapSpain.svg","batik/sydney.svg",
-                "batik/asf-logo.svg","batik/moonPhases.svg","batik/batik3D.svg",
-		"batik/strokeFont.svg"
+size large args "-d","${SCRATCH}","-scriptSecurityOff","${SCRATCH}/batik/mapWaadt.svg","${SCRATCH}/batik/mapSpain.svg","${SCRATCH}/batik/sydney.svg",
+                "${SCRATCH}/batik/asf-logo.svg","${SCRATCH}/batik/moonPhases.svg","${SCRATCH}/batik/batik3D.svg",
+		"${SCRATCH}/batik/strokeFont.svg"
   output stdout           digest 0x7b9a5d41084750e997c9899ef6ad3fa7a9c6d267,
     	 stderr           digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
          "mapWaadt.png"   /* digest 0xa0617ca6035d7eaeb6ea02f949759c48d869f15b */,

@@ -1,16 +1,15 @@
 benchmark luindex
   class org.dacapo.harness.Luindex
   thread-model single
-  jar "luindex.jar"
-  libs "lucene-core-2.4.jar", "lucene-demos-2.4.jar";
+  jars "dacapo-luindex.jar", "lucene-core-2.4.jar", "lucene-demos-2.4.jar";
 
-size small args "luindex/william/poetry" 
+size small args "${SCRATCH}/luindex/william/poetry"
   output stdout  digest 0xebb11b9e1c56c6ef5620b890cca24ec773301388,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/segments.gen" bytes 20,
 	 "index/segments_2"  bytes 62;
 
-size default args "luindex/william","luindex/kjv"
+size default args "${SCRATCH}/luindex/william","${SCRATCH}/luindex/kjv"
   output stdout  digest 0xc90792fce1594b4b9ea1b01d593aefe801e6e58b,
          stderr      digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
 	 "index/segments.gen" bytes 20,

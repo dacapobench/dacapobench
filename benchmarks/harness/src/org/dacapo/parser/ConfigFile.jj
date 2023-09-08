@@ -12,6 +12,7 @@
  */
 options {
   STATIC = false;
+  UNICODE_INPUT = true;
 }
 PARSER_BEGIN(ConfigFile)
 package org.dacapo.parser;
@@ -24,7 +25,7 @@ class ConfigFile {
   public static void main(String[] args) {
     ConfigFile parser;
     try {
-      parser = new ConfigFile(new FileInputStream(args[0]));
+      parser = new ConfigFile(new FileInputStream(args[0]), "UTF-8");
       parser.configFile();
     } catch (ParseException p) {
     	System.err.println("Parse exception");
@@ -108,9 +109,8 @@ TOKEN :
 | < EXISTS : "exists" >
 | < FILTER : "filter" >
 | < FIXED : "fixed" >
-| < JAR : "jar" >
 | < KEEP : "keep" >
-| < LIBS : "libs" >
+| < JARS : "jars" >
 | < LICENSE : "license" >
 | < LINES : "lines" >
 | < LONG : "long" >
@@ -178,15 +178,14 @@ void configOption(Config config) :
 {
     <CLASS> className=identifier() { config.setClass(className); }
   | <THREAD_MODEL> threadModel=threadModel() { config.setThreadModel(threadModel); }
-  | <JAR> jar=string() { config.setJar(jar); }
-  | <LIBS> libraries(config)
+  | <JARS> libraries(config)
 }
 
 void libraries(Config config) :
-{ ArrayList libs = new ArrayList(); String lib; }
+{ ArrayList jars = new ArrayList(); String jar; }
 {
-  lib=string() { libs.add(lib); } (<COMMA> lib=string() { libs.add(lib); })*
-  { config.setLibs((String[]) libs.toArray(new String[0])); }
+  jar=string() { jars.add(jar); } (<COMMA> jar=string() { jars.add(jar); })*
+  { config.setJars((String[]) jars.toArray(new String[0])); }
 }
 
 void sizeSpec(Config config) :

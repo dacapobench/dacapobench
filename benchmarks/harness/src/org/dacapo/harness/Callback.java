@@ -42,11 +42,6 @@ public class Callback {
   protected long[] times;
 
   /**
-   * The start time of the most recent benchmark run.
-   */
-  protected long timer;
-
-  /**
    * 
    */
   protected long elapsed;
@@ -162,40 +157,23 @@ public class Callback {
     start(benchmark, mode == Mode.WARMUP);
   };
 
-  @Deprecated
-  public void startWarmup(String benchmark) {
-    start(benchmark, true);
-  };
-
   protected void start(String benchmark, boolean warmup) {
-    timer = System.currentTimeMillis();
     System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
     System.err.println((warmup ? ("warmup " + (iterations + 1) + " ") : "") + "=====");
     System.err.flush();
   }
 
-  /* Stop the timer */
-  public void stop() {
-    stop(mode == Mode.WARMUP);
+  public void stop(long duration) {
+    stop(duration, mode == Mode.WARMUP);
   }
 
-  @Deprecated
-  public void stopWarmup() {
-    stop(true);
-  }
-
-  public void stop(boolean warmup) {
-    elapsed = System.currentTimeMillis() - timer;
+  public void stop(long duration, boolean warmup) {
+    elapsed = duration;
   }
 
   /* Announce completion of the benchmark (pass or fail) */
   public void complete(String benchmark, boolean valid) {
     complete(benchmark, valid, mode == Mode.WARMUP);
-  };
-
-  @Deprecated
-  public void completeWarmup(String benchmark, boolean valid) {
-    complete(benchmark, valid, true);
   };
 
   protected void complete(String benchmark, boolean valid, boolean warmup) {

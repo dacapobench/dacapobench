@@ -7,59 +7,59 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="pmd" default="all" basedir="../..">
-	<description>DaCapo pmd benchmark</description>
-	<property file="dacapo.properties"/>
+    <description>DaCapo pmd benchmark</description>
+    <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="pmd"/>
-	<property name="bm-version" value="4.2.5"/>
-	<property name="bm-url" value="${sourceforge.dl.url}/pmd"/>
-	<property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
-	<property name="jaxen-version" value="1.1.1"/>
-	<property name="asm-version" value="3.1"/>
+    <property name="bm-name" value="pmd"/>
+    <property name="bm-version" value="4.2.5"/>
+    <property name="bm-url" value="${sourceforge.dl.url}/pmd/pmd/4.2.5"/>
+    <property name="bm-src" value="${bm-name}-src-${bm-version}.zip"/>
+    <property name="jaxen-version" value="1.1.1"/>
+    <property name="asm-version" value="3.1"/>
 
-	<import file="../common.xml"/>
+    <import file="../common.xml"/>
 
-	<property name="bm-build-top" value="${bm-build-dir}/pmd-${bm-version}"/>
+    <property name="bm-build-top" value="${bm-build-dir}/pmd-${bm-version}"/>
 
-	<target name="unpack" depends="unzip, patch"/>
+    <target name="unpack" depends="unzip, patch"/>
 
-	<target name="bm-build" depends="xerces">
-		<ant antfile="libs/junit/build.xml"/>
-		<exec dir="${bm-build-top}/bin" executable="ant">
-			<arg value="jar"/>
-			<env key="CLASSPATH" value=".:${junit-jar}"/>
-			<env key="ANT_HOME" value="${ant.install}"/>
-		</exec>
-	</target>
+    <target name="bm-build" depends="xerces">
+        <ant antfile="libs/junit/build.xml"/>
+        <exec dir="${bm-build-top}/bin" executable="ant">
+            <arg value="jar"/>
+            <env key="CLASSPATH" value=".:${junit-jar}"/>
+            <env key="ANT_HOME" value="${ant.install}"/>
+        </exec>
+    </target>
 
-	<target name="jar" depends="libs">
-		<copy file="${bm-build-top}/lib/pmd-${bm-version}.jar" todir="${bm-jars}"/>
-	</target>
+    <target name="jar" depends="libs">
+        <copy file="${bm-build-top}/lib/pmd-${bm-version}.jar" todir="${bm-jars}"/>
+    </target>
 
-	<target name="data">
-		<property name="pmd-data" value="${bm-build-top}/data/pmd"/>
-		<mkdir dir="${pmd-data}"/>
-		<copy todir="${pmd-data}">
-			<fileset dir="${bm-build-top}/src">
-				<include name="net/**/*.java"/>
-			</fileset>
-		</copy>
-		<copy todir="${pmd-data}">
-			<fileset dir="${bm-build-top}">
-				<include name="rulesets/**/*"/>
-			</fileset>
-		</copy>
-		<copy todir="${pmd-data}" >
-			<fileset dir="${bm-data}/pmd">
-				<include name="*.lst"/>
-			</fileset>
-		</copy>
-		<zip basedir="${bm-build-top}/data" includes="pmd/**" destfile="${bm-dat}/pmd.zip"/>
-		<delete dir="${bm-build-top}/data"/>
-	</target>
+    <target name="data">
+        <property name="pmd-data" value="${bm-build-top}/data/pmd"/>
+        <mkdir dir="${pmd-data}"/>
+        <copy todir="${pmd-data}">
+            <fileset dir="${bm-build-top}/src">
+                <include name="net/**/*.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${pmd-data}">
+            <fileset dir="${bm-build-top}">
+                <include name="rulesets/**/*"/>
+            </fileset>
+        </copy>
+        <copy todir="${pmd-data}" >
+            <fileset dir="${bm-data}/pmd">
+                <include name="*.lst"/>
+            </fileset>
+        </copy>
+        <zip basedir="${bm-build-top}/data" includes="pmd/**" destfile="${bm-dat}/pmd.zip"/>
+        <delete dir="${bm-build-top}/data"/>
+    </target>
 
-	<target name="libs">
-		<copy file="${bm-build-top}/lib/jaxen-${jaxen-version}.jar" todir="${bm-jars}"/>
-		<copy file="${bm-build-top}/lib/asm-${asm-version}.jar" todir="${bm-jars}"/>
-	</target>
+    <target name="libs">
+        <copy file="${bm-build-top}/lib/jaxen-${jaxen-version}.jar" todir="${bm-jars}"/>
+        <copy file="${bm-build-top}/lib/asm-${asm-version}.jar" todir="${bm-jars}"/>
+    </target>
 </project>

@@ -64,13 +64,15 @@ public class CommandLineArgs {
                                                          // unspecified
   public static final String DEFAULT_THREAD_FACTOR = "0"; // 0 represents
                                                           // unspecified
-
+  public static final String DEFAULT_TIMEOUT_DIALATION = "1";
+  
   private static final String OPT_CALLBACK = "callback";
   private static final String OPT_HELP = "help";
   private static final String OPT_RELEASE_NOTES = "release-notes";
   private static final String OPT_LIST_BENCHMARKS = "list-benchmarks";
   private static final String OPT_INFORMATION = "information";
   private static final String OPT_SIZE = "size";
+  private static final String OPT_SIZES = "sizes";
   private static final String OPT_SCRATCH_DIRECTORY = "scratch-directory";
   private static final String OPT_CONVERGE = "converge";
   private static final String OPT_MAX_ITERATIONS = "max-iterations";
@@ -88,12 +90,14 @@ public class CommandLineArgs {
   private static final String OPT_NO_PRE_ITERATION_GC = "no-pre-iteration-gc";
   private static final String OPT_THREAD_COUNT = "thread-count";
   private static final String OPT_THREAD_FACTOR = "thread-factor";
+  private static final String OPT_TIMEOUT_DIALATION = "timeout-dialation";
 
   private static final Option[] OPTIONS = { 
     makeOption("c",  OPT_CALLBACK,            "Use class <callback> to bracket benchmark runs", "callback"),
     makeOption("h",  OPT_HELP,                "Print this help", null), makeOption("r", OPT_RELEASE_NOTES, "Print the release notes", null),
     makeOption("l",  OPT_LIST_BENCHMARKS,     "List available benchmarks", null), makeOption("i", OPT_INFORMATION, "Display benchmark information", null),
     makeOption("s",  OPT_SIZE,                "Size of input data", "SIZE"), makeOption(null, OPT_SCRATCH_DIRECTORY, "Specify an alternate scratch directory <dir>", "dir"),
+    makeOption(null, OPT_SIZES,               "Report the valid sizes for the specified benchmarks", null),
     makeOption("C",  OPT_CONVERGE,            "Allow benchmark times to converge before timing", null),
     makeOption(null, OPT_MAX_ITERATIONS,      "Run a max of <max_iterations> iterations (default 20)", "max_iterations"),
     makeOption(null, OPT_VARIANCE,            "Target coefficient of variation <pct> (default 3.0)", "pct"),
@@ -106,6 +110,7 @@ public class CommandLineArgs {
     makeOption(null, OPT_NO_PRE_ITERATION_GC, "Skip performing System.gc() before the start of each iteration", null),
     makeOption("t",  OPT_THREAD_COUNT,        "Set the thread count to drive the workload (mutually exclusive -k)", "thread_count"),
     makeOption("k",  OPT_THREAD_FACTOR,       "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
+    makeOption("f",  OPT_TIMEOUT_DIALATION,   "Set the time dialation of the timeouts in the benchmark by the given integer factor.", "timeout_dialation"),
     makeOption("v",  OPT_VERBOSE,             "Verbose output", null)
   };
 
@@ -305,6 +310,10 @@ public class CommandLineArgs {
     return line.getOptionValue(OPT_SIZE, DEFAULT_SIZE);
   }
 
+  public boolean getSizes() {
+    return line.hasOption(OPT_SIZES);
+  }
+
   public String getScratchDir() {
     return line.getOptionValue(OPT_SCRATCH_DIRECTORY, DEFAULT_SCRATCH_DIRECTORY);
   }
@@ -355,6 +364,10 @@ public class CommandLineArgs {
 
   public String getThreadFactor() {
     return line.getOptionValue(OPT_THREAD_FACTOR, DEFAULT_THREAD_FACTOR);
+  }
+  
+  public String getTimeoutDialation() {
+	  return line.getOptionValue(OPT_TIMEOUT_DIALATION, DEFAULT_TIMEOUT_DIALATION);
   }
 
   public List<String> getArgList() {

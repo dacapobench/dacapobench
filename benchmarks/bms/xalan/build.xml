@@ -33,7 +33,7 @@
             destdir="${bm-build-dir}/benchmark/" 
             includes="org/dacapo/xalan/*"
             debug="true" debuglevel="lines,vars,source"/>
-        <jar destfile="${bm-jars}/xalan-benchmark.jar" basedir="${bm-build-dir}/benchmark"/>
+        <jar destfile="${bm-jars}/dacapo-${bm-name}.jar" basedir="${bm-build-dir}/benchmark"/>
     </target>
     
     <target name="jar">

@@ -55,6 +55,11 @@ public abstract class FullSourceWorkspaceTests {
   final static boolean PRINT = "true".equals(System.getProperty("print"));
   final static boolean DACAPO_PRINT = true;
 
+  // Default settings for workspace compiler
+  final static String DEFAULT_COMPLIANCE      = "1.4";
+  final static String DEFAULT_SOURCE          = "1.3";
+  final static String DEFAULT_TARGET_PLATFORM = "1.2";
+
   final static Hashtable INITIAL_OPTIONS = JavaCore.getOptions();
   protected static TestingEnvironment ENV = null;
   protected static IJavaProject[] ALL_PROJECTS;
@@ -300,6 +305,13 @@ public abstract class FullSourceWorkspaceTests {
   }
 
   static void setUpFullSourceWorkspace(boolean large) throws Exception {
+    // Set compiler options to be independent of the jvm used to run these tests
+    Hashtable options = JavaCore.getOptions();
+    options.put(CompilerOptions.OPTION_Compliance, DEFAULT_COMPLIANCE);
+    options.put(CompilerOptions.OPTION_Source, DEFAULT_SOURCE);
+    options.put(CompilerOptions.OPTION_TargetPlatform, DEFAULT_TARGET_PLATFORM);
+    JavaCore.setOptions(options);
+
     // Get wksp info
     IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IWorkspaceRoot workspaceRoot = workspace.getRoot();
@@ -335,23 +347,29 @@ public abstract class FullSourceWorkspaceTests {
       }
     }
 
+
     // Create lib entries for the JDKs
     String jreLibPath = JavaCore.getClasspathVariable("JRE_LIB").toOSString();
+    String tempPath = System.getProperty("dacapo.local.jre");
     String[] jdkLibs = Util.getJavaClassLibs();
     int jdkLibsLength = jdkLibs.length;
-    IClasspathEntry[] jdkEntries = new IClasspathEntry[jdkLibsLength];
+    IClasspathEntry[] jdkEntries = new IClasspathEntry[jdkLibsLength + 1];
     int jdkEntriesCount = 0;
+
     for (int i = 0; i < jdkLibsLength; i++) {
       if (!jdkLibs[i].equals(jreLibPath)) { // do not include JRE_LIB in
         // additional JDK entries
+
         jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(jdkLibs[i]), null, null);
       }
     }
+    jdkEntries[jdkEntriesCount++] = JavaCore.newLibraryEntry(new Path(tempPath), null, null);
 
     // Set classpaths (workaround bug 73253 Project references not set on
     // project open)
     ALL_PROJECTS = JavaCore.create(workspaceRoot).getJavaProjects();
     int projectsLength = ALL_PROJECTS.length;
+
     for (int i = 0; i < projectsLength; i++) {
       String projectName = ALL_PROJECTS[i].getElementName();
       if (BIG_PROJECT_NAME.equals(projectName))
@@ -372,6 +390,7 @@ public abstract class FullSourceWorkspaceTests {
       } catch (CoreException jme) {
         // skip name collision as it means that JRE lib were already set on the
         // classpath
+        System.out.println("errors in here");
         if (jme.getStatus().getCode() != IJavaModelStatusConstants.NAME_COLLISION) {
           throw jme;
         }

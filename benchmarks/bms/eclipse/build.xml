@@ -7,105 +7,100 @@
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
 <project name="eclipse" default="all" basedir="../..">
-	<description>DaCapo eclipse benchmark</description>
-	<property file="dacapo.properties"/>
+    <description>DaCapo eclipse benchmark</description>
+    <property file="dacapo.properties"/>
 
-	<property name="bm-name" value="eclipse"/>
-	<property name="bm-version" value="3.5.1"/>
-	<property name="bm-drop" value="200909170800"/>
-	<property name="bm-url" value="http://download.eclipse.org/eclipse/downloads/drops/R-${bm-version}-${bm-drop}"/>
-	<property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa.tar.gz"/>
-	<property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.5.1.R35x_v20090827.jar"/>
+    <property name="bm-name" value="eclipse"/>
+    <property name="bm-version" value="3.5.1"/>
+    <property name="bm-drop" value="200909170800"/>
+    <property name="bm-url" value="http://archive.eclipse.org/eclipse/downloads/drops/R-${bm-version}-${bm-drop}"/>
+    <property name="bm-src" value="eclipse-SDK-${bm-version}-macosx-cocoa.tar.gz"/>
+    <property name="osgi-bootstrap-jar" value="org.eclipse.osgi_3.5.1.R35x_v20090827.jar"/>
 
-	<import file="../common.xml"/>
-	<property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
-	<property name="bm-src-at" value="eclipse-Automated-Tests-${bm-version}.zip"/>
+    <import file="../common.xml"/>
+    <property name="eclipse-top" value="${bm-build-dir}/eclipse"/>
+    <property name="bm-src-at" value="eclipse-Automated-Tests-${bm-version}.zip"/>
 
-	<property name="workspace-full" value="full-source-R3_0"/>
-	<property name="workspace-default" value="${workspace-full}-default"/>
-	<property name="workspace-large" value="${workspace-full}-large"/>
+    <property name="workspace-full" value="full-source-R3_0"/>
+    <property name="workspace-default" value="${workspace-full}-default"/>
+    <property name="workspace-large" value="${workspace-full}-large"/>
 
-	<target name="clean" depends="common.clean">
-		<delete dir="${bm-files}/@dot"/>
-	</target>
+    <target name="clean" depends="common.clean">
+        <delete dir="${bm-files}/@dot"/>
+    </target>
 
-	<target name="source" depends="common.source">
-		<antcall target="check-source">
-			<param name="target-dir" value="${bm-downloads}"/>
-			<param name="target-url" value="${bm-url}"/>
-			<param name="target-file" value="${bm-src-at}"/>
-		</antcall>
-	</target>
+    <target name="source" depends="common.source">
+        <antcall target="check-source">
+            <param name="target-dir" value="${bm-downloads}"/>
+            <param name="target-url" value="${bm-url}"/>
+            <param name="target-file" value="${bm-src-at}"/>
+        </antcall>
+    </target>
 
-	<target name="bm-harness">
-		<javac srcdir="${bm-src-dir}" destdir="${bm-output-dir}" includes="org/dacapo/harness/*.java"
-                debug="true" debuglevel="lines,vars,source">
-			<classpath>
-				<pathelement path="${harness-classpath}"/>
-			</classpath>
-		</javac>
-	</target>
+    <target name="unpack" depends="untar"/>
 
-	<target name="unpack" depends="untar"/>
+    <target name="bm-build">
+    </target>
 
-	<target name="bm-build">
-	</target>
+    <target name="workspace-zips">
+        <!-- Unravel the source zip -->
+        <unzip src="${bm-downloads}/${bm-src-at}" dest="${bm-build-dir}">
+            <patternset>
+                <include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
+            </patternset>
+        </unzip>
+        <unzip dest="${bm-build-dir}/eclipse-testing/">
+            <fileset dir="${bm-build-dir}/eclipse-testing/">
+                <include name="eclipse-junit-tests-M*.zip"/>
+            </fileset>
+            <patternset>
+                <include name="eclipse/plugins/org.eclipse.jdt.core.tests.performance*/${workspace-full}.zip"/>
+            </patternset>
+        </unzip>
+        <unzip dest="${bm-build-dir}/eclipse-testing/workspace">
+            <fileset dir="${bm-build-dir}/eclipse-testing/eclipse">
+                <include name="**/${workspace-full}.zip"/>
+            </fileset>
+        </unzip>
+        <!--Create two complimentary zips for default and large workspaces-->
+        <zip destfile="${bm-build-dir}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
+            <patternset includesfile="${bm-files}/bundles-default.lst"/>
+        </zip>
+        <zip destfile="${bm-build-dir}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
+            <patternset excludesfile="${bm-files}/bundles-default.lst"/>
+        </zip>
+        <delete dir="${bm-build-dir}/eclipse-testing"/>
+    </target>
 
-	<target name="workspace-zips">
-		<!-- Unravel the source zip -->
-		<unzip src="${bm-downloads}/${bm-src-at}" dest="${bm-build-dir}">
-			<patternset>
-				<include name="eclipse-testing/eclipse-junit-tests-M*.zip"/>
-			</patternset>
-		</unzip>
-		<unzip dest="${bm-build-dir}/eclipse-testing/">
-			<fileset dir="${bm-build-dir}/eclipse-testing/">
-				<include name="eclipse-junit-tests-M*.zip"/>
-			</fileset>
-			<patternset>
-				<include name="eclipse/plugins/org.eclipse.jdt.core.tests.performance*/${workspace-full}.zip"/>
-			</patternset>
-		</unzip>
-		<unzip dest="${bm-build-dir}/eclipse-testing/workspace">
-			<fileset dir="${bm-build-dir}/eclipse-testing/eclipse">
-				<include name="**/${workspace-full}.zip"/>
-			</fileset>
-		</unzip>
-		<!-- Create two complimentary zips for default and large workspaces -->
-		<zip destfile="${bm-build-dir}/${workspace-default}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
-			<patternset includesfile="${bm-files}/bundles-default.lst"/>
-		</zip>
-		<zip destfile="${bm-build-dir}/${workspace-large}.zip" basedir="${bm-build-dir}/eclipse-testing/workspace">
-			<patternset excludesfile="${bm-files}/bundles-default.lst"/>
-		</zip>
-		<delete dir="${bm-build-dir}/eclipse-testing"/>
-	</target>
-
-	<!-- This is a bit ugly.  the osgi-bootstrap jar needs to be in the 
+    <!-- This is a bit ugly.  the osgi-bootstrap jar needs to be in the 
          classpath at the start, but our harness only wants to deal with
          files in the jar directory.  However we can't simply remove the
          jar from the eclipse directory so for now we do the dumb thing
          of duplicating the jar -->
-	<target name="jar" depends="unpack">
-		<copy file="${bm-build-dir}/eclipse/plugins/${osgi-bootstrap-jar}" tofile="${bm-jars}/eclipse.jar"/>
-	</target>
+    <target name="jar" depends="unpack">
+        <copy file="${bm-build-dir}/eclipse/plugins/${osgi-bootstrap-jar}" tofile="${bm-jars}/eclipse.jar"/>
+    </target>
 
-	<!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
-	<target name="plugin" depends="unpack">
-		<ant antfile="build.xml" dir="${bm-files}/plugin" inheritall="false">
-			<property name="plugin.destination" location="${bm-build-dir}/eclipse/plugins/"/>
-			<target name="clean"/>
-			<target name="build.update.jar"/>
-		</ant>
-		<!-- add our bundle to the configurator metadata -->
-		<patch patchfile="${bm-files}/eclipse.patch" dir="${bm-build-dir}" strip="1"/>
-	</target>
+    <!-- build the eclipse plugin, which is necessary to fire up eclipse from within our harness -->
+    <target name="plugin" depends="unpack">
+        <exec executable="${ant.home}/bin/ant" dir="${bm-files}/plugin" failonerror="yes">
+            <arg line="clean"/>
+            <arg line="-Dplugin.destination=${bm-build-dir}/eclipse/plugins/"/>
+            <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
+        <exec executable="${ant.home}/bin/ant" dir="${bm-files}/plugin" failonerror="yes">
+            <arg line="build.update.jar"/>
+            <arg line="-Dplugin.destination=${bm-build-dir}/eclipse/plugins/"/>
+            <env key="JAVA_HOME" value="${jdk16home}"/>
+        </exec>
+        <patch patchfile="${bm-files}/eclipse.patch" dir="${bm-build-dir}" strip="1"/>
+    </target>
 
-	<!-- Create the eclipse data file -->
-	<target name="data" depends="plugin, workspace-zips">
+    <!-- Create the eclipse data file -->
+    <target name="data" depends="plugin, workspace-zips">
 
-		<!-- where possible, replace jars with empty stubs -->
-		<!-- remove this optimization for now; it fails with ant 1.7.0 (but not 1.7.1) sigh.
+        <!-- where possible, replace jars with empty stubs -->
+        <!-- remove this optimization for now; it fails with ant 1.7.0 (but not 1.7.1) sigh.
         <delete>
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </delete>
@@ -113,13 +108,15 @@
             <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
         </touch>
         -->
+        <unzip dest="${bm-build-dir}/" src="${bm-data}/dummyjre.zip"/>
 
-		<!-- Install the test data -->
-		<zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
-			<!-- The eclipse runtime.  We just include as little as we can, -->
-			<!-- using an empirically derived list of what we really need.  -->
-			<fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
-			<fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
-		</zip>
-	</target>
+        <!-- Install the test data -->
+        <zip destfile="${bm-dat}/${bm-name}.zip" basedir="${bm-build-dir}" excludes="eclipse/plugins/**">
+            <!-- The eclipse runtime.  We just include as little as we can, -->
+            <!-- using an empirically derived list of what we really need.  -->
+            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-required.lst"/>
+            <fileset dir="${bm-build-dir}" includesfile="${bm-files}/bundles-stub-required.lst"/>
+        </zip>
+    </target>
+
 </project>
