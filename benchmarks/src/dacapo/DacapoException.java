@@ -7,8 +7,8 @@ package dacapo;
  * Exception class for local error conditions.
  * 
  * @author Robin Garner
- * @date $Date: 2006-09-28 21:11:06 +1000 (Thu, 28 Sep 2006) $
- * @id $Id: DacapoException.java 135 2006-09-28 11:11:06Z rgarner $
+ * @date $Date: 2006-09-28 11:11:06 +0000 (Thu, 28 Sep 2006) $
+ * @id $Id: DacapoException.java 135 2006-09-28 11:11:06 +0000 (Thu, 28 Sep 2006) rgarner $
  *
  */
 public class DacapoException extends Exception {

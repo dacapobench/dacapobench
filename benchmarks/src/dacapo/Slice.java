@@ -15,8 +15,8 @@ import java.io.*;
  * and so on.
  * 
  * @author Robin Garner
- * @date $Date: 2006-10-03 17:24:11 +1000 (Tue, 03 Oct 2006) $
- * @id $Id: Slice.java 137 2006-10-03 07:24:11Z rgarner $
+ * @date $Date: 2006-10-03 07:24:11 +0000 (Tue, 03 Oct 2006) $
+ * @id $Id: Slice.java 137 2006-10-03 07:24:11 +0000 (Tue, 03 Oct 2006) rgarner $
  *
  */
 public class Slice {

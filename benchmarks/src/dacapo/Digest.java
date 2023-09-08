@@ -10,8 +10,8 @@ import java.security.NoSuchAlgorithmException;
  * Encapsulate the digests used for validation of files.
  * 
  * @author Robin Garner
- * @date $Date: 2006-09-28 14:15:21 +1000 (Thu, 28 Sep 2006) $
- * @id $Id: Digest.java 134 2006-09-28 04:15:21Z rgarner $
+ * @date $Date: 2006-09-28 04:15:21 +0000 (Thu, 28 Sep 2006) $
+ * @id $Id: Digest.java 134 2006-09-28 04:15:21 +0000 (Thu, 28 Sep 2006) rgarner $
  *
  */
 public class Digest {

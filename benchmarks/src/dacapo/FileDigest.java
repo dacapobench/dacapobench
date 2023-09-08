@@ -22,8 +22,8 @@ import java.security.MessageDigest;
  *   with Unix ones.  (A bit heavy handed, better alternatives are invited :)
  * 
  * @author Robin Garner
- * @date $Date: 2006-10-13 18:01:52 +1000 (Fri, 13 Oct 2006) $
- * @id $Id: FileDigest.java 169 2006-10-13 08:01:52Z rgarner $
+ * @date $Date: 2006-10-13 08:01:52 +0000 (Fri, 13 Oct 2006) $
+ * @id $Id: FileDigest.java 169 2006-10-13 08:01:52 +0000 (Fri, 13 Oct 2006) rgarner $
  *
  */
 public class FileDigest {
