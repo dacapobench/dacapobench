@@ -77,9 +77,6 @@ public class XalanHarness extends Benchmark {
 
 		public void run() {
 			try {
-        FileOutputStream outputStream = new FileOutputStream(
-            new File(scratch,"xalan.out." + _id));
-        Result outFile = new StreamResult(outputStream);
 				while (true) {
 					String fileName = _queue.pop();
 					// An empty string is the end of life signal
@@ -87,17 +84,17 @@ public class XalanHarness extends Benchmark {
 						break;
 					Transformer transformer = _template.newTransformer();
 					transformer.setErrorListener(this);
-					FileInputStream inputStream = new FileInputStream(
-                        new File(scratch,fileName));
-          Source inFile = new StreamSource(inputStream);
+					Source inFile = new StreamSource(new FileInputStream(
+              new File(scratch,fileName)));
+					Result outFile = new StreamResult(new FileOutputStream(
+              new File(scratch,"xalan.out." + _id)));
 					transformer.transform(inFile, outFile);
-          inputStream.close();
 				}
 			} catch (TransformerConfigurationException e) {
 				e.printStackTrace();				
 			} catch (TransformerException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (FileNotFoundException e) {
         e.printStackTrace();
       }
 		}

@@ -20,8 +20,8 @@ import dacapo.parser.Config;
  * for the specified benchmark, interprets command line arguments, and invokes 
  * the benchmark-specific harness class.
  * 
- * $Id: TestHarness.java 266 2007-01-27 01:47:43Z steveb-oss $
- * $Date: 2007-01-27 12:47:43 +1100 (Sat, 27 Jan 2007) $
+ * $Id: TestHarness.java 210 2006-10-20 21:59:35Z steveb-oss $
+ * $Date: 2006-10-21 07:59:35 +1000 (Sat, 21 Oct 2006) $
  * 
  * @author Steve Blackburn
  * @author Robin Garner
@@ -182,11 +182,9 @@ public class TestHarness {
         } else if (args[i].equals("-preserve")) {   // Preserve scratch directory contents
           Benchmark.setPreserve(true);
         } else if (args[i].equals("-noDigestOutput")) {  // 
-          Benchmark.setValidateOutput(false);
+          Benchmark.setDigestOutput(false);
         } else if (args[i].equals("-ignoreValidation")) {
           ignoreValidation = true;
-        } else if (args[i].equals("-noValidation")) {
-          Benchmark.setValidate(false);
         } else if (args[i].equals("-validationReport")) {
           Benchmark.enableValidationReport(args[++i]);
         } else if (args[i].equals("-scratch")) {
@@ -297,7 +295,7 @@ public class TestHarness {
       /*
        * Run the benchmark for a set # of iterations
        */
-      for (int n = 0; n < iterations - 1; n++)
+      for (; iterations > 1; iterations--)
         valid = b.run(callback, size, false) && valid; // beware order of evaluation!
       valid = b.run(callback, size, true) && valid; // beware order of evaluation!
     }            
@@ -366,7 +364,6 @@ public class TestHarness {
     System.out.println("    -debug                  Verbose debugging information");
     System.out.println("    -ignoreValidation       Don't halt on validation failure");
     System.out.println("    -noDigestOutput         Turn off SHA1 digest of stdout/stderr");
-    System.out.println("    -noValidation           Don't validate at all");
     System.out.println("    -preserve               Preserve output files (debug)");
     System.out.println("    -v                      Verbose output");
     System.out.println("    -validationReport       Report digests, line counts etc");

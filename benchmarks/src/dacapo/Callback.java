@@ -1,8 +1,7 @@
 package dacapo;
 
 public class Callback {
-  
-  protected long timer;
+  long timer;
   
   /* Start the timer and announce the begining of an iteration */
   public void start(String benchmark) {
