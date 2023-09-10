@@ -139,7 +139,7 @@ public class CommandLineArgs {
     makeOption(null, OPT_LATENCY_CSV,         "Dump latency data to csv file in log directory", null),
     makeOption(null, OPT_LATENCY_HDR,         "Dump latency data to HDR histogram file in log directory", null),
     makeOption(null, OPT_LOG_DIR,             "Directory in which log files will be written (default is scratch)", "log_dir"),
-    makeOption("s",  OPT_PRINT_STATS,         "Print nominal benchmark statistics", null),
+    makeOption("p",  OPT_PRINT_STATS,         "Print nominal benchmark statistics", null),
   };
 
   private static CommandLineParser parser = new PosixParser();
