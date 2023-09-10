@@ -4,15 +4,15 @@ benchmark kafka
 
 size small args "simple_produce_bench-small.json", "10000"
   output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x49eb5f30bb81b66c3e38a78f9122256c85254479;
+         stderr digest 0xd28f6cbef9f8331245d79c1e0632efd73b069b99;
          
 size default args "simple_produce_bench.json", "1000000"
   output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x36fed859a569f5840cd873e556ce3028dcac3371;
+         stderr digest 0x4edb3257a0c7c91fd7fc9ac16b0d010739ab3f91;
          
 size large args "simple_produce_bench-large.json", "10000000"
   output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x452a8ac06032778f38bc1853b00dbdfb170bea3b;
+         stderr digest 0x0437129e2ee7fcf2733f26ee8b0edeb9d6688cf8;
 
 description
   short	     "Apache Kafka® is a distributed streaming platform.",
