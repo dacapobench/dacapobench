@@ -4,12 +4,12 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 85, 85, 85 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
-open-jdk-17.sz-small.s.cp.gc-G1.t-1.f-10.n-1: [ 75, 75, 75 ]           # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -s small -t 32 -f 10 -n 1
-open-jdk-17.sz-large.s.cp.gc-G1.t-32.f-10.n-1: [ 219, 219, 222 ]       # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -s large -t 32 -f 10 -n 1
-open-jdk-17.sz-vlarge.s.cp.gc-G1.t-32.f-10.n-1: [ 365, 367, 367 ]      # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -s vlarge -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-Parallel.t-32.f-10.n-1: [ 101, 103, 99 ]           # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 1 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-1.f-10.n-1: [ 83, 83, 83 ]                    # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
-open-jdk-17.s.up.gc-G1.t-32.f-10.n-1: [ 111, 111, 111 ]                # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseParallelGC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10: [ 91, 91, 91 ]                  # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 85, 85, 85 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 10
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 85, 85, 85 ]                   # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
+open-jdk-17.sz-small.s.cp.gc-G1.t-1.f-10.n-1: [ 75, 75, 75 ]           # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -s small -t 32 -f 10 -n 1
+open-jdk-17.sz-large.s.cp.gc-G1.t-32.f-10.n-1: [ 219, 219, 222 ]       # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -s large -t 32 -f 10 -n 1
+open-jdk-17.sz-vlarge.s.cp.gc-G1.t-32.f-10.n-1: [ 365, 367, 367 ]      # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -s vlarge -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-Parallel.t-32.f-10.n-1: [ 101, 103, 99 ]           # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-1.f-10.n-1: [ 83, 83, 83 ]                    # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 1 -f 10 -n 1
+open-jdk-17.s.up.gc-G1.t-32.f-10.n-1: [ 111, 111, 111 ]                # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
+open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10: [ 91, 91, 91 ]                  # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 10
+open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 85, 85, 85 ]                   # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-744ef415.jar tradesoap -t 32 -f 10 -n 1
