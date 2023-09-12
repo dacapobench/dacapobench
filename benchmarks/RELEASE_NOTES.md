@@ -23,7 +23,7 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 ## 2.1 Downloading
 
 * DaCapo now ships as a zip file which contains a jar file and a folder which contains all data sources and jar files used by the respective workloads.
-* Download from https://www.dacapobench.org/chopin/dacapo-23.9-chopin-RC3.zip
+* Download from https://download.dacapobench.org/chopin/dacapo-23.9-RC3-chopin.zip
 * Unzip the zip file
 
 ## 2.2 Running
