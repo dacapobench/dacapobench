@@ -96,10 +96,10 @@ public class XSLTBench {
   public void createWorkers(int threads, int runs) {
     if (workers == null)
       workers = new XalanWorker[threads];
+    int tasks = runs * FILE_LIST.length;
     for (int id = 0; id < threads; id++) {
-      int extra = (id < runs % threads) ? 1 : 0;
-      int tasks = FILE_LIST.length * (extra + runs / threads);
-      workers[id] = new XalanWorker(id, tasks);
+      int extra = (id < tasks % threads) ? 1 : 0;
+      workers[id] = new XalanWorker(id, (tasks / threads) + extra);
     }
   }
 
@@ -139,13 +139,15 @@ public class XSLTBench {
         if (VERBOSE)
           System.out.println("Worker thread starting");
 
-        int fivePercent = tasks/20;
+        int progress = 5;
         FileOutputStream outputStream = new FileOutputStream(new File(scratch, "xalan.out." + id));
         Result outFile = new StreamResult(outputStream);
         for (int task = 0; task < tasks; task++) {
-          if (id == 0 && fivePercent > 1 && task < tasks && task % fivePercent == 0) {
-            int percentage = 5 * (task / fivePercent);
-            System.out.print("Processing: "+percentage+"%\r");
+          if (id == 0) {
+            while (progress < (100 * ((float) (task + 1)/tasks))) {
+              System.out.print("Processing: " + progress + "%\r");
+              progress += 5;
+            }
           }
           String fileName = FILE_LIST[(task + id) % FILE_LIST.length];
           Transformer transformer = template.newTransformer();
