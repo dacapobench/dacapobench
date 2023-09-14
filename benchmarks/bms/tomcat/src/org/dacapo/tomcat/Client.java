@@ -128,7 +128,7 @@ public class Client implements Runnable {
     this.pageCount = pageCount;
     this.verbose = verbose;
     this.port = port;
-    fivePercent = BATCH_SIZE*(pageCount/20);
+    fivePercent = (BATCH_SIZE*pageCount)/20;
   }
 
   /**
@@ -139,17 +139,25 @@ public class Client implements Runnable {
     final int totalRequests = pageCount * BATCH_SIZE;
     try {
       int idx = 0;
+      int progress = fivePercent;
       while ((idx = LatencyReporter.start(ordinal)) < totalRequests) {
         Page page = pages.get(idx % BATCH_SIZE);
         page.fetch(session, null, verbose);
         LatencyReporter.end(ordinal);
-        int done = idx + 1;
-        if (fivePercent > 0 && (done % fivePercent == 0)) {
-          int percentage = 5 * (done / fivePercent);
-          System.err.print("Completing requests: "+percentage+"%\r");
-          if (done == totalRequests)
-            System.err.println();
+        if (ordinal == 0) {
+          while (progress < idx) {
+            System.out.print("Completing requests: "+(5 * (progress / fivePercent))+"%\r");
+            progress += fivePercent;
+          }
         }
+      }
+      if (ordinal == 0) {
+        /* finish printing progress if necessary */
+        while (progress < totalRequests) {
+          System.out.print("Completing requests: "+(5 * (progress / fivePercent))+"%\r");
+          progress += fivePercent;
+        }
+        System.out.println();
       }
     } catch (Exception e) {
       e.printStackTrace();
