@@ -11,47 +11,50 @@ package org.dacapo.daytrader;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.ConnectException;
 import java.net.URL;
 
 import org.jboss.modules.Main;
 
 /**
  * Dacapo benchmark harness for tradesoap.
- * 
- * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
- * id: $Id: DaCapoServerRunner.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class DaCapoServerRunner {
 
+  private static final int PAUSE_MS = 200;
+
   /**
-   * Start the server and deploy DayTrader ejb application
+   * Start the server to deploy DayTrader ejb application, and wait until it is available
    */
   public static void initialize() {
     try {
-
+      /* Asynchronously start server */
       Main.main(new String[] {"org.jboss.as.standalone", "-c", "standalone-full.xml"});
 
-      // Checking if server started
+      /* Now wait until either the server is up */
       URL url = new URL("http://localhost:8080/daytrader");
-
       while (true) {
         try {
-          Thread.sleep(5000);
-          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-          if (connection.getResponseCode() != 200) throw new RuntimeException();
-        } catch (InterruptedException|IOException e) {
-          System.err.print("Exception initializing server: " + e.toString());
-          System.err.print("VM was forced to quit without executing the shutdown hook");
-          Runtime.getRuntime().halt(1);
+          HttpURLConnection con = (HttpURLConnection) url.openConnection();
+          if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            System.err.println("Success. Daytrader returned: " + con.getResponseMessage());
+            return;  // we're up, so can return
+          } else {
+            System.err.println("Got " + con.getResponseCode());
+          }
+        } catch (ConnectException e) {
+          Thread.sleep(PAUSE_MS); // connection refused, try again shortly
+        } catch (IOException e) {
+          System.err.println("Exception while waiting for server: " + e.toString());
         }
-        break;
       }
-
     } catch (Throwable e) {
-      System.err.print("Exception initializing server: " + e.toString());
-      System.err.print("VM was forced to quit without executing the shutdown hook");
-      Runtime.getRuntime().halt(1);
+      System.err.println("Exception initializing server: " + e.toString());
     }
+
+    // Failed to start
+    System.err.println("VM was forced to quit without executing the shutdown hook");
+    System.exit(-1);
   }
 
   private static void makeExecutable(String scriptPath){

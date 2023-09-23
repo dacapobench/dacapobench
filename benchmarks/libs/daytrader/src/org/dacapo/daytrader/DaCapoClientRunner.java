@@ -47,16 +47,6 @@ public class DaCapoClientRunner {
       // Request for running transactions
       connection.setRequestMethod("GET");
 
-      new Thread(() -> {
-        try {
-          Thread.sleep(timeoutms);
-        } catch (InterruptedException e) {
-          System.err.println("ERROR:  Iteration exceeded timeout of "+timeoutms+"ms.  Quitting.");
-        } finally {
-          System.exit(-1);
-        }
-      }).start();
-
       if (connection.getResponseCode() != 200){
         throw new RuntimeException("Failed for running transactions!");
       }

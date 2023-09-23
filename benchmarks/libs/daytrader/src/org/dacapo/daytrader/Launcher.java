@@ -37,16 +37,14 @@ public class Launcher {
   private static int numThreads = -1;
   private static int logNumSessions = 0;
   private static boolean useBeans = true;
-  private static int timeoutms = 0;
 
   private static ClassLoader serverCLoader = null;
   private static File root = null;
 
-  public static void initialize(File data, File scratch, int threads, int lns,  int timeout, boolean beans) {
+  public static void initialize(File data, File scratch, int threads, int lns, boolean beans) {
     numThreads = threads;
     logNumSessions = lns;
     useBeans = beans;
-    timeoutms = timeout;
     root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
 
     setProperties(root, scratch, threads);
@@ -117,7 +115,7 @@ public class Launcher {
     ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(serverCLoader);
-      DaCapoClientRunner.runIteration(logNumSessions, numThreads, timeoutms, useBeans);
+      DaCapoClientRunner.runIteration(logNumSessions, numThreads, 0, useBeans);
     } catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();

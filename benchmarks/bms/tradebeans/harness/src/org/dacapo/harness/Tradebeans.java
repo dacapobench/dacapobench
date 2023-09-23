@@ -31,6 +31,7 @@ public class Tradebeans extends Benchmark {
 
   private Method initializeMethod;
   private Method shutdownMethod;
+  private static final int TIMEOUT_MARGIN = 5; // Increase our watchdog timeout by this factor to account for slow machines
 
   public Tradebeans(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
@@ -38,7 +39,7 @@ public class Tradebeans extends Benchmark {
   
     // Find the launcher
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
-    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE});
+    this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Boolean.TYPE});
     this.method = clazz.getMethod("performIteration", new Class[] {});
     this.shutdownMethod = clazz.getMethod("shutdown", new Class[] {});
   }
@@ -70,25 +71,24 @@ public class Tradebeans extends Benchmark {
     }
 
     String[] args = config.preprocessArgs(size, scratch, data);
-    int logNumSessions = 3;
-    int timeoutms = 0;
-    final int threads = config.getThreadCount(size);
-    if (args.length == 2) {
-      logNumSessions = Integer.parseInt(args[0]);
-      timeoutms = 1000*Integer.parseInt(args[1])*iterations;
-      timeoutms = (int) (timeoutms*Float.parseFloat(timeoutDialation));
-    } else {
-      System.err.println("Quitting.   Bad arguments: "+args);
+    if (args.length != 2) {
+      System.err.println("Quitting. Bad arguments: "+args);
       System.exit(1);
     }
-    System.out.println("Launching the server with timeout of "+(timeoutms/1000)+" seconds (use -f to adjust timeout dialation).");
+    final int logNumSessions = Integer.parseInt(args[0]);
+    final int timeEstimate = TIMEOUT_MARGIN * iterations * Integer.parseInt(args[1]);
+    final int threads = config.getThreadCount(size);
+
+    int timeout = (int) (timeEstimate * Float.parseFloat(timeoutDialation));
+    WatchDog.set(timeout, "tradebeans", "Adjust timeout with the -f command line option.");
+
+    // Silence server startup messages
     PrintStream stdout = System.out;
-    // Hide server starting messages
     emptyOutput();
 
-    initializeMethod.invoke(null, data, scratch, threads, logNumSessions, timeoutms, true);
+    initializeMethod.invoke(null, data, scratch, threads, logNumSessions, true);
 
-    // stdout for iterate
+    // Restore stdout for iterations
     System.setOut(stdout);
   }
 
