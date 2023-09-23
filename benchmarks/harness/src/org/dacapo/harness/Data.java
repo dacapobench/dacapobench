@@ -36,13 +36,7 @@ public class Data {
   public static final String WORKING_DIRE = Paths.get("").toAbsolutePath().toString();
   public static final Path DEFAULT_LOCAL_DACAPO_CONFIG = Paths.get(System.getProperty("user.home"), ".dacapo-config.properties");
   public static final String CONFIG_KEY_DATA_LOC = "Data-Location";
-  public static final String DACAPO_DL_URL_LFS = "DaCapo-DL-URL-LFS";
-  public static final String DACAPO_DL_URL_RAW = "DaCapo-DL-URL-RAW";
   public static final String DACAPO_CHECKSUM_RE_PATH = "META-INF" + File.separator + "huge-data-md5s.list";
-
-  static {
-    disableSslVerification();
-  }
 
   private static String getDefaultLocation() {
     try {
@@ -81,25 +75,11 @@ public class Data {
   public static void failDataNotFound(File path) {
     System.err.printf("FATAL ERROR: Failed to find data at %s"+System.lineSeparator(), path == null ? "null" : path.getAbsolutePath());
     System.err.println();
-    System.err.println("Please do one of the following:");
-    System.err.println("  1) If you have not installed the data yet, run DaCapo with --data-install <parent-dir-name> to download the data and install it.");
-    System.err.println("  2) If you have already installed the data, run DaCapo with --data-set-location <parent-dir-name> to reset the location of the parent directory.");
+    System.err.println("Please run DaCapo with --data-set-location <parent-dir-name> to reset the location of the parent directory.");
     System.exit(-1);
   }
 
   public static void setLocation(File path, boolean md5Check) {
-    // if (md5Check) {
-    //   downloadChecksum();
-    //   // MD5 check
-    //   System.out.printf("Checking MD5 at %s...", path.toString());
-    //   if (!checkExtDataDirMD5(path)) {
-    //     System.out.println("failed!");
-    //     System.err.println("WARNING: MD5 check failed. Your data does not match expected release.");
-    //     System.err.println("Please download and install the latest data using --extdata-install flag.");
-    //   } else
-    //     System.out.println("done!");
-    // }
-
     File fileProperties  = new File(DEFAULT_LOCAL_DACAPO_CONFIG.toString());
     Properties props = new Properties();
     try {
@@ -115,102 +95,6 @@ public class Data {
     }
   }
 
-  private static boolean downloadChecksum() {
-    try {
-      DataDownload.download("META-INF"+File.separator+"huge-data-md5s.list", new File(WORKING_DIRE).getAbsolutePath(), "dat");
-    } catch (Exception e) {
-      return false;
-    }
-    return true;
-  }
-
-  private static boolean checkExtDataDirMD5(File dir){
-    File checksum = new File(WORKING_DIRE, DACAPO_CHECKSUM_RE_PATH);
-    InputStream in = ClassLoader.getSystemResourceAsStream("META-INF/huge-data-md5s.list");
-    if(!checksum.exists()) {
-      try {
-        in = new FileInputStream(checksum);
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
-    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-    File datDir = new File(dir, "dat");
-    return reader.lines().map(l -> {
-      String [] fields = l.split("  ");
-      String md5Expected = fields[0];
-      String filePath = fields[1];
-      try {
-        String md5 = getMD5(new File(datDir, filePath));
-        if (!md5.toUpperCase().equals(md5Expected.toUpperCase())) {
-          return false;
-        }
-      } catch (Exception e) {
-        return false;
-      }
-      return true;
-    }).reduce(true, (a, b) -> a & b);
-  }
-
-  /**
-   * Download and install data
-   */
-  public static void downloadAndInstall(File path, String bench) {
-    try {
-      // create directory if not exist already
-      if (!path.exists())
-        path.mkdirs();
-
-      // download
-      BufferedReader dllistReader = new BufferedReader(new InputStreamReader(
-              ClassLoader.getSystemResourceAsStream("META-INF/dlfiles.list")));
-
-      ExecutorService executor = Executors.newCachedThreadPool();
-      dllistReader.lines().forEach(s -> {
-        try {
-          if(bench.length() == 0 || s.startsWith("dat/"+bench) || s.startsWith("jar/"+bench)) {
-            executor.submit(() -> {
-              if (s.startsWith("jar")) {
-                DataDownload.download(s.split("/")[1], path.getAbsolutePath(), "jar");
-              }
-              if (s.startsWith("dat")) {
-                DataDownload.download(s.split("/")[1], path.getAbsolutePath(), "dat");
-              }
-
-              File fileLocalItem = new File(path, s);
-              System.out.printf("Extracting %s...", fileLocalItem.toString());
-              try {
-                Benchmark.unpackZipStream(new BufferedInputStream(new FileInputStream(fileLocalItem)),
-                              fileLocalItem.getParentFile());
-              } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(-1);
-              }
-              System.out.println("Done.");
-              executor.shutdown();
-            });
-          }
-        } catch(Exception e) {
-          e.printStackTrace();
-          System.exit(-1);
-        }
-      });
-
-      executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
-      setLocation(path, false);
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.exit(-1);
-    }
-  }
-
-  private static void downloadAndExtractItem(String itemRelPath, File path) throws Exception {
-    // Create the directory
-    path.mkdir();
-    // download
-    DataDownload.download(itemRelPath, path.getAbsolutePath());
-  }
-
   private static String getMD5(File file) throws Exception{
       MessageDigest md = MessageDigest.getInstance("MD5");
       byte [] buffer = new byte [1024 * 1024 * 32]; // 32 MB buffer
@@ -220,41 +104,5 @@ public class Data {
         md.update(buffer, 0, bytesRead);
       }
       return DatatypeConverter.printHexBinary(md.digest());
-  }
-
-  private static void disableSslVerification() {
-    try
-    {
-      // Create a trust manager that does not validate certificate chains
-      TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-          return null;
-        }
-        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-        }
-        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-        }
-      }
-      };
-
-      // Install the all-trusting trust manager
-      SSLContext sc = SSLContext.getInstance("SSL");
-      sc.init(null, trustAllCerts, new java.security.SecureRandom());
-      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-      // Create all-trusting host name verifier
-      HostnameVerifier allHostsValid = new HostnameVerifier() {
-        public boolean verify(String hostname, SSLSession session) {
-          return true;
-        }
-      };
-
-      // Install the all-trusting host verifier
-      HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (KeyManagementException e) {
-      e.printStackTrace();
-    }
   }
 }

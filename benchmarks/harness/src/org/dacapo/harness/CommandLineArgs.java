@@ -83,8 +83,6 @@ public class CommandLineArgs {
   private static final String OPT_SIZE = "size";
   private static final String OPT_SIZES = "sizes";
   private static final String OPT_SCRATCH_DIRECTORY = "scratch-directory";
-  private static final String OPT_DATA_INSTALL = "data-install";
-  private static final String OPT_DATA_SETLOC = "data-set-location";
   private static final String OPT_LOG_DIR = "log-directory";
   private static final String OPT_LATENCY_CSV = "latency-csv";
   private static final String OPT_LATENCY_HDR = "latency-hdr";
@@ -134,8 +132,6 @@ public class CommandLineArgs {
     makeOption("k",  OPT_THREAD_FACTOR,       "Set the number of threads per CPU to drive the workload (mutually exclusive with -t)", "thread_per_cpu"),
     makeOption("f",  OPT_TIMEOUT_DIALATION,   "Set the time dialation of the timeouts in the benchmark by the given integer factor.", "timeout_dialation"),
     makeOption("v",  OPT_VERBOSE,             "Verbose output", null),
-    makeOption(null, OPT_DATA_INSTALL,        "Download and install workload data sets and jars.", "install_path"),
-    makeOption(null, OPT_DATA_SETLOC,         "Path to workload data and jar location.", "ext_data_loc"),
     makeOption(null, OPT_LATENCY_CSV,         "Dump latency data to csv file in log directory", null),
     makeOption(null, OPT_LATENCY_HDR,         "Dump latency data to HDR histogram file in log directory", null),
     makeOption(null, OPT_LOG_DIR,             "Directory in which log files will be written (default is scratch)", "log_dir"),
@@ -182,18 +178,6 @@ public class CommandLineArgs {
       }
       if (line.hasOption(OPT_HELP)) {
         printUsage();
-        reportAndExitOk = true;
-      }
-      if (line.hasOption(OPT_DATA_INSTALL)) {
-        String impver = TestHarness.getManifestAttribute("Implementation-Version");
-        File pathVersioned = new File(line.getOptionValue(OPT_DATA_INSTALL), impver);
-        Data.downloadAndInstall(pathVersioned, bench);
-        reportAndExitOk = true;
-      }
-      if (line.hasOption(OPT_DATA_SETLOC)) {
-        String impver = TestHarness.getManifestAttribute("Implementation-Version");
-        File pathVersioned = new File(line.getOptionValue(OPT_DATA_SETLOC), "dacapo-"+impver);
-        Data.setLocation(pathVersioned, true);
         reportAndExitOk = true;
       }
       if (line.hasOption(OPT_THREAD_FACTOR) && line.hasOption(OPT_THREAD_COUNT)) {
