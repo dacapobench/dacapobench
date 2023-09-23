@@ -94,6 +94,8 @@ Latency metrics are now reported for each of the request-based workloads  (cassa
 Each of the workloads has been measured against a variety of metrics, and the statistics are recorded in the DaCapo git repository at 
 benchmarks/bm/*/stats-*.yml. When benchmarks are invoked some summary metrics are displayed giving a score (out of 10), an absolute value for each metric, its rank among the other benchmarks, and a short description.  This allows some level of benchmark characterization and benchmark comparison to be done.
 
+The benchmark harness now supports a watchdog timer which can be set with the `-w` command line option.  This will terminate the JVM after the specified number of seconds if the process has not already completed.  This can be useful for debugging, for terminating runaway tasks in set amount of time.
+
 ## 3.2 Changes introduced by 9.12-MR1
 
 **lusearch-fix** is introduced as a new benchmark.   The lusearch-fix  and lusearch benchmarks differ by a single line of code.   This is a bug fix to lucene, which dramatically changes the performance of lusearch, reducing the amount of allocation greatly. https://issues.apache.org/jira/browse/LUCENE-1800 https://dl.acm.org/citation.cfm?id=2048092 We encourage you to use lusearch-fix in place of lusearch.   We retain the unpatched lusearch in this release for historical consistency.
