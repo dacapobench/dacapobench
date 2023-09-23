@@ -135,6 +135,13 @@ public abstract class Benchmark {
   private static boolean printStats = false;
 
   /**
+   * If the user specified a watchdog timer at the
+   * command line this will contain the timeout in
+   * seconds, as a string.
+   */
+  private static String watchdog = null;
+
+  /**
    * Saved System.out while redirected to the digest stream
    */
   private static final PrintStream savedOut = System.out;
@@ -392,6 +399,17 @@ public abstract class Benchmark {
     System.out.println("Version: " + config.getDesc("version") + (printStats ? "" : " (use -p to print nominal benchmark stats)"));
     if (printStats) {
       System.out.println(getStats());
+    }
+
+    /* Start a watchdog timer if requested at the command line */
+    if (watchdog != null) {
+      try {
+        int seconds = Integer.parseInt(watchdog);
+        WatchDog.set(seconds, "command line", "Adust timeout with the -w command line option.");
+      } catch (NumberFormatException e) {
+        System.err.println("ERROR: badly formatted argument to -w :'"+watchdog+"' (was expecting an integer number of seconds)");
+        System.exit(-1);
+      }
     }
   }
 
@@ -883,6 +901,7 @@ public abstract class Benchmark {
     dumpLatencyCSV = line.getLatencyCSV();
     dumpLatencyHDR = line.getLatencyHDR();
     printStats = line.getStats();
+    watchdog = line.getWatchdog();
 
     if (line.getValidationReport() != null)
       Benchmark.enableValidationReport(line.getValidationReport());

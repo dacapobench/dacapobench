@@ -106,7 +106,7 @@ public class CommandLineArgs {
   private static final String OPT_THREAD_FACTOR = "thread-factor";
   private static final String OPT_TIMEOUT_DIALATION = "timeout-dialation";
   private static final String OPT_PRINT_STATS = "print-stats";
-
+  private static final String OPT_WATCHDOG = "watchdog";
 
   private static final Option[] OPTIONS = { 
     makeOption("c",  OPT_CALLBACK,            "Use class <callback> to bracket benchmark runs", "callback"),
@@ -140,6 +140,7 @@ public class CommandLineArgs {
     makeOption(null, OPT_LATENCY_HDR,         "Dump latency data to HDR histogram file in log directory", null),
     makeOption(null, OPT_LOG_DIR,             "Directory in which log files will be written (default is scratch)", "log_dir"),
     makeOption("p",  OPT_PRINT_STATS,         "Print nominal benchmark statistics", null),
+    makeOption("w",  OPT_WATCHDOG,            "Terminate the JVM after <s> seconds have elapsed, if it is still running", "seconds"),
   };
 
   private static CommandLineParser parser = new PosixParser();
@@ -422,6 +423,10 @@ public class CommandLineArgs {
 
   public boolean getStats() {
     return line.hasOption(OPT_PRINT_STATS);
+  }
+
+  public String getWatchdog() {
+    return line.getOptionValue(OPT_WATCHDOG, null);
   }
 
   public List<String> getArgList() {
