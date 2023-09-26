@@ -71,6 +71,12 @@ public class H2O extends Benchmark{
             // ignore
         }
 
+        // This sets h2o's target key/value cache size (water.MemoryManager).  We set this to an
+        // arbitrary 2MB (emperically we find that the workload is very insensitive to this setting)
+        // If the target is set to 0, h2o will fall back to its default behavior.
+        if (System.getProperty("dacapo.h2o.target") == null)
+            System.setProperty("dacapo.h2o.target", "2097152");
+
         // Launch the h2o server
         useBenchmarkClassLoader();
         // use these for debugging: "-log_level", "DEBUG", "-log_dir", scratch+File.separator+"h2o.log"

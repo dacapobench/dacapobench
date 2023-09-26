@@ -1,6 +1,6 @@
-diff '--color=auto' -ur ./build.gradle ../build/build.gradle
+diff '--color=auto' -ur '--exclude=cache.properties' ./build.gradle ../build/build.gradle
 --- ./build.gradle	2023-08-02 10:09:23.000000000 +0000
-+++ ../build/build.gradle	2023-08-02 10:20:18.285695765 +0000
++++ ../build/build.gradle	2023-09-27 05:56:56.722836320 +0000
 @@ -151,14 +151,14 @@
        project(':h2o-clustering')
      ]
@@ -70,9 +70,9 @@ diff '--color=auto' -ur ./build.gradle ../build/build.gradle
  }
  
  // Include support for S3 syncing
-diff '--color=auto' -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
+diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
 --- ./h2o-algos/build.gradle	2023-08-02 10:09:23.000000000 +0000
-+++ ../build/h2o-algos/build.gradle	2023-08-02 10:20:18.285695765 +0000
++++ ../build/h2o-algos/build.gradle	2023-09-27 05:56:56.722836320 +0000
 @@ -53,7 +53,7 @@
    testRuntimeOnly project(":${defaultWebserverModule}")
    testCompileOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
@@ -82,14 +82,103 @@ diff '--color=auto' -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-Only in ./h2o-extensions/jython-cfunc: bin
-Only in ./h2o-extensions/krbstandalone: bin
-Only in ./h2o-extensions/mojo-pipeline: bin
-Only in ./h2o-extensions/steam: bin
-Only in ./h2o-extensions/target-encoder: bin
-diff '--color=auto' -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
+diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-core/src/main/java/water/Cleaner.java ../build/h2o-core/src/main/java/water/Cleaner.java
+--- ./h2o-core/src/main/java/water/Cleaner.java	2023-08-02 10:09:23.000000000 +0000
++++ ../build/h2o-core/src/main/java/water/Cleaner.java	2023-09-27 06:16:44.223279108 +0000
+@@ -10,6 +10,7 @@
+ /** Store Cleaner: User-Mode Swap-To-Disk */
+ 
+ class Cleaner extends Thread {
++  private static final int LONG_TIME = 1000; // was 5000 ms between clean checks
+   // msec time at which the STORE was dirtied.
+   // Long.MAX_VALUE if clean.
+   static private volatile long _dirty; // When was store dirtied
+@@ -28,7 +29,7 @@
+     synchronized(THE_CLEANER) { THE_CLEANER.notifyAll(); }
+   }
+   private static void block_store_cleaner() {
+-    synchronized(THE_CLEANER) { try { THE_CLEANER.wait(5000); } catch (InterruptedException ignore) { } }
++    synchronized(THE_CLEANER) { try { THE_CLEANER.wait(LONG_TIME); } catch (InterruptedException ignore) { } }
+   }
+   volatile boolean _did_sweep;
+   static void block_for_test() throws InterruptedException {
+@@ -82,8 +83,8 @@
+       // Start cleaning if: "dirty" was set a "long" time ago, or we beyond
+       // the desired cache levels. Inverse: go back to sleep if the cache
+       // is below desired levels & nothing has been dirty awhile.
+-      if( h._cached < DESIRED && // Cache is low and
+-          (now-dirty < 5000) ) { // not dirty a long time
++      if( (h._cached < DESIRED && // Cache is low and
++          (now-dirty < LONG_TIME) )) { // not dirty a long time
+         // Block asleep, waking every 5 secs to check for stuff, or when poked
+         block_store_cleaner();
+         continue; // Awoke; loop back and re-check histogram.
+@@ -103,7 +104,7 @@
+       long clean_to_age = h.clean_to(force ? DESIRED : (DESIRED>>1));
+       // If not forced cleaning, expand the cleaning age to allows Values
+       // more than 5sec old
+-      if( !force ) clean_to_age = Math.max(clean_to_age,now-5000);
++      if( !force ) clean_to_age = Math.max(clean_to_age,now-LONG_TIME);
+       if( DESIRED == -1 ) clean_to_age = now;  // Test mode: clean all
+ 
+       // No logging if under memory pressure: can deadlock the cleaner thread
+diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-core/src/main/java/water/MemoryManager.java ../build/h2o-core/src/main/java/water/MemoryManager.java
+--- ./h2o-core/src/main/java/water/MemoryManager.java	2023-08-02 10:09:23.000000000 +0000
++++ ../build/h2o-core/src/main/java/water/MemoryManager.java	2023-09-27 06:17:21.431217519 +0000
+@@ -42,6 +42,23 @@
+  * @author cliffc
+  */
+ abstract public class MemoryManager {
++
++  private static final int DACAPO_CACHE_TARGET = getDaCapoCacheTarget();
++
++  private static int getDaCapoCacheTarget() {
++    int rtn = 0;
++    String tgt = System.getProperty("dacapo.h2o.target");
++    if (tgt != null) {
++      try {
++        rtn = Integer.parseInt(System.getProperty("dacapo.h2o.target"));
++      } catch (Exception e) {
++        System.err.println("Could not parse dacapo.h2o.target: '"+System.getProperty("dacapo.h2o.target")+"'");
++      }
++      System.err.println("H2O cache target set to "+rtn+" ("+(rtn>>20)+"MB) by DaCapo");
++    }
++    return rtn;
++  }
++
+   // Track timestamp of last oom log to avoid spamming the logs with junk.
+   private static volatile long oomLastLogTimestamp = 0;
+   private static final long SIXTY_SECONDS_IN_MILLIS = 60 * 1000;
+@@ -50,7 +67,7 @@
+   public static final long MEM_MAX = Runtime.getRuntime().maxMemory();
+ 
+   // Callbacks from GC
+-  static final HeapUsageMonitor HEAP_USAGE_MONITOR = new HeapUsageMonitor();
++  static final HeapUsageMonitor HEAP_USAGE_MONITOR = DACAPO_CACHE_TARGET == 0 ? new HeapUsageMonitor() : null;
+ 
+   // Keep the K/V store below this threshold AND this is the FullGC call-back
+   // threshold - which is limited in size to the old-gen pool size.
+@@ -118,7 +135,7 @@
+     d -= 2*p - bytes; // Allow for the effective POJO, and again to throttle GC rate (and allow for this allocation)
+     d = Math.max(d,MEM_MAX>>3); // Keep at least 1/8th heap
+     if( Cleaner.DESIRED != -1 ) // Set to -1 only for OOM/Cleaner testing.  Never negative normally
+-      Cleaner.DESIRED = d;      // Desired caching level
++      Cleaner.DESIRED = DACAPO_CACHE_TARGET == 0 ? d : DACAPO_CACHE_TARGET;      // Desired caching level
+     final long cacheUsageNow = Cleaner.Histo.cached();
+ 
+     boolean skipThisLogMessageToAvoidSpammingTheLogs = false;
+@@ -315,7 +332,7 @@
+   public static double [] arrayCopyOf( double[] orig, int sz) { return arrayCopyOfRange(orig,0,sz); }
+ 
+   // Memory available for tasks (we assume 3/4 of the heap is available for tasks)
+-  static final AtomicLong _taskMem = new AtomicLong(MEM_MAX-(MEM_MAX>>2));
++  static final AtomicLong _taskMem = new AtomicLong(DACAPO_CACHE_TARGET == 0 ? MEM_MAX-(MEM_MAX>>2) : DACAPO_CACHE_TARGET);
+ 
+   /**
+    * Try to reserve memory needed for task execution and return true if
+diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
 --- ./h2o-extensions/target-encoder/build.gradle	2023-08-02 10:09:24.000000000 +0000
-+++ ../build/h2o-extensions/target-encoder/build.gradle	2023-08-02 10:20:18.285695765 +0000
++++ ../build/h2o-extensions/target-encoder/build.gradle	2023-09-27 05:56:56.722836320 +0000
 @@ -12,7 +12,7 @@
      testImplementation 'com.pholser:junit-quickcheck-generators:0.9'
      testRuntimeOnly project(":${defaultWebserverModule}")
@@ -99,17 +188,9 @@ diff '--color=auto' -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-Only in ./h2o-extensions/xgboost: bin
-Only in ./h2o-genmodel-extensions/jgrapht: bin
-Only in ./h2o-genmodel-extensions/xgboost: bin
-Only in ./h2o-logging/impl-log4j2: bin
-Only in ./h2o-logging/safe4j: bin
-Only in ./h2o-parsers/h2o-orc-parser: bin
-Only in ./h2o-parsers/h2o-parquet-parser: bin
-Only in ./h2o-parsers/h2o-parquet-parser-tests: bin
-diff '--color=auto' -ur ./settings.gradle ../build/settings.gradle
+diff '--color=auto' -ur '--exclude=cache.properties' ./settings.gradle ../build/settings.gradle
 --- ./settings.gradle	2023-08-02 10:09:24.000000000 +0000
-+++ ../build/settings.gradle	2023-08-02 10:22:19.129295474 +0000
++++ ../build/settings.gradle	2023-09-27 05:56:56.722836320 +0000
 @@ -7,9 +7,9 @@
  include 'h2o-algos'
  include 'h2o-web'
