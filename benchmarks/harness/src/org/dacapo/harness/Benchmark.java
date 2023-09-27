@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.LogManager;
 
 import org.dacapo.parser.Config;
 
@@ -296,7 +299,9 @@ public abstract class Benchmark {
     savedSystemProperties = System.getProperties();
     Data.checkData(data);
 
-    System.setProperty("java.util.logging.config.file", fileInScratch(config.name + ".log"));
+    Logger rootLogger = LogManager.getLogManager().getLogger("");
+    rootLogger.setLevel(Level.OFF);
+
     synchronized (System.out) {
       if (out == null) {
         out = new TeePrintStream(System.out, new File(scratch, "stdout.log"));
