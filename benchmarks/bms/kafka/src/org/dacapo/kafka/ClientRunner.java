@@ -12,7 +12,6 @@ public class ClientRunner{
     private Method topicCommand;
     long timerBase = 0;
     private int txCount;
-    private final static long timeout = (long) (1000L * Float.parseFloat(System.getProperty("dacapo.timeout.dialation")));
 
     ClientRunner(int txCount) throws Exception{
         this.txCount = txCount;
@@ -43,14 +42,9 @@ public class ClientRunner{
         setTxCount.invoke(null, txCount);
         // Using the Trogodr exec mode to send requests
         agentStarter.invoke(null, (Object) new String[]{"-c", agentConfig, "-n", "node0", "--exec", produceBench});
-        topicCommand.invoke(null, (Object) new String[]{"--bootstrap-server", "localhost:9092", "--delete", "--topic", "dacapo-1,dacapo-2,dacapo-3,dacapo-4"});
-
+        System.err.println("Finished");
     }
 
     void finishUp() throws Exception{
-        // Sleep one second waiting for the Kafka broker to delete the topics
-        System.err.println("Waiting " + timeout + "ms for cleanup...");
-        Thread.sleep(timeout);
-        System.err.println("Finished");
     }
 }
