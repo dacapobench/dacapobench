@@ -1,6 +1,6 @@
-diff '--color=auto' -ur ./pom.xml ../build/pom.xml
---- ./pom.xml	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/pom.xml	2022-10-05 08:40:34.764326071 +0000
+diff '--color=auto' -ur '--exclude=cache.properties' ./pom.xml ../build/pom.xml
+--- ./pom.xml	2023-05-12 07:49:43.000000000 +0000
++++ ../build/pom.xml	2023-09-28 10:14:52.520582472 +0000
 @@ -41,13 +41,18 @@
        <artifactId>metrics-core</artifactId>
        <version>2.2.0</version>
@@ -47,9 +47,9 @@ diff '--color=auto' -ur ./pom.xml ../build/pom.xml
      </plugins>
      <testOutputDirectory>target/test-classes</testOutputDirectory>
      <testSourceDirectory>test</testSourceDirectory>
-diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java
---- ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2022-10-05 08:40:34.764326071 +0000
+diff '--color=auto' -ur '--exclude=cache.properties' ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java
+--- ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2023-05-12 07:49:43.000000000 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactorization.java	2023-09-28 10:21:08.251894947 +0000
 @@ -155,7 +155,8 @@
           * so that each row contains one latent factor.
           */
@@ -97,13 +97,13 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactoriza
          return als;
      }
  
-@@ -293,6 +298,43 @@
+@@ -293,6 +298,19 @@
          }
      }
  
 +
 +    /**
-+     * Output in matrix market format
++     * Output info for DaCapo checksum
 +     * @throws Exception
 +     */
 +    private void checksumMatrices() throws Exception {
@@ -111,39 +111,15 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/apps/ALSMatrixFactoriza
 +        BipartiteGraphInfo graphInfo = getGraphInfo();
 +        int numLeft = graphInfo.getNumLeft();
 +        int numRight = graphInfo.getNumRight();
-+
-+        VertexIdTranslate vertexIdTranslate =
-+                VertexIdTranslate.fromFile(new File(ChiFilenames.getVertexTranslateDefFile(baseFilename, numShards)));
-+
-+        /* Sum left */
-+        long count = 0;
-+        double sum = 0;
-+        for(int j=0; j < numLeft; j++) {
-+            int vertexId = vertexIdTranslate.forward(j);  // Translate to internal vertex id
-+            for(int i=0; i < D; i++) {
-+                count++;
-+                sum += vertexValueMatrix.getValue(vertexId, i);
-+            }
-+        }
-+
-+        /* Sum right */
-+        double rsum = 0;
-+        for(int j=0; j < numRight; j++) {
-+            int vertexId = vertexIdTranslate.forward(numLeft + j);   // Translate to internal vertex id
-+            for(int i=0; i < D; i++) {
-+                count++;
-+                sum += vertexValueMatrix.getValue(vertexId, i);
-+            }
-+        }
-+        System.out.println(count+ " elements, check: "+(10*((int) sum)/count));
++        System.out.println("Left "+numLeft+", Right "+numRight);
 +    }
 +
      /**
       * Output in matrix market format
       * @throws Exception
-diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java
---- ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2022-10-05 08:52:57.136630220 +0000
+diff '--color=auto' -ur '--exclude=cache.properties' ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java
+--- ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2023-05-12 07:49:43.000000000 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.java	2023-09-28 10:14:52.520582472 +0000
 @@ -19,6 +19,7 @@
  import java.util.concurrent.*;
  import java.util.concurrent.atomic.AtomicInteger;
@@ -177,9 +153,9 @@ diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/engine/GraphChiEngine.j
      }
  
      /**
-diff '--color=auto' -ur ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java
---- ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-10-04 01:31:41.000000000 +0000
-+++ ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2022-10-05 08:40:34.764326071 +0000
+diff '--color=auto' -ur '--exclude=cache.properties' ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java
+--- ./src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2023-05-12 07:49:43.000000000 +0000
++++ ../build/src/main/java/edu/cmu/graphchi/preprocessing/FastSharder.java	2023-09-28 10:14:52.520582472 +0000
 @@ -115,7 +115,10 @@
          shovelStreams = new DataOutputStream[numShards];
          vertexShovelStreams = new DataOutputStream[numShards];
