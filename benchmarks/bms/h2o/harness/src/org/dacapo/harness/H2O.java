@@ -29,8 +29,17 @@ public class H2O extends Benchmark{
 
     private String[] args;
     PrintStream savedOut;
-    private String ip = "127.0.0.1";
-    private String port = "54321";
+    private static final String H2O_IP = "127.0.0.1";
+    private static final String H2O_PORT;
+    private static final String H2O_REST_URL;
+
+    static {
+        if (System.getProperty("dacapo.h2o.port") != null)
+            H2O_PORT = System.getProperty("dacapo.h2o.port");
+        else
+            H2O_PORT = "54321";
+        H2O_REST_URL = "http://" + H2O_IP + ":" + H2O_PORT;
+    }
 
     public H2O(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
@@ -75,12 +84,12 @@ public class H2O extends Benchmark{
         // arbitrary 2MB (emperically we find that the workload is very insensitive to this setting)
         // If the target is set to 0, h2o will fall back to its default behavior.
         if (System.getProperty("dacapo.h2o.target") == null)
-            System.setProperty("dacapo.h2o.target", "2097152");
+            System.setProperty("dacapo.h2o.target", args[0]);
 
         // Launch the h2o server
         useBenchmarkClassLoader();
         // use these for debugging: "-log_level", "DEBUG", "-log_dir", scratch+File.separator+"h2o.log"
-        this.method.invoke(null,  (Object) new String[] {"-ip", ip, "-port", port, "-log_dir", scratch.getAbsolutePath(), "-log_level", "ERROR"});
+        this.method.invoke(null,  (Object) new String[] {"-ip", H2O_IP, "-port", H2O_PORT, "-log_dir", scratch.getAbsolutePath(), "-log_level", "ERROR"});
     }
 
     @Override
@@ -91,9 +100,14 @@ public class H2O extends Benchmark{
         // Store the standard output
         emptyOutput();
 
-        ClientRunner.running("http://" + ip + ":" + port, args[0], args[1], args[2], args[3], savedOut, savedErr);
+        ClientRunner.iterate(H2O_REST_URL, args[1], args[2], args[3], args[4], savedOut, savedErr);
 
         System.setOut(savedOut);
+    }
+
+    @Override
+    public void postIteration(String size) throws Exception {
+        ClientRunner.postIteration(H2O_REST_URL);
     }
 
     private void emptyOutput(){

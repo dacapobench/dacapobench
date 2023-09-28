@@ -7,8 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ClientRunner{
 
-    public static void running(String URL, String data, String source, String algo, String response, PrintStream stdout, PrintStream stderr) throws NoSuchMethodException, ClassNotFoundException, IOException, IllegalAccessException, InterruptedException, InvocationTargetException {
-        DacapoH2OFacade dhf = new DacapoH2OFacade(URL);
+    public static void iterate(String restURL, String data, String source, String algo, String response, PrintStream stdout, PrintStream stderr) throws NoSuchMethodException, ClassNotFoundException, IOException, IllegalAccessException, InterruptedException, InvocationTargetException {
+        DacapoH2OFacade dhf = new DacapoH2OFacade(restURL);
+
         // Import and parse the data set
         stdout.println("Importing file: " + source + "......");
         dhf.importFiles(data + File.separator + source);
@@ -34,5 +35,12 @@ public class ClientRunner{
         stdout.println("Frames deleted");
 
         stderr.println("H2O finished");
+    }
+
+    public static void postIteration(String restURL) throws IOException, NoSuchMethodException, ClassNotFoundException {
+        DacapoH2OFacade dhf = new DacapoH2OFacade(restURL);
+        dhf.forceH2OGC();
+        dhf.removeAll();
+        dhf.forceH2OGC();
     }
 }

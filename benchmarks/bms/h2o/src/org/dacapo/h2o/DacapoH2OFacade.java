@@ -73,6 +73,10 @@ public class DacapoH2OFacade {
     private final String JOB_LIST = "3/Jobs";
     //all frames
     private final String frames = "3/Frames";
+    // System.gc()
+    private final String GC = "3/GarbageCollect";
+    // Remove all keys from the H2O distributed K/V store.
+    private final String DKV = "3/DKV";
 
     private Method getStringOb;
 
@@ -280,4 +284,11 @@ public class DacapoH2OFacade {
         }
     }
 
+    public void forceH2OGC() throws IOException {
+        h2o_rest.postMethod(GC, "");
+    }
+
+    public void removeAll() throws IOException {
+        h2o_rest.deleteMethod(DKV);
+    }
 }

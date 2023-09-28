@@ -3,19 +3,19 @@ benchmark h2o
   thread-model per_cpu;
 
 
-size small args "${DATA}/h2o", "citibiketripdata201908s.csv", "drf" , "tripduration"
+size small args "2097152", "${DATA}/h2o", "citibiketripdata201908s.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
   output stdout digest 0x2b40279dd7fc87aae163726d68e53a7841728308,
          stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
 
-size default args "${DATA}/h2o", "citibiketripdata201908.csv", "drf" , "tripduration"
+size default args "20971520", "${DATA}/h2o", "citibiketripdata201908.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
   output stdout digest 0x1aab065a1376445d213907a200012d8bed338f45,
          stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
 
-size large args "${DATA}/h2o", "citibiketripdata201908h.csv", "drf" , "tripduration"
+size large args "209715200", "${DATA}/h2o", "citibiketripdata201908h.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
   output stdout digest 0xf7333758241d1f0934939f35320fd51b3181941c,
