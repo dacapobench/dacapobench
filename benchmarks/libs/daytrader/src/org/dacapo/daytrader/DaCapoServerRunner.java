@@ -32,7 +32,7 @@ public class DaCapoServerRunner {
       Main.main(new String[] {"org.jboss.as.standalone", "-c", "standalone-full.xml"});
 
       /* Now wait until either the server is up */
-      URL url = new URL("http://localhost:8080/daytrader");
+      URL url = new URL("http://localhost:"+System.getProperty("jboss.http.port")+"/daytrader");
       while (true) {
         try {
           HttpURLConnection con = (HttpURLConnection) url.openConnection();

@@ -17,11 +17,14 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dacapo.harness.util.AvailablePortFinder;
+
 /** 
 * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
 * id: $Id: Launcher.java 738 2009-12-24 00:19:36Z steveb-oss $
 */
 public class Launcher {
+  private static final int DAYTRADER_PORT = establishDaytraderPort();
   private final static String VERSION = "26.1.3";
   private final static String TYPE = "Final";
   private final static String DIRECTORY = "wildfly-" + VERSION + "." + TYPE;
@@ -61,7 +64,7 @@ public class Launcher {
       method.invoke(null);
 
       // Create a client environment
-      DaCapoClientRunner.initialize(logNumSessions, numThreads, false);
+      DaCapoClientRunner.initialize(DAYTRADER_PORT, logNumSessions, numThreads, false);
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
@@ -115,7 +118,7 @@ public class Launcher {
     ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(serverCLoader);
-      DaCapoClientRunner.runIteration(logNumSessions, numThreads, 0, useBeans);
+      DaCapoClientRunner.runIteration(DAYTRADER_PORT, logNumSessions, numThreads, 0, useBeans);
     } catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();
@@ -190,5 +193,33 @@ public class Launcher {
         }
       }
     }
+  }
+
+  static int establishDaytraderPort() {
+    int port = 0;
+    String jbhp = System.getProperty("jboss.http.port");
+    if (jbhp != null) {
+      try {
+        port = Integer.parseInt(jbhp);
+      } catch (NumberFormatException e) {
+        System.err.println("jboss.http.port set to malformed value '"+jbhp+"', exiting.");
+        System.exit(-1);
+      }
+      if (!AvailablePortFinder.available(port)) {
+        System.err.println("DayTrader attepmpted to use unavailable port '"+jbhp+"'. Exiting.");
+        System.exit(-1);
+      }
+    } else {
+      port = AvailablePortFinder.getNextAvailable(8080);
+      System.setProperty("jboss.http.port", Integer.toString(port));
+    }
+    if (port != 8080) {
+      System.err.println("Port 8080 is unavailable.  DayTrader is exiting.");
+      System.exit(-1);
+      // System.setProperty("jboss.socket.binding.port-offset", Integer.toString(port-8080));
+    }
+
+    System.out.println("DayTrader is using port "+System.getProperty("jboss.http.port")+"."); //  (configure with -Djboss.http.port=<port>).  jboss.socket.binding.port-offset="+System.getProperty("jboss.socket.binding.port-offset"));
+    return port;
   }
 }
