@@ -65,7 +65,7 @@ public class DaCapoRunner {
 		synchronized(completed) {
 			while (completed[0] != (tradeSessions+numTraders)) {
 				try {
-					completed.wait(2000);
+					completed.wait(200);
 					if (VERBOSE) System.err.println("Completed: "+completed[0]+"/"+tradeSessions);
 				} catch (InterruptedException e) {
 					System.out.println("Caught exception while waiting "+ e.toString());
