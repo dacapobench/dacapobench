@@ -189,7 +189,7 @@
         <property name="build.target-zip" value="dacapo-${build.version}.zip"/>
     </target>
 
-    <target name="init" depends="check-dependencies, set-build-version-info, create-zip-directory">
+    <target name="init" depends="check-dependencies, set-build-version-info, create-zip-directory, create-logging-properties">
         <!-- Create the time stamp -->
         <tstamp/>
         <delete dir="${log.build.dir}" />
@@ -611,6 +611,10 @@ See ${log.build.report} for a summary of benchmark build status.
             <dirset dir="${build.target-dir}"/>
         </chmod>
         <delete dir="${build.target-dir}"/>
+    </target>
+
+    <target name="create-logging-properties">
+        <echo message=".level=OFF" file="${build.target-data}/logging.properties"/>
     </target>
 
     <target name="create-zip-directory" depends="set-build-version-info,set-delete-zip-dir-property,delete-zip-directory">

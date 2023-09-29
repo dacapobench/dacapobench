@@ -299,8 +299,7 @@ public abstract class Benchmark {
     savedSystemProperties = System.getProperties();
     Data.checkData(data);
 
-    Logger rootLogger = LogManager.getLogManager().getLogger("");
-    rootLogger.setLevel(Level.OFF);
+    System.setProperty("java.util.logging.config.file", fileInData("dat"+File.separator+"logging.properties"));
 
     synchronized (System.out) {
       if (out == null) {
