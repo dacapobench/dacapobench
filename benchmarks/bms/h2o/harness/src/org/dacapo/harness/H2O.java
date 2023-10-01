@@ -11,6 +11,8 @@ package org.dacapo.harness;
 
 import org.dacapo.h2o.ClientRunner;
 import org.dacapo.parser.Config;
+import org.dacapo.harness.util.AvailablePortFinder;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,15 +31,31 @@ public class H2O extends Benchmark{
 
     private String[] args;
     PrintStream savedOut;
+
     private static final String H2O_IP = "127.0.0.1";
+    private static final int H2O_DEFAULT_PORT = 54321;  // H2O's preferred port
     private static final String H2O_PORT;
     private static final String H2O_REST_URL;
 
     static {
-        if (System.getProperty("dacapo.h2o.port") != null)
-            H2O_PORT = System.getProperty("dacapo.h2o.port");
-        else
-            H2O_PORT = "54321";
+        int port = H2O_DEFAULT_PORT;
+
+        String prop = System.getProperty("dacapo.h2o.port");
+        if (prop != null) {
+            try {
+                port = Integer.parseInt(prop);
+            }  catch (NumberFormatException e) {
+                System.err.println("Could not parse property 'dacapo.h2o.port': '"+prop+"'.  Exiting.");
+                System.exit(-1);
+            }
+        }
+        if (!AvailablePortFinder.available(port)) {
+            System.err.print("Port "+port+" unavailable. ");
+            port = AvailablePortFinder.getNextAvailable(port);
+            System.err.println("Using "+port+".");
+        }
+
+        H2O_PORT = Integer.toString(port);
         H2O_REST_URL = "http://" + H2O_IP + ":" + H2O_PORT;
     }
 

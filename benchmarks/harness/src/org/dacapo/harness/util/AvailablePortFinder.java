@@ -48,7 +48,7 @@ public class AvailablePortFinder {
     /**
      * The maximum number of server port number.
      */
-    public static final int MAX_PORT_NUMBER = 49151;
+    public static final int MAX_PORT_NUMBER = 65535;
 
     /**
      * Creates a new instance.
