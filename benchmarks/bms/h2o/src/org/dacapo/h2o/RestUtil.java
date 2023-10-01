@@ -21,6 +21,25 @@ public class RestUtil {
     private String url;
     private String response;
 
+    private static final int DEFAULT_TIMEOUT_MS = 5000;
+    private static final int CONNECTION_TIMEOUT_MS;
+
+    static {
+        int timeout = DEFAULT_TIMEOUT_MS;
+        String dilation = System.getProperty("dacapo.timeout.dialation");
+        if (dilation != null) {
+           try {
+                timeout = (int) ((float) DEFAULT_TIMEOUT_MS * Float.parseFloat(dilation));
+            } catch (NumberFormatException e) {
+                System.err.println("Could not parse property 'dacapo.timeout.dialation': '"+dilation+"'.  Exiting.");
+                System.exit(-1);
+            }
+        }
+
+        CONNECTION_TIMEOUT_MS = timeout;
+        System.out.println("H2O client connection timeout set to "+CONNECTION_TIMEOUT_MS+"ms.  Use -f to adjust.");
+    }
+
     RestUtil(String url) throws ClassNotFoundException, NoSuchMethodException {
         this.url = url;
         Class<?> jsonObj = Class.forName("net.sf.json.JSONObject", true, Thread.currentThread().getContextClassLoader());
@@ -81,8 +100,8 @@ public class RestUtil {
 
         // Open the connection
         HttpURLConnection conn = (HttpURLConnection) restURL.openConnection();
-        conn.setConnectTimeout(5*1000); // 5 seconds
-        conn.setReadTimeout(5*1000); // 5 seconds
+        conn.setConnectTimeout(CONNECTION_TIMEOUT_MS);
+        conn.setReadTimeout(CONNECTION_TIMEOUT_MS);
         // Set POST, and open for input and output
         conn.setRequestMethod("POST");
 //        conn.setRequestProperty("Content-Type", "application/json");
