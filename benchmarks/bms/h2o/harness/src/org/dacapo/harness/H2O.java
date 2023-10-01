@@ -54,7 +54,7 @@ public class H2O extends Benchmark{
         emptyOutput();
 
         System.setProperty("org.eclipse.jetty.util.log.announce", "false");
-        System.setProperty("heartbeat.benchmark.enabled", "false");
+        System.setProperty("sys.ai.h2o.heartbeat.benchmark.enabled", "false");
 
         /*
          * FIXME
