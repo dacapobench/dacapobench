@@ -24,7 +24,9 @@ import org.dacapo.harness.util.AvailablePortFinder;
 * id: $Id: Launcher.java 738 2009-12-24 00:19:36Z steveb-oss $
 */
 public class Launcher {
-  private static final int DAYTRADER_PORT = establishDaytraderPort();
+  private static final int DEFAULT_WILDFLY_PORT = 8080;
+  private static final int DEFAULT_PORT_OFFSET_STEP = 100;
+  public static final int DAYTRADER_PORT = establishDaytraderPort();
   private final static String VERSION = "26.1.3";
   private final static String TYPE = "Final";
   private final static String DIRECTORY = "wildfly-" + VERSION + "." + TYPE;
@@ -64,7 +66,7 @@ public class Launcher {
       method.invoke(null);
 
       // Create a client environment
-      DaCapoClientRunner.initialize(DAYTRADER_PORT, logNumSessions, numThreads, false);
+      DaCapoClientRunner.initialize(logNumSessions, numThreads, false);
     } catch (Exception e) {
       System.err.println("Exception during initialization: " + e.toString());
       e.printStackTrace();
@@ -118,7 +120,7 @@ public class Launcher {
     ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(serverCLoader);
-      DaCapoClientRunner.runIteration(DAYTRADER_PORT, logNumSessions, numThreads, 0, useBeans);
+      DaCapoClientRunner.runIteration(logNumSessions, numThreads, 0, useBeans);
     } catch (Exception e) {
       System.err.println("Exception during iteration: " + e.toString());
       e.printStackTrace();
@@ -196,7 +198,21 @@ public class Launcher {
   }
 
   static int establishDaytraderPort() {
-    int port = 0;
+
+    // determine whether a port offset was explicitly requested via command line property
+    int offset = 0;
+    String jbpo = System.getProperty("jboss.socket.binding.port-offset");
+    if (jbpo != null) {
+      try {
+        offset = Integer.parseInt(jbpo);
+      } catch (NumberFormatException e) {
+        System.err.println("jboss.socket.binding.port-offset set to malformed value '"+jbpo+"', exiting.");
+        System.exit(-1);
+      }
+    }
+
+    // determine whether the http port was explicitly requested via command line property
+    int port = DEFAULT_WILDFLY_PORT;
     String jbhp = System.getProperty("jboss.http.port");
     if (jbhp != null) {
       try {
@@ -205,21 +221,20 @@ public class Launcher {
         System.err.println("jboss.http.port set to malformed value '"+jbhp+"', exiting.");
         System.exit(-1);
       }
-      if (!AvailablePortFinder.available(port)) {
-        System.err.println("DayTrader attepmpted to use unavailable port '"+jbhp+"'. Exiting.");
-        System.exit(-1);
-      }
-    } else {
-      port = AvailablePortFinder.getNextAvailable(8080);
+    } else
       System.setProperty("jboss.http.port", Integer.toString(port));
-    }
-    if (port != 8080) {
-      System.err.println("Port 8080 is unavailable.  DayTrader is exiting.");
-      System.exit(-1);
-      // System.setProperty("jboss.socket.binding.port-offset", Integer.toString(port-8080));
+
+    // adjust the ports as necessary
+    int requested = port + offset;
+    if (!AvailablePortFinder.available(requested)) {
+      int available = AvailablePortFinder.getNextAvailable(requested+DEFAULT_PORT_OFFSET_STEP);
+      System.out.print("Port conflict detecteed.  Offset of "+(available - requested)+" will be applied.  ");
+      offset += (available - requested);
+      System.setProperty("jboss.socket.binding.port-offset", Integer.toString(offset));
     }
 
-    System.out.println("DayTrader is using port "+System.getProperty("jboss.http.port")+"."); //  (configure with -Djboss.http.port=<port>).  jboss.socket.binding.port-offset="+System.getProperty("jboss.socket.binding.port-offset"));
-    return port;
+    System.out.println("DayTrader is using port "+(port+offset)+" ("+port+"+"+offset+"). Configure with -Djboss.http.port and/or -Djboss.socket.binding.port-offset");
+
+    return port+offset;
   }
 }

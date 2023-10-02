@@ -17,15 +17,14 @@ import java.net.URL;
  */
 public class DaCapoClientRunner {
 
-  public static void initialize(int port, int logNumSessions, int numThreads, boolean useBeans) {
+  public static void initialize(int logNumSessions, int numThreads, boolean useBeans) {
     try {
-      URL url = new URL("http://localhost:"+port+"/daytrader/config?action=dacapoBuild&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
+      URL url = new URL("http://localhost:"+Launcher.DAYTRADER_PORT+"/daytrader/config?action=dacapoBuild&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
 
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
       // Request for creating tables
       connection.setRequestMethod("GET");
-      boolean connected = false;
 
       if (connection.getResponseCode() != 200) {
         throw new RuntimeException("Failed for creating tables!");
@@ -38,10 +37,11 @@ public class DaCapoClientRunner {
     }
   }
 
-  public static void runIteration(int port, int logNumSessions, int numThreads, int timeoutms, boolean useBeans) {
+  public static void runIteration(int logNumSessions, int numThreads, int timeoutms, boolean useBeans) {
 
     try {
-      URL url = new URL("http://localhost:"+port+"/daytrader/config?action=dacapoRun&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
+      URL url = new URL("http://localhost:"+Launcher.DAYTRADER_PORT+"/daytrader/config?action=dacapoRun&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
+
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
       // Request for running transactions
