@@ -228,7 +228,7 @@ public class Launcher {
     int requested = port + offset;
     if (!AvailablePortFinder.available(requested)) {
       int available = AvailablePortFinder.getNextAvailable(requested+DEFAULT_PORT_OFFSET_STEP);
-      System.out.print("Port conflict detecteed.  Offset of "+(available - requested)+" will be applied.  ");
+      System.out.print("Port conflict detected.  Offset of "+(available - requested)+" will be applied.  ");
       offset += (available - requested);
       System.setProperty("jboss.socket.binding.port-offset", Integer.toString(offset));
     }
