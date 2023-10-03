@@ -31,7 +31,8 @@ import org.dacapo.harness.Digest;
 public class Client implements Runnable {
 
   private static final boolean GEN_DIGESTS = false;  // use this to generate digests when creating a new workload
-  
+  private static final String BASE_RQ_URL = "http://localhost:"+Integer.toString(Launcher.SPRING_PORT);
+
   private static String[] requests;
   private static int cursor = 0;
   private static int fivePercent;
@@ -85,16 +86,16 @@ public class Client implements Runnable {
         String req = request.substring(49);
         switch (request.charAt(48)) {
           case 'G':
-            request(new GetMethod(formatUrl(PORT, req)), req, expectedLength, expectedDigest);
+            request(new GetMethod(BASE_RQ_URL + req), req, expectedLength, expectedDigest, rq+i);
             break;
           case 'P':
             String[] values = req.split("&");
-            HttpMethodBase post = new PostMethod(formatUrl(PORT, values[0]));
+            HttpMethodBase post = new PostMethod(BASE_RQ_URL + values[0]);
             for(int j = 1; j < values.length; j++) {
               String[] token = values[j].split("=");
               ((PostMethod) post).addParameter(token[0], token[1]);
             }
-            request(post, req, expectedLength, expectedDigest);
+            request(post, req, expectedLength, expectedDigest, rq+i);
             break;
           default:
             System.err.println("Unexpected request: '"+request+"'");
@@ -117,27 +118,28 @@ public class Client implements Runnable {
     connectionManager.shutdown();
   }
 
-  private void request(HttpMethodBase rq, String request, int expectedLength, String expectedDigest) {
+  private void request(HttpMethodBase rq, String request, int expectedLength, String expectedDigest, int index) {
     reporter.start();
     try {
       boolean get = rq instanceof GetMethod;
       final int result = httpClient.executeMethod(rq);
       if (!(result == 200 || (!get && result == 302))) // redirect on post is OK
-        System.err.println("Unexpected response. Got "+result+" for request "+(get ? "GET " : "POST ")+request);
+        System.err.println("Unexpected response. Got "+result+" for request "+index+": "+(get ? "GET " : "POST ")+request);
       else {
         final String response = readStream(rq.getResponseBodyAsStream());
-          if (!GEN_DIGESTS && response.length() != expectedLength)
-            System.err.println("Unexpected response length. Got "+response.length()+" but expected "+expectedLength+" for request "+(get ? "GET " : "POST ")+request+", got:\n"+response);
-          else {
-            String digest = Digest.stringDigest(response, 1024);
-            if (GEN_DIGESTS)
-              System.err.println(">>>> "+String.format("%1$6s ", response.length())+digest+(get ? " G" : " P")+request);
-            else if (!digest.equals(expectedDigest))
-              System.err.println("Unexpected digest. Got "+digest+", but expected "+expectedDigest+" for request "+(get ? "GET " : "POST ")+request+", got:\n"+response);
-          }
+        if (!GEN_DIGESTS && response.length() != expectedLength)
+          System.err.println("Unexpected response length. Got "+response.length()+" but expected "+expectedLength+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
+        else {
+          String digest = Digest.stringDigest(response, 1024);
+          if (GEN_DIGESTS)
+            System.err.println(">>>> "+String.format("%1$6s ", response.length())+digest+(get ? " G" : " P")+request);
+          else if (!digest.equals(expectedDigest))
+            System.err.println("Unexpected digest. Got "+digest+", but expected "+expectedDigest+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
         }
-      } catch (IOException e) { 
+      }
+    } catch (IOException e) {
       System.err.println("IOException: "+e);
+      System.exit(-1);
     }
     reporter.end();
   }
@@ -155,10 +157,4 @@ public class Client implements Runnable {
         String replyString = reply.toString();
         return replyString;
   }
-
-  static String formatUrl(int port, String addr) {
-        String formattedUrl = String.format("http://localhost:%d%s", port, addr);
-        return formattedUrl;
-  }
-
 }

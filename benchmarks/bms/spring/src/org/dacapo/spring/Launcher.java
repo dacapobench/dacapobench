@@ -14,8 +14,12 @@ import java.util.jar.JarFile;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.dacapo.harness.util.AvailablePortFinder;
 
 public class Launcher {
+
+    private static final int DEFAULT_SPRING_PORT = 8080;
+    static final int SPRING_PORT = establishSpringPort();
 
     public Launcher(File scratch, File data, String[] bench) {
     }
@@ -75,4 +79,30 @@ public class Launcher {
         System.out.println("Launching the server");
 		launchMethod.invoke(jarLauncher, new Object[]{new String[0]});
     }
+
+    static int establishSpringPort() {
+        // determine whether the http port was explicitly requested via command line property
+        int port = DEFAULT_SPRING_PORT;
+        String sp = System.getProperty("server.port");
+        if (sp != null) {
+          try {
+            port = Integer.parseInt(sp);
+          } catch (NumberFormatException e) {
+            System.err.println("server.port set to malformed value '"+sp+"', exiting.");
+            System.exit(-1);
+          }
+        }
+
+        // adjust the ports as necessary
+        int requested = port;
+        if (!AvailablePortFinder.available(requested)) {
+          int available = AvailablePortFinder.getNextAvailable(requested);
+          System.out.print("Port conflict detected. ");
+
+        }
+
+        System.setProperty("server.port", Integer.toString(port));
+        System.out.println("Spring is using port "+port+". Configure with -Dserver.port.");
+        return port;
+      }
 }
