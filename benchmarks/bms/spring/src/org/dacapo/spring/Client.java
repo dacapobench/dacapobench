@@ -64,12 +64,12 @@ public class Client implements Runnable {
     synchronized (requests) {
       rtn = cursor;
       cursor += stride;
-    }
-    int batches = (rtn  / stride);
-    if (fivePercent > 0 && batches % fivePercent == 0 && !GEN_DIGESTS) {
-      int percentage = 5 * (batches / fivePercent);
-      if (percentage <= 100)
-        System.out.print("Completing query batches: "+percentage+"%\r");
+      int batches = (rtn  / stride);
+      if (fivePercent > 0 && batches % fivePercent == 0 && !GEN_DIGESTS) {
+        int percentage = 5 * (batches / fivePercent);
+        if (percentage <= 100)
+          System.out.print("Completing query batches: "+percentage+"%\r");
+      }
     }
     return rtn;
   }
