@@ -124,17 +124,17 @@ public class Client implements Runnable {
       boolean get = rq instanceof GetMethod;
       final int result = httpClient.executeMethod(rq);
       if (!(result == 200 || (!get && result == 302))) // redirect on post is OK
-        System.err.println("Unexpected response. Got "+result+" for request "+index+": "+(get ? "GET " : "POST ")+request);
+        System.err.println("Unexpected response. "+Thread. currentThread().getName()+" got "+result+" for request "+index+": "+(get ? "GET " : "POST ")+request);
       else {
         final String response = readStream(rq.getResponseBodyAsStream());
         if (!GEN_DIGESTS && response.length() != expectedLength)
-          System.err.println("Unexpected response length. Got "+response.length()+" but expected "+expectedLength+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
+          System.err.println("Unexpected response length. "+Thread. currentThread().getName()+" got "+response.length()+" but expected "+expectedLength+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
         else {
           String digest = Digest.stringDigest(response, 1024);
           if (GEN_DIGESTS)
             System.err.println(">>>> "+String.format("%1$6s ", response.length())+digest+(get ? " G" : " P")+request);
           else if (!digest.equals(expectedDigest))
-            System.err.println("Unexpected digest. Got "+digest+", but expected "+expectedDigest+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
+            System.err.println("Unexpected digest "+Thread. currentThread().getName()+" got "+digest+", but expected "+expectedDigest+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
         }
       }
     } catch (IOException e) {
