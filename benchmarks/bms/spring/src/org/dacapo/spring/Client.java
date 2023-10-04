@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
@@ -44,8 +45,6 @@ public class Client implements Runnable {
 
   private MultiThreadedHttpConnectionManager connectionManager;
   private HttpClient httpClient;
-
-  private static final int PORT = 8080;
 
   public Client(int ordinal, LatencyReporter reporter) {
     this.ordinal = ordinal;
@@ -118,6 +117,7 @@ public class Client implements Runnable {
     connectionManager.shutdown();
   }
 
+  static final int MAX_MESSAGE_LEN = 208000;
   private void request(HttpMethodBase rq, String request, int expectedLength, String expectedDigest, int index) {
     reporter.start();
     try {
@@ -126,15 +126,15 @@ public class Client implements Runnable {
       if (!(result == 200 || (!get && result == 302))) // redirect on post is OK
         System.err.println("Unexpected response. "+Thread. currentThread().getName()+" got "+result+" for request "+index+": "+(get ? "GET " : "POST ")+request);
       else {
-        final String response = readStream(rq.getResponseBodyAsStream());
-        if (!GEN_DIGESTS && response.length() != expectedLength)
-          System.err.println("Unexpected response length. "+Thread. currentThread().getName()+" got "+response.length()+" but expected "+expectedLength+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
+        final byte[] buf = rq.getResponseBody(MAX_MESSAGE_LEN);
+        if (!GEN_DIGESTS && buf.length != expectedLength)
+          System.err.println("Unexpected response length. "+Thread. currentThread().getName()+" got "+buf.length+" but expected "+expectedLength+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+(new String(buf, 0, Math.min(buf.length, 1024), StandardCharsets.UTF_8)));
         else {
-          String digest = Digest.stringDigest(response, 1024);
-          if (GEN_DIGESTS)
-            System.err.println(">>>> "+String.format("%1$6s ", response.length())+digest+(get ? " G" : " P")+request);
+          String digest = Digest.byteDigest(buf, 2048);
+        if (GEN_DIGESTS)
+            System.err.println(">>>> "+String.format("%1$6s ", buf.length)+digest+(get ? " G" : " P")+request);
           else if (!digest.equals(expectedDigest))
-            System.err.println("Unexpected digest "+Thread. currentThread().getName()+" got "+digest+", but expected "+expectedDigest+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+response);
+            System.err.println("Unexpected digest "+Thread. currentThread().getName()+" got "+digest+", but expected "+expectedDigest+" for request "+index+": "+(get ? "GET " : "POST ")+request+", got:\n"+(new String(buf, 0, Math.min(buf.length, 1024), StandardCharsets.UTF_8)));
         }
       }
     } catch (IOException e) {
@@ -142,19 +142,5 @@ public class Client implements Runnable {
       System.exit(-1);
     }
     reporter.end();
-  }
-
-  protected static String readStream(InputStream responseStream) throws IOException {
-        BufferedReader input = new BufferedReader(new InputStreamReader(responseStream));
-        StringBuilder reply1 = new StringBuilder(4096);
-        for (String line = input.readLine(); line != null; line = input.readLine()) {
-          reply1.append(line);
-          reply1.append('\n');
-        }
-        input.close();
-        StringBuilder reply = reply1;
-    
-        String replyString = reply.toString();
-        return replyString;
   }
 }

@@ -52,20 +52,53 @@ public class Digest {
   }
 
   /**
-   * Calculate the md5 digest of a given string, and return a string
+   * Calculate the SHA-1 digest of a given string, and return a string
    * representation thereof
    * 
-   * @param str
-   * @return
+   * @param str The string to be checksummed
+   * @return A string representation of the SHA-1 digest
    */
   public static String stringDigest(String str) {
-    return stringDigest(str, Integer.MAX_VALUE);
+    // note we use str.length() for backward compatability (there twice that number of bytes)
+    return byteDigest(str.getBytes(), str.length());
   }
+
+  /**
+   * Calculate the SHA-1 digest of a given string, and return a string
+   * representation thereof
+   * 
+   * @param str The string to be checksummed
+   * @param max Only consider the first N characters
+   * @return A string representation of the SHA-1 digest
+   */
   public static String stringDigest(String str, int max) {
+    // note we use str.length() for backward compatability (there twice that number of bytes)
+    return byteDigest(str.getBytes(), Math.min(max, str.length()));
+  }
+
+  /**
+   * Calculate the SHA-1 digest of a given byte array, and return a string
+   * representation thereof
+   * 
+   * @param b The byte array to be checksummed
+   * @return A string representation of the SHA-1 digest
+   */
+  public static String byteDigest(byte[] b) {
+    return byteDigest(b, b.length);
+  }
+
+  /**
+   * Calculate the SHA-1 digest of a given byte array, and return a string
+   * representation thereof
+   * 
+   * @param b The byte array to be checksummed
+   * @param max Only consider the first N bytes
+   * @return A string representation of the SHA-1 digest
+   */
+  public static String byteDigest(byte[] b, int max) {
     final MessageDigest md = create();
-    byte[] buf = str.getBytes();
-    for (int i = 0; i < Math.min(max,str.length()); i++) {
-      md.update(buf[i]);
+    for (int i = 0; i < Math.min(b.length, max); i++) {
+      md.update(b[i]);
     }
     return toString(md.digest()); // Must only ever call digest() once!
   }
