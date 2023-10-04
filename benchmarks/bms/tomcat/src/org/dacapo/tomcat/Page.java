@@ -104,7 +104,7 @@ public abstract class Page {
    */
   protected final boolean fetch(Session session, HttpMethod method, File logFile, boolean keep) throws IOException {
     final int iGetResultCode = session.httpClient.executeMethod(method);
-    final String strGetResponseBody = readStream(method.getResponseBodyAsStream());
+    String strGetResponseBody = readStream(method.getResponseBodyAsStream());
     final String strGetResponseBodyLocalized = strGetResponseBody.replace("\n", System.getProperty("line.separator"));
     if (keep) {
       writeLog(logFile, strGetResponseBodyLocalized);
@@ -118,6 +118,10 @@ public abstract class Page {
     if (expectedDigest == null) {
       return true;
     }
+
+    // This request's response includes the port-number (which is run-time configurable), so normalize port number before taking the digest
+    if (address.equals("/examples/jsp/jsp2/el/implicit-objects.jsp?foo=bar"))
+      strGetResponseBody = strGetResponseBody.replaceAll("localhost:\\d+&nbsp;", "localhost:8080&nbsp;");
 
     String digestString = Digest.stringDigest(strGetResponseBody);
     boolean digestMatch = digestString.equals(expectedDigest);

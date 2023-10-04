@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.dacapo.harness.Benchmark;
 import org.dacapo.parser.Config;
+import org.dacapo.harness.util.AvailablePortFinder;
 
 /**
  * Benchmark harness for the Tomcat benchmark
@@ -29,7 +30,9 @@ import org.dacapo.parser.Config;
  */
 public class Tomcat extends Benchmark {
 
-  private static final int PORT = 8080;// Integer.valueOf(System.getProperty("dacapo.tomcat.port", "7080"));
+  private static final int DEFAULT_TOMCAT_PORT = 8080;
+  public static final int TOMCAT_PORT = establishTomcatPort();
+
   private final Class<?> clazz;
   private final Constructor<Runnable> clientConstructor;
   private final Object controller;
@@ -51,7 +54,7 @@ public class Tomcat extends Benchmark {
 
     /* Create a constructor for the tomcat controller */
     Constructor<?> controlConstructor = clazz.getConstructor(File.class, ClassLoader.class, int.class);
-    this.controller = controlConstructor.newInstance(scratch, loader, PORT);
+    this.controller = controlConstructor.newInstance(scratch, loader, TOMCAT_PORT);
 
     /* Create a constructor for the tomcat client */
     @SuppressWarnings("unchecked")
@@ -171,7 +174,7 @@ public class Tomcat extends Benchmark {
     LatencyReporter.initialize(requests, threadCount, BATCH_SIZE);
     LatencyReporter.requestsStarting();
     for (int i = 0; i < threadCount; i++) {
-      Runnable client = clientConstructor.newInstance(scratch, i, iterations, getVerbose(), PORT);
+      Runnable client = clientConstructor.newInstance(scratch, i, iterations, getVerbose(), TOMCAT_PORT);
       threads[i] = new Thread(client);
       threads[i].start();
     }
@@ -261,5 +264,30 @@ public class Tomcat extends Benchmark {
       }
       return FileVisitResult.CONTINUE;
     }
+  }
+
+  static int establishTomcatPort() {
+    // determine whether the http port was explicitly requested via command line property
+    int port = DEFAULT_TOMCAT_PORT;
+    String sp = System.getProperty("dacapo.tomcat.port");
+    if (sp != null) {
+      try {
+        port = Integer.parseInt(sp);
+      } catch (NumberFormatException e) {
+        System.err.println("server.port set to malformed value '"+sp+"', exiting.");
+        System.exit(-1);
+      }
+    }
+
+    // adjust the ports as necessary
+    int requested = port;
+    if (!AvailablePortFinder.available(requested)) {
+      int available = AvailablePortFinder.getNextAvailable(requested);
+      System.out.print("Port conflict detected. ");
+    }
+
+    System.setProperty("dacapo.tomcat.port", Integer.toString(port));
+    System.out.println("Tomcat is using port "+port+". Configure with -Ddacapo.tomcat.port.");
+    return port;
   }
 }
