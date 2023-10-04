@@ -12,8 +12,8 @@
      <property file="dacapo.properties"/>
 
     <property name="bm-name" value="cassandra"/>
-    <property name="git-hash" value="2a458ba"/>
-    <property name="version" value="5.0"/>
+    <property name="git-hash" value="1ba458c"/>
+    <property name="version" value="5.1"/>
     <property name="bm-version" value="${git-hash}-pre-${version}"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="https://gitbox.apache.org/repos/asf/cassandra.git"/>
@@ -36,7 +36,7 @@
     <property name="datastax-driver-url" value="${maven.url}/com/datastax/oss/java-driver-core/${datastax-driver-version}"/>
     <property name="datastax-driver-jar" value="java-driver-core-${datastax-driver-version}.jar"/>
 
-    <property name="bm-version-str" value="cassandra ${bm-version} ycsb ${ycsb-version} datastax ${datastax-driver-version}"/>
+    <property name="bm-version-str" value="cassandra ${git-hash}-pre-5.0 ycsb ${ycsb-version} datastax ${datastax-driver-version}"/> <!-- FIXME hard-coded version number due to cassandra's versioning scheme -->
 
     <target name="source">
         <antcall target="check-source">
@@ -63,6 +63,7 @@
     <target name="cassandra-build">    
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
+        <patch patchfile="${bm-files}/cassandra.patch" dir="${bm-build-dir}/${bm-name}-${bm-version}" strip="3" ignorewhitespace="yes"/>
         <exec executable="ant" dir="${cassandra-build-top}">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line="-Drat.skip=true"/>
@@ -99,6 +100,7 @@
                     <exclude name="jamm-0.3.0.jar"/>
                     <exclude name="slf4j-simple-1.7.21.jar"/>
                     <exclude name="snakeyaml-1.11.jar"/>
+                    <exclude name="netty-*.jar"/>
                 </fileset>
                 <file file="${ycsb-dir}/core/target/core-${ycsb-version}.jar"/>
                 <fileset dir="${ycsb-dir}/core/target/dependency">
