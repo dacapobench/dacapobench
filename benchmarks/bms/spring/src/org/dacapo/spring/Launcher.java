@@ -21,9 +21,15 @@ public class Launcher {
   private static final int DEFAULT_SPRING_PORT = 8080;
   static final int SPRING_PORT = establishSpringPort();
 
+  static {
+    // Force character encoding to avoid a locale setting affecting benchmark behavior
+    System.setProperty("spring.sql.init.encoding", "UTF-8");
+  }
+
   public Launcher(File scratch, File data, String[] bench) {}
 
   public static void launch(String pathToJar) throws Exception {
+
 	  // Class name to Class object mapping.
 	  final Map<String, Class<?>> classMap = new HashMap<>();
 
