@@ -94,7 +94,7 @@ public class Launcher {
     // adjust the ports as necessary
     int requested = port;
     if (!AvailablePortFinder.available(requested)) {
-      int available = AvailablePortFinder.getNextAvailable(requested);
+      port = AvailablePortFinder.getNextAvailable(requested);
       System.out.print("Port conflict detected. ");
     }
 
