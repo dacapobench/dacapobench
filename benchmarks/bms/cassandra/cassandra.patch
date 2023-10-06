@@ -244,7 +244,7 @@ diff '--color=auto' -ur cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/
 diff '--color=auto' -ur cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/btree/BTreeSet.java ../build/cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/btree/BTreeSet.java
 --- cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/btree/BTreeSet.java	2023-10-04 03:46:10.000000000 +0000
 +++ ../build/cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/btree/BTreeSet.java	2023-10-04 06:07:45.903498175 +0000
-@@ -312,6 +312,48 @@
+@@ -312,6 +312,41 @@
          throw new UnsupportedOperationException();
      }
  
@@ -286,19 +286,6 @@ diff '--color=auto' -ur cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/
      public static class BTreeRange<V> extends BTreeSet<V>
      {
          // both inclusive
-diff '--color=auto' -ur cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java ../build/cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java
---- cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java	2023-10-04 03:46:11.000000000 +0000
-+++ ../build/cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java	2023-10-04 06:07:45.903498175 +0000
-@@ -47,7 +47,7 @@
-          * implementation. Set <code>cassandra.clock</code> system property to a FQCN to use a
-          * different implementation instead.
-          */
--        private static final Clock instance;
-+        private static Clock instance;
- 
-         static
-         {
-Only in ../build/cassandra-1ba458c-pre-5.1/src/resources/org/apache/cassandra: config
 diff '--color=auto' -ur cassandra-1ba458c-pre-5.1/test/simulator/asm/org/apache/cassandra/simulator/asm/InterceptClasses.java ../build/cassandra-1ba458c-pre-5.1/test/simulator/asm/org/apache/cassandra/simulator/asm/InterceptClasses.java
 --- cassandra-1ba458c-pre-5.1/test/simulator/asm/org/apache/cassandra/simulator/asm/InterceptClasses.java	2023-10-04 03:46:10.000000000 +0000
 +++ ../build/cassandra-1ba458c-pre-5.1/test/simulator/asm/org/apache/cassandra/simulator/asm/InterceptClasses.java	2023-10-04 06:07:45.903498175 +0000
@@ -369,3 +356,15 @@ diff '--color=auto' -ur cassandra-1ba458c-pre-5.1/test/simulator/main/org/apache
                  return disabled;
              throw new IllegalStateException("Using time is not allowed during simulation");
          }
+diff '--color=auto' -ur cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java ../build/cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java
+--- cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java	2023-10-04 03:46:11.000000000 +0000
++++ ../build/cassandra-1ba458c-pre-5.1/src/java/org/apache/cassandra/utils/Clock.java	2023-10-04 06:07:45.903498175 +0000
+@@ -47,7 +47,7 @@
+          * implementation. Set <code>cassandra.clock</code> system property to a FQCN to use a
+          * different implementation instead.
+          */
+-        private static final Clock instance;
++        private static Clock instance;
+ 
+         static
+         {

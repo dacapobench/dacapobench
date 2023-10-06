@@ -63,7 +63,7 @@
     <target name="cassandra-build">    
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
-        <patch patchfile="${bm-files}/cassandra.patch" dir="${bm-build-dir}/${bm-name}-${bm-version}" strip="3" ignorewhitespace="yes"/>
+        <patch patchfile="${bm-files}/cassandra.patch" dir="${bm-build-dir}/${bm-name}-${bm-version}" strip="3" ignorewhitespace="yes" failonerror="true"/>
         <exec executable="ant" dir="${cassandra-build-top}">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line="-Drat.skip=true"/>
@@ -74,7 +74,7 @@
         <property name="ycsb-dir" value="${bm-build-dir}/ycsb-${ycsb-version}"/>
         <mkdir dir="${ycsb-dir}"/>
         <untar src="${bm-downloads}/${ycsb-tgz}" dest="${ycsb-dir}" compression="gzip"/>
-        <patch patchfile="${bm-files}/ycsb.patch" dir="${ycsb-dir}" strip="3" ignorewhitespace="yes"/>
+        <patch patchfile="${bm-files}/ycsb.patch" dir="${ycsb-dir}" strip="3" ignorewhitespace="yes" failonerror="true"/>
         <exec executable="${mvn-exe}" dir="${ycsb-dir}">
             <arg line="-pl site.ycsb:cassandra-binding dependency:copy-dependencies -am package -DskipTests"/>
         </exec>

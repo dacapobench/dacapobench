@@ -73,6 +73,7 @@ public class Cassandra extends Benchmark {
             System.setProperty("cassandra.config", ymlConf.toPath().toUri().toString());
             System.setProperty("cassandra.logback.configurationFile", xmlLogback.toString());
             System.setProperty("cassandra-foreground", "yes");
+            System.setProperty("java.security.manager", "allow");
 
             EmbeddedCassandraServiceClass = Class.forName("org.apache.cassandra.service.EmbeddedCassandraService", true, loader);
             cassandra = EmbeddedCassandraServiceClass.getConstructor().newInstance();
