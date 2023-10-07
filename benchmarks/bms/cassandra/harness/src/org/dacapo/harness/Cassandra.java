@@ -42,10 +42,8 @@ public class Cassandra extends Benchmark {
 
     public Cassandra(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
-        assertJavaVersionGE(11, "Cassandra requires Java versions between 11 and 17 inclusive.");
-        assertJavaVersionLE(21, "Cassandra requires Java versions between 11 and 21 inclusive.");
-        warnJavaVersionEQ(17, "JDK 17 will issue (harmless) deprecation warnings when executing cassandra.");
-        warnJavaVersionEQ(21, "JDK 21 will issue (harmless) deprecation warnings when executing cassandra.");
+        assertJavaVersionGE(11, "Cassandra requires Java version 11 or more recent.");
+        warnJavaVersionLE(16, "Cassandra uses deprecated operations triggering warnings for JDK 17 - JDK 21 and may trigger failure in later JDKs.");
     }
 
     private void setupData() {
