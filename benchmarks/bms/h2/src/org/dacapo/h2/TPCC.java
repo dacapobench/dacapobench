@@ -242,14 +242,7 @@ public class TPCC {
       // if (verbose)
       //   System.out.println("Calculate checksum of initial data");
       // checkSum = calculateSumDB();
-    } else if (!cleanupInIteration) {
-      // resetToInitialData();
-
-      // long value = calculateSumDB();
-      // if (value != checkSum)
-      //   System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
     }
-
     // keep connection open so that database stays in memory
   }
 
@@ -318,21 +311,10 @@ public class TPCC {
     System.out.println();
     LatencyReporter.requestsFinished();
     report(System.out);
-
-    // if (inMemoryDB && cleanupInIteration) {
-    //   long start = System.currentTimeMillis();
-
-    //   resetToInitialData();
-
-    //   long value = calculateSumDB();
-    //   if (value != checkSum)
-    //     System.err.println("Checksum Failed for Database, expected " + checkSum + " got " + value);
-
-    //   resetToInitialDataTime = System.currentTimeMillis() - start;
-    // }
   }
 
   public void postIteration(String size) throws Exception {
+    resetToInitialData();
     if (verbose && (firstIteration || !inMemoryDB)) {
       System.out.println("Time to perform pre-iteration phase: " + preIterationTime + " msec");
     }
@@ -485,21 +467,28 @@ public class TPCC {
   }
 
   private void resetToInitialData() throws Exception {
-    System.out.println("Resetting database to initial state");
+    System.out.print("Resetting database to initial state");
 
     // there are no initial delivery requests or orders so remove all
     // residual entries
+    System.out.print(".");
     prepareStatement("DELETE FROM DELIVERY_REQUEST").execute();
+    System.out.print(".");
     prepareStatement("DELETE FROM DELIVERY_ORDERS").execute();
 
     // remove all entries that are not marked as part of the initial\\
     // set of entries
+    System.out.print(".");
     prepareStatement("DELETE FROM HISTORY WHERE H_INITIAL = FALSE").execute();
+    System.out.print(".");
     prepareStatement("DELETE FROM NEWORDERS WHERE NO_INITIAL = FALSE").execute();
+    System.out.print(".");
     prepareStatement("DELETE FROM ORDERLINE WHERE OL_INITIAL = FALSE").execute();
+    System.out.print(".");
     prepareStatement("DELETE FROM ORDERS WHERE O_INITIAL = FALSE").execute();
 
     // commit deletes
+    System.out.print(".");
     getConnection().commit();
 
     // although below seems a little inefficient we put the conditions in for
@@ -507,24 +496,37 @@ public class TPCC {
     // following reason: it keeps the commit set size low and therefore there is
     // less heap pressure
     // we also perform regular commits for the same reason
+    System.out.print(".");
     prepareStatement(
         "UPDATE CUSTOMER SET C_DATA = C_DATA_INITIAL, C_BALANCE = -10.0, C_YTD_PAYMENT = 10.0, C_PAYMENT_CNT = 1, C_DELIVERY_CNT = 0 WHERE C_DATA <> C_DATA_INITIAL OR C_BALANCE <> -10.0 OR C_YTD_PAYMENT <> 10.0 OR C_PAYMENT_CNT <> 1 OR C_DELIVERY_CNT <> 0").execute();
+    System.out.print(".");
     getConnection().commit();
 
+    System.out.print(".");
     prepareStatement("UPDATE DISTRICT SET D_YTD = 30000.0, D_NEXT_O_ID = 3001 WHERE D_YTD <> 30000.0 OR D_NEXT_O_ID <> 3001").execute();
+    System.out.print(".");
     getConnection().commit();
 
+    System.out.print(".");
     prepareStatement("UPDATE WAREHOUSE SET W_YTD = 300000.0 WHERE W_YTD <> 300000.0").execute();
+    System.out.print(".");
     getConnection().commit();
 
+    System.out.print(".");
     prepareStatement("UPDATE STOCK SET S_QUANTITY = S_QUANTITY_INITIAL, S_ORDER_CNT = 0, S_YTD = 0, S_REMOTE_CNT = 0 WHERE S_QUANTITY <> S_QUANTITY_INITIAL OR S_ORDER_CNT <> 0 OR S_YTD <> 0 OR S_REMOTE_CNT <> 0").execute();
+    System.out.print(".");
     getConnection().commit();
 
+    System.out.print(".");
     prepareStatement("UPDATE ORDERS SET O_CARRIER_ID = O_CARRIER_ID_INITIAL WHERE O_CARRIER_ID <> O_CARRIER_ID_INITIAL").execute();
+    System.out.print(".");
     getConnection().commit();
 
+    System.out.print(".");
     prepareStatement("UPDATE ORDERLINE SET OL_DELIVERY_D = OL_DELIVERY_D_INITIAL WHERE OL_DELIVERY_D <> OL_DELIVERY_D_INITIAL").execute();
+    System.out.print(".");
     getConnection().commit();
+    System.out.println(".");
   }
 
   // helper function for getting and setting a connection for initial
