@@ -4,11 +4,11 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 97, 112, 120 ]                 # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-61464e9e.jar cassandra -t 32 -f 10 -n 1
-open-jdk-17.sz-small.s.cp.gc-G1.t-1.f-10.n-1: [ 74, 72, 73 ]           # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-61464e9e.jar cassandra -s small -t 32 -f 10 -n 1
-open-jdk-17.sz-large.s.cp.gc-G1.t-32.f-10.n-1: [ 133, 137, 140 ]       # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-61464e9e.jar cassandra -s large -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-Parallel.t-32.f-10.n-1: [ 112, 110, 105 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-61464e9e.jar cassandra -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-1.f-10.n-1: [ 87, 85, 87 ]                    # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-61464e9e.jar cassandra -t 1 -f 10 -n 1
-open-jdk-17.s.up.gc-G1.t-32.f-10.n-1: [ 121, 125, 113 ]                # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-61464e9e.jar cassandra -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10: [ 129, 129, 129 ]               # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-61464e9e.jar cassandra -t 32 -f 10 -n 10
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 106, 113, 117 ]                # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-61464e9e.jar cassandra -t 32 -f 10 -n 1
+open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 130, 122, 136 ]             # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar cassandra -t 32 -f 10 -n 1
+open-jdk-17.sz-small.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 80, 81, 81 ]        # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar cassandra -s small -t 32 -f 10 -n 1
+open-jdk-17.sz-large.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 145, 152, 148 ]    # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar cassandra -s large -t 32 -f 10 -n 1
+open-jdk-17.ee.s.cp.gc-Parallel.t-32.f-10.n-1: [ 115, 119, 114 ]       # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-45236345.jar cassandra -t 32 -f 10 -n 1
+open-jdk-17.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 97, 99, 93 ]                 # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar cassandra -t 1 -f 10 -n 1
+open-jdk-17.ee.s.up.gc-G1.t-32.f-10.n-1: [ 125, 125, 134 ]             # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar cassandra -t 32 -f 10 -n 1
+open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-10: [ 129, 128, 129 ]            # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar cassandra -t 32 -f 10 -n 10
+open-jdk-11.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 109, 120, 122 ]             # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar cassandra -t 32 -f 10 -n 1
