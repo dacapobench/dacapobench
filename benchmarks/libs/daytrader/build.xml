@@ -14,7 +14,7 @@
     <property file="./dacapo.properties"/>
 
     <property name="lib-name" value="daytrader"/>
-
+    
     <property name="apache-svn-url" value="http://svn.apache.org/repos/asf"/>
 
     <property name="lib-svn-url" value="${apache-svn-url}/geronimo/daytrader/trunk"/>
@@ -23,10 +23,12 @@
     <property name="lib-src" value="daytrader-${lib-version}-src.tar.gz"/>
  
     <property name="wildfly" value="wildfly-${wildfly-version}"/>
+    <!-- <property name="wildfly-from-src" value="true"/> --> <!-- Skip by default (it takes around 20 minutes, doubling the time for a full build of DaCapo) -->
 
     <import file="../common.xml"/>
 
     <property name="dt-build" location="${lib-build-dir}/daytrader"/>
+    <property name="wf-build" location="${lib-build-dir}/${wildfly}-src"/>
 
     <property name="launcher-build" location="${lib-build-dir}/launcher"/>
 
@@ -36,10 +38,17 @@
     <property name="mvn-exe" value="mvn"/>
 
     <target name="url-source">
+        <!-- get the binary -->
         <antcall target="check-source">
             <param name="target-dir" value="${lib-downloads}"/>
             <param name="target-url" value="${github.url}/wildfly/wildfly/releases/download/${wildfly-version}"/>
             <param name="target-file" value="${wildfly}.zip"/>
+        </antcall>
+        <!-- get the source -->
+        <antcall target="check-source">
+            <param name="target-dir" value="${lib-downloads}"/>
+            <param name="target-url" value="${github.url}/wildfly/wildfly/releases/download/${wildfly-version}"/>
+            <param name="target-file" value="${wildfly}-src.zip"/>
         </antcall>
     </target>
 
@@ -47,8 +56,6 @@
         <mkdir dir="${dt-build}"/>
         <untar src="${lib-downloads}/${lib-src}" dest="${dt-build}/" compression="gzip"/>
         <delete file="${dt-build}/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/prims/ejb3/PingServlet2Entity.java"/>
-        <unzip src="${lib-downloads}/${wildfly}.zip" dest="${lib-build-dir}/"/>
-
         <copy file="${lib-data}/stocks.txt" todir="${dt-build}/javaee6/modules/web/src/main/resources/"/>
         <copy file="${lib-data}/users.txt" todir="${dt-build}/javaee6/modules/web/src/main/resources/"/>
         <copy file="${lib-data}/workload.txt" todir="${dt-build}/javaee6/modules/web/src/main/resources/"/>
@@ -58,6 +65,31 @@
         </copy>
 
         <patch patchfile="${lib-base}/${lib-name}/daytrader.patch" dir="${lib-build-dir}" ignorewhitespace="yes" strip="0" failonerror="yes"/>
+    </target>
+
+    <!-- build wildfly from source -->
+    <target name="wildfly.src" if="wildfly-from-src">
+        <unzip src="${lib-downloads}/${wildfly}-src.zip" dest="${lib-build-dir}/"/>
+
+        <!-- build widlfly -->
+        <exec executable="${mvn}" dir="${wf-build}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <env key="MAVEN_OPTS" value="-Xms256m -Xmx512m -XX:MaxPermSize=128m"/>
+            <arg value="-Drat.ignoreErrors=true"/>
+            <arg value="clean"/>
+            <arg value="install"/>
+        </exec>
+
+        <copy todir="${lib-build-dir}/${wildfly}">
+            <fileset dir="${wf-build}/dist/target/${wildfly}" />
+        </copy>
+    </target>
+    <!-- use the wildfly binary distro -->
+    <target name="wildfly.bin" unless="wildfly-from-src">
+        <unzip src="${lib-downloads}/${wildfly}.zip" dest="${lib-build-dir}/"/>
+    </target>
+
+    <target name="wildfly.patch" depends="wildfly.src,wildfly.bin">
         <patch patchfile="${lib-base}/${lib-name}/wildfly.patch" dir="${lib-build-dir}" ignorewhitespace="yes" strip="0" failonerror="yes"/>
     </target>
 
@@ -81,8 +113,7 @@
         <property name="mvn" location="${mvn-home}/${mvn-exe}"/>
     </target>
 
-    <target name="data" depends="build.init">
-
+    <target name="data" depends="build.init,wildfly.patch">
         <!-- build daytrader -->
         <exec executable="${mvn}" dir="${dt-build}">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
