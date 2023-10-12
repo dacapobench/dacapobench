@@ -1,4 +1,4 @@
-# dacapo-23.9-chopin  RC3 RELEASE NOTES  2023-09
+# dacapo-23.10-chopin  RC4 RELEASE NOTES  2023-10
 
 This is the second release candidate of the third major release of the DaCapo benchmark suite.
 
@@ -14,7 +14,7 @@ These notes are structured as follows:
 
 # 1. Overview
 
-The 23.9 release is the third major update of the suite.  It is incompatible with previous releases: new benchmarks have been added, old benchmarks have been removed, all other benchmarks have been substantially updated and the inputs have changed for every program. It is for this reason that in any published use of the suite, the version of the suite must be explicitly stated.
+The 23.10 release is the third major update of the suite.  It is incompatible with previous releases: new benchmarks have been added, old benchmarks have been removed, all other benchmarks have been substantially updated and the inputs have changed for every program. It is for this reason that in any published use of the suite, the version of the suite must be explicitly stated.
 
 The release sees: new packaging as a zip file containg a jar plus a read-only folder structure; the move from Geronimo to JBoss Wildfly for the trade benchmarks; the addition of eight completely new benchmarks: biojava, cassandra, graphchi, h2o, jme, kafka, spring, and zxing; the inclusion of six benchmarks with large (> 1 GB) heap footprints; the inclusion of nine latency-sensitive benchmarks; and the upgrade of all other benchmarks to reflect the current release state of the applications from which the benchmarks were derived.  This version introduces latency metrics for the request-based workloads, and basic statistics that characterize each benchmark.  These changes are consistent with the original goals of the DaCapo project, which include the desire for the suite to remain relevant and reflect the current state of deployed Java applications.
 
@@ -23,7 +23,7 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 ## 2.1 Downloading
 
 * DaCapo now ships as a zip file which contains a jar file and a folder which contains all data sources and jar files used by the respective workloads.
-* Download from https://download.dacapobench.org/chopin/dacapo-23.9-RC3-chopin.zip
+* Download from https://download.dacapobench.org/chopin/dacapo-23.10-RC4-chopin.zip
 * Unzip the zip file
 
 ## 2.2 Running
@@ -44,13 +44,13 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 
 # 3. Changes
 
-## 3.1 Changes introduced by 23.9
+## 3.1 Changes introduced by 23.10
 
-### 3.1.1 Version changes introduced by 23.9
+### 3.1.1 Version changes introduced by 23.10
 
 All benchmarks updated to reflect recent versions:
 
-| Benchmark | 9.12 | 23.9 |
+| Benchmark | 9.12 | 23.10 |
 |---|---|---|
 |avrora|    20091224 | 20131011 |
 | batik |    1.7     | 1.16 |
@@ -65,7 +65,7 @@ All benchmarks updated to reflect recent versions:
 | lucene|   2.4.1    | 9.7.0 |
 
 
-### 3.1.2 Benchmark additions due to 23.9
+### 3.1.2 Benchmark additions due to 23.10
 
 **biojava**: BioJava is an open-source project dedicated to   providing a Java framework for processing biological data.  It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures.
       
@@ -83,11 +83,11 @@ All benchmarks updated to reflect recent versions:
 
 **zxing**: Zxing is a multi-format 1D/2D barcode image processing library
 
-### 3.1.3. Benchmark deletions due to 23.9
+### 3.1.3. Benchmark deletions due to 23.10
 
 **lusearch-fix**:  This is no longer needed as we've moved to a much more recent version of Lucene.
        
-### 3.1.4. Other Notable Changes due to 23.9
+### 3.1.4. Other Notable Changes due to 23.10
 
 Latency metrics are now reported for each of the request-based workloads  (cassandra, h2, kafka, lusearch, spring, tomcat, tradebeans and tradesoap) and jme, which is a rendering workload (game engine).  The benchmark harness internally records the period of each request (or frame render), and at the end of each benchmark iteration outputs percentile statistics for request latencies. We report two metrics. Simple latency just reports the raw percentile latencies that were observed. Metered latency reports latencies as seen via an emulated request queue and a continuous stream of requests. Simple latency is unrealistic in that the rate at which requests are accepted is a function of the rate at which they are processed. In real systems requests will be enqueued and some of the user-observed latency is due to requests waiting in the request queue.
 
@@ -186,15 +186,15 @@ should be able to include such a contribution in a maintenance release, rather t
 
 # 5. Contributions and Acknowledgements
 
-The support of the Australian National University, Oracle, Google, and Huawei was crucial to the successful completeion of the 23.9 and 9.12-MR1 releases.
+The support of the Australian National University, Oracle, Google, and Huawei was crucial to the successful completeion of the 23.10 and 9.12-MR1 releases.
 
-The 23.9 release was led by Steve Blackburn of ANU and Google, and developed primarily by:
+The 23.10 release was led by Steve Blackburn of ANU and Google, and developed primarily by:
 
 *  Steve Blackburn, Google and Australian National University
 *  Rui Chen, Australian National University
 *  John Zhang, Australian National University
 
-In preparing the 23.9 release we received guidance and assistance from a number of people including:
+In preparing the 23.10 release we received guidance and assistance from a number of people including:
 
 * Xi Yang, Australian National University, Confluent and Twitter
 * Zixian Cai, Australian National University
