@@ -43,7 +43,10 @@ public class Cassandra extends Benchmark {
     public Cassandra(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
         assertJavaVersionGE(11, "Cassandra requires Java version 11 or more recent.");
-        warnJavaVersionLE(16, "Cassandra uses deprecated operations triggering warnings for JDK 17 - JDK 21 and may trigger failure in later JDKs.");
+        warnJavaVersionEQ(17, "Cassandra uses deprecated operations, which triggering warnings for JDK 17.");
+        if (System.getProperty("java.security.manager") == null || !System.getProperty("java.security.manager").equals("allow")) {
+            assertJavaVersionLE(16, "Cassandra uses deprecated operations which mean that for JDK 17 onwards, you must explicitly allow the security manager by including '-Djava.security.manager=allow' on the Java command line.");
+        }
     }
 
     private void setupData() {
