@@ -24,6 +24,8 @@ import org.dacapo.harness.util.AvailablePortFinder;
 * id: $Id: Launcher.java 738 2009-12-24 00:19:36Z steveb-oss $
 */
 public class Launcher {
+  private static final int MAX_THREADS = 128;   // Artificial ceiling due to issue #230
+  private static final String TC_PROPERTY_STRING = "dacapo.daytrader.override"; // #230
   private static final int DEFAULT_WILDFLY_PORT = 8080;
   private static final int DEFAULT_PORT_OFFSET_STEP = 100;
   public static final int DAYTRADER_PORT = establishDaytraderPort();
@@ -47,7 +49,19 @@ public class Launcher {
   private static File root = null;
 
   public static void initialize(File data, File scratch, int threads, int lns, boolean beans) {
-    numThreads = threads;
+    if (threads > MAX_THREADS) {
+      if (System.getProperty(TC_PROPERTY_STRING) == null) {
+        numThreads = MAX_THREADS;
+        System.err.println("WARNING: Thread count reduced from " + threads + " to " + MAX_THREADS + ".");
+        System.err.println("WARNING: Use '-D"+TC_PROPERTY_STRING+"=true' to override.");
+        System.err.println("WARNING: See https://github.com/dacapobench/dacapobench/issues/230 for details.");
+      } else {
+        numThreads = threads;
+        System.err.println("WARNING: Thread count has been overridden to exceed daytrader's recommended limit of " + MAX_THREADS + ".");
+        System.err.println("WARNING: See https://github.com/dacapobench/dacapobench/issues/230 for details.");
+      }
+    } else
+      numThreads = threads;
     logNumSessions = lns;
     useBeans = beans;
     root = new File(data.getAbsolutePath()+File.separator+"dat"+File.separator+"lib"+File.separator+"daytrader");
