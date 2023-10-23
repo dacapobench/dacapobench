@@ -1,4 +1,4 @@
-# dacapo-23.10-chopin  RC4 RELEASE NOTES  2023-10
+# dacapo-23.10-chopin  RC5 RELEASE NOTES  2023-10
 
 This is the second release candidate of the third major release of the DaCapo benchmark suite.
 
@@ -23,7 +23,7 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 ## 2.1 Downloading
 
 * DaCapo now ships as a zip file which contains a jar file and a folder which contains all data sources and jar files used by the respective workloads.
-* Download from https://download.dacapobench.org/chopin/dacapo-23.10-RC4-chopin.zip
+* Download from https://download.dacapobench.org/chopin/dacapo-23.10-RC5-chopin.zip
 * Unzip the zip file
 
 ## 2.2 Running
@@ -34,9 +34,8 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 
 ## 2.3 Compatability
 
-* All benchmarks are compatable with Java 11 through Java 17.
+* All benchmarks are compatable with Java 11 through Java 21 (cassandra and h2o require defaults to be overridden via runtime properties).
 * All benchmarks aside from biojava, cassandra, eclipse, h2, luindex, lusearch, tomcat, tradebeans and tradesoap are compatable with Java 8.
-* All benchmarks aside from cassandra are compatable with Java 21.
 
 ## 2.4 Building from Source
 
