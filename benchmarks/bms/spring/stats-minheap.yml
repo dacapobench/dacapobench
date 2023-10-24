@@ -4,11 +4,11 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 55, 58, 53 ]                # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar spring -t 32 -f 10 -n 1
-open-jdk-17.sz-small.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 45, 45, 45 ]        # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar spring -s small -t 32 -f 10 -n 1
-open-jdk-17.sz-large.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 76, 73, 75 ]       # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar spring -s large -t 32 -f 10 -n 1
-open-jdk-17.ee.s.cp.gc-Parallel.t-32.f-10.n-1: [ 59, 61, 59 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-45236345.jar spring -t 32 -f 10 -n 1
-open-jdk-17.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 45, 45, 45 ]                 # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar spring -t 1 -f 10 -n 1
-open-jdk-17.ee.s.up.gc-G1.t-32.f-10.n-1: [ 65, 74, 68 ]                # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar spring -t 32 -f 10 -n 1
-open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-10: [ 57, 57, 57 ]               # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar spring -t 32 -f 10 -n 10
-open-jdk-11.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 51, 51, 51 ]                # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-45236345.jar spring -t 32 -f 10 -n 1
+open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 55, 56, 56, 53, 57 ]                       # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar spring -t 32 -f 10 -n 1
+open-jdk-21.sz-small.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 43, 43, 43, 43, 43 ]               # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar spring -s small -t 32 -f 10 -n 1
+open-jdk-21.sz-large.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 72, 79, 72, 71, 71 ]              # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar spring -s large -t 32 -f 10 -n 1
+open-jdk-21.ee.s.cp.gc-Parallel.t-32.f-10.n-1: [ 61, 60, 60, 61, 61 ]                 # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-de2897a.jar spring -t 32 -f 10 -n 1
+open-jdk-21.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 45, 45, 45, 45, 45 ]                        # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar spring -t 1 -f 10 -n 1
+open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1: [ 69, 69, 67, 67, 66 ]                       # java-21-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar spring -t 32 -f 10 -n 1
+open-jdk-21.s.ee.cp.gc-G1.t-32.f-10.n-10: [ 59, 58, 60, 57, 59 ]                      # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar spring -t 32 -f 10 -n 10
+open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 53, 51, 53, 53, 56 ]                       # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar spring -t 32 -f 10 -n 1

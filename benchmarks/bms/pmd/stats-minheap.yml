@@ -4,11 +4,11 @@
 # by bisection search.  Numbers below are in MB and reflect results of
 # three trials.
 #
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1: [ 188, 186, 185 ]                # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-7839b032.jar pmd -t 32 -f 10 -n 1
-open-jdk-17.sz-small.s.cp.gc-G1.t-1.f-10.n-1: [ 9, 9, 9 ]              # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-7839b032.jar pmd -s small -t 32 -f 10 -n 1
-open-jdk-17.sz-large.s.cp.gc-G1.t-32.f-10.n-1: [ 3523, 3523, 3525 ]    # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-7839b032.jar pmd -s large -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-Parallel.t-32.f-10.n-1: [ 233, 233, 243 ]          # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-7839b032.jar pmd -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-1.f-10.n-1: [ 43, 43, 43 ]                    # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-7839b032.jar pmd -t 1 -f 10 -n 1
-open-jdk-17.s.up.gc-G1.t-32.f-10.n-1: [ 271, 269, 265 ]                # java-17-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-7839b032.jar pmd -t 32 -f 10 -n 1
-open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10: [ 193, 202, 193 ]               # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-7839b032.jar pmd -t 32 -f 10 -n 10
-open-jdk-11.s.cp.gc-G1.t-32.f-10.n-1: [ 187, 191, 188 ]                # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-7839b032.jar pmd -t 32 -f 10 -n 1
+open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 185, 184, 185, 184, 185 ]                  # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar pmd -t 32 -f 10 -n 1
+open-jdk-21.sz-small.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 7, 7, 7, 7, 7 ]                    # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar pmd -s small -t 32 -f 10 -n 1
+open-jdk-21.sz-large.ee.s.cp.gc-G1.t-32.f-10.n-1: [ .inf, .inf, .inf, .inf,  ]        # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar pmd -s large -t 32 -f 10 -n 1
+open-jdk-21.ee.s.cp.gc-Parallel.t-32.f-10.n-1: [ 238, 235, 238, 238, 237 ]            # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-de2897a.jar pmd -t 32 -f 10 -n 1
+open-jdk-21.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 41, 41, 41, 41, 41 ]                        # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar pmd -t 1 -f 10 -n 1
+open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1: [ 265, 272, 265, 274, 272 ]                  # java-21-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar pmd -t 32 -f 10 -n 1
+open-jdk-21.s.ee.cp.gc-G1.t-32.f-10.n-10: [ 194, 193, 191, 191, 194 ]                 # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar pmd -t 32 -f 10 -n 10
+open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 185, 183, 182, 185, 187 ]                  # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar pmd -t 32 -f 10 -n 1
