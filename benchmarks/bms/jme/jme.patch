@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ./build.gradle ../build/build.gradle
---- ./build.gradle	2022-09-17 11:07:26.000000000 +0000
-+++ ../build/build.gradle	2022-09-20 08:47:59.749057500 +0000
+--- ./build.gradle	2023-08-02 10:34:04.000000000 +0000
++++ ../build/build.gradle	2023-10-25 04:37:54.346099930 +0000
 @@ -120,33 +120,10 @@
      into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
  }
@@ -37,8 +37,8 @@ diff '--color=auto' -ur ./build.gradle ../build/build.gradle
  task cleanMergedJavadoc(type: Delete) {
      delete file('dist/javadoc')
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
---- ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2022-09-17 11:07:26.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2022-09-20 08:54:34.720484246 +0000
+--- ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2023-08-02 10:34:04.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2023-10-25 04:37:54.346099930 +0000
 @@ -462,7 +462,7 @@
       * @param contextType the type of context to create
       */
@@ -49,8 +49,8 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication
  
      /**
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
---- ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2022-09-17 11:07:26.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2022-09-20 08:55:58.192376327 +0000
+--- ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2023-08-02 10:34:04.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2023-10-25 04:37:54.346099930 +0000
 @@ -48,6 +48,12 @@
  import com.jme3.system.AppSettings;
  import com.jme3.system.JmeContext.Type;
@@ -192,8 +192,8 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication
      }
  
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
---- ./jme3-core/src/main/java/com/jme3/system/AppSettings.java	2022-09-17 11:07:26.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2022-09-20 08:47:59.753057493 +0000
+--- ./jme3-core/src/main/java/com/jme3/system/AppSettings.java	2023-08-02 10:34:04.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2023-10-25 04:37:54.346099930 +0000
 @@ -267,8 +267,8 @@
  
      static {
@@ -206,8 +206,8 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.ja
          defaults.put("Frequency", 60);
          defaults.put("DepthBits", 24);
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
---- ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2022-09-17 11:07:24.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2022-09-20 08:47:59.753057493 +0000
+--- ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2023-08-02 10:34:02.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2023-10-25 04:37:54.346099930 +0000
 @@ -46,6 +46,7 @@
      private long previousTime;
      private float tpf;
@@ -233,9 +233,177 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java
      }
      
      @Override
+diff '--color=auto' -ur ./jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java ../build/jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java
+--- ./jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java	2023-08-02 10:34:02.000000000 +0000
++++ ../build/jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java	2023-10-25 04:42:33.241784026 +0000
+@@ -482,8 +482,14 @@
+      * @throws java.io.IOException If an error occurred while reading from InputStream
+      */
+     public ByteBuffer readGrayscale2D(boolean flip, int totalSize) throws IOException {
+-        ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize);
+-
++        ByteBuffer buffer = null;
++        try {
++            buffer = BufferUtils.createByteBuffer(totalSize);
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
++        }
+         if (bpp == 8) {
+             logger.finest("Source image format: R8");
+         }
+@@ -533,8 +539,14 @@
+         int sourcebytesPP = bpp / 8;
+         int targetBytesPP = pixelFormat.getBitsPerPixel() / 8;
+ 
+-        ByteBuffer dataBuffer = BufferUtils.createByteBuffer(totalSize);
+-
++        ByteBuffer dataBuffer = null;
++        try {
++            dataBuffer = BufferUtils.createByteBuffer(totalSize);
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
++        }
+         int mipWidth = width;
+         int mipHeight = height;
+ 
+@@ -586,8 +598,14 @@
+     public ByteBuffer readDXT2D(boolean flip, int totalSize) throws IOException {
+         logger.finest("Source image format: DXT");
+ 
+-        ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize);
+-
++        ByteBuffer buffer = null;
++        try {
++            buffer = BufferUtils.createByteBuffer(totalSize);
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
++        }
+         int mipWidth = width;
+         int mipHeight = height;
+ 
+@@ -621,8 +639,15 @@
+      * @throws java.io.IOException If an error occurred while reading from InputStream
+      */
+     public ByteBuffer readGrayscale3D(boolean flip, int totalSize) throws IOException {
+-        ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize * depth);
+-
++        ByteBuffer buffer = null;
++        try {
++            buffer = BufferUtils.createByteBuffer(totalSize * depth);
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
++        }
++        
+         if (bpp == 8) {
+             logger.finest("Source image format: R8");
+         }
+@@ -675,8 +700,14 @@
+         int sourcebytesPP = bpp / 8;
+         int targetBytesPP = pixelFormat.getBitsPerPixel() / 8;
+ 
+-        ByteBuffer dataBuffer = BufferUtils.createByteBuffer(totalSize * depth);
+-
++        ByteBuffer dataBuffer = null;
++        try {
++            dataBuffer = BufferUtils.createByteBuffer(totalSize * depth);
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
++        }
+         for (int k = 0; k < depth; k++) {
+             //   ByteBuffer dataBuffer = BufferUtils.createByteBuffer(totalSize);
+             int mipWidth = width;
+@@ -716,6 +747,7 @@
+             }
+         }
+         dataBuffer.rewind();
++
+         return dataBuffer;
+     }
+ 
+@@ -730,32 +762,39 @@
+     public ByteBuffer readDXT3D(boolean flip, int totalSize) throws IOException {
+         logger.finest("Source image format: DXT");
+ 
+-        ByteBuffer bufferAll = BufferUtils.createByteBuffer(totalSize * depth);
++        ByteBuffer bufferAll = null;
++        try {
++            bufferAll = BufferUtils.createByteBuffer(totalSize * depth);
+ 
+-        for (int i = 0; i < depth; i++) {
+-            ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize);
+-            int mipWidth = width;
+-            int mipHeight = height;
+-            for (int mip = 0; mip < mipMapCount; mip++) {
+-                if (flip) {
+-                    byte[] data = new byte[sizes[mip]];
+-                    in.readFully(data);
+-                    ByteBuffer wrapped = ByteBuffer.wrap(data);
+-                    wrapped.rewind();
+-                    ByteBuffer flipped = DXTFlipper.flipDXT(wrapped, mipWidth, mipHeight, pixelFormat);
+-                    flipped.rewind();
+-                    buffer.put(flipped);
+-                } else {
+-                    byte[] data = new byte[sizes[mip]];
+-                    in.readFully(data);
+-                    buffer.put(data);
+-                }
++            for (int i = 0; i < depth; i++) {
++                ByteBuffer buffer = BufferUtils.createByteBuffer(totalSize);
++                int mipWidth = width;
++                int mipHeight = height;
++                for (int mip = 0; mip < mipMapCount; mip++) {
++                    if (flip) {
++                        byte[] data = new byte[sizes[mip]];
++                        in.readFully(data);
++                        ByteBuffer wrapped = ByteBuffer.wrap(data);
++                        wrapped.rewind();
++                        ByteBuffer flipped = DXTFlipper.flipDXT(wrapped, mipWidth, mipHeight, pixelFormat);
++                        flipped.rewind();
++                        buffer.put(flipped);
++                    } else {
++                        byte[] data = new byte[sizes[mip]];
++                        in.readFully(data);
++                        buffer.put(data);
++                    }
+ 
+-                mipWidth = Math.max(mipWidth / 2, 1);
+-                mipHeight = Math.max(mipHeight / 2, 1);
++                    mipWidth = Math.max(mipWidth / 2, 1);
++                    mipHeight = Math.max(mipHeight / 2, 1);
++                }
++                buffer.rewind();
++                bufferAll.put(buffer);
+             }
+-            buffer.rewind();
+-            bufferAll.put(buffer);
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
+         }
+ 
+         return bufferAll;
+@@ -811,7 +850,6 @@
+                 allMaps.add(readRGB2D(flip, totalSize));
+             }
+         }
+-
+         return allMaps;
+     }
+ 
 diff '--color=auto' -ur ./jme3-examples/build.gradle ../build/jme3-examples/build.gradle
---- ./jme3-examples/build.gradle	2022-09-17 11:07:26.000000000 +0000
-+++ ../build/jme3-examples/build.gradle	2022-09-20 08:47:59.753057493 +0000
+--- ./jme3-examples/build.gradle	2023-08-02 10:34:04.000000000 +0000
++++ ../build/jme3-examples/build.gradle	2023-10-25 04:37:54.346099930 +0000
 @@ -19,8 +19,8 @@
      implementation project(':jme3-effects')
      implementation project(':jme3-jbullet')
@@ -248,8 +416,8 @@ diff '--color=auto' -ur ./jme3-examples/build.gradle ../build/jme3-examples/buil
      implementation project(':jme3-niftygui')
      implementation project(':jme3-plugins')
 diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
---- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2022-09-17 11:07:26.000000000 +0000
-+++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2022-09-20 09:00:48.360022711 +0000
+--- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2023-08-02 10:34:04.000000000 +0000
++++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2023-10-25 04:40:13.385939858 +0000
 @@ -53,11 +53,7 @@
  import java.nio.file.Files;
  import java.nio.file.Path;
@@ -515,8 +683,8 @@ diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java 
  
      protected void addDisplayedClasses(Set<Class<?>> classes) {
 diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
---- ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2022-09-17 11:07:24.000000000 +0000
-+++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2022-09-20 08:47:59.753057493 +0000
+--- ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2023-08-02 10:34:02.000000000 +0000
++++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2023-10-25 04:37:54.350099925 +0000
 @@ -44,6 +44,7 @@
  import com.jme3.scene.Node;
  import com.jme3.scene.Spatial;
@@ -562,8 +730,8 @@ diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPo
      }
  }
 diff '--color=auto' -ur ./jme3-networking/build.gradle ../build/jme3-networking/build.gradle
---- ./jme3-networking/build.gradle	2022-09-17 11:07:24.000000000 +0000
-+++ ../build/jme3-networking/build.gradle	2022-09-20 08:47:59.753057493 +0000
+--- ./jme3-networking/build.gradle	2023-08-02 10:34:03.000000000 +0000
++++ ../build/jme3-networking/build.gradle	2023-10-25 04:37:54.350099925 +0000
 @@ -1,5 +1,6 @@
  dependencies {
      api project(':jme3-core')
@@ -572,8 +740,8 @@ diff '--color=auto' -ur ./jme3-networking/build.gradle ../build/jme3-networking/
  
  javadoc {
 diff '--color=auto' -ur ./jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
---- ./jme3-plugins/build.gradle	2022-09-17 11:07:26.000000000 +0000
-+++ ../build/jme3-plugins/build.gradle	2022-09-20 08:47:59.753057493 +0000
+--- ./jme3-plugins/build.gradle	2023-08-02 10:34:04.000000000 +0000
++++ ../build/jme3-plugins/build.gradle	2023-10-25 04:37:54.350099925 +0000
 @@ -13,4 +13,8 @@
      api project(':jme3-core')
      api 'com.google.code.gson:gson:2.8.1'
