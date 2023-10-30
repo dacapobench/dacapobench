@@ -627,8 +627,9 @@ See ${log.build.report} for a summary of benchmark build status.
 
     <target name="create-zip" depends="set-build-version-info">
         <zip destfile="${build.target-zip}">
-            <fileset dir="." includes="${build.target-dir}/**"/>
-            <fileset file="${build.target-jar}"/>
+            <zipfileset dir="." includes="${build.target-dir}/**" excludes="${build.target-dir}/**/jboss-cli.sh ${build.target-dir}/**/jboss-cli.bat"/>
+            <zipfileset dir="." includes="${build.target-dir}/**/jboss-cli.sh ${build.target-dir}/**/jboss-cli.bat" filemode="755" />
+            <zipfileset file="${build.target-jar}"/>
         </zip>
     </target>
 
