@@ -1,7 +1,17 @@
 diff '--color=auto' -ur ./javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java ../build/javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java
---- ./javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java	2022-09-23 07:35:18.000000000 +0000
-+++ ../build/javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java	2022-09-23 07:40:27.858263810 +0000
-@@ -99,7 +99,7 @@
+--- ./javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java	2023-08-08 10:29:55.000000000 +0000
++++ ../build/javase/src/main/java/com/google/zxing/client/j2se/CommandLineRunner.java	2023-10-30 02:48:00.388221702 +0000
+@@ -83,7 +83,8 @@
+     }
+ 
+     Queue<URI> syncInputs = new ConcurrentLinkedQueue<>(inputs);
+-    int numThreads = Math.min(numInputs, Runtime.getRuntime().availableProcessors());
++    int dacapoThreads = Integer.parseInt(System.getProperty("dacapo.zxing.threads"));
++    int numThreads = Math.min(numInputs, dacapoThreads);
+     int successful = 0;    
+     if (numThreads > 1) {
+       ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+@@ -99,7 +100,7 @@
        successful += new DecodeWorker(config, syncInputs).call();
      }
  
@@ -11,8 +21,8 @@ diff '--color=auto' -ur ./javase/src/main/java/com/google/zxing/client/j2se/Comm
            " successfully (" + (successful * 100 / numInputs) + "%)\n");
      }
 diff '--color=auto' -ur ./javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java ../build/javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java
---- ./javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java	2022-09-23 07:35:18.000000000 +0000
-+++ ../build/javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java	2022-09-23 07:43:34.530152524 +0000
+--- ./javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java	2023-08-08 10:29:55.000000000 +0000
++++ ../build/javase/src/main/java/com/google/zxing/client/j2se/DecodeWorker.java	2023-10-30 02:39:30.405232036 +0000
 @@ -22,9 +22,9 @@
  import com.google.zxing.MultiFormatReader;
  import com.google.zxing.NotFoundException;

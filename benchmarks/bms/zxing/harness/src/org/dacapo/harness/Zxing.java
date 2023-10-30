@@ -34,6 +34,7 @@ public class Zxing extends Benchmark{
   protected void prepare(String size) throws Exception {
     super.prepare(size);
     args = config.preprocessArgs(size, scratch, data);
+    System.setProperty("dacapo.zxing.threads", Integer.toString(config.getThreadCount(size)));
   }
 
   @Override
