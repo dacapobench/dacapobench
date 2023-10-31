@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ./build.gradle ../build/build.gradle
 --- ./build.gradle	2023-08-02 10:34:04.000000000 +0000
-+++ ../build/build.gradle	2023-10-25 04:37:54.346099930 +0000
++++ ../build/build.gradle	2023-10-31 05:37:45.216844467 +0000
 @@ -120,33 +120,10 @@
      into "$buildDir/libDist/lib-ext" //buildDir.path + '/' + libsDirName + '/lib'
  }
@@ -38,8 +38,61 @@ diff '--color=auto' -ur ./build.gradle ../build/build.gradle
      delete file('dist/javadoc')
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java
 --- ./jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2023-08-02 10:34:04.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2023-10-25 04:37:54.346099930 +0000
-@@ -462,7 +462,7 @@
++++ ../build/jme3-core/src/main/java/com/jme3/app/LegacyApplication.java	2023-10-31 05:37:45.220844459 +0000
+@@ -302,27 +302,33 @@
+      * units respectively.
+      */
+     private void initCamera() {
+-        cam = new Camera(settings.getWidth(), settings.getHeight());
++        try {
++            cam = new Camera(settings.getWidth(), settings.getHeight());
+ 
+-        cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 1f, 1000f);
+-        cam.setLocation(new Vector3f(0f, 0f, 10f));
+-        cam.lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
+-
+-        renderManager = new RenderManager(renderer);
+-        //Remy - 09/14/2010 set the timer in the renderManager
+-        renderManager.setTimer(timer);
+-
+-        if (prof != null) {
+-            renderManager.setAppProfiler(prof);
++            cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 1f, 1000f);
++            cam.setLocation(new Vector3f(0f, 0f, 10f));
++            cam.lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
++
++            renderManager = new RenderManager(renderer);
++            //Remy - 09/14/2010 set the timer in the renderManager
++            renderManager.setTimer(timer);
++
++            if (prof != null) {
++                renderManager.setAppProfiler(prof);
++            }
++
++            viewPort = renderManager.createMainView("Default", cam);
++            viewPort.setClearFlags(true, true, true);
++
++            // Create a new cam for the gui
++            Camera guiCam = new Camera(settings.getWidth(), settings.getHeight());
++            guiViewPort = renderManager.createPostView("Gui Default", guiCam);
++            guiViewPort.setClearFlags(false, false, false);
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
+         }
+-
+-        viewPort = renderManager.createMainView("Default", cam);
+-        viewPort.setClearFlags(true, true, true);
+-
+-        // Create a new cam for the gui
+-        Camera guiCam = new Camera(settings.getWidth(), settings.getHeight());
+-        guiViewPort = renderManager.createPostView("Gui Default", guiCam);
+-        guiViewPort.setClearFlags(false, false, false);
+     }
+ 
+     /**
+@@ -462,7 +468,7 @@
       * @param contextType the type of context to create
       */
      public void start(JmeContext.Type contextType) {
@@ -48,9 +101,55 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/LegacyApplication
      }
  
      /**
+@@ -630,23 +636,29 @@
+      */
+     @Override
+     public void initialize() {
+-        if (assetManager == null) {
+-            initAssetManager();
++        try {
++            if (assetManager == null) {
++                initAssetManager();
++            }
++
++            initDisplay();
++            initCamera();
++
++            if (inputEnabled) {
++                initInput();
++            }
++            initAudio();
++
++            // update timer so that the next delta is not too large
++    //        timer.update();
++            timer.reset();
++
++            // user code here
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
+         }
+-
+-        initDisplay();
+-        initCamera();
+-
+-        if (inputEnabled) {
+-            initInput();
+-        }
+-        initAudio();
+-
+-        // update timer so that the next delta is not too large
+-//        timer.update();
+-        timer.reset();
+-
+-        // user code here
+     }
+ 
+     /**
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java
 --- ./jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2023-08-02 10:34:04.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2023-10-25 04:37:54.346099930 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/app/SimpleApplication.java	2023-10-31 05:37:45.220844459 +0000
 @@ -48,6 +48,12 @@
  import com.jme3.system.AppSettings;
  import com.jme3.system.JmeContext.Type;
@@ -103,10 +202,90 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication
      }
  
      @Override
-@@ -240,6 +264,46 @@
-         simpleInitApp();
-     }
+@@ -195,49 +219,95 @@
  
+     @Override
+     public void initialize() {
+-        super.initialize();
++        try {
++            super.initialize();
+ 
+-        // Several things rely on having this
+-        guiFont = loadGuiFont();
++            // Several things rely on having this
++            guiFont = loadGuiFont();
+ 
+-        guiNode.setQueueBucket(Bucket.Gui);
+-        guiNode.setCullHint(CullHint.Never);
+-        viewPort.attachScene(rootNode);
+-        guiViewPort.attachScene(guiNode);
+-
+-        if (inputManager != null) {
+-
+-            // We have to special-case the FlyCamAppState because too
+-            // many SimpleApplication subclasses expect it to exist in
+-            // simpleInit().  But at least it only gets initialized if
+-            // the app state is added.
+-            if (stateManager.getState(FlyCamAppState.class) != null) {
+-                flyCam = new FlyByCamera(cam);
+-                flyCam.setMoveSpeed(1f); // odd to set this here but it did it before
+-                stateManager.getState(FlyCamAppState.class).setCamera(flyCam);
+-            }
++            guiNode.setQueueBucket(Bucket.Gui);
++            guiNode.setCullHint(CullHint.Never);
++            viewPort.attachScene(rootNode);
++            guiViewPort.attachScene(guiNode);
++
++            if (inputManager != null) {
++
++                // We have to special-case the FlyCamAppState because too
++                // many SimpleApplication subclasses expect it to exist in
++                // simpleInit().  But at least it only gets initialized if
++                // the app state is added.
++                if (stateManager.getState(FlyCamAppState.class) != null) {
++                    flyCam = new FlyByCamera(cam);
++                    flyCam.setMoveSpeed(1f); // odd to set this here but it did it before
++                    stateManager.getState(FlyCamAppState.class).setCamera(flyCam);
++                }
++
++                if (context.getType() == Type.Display) {
++                    inputManager.addMapping(INPUT_MAPPING_EXIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
++                }
++
++                if (stateManager.getState(StatsAppState.class) != null) {
++                    inputManager.addMapping(INPUT_MAPPING_HIDE_STATS, new KeyTrigger(KeyInput.KEY_F5));
++                    inputManager.addListener(actionListener, INPUT_MAPPING_HIDE_STATS);
++                }
+ 
+-            if (context.getType() == Type.Display) {
+-                inputManager.addMapping(INPUT_MAPPING_EXIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
++                inputManager.addListener(actionListener, INPUT_MAPPING_EXIT);
+             }
+ 
+             if (stateManager.getState(StatsAppState.class) != null) {
+-                inputManager.addMapping(INPUT_MAPPING_HIDE_STATS, new KeyTrigger(KeyInput.KEY_F5));
+-                inputManager.addListener(actionListener, INPUT_MAPPING_HIDE_STATS);
++                // Some tests rely on having access to fpsText
++                // for quick display.  Maybe a different way would be better.
++                stateManager.getState(StatsAppState.class).setFont(guiFont);
++                fpsText = stateManager.getState(StatsAppState.class).getFpsText();
+             }
+ 
+-            inputManager.addListener(actionListener, INPUT_MAPPING_EXIT);
++            // call user code
++            simpleInitApp();
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
+         }
++    }
+ 
+-        if (stateManager.getState(StatsAppState.class) != null) {
+-            // Some tests rely on having access to fpsText
+-            // for quick display.  Maybe a different way would be better.
+-            stateManager.getState(StatsAppState.class).setFont(guiFont);
+-            fpsText = stateManager.getState(StatsAppState.class).getFpsText();
 +    public void dacapoStarting() {
 +        try {
 +          dacapoRequestsStarting.invoke(null);
@@ -114,7 +293,7 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication
 +          System.err.println("Failed to access DaCapo latency reporter: "+e);
 +        } catch (InvocationTargetException e) {
 +          System.err.println("Failed to invoke LatencyReporter.requestsStarting(): "+e);
-+        }
+         }
 +    }
 +    
 +    public void dacapoFinished() {
@@ -136,7 +315,9 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication
 +            System.err.println("Failed to invoke LatencyReporter.start(): "+e);
 +        }
 +    }
-+
+ 
+-        // call user code
+-        simpleInitApp();
 +    public void dacapoEnd() {
 +        try {
 +            dacapoRequestEnd.invoke(null, 0);  // only one reporter object
@@ -145,12 +326,10 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication
 +        } catch (InvocationTargetException e) {
 +            System.err.println("Failed to invoke LatencyReporter.end(): "+e);
 +        }
-+    }
-+
+     }
+ 
      @Override
-     public void update() {
-         if (prof != null)
-@@ -258,7 +322,8 @@
+@@ -258,7 +328,8 @@
          stateManager.update(tpf);
  
          // simple update and root node
@@ -160,7 +339,7 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication
  
          if (prof != null)
              prof.appStep(AppStep.SpatialUpdate);
-@@ -297,6 +362,30 @@
+@@ -297,6 +368,30 @@
  
      public abstract void simpleInitApp();
  
@@ -191,9 +370,45 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/app/SimpleApplication
      public void simpleUpdate(float tpf) {
      }
  
+diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/asset/AssetConfig.java ../build/jme3-core/src/main/java/com/jme3/asset/AssetConfig.java
+--- ./jme3-core/src/main/java/com/jme3/asset/AssetConfig.java	2023-08-02 10:34:02.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/asset/AssetConfig.java	2023-10-31 05:37:45.220844459 +0000
+@@ -62,6 +62,11 @@
+             return Class.forName(name);
+         } catch (ClassNotFoundException ex) {
+             return null;
++        } catch (Exception e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
++            return null;
+         }
+     }
+ 
+diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/asset/DesktopAssetManager.java ../build/jme3-core/src/main/java/com/jme3/asset/DesktopAssetManager.java
+--- ./jme3-core/src/main/java/com/jme3/asset/DesktopAssetManager.java	2023-08-02 10:34:02.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/asset/DesktopAssetManager.java	2023-10-31 05:39:12.888679977 +0000
+@@ -266,12 +266,15 @@
+     @SuppressWarnings("unchecked")
+     protected <T> T loadLocatedAsset(AssetKey<T> key, AssetInfo info, AssetProcessor proc, AssetCache cache) {
+         AssetLoader loader = handler.aquireLoader(key);
+-        Object obj;
++        Object obj = null;
+         try {
+             handler.establishParentKey(key);
+             obj = loader.load(info);
+         } catch (IOException ex) {
+-            throw new AssetLoadException("An exception has occurred while loading asset: " + key, ex);
++            System.err.println(ex);
++            ex.printStackTrace();
++            System.exit(1);
++            // throw new AssetLoadException("An exception has occurred while loading asset: " + key, ex);
+         } finally {
+             handler.releaseParentKey(key);
+         }
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.java ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java
 --- ./jme3-core/src/main/java/com/jme3/system/AppSettings.java	2023-08-02 10:34:04.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2023-10-25 04:37:54.346099930 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/system/AppSettings.java	2023-10-31 05:37:45.220844459 +0000
 @@ -267,8 +267,8 @@
  
      static {
@@ -207,7 +422,7 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/AppSettings.ja
          defaults.put("DepthBits", 24);
 diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java
 --- ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2023-08-02 10:34:02.000000000 +0000
-+++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2023-10-25 04:37:54.346099930 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/system/NanoTimer.java	2023-10-31 05:37:45.220844459 +0000
 @@ -46,6 +46,7 @@
      private long previousTime;
      private float tpf;
@@ -233,9 +448,27 @@ diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/NanoTimer.java
      }
      
      @Override
+diff '--color=auto' -ur ./jme3-core/src/main/java/com/jme3/system/NullContext.java ../build/jme3-core/src/main/java/com/jme3/system/NullContext.java
+--- ./jme3-core/src/main/java/com/jme3/system/NullContext.java	2023-08-02 10:34:04.000000000 +0000
++++ ../build/jme3-core/src/main/java/com/jme3/system/NullContext.java	2023-10-31 05:37:45.220844459 +0000
+@@ -78,7 +78,13 @@
+         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+             @Override
+             public void uncaughtException(Thread thread, Throwable thrown) {
+-                listener.handleError("Uncaught exception thrown in "+thread.toString(), thrown);
++                if (thrown instanceof OutOfMemoryError) {
++                    System.err.println(thrown);
++                    thrown.printStackTrace();
++                    System.exit(1);
++                } else {
++                    listener.handleError("Uncaught exception thrown in "+thread.toString(), thrown);
++                }
+             }
+         });
+ 
 diff '--color=auto' -ur ./jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java ../build/jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java
 --- ./jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java	2023-08-02 10:34:02.000000000 +0000
-+++ ../build/jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java	2023-10-25 04:42:33.241784026 +0000
++++ ../build/jme3-core/src/plugins/java/com/jme3/texture/plugins/DDSLoader.java	2023-10-31 05:37:45.220844459 +0000
 @@ -482,8 +482,14 @@
       * @throws java.io.IOException If an error occurred while reading from InputStream
       */
@@ -403,7 +636,7 @@ diff '--color=auto' -ur ./jme3-core/src/plugins/java/com/jme3/texture/plugins/DD
  
 diff '--color=auto' -ur ./jme3-examples/build.gradle ../build/jme3-examples/build.gradle
 --- ./jme3-examples/build.gradle	2023-08-02 10:34:04.000000000 +0000
-+++ ../build/jme3-examples/build.gradle	2023-10-25 04:37:54.346099930 +0000
++++ ../build/jme3-examples/build.gradle	2023-10-31 05:37:45.220844459 +0000
 @@ -19,8 +19,8 @@
      implementation project(':jme3-effects')
      implementation project(':jme3-jbullet')
@@ -417,7 +650,7 @@ diff '--color=auto' -ur ./jme3-examples/build.gradle ../build/jme3-examples/buil
      implementation project(':jme3-plugins')
 diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java ../build/jme3-examples/src/main/java/jme3test/TestChooser.java
 --- ./jme3-examples/src/main/java/jme3test/TestChooser.java	2023-08-02 10:34:04.000000000 +0000
-+++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2023-10-25 04:40:13.385939858 +0000
++++ ../build/jme3-examples/src/main/java/jme3test/TestChooser.java	2023-10-31 05:37:45.224844452 +0000
 @@ -53,11 +53,7 @@
  import java.nio.file.Files;
  import java.nio.file.Path;
@@ -684,7 +917,7 @@ diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/TestChooser.java 
      protected void addDisplayedClasses(Set<Class<?>> classes) {
 diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java
 --- ./jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2023-08-02 10:34:02.000000000 +0000
-+++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2023-10-25 04:37:54.350099925 +0000
++++ ../build/jme3-examples/src/main/java/jme3test/water/TestMultiPostWater.java	2023-10-31 05:37:45.224844452 +0000
 @@ -44,6 +44,7 @@
  import com.jme3.scene.Node;
  import com.jme3.scene.Spatial;
@@ -731,7 +964,7 @@ diff '--color=auto' -ur ./jme3-examples/src/main/java/jme3test/water/TestMultiPo
  }
 diff '--color=auto' -ur ./jme3-networking/build.gradle ../build/jme3-networking/build.gradle
 --- ./jme3-networking/build.gradle	2023-08-02 10:34:03.000000000 +0000
-+++ ../build/jme3-networking/build.gradle	2023-10-25 04:37:54.350099925 +0000
++++ ../build/jme3-networking/build.gradle	2023-10-31 05:37:45.224844452 +0000
 @@ -1,5 +1,6 @@
  dependencies {
      api project(':jme3-core')
@@ -741,7 +974,7 @@ diff '--color=auto' -ur ./jme3-networking/build.gradle ../build/jme3-networking/
  javadoc {
 diff '--color=auto' -ur ./jme3-plugins/build.gradle ../build/jme3-plugins/build.gradle
 --- ./jme3-plugins/build.gradle	2023-08-02 10:34:04.000000000 +0000
-+++ ../build/jme3-plugins/build.gradle	2023-10-25 04:37:54.350099925 +0000
++++ ../build/jme3-plugins/build.gradle	2023-10-31 05:37:45.224844452 +0000
 @@ -13,4 +13,8 @@
      api project(':jme3-core')
      api 'com.google.code.gson:gson:2.8.1'
@@ -751,3 +984,75 @@ diff '--color=auto' -ur ./jme3-plugins/build.gradle ../build/jme3-plugins/build.
 +    api 'com.sun.xml.bind:jaxb-core:2.3.0'
 +    api 'com.sun.xml.bind:jaxb-impl:2.3.0'
  }
+diff '--color=auto' -ur ./jme3-terrain/src/main/java/com/jme3/terrain/geomipmap/LODGeomap.java ../build/jme3-terrain/src/main/java/com/jme3/terrain/geomipmap/LODGeomap.java
+--- ./jme3-terrain/src/main/java/com/jme3/terrain/geomipmap/LODGeomap.java	2023-08-02 10:34:03.000000000 +0000
++++ ../build/jme3-terrain/src/main/java/com/jme3/terrain/geomipmap/LODGeomap.java	2023-10-31 05:37:45.224844452 +0000
+@@ -78,34 +78,41 @@
+     }
+ 
+     public Mesh createMesh(Vector3f scale, Vector2f tcScale, Vector2f tcOffset, float offsetAmount, int totalSize, boolean center, int lod, boolean rightLod, boolean topLod, boolean leftLod, boolean bottomLod) {
+-        FloatBuffer pb = writeVertexArray(null, scale, center);
+-        FloatBuffer texb = writeTexCoordArray(null, tcOffset, tcScale, offsetAmount, totalSize);
+-        FloatBuffer nb = writeNormalArray(null, scale);
+-        IndexBuffer ib = writeIndexArrayLodDiff(lod, rightLod, topLod, leftLod, bottomLod, totalSize);
+-        FloatBuffer bb = BufferUtils.createFloatBuffer(getWidth() * getHeight() * 3);
+-        FloatBuffer tanb = BufferUtils.createFloatBuffer(getWidth() * getHeight() * 3);
+-        writeTangentArray(nb, tanb, bb, texb, scale);
+-        Mesh m = new Mesh();
+-        m.setMode(Mode.TriangleStrip);
+-        m.setBuffer(Type.Position, 3, pb);
+-        m.setBuffer(Type.Normal, 3, nb);
+-        m.setBuffer(Type.Tangent, 3, tanb);
+-        m.setBuffer(Type.Binormal, 3, bb);
+-        m.setBuffer(Type.TexCoord, 2, texb);
+-        switch (ib.getFormat()) {
+-            case UnsignedInt:
+-                m.setBuffer(Type.Index, 3, (IntBuffer) ib.getBuffer());
+-                break;
+-            case UnsignedShort:
+-                m.setBuffer(Type.Index, 3, (ShortBuffer) ib.getBuffer());
+-                break;
+-            case UnsignedByte:
+-                m.setBuffer(Type.Index, 3, (ByteBuffer) ib.getBuffer());
+-                break;
++        try {
++            FloatBuffer pb = writeVertexArray(null, scale, center);
++            FloatBuffer texb = writeTexCoordArray(null, tcOffset, tcScale, offsetAmount, totalSize);
++            FloatBuffer nb = writeNormalArray(null, scale);
++            IndexBuffer ib = writeIndexArrayLodDiff(lod, rightLod, topLod, leftLod, bottomLod, totalSize);
++            FloatBuffer bb = BufferUtils.createFloatBuffer(getWidth() * getHeight() * 3);
++            FloatBuffer tanb = BufferUtils.createFloatBuffer(getWidth() * getHeight() * 3);
++            writeTangentArray(nb, tanb, bb, texb, scale);
++            Mesh m = new Mesh();
++            m.setMode(Mode.TriangleStrip);
++            m.setBuffer(Type.Position, 3, pb);
++            m.setBuffer(Type.Normal, 3, nb);
++            m.setBuffer(Type.Tangent, 3, tanb);
++            m.setBuffer(Type.Binormal, 3, bb);
++            m.setBuffer(Type.TexCoord, 2, texb);
++            switch (ib.getFormat()) {
++                case UnsignedInt:
++                    m.setBuffer(Type.Index, 3, (IntBuffer) ib.getBuffer());
++                    break;
++                case UnsignedShort:
++                    m.setBuffer(Type.Index, 3, (ShortBuffer) ib.getBuffer());
++                    break;
++                case UnsignedByte:
++                    m.setBuffer(Type.Index, 3, (ByteBuffer) ib.getBuffer());
++                    break;
++            }
++            m.setStatic();
++            m.updateBound();
++            return m;
++        } catch (OutOfMemoryError e) {
++            System.err.println(e);
++            e.printStackTrace();
++            System.exit(1);
+         }
+-        m.setStatic();
+-        m.updateBound();
+-        return m;
++        return null;
+     }
+ 
+     public FloatBuffer writeTexCoordArray(FloatBuffer store, Vector2f offset, Vector2f scale, float offsetAmount, int totalSize) {
