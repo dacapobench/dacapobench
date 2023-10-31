@@ -6,10 +6,10 @@ RELEASE PROCEDURES
    	git clone https://github.com/dacapobench/dacapobench.git
 
 2. Determine a version number and optionally a nickname, specify that in dacapobench/benchmarks/dacapo.properties file
-	dacapo.version=23.9
+	dacapo.version=23.11
 	dacapo.nickname=chopin
 
-3. Produced a source build and rename it:
+3. Produce a source build and rename it:
     cd dacapobench/benchmarks
 	ant -Dbuild.is-official=true source
 	mv dacapo-${dacapo.version}-${dacapo.nickname}-src.zip ../..
@@ -34,6 +34,6 @@ RELEASE PROCEDURES
 8. Ensure download is working, and update web page 
 
 9. Create a git tag and release
-    - git tag -a v23.9-RC2-chopin -m "23.9-RC2-chopin release"
+    - git tag -a v23.11-chopin -m "23.11-chopin release"
 	- git push origin --tags
-	- got to github and create a release
+	- go to github and create a release
