@@ -2,7 +2,7 @@
 # Minimum heap sizes in which benchmark will run to completion, using
 # -Xms<x> -Xmx<x> for various x and various configuarations.  Discovered
 # by bisection search.  Numbers below are in MB and reflect results of
-# three trials.
+# five trials.
 #
 open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 107, 107, 107, 107, 107 ]                  # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar tradebeans -t 32 -f 10 -n 1
 open-jdk-21.sz-small.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 73, 73, 73, 73, 73 ]               # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar tradebeans -s small -t 32 -f 10 -n 1
