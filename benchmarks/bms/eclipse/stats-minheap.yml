@@ -5,11 +5,12 @@
 # five trials.
 #
 open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 133, 133, 133, 133, 133 ]                  # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -t 32 -f 10 -n 1
+open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-5: [ 135, 135, 135, 135, 135 ]                  # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar eclipse -t 32 -f 10 -n 5
+open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-10: [ 135, 135, 135, 135, 135 ]                 # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -t 32 -f 10 -n 10
 open-jdk-21.sz-small.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 13, 13, 13, 13, 13 ]               # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -s small -t 32 -f 10 -n 1
 open-jdk-21.sz-large.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 139, 139, 139, 139, 139 ]         # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -s large -t 32 -f 10 -n 1
 open-jdk-21.ee.s.cp.gc-Parallel.t-32.f-10.n-1: [ 150, 149, 150, 149, 149 ]            # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-de2897a.jar eclipse -t 32 -f 10 -n 1
 open-jdk-21.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 133, 133, 133, 133, 133 ]                   # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -t 1 -f 10 -n 1
 open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1: [ 167, 167, 167, 167, 167 ]                  # java-21-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -t 32 -f 10 -n 1
-open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-10: [ 135, 135, 135, 135, 135 ]                 # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -t 32 -f 10 -n 10
 open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 133, 133, 133, 133, 133 ]                  # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-de2897a.jar eclipse -t 32 -f 10 -n 1
 open-jdk-11.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 133, 133, 133, 133, 133 ]                  # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar eclipse -t 32 -f 10 -n 1
