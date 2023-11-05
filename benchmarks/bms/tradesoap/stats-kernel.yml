@@ -1,0 +1,35 @@
+#
+# Total, user and kernel time in milliseconds for the final (10th)
+# iteration of the benchmark when run at 2.0 times the minimum heap
+# size with the default G1 collector on a 32 way machine.
+#
+# Total time represents the wall clock time.
+# User and kernel time are integrated across all threads, so their sum
+# reflects the total integrated running time.
+#
+# For example, the triple '3534, 50975, 13496' indicates a wall clock
+# of 3.532ms, user time of 50.975ms, kernel time of 13.496ms, so the
+# benchmark had 64.471/3.532 = 18.25 utilization on the 32 core machine
+# (about 57% parallel efficiency).
+#
+# Multiple invocations are reported.  These reflect the distribution
+# (variance) of the workload across invocations.  Missing data reflects
+# the workload failing to complete with that configuration.
+#
+# These results were gathered on the following hardware:
+#
+# AMD Ryzen 9 7950X 16/32 cores.
+# Linux 5.15.0.
+#
+open-jdk-21.server.G1.t-32:
+  2.0:
+    - [ 3198, 10648, 966 ]
+    - [ 3218, 10753, 931 ]
+    - [ 3209, 10952, 928 ]
+    - [ 3255, 10775, 950 ]
+    - [ 3204, 10756, 966 ]
+    - [ 3209, 10902, 825 ]
+    - [ 3246, 10609, 884 ]
+    - [ 3271, 10956, 900 ]
+    - [ 3222, 10936, 840 ]
+    - [ 3232, 10971, 798 ]
