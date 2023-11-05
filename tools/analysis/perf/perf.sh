@@ -6,25 +6,27 @@
 # yml.
 #
 bm=$1    # benchmark name
-log=$2   # the name of the log directory containing the log files
-xlog=$3  # the name of the log directory containing the log files for the extra runs
+log=$2   # name of the root directory containing the log files
 
-dacapo=744ef415
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 hfacs="1000 2000 3000 4000 5000 6000 7000 8000 9000 10000"
 hardware="AMD Ryzen 9 7950X 16/32 cores."
 os="Linux 5.15.0."
 
 echo "#"
 echo "# Execution times in msec for various configurations at various heap"
-echo "# factors. The heap factor is 1000 * (heap size / minimum heap size)."
-echo "# So a heap factor of 1000 is the smallest heap the workload will run"
-echo "# in; a heap factor of 2000 is twice the minimum heap size, etc."
+echo "# sizes. The heap size is expressed as a multiple of the minimum heap"
+echo "# size. So a heap size of 1.0 is the smallest heap the workload will run"
+echo "# in when using the default G1 configuration; a heap size of 2.0 is twice"
+echo "# the minimum heap size, etc."
 echo "#"
 echo "# Each row represents one invocation of the benchmark, showing the"
 echo "# times for each iteration within that invocation."
 echo "#"
 echo "# Multiple invocations are reported.  These reflect the distribution"
-echo "# (variance) of the workload across invocations."
+echo "# (variance) of the workload across invocations.  Missing data reflects"
+echo "# the workload failing to complete with that configuration."
 echo "#"
 echo "# These results were gathered on the following hardware:"
 echo "#"
@@ -33,21 +35,25 @@ echo "# $os"
 echo "#"
 
 # main perf config
-d=log/$log
-cfg="open-jdk-17.s.cp.gc-G1.t-32"
+cfg="open-jdk-21.server.G1.t-32"
 echo "$cfg:"
 for hf in $hfacs; do
-    echo "  $hf:"
-    zcat $d/$bm\.$hf\.*.$cfg.f-*.dacapo-*.log.gz  | ./perflogtoyml.py -i 4
+    echo "  $hf:" | sed -e s/000:/.0:/g
+    zcat $log/*baseline*/$bm.$hf.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
 done
 
 # extra configs
-d=log/$xlog
 
-for cfg in open-jdk-17.s.cp.gc-G1.taskset-0 open-jdk-17.s.cp.gc-Serial open-jdk-17.s.cp.gc-Parallel open-jdk-17.s.cp.gc-Z open-jdk-17.s.cp.gc-Shenandoah ; do
-    echo "$cfg:"
-    for hf in 2000; do
-	echo "  $hf:"
-	zcat $d/$bm\.$hf\.*.$cfg.f-*.dacapo-*.log.gz  | ./perflogtoyml.py -i 4
-    done
+hf=2000
+for cfg in G1.taskset-0 Parallel.mu_threads-32 Serial.mu_threads-32 Shenandoah.mu_threads-32 Z.mu_threads-32 Z.zgc_gen.mu_threads-32; do
+    echo "open-jdk-21.server.$cfg:" | sed -e s/mu_threads-/t-/g | sed -e s/Z.zgc_gen/Zgen/g
+    echo "  $hf:" | sed -e s/000:/.0:/g
+    zcat $log/*variants*/$bm.$hf.*-$cfg.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
 done
+#for cfg in open-jdk-17.s.cp.gc-G1.taskset-0 open-jdk-17.s.cp.gc-Serial open-jdk-17.s.cp.gc-Parallel open-jdk-17.s.cp.gc-Z open-jdk-17.s.cp.gc-Shenandoah ; do
+#    echo "$cfg:"
+#    for hf in 2000; do
+#	echo "  $hf:"
+#	zcat $d/$bm\.$hf\.*.$cfg.f-*.dacapo-*.log.gz  | ./perflogtoyml.py -i 4
+#    done
+#done
