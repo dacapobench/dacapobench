@@ -21,7 +21,8 @@ count = {}
 vals = {}
 
 # metrics where lower is 'more interesting', so rank these the other way
-lower_is_better = [ 'BEF', 'GCA', 'GCC', 'GCM', 'PSD', 'PWU' ]
+# lower_is_better = [ 'BEF', 'GCA', 'GCC', 'GCM', 'PSD', 'PWU' ]
+lower_is_better = [ ] # for now we're going to scrap this idea
 
 def usage(errno):
     print ('usage: ',sys.argv[0], '-p <path to benchmark root>')
