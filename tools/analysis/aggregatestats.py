@@ -18,6 +18,7 @@ alloc = {}       # allocation stats
 bytecode = {}    # bytecode execution stats
 minheap = {}     # min heap size stats
 perf = {}        # performance stats
+kernel = {}      # kernel/user stats
 gc = {}          # GC stats
 
 nom = {}         # nominal stats
@@ -34,6 +35,7 @@ def load_yml(bmpath):
     global bytecode
     global minheap
     global perf
+    global kernel
     global gc
 
     yml = bmpath + '/stats-alloc.yml'
@@ -56,6 +58,11 @@ def load_yml(bmpath):
         with open(yml, 'r') as y:
             perf = yaml.load(y, Loader=yaml.Loader)
 
+    yml = bmpath + '/stats-kernel.yml'
+    if os.path.exists(yml):
+        with open(yml, 'r') as y:
+            kernel = yaml.load(y, Loader=yaml.Loader)
+            
     yml = bmpath + '/stats-gc.yml'
     if os.path.exists(yml):
         with open(yml, 'r') as y:
@@ -79,7 +86,7 @@ def aggregate(results):
 
     return std, mean, mini;
 
-par_hf = 2000
+par_hf = 2.0
 par_threads = 32
 
 def get_perf_stats():
@@ -88,7 +95,7 @@ def get_perf_stats():
     if perf is None:
         return None, None, None, None, None, None;
 
-    vm_base = 'open-jdk-17.s.cp.gc-G1'
+    vm_base = 'open-jdk-21.server.G1'
     vm = vm_base+'.t-32'
     vm_one = vm_base+'.taskset-0'
 
@@ -135,7 +142,19 @@ def get_perf_stats():
     std_one, mean_one, mini_one  = aggregate(one)
     pa = int(100*mean_one[wu]/(par_threads*mean[par_hf][wu]))  # perfect scaling -> 100
 
-    return best, np, wu, st, pa, tight;
+    # kernel
+    vm = 'open-jdk-21.server.G1.t-32'
+    hf = 2.0
+    w = 0 # wall clock
+    u = 0 # user
+    k = 0 # kernel
+    for res in kernel[vm][hf]:
+        w += res[0]
+        u += res[1]
+        k += res[2]
+    kpct = int(100*k/(u+k))
+
+    return best, np, wu, st, pa, tight, kpct;
 
 def objectsizehisto():
     if alloc is None:
@@ -184,7 +203,7 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, wu, st, pa, tight = get_perf_stats()
+    ap, np, wu, st, pa, tight, kpct = get_perf_stats()
 
 
     if (not alloc is None):
@@ -205,7 +224,7 @@ def nominal():
         nom['ARA'] = int(alloc['bytes-allocated']/(1000*ap))
         desc['ARA'] = 'nominal allocation rate (bytes / usec) ('+str(alloc['bytes-allocated'])+'/'+str(1000*ap)+')'
 
-        nom['GTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1']))))
+        nom['GTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1']))))
         desc['GTO'] = 'nominal memory turnover (total alloc bytes / min heap bytes)'
 
     hs = int(100*(tight-ap)/ap)
@@ -214,33 +233,33 @@ def nominal():
     nom['GSS'] = hs
     desc['GSS'] = 'nominal heap size sensitivity (slowdown with tight heap, as a percentage) ('+str(tight)+'/'+str(ap)+')'
 
-    nom['GMD'] = max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1'])
+    nom['GMD'] = statistics.median(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-5'])
     desc['GMD'] = 'nominal minimum heap size (MB) for default size configuration (with compressed pointers)'
 
     sz='small'
-    hscfg='open-jdk-17.sz-'+sz+'.s.cp.gc-G1.t-1.f-10.n-1'
+    hscfg='open-jdk-21.sz-'+sz+'.s.cp.gc-G1.t-1.f-10.n-1'
     if hscfg in minheap:
-        nom['GMS'] = max(minheap[hscfg])
+        nom['GMS'] = statistics.median(minheap[hscfg])
         desc['GMS'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
     sz='large'
-    hscfg='open-jdk-17.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
+    hscfg='open-jdk-21.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
     if hscfg in minheap:
-        nom['GML'] = max(minheap[hscfg])
+        nom['GML'] = statistics.median(minheap[hscfg])
         desc['GML'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
     sz='vlarge'
-    hscfg='open-jdk-17.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
+    hscfg='open-jdk-21.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
     if hscfg in minheap:
-        nom['GMV'] = max(minheap[hscfg])
+        nom['GMV'] = statistics.median(minheap[hscfg])
         desc['GMV'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
        
-    nom['GMU'] = max(minheap['open-jdk-17.s.up.gc-G1.t-32.f-10.n-1'])
+    nom['GMU'] = statistics.median(minheap['open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1'])
     desc['GMU'] = 'nominal minimum heap size (MB) without compressed pointers'
 
-    one = max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-1'])
-    ten = max(minheap['open-jdk-17.s.cp.gc-G1.t-32.f-10.n-10'])
+    one = max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1'])
+    ten = max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-10'])
     if (not ten is None):
         leakage = int(100*((ten/one)-1))
         if (leakage < 0):
@@ -259,6 +278,10 @@ def nominal():
 
     nom['PSD'] = st
     desc['PSD'] = 'nominal standard deviation among invocations at peak performance (as percentage of performance)'
+
+    nom['PKP'] = kpct
+    desc['PKP'] = 'nominal percentage of time spent in kernel mode (as percentage of user plus kernel time)'
+
 
     if (not bytecode is None):
         nom['BUB'] = int(bytecode['executed-bytecodes-unique']/1000)
