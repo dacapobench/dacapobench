@@ -40,10 +40,20 @@ def parse_log(file: os.PathLike):
                     else:
                         idx = 13
                 elif parse[10] == "(Normal)" or parse[10] == "(Mixed)":
-                    idx = 14
+                    if (parse[14] == "(Evacuation"):
+                        idx = 16
+                    else:
+                        idx = 14
                 elif parse[9] == "Young":
-                    idx = 15
-#                print(parse)
+                    if (parse[15] == "(Evacuation"):
+                        idx = 17
+                    else:
+                        idx = 15
+                
+                # print(parse)
+                # print(str(idx))
+                # if idx == 14:
+                #     print(parse[14])
                 size = int(re.split("[>M]",parse[idx])[2])
                 pause = float(parse[idx+1][:-2])
                 gc.append([start, size, pause])

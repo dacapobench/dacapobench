@@ -12,7 +12,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 hfacs="1000 2000 3000 4000 5000 6000 7000 8000 9000 10000"
 hardware="AMD Ryzen 9 7950X 16/32 cores."
-os="Linux 5.15.0."
+os="Linux 6.2."
 
 echo "#"
 echo "# Execution times in msec for various configurations at various heap"
@@ -39,7 +39,7 @@ cfg="open-jdk-21.server.G1.t-32"
 echo "$cfg:"
 for hf in $hfacs; do
     echo "  $hf:" | sed -e s/000:/.0:/g
-    zcat $log/*baseline*/$bm.$hf.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
+    zcat $log/*baseline-vole*/$bm.$hf.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
 done
 
 # extra configs
@@ -48,7 +48,7 @@ hf=2000
 for cfg in G1.taskset-0 Parallel.mu_threads-32 Serial.mu_threads-32 Shenandoah.mu_threads-32 Z.mu_threads-32 Z.zgc_gen.mu_threads-32; do
     echo "open-jdk-21.server.$cfg:" | sed -e s/mu_threads-/t-/g | sed -e s/Z.zgc_gen/Zgen/g
     echo "  $hf:" | sed -e s/000:/.0:/g
-    zcat $log/*variants*/$bm.$hf.*-$cfg.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
+    zcat $log/*variants-mole*/$bm.$hf.*-$cfg.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
 done
 #for cfg in open-jdk-17.s.cp.gc-G1.taskset-0 open-jdk-17.s.cp.gc-Serial open-jdk-17.s.cp.gc-Parallel open-jdk-17.s.cp.gc-Z open-jdk-17.s.cp.gc-Shenandoah ; do
 #    echo "$cfg:"

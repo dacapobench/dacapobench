@@ -11,7 +11,7 @@ log=$2   # name of the root directory containing the log files
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 hardware="AMD Ryzen 9 7950X 16/32 cores."
-os="Linux 5.15.0."
+os="Linux 6.2."
 
 echo "#"
 echo "# Total, user and kernel time in milliseconds for the final (10th)"
@@ -42,5 +42,5 @@ cfg="open-jdk-21.server.G1.t-32"
 echo "$cfg:"
 for hf in 2000; do
     echo "  $hf:" | sed -e s/000:/.0:/g
-    zcat $log/*baseline*/$bm.$hf.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -k -i 4
+    zcat $log/*baseline-v*/$bm.$hf.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -k -i 4
 done

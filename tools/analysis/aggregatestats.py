@@ -128,7 +128,7 @@ def get_perf_stats():
     #     hs = 0
 
     # warmup (iteration by which the mean is within 2.5% of the best mean)
-    tgt = 1.025*best
+    tgt = 1.015*best
     wu = 0
     while mean[best_hf][wu] >= tgt:
         wu = wu + 1
@@ -237,19 +237,19 @@ def nominal():
     desc['GMD'] = 'nominal minimum heap size (MB) for default size configuration (with compressed pointers)'
 
     sz='small'
-    hscfg='open-jdk-21.sz-'+sz+'.s.cp.gc-G1.t-1.f-10.n-1'
+    hscfg='open-jdk-21.sz-'+sz+'.ee.s.cp.gc-G1.t-1.f-10.n-1'
     if hscfg in minheap:
         nom['GMS'] = statistics.median(minheap[hscfg])
         desc['GMS'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
     sz='large'
-    hscfg='open-jdk-21.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
+    hscfg='open-jdk-21.sz-'+sz+'.ee.s.cp.gc-G1.t-32.f-10.n-1'
     if hscfg in minheap:
         nom['GML'] = statistics.median(minheap[hscfg])
         desc['GML'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
     sz='vlarge'
-    hscfg='open-jdk-21.sz-'+sz+'.s.cp.gc-G1.t-32.f-10.n-1'
+    hscfg='open-jdk-21.sz-'+sz+'.ee.s.cp.gc-G1.t-32.f-10.n-1'
     if hscfg in minheap:
         nom['GMV'] = statistics.median(minheap[hscfg])
         desc['GMV'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
@@ -265,13 +265,13 @@ def nominal():
         if (leakage < 0):
             leakage = 0
         nom['GLK'] = leakage
-        desc['GLK'] = 'nominal percent memory leakage (10 iterations / 1 iterations) ('+str(ten)+'/'+str(one)+')'
+        desc['GLK'] = 'nominal percent 10th iteration memory leakage (10 iterations / 1 iterations) ('+str(ten)+'/'+str(one)+')'
 
     nom['PET'] = np
     desc['PET'] = 'nominal execution time (sec)'
 
     nom['PWU'] = wu
-    desc['PWU'] = 'nominal iterations to warm up to within 2.5% of best'
+    desc['PWU'] = 'nominal iterations to warm up to within 1.5% of best'
 
     nom['PPE'] = pa
     desc['PPE'] = 'nominal parallel efficiency (speedup as percentage of ideal speedup for '+str(par_threads)+' threads)'
