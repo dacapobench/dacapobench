@@ -1,6 +1,6 @@
 # The DaCapo Benchmark Suite
 
-Last updated 2023-09-06
+Last updated 2023-11-08
 
 This benchmark suite is intend as a tool for the research community.
 It consists of a set of open source, real world applications with
@@ -12,13 +12,13 @@ non-trivial memory loads.
 When quoting results in publications, the authors of this suite
 strongly request that:
 
-* The exact version of the suite be given (number & name)
+* The exact version of the suite be given (number & name, eg 'dacapo-23.11-chopin')
 
 * The suite be cited in accordance with the usual standards of acknowledging credit in academic research.
 
-* Please cite the [2006 OOPSLA paper](http://doi.acm.org/10.1145/1167473.1167488) or a more recent paper by the DaCapo authors providing an up-to-date description of the suite, if and when such a paper becomes available.
+* Please cite the [2006 OOPSLA paper](http://doi.acm.org/10.1145/1167473.1167488) or a more recent paper by the DaCapo authors providing an up-to-date description of the suite if and when such a paper becomes available.
 
-* All command line options used be reported.  For example, if you explicitly override the number of threads or set the number of iterations, you must report this when you publish results. 
+* All command line options used be reported.  For example, if you explicitly override the number of threads or set the number of iterations, you must report this when you publish results.  Likewise you should report exactly which JVM version you use, and all commandline options provided to the JVM.
 
 For more information see the [DaCapo Benchmark web page](http://dacapobench.org).
 
@@ -29,38 +29,11 @@ The easiest way to obtain the benchmark suite is to download the pre-built suite
 
 If, however, you want to build from source read on...
 
-##### Dependencies:
-
-The suite is built using ant 1.10.  You will need the following tools:
-
-* *[ant 1.10](http://ant.apache.org)* You need to install this yourself if you don't already have it.
-
-* *[javacc](http://javacc.dev.java.net/)* Included in our tools directory.
-
-* *[maven](http://maven.apache.org)* Included in our tools directory.
-
-* *[cvs](http:/www.nongnu.org/cvs)*
-
-* *[svn](http://subversion.apache.org)*
-
-* *[python](https://www.python.org/) (with following libraries)*
-
-    * *[colorama](https://pypi.org/project/colorama/)*
-    * *[future](https://pypi.org/project/future/)*
-    * *[tabulate](https://pypi.org/project/tabulate/)*
-    * *[requests](https://pypi.org/project/requests/)*
-    * *[wheel](https://pypi.org/project/wheel/)*
-
-* *[node.js](https://nodejs.org/en/)*
-
-* *[npm](https://www.npmjs.com/get-npm)*
-
-
 ##### Run ant:
 
 `ant -p`      [prints out description, including configuration and environment variable settings]
 
-`ant`         [builds all benchmarks]
+`ant`         [builds all benchmarks, creates a zip file]
 
 `ant dist`    [builds all benchmarks, this is the default]
 
@@ -84,7 +57,7 @@ is created when a full build is performed.
 
 1. Set your `JAVA_HOME` environment variable appropriately (it must be set and be consistent with the VM that will be used to build the suite).
 
-2. You must set `jdk8home`, in the `default.properties`, to point to a Java installation.
+2. You must set `jdk.11.home`, in the `default.properties`, to point to a Java 11 installation.
 
 
 For more information, run `ant -p` in the benchmarks directory.
@@ -92,11 +65,11 @@ For more information, run `ant -p` in the benchmarks directory.
 ## Customization
 
 It is possible to use callbacks to run code before a benchmark starts, when it stops, and when the run has completed.
-To do so, extend the class `Callback` (see the file `harness/src/MyCallback.java` for an example).
+To do so, extend the class `Callback` (see the file [`harness/src/ExampleCallback.java`](https://github.com/dacapobench/dacapobench/blob/main/benchmarks/harness/src/ExampleCallback.java) for an example).
 
 To run a benchmark with your callback, run:
 
-    java -jar dacapo.jar -c <callback> <benchmark>
+    java -jar dacapo-23.11-chopin.jar -c <callback> <benchmark>
 
 ## Source Code Structure
 

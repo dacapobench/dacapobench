@@ -57,11 +57,11 @@ All benchmarks updated to reflect recent versions:
 | fop       |        0.95 |      2.8 |
 | h2        |         1.5 |  2.2.220 |
 | jython    |       2.5.2 |    2.7.3 |
-| pmd.      |       4.2.5 |   6.55.0 |
-| tomcat.   |       6.0.2 |  10.1.11 |
+| pmd       |       4.2.5 |   6.55.0 |
+| tomcat    |       6.0.2 |  10.1.11 |
 | daytrader |       2.4.1 |      3.0 |
-| xalan.    |       2.7.1 |    2.7.2 |
-| lucene.   |       2.4.1 |    9.7.0 |
+| xalan     |       2.7.1 |    2.7.2 |
+| lucene    |       2.4.1 |    9.7.0 |
 
 
 ### 3.1.2 Benchmark additions due to 23.11
