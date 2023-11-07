@@ -29,7 +29,7 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 ## 2.2 Running
 
 * It is essential that you read and observe the usage guidelines that appear in README.md
-* Run a benchmark: `java -jar <dacapo-jar-name>.jar <benchmark>`
+* Run a benchmark: `java -jar dacapo-23.11-chopin.jar <benchmark>`
 * For usage information, run with no arguments.
 
 ## 2.3 Compatability
@@ -49,19 +49,19 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 
 All benchmarks updated to reflect recent versions:
 
-| Benchmark | 9.12 | 23.11 |
+| Benchmark |        9.12 |    23.11 |
 |---|---|---|
-|avrora|    20091224 | 20131011 |
-| batik |    1.7     | 1.16 |
-| eclipse |   3.5.1   | 4.27 |
-| fop |      0.95     | 2.8 |
-| h2|        1.5      | 2.2.220 |
-| jython|   2.5.2   | 2.7.3 |
-| pmd|     4.2.5  | 6.55.0 |
-| tomcat| 6.0.2   | 10.1.11 |
-| daytrader| 2.4.1   | 3.0-SNAPSHOT |
-| xalan|     2.7.1   |2.7.2 |
-| lucene|   2.4.1    | 9.7.0 |
+| avrora    |    20091224 | 20131011 |
+| batik     |         1.7 |     1.16 |
+| eclipse   |       3.5.1 |     4.27 |
+| fop       |        0.95 |      2.8 |
+| h2        |         1.5 |  2.2.220 |
+| jython    |       2.5.2 |    2.7.3 |
+| pmd.      |       4.2.5 |   6.55.0 |
+| tomcat.   |       6.0.2 |  10.1.11 |
+| daytrader |       2.4.1 |      3.0 |
+| xalan.    |       2.7.1 |    2.7.2 |
+| lucene.   |       2.4.1 |    9.7.0 |
 
 
 ### 3.1.2 Benchmark additions due to 23.11
