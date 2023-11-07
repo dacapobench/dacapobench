@@ -22,7 +22,7 @@ RELEASE PROCEDURES
 
 5. Build the new source (using a proxy if necessary)
 	<set up local.properties>
-	export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home
+	export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
     cd benchmarks
 	ant -Dbuild.is-official=true
 
