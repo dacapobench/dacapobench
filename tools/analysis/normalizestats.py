@@ -75,6 +75,8 @@ def normalize():
                 print (k, r, score)
             rank = str(r)+'/'+str(len(keys[k]))
             score = 10 - int(10 * r / len(keys[k]))
+            if r == 1:
+                score = 10
 
             l = [score, stats[bm][k][0], rank, min, median[k], max, stats[bm][k][1]]
             stats[bm][k] = l
