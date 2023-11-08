@@ -256,7 +256,7 @@ def nominal():
 
        
     nom['GMU'] = statistics.median(minheap['open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1'])
-    desc['GMU'] = 'nominal minimum heap size (MB) without compressed pointers'
+    desc['GMU'] = 'nominal minimum heap size (MB) for default size without compressed pointers'
 
     one = max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1'])
     ten = max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-10'])
