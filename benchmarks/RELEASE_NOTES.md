@@ -16,7 +16,7 @@ These notes are structured as follows:
 
 The 23.11 release is the third major update of the suite.  It is incompatible with previous releases: new benchmarks have been added, old benchmarks have been removed, all other benchmarks have been substantially updated and the inputs have changed for every program. It is for this reason that in any published use of the suite, the version of the suite must be explicitly stated.
 
-The release sees: new packaging as a zip file containg a jar plus a read-only folder structure; the move from Geronimo to JBoss Wildfly for the trade benchmarks; the addition of eight completely new benchmarks: biojava, cassandra, graphchi, h2o, jme, kafka, spring, and zxing; the inclusion of six benchmarks with large (> 1 GB) heap footprints; the inclusion of nine latency-sensitive benchmarks; and the upgrade of all other benchmarks to reflect the current release state of the applications from which the benchmarks were derived.  This version introduces latency metrics for the request-based workloads, and basic statistics that characterize each benchmark.  These changes are consistent with the original goals of the DaCapo project, which include the desire for the suite to remain relevant and reflect the current state of deployed Java applications.
+This release sees: new packaging as a zip file containg a jar plus a read-only folder structure; the addition of eight completely new benchmarks: biojava, cassandra, graphchi, h2o, jme, kafka, spring, and zxing; the inclusion of six benchmarks with large (> 1 GB) heap footprints; the inclusion of nine latency-sensitive benchmarks; the move from Geronimo to JBoss Wildfly for the trade benchmarks; and the upgrade of all other benchmarks to reflect the current release state of the applications from which the benchmarks were derived.  This version introduces latency metrics for the request-based workloads, and basic statistics that characterize each benchmark.  These changes are consistent with the original goals of the DaCapo project, which include the desire for the suite to remain relevant and reflect the current state of deployed Java applications.
 
 # 2. Usage
 
@@ -28,7 +28,7 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 
 ## 2.2 Running
 
-* It is essential that you read and observe the usage guidelines that appear in README.md
+* It is essential that you read and observe the usage guidelines that appear in the [README](https://github.com/dacapobench/dacapobench/blob/main/README.md).
 * Run a benchmark: `java -jar dacapo-23.11-chopin.jar <benchmark>`
 * For usage information, run with no arguments.
 
@@ -50,7 +50,7 @@ The release sees: new packaging as a zip file containg a jar plus a read-only fo
 All benchmarks updated to reflect recent versions:
 
 | Benchmark |        9.12 |    23.11 |
-|---|---|---|
+|-----------|-------------|----------|
 | avrora    |    20091224 | 20131011 |
 | batik     |         1.7 |     1.16 |
 | eclipse   |       3.5.1 |     4.27 |
