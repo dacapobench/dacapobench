@@ -36,6 +36,7 @@ This release sees: new packaging as a zip file containg a jar plus a read-only f
 
 * All benchmarks are compatable with Java 11 through Java 21 (cassandra and h2o require defaults to be overridden via runtime properties).
 * All benchmarks aside from biojava, cassandra, eclipse, h2, luindex, lusearch, tomcat, tradebeans and tradesoap are compatable with Java 8.
+* The suite has been extensively tested on JDKs from 11 to 21 on Linux.  While we are not aware of any issues on MacOS or Windows, these platforms have not been tested the same way.  Thus we cannot vouch for the stability of the suite on MacOS or Windows (see 4.1 below).
 
 ## 2.4 Building from Source
 
@@ -165,17 +166,20 @@ DaCapo is an open source community project. We welcome all assistance in address
 
 A few notable unresolved high priority issues are listed here:
 
-## 4.1 Socket use by tradebeans, tradesoap and tomcat
+## 4.1 No extensive testing on MacOS or Windows
+
+DaCapo should perform equally well on Linux, MacOS and Windows.  However, due to our limited resources, our testing has been limited to Linux, covering JDKs 8 - 21 from various vendors.
+
+## 4.2 Socket use by tradebeans, tradesoap and tomcat
 
 Each of these benchmarks use sockets to communicate between their clients and server.  We have observed that connections are used very liberally (we have seen more than 64,000 connections in use when running tradebeans in its "huge" configuration, according to netstat). We believe that this phenomena can lead to spurious failures, particularly on tradesoap, where the benchmark fails with an error message that indicates a garbled bean (stock name seen when userid expected).  At the time of writing, we believe these issues are platform-sensitive and are due to the underlying systems rather than our particular use of them.  As with all issues, we welcome feedback and fixes from the community.
 
-## 4.2 Validation
+## 4.3 Validation
 
 Validation continues to use summarization via a checksum, so we are unable to provide a diff between expected and actual output in the
 case of failure.   We hope to update this, and welcome community contributions.
 
-
-## 4.3 Support for whole-program static analysis
+## 4.4 Support for whole-program static analysis
 
 Despite significant help from the community, we have had to drop support for whole-program static analysis that was available in the
 last major release.  The main reason for this is that the more systematic and extensive use of reflection and the enormous internal
