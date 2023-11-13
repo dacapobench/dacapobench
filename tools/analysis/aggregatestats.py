@@ -160,20 +160,30 @@ def get_perf_stats():
     # compiler
     hf = 2.0
     comp = {}
-    iteration = 4
-    compilers = ['c1', 'c1.comp', 'c2', 'c2.comp']
+    iterations = 5
+    compilers = ['G1.c1', 'G1.c1.comp', 'G1.c2', 'G1.c2.comp']
+    all = compilers + ['G1']
+    for c in all:
+        vm = 'open-jdk-21.server.'+c+'.t-32'
+        comp[c] = []
+        for i in range(iterations):
+            comp[c].append(0)
+            for res in perf[vm][hf]:
+                comp[c][i] += res[i]
+            comp[c][i] = comp[c][i]/len(perf[vm][hf])
+    final = {}
     for c in compilers:
-        vm = 'open-jdk-21.server.G1.'+c+'.t-32'
-        comp[c] = 0
-        for res in perf[vm][hf]:
-            comp[c] += res[iteration]
-        comp[c] = comp[c]/len(perf[vm][hf])
-    vals = list(comp.values())
+        final[c] = comp[c][iterations-1]
+    # compiler sensitivity
+    vals = list(final.values())
     vals.sort()
     cr = vals[len(vals)-1]/vals[0] # compiler ratio (worst/best)
-    cpct = int(100*(cr-1))
+    cspct = int(100*(cr-1))
+    # c2 comp
+    cr = comp['G1.c2.comp'][0]/comp['G1'][0]
+    ccpct = int(100*(cr-1))
 
-    return best, np, wu, st, pa, tight, kpct, cpct;
+    return best, np, wu, st, pa, tight, kpct, cspct, ccpct;
 
 def objectsizehisto():
     if alloc is None:
@@ -222,7 +232,7 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, wu, st, pa, tight, kpct, cpct = get_perf_stats()
+    ap, np, wu, st, pa, tight, kpct, cspct, ccpct = get_perf_stats()
 
 
     if (not alloc is None):
@@ -301,8 +311,11 @@ def nominal():
     nom['PKP'] = kpct
     desc['PKP'] = 'nominal percentage of time spent in kernel mode (as percentage of user plus kernel time)'
 
-    nom['PCS'] = cpct
+    nom['PCS'] = cspct
     desc['PCS'] = 'nominal percentage slowdown due to worst compiler configuration compared to best (sensitivty to compiler)'
+
+    nom['PCC'] = ccpct
+    desc['PCC'] = 'nominal percentage slowdown due to aggressive c2 compilation compared to baseline (compiler cost)'
 
     if (not bytecode is None):
         nom['BUB'] = int(bytecode['executed-bytecodes-unique']/1000)
