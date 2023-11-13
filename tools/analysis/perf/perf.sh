@@ -44,12 +44,21 @@ done
 
 # extra configs
 
+# collectors
 hf=2000
 for cfg in G1.taskset-0 Parallel.mu_threads-32 Serial.mu_threads-32 Shenandoah.mu_threads-32 Z.mu_threads-32 Z.zgc_gen.mu_threads-32; do
     echo "open-jdk-21.server.$cfg:" | sed -e s/mu_threads-/t-/g | sed -e s/Z.zgc_gen/Zgen/g
     echo "  $hf:" | sed -e s/000:/.0:/g
     zcat $log/*variants-?ole*/$bm.$hf.*-$cfg.*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
 done
+
+# compilers
+for cfg in c1.comp c1 c2.comp c2; do
+    echo "open-jdk-21.server.G1.$cfg.t-32"
+    echo "  $hf:" | sed -e s/000:/.0:/g
+    zcat $log/*compiler-?ole*/$bm.$hf.*.$cfg.dacapo*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
+done
+
 #for cfg in open-jdk-17.s.cp.gc-G1.taskset-0 open-jdk-17.s.cp.gc-Serial open-jdk-17.s.cp.gc-Parallel open-jdk-17.s.cp.gc-Z open-jdk-17.s.cp.gc-Shenandoah ; do
 #    echo "$cfg:"
 #    for hf in 2000; do
