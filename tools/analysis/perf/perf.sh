@@ -54,7 +54,7 @@ done
 
 # compilers
 for cfg in c1.comp c1 c2.comp c2; do
-    echo "open-jdk-21.server.G1.$cfg.t-32"
+    echo "open-jdk-21.server.G1.$cfg.t-32:"
     echo "  $hf:" | sed -e s/000:/.0:/g
     zcat $log/*compiler-?ole*/$bm.$hf.*.$cfg.dacapo*.log.gz  | $SCRIPT_DIR/perflogtoyml.py -i 4
 done
