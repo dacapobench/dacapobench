@@ -80,7 +80,10 @@ def aggregate(results):
         vals = []
         for inv in range(0, invocations):
             vals.append(results[inv][itr])
-        std.append(statistics.stdev(vals))
+        if len(vals) == 1:
+            std.append(0)
+        else:
+            std.append(statistics.stdev(vals))
         mean.append(statistics.mean(vals))
         mini.append(min(vals))
 
@@ -154,7 +157,23 @@ def get_perf_stats():
         k += res[2]
     kpct = int(100*k/(u+k))
 
-    return best, np, wu, st, pa, tight, kpct;
+    # compiler
+    hf = 2.0
+    comp = {}
+    iteration = 4
+    compilers = ['c1', 'c1.comp', 'c2', 'c2.comp']
+    for c in compilers:
+        vm = 'open-jdk-21.server.G1.'+c+'.t-32'
+        comp[c] = 0
+        for res in perf[vm][hf]:
+            comp[c] += res[iteration]
+        comp[c] = comp[c]/len(perf[vm][hf])
+    vals = list(comp.values())
+    vals.sort()
+    cr = vals[len(vals)-1]/vals[0] # compiler ratio (worst/best)
+    cpct = int(100*(cr-1))
+
+    return best, np, wu, st, pa, tight, kpct, cpct;
 
 def objectsizehisto():
     if alloc is None:
@@ -203,7 +222,7 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, wu, st, pa, tight, kpct = get_perf_stats()
+    ap, np, wu, st, pa, tight, kpct, cpct = get_perf_stats()
 
 
     if (not alloc is None):
@@ -282,6 +301,8 @@ def nominal():
     nom['PKP'] = kpct
     desc['PKP'] = 'nominal percentage of time spent in kernel mode (as percentage of user plus kernel time)'
 
+    nom['PCS'] = cpct
+    desc['PCS'] = 'nominal percentage slowdown due to worst compiler configuration compared to best (sensitivty to compiler)'
 
     if (not bytecode is None):
         nom['BUB'] = int(bytecode['executed-bytecodes-unique']/1000)
