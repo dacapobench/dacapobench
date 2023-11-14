@@ -362,8 +362,8 @@ def nominal():
     nom['PMS'] = mempct
     desc['PMS'] = 'nominal percentage slowdown due to slower memory (memory speed sensitivity)'
     
-    nom['PTS'] = tbpct
-    desc['PTS'] = 'nominal percentage speedup due to enabling turbo boost (turbo sensitivity)'
+    nom['PFS'] = tbpct
+    desc['PFS'] = 'nominal percentage speedup due to enabling frequency scaling (CPU frequency sensitivity)'
 
     if (not bytecode is None):
         nom['BUB'] = int(bytecode['executed-bytecodes-unique']/1000)
