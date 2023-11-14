@@ -196,7 +196,33 @@ def get_perf_stats():
     llcs = llc['resctrl-0001']/llc['resctrl-ffff']
     llcpct = int(100*(llcs-1))
 
-    return best, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct;
+    # memory speed sensitivity
+    hf = 2.0
+    mem = {}
+    cfgs = ['slow-memory', 'resctrl-ffff']
+    for c in cfgs:
+        vm = 'open-jdk-21.server.G1.'+c+'.t-32'
+        mem[c] = 0
+        for res in perf[vm][hf]:
+            mem[c] += res[(len(res)-1)]
+        mem[c] = mem[c]/len(res)
+    mems = mem['slow-memory']/mem['resctrl-ffff']
+    mempct = int(100*(mems-1)) 
+    
+    # turbo boost sensitivity
+    hf = 2.0
+    tb = {}
+    cfgs = ['turbo-boost', 'resctrl-ffff']
+    for c in cfgs:
+        vm = 'open-jdk-21.server.G1.'+c+'.t-32'
+        tb[c] = 0
+        for res in perf[vm][hf]:
+            tb[c] += res[(len(res)-1)]
+        tb[c] = tb[c]/len(res)
+    tbs = tb['resctrl-ffff']/tb['turbo-boost']
+    tbpct = int(100*(tbs-1))
+
+    return best, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct;
 
 def objectsizehisto():
     if alloc is None:
@@ -245,7 +271,7 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct = get_perf_stats()
+    ap, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct = get_perf_stats()
 
 
     if (not alloc is None):
@@ -332,6 +358,12 @@ def nominal():
 
     nom['PLS'] = llcpct
     desc['PLS'] = 'nominal percentage slowdown due to 1/16 reduction of LLC capacity (LLC sensitivity)'
+
+    nom['PMS'] = mempct
+    desc['PMS'] = 'nominal percentage slowdown due to slower memory (memory speed sensitivity)'
+    
+    nom['PTS'] = tbpct
+    desc['PTS'] = 'nominal percentage speedup due to enabling turbo boost (turbo sensitivity)'
 
     if (not bytecode is None):
         nom['BUB'] = int(bytecode['executed-bytecodes-unique']/1000)
