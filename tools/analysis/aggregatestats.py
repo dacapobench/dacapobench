@@ -183,7 +183,20 @@ def get_perf_stats():
     cr = comp['G1.c2.comp'][0]/comp['G1'][0]
     ccpct = int(100*(cr-1))
 
-    return best, np, wu, st, pa, tight, kpct, cspct, ccpct;
+    # LLC (cache sensitivity)
+    hf = 2.0
+    llc = {}
+    caches = ['resctrl-0001', 'resctrl-ffff']
+    for c in caches:
+        vm = 'open-jdk-21.server.G1.'+c+'.t-32'
+        llc[c] = 0
+        for res in perf[vm][hf]:
+            llc[c] += res[(len(res)-1)]
+        llc[c] = llc[c]/len(res)
+    llcs = llc['resctrl-0001']/llc['resctrl-ffff']
+    llcpct = int(100*(llcs-1))
+
+    return best, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct;
 
 def objectsizehisto():
     if alloc is None:
@@ -232,7 +245,7 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, wu, st, pa, tight, kpct, cspct, ccpct = get_perf_stats()
+    ap, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct = get_perf_stats()
 
 
     if (not alloc is None):
@@ -316,6 +329,9 @@ def nominal():
 
     nom['PCC'] = ccpct
     desc['PCC'] = 'nominal percentage slowdown due to aggressive c2 compilation compared to baseline (compiler cost)'
+
+    nom['PLS'] = llcpct
+    desc['PLS'] = 'nominal percentage slowdown due to 1/16 reduction of LLC capacity (LLC sensitivity)'
 
     if (not bytecode is None):
         nom['BUB'] = int(bytecode['executed-bytecodes-unique']/1000)
