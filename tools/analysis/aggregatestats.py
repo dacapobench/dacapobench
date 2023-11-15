@@ -20,6 +20,7 @@ minheap = {}     # min heap size stats
 perf = {}        # performance stats
 kernel = {}      # kernel/user stats
 gc = {}          # GC stats
+uarch = {}       # uarch stats
 
 nom = {}         # nominal stats
 desc = {}        # description of nominal stats
@@ -37,6 +38,7 @@ def load_yml(bmpath):
     global perf
     global kernel
     global gc
+    global uarch
 
     yml = bmpath + '/stats-alloc.yml'
     if os.path.exists(yml):
@@ -67,6 +69,11 @@ def load_yml(bmpath):
     if os.path.exists(yml):
         with open(yml, 'r') as y:
             gc = yaml.load(y, Loader=yaml.Loader)
+
+    yml = bmpath + '/stats-uarch.yml'
+    if os.path.exists(yml):
+        with open(yml, 'r') as y:
+            uarch = yaml.load(y, Loader=yaml.Loader)
 
 def aggregate(results):
     std = []
@@ -418,6 +425,33 @@ def nominal():
 
     nom['GCM'] = int(100*(gc_summary[2.0][4]/ten))
     desc['GCM'] = 'nominal median post-GC heap size as percent of min heap, when run at 2X min heap with G1 ('+str(gc_summary[2.0][4])+'/'+str(ten)+')'
+
+    # uarch
+    cfg = 'open-jdk-21.server.G1.t-32'
+    hf = 2.0
+    ua = uarch[cfg][hf]
+
+    nom['UIP'] = int(100 * ua['INSTS']/ua['CYCLES'])
+    desc['UIP'] = 'nominal 100 x instructions per cycle (IPC) ( 100 x '+str(ua['INSTS'])+'/'+str(ua['CYCLES'])+')'
+
+    nom['USF'] = int(100 * ua['FE_STALLS']/ua['CYCLES'])
+    desc['USF'] = 'nominal 100 x front end stalls per cycle ( 100 x '+str(ua['FE_STALLS'])+'/'+str(ua['CYCLES'])+')'
+
+    nom['USB'] = int(100 * ua['BE_STALLS']/ua['CYCLES'])
+    desc['USB'] = 'nominal 100 x back end stalls per cycle ( 100 x '+str(ua['BE_STALLS'])+'/'+str(ua['CYCLES'])+')'
+
+    nom['UDC'] = int(1000 * ua['DC_MISS']/ua['CYCLES'])
+    desc['UDC'] = 'nominal 1000 x data cache misses per cycle ( 1000 x '+str(ua['DC_MISS'])+'/'+str(ua['CYCLES'])+')'
+
+    nom['UDT'] = int(1000000 * ua['DTLB_MISS']/ua['CYCLES'])
+    desc['UDT'] = 'nominal 1000000 x DTLB misses per cycle ( 1000000 x '+str(ua['DTLB_MISS'])+'/'+str(ua['CYCLES'])+')'
+
+    nom['ULZ'] = int(1000000 * ua['LLC_MISS.0']/ua['CYCLES'])
+    desc['ULZ'] = 'nominal 1000000 x LLC.0 misses per cycle ( 1000000 x '+str(ua['LLC_MISS.0'])+'/'+str(ua['CYCLES'])+')'
+
+    nom['ULE'] = int(1000000 * ua['LLC_MISS.8']/ua['CYCLES'])
+    desc['ULE'] = 'nominal 1000000 x LLC.8 misses per cycle ( 1000000 x '+str(ua['LLC_MISS.8'])+'/'+str(ua['CYCLES'])+')'
+
 
     print("# [value, mean, benchmark rank, description]")
     for x in sorted(nom):
