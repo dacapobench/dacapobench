@@ -157,6 +157,8 @@ def get_perf_stats():
         k += res[2]
     kpct = int(100*k/(u+k))
 
+
+
     # compiler
     hf = 2.0
     comp = {}
@@ -222,7 +224,20 @@ def get_perf_stats():
     tbs = tb['resctrl-ffff']/tb['turbo-boost']
     tbpct = int(100*(tbs-1))
 
-    return best, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct;
+    # interpreter
+    hf = 2.0
+    intp = {}
+    cfgs = ['interpreter', 'resctrl-ffff']
+    for c in cfgs:
+        vm = 'open-jdk-21.server.G1.'+c+'.t-32'
+        intp[c] = 0
+        for res in perf[vm][hf]:
+            intp[c] += res[(len(res)-1)]
+        intp[c] = intp[c]/len(res)
+    ins = intp['interpreter']/intp['resctrl-ffff']
+    inpct = int(100*(ins-1))
+
+    return best, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct, inpct;
 
 def objectsizehisto():
     if alloc is None:
@@ -271,7 +286,7 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct = get_perf_stats()
+    ap, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct, inpct = get_perf_stats()
 
 
     if (not alloc is None):
@@ -349,6 +364,9 @@ def nominal():
 
     nom['PKP'] = kpct
     desc['PKP'] = 'nominal percentage of time spent in kernel mode (as percentage of user plus kernel time)'
+
+    nom['PIN'] = cspct
+    desc['PIN'] = 'nominal percentage slowdown due to using the interpreter (sensitivty to interpreter)'
 
     nom['PCS'] = cspct
     desc['PCS'] = 'nominal percentage slowdown due to worst compiler configuration compared to best (sensitivty to compiler)'
