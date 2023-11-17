@@ -431,23 +431,41 @@ def nominal():
     hf = 2.0
     ua = uarch[cfg][hf]
 
-    nom['UIP'] = int(100 * ua['INSTS']/ua['CYCLES'])
-    desc['UIP'] = 'nominal 100 x instructions per cycle (IPC) ( 100 x '+str(ua['INSTS'])+'/'+str(ua['CYCLES'])+' )'
+    nom['UIP'] = int(100 * ua['IPC'])
+    desc['UIP'] = 'nominal 100 x instructions per cycle (IPC) ( 100 x '+str(int(ua['IPC']))+' )'
 
-    nom['USF'] = int(100 * ua['FE_STALLS']/(6*ua['CYCLES']))
-    desc['USF'] = 'nominal 100 x front end bound ( 100 x '+str(ua['FE_STALLS'])+'/(6 x '+str(ua['CYCLES'])+') )'
+    nom['USF'] = int(100 * ua['FE_BOUND'])
+    desc['USF'] = 'nominal 100 x front end bound ( 100 x '+str(ua['FE_BOUND'])+') )'
 
-    nom['USB'] = int(100 * ua['BE_STALLS']/(6*ua['CYCLES']))
-    desc['USB'] = 'nominal 100 x back end bound ( 100 x '+str(ua['BE_STALLS'])+'/(6 x '+str(ua['CYCLES'])+') )'
+    nom['USB'] = int(100 * ua['BE_BOUND'])
+    desc['USB'] = 'nominal 100 x back end bound ( 100 x '+str(ua['BE_BOUND'])+') )'
 
-    nom['UDC'] = int(1000 * ua['DC_MISS']/ua['INSTS'])
-    desc['UDC'] = 'nominal data cache misses per K instructions ( '+str(ua['DC_MISS'])+'/(1000 x '+str(ua['INSTS'])+') )'
+    nom['UDC'] = int(ua['L1MPKI'])
+    desc['UDC'] = 'nominal data cache misses per K instructions ( '+str(ua['L1MPKI'])+' )'
 
-    nom['UDT'] = int(1000000 * ua['DTLB_MISS']/ua['INSTS'])
-    desc['UDT'] = 'nominal DTLB misses per M instructions ( '+str(ua['DTLB_MISS'])+'/(1000000 x '+str(ua['INSTS'])+') )'
+    nom['UDT'] = int(1000 * ua['DTLBMPKI'])
+    desc['UDT'] = 'nominal DTLB misses per M instructions ( 1000 x '+str(ua['DTLBMPKI'])+' )'
 
-    nom['ULL'] = int(1000000 * (ua['LLC_MISS.0']+ua['LLC_MISS.8'])/ua['INSTS'])
-    desc['ULL'] = 'nominal LLC misses M instructions ( 1000000 x ('+str(ua['LLC_MISS.0'])+'+'+str(ua['LLC_MISS.0'])+' )/'+str(ua['INSTS'])+' )'
+    nom['ULL'] = int(1000 * (ua['LLCMPKI']))
+    desc['ULL'] = 'nominal LLC misses M instructions ( 1000 x '+str(ua['LLCMPKI'])+' )'
+
+    nom['UBM'] = int(1000 * (ua['BE_BOUND_MEMORY']))
+    desc['UBM'] = 'nominal backend bound (memory) ( 1000 x '+str(ua['BE_BOUND_MEMORY'])+' )'
+
+    nom['UBC'] = int(1000 * (ua['BE_BOUND_CPU']))
+    desc['UBC'] = 'nominal backend bound (CPU) ( 1000 x '+str(ua['BE_BOUND_CPU'])+' )'
+
+    nom['USC'] = int(1000 * (ua['SMT_CONTENTION']))
+    desc['USC'] = 'nominal SMT contention ( 1000 x '+str(ua['SMT_CONTENTION'])+' )'
+
+    nom['UBS'] = int(1000 * (ua['BAD_SPECULATION']))
+    desc['UBS'] = 'nominal bad speculation ( 1000 x '+str(ua['BAD_SPECULATION'])+' )'
+
+    nom['UBP'] = int(1000000 * (ua['BAD_SPECULATION_PIPELINE_RESTARTS']))
+    desc['UBP'] = 'nominal bad speculation: pipeline restarts ( 1000000 x '+str(ua['BAD_SPECULATION_PIPELINE_RESTARTS'])+' )'
+
+    nom['UBM'] = int(1000 * (ua['BAD_SPECULATION_MISPREDICTS']))
+    desc['UBM'] = 'nominal bad speculation: mispredicts ( 1000 x '+str(ua['BAD_SPECULATION_MISPREDICTS'])+' )'
 
     print("# [value, mean, benchmark rank, description]")
     for x in sorted(nom):
