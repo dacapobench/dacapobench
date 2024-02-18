@@ -11,9 +11,8 @@ public class Transformer implements ClassFileTransformer {
 
         for (ClassLoader curLoader = loader; ; curLoader = curLoader.getParent()) {
             if (curLoader == null) {
-                if (loader != null) {
-                    BCCAnalysis.classSkipped("Skipped '" + className + "' for non-null loader " + loader);
-                }
+                String suffix = loader != null ? "for non-null loader " + loader : "with null loader";
+                BCCAnalysis.classSkipped("Skipped '" + className + "' " + suffix);
                 return null;
              } else if (curLoader == BCCAnalysis.class.getClassLoader())
                  break;
