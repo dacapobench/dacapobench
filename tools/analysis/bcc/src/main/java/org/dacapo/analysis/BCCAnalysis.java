@@ -11,7 +11,7 @@ import java.io.PrintStream;
 
 public class BCCAnalysis {
 
-    private static final String YML_FILENAME_PROPERTY = "dacapo.bccyml";
+    private static final String YML_FILENAME_PROPERTY = "dacapo.bcc.yml";
 
     private static int iteration = 0;
     private static String ymlSuffix = "";
@@ -90,10 +90,10 @@ public class BCCAnalysis {
             List<Long> bytecodefreq = new ArrayList<Long>(v);
             Collections.sort(bytecodefreq);
             int uniq = bytecodefreq.size();
-            long p90 = bytecodefreq.get((uniq-1)-(uniq/10));
-            long p99 = bytecodefreq.get((uniq-1)-(uniq/100));
-            long p999 = bytecodefreq.get((uniq-1)-(uniq/1000));
-            long p9999 = bytecodefreq.get((uniq-1)-(uniq/10000));
+            long p90 = uniq > 0 ? bytecodefreq.get((uniq-1)-(uniq/10)) : 0;
+            long p99 = uniq > 0 ? bytecodefreq.get((uniq-1)-(uniq/100)) : 0;
+            long p999 = uniq > 0 ? bytecodefreq.get((uniq-1)-(uniq/1000)) : 0;
+            long p9999 = uniq > 0 ? bytecodefreq.get((uniq-1)-(uniq/10000)) : 0;
 
             yml.println("skipped-classes: " + skipped.size());
             yml.println("transformed-classes: "+ classesTransformed);
