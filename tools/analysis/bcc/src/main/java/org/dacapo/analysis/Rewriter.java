@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 
 import static org.objectweb.asm.Opcodes.*;
 
+import org.dacapo.analysis.BytecodeCallback;
+
 public class Rewriter {
 
     private final ClassReader classReader;
@@ -93,7 +95,7 @@ public class Rewriter {
             instrumentInsn(Opcodes.INVOKEDYNAMIC);
             mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
         }
-        
+
         @Override
         public void visitJumpInsn(int opcode, Label label) {
             instrumentInsn(opcode);
@@ -132,13 +134,13 @@ public class Rewriter {
 
         void instrumentInsn(int opcode) {
             bcid++;
-            int id = BCCAnalysis.bytecodeTransformed();
+            int id = BytecodeCallback.bytecodeTransformed();
 
             mv.visitInsn(NOP);
             push(opcode);
-            mv.visitInsn(NOP);            
+            mv.visitInsn(NOP);
             push(id);
-            mv.visitMethodInsn(INVOKESTATIC, "org/dacapo/analysis/BCCAnalysis", "bytecodeExecuted", "(II)V", false);
+            mv.visitMethodInsn(INVOKESTATIC, "org/dacapo/analysis/BytecodeCallback", "bytecodeExecuted", "(II)V", false);
         }
 
         void push(final int value) {
