@@ -1,188 +1,1759 @@
-skipped-classes: 36
-transformed-classes: 5709
-transformed-bytecodes: 1120249
-executed-bytecodes: 5521831604
-executed-bytecodes-unique: 128108
-executed-bytecodes-p90: 22574
-executed-bytecodes-p99: 1000000
-executed-bytecodes-p999: 5359278
-executed-bytecodes-p9999: 17254853
-executed-calls: 622990789
-executed-calls-unique: 21570
-opcodes:
-  aconst_null: 10430705
-  iconst_m1: 3094994
-  iconst_0: 71957126
-  iconst_1: 91004264
-  iconst_2: 7684373
-  iconst_3: 372321
-  iconst_4: 616414
-  iconst_5: 18089239
-  lconst_0: 16430622
-  lconst_1: 10952585
-  fconst_0: 78
-  fconst_1: 97801
-  dconst_0: 341
-  dconst_1: 416721
-  bipush: 130327859
-  sipush: 21482415
-  ldc: 43839870
-  iload: 517250355
-  lload: 121936274
-  fload: 557690
-  dload: 11025149
-  aload: 1243959957
-  iaload: 17126234
-  laload: 368129
-  faload: 1098069
-  daload: 33667
-  aaload: 5531890
-  baload: 4442679
-  caload: 2501485
-  istore: 185445250
-  lstore: 26377077
-  fstore: 422721
-  dstore: 1168682
-  astore: 79490130
-  iastore: 1401163
-  fastore: 3000018
-  dastore: 22526
-  aastore: 2569004
-  bastore: 1927049
-  castore: 2333550
-  pop: 27499993
-  pop2: 943748
-  dup: 43490323
-  dup_x1: 4429049
-  dup2: 1935910
-  dup2_x1: 2001154
-  iadd: 96459442
-  ladd: 14643358
-  fadd: 390039
-  dadd: 2733633
-  isub: 27111797
-  lsub: 12668021
-  dsub: 83087
-  imul: 27813807
-  lmul: 439178
-  fmul: 42
-  dmul: 86879
-  idiv: 1094536
-  ldiv: 2053192
-  fdiv: 32602
-  ddiv: 90137
-  irem: 2245069
-  lrem: 755
-  ineg: 5005678
-  lneg: 1000600
-  ishl: 31774271
-  lshl: 4932691
-  ishr: 24480307
-  lshr: 3003852
-  iushr: 46702843
-  lushr: 1951580
-  iand: 32605219
-  land: 5863967
-  ior: 12367841
-  lor: 1929644
-  ixor: 29118032
-  lxor: 3999653
-  iinc: 16250580
-  i2l: 13076094
-  i2f: 65125
-  i2d: 197120
-  l2i: 5357925
-  l2f: 2390120
-  l2d: 544885
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 1601
+transformed-classes: 5364
+transformed-bytecodes: 1074255
+executed-bytecodes: 9256464329
+executed-bytecodes-unique: 161050
+executed-bytecodes-p90: 5669
+executed-bytecodes-p99: 1036500
+executed-bytecodes-p999: 8513562
+executed-bytecodes-p9999: 18529825
+executed-calls: 1347284486
+executed-calls-unique: 28376
+opcodes: {
+  aconst_null: 20608690
+  iconst_m1: 5100001
+  iconst_0: 116053045
+  iconst_1: 132968923
+  iconst_2: 9123222
+  iconst_3: 513862
+  iconst_4: 625886
+  iconst_5: 20131899
+  lconst_0: 17480858
+  lconst_1: 11353132
+  fconst_0: 123
+  fconst_1: 338218
+  dconst_0: 711
+  dconst_1: 221993
+  bipush: 133583080
+  sipush: 17029524
+  ldc: 55243092
+  iload: 563226206
+  lload: 133040645
+  fload: 1174243
+  dload: 9668844
+  aload: 2413594779
+  iaload: 7214845
+  laload: 33542
+  faload: 1338757
+  daload: 170369
+  aaload: 7323323
+  baload: 7127
+  caload: 37615
+  istore: 196427322
+  lstore: 25199832
+  fstore: 722926
+  dstore: 1077919
+  astore: 141499552
+  iastore: 1196225
+  lastore: 19
+  fastore: 3000013
+  dastore: 113786
+  aastore: 3086157
+  bastore: 6269
+  castore: 5109
+  pop: 36733428
+  pop2: 3048967
+  dup: 76874535
+  dup_x1: 1008324
+  dup_x2: 1816
+  dup2: 1769185
+  dup2_x1: 2000272
+  iadd: 97629891
+  ladd: 14765253
+  fadd: 610061
+  dadd: 2062024
+  isub: 30512377
+  lsub: 12325547
+  dsub: 247039
+  imul: 29649782
+  lmul: 726292
+  fmul: 181
+  dmul: 210193
+  idiv: 1046376
+  ldiv: 2057436
+  fdiv: 112741
+  ddiv: 190612
+  irem: 2690887
+  lrem: 1004
+  ineg: 5000062
+  lneg: 1000688
+  ishl: 30221735
+  lshl: 4649410
+  ishr: 21777332
+  lshr: 2888700
+  iushr: 48875620
+  lushr: 1874591
+  iand: 31653213
+  land: 5511182
+  ior: 10776834
+  lor: 1761811
+  ixor: 33085215
+  lxor: 3887683
+  iinc: 4490591
+  i2l: 15138934
+  i2f: 225359
+  i2d: 496051
+  l2i: 5942407
+  l2f: 2610303
+  l2d: 658234
   f2i: 1
-  f2l: 41
-  f2d: 97686
-  d2i: 17985
-  d2l: 28
-  i2b: 20607123
-  i2c: 434701
-  i2s: 38128
-  lcmp: 31370814
-  fcmpl: 32676
-  fcmpg: 32676
-  dcmpl: 26242
-  dcmpg: 1010
-  ifeq: 89953900
-  ifne: 20575336
-  iflt: 5921950
-  ifge: 18659886
-  ifgt: 2391483
-  ifle: 10863215
-  if_icmpeq: 11136642
-  if_icmpne: 13094149
-  if_icmplt: 15364233
-  if_icmpge: 27819741
-  if_icmpgt: 5806771
-  if_icmple: 31441809
-  if_acmpeq: 11307475
-  if_acmpne: 20714230
-  goto: 57960596
-  tableswitch: 1377019
-  lookupswitch: 125109
-  ireturn: 182159267
-  lreturn: 27308257
-  freturn: 1065200
-  dreturn: 112257
-  areturn: 137236496
-  return: 118562329
-  getstatic: 61940434
-  putstatic: 10604
-  getfield: 471925569
-  putfield: 130015701
-  invokevirtual: 268568267
-  invokespecial: 69413714
-  invokestatic: 178778463
-  invokeinterface: 102598499
-  invokedynamic: 3631851
-  new: 12105061
-  newarray: 2062718
-  anewarray: 2258192
-  arraylength: 27030976
-  athrow: 10
-  checkcast: 35839448
-  instanceof: 11030828
-  monitorenter: 2604120
-  monitorexit: 2604120
-  ifnull: 46785231
-  ifnonnull: 61363797
-# Skipped'sun/security/pkcs11/SunPKCS11' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/pkcs11/wrapper/PKCS11Exception' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/pkcs11/SunPKCS11$Descriptor' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/smartcardio/SunPCSC' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/smartcardio/SunPCSC$1' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/smartcardio/SunPCSC$ProviderService' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/jgss/SunProvider' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/jgss/SunProvider$1' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/jgss/SunProvider$ProviderService' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/SunEC' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/SunEC$ProviderService' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/SunEC$1' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/SunEC$2' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/ECDSASignature$SHA1' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/ECDSASignature' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/ECOperations$IntermediateValueException' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/ECDSASignature$Raw' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/ECDSASignature$RawECDSA' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/ECKeyFactory' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/ECKeyPairGenerator' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/security/ec/point/Point' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'jdk/internal/reflect/GeneratedConstructorAccessor1' for non-null loader jdk.internal.reflect.DelegatingClassLoader@2cb4c3ab
-# Skipped'sun/util/resources/cldr/provider/CLDRLocaleDataMetaInfo' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/util/resources/provider/LocaleDataProvider' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/text/resources/cldr/ext/FormatData_en_001' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/text/resources/cldr/ext/FormatData_en_AU' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'jdk/internal/reflect/GeneratedConstructorAccessor2' for non-null loader jdk.internal.reflect.DelegatingClassLoader@5bb0f462
-# Skipped'sun/util/resources/provider/NonBaseLocaleDataMetaInfo' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'jdk/internal/reflect/GeneratedConstructorAccessor3' for non-null loader jdk.internal.reflect.DelegatingClassLoader@6b25013f
-# Skipped'jdk/internal/reflect/GeneratedConstructorAccessor5' for non-null loader jdk.internal.reflect.DelegatingClassLoader@12882b59
-# Skipped'jdk/internal/reflect/GeneratedConstructorAccessor6' for non-null loader jdk.internal.reflect.DelegatingClassLoader@1a6aa190
-# Skipped'sun/text/resources/ext/FormatData_en_AU' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/util/resources/provider/SupplementaryLocaleDataProvider' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'sun/text/resources/ext/JavaTimeSupplementary_en_AU' for non-null loader jdk.internal.loader.ClassLoaders$PlatformClassLoader@726f3b58
-# Skipped'jdk/internal/reflect/GeneratedConstructorAccessor15' for non-null loader jdk.internal.reflect.DelegatingClassLoader@126a5251
-# Skipped'jdk/internal/reflect/GeneratedConstructorAccessor23' for non-null loader jdk.internal.reflect.DelegatingClassLoader@7e46b2fb
+  f2l: 180
+  f2d: 338037
+  d2i: 38
+  d2l: 36
+  i2b: 20695090
+  i2c: 4717
+  i2s: 129670
+  lcmp: 37748667
+  fcmpl: 112859
+  fcmpg: 112859
+  dcmpl: 76724
+  dcmpg: 46502
+  ifeq: 153913537
+  ifne: 50800298
+  iflt: 8665308
+  ifge: 18070265
+  ifgt: 1247846
+  ifle: 12630846
+  if_icmpeq: 5923428
+  if_icmpne: 31597297
+  if_icmplt: 20412088
+  if_icmpge: 29157123
+  if_icmpgt: 5333647
+  if_icmple: 35017326
+  if_acmpeq: 11457308
+  if_acmpne: 48576596
+  goto: 71443559
+  tableswitch: 3664743
+  lookupswitch: 114319
+  ireturn: 363679552
+  lreturn: 78114669
+  freturn: 1225478
+  dreturn: 394945
+  areturn: 473584761
+  return: 254359711
+  getstatic: 148776520
+  putstatic: 11480
+  getfield: 825073812
+  putfield: 250710045
+  invokevirtual: 578198495
+  invokespecial: 261527258
+  invokestatic: 272687168
+  invokeinterface: 227919515
+  invokedynamic: 6952050
+  new: 43128469
+  newarray: 2209901
+  anewarray: 5998276
+  arraylength: 26741813
+  athrow: 20
+  checkcast: 75770008
+  instanceof: 19758563
+  monitorenter: 3507602
+  monitorexit: 3507603
+  ifnull: 62389738
+  ifnonnull: 104604102
+}
+# sun/launcher/LauncherHelper
+# sun/nio/fs/UnixFileKey
+# java/util/jar/JarVerifier
+# java/util/ArrayList$SubList
+# java/lang/WeakPairMap$Pair$Weak
+# java/lang/WeakPairMap$WeakRefPeer
+# java/lang/WeakPairMap$Pair$Weak$1
+# jdk/internal/misc/MainMethodFinder
+# jdk/internal/misc/PreviewFeatures
+# java/net/URISyntaxException
+# jdk/internal/module/Resources
+# jdk/internal/loader/BuiltinClassLoader$2
+# jdk/internal/loader/BuiltinClassLoader$5
+# java/lang/module/ModuleReader
+# jdk/internal/module/SystemModuleFinders$SystemModuleReader
+# jdk/internal/module/SystemModuleFinders$SystemImage
+# jdk/internal/jimage/ImageReaderFactory
+# java/nio/file/Paths
+# java/nio/file/FileSystems
+# java/nio/file/FileSystems$DefaultFileSystemHolder
+# java/nio/file/FileSystems$DefaultFileSystemHolder$1
+# java/net/URI$Parser
+# jdk/internal/jimage/ImageReaderFactory$1
+# jdk/internal/jimage/ImageReader
+# jdk/internal/jimage/BasicImageReader
+# jdk/internal/jimage/ImageReader$SharedImageReader
+# jdk/internal/jimage/BasicImageReader$1
+# jdk/internal/jimage/NativeImageBuffer
+# jdk/internal/jimage/NativeImageBuffer$1
+# jdk/internal/jimage/ImageHeader
+# java/nio/IntBuffer
+# java/nio/DirectIntBufferU
+# java/nio/DirectByteBufferR
+# java/nio/DirectIntBufferRU
+# jdk/internal/jimage/ImageStrings
+# jdk/internal/jimage/ImageStringsReader
+# jdk/internal/jimage/decompressor/Decompressor
+# jdk/internal/jimage/ImageLocation
+# java/net/URLClassLoader$5
+# java/net/FactoryURLClassLoader
+# java/io/FileNotFoundException
+# java/lang/InstantiationException
+# java/lang/IllegalAccessException
+# java/lang/reflect/InvocationTargetException
+# sun/util/locale/BaseLocale$Key
+# sun/util/locale/LocaleObjectCache
+# sun/util/locale/BaseLocale$Cache
+# sun/util/locale/LocaleObjectCache$CacheEntry
+# java/util/Locale$Category
+# java/lang/Readable
+# java/nio/CharBuffer
+# java/nio/HeapCharBuffer
+# java/nio/charset/CoderResult
+# java/io/Reader
+# java/io/InputStreamReader
+# java/lang/CloneNotSupportedException
+# java/util/LinkedHashMap$LinkedValues
+# java/util/LinkedHashMap$LinkedValueIterator
+# java/util/LinkedHashMap$LinkedHashIterator
+# java/util/Collections$UnmodifiableList
+# java/util/Collections$UnmodifiableRandomAccessList
+# java/util/LinkedList
+# java/util/AbstractSequentialList
+# java/util/Arrays$ArrayList
+# java/util/Arrays$ArrayItr
+# java/util/AbstractList$ListItr
+# java/util/AbstractList$Itr
+# java/util/LinkedList$Node
+# jdk/internal/reflect/DirectConstructorHandleAccessor
+# java/io/FileWriter
+# java/nio/file/spi/FileSystemProvider$1
+# java/util/ServiceLoader
+# java/util/ServiceLoader$ModuleServicesLookupIterator
+# java/util/Spliterators$ArraySpliterator
+# java/util/Spliterators$1Adapter
+# java/util/concurrent/CopyOnWriteArrayList$COWIterator
+# java/util/ServiceLoader$LazyClassPathLookupIterator
+# java/util/ServiceLoader$2
+# java/util/ServiceLoader$3
+# jdk/internal/module/ModulePatcher$PatchedModuleReader
+# sun/net/www/protocol/jrt/Handler
+# java/nio/file/FileSystemNotFoundException
+# java/nio/file/FileSystemAlreadyExistsException
+# java/security/PrivilegedActionException
+# java/util/zip/ZipException
+# java/nio/file/ProviderMismatchException
+# java/nio/file/AccessMode
+# java/nio/file/attribute/FileAttribute
+# java/nio/channels/SeekableByteChannel
+# java/nio/channels/ByteChannel
+# java/nio/channels/ReadableByteChannel
+# java/nio/channels/Channel
+# java/nio/channels/WritableByteChannel
+# java/nio/file/DirectoryStream$Filter
+# java/nio/file/DirectoryStream
+# java/nio/file/FileStore
+# java/nio/channels/FileChannel
+# java/nio/channels/GatheringByteChannel
+# java/nio/channels/ScatteringByteChannel
+# java/nio/channels/spi/AbstractInterruptibleChannel
+# java/nio/channels/InterruptibleChannel
+# java/util/concurrent/Executor
+# java/util/concurrent/ExecutorService
+# java/nio/channels/AsynchronousFileChannel
+# java/nio/channels/AsynchronousChannel
+# java/util/ServiceLoader$1
+# java/util/ServiceLoader$Provider
+# java/util/ServiceLoader$ProviderImpl
+# jdk/internal/jrtfs/JrtFileSystemProvider
+# java/util/Collections$EmptyEnumeration
+# jdk/internal/loader/BuiltinClassLoader$1
+# java/util/Collections$EmptyIterator
+# java/lang/CompoundEnumeration
+# jdk/internal/loader/URLClassPath$1
+# sun/net/www/protocol/jrt/JavaRuntimeURLConnection
+# sun/net/www/URLConnection
+# java/net/URLConnection
+# sun/net/www/MessageHeader
+# sun/net/www/protocol/jrt/JavaRuntimeURLConnection$1
+# jdk/internal/jimage/ImageBufferCache
+# jdk/internal/jimage/ImageBufferCache$1
+# jdk/internal/jimage/ImageBufferCache$2
+# java/util/AbstractMap$SimpleEntry
+# java/util/Arrays$LegacyMergeSort
+# java/util/TimSort
+# java/io/BufferedReader
+# sun/nio/cs/StreamDecoder
+# sun/nio/cs/UTF_8$Decoder
+# java/nio/charset/CharsetDecoder
+# java/util/LinkedHashMap$LinkedKeySet
+# java/util/LinkedHashMap$LinkedKeyIterator
+# sun/nio/fs/UnixUriUtils
+# java/util/concurrent/locks/ReadWriteLock
+# java/nio/file/NoSuchFileException
+# java/nio/file/FileSystemException
+# java/nio/file/ClosedFileSystemException
+# java/nio/file/FileAlreadyExistsException
+# java/lang/NumberFormatException
+# java/nio/file/ReadOnlyFileSystemException
+# java/util/zip/DeflaterOutputStream
+# java/nio/file/NotDirectoryException
+# java/nio/file/DirectoryNotEmptyException
+# java/nio/file/attribute/PosixFilePermissions
+# java/nio/file/attribute/PosixFilePermission
+# java/util/Collections$SynchronizedCollection
+# java/util/Collections$SynchronizedSet
+# java/util/concurrent/locks/ReentrantReadWriteLock
+# java/util/concurrent/locks/ReentrantReadWriteLock$NonfairSync
+# java/util/concurrent/locks/ReentrantReadWriteLock$Sync
+# java/util/concurrent/locks/ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter
+# java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock
+# java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock
+# sun/nio/fs/UnixFileSystemProvider$3
+# java/nio/charset/StandardCharsets
+# sun/nio/cs/US_ASCII
+# sun/nio/cs/ISO_8859_1
+# sun/nio/cs/UTF_16BE
+# sun/nio/cs/UTF_16LE
+# sun/nio/cs/UTF_16
+# java/nio/file/AccessDeniedException
+# java/nio/file/InvalidPathException
+# java/nio/file/attribute/PosixFileAttributeView
+# java/nio/file/attribute/FileOwnerAttributeView
+# sun/nio/fs/UnixFileModeAttribute
+# sun/nio/fs/UnixChannelFactory
+# sun/nio/fs/UnixChannelFactory$Flags
+# sun/nio/fs/UnixChannelFactory$1
+# sun/nio/ch/FileChannelImpl
+# sun/nio/ch/FileDispatcherImpl
+# sun/nio/ch/UnixFileDispatcherImpl
+# sun/nio/ch/FileDispatcher
+# sun/nio/ch/NativeDispatcher
+# sun/nio/ch/IOUtil
+# sun/nio/ch/NativeThreadSet
+# sun/nio/ch/FileChannelImpl$Closer
+# java/nio/channels/spi/AbstractInterruptibleChannel$1
+# sun/nio/ch/Interruptible
+# sun/nio/ch/NativeThread
+# sun/nio/ch/IOStatus
+# sun/nio/ch/Util
+# sun/nio/ch/Util$1
+# sun/nio/ch/Util$BufferCache
+# java/nio/DirectByteBuffer$Deallocator
+# java/nio/file/FileVisitOption
+# java/nio/file/FileTreeIterator
+# java/nio/file/FileTreeWalker
+# java/time/DateTimeException
+# java/util/regex/PatternSyntaxException
+# java/time/temporal/TemporalAccessor
+# java/time/temporal/Temporal
+# java/time/temporal/TemporalAdjuster
+# java/time/chrono/ChronoLocalDateTime
+# java/time/LocalDateTime
+# java/time/chrono/ChronoLocalDate
+# java/time/LocalDate
+# java/time/temporal/TemporalField
+# java/time/temporal/ChronoField
+# java/time/temporal/TemporalUnit
+# java/time/temporal/ChronoUnit
+# java/time/temporal/TemporalAmount
+# java/time/Duration
+# java/math/BigInteger
+# java/time/temporal/ValueRange
+# java/time/LocalTime
+# java/time/ZoneId
+# java/util/TimeZone
+# sun/util/calendar/ZoneInfo
+# sun/util/calendar/ZoneInfoFile
+# sun/util/calendar/ZoneInfoFile$1
+# java/io/DataInputStream
+# jdk/internal/util/ByteArray
+# java/lang/invoke/VarHandles
+# java/lang/ClassValue
+# java/lang/invoke/VarHandles$1
+# java/lang/ClassValue$Entry
+# java/lang/ClassValue$Identity
+# java/lang/ClassValue$Version
+# java/lang/invoke/VarHandleByteArrayAsShorts$ByteArrayViewVarHandle
+# java/lang/invoke/VarHandleByteArrayAsShorts$ArrayHandle
+# java/lang/invoke/VarHandleGuards
+# java/lang/invoke/VarForm
+# java/lang/invoke/VarHandleByteArrayAsChars$ByteArrayViewVarHandle
+# java/lang/invoke/VarHandleByteArrayAsChars$ArrayHandle
+# java/lang/invoke/VarHandleByteArrayAsInts$ByteArrayViewVarHandle
+# java/lang/invoke/VarHandleByteArrayAsInts$ArrayHandle
+# java/lang/invoke/VarHandleByteArrayAsFloats$ByteArrayViewVarHandle
+# java/lang/invoke/VarHandleByteArrayAsFloats$ArrayHandle
+# java/lang/invoke/VarHandleByteArrayAsLongs$ByteArrayViewVarHandle
+# java/lang/invoke/VarHandleByteArrayAsLongs$ArrayHandle
+# java/lang/invoke/VarHandleByteArrayAsDoubles$ByteArrayViewVarHandle
+# java/lang/invoke/VarHandleByteArrayAsDoubles$ArrayHandle
+# java/lang/invoke/VarHandle$AccessDescriptor
+# java/io/FileInputStream$1
+# sun/util/calendar/ZoneInfoFile$ZoneOffsetTransitionRule
+# java/time/ZoneRegion
+# java/time/zone/ZoneRulesProvider
+# java/time/zone/ZoneRulesProvider$1
+# java/time/zone/TzdbZoneRulesProvider
+# java/util/concurrent/ConcurrentHashMap$KeyIterator
+# java/time/zone/Ser
+# java/io/Externalizable
+# java/time/zone/ZoneRules
+# java/time/zone/ZoneOffsetTransitionRule
+# java/time/ZoneOffset
+# java/time/zone/ZoneOffsetTransition
+# java/nio/file/Files$AcceptAllFilter
+# java/nio/file/ClosedDirectoryStreamException
+# java/nio/file/DirectoryIteratorException
+# java/util/ConcurrentModificationException
+# java/nio/file/FileTreeWalker$DirectoryNode
+# java/util/NoSuchElementException
+# java/nio/file/FileTreeWalker$Event
+# java/nio/file/FileTreeWalker$EventType
+# sun/nio/fs/BasicFileAttributesHolder
+# java/util/LinkedList$ListItr
+# java/io/FileReader
+# java/util/zip/ZipInputStream
+# sun/net/www/protocol/jar/JarURLConnection
+# java/net/JarURLConnection
+# sun/net/www/protocol/jar/JarFileFactory
+# sun/net/www/protocol/jar/URLJarFile$URLJarFileCloseController
+# sun/net/www/protocol/file/FileURLConnection
+# sun/net/www/protocol/jar/URLJarFile
+# sun/net/www/protocol/jar/URLJarFile$URLJarFileEntry
+# sun/net/www/protocol/jar/JarURLConnection$JarURLInputStream
+# java/io/UnsupportedEncodingException
+# java/util/Vector
+# java/lang/NoSuchFieldError
+# java/lang/invoke/LambdaFormEditor$1
+# java/util/TreeMap$EntrySet
+# java/util/TreeMap$EntryIterator
+# java/io/BufferedReader$1
+# java/lang/invoke/DirectMethodHandle$Special
+# java/util/stream/ReduceOps$1
+# java/util/stream/ReduceOps$1ReducingSink
+# java/security/MessageDigest
+# java/security/MessageDigestSpi
+# sun/security/jca/GetInstance
+# sun/security/jca/Providers
+# sun/security/jca/ProviderList
+# sun/security/jca/ProviderConfig
+# java/security/Provider
+# sun/security/jca/ProviderList$3
+# sun/security/jca/ProviderList$1
+# java/security/Provider$ServiceKey
+# java/security/Provider$EngineDescription
+# jdk/internal/math/FloatingDecimal
+# jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
+# jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
+# jdk/internal/math/FloatingDecimal$BinaryToASCIIBuffer
+# jdk/internal/math/FloatingDecimal$1
+# jdk/internal/math/FloatingDecimal$PreparedASCIIToBinaryBuffer
+# jdk/internal/math/FloatingDecimal$ASCIIToBinaryConverter
+# jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer
+# sun/security/jca/ProviderList$2
+# java/security/Security
+# java/util/Properties$LineReader
+# java/util/concurrent/ConcurrentHashMap$EntrySetView
+# java/util/concurrent/ConcurrentHashMap$EntryIterator
+# java/util/concurrent/ConcurrentHashMap$MapEntry
+# jdk/internal/access/JavaSecurityPropertiesAccess
+# java/security/Security$1
+# sun/security/provider/Sun
+# sun/security/util/SecurityConstants
+# java/net/NetPermission
+# java/security/SecurityPermission
+# java/net/SocketPermission
+# java/lang/reflect/ReflectPermission
+# sun/security/provider/SunEntries
+# sun/security/provider/SunEntries$1
+# sun/security/provider/NativePRNG
+# java/security/SecureRandomSpi
+# sun/security/provider/NativePRNG$Variant
+# sun/security/provider/NativePRNG$1
+# sun/security/provider/NativePRNG$RandomIO
+# sun/security/provider/FileInputStreamPool
+# sun/security/provider/FileInputStreamPool$UnclosableInputStream
+# sun/security/provider/FileInputStreamPool$StreamRef
+# java/security/Provider$Service
+# java/security/Provider$UString
+# sun/security/provider/NativePRNG$Blocking
+# sun/security/provider/NativePRNG$NonBlocking
+# sun/security/util/SecurityProviderConstants
+# sun/security/util/KnownOIDs
+# sun/security/util/KnownOIDs$1
+# sun/security/util/KnownOIDs$2
+# sun/security/util/KnownOIDs$3
+# sun/security/util/KnownOIDs$4
+# sun/security/util/KnownOIDs$5
+# sun/security/util/KnownOIDs$6
+# sun/security/util/KnownOIDs$7
+# sun/security/util/KnownOIDs$8
+# sun/security/util/KnownOIDs$9
+# sun/security/util/KnownOIDs$10
+# jdk/internal/event/SecurityProviderServiceEvent
+# jdk/internal/event/Event
+# sun/security/provider/MD5
+# sun/security/provider/DigestBase
+# sun/security/jca/GetInstance$Instance
+# java/security/MessageDigest$Delegate
+# sun/security/util/MessageDigestSpi2
+# java/security/MessageDigest$Delegate$CloneableDelegate
+# java/nio/channels/Channels
+# sun/nio/ch/Streams
+# sun/nio/ch/SocketChannelImpl
+# sun/nio/ch/SelChImpl
+# java/nio/channels/SocketChannel
+# java/nio/channels/NetworkChannel
+# java/nio/channels/spi/AbstractSelectableChannel
+# java/nio/channels/SelectableChannel
+# sun/nio/ch/ChannelInputStream
+# sun/security/provider/ByteArrayAccess$LE
+# sun/security/provider/ByteArrayAccess
+# javax/xml/datatype/DatatypeConfigurationException
+# java/util/Calendar
+# java/util/GregorianCalendar
+# javax/xml/datatype/DatatypeFactory
+# java/util/regex/Pattern
+# java/util/regex/Pattern$Node
+# java/util/regex/Pattern$LastNode
+# java/util/regex/Pattern$GroupHead
+# java/util/regex/Pattern$CharPredicate
+# java/util/regex/Pattern$BmpCharPredicate
+# java/util/regex/Pattern$BitClass
+# java/util/regex/Pattern$CharProperty
+# java/util/regex/Pattern$Qtype
+# java/util/regex/Pattern$BmpCharProperty
+# java/util/regex/Pattern$CharPropertyGreedy
+# java/util/regex/Pattern$SliceNode
+# java/util/regex/Pattern$Slice
+# java/util/regex/Pattern$Begin
+# java/util/regex/Pattern$First
+# java/util/regex/Pattern$Start
+# java/util/regex/Pattern$StartS
+# java/util/regex/Pattern$TreeInfo
+# javax/xml/datatype/FactoryFinder
+# jdk/xml/internal/SecuritySupport
+# javax/xml/datatype/FactoryFinder$1
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
+# java/net/URLClassLoader$3
+# java/net/URLClassLoader$3$1
+# java/net/MalformedURLException
+# com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# java/lang/invoke/MethodHandle$1
+# java/util/regex/Pattern$BnM
+# java/util/regex/MatchResult
+# java/util/regex/Matcher
+# java/util/regex/IntHashSet
+# java/net/URLClassLoader$1
+# java/io/FilePermission
+# java/io/FilePermission$1
+# jdk/internal/access/JavaIOFilePermissionAccess
+# sun/security/util/FilePermCompat
+# sun/security/util/SecurityProperties
+# java/io/FilePermissionCollection
+# javax/management/JMException
+# java/lang/InterruptedException
+# java/util/concurrent/LinkedBlockingQueue
+# java/util/concurrent/BlockingQueue
+# java/util/AbstractQueue
+# java/util/concurrent/LinkedBlockingQueue$Node
+# java/lang/SecurityException
+# java/io/StringWriter
+# java/util/MissingResourceException
+# java/io/InterruptedIOException
+# java/util/StringTokenizer
+# java/lang/Class$1
+# java/text/Format
+# java/text/DateFormat
+# java/text/SimpleDateFormat
+# java/util/Properties$EntrySet
+# java/util/Hashtable$Enumerator
+# java/beans/Introspector
+# java/beans/EventSetDescriptor
+# java/beans/FeatureDescriptor
+# java/beans/Introspector$1
+# jdk/internal/access/JavaBeansAccess
+# sun/reflect/misc/ReflectUtil
+# java/beans/ThreadGroupContext
+# java/beans/ThreadGroupContext$1
+# java/beans/WeakIdentityMap
+# java/beans/WeakIdentityMap$Entry
+# com/sun/beans/finder/BeanInfoFinder
+# com/sun/beans/finder/InstanceFinder
+# com/sun/beans/finder/ClassFinder
+# java/beans/BeanDescriptor
+# java/beans/JavaBean
+# java/lang/Class$AnnotationData
+# javax/swing/SwingContainer
+# com/sun/beans/introspect/ClassInfo
+# com/sun/beans/introspect/ClassInfo$1
+# com/sun/beans/util/Cache
+# com/sun/beans/util/Cache$Kind
+# com/sun/beans/util/Cache$Kind$1
+# com/sun/beans/util/Cache$Kind$2
+# com/sun/beans/util/Cache$Kind$3
+# com/sun/beans/util/Cache$CacheEntry
+# com/sun/beans/util/Cache$Kind$Soft
+# com/sun/beans/util/Cache$Ref
+# com/sun/beans/introspect/MethodInfo
+# java/lang/PublicMethods
+# com/sun/beans/introspect/MethodInfo$MethodOrder
+# java/beans/MethodDescriptor
+# java/beans/MethodRef
+# com/sun/beans/TypeResolver
+# com/sun/beans/WeakCache
+# sun/reflect/generics/repository/ClassRepository
+# sun/reflect/generics/repository/GenericDeclRepository
+# sun/reflect/generics/repository/AbstractRepository
+# java/lang/reflect/TypeVariable
+# sun/reflect/generics/parser/SignatureParser
+# sun/reflect/generics/tree/FormalTypeParameter
+# sun/reflect/generics/tree/TypeTree
+# sun/reflect/generics/tree/Tree
+# sun/reflect/generics/tree/TypeArgument
+# sun/reflect/generics/tree/SimpleClassTypeSignature
+# sun/reflect/generics/tree/FieldTypeSignature
+# sun/reflect/generics/tree/BaseType
+# sun/reflect/generics/tree/TypeSignature
+# sun/reflect/generics/tree/ReturnType
+# sun/reflect/generics/tree/ClassTypeSignature
+# sun/reflect/generics/tree/ClassSignature
+# sun/reflect/generics/tree/Signature
+# java/util/StringJoiner
+# sun/reflect/generics/scope/MethodScope
+# sun/reflect/generics/scope/AbstractScope
+# sun/reflect/generics/scope/Scope
+# sun/reflect/generics/factory/CoreReflectionFactory
+# sun/reflect/generics/factory/GenericsFactory
+# sun/reflect/generics/repository/MethodRepository
+# sun/reflect/generics/repository/ConstructorRepository
+# sun/reflect/generics/tree/BottomSignature
+# sun/reflect/generics/tree/Wildcard
+# sun/reflect/generics/tree/MethodTypeSignature
+# sun/reflect/generics/visitor/Reifier
+# sun/reflect/generics/visitor/TypeTreeVisitor
+# sun/reflect/generics/reflectiveObjects/WildcardTypeImpl
+# java/lang/reflect/WildcardType
+# sun/reflect/generics/reflectiveObjects/LazyReflectiveObjectGenerator
+# sun/reflect/generics/reflectiveObjects/ParameterizedTypeImpl
+# java/lang/reflect/ParameterizedType
+# sun/reflect/generics/scope/ClassScope
+# sun/reflect/generics/reflectiveObjects/TypeVariableImpl
+# com/sun/beans/introspect/EventSetInfo
+# java/util/TreeMap$Values
+# java/util/TreeMap$ValueIterator
+# com/sun/beans/introspect/PropertyInfo
+# java/beans/PropertyVetoException
+# java/lang/reflect/GenericArrayType
+# com/sun/beans/WildcardTypeImpl
+# java/beans/BeanProperty
+# jdk/internal/vm/annotation/IntrinsicCandidate
+# sun/reflect/annotation/AnnotationType
+# sun/reflect/annotation/AnnotationType$1
+# java/lang/annotation/Retention
+# java/lang/annotation/Inherited
+# java/lang/annotation/Target
+# java/lang/annotation/RetentionPolicy
+# sun/reflect/annotation/AnnotationTypeMismatchExceptionProxy
+# sun/reflect/annotation/ExceptionProxy
+# sun/reflect/annotation/AnnotationParser$1
+# sun/reflect/annotation/AnnotationInvocationHandler
+# java/lang/reflect/InvocationHandler
+# java/lang/reflect/Proxy
+# java/lang/reflect/Proxy$1
+# jdk/internal/loader/AbstractClassLoaderValue$Sub
+# java/lang/reflect/Proxy$ProxyBuilder
+# java/util/Collections$SingletonList
+# java/util/Collections$1
+# java/lang/module/ModuleDescriptor$Builder
+# jdk/internal/module/Checks
+# java/lang/reflect/Proxy$ProxyBuilder$ProxyClassContext
+# java/lang/reflect/ProxyGenerator
+# java/lang/reflect/ProxyGenerator$ProxyMethod
+# java/lang/reflect/ProxyGenerator$PrimitiveTypeInfo
+# jdk/internal/org/objectweb/asm/Edge
+# jdk/proxy1/$Proxy0
+# java/lang/reflect/Proxy$ProxyBuilder$1
+# com/sun/proxy/jdk/proxy1/$Proxy1
+# java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet
+# java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$1
+# java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry
+# java/beans/PropertyDescriptor
+# java/beans/Transient
+# com/sun/beans/introspect/PropertyInfo$Name
+# java/beans/IndexedPropertyDescriptor
+# java/beans/GenericBeanInfo
+# java/beans/SimpleBeanInfo
+# java/util/Hashtable$EntrySet
+# java/util/spi/LocaleServiceProvider
+# sun/util/spi/CalendarProvider
+# sun/util/locale/provider/LocaleProviderAdapter
+# sun/util/locale/provider/LocaleProviderAdapter$Type
+# sun/util/locale/provider/ResourceBundleBasedAdapter
+# sun/util/locale/provider/JRELocaleProviderAdapter
+# sun/util/cldr/CLDRLocaleProviderAdapter
+# sun/util/locale/provider/LocaleDataMetaInfo
+# sun/util/cldr/CLDRBaseLocaleDataMetaInfo
+# sun/util/locale/LanguageTag
+# sun/util/locale/ParseStatus
+# sun/util/locale/StringTokenIterator
+# sun/util/locale/InternalLocaleBuilder
+# sun/util/locale/InternalLocaleBuilder$CaseInsensitiveChar
+# java/util/Locale$Cache
+# sun/util/locale/provider/AvailableLanguageTags
+# sun/util/locale/provider/CalendarProviderImpl
+# java/util/regex/Pattern$BmpCharPropertyGreedy
+# java/util/Calendar$Builder
+# sun/util/locale/provider/CalendarDataUtility
+# java/util/Locale$Builder
+# java/util/spi/CalendarDataProvider
+# sun/util/locale/provider/LocaleServiceProviderPool
+# java/text/spi/BreakIteratorProvider
+# java/text/spi/CollatorProvider
+# java/text/spi/DateFormatProvider
+# java/text/spi/DateFormatSymbolsProvider
+# java/text/spi/DecimalFormatSymbolsProvider
+# java/text/spi/NumberFormatProvider
+# java/util/spi/CurrencyNameProvider
+# java/util/spi/LocaleNameProvider
+# java/util/spi/TimeZoneNameProvider
+# sun/util/locale/provider/LocaleServiceProviderPool$LocalizedObjectGetter
+# sun/util/locale/provider/CalendarDataUtility$CalendarWeekParameterGetter
+# java/util/ResourceBundle$Control
+# java/util/ResourceBundle$Control$CandidateListCache
+# java/util/ResourceBundle$SingleFormatControl
+# java/util/ResourceBundle$NoFallbackControl
+# sun/util/locale/provider/CalendarDataProviderImpl
+# sun/util/cldr/CLDRCalendarDataProviderImpl
+# java/util/function/IntFunction
+# java/util/stream/Nodes
+# java/util/stream/Node
+# java/util/stream/Nodes$EmptyNode
+# java/util/stream/Nodes$EmptyNode$OfRef
+# java/util/stream/Node$OfPrimitive
+# java/util/stream/Node$OfInt
+# java/util/stream/Nodes$EmptyNode$OfInt
+# java/util/stream/Node$OfLong
+# java/util/stream/Nodes$EmptyNode$OfLong
+# java/util/stream/Node$OfDouble
+# java/util/stream/Nodes$EmptyNode$OfDouble
+# java/util/stream/Nodes$ArrayNode
+# java/util/stream/Node$Builder
+# java/util/stream/Nodes$FixedNodeBuilder
+# sun/util/locale/provider/LocaleResources
+# java/util/regex/ASCII
+# java/util/regex/Pattern$GroupTail
+# java/util/regex/Pattern$Curly
+# sun/util/resources/LocaleData
+# sun/util/resources/LocaleData$1
+# sun/util/resources/Bundles$Strategy
+# sun/util/resources/LocaleData$LocaleDataStrategy
+# sun/util/resources/Bundles
+# sun/util/resources/Bundles$1
+# sun/util/resources/Bundles$CacheKey
+# java/util/ListResourceBundle
+# sun/util/resources/cldr/CalendarData
+# java/util/ResourceBundle$ResourceBundleProviderHelper
+# sun/util/resources/Bundles$CacheKeyReference
+# sun/util/resources/Bundles$BundleReference
+# sun/util/locale/provider/LocaleResources$ResourceReference
+# sun/util/calendar/CalendarDate
+# sun/util/calendar/BaseCalendar$Date
+# sun/util/calendar/Gregorian$Date
+# sun/util/calendar/CalendarUtils
+# java/io/FilterWriter
+# java/util/Collections$3
+# java/util/Vector$1
+# java/lang/Thread$ThreadNumbering
+# java/lang/invoke/VarHandleInts$FieldInstanceReadWrite
+# java/lang/invoke/VarHandleInts$FieldInstanceReadOnly
+# java/lang/invoke/VarHandleReferences$FieldInstanceReadOnly
+# java/lang/invoke/VarHandleReferences$FieldInstanceReadWrite
+# java/net/InetSocketAddress
+# java/net/SocketAddress
+# java/net/InetAddress
+# jdk/internal/access/JavaNetInetAddressAccess
+# java/net/InetAddress$1
+# java/net/InetAddress$InetAddressHolder
+# java/util/concurrent/ConcurrentSkipListSet
+# java/util/concurrent/ConcurrentNavigableMap
+# java/util/concurrent/ConcurrentSkipListMap
+# java/util/concurrent/ConcurrentSkipListMap$Index
+# java/util/concurrent/atomic/Striped64
+# java/util/concurrent/atomic/LongAdder
+# java/util/concurrent/ConcurrentSkipListMap$Node
+# java/net/InetAddressImpl
+# java/net/Inet6AddressImpl
+# java/net/Inet4AddressImpl
+# java/net/spi/InetAddressResolver$LookupPolicy
+# java/net/spi/InetAddressResolver
+# java/net/InetAddress$PlatformResolver
+# java/net/Inet4Address
+# java/net/InetSocketAddress$InetSocketAddressHolder
+# java/net/SocketImpl
+# java/net/SocketOptions
+# sun/nio/ch/NioSocketImpl
+# sun/net/PlatformSocketImpl
+# sun/nio/ch/SocketDispatcher
+# sun/nio/ch/UnixDispatcher
+# java/net/SocksSocketImpl
+# java/net/SocksConsts
+# java/net/DelegatingSocketImpl
+# sun/nio/ch/Net
+# sun/nio/ch/Net$1
+# java/net/ProtocolFamily
+# java/net/Inet6Address
+# java/net/Inet6Address$Inet6AddressHolder
+# sun/net/ext/ExtendedSocketOptions
+# jdk/net/ExtendedSocketOptions
+# jdk/net/ExtendedSocketOptions$ExtSocketOption
+# java/net/SocketOption
+# jdk/net/UnixDomainPrincipal
+# jdk/net/ExtendedSocketOptions$PlatformSocketOptions
+# jdk/net/ExtendedSocketOptions$2
+# jdk/internal/util/OperatingSystem
+# jdk/net/LinuxSocketOptions
+# jdk/net/ExtendedSocketOptions$1
+# java/net/StandardProtocolFamily
+# java/net/SocksSocketImpl$3
+# java/net/ProxySelector
+# sun/net/spi/DefaultProxySelector
+# java/net/Proxy
+# java/net/Proxy$Type
+# sun/net/spi/DefaultProxySelector$1
+# sun/net/NetProperties
+# sun/net/NetProperties$1
+# java/net/NoRouteToHostException
+# java/net/SocketException
+# java/net/UnknownHostException
+# sun/net/spi/DefaultProxySelector$NonProxyInfo
+# sun/net/spi/DefaultProxySelector$3
+# sun/net/NetHooks
+# sun/net/sdp/SdpProvider
+# sun/net/NetHooks$Provider
+# java/net/ConnectException
+# sun/net/util/SocketExceptions
+# java/net/SocketTimeoutException
+# jdk/internal/event/ThreadSleepEvent
+# java/util/Formatter
+# java/util/regex/CharPredicates
+# java/util/regex/Pattern$Ques
+# java/util/regex/Pattern$BranchConn
+# java/util/regex/Pattern$Branch
+# java/util/Formatter$Conversion
+# java/util/Formatter$FormatString
+# java/util/Formatter$FormatSpecifier
+# java/util/Formatter$FixedString
+# java/util/Formattable
+# java/util/Formatter$Flags
+# java/util/concurrent/atomic/AtomicLongArray
+# java/lang/invoke/VarHandleLongs$Array
+# java/lang/invoke/VarHandleLongs$FieldInstanceReadOnly
+# java/lang/invoke/VarHandleLongs$FieldInstanceReadWrite
+# java/util/concurrent/atomic/Striped64$1
+# java/io/FilenameFilter
+# java/util/zip/CheckedInputStream
+# java/util/zip/CheckedOutputStream
+# javax/security/sasl/SaslException
+# java/util/concurrent/ConcurrentSkipListMap$KeySet
+# java/util/concurrent/ConcurrentSkipListMap$KeyIterator
+# java/util/concurrent/ConcurrentSkipListMap$Iter
+# java/net/InetAddress$NameServiceAddresses
+# java/net/InetAddress$Addresses
+# java/net/spi/InetAddressResolverProvider
+# sun/net/InetAddressCachePolicy
+# sun/net/InetAddressCachePolicy$1
+# java/net/InetAddress$CachedLookup
+# java/util/random/RandomGenerator
+# java/util/Random
+# java/util/concurrent/ThreadLocalRandom
+# jdk/internal/util/random/RandomSupport
+# java/net/InetAddress$CachedLocalHost
+# java/util/Collections$SynchronizedMap
+# java/util/concurrent/Executors
+# java/util/concurrent/ScheduledThreadPoolExecutor
+# java/util/concurrent/ScheduledExecutorService
+# java/util/concurrent/ThreadPoolExecutor
+# java/util/concurrent/AbstractExecutorService
+# java/util/concurrent/ThreadPoolExecutor$AbortPolicy
+# java/util/concurrent/RejectedExecutionHandler
+# java/util/concurrent/ScheduledThreadPoolExecutor$DelayedWorkQueue
+# java/util/concurrent/RunnableScheduledFuture
+# java/util/concurrent/RunnableFuture
+# java/util/concurrent/Future
+# java/util/concurrent/ScheduledFuture
+# java/util/concurrent/Delayed
+# java/util/concurrent/Executors$DefaultThreadFactory
+# jdk/internal/vm/StackableScope
+# jdk/internal/vm/ThreadContainer
+# jdk/internal/vm/SharedThreadContainer
+# java/lang/invoke/VarHandleBooleans$FieldInstanceReadOnly
+# java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite
+# jdk/internal/vm/ThreadContainers
+# jdk/internal/vm/ThreadContainers$RootContainer
+# jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer
+# java/util/concurrent/atomic/AtomicReference
+# java/util/concurrent/ConcurrentLinkedQueue
+# java/util/concurrent/ConcurrentLinkedQueue$Node
+# java/util/concurrent/CountDownLatch
+# java/util/concurrent/CountDownLatch$Sync
+# javax/security/auth/login/LoginException
+# java/security/GeneralSecurityException
+# javax/security/auth/callback/CallbackHandler
+# java/nio/channels/Selector
+# java/nio/channels/spi/SelectorProvider
+# java/nio/channels/spi/SelectorProvider$Holder
+# sun/nio/ch/DefaultSelectorProvider
+# sun/nio/ch/EPollSelectorProvider
+# sun/nio/ch/SelectorProviderImpl
+# sun/nio/ch/EPollSelectorImpl
+# sun/nio/ch/SelectorImpl
+# java/nio/channels/spi/AbstractSelector
+# sun/nio/ch/Util$2
+# sun/nio/ch/EPoll
+# sun/nio/ch/EventFD
+# javax/security/auth/login/Configuration
+# javax/security/auth/login/Configuration$1
+# javax/security/auth/login/Configuration$2
+# sun/security/provider/ConfigFile
+# sun/security/provider/ConfigFile$Spi
+# javax/security/auth/login/ConfigurationSpi
+# javax/security/auth/login/Configuration$3
+# java/nio/channels/ServerSocketChannel
+# sun/nio/ch/ServerSocketChannelImpl
+# sun/nio/ch/ServerSocketAdaptor
+# java/net/ServerSocket
+# sun/nio/ch/DummySocketImpl
+# java/net/StandardSocketOptions
+# java/net/StandardSocketOptions$StdSocketOption
+# java/net/NetworkInterface
+# sun/nio/ch/ServerSocketChannelImpl$DefaultOptionsHolder
+# sun/nio/ch/SocketOptionRegistry
+# sun/nio/ch/SocketOptionRegistry$RegistryKey
+# sun/nio/ch/SocketOptionRegistry$LazyInitialization
+# sun/nio/ch/OptionKey
+# sun/nio/ch/ExtendedSocketOption
+# sun/nio/ch/ExtendedSocketOption$1
+# sun/nio/ch/SelectionKeyImpl
+# java/nio/channels/spi/AbstractSelectionKey
+# java/nio/channels/SelectionKey
+# java/lang/invoke/ConstantBootstraps
+# java/util/concurrent/RejectedExecutionException
+# java/nio/channels/spi/AbstractSelector$1
+# java/io/EOFException
+# java/util/concurrent/locks/ReentrantReadWriteLock$FairSync
+# jdk/internal/math/DoubleToDecimal
+# jdk/internal/math/MathUtils
+# sun/nio/fs/UnixException
+# java/util/zip/GZIPInputStream
+# java/util/zip/GZIPOutputStream
+# java/util/zip/Adler32
+# java/io/DataOutputStream
+# java/io/FileOutputStream$1
+# java/util/concurrent/Semaphore
+# java/util/concurrent/Semaphore$NonfairSync
+# java/util/concurrent/Semaphore$Sync
+# java/io/StringReader
+# java/util/concurrent/ForkJoinPool
+# java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
+# java/util/concurrent/ForkJoinPool$WorkQueue
+# java/util/concurrent/ForkJoinPool$DefaultForkJoinWorkerThreadFactory
+# jdk/internal/access/JavaUtilConcurrentFJPAccess
+# java/util/concurrent/ForkJoinPool$2
+# java/text/DecimalFormatSymbols
+# sun/util/locale/provider/DecimalFormatSymbolsProviderImpl
+# sun/util/resources/LocaleData$CommonResourceBundleProvider
+# sun/util/resources/LocaleData$LocaleDataResourceBundleProvider
+# java/util/spi/ResourceBundleProvider
+# java/util/ArrayList$SubList$1
+# sun/text/resources/cldr/FormatData
+# sun/text/resources/cldr/FormatData_en
+# sun/util/resources/Bundles$2
+# javax/management/MalformedObjectNameException
+# javax/management/OperationsException
+# java/lang/management/ManagementFactory
+# javax/management/MBeanServerFactory
+# com/sun/jmx/mbeanserver/GetPropertyAction
+# javax/management/MBeanServerBuilder
+# java/lang/StringLatin1$CharsSpliterator
+# com/sun/jmx/mbeanserver/JmxMBeanServer
+# java/util/stream/IntStream
+# java/util/stream/IntPipeline
+# java/util/stream/IntPipeline$Head
+# com/sun/jmx/mbeanserver/SunJmxMBeanServer
+# java/util/function/IntPredicate
+# javax/management/MBeanServer
+# javax/management/MBeanServerConnection
+# java/util/stream/IntPipeline$StatelessOp
+# java/util/stream/IntPipeline$10
+# com/sun/jmx/mbeanserver/MBeanServerDelegateImpl
+# javax/management/DynamicMBean
+# javax/management/MBeanRegistration
+# javax/management/MBeanServerDelegate
+# javax/management/MBeanServerDelegateMBean
+# java/util/function/IntConsumer
+# javax/management/NotificationEmitter
+# javax/management/NotificationBroadcaster
+# java/util/stream/Sink$OfInt
+# java/util/stream/FindOps$FindSink$OfInt
+# java/util/OptionalInt
+# javax/management/MBeanNotificationInfo
+# javax/management/MBeanFeatureInfo
+# javax/management/DescriptorRead
+# javax/management/MBeanInfo
+# com/sun/jmx/mbeanserver/Util
+# javax/management/ObjectName
+# javax/management/QueryExp
+# java/util/stream/Sink$ChainedInt
+# java/util/stream/IntPipeline$10$1
+# javax/management/ObjectName$Property
+# java/lang/StringUTF16$CharsSpliterator
+# java/util/ComparableTimSort
+# java/lang/CharacterData00
+# javax/management/MBeanAttributeInfo
+# javax/management/NotificationBroadcasterSupport
+# javax/management/NotificationBroadcasterSupport$1
+# com/sun/jmx/remote/util/ClassLogger
+# java/lang/System$Logger
+# jdk/internal/logger/LazyLoggers
+# jdk/internal/logger/LazyLoggers$1
+# jdk/internal/logger/LazyLoggers$LazyLoggerFactories
+# java/lang/System$LoggerFinder
+# jdk/internal/logger/DefaultLoggerFinder
+# jdk/internal/logger/DefaultLoggerFinder$1
+# sun/util/logging/PlatformLogger$Bridge
+# sun/util/logging/PlatformLogger$ConfigurableBridge
+# jdk/internal/logger/BootstrapLogger
+# jdk/internal/logger/BootstrapLogger$DetectBackend
+# jdk/internal/logger/BootstrapLogger$DetectBackend$1
+# sun/util/logging/internal/LoggingProviderImpl
+# sun/util/logging/internal/LoggingProviderImpl$LogManagerAccess
+# jdk/internal/logger/BootstrapLogger$LoggingBackend
+# jdk/internal/logger/LoggerFinderLoader
+# java/util/logging/LoggingPermission
+# jdk/internal/logger/BootstrapLogger$BootstrapExecutors
+# java/util/logging/LogManager
+# java/util/logging/Level
+# java/util/logging/Level$KnownLevel
+# java/util/logging/LogManager$1
+# java/util/logging/LogManager$LoggerContext
+# java/util/logging/LogManager$SystemLoggerContext
+# java/util/logging/LogManager$LogNode
+# java/util/logging/LogManager$Cleaner
+# java/lang/ApplicationShutdownHooks
+# java/lang/ApplicationShutdownHooks$1
+# java/lang/Shutdown
+# java/lang/Shutdown$Lock
+# java/util/logging/LogManager$LoggingProviderAccess
+# java/util/logging/LogManager$2
+# java/util/logging/Logger
+# java/util/logging/LogManager$RootLogger
+# java/util/logging/Handler
+# java/util/logging/Logger$LoggerBundle
+# java/util/logging/Logger$ConfigurationData
+# java/util/logging/LogManager$LoggerWeakRef
+# java/util/logging/LogManager$VisitedLoggers
+# java/util/logging/LogManager$LoggerContext$1
+# java/util/ArrayList$ArrayListSpliterator
+# java/util/stream/ReferencePipeline$7
+# java/util/stream/ReferencePipeline$7$1
+# java/util/stream/Streams$AbstractStreamBuilderImpl
+# java/util/stream/Stream$Builder
+# java/util/stream/Streams$StreamBuilderImpl
+# java/util/stream/Streams
+# java/util/IdentityHashMap$Values
+# java/util/logging/LogManager$4
+# sun/util/logging/internal/LoggingProviderImpl$JULWrapper
+# sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration
+# javax/management/MBeanOperationInfo
+# javax/management/MBeanConstructorInfo
+# javax/management/ImmutableDescriptor
+# javax/management/Descriptor
+# com/sun/jmx/mbeanserver/ClassLoaderRepositorySupport
+# com/sun/jmx/mbeanserver/ModifiableClassLoaderRepository
+# javax/management/loading/ClassLoaderRepository
+# com/sun/jmx/mbeanserver/ClassLoaderRepositorySupport$LoaderEntry
+# com/sun/jmx/mbeanserver/MBeanInstantiator
+# com/sun/jmx/mbeanserver/SecureClassLoaderRepository
+# com/sun/jmx/mbeanserver/JmxMBeanServer$1
+# com/sun/jmx/mbeanserver/Repository
+# com/sun/jmx/interceptor/DefaultMBeanServerInterceptor
+# com/sun/jmx/interceptor/MBeanServerInterceptor
+# com/sun/jmx/mbeanserver/JmxMBeanServer$2
+# com/sun/jmx/mbeanserver/Introspector
+# com/sun/jmx/defaults/JmxProperties
+# java/lang/System$Logger$Level
+# com/sun/jmx/mbeanserver/DynamicMBean2
+# com/sun/jmx/interceptor/DefaultMBeanServerInterceptor$ResourceContext
+# com/sun/jmx/mbeanserver/Repository$RegistrationContext
+# com/sun/jmx/interceptor/DefaultMBeanServerInterceptor$ResourceContext$1
+# com/sun/jmx/mbeanserver/NamedObject
+# javax/management/MBeanServerNotification
+# javax/management/Notification
+# java/util/EventObject
+# javax/management/ObjectInstance
+# com/sun/jmx/mbeanserver/JmxMBeanServer$3
+# java/lang/management/ManagementFactory$PlatformMBeanFinder
+# java/lang/management/ManagementFactory$PlatformMBeanFinder$1
+# sun/management/spi/PlatformMBeanProvider
+# jdk/management/jfr/internal/FlightRecorderMXBeanProvider
+# java/util/concurrent/Callable
+# com/sun/management/internal/PlatformMBeanProviderImpl
+# com/sun/management/internal/PlatformMBeanProviderImpl$1
+# sun/management/spi/PlatformMBeanProvider$PlatformComponent
+# com/sun/management/internal/PlatformMBeanProviderImpl$2
+# com/sun/management/internal/PlatformMBeanProviderImpl$3
+# com/sun/management/internal/PlatformMBeanProviderImpl$4
+# java/util/Collections$SingletonSet
+# com/sun/management/internal/DiagnosticCommandImpl
+# com/sun/management/DiagnosticCommandMBean
+# sun/management/NotificationEmitterSupport
+# sun/management/ManagementFactoryHelper
+# sun/management/VMManagementImpl
+# sun/management/VMManagement
+# com/sun/management/internal/PlatformMBeanProviderImpl$5
+# java/lang/management/DefaultPlatformMBeanProvider
+# java/lang/management/DefaultPlatformMBeanProvider$1
+# java/lang/management/DefaultPlatformMBeanProvider$2
+# java/lang/management/DefaultPlatformMBeanProvider$3
+# java/lang/management/DefaultPlatformMBeanProvider$4
+# java/lang/management/DefaultPlatformMBeanProvider$5
+# java/lang/management/DefaultPlatformMBeanProvider$6
+# java/lang/management/DefaultPlatformMBeanProvider$7
+# java/lang/management/DefaultPlatformMBeanProvider$8
+# sun/management/ManagementFactoryHelper$LoggingMXBeanAccess
+# sun/management/ManagementFactoryHelper$LoggingMXBeanAccess$1
+# java/lang/management/DefaultPlatformMBeanProvider$9
+# java/lang/management/DefaultPlatformMBeanProvider$10
+# java/lang/management/DefaultPlatformMBeanProvider$11
+# jdk/management/jfr/FlightRecorderMXBean
+# java/lang/management/PlatformManagedObject
+# jdk/management/jfr/internal/FlightRecorderMXBeanProvider$SingleMBeanComponent
+# java/util/HashMap$HashMapSpliterator
+# java/util/HashMap$ValueSpliterator
+# java/util/stream/ForEachOps
+# java/util/stream/ForEachOps$ForEachOp
+# java/util/stream/ForEachOps$ForEachOp$OfRef
+# sun/management/RuntimeImpl
+# java/lang/management/RuntimeMXBean
+# java/util/Collections$SingletonMap
+# java/util/AbstractMap$SimpleImmutableEntry
+# java/util/Collections$2
+# javax/management/StandardMBean
+# javax/management/JMX
+# com/sun/jmx/mbeanserver/DescriptorCache
+# com/sun/jmx/mbeanserver/MXBeanSupport
+# com/sun/jmx/mbeanserver/MBeanSupport
+# javax/management/MXBean
+# com/sun/jmx/mbeanserver/MXBeanIntrospector
+# com/sun/jmx/mbeanserver/MBeanIntrospector
+# com/sun/jmx/mbeanserver/MBeanIntrospector$PerInterfaceMap
+# sun/nio/ch/SocketAdaptor
+# com/sun/jmx/mbeanserver/MBeanIntrospector$MBeanInfoMap
+# com/sun/jmx/mbeanserver/MBeanAnalyzer
+# com/sun/jmx/mbeanserver/MBeanAnalyzer$MethodOrder
+# com/sun/jmx/mbeanserver/ConvertingMethod
+# com/sun/jmx/mbeanserver/MXBeanMappingFactory
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory
+# java/nio/channels/CancelledKeyException
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$Mappings
+# javax/management/openmbean/OpenType
+# javax/management/openmbean/SimpleType
+# javax/management/openmbean/CompositeData
+# javax/management/openmbean/TabularData
+# java/math/BigDecimal
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$IdentityMapping
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$NonNullMXBeanMapping
+# com/sun/jmx/mbeanserver/MXBeanMapping
+# java/lang/invoke/DirectMethodHandle$StaticAccessor
+# jdk/internal/reflect/MethodHandleFieldAccessorImpl
+# jdk/internal/reflect/MethodHandleObjectFieldAccessorImpl
+# javax/management/openmbean/ArrayType
+# com/sun/jmx/mbeanserver/MBeanAnalyzer$AttrMethods
+# sun/reflect/generics/tree/TypeVariableSignature
+# java/lang/invoke/MethodHandles$1
+# java/lang/invoke/BoundMethodHandle$Species_LJ
+# java/lang/invoke/BoundMethodHandle$Species_LLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLL
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$CollectionMapping
+# javax/management/openmbean/CompositeType
+# javax/management/openmbean/TabularType
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$TabularMapping
+# java/util/LinkedHashMap$LinkedEntrySet
+# java/util/LinkedHashMap$LinkedEntryIterator
+# com/sun/jmx/mbeanserver/MBeanIntrospector$MBeanInfoMaker
+# com/sun/jmx/mbeanserver/MBeanAnalyzer$MBeanVisitor
+# javax/management/openmbean/OpenMBeanAttributeInfoSupport
+# javax/management/openmbean/OpenMBeanAttributeInfo
+# javax/management/openmbean/OpenMBeanParameterInfo
+# com/sun/jmx/mbeanserver/PerInterface
+# com/sun/jmx/mbeanserver/PerInterface$InitMaps
+# com/sun/jmx/mbeanserver/MXBeanLookup
+# com/sun/jmx/mbeanserver/WeakIdentityHashMap
+# com/sun/jmx/mbeanserver/WeakIdentityHashMap$IdentityWeakReference
+# com/sun/management/internal/HotSpotThreadImpl
+# com/sun/management/ThreadMXBean
+# java/lang/management/ThreadMXBean
+# sun/management/ThreadImpl
+# java/lang/management/ThreadInfo
+# java/lang/management/LockInfo
+# java/lang/management/MonitorInfo
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$CompositeMapping
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$ArrayMapping
+# java/lang/annotation/ElementType
+# com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$EnumMapping
+# javax/management/MBeanParameterInfo
+# java/util/concurrent/atomic/AtomicBoolean
+# sun/nio/ch/SocketChannelImpl$DefaultOptionsHolder
+# com/sun/jmx/mbeanserver/PerInterface$MethodAndSig
+# com/sun/management/internal/OperatingSystemImpl
+# com/sun/management/UnixOperatingSystemMXBean
+# com/sun/management/OperatingSystemMXBean
+# java/lang/management/OperatingSystemMXBean
+# sun/management/BaseOperatingSystemImpl
+# com/sun/management/internal/OperatingSystemImpl$SystemCpuTicks
+# com/sun/management/internal/OperatingSystemImpl$ContainerCpuTicks
+# com/sun/management/internal/OperatingSystemImpl$ProcessCpuTicks
+# jdk/internal/platform/Container
+# jdk/internal/platform/Metrics
+# jdk/internal/platform/SystemMetrics
+# jdk/internal/platform/CgroupMetrics
+# jdk/internal/platform/CgroupSubsystemFactory
+# java/util/regex/Pattern$Dollar
+# jdk/internal/platform/CgroupUtil
+# jdk/internal/platform/CgroupInfo
+# java/nio/file/FileChannelLinesSpliterator
+# jdk/internal/platform/CgroupSubsystemFactory$CgroupTypeResult
+# jdk/internal/platform/cgroupv2/CgroupV2Subsystem
+# jdk/internal/platform/CgroupSubsystem
+# jdk/internal/platform/cgroupv2/CgroupV2SubsystemController
+# jdk/internal/platform/CgroupSubsystemController
+# java/lang/Deprecated
+# java/lang/annotation/Documented
+# jdk/proxy1/$Proxy2
+# javax/management/DescriptorKey
+# sun/management/MemoryImpl
+# java/lang/management/MemoryMXBean
+# java/lang/management/MemoryManagerMXBean
+# sun/management/MemoryManagerImpl
+# com/sun/management/internal/GarbageCollectorExtImpl
+# com/sun/management/GarbageCollectorMXBean
+# java/lang/management/GarbageCollectorMXBean
+# sun/management/GarbageCollectorImpl
+# sun/management/Util
+# java/lang/management/ManagementPermission
+# java/lang/invoke/BoundMethodHandle$Species_LLJ
+# java/util/HashMap$EntrySpliterator
+# javax/management/StandardEmitterMBean
+# java/lang/management/MemoryPoolMXBean
+# sun/management/MemoryPoolImpl
+# sun/management/MemoryPoolImpl$PoolSensor
+# sun/management/Sensor
+# sun/management/MemoryPoolImpl$CollectionSensor
+# java/lang/management/MemoryUsage
+# java/lang/management/MemoryType
+# sun/management/VMManagementImpl$1
+# sun/management/CompilationImpl
+# java/lang/management/CompilationMXBean
+# sun/management/ManagementFactoryHelper$PlatformLoggingImpl
+# java/lang/management/PlatformLoggingMXBean
+# java/util/logging/LoggingMXBean
+# java/util/logging/Logging
+# javax/management/openmbean/OpenMBeanParameterInfoSupport
+# javax/management/openmbean/OpenMBeanOperationInfoSupport
+# javax/management/openmbean/OpenMBeanOperationInfo
+# javax/management/MBeanInfo$ArrayGettersSafeAction
+# sun/management/ClassLoadingImpl
+# java/lang/management/ClassLoadingMXBean
+# com/sun/management/internal/DiagnosticCommandImpl$OperationInfoComparator
+# com/sun/management/internal/DiagnosticCommandInfo
+# com/sun/management/internal/DiagnosticCommandArgumentInfo
+# jdk/jfr/internal/dcmd/DCmdView
+# jdk/jfr/internal/dcmd/AbstractDCmd
+# jdk/jfr/internal/util/Output$LinePrinter
+# jdk/jfr/internal/util/Output
+# jdk/jfr/internal/dcmd/Argument
+# jdk/jfr/internal/dcmd/DCmdStop
+# jdk/jfr/internal/dcmd/DCmdStart
+# jdk/jfr/internal/dcmd/DCmdDump
+# jdk/jfr/internal/dcmd/DCmdCheck
+# com/sun/management/internal/DiagnosticCommandImpl$Wrapper
+# java/lang/StringLatin1$LinesSpliterator
+# java/util/ImmutableCollections$Access
+# java/util/ImmutableCollections$Access$1
+# jdk/internal/access/JavaUtilCollectionAccess
+# java/util/stream/Nodes$SpinedNodeBuilder
+# java/util/stream/SpinedBuffer
+# java/util/stream/AbstractSpinedBuffer
+# jdk/jfr/internal/query/ViewPrinter
+# jdk/jfr/internal/util/Columnizer
+# jdk/jfr/internal/query/ViewFile
+# jdk/jfr/internal/util/Tokenizer
+# jdk/jfr/internal/query/ViewFile$ViewConfiguration
+# jdk/jfr/internal/util/Columnizer$Column
+# jdk/jfr/internal/SecuritySupport
+# jdk/jfr/Event
+# jdk/jfr/internal/SecuritySupport$CallableWithoutCheckException
+# jdk/jfr/internal/SecuritySupport$SafePath
+# java/util/PropertyPermission
+# jdk/jfr/internal/SecuritySupport$4
+# jdk/jfr/internal/SecuritySupport$Privileged
+# jdk/jfr/internal/consumer/FileAccess
+# jdk/jfr/internal/consumer/FileAccess$UnPrivileged
+# jdk/jfr/internal/SecuritySupport$1
+# sun/nio/fs/Globs
+# sun/nio/fs/UnixFileSystem$3
+# java/nio/file/PathMatcher
+# java/nio/file/Files$1
+# sun/nio/fs/UnixSecureDirectoryStream
+# java/nio/file/SecureDirectoryStream
+# sun/nio/fs/UnixDirectoryStream
+# sun/nio/fs/UnixDirectoryStream$UnixDirectoryIterator
+# jdk/jfr/internal/jfc/JFC
+# jdk/jfr/internal/jfc/model/JFCModel
+# jdk/jfr/internal/jfc/JFC$KnownConfiguration
+# jdk/jfr/internal/jfc/model/Parser
+# jdk/internal/util/xml/impl/SAXParserImpl
+# jdk/internal/util/xml/SAXParser
+# jdk/internal/util/xml/impl/ParserSAX
+# jdk/internal/org/xml/sax/XMLReader
+# jdk/internal/org/xml/sax/Locator
+# jdk/internal/util/xml/impl/Parser
+# jdk/internal/util/xml/impl/Attrs
+# jdk/internal/org/xml/sax/Attributes
+# jdk/internal/util/xml/impl/Pair
+# jdk/internal/org/xml/sax/helpers/DefaultHandler
+# jdk/internal/org/xml/sax/EntityResolver
+# jdk/internal/org/xml/sax/DTDHandler
+# jdk/internal/org/xml/sax/ContentHandler
+# jdk/internal/org/xml/sax/ErrorHandler
+# jdk/jfr/internal/jfc/model/Parser$ConfigurationHandler
+# jdk/internal/org/xml/sax/InputSource
+# jdk/internal/util/xml/impl/Input
+# jdk/jfr/internal/jfc/model/XmlConfiguration
+# jdk/jfr/internal/jfc/model/XmlElement
+# jdk/jfr/internal/jfc/model/Utilities
+# jdk/jfr/internal/jfc/model/XmlEvent
+# jdk/jfr/internal/jfc/model/Constraint
+# jdk/jfr/internal/jfc/model/XmlControl
+# jdk/jfr/internal/jfc/model/XmlSetting
+# jdk/jfr/internal/jfc/model/SettingsLog
+# jdk/jfr/internal/jfc/model/XmlCondition
+# jdk/jfr/internal/jfc/model/ControlElement
+# jdk/jfr/internal/jfc/model/XmlExpression
+# jdk/jfr/internal/jfc/model/XmlText
+# jdk/jfr/internal/jfc/model/XmlInput
+# jdk/jfr/internal/jfc/model/XmlSelection
+# jdk/jfr/internal/jfc/model/XmlFlag
+# jdk/jfr/internal/jfc/model/XmlOption
+# jdk/jfr/internal/jfc/model/XmlOr
+# jdk/jfr/internal/jfc/model/XmlAnd
+# jdk/jfr/internal/jfc/model/XmlTest
+# jdk/jfr/internal/jfc/model/XmlNot
+# com/sun/management/GcInfo
+# javax/management/openmbean/CompositeDataView
+# com/sun/management/internal/HotSpotDiagnostic
+# com/sun/management/HotSpotDiagnosticMXBean
+# com/sun/management/VMOption
+# com/sun/management/HotSpotDiagnosticMXBean$ThreadDumpFormat
+# com/sun/management/VMOption$Origin
+# jdk/internal/misc/VM$BufferPoolsHolder
+# sun/nio/ch/FileChannelImpl$2
+# sun/nio/ch/FileChannelImpl$3
+# java/lang/management/BufferPoolMXBean
+# sun/management/ManagementFactoryHelper$1
+# java/util/concurrent/ThreadPoolExecutor$Worker
+# jdk/management/jfr/SettingDescriptorInfo
+# jdk/management/jfr/SettingDescriptorInfo$1
+# jdk/management/jfr/FlightRecorderMXBeanImpl
+# javax/management/AttributeChangeNotification
+# sun/reflect/generics/tree/LongSignature
+# sun/reflect/generics/tree/VoidDescriptor
+# jdk/management/jfr/RecordingInfo
+# jdk/management/jfr/ConfigurationInfo
+# jdk/management/jfr/EventTypeInfo
+# jdk/jfr/internal/management/StreamManager
+# javax/management/StandardMBean$MBeanInfoSafeAction
+# javax/management/NotificationListener
+# java/util/EventListener
+# javax/management/NotificationFilter
+# javax/management/ListenerNotFoundException
+# jdk/jfr/Recording
+# jdk/jfr/FlightRecorder
+# jdk/management/jfr/FlightRecorderMXBeanImpl$MXBeanListener
+# jdk/jfr/FlightRecorderListener
+# com/sun/jmx/mbeanserver/StandardMBeanSupport
+# com/sun/jmx/mbeanserver/StandardMBeanIntrospector
+# javax/management/NotCompliantMBeanException
+# java/lang/reflect/UndeclaredThrowableException
+# java/util/stream/ReduceOps$2
+# java/util/stream/ReduceOps$2ReducingSink
+# java/util/TimerTask
+# java/util/Timer
+# java/util/TaskQueue
+# java/util/TimerThread
+# java/util/Timer$ThreadReaper
+# java/lang/ArrayIndexOutOfBoundsException
+# java/util/concurrent/locks/AbstractQueuedSynchronizer$SharedNode
+# java/math/MathContext
+# java/math/RoundingMode
+# java/nio/BufferUnderflowException
+# java/text/ParseException
+# java/nio/file/FileVisitor
+# java/text/NumberFormat
+# java/text/DecimalFormat
+# java/text/FieldPosition
+# java/text/DigitList
+# java/lang/ExceptionInInitializerError
+# java/lang/ClassValue$ClassValueMap
+# javax/net/ssl/KeyManagerFactory
+# javax/net/ssl/TrustManagerFactory
+# java/security/cert/CertSelector
+# java/security/cert/CertPathParameters
+# javax/net/ssl/ManagerFactoryParameters
+# javax/net/ssl/X509TrustManager
+# javax/net/ssl/TrustManager
+# javax/management/InstanceNotFoundException
+# javax/management/MBeanRegistrationException
+# javax/management/MBeanException
+# sun/misc/Signal
+# sun/misc/SignalHandler
+# sun/misc/Signal$SunMiscHandler
+# sun/misc/Signal$InternalMiscHandler
+# java/util/concurrent/ScheduledThreadPoolExecutor$ScheduledFutureTask
+# java/util/concurrent/FutureTask
+# java/util/concurrent/FutureTask$WaitNode
+# java/util/concurrent/Executors$RunnableAdapter
+# java/util/concurrent/CopyOnWriteArraySet
+# java/util/concurrent/LinkedBlockingDeque
+# java/util/concurrent/BlockingDeque
+# java/util/regex/Pattern$SliceS
+# java/lang/InheritableThreadLocal
+# java/util/concurrent/LinkedBlockingDeque$Node
+# java/util/RegularEnumSet$EnumSetIterator
+# java/util/concurrent/LinkedBlockingQueue$Itr
+# java/util/concurrent/ArrayBlockingQueue
+# java/util/concurrent/ArrayBlockingQueue$Itr
+# java/util/concurrent/ArrayBlockingQueue$Itrs
+# java/util/concurrent/ArrayBlockingQueue$Itrs$Node
+# java/util/UUID
+# java/util/UUID$Holder
+# java/security/SecureRandom
+# java/security/SecureRandomParameters
+# sun/security/provider/SecureRandom
+# sun/security/provider/SHA
+# sun/security/provider/ByteArrayAccess$BE
+# java/util/Base64
+# java/util/Base64$Encoder
+# java/beans/ConstructorProperties
+# java/text/AttributedCharacterIterator$Attribute
+# java/text/Format$Field
+# java/text/DateFormat$Field
+# java/text/DateFormatSymbols
+# sun/util/locale/provider/DateFormatSymbolsProviderImpl
+# sun/util/locale/provider/NumberFormatProviderImpl
+# java/io/CharArrayReader
+# java/util/Currency
+# java/util/concurrent/atomic/AtomicReferenceArray
+# java/lang/invoke/VarHandleReferences$Array
+# sun/reflect/generics/scope/ConstructorScope
+# java/util/stream/SliceOps
+# java/util/stream/SliceOps$1
+# java/util/stream/ReferencePipeline$StatefulOp
+# java/util/stream/SliceOps$1$1
+# java/util/HashMap$KeySpliterator
+# java/util/stream/Streams$ConcatSpliterator$OfRef
+# java/util/stream/Streams$ConcatSpliterator
+# java/util/stream/StreamSpliterators$WrappingSpliterator
+# java/util/stream/StreamSpliterators$AbstractWrappingSpliterator
+# java/util/stream/Streams$2
+# java/util/stream/StreamSpliterators
+# javax/management/AttributeNotFoundException
+# java/util/concurrent/DelayQueue
+# java/util/PriorityQueue
+# java/util/concurrent/ExecutionException
+# java/nio/channels/OverlappingFileLockException
+# sun/nio/ch/FileLockImpl
+# java/nio/channels/FileLock
+# sun/nio/ch/FileLockTable
+# sun/nio/ch/FileKey
+# sun/nio/ch/FileLockTable$FileLockReference
+# java/nio/file/StandardCopyOption
+# sun/nio/fs/UnixFileSystem$Flags
+# java/util/concurrent/TimeoutException
+# java/util/concurrent/ConcurrentLinkedDeque
+# java/util/concurrent/ConcurrentLinkedDeque$Node
+# java/util/concurrent/LinkedBlockingDeque$Itr
+# java/util/concurrent/LinkedBlockingDeque$AbstractItr
+# java/util/JumboEnumSet
+# java/util/JumboEnumSet$EnumSetIterator
+# java/util/concurrent/CompletableFuture
+# java/util/concurrent/CompletionStage
+# java/util/concurrent/CompletableFuture$AltResult
+# java/util/concurrent/CompletableFuture$Completion
+# java/util/concurrent/CompletableFuture$AsynchronousCompletionTask
+# java/util/concurrent/ForkJoinTask
+# java/util/concurrent/CompletableFuture$UniRun
+# java/util/concurrent/CompletableFuture$UniCompletion
+# java/util/concurrent/ForkJoinTask$Aux
+# sun/invoke/util/ValueConversions$WrapperCache
+# sun/invoke/util/ValueConversions$1
+# java/lang/invoke/ClassSpecializer$Factory$1Var
+# java/lang/invoke/BoundMethodHandle$Species_LI
+# java/util/ResourceBundle$ResourceBundleControlProviderHolder
+# java/util/spi/ResourceBundleControlProvider
+# java/util/ServiceLoader$ProviderSpliterator
+# java/util/ResourceBundle$CacheKey
+# java/util/ResourceBundle$KeyElementReference
+# java/util/ResourceBundle$CacheKeyReference
+# java/util/ResourceBundle$Control$2
+# java/net/URLClassLoader$2
+# java/util/PropertyResourceBundle
+# sun/util/PropertyResourceBundleCharset
+# sun/util/PropertyResourceBundleCharset$PropertiesFileDecoder
+# java/util/ResourceBundle$BundleReference
+# java/io/CharConversionException
+# java/util/concurrent/Executors$DelegatedScheduledExecutorService
+# java/util/concurrent/Executors$DelegatedExecutorService
+# jdk/proxy1/$Proxy5
+# java/util/concurrent/ConcurrentHashMap$TreeNode
+# java/util/concurrent/ConcurrentHashMap$TreeBin
+# java/util/function/UnaryOperator
+# java/time/Instant
+# java/time/format/DateTimeFormatter
+# java/time/format/DateTimeFormatterBuilder
+# java/time/temporal/TemporalQuery
+# java/time/temporal/IsoFields
+# java/time/temporal/IsoFields$Field
+# java/time/temporal/IsoFields$Field$1
+# java/time/temporal/IsoFields$Field$2
+# java/time/temporal/IsoFields$Field$3
+# java/time/temporal/IsoFields$Field$4
+# java/time/temporal/IsoFields$Unit
+# java/time/temporal/JulianFields
+# java/time/temporal/JulianFields$Field
+# java/time/format/SignStyle
+# java/time/format/DateTimeFormatterBuilder$DateTimePrinterParser
+# java/time/format/DateTimeFormatterBuilder$NumberPrinterParser
+# java/time/format/DateTimeFormatterBuilder$CharLiteralPrinterParser
+# java/time/format/ResolverStyle
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
+# java/time/format/DateTimeFormatterBuilder$CompositePrinterParser
+# java/time/format/DecimalStyle
+# java/time/format/DateTimeFormatterBuilder$SettingsParser
+# java/time/format/DateTimeFormatterBuilder$OffsetIdPrinterParser
+# java/time/format/DateTimeFormatterBuilder$NanosPrinterParser
+# java/time/format/DateTimeFormatterBuilder$ZoneIdPrinterParser
+# java/time/format/DateTimeFormatterBuilder$StringLiteralPrinterParser
+# java/time/format/DateTimeFormatterBuilder$InstantPrinterParser
+# java/time/format/TextStyle
+# java/time/format/DateTimeTextProvider$LocaleStore
+# java/time/format/DateTimeTextProvider
+# java/time/format/DateTimeTextProvider$1
+# java/time/format/DateTimeFormatterBuilder$1
+# java/time/format/DateTimeFormatterBuilder$TextPrinterParser
+# java/time/chrono/ChronoPeriod
+# java/time/Period
+# java/time/format/DateTimePrintContext
+# java/time/Instant$1
+# sun/nio/cs/ISO_8859_1$Encoder
+# sun/nio/cs/Surrogate$Parser
+# sun/nio/cs/Surrogate
+# sun/util/locale/provider/TimeZoneNameUtility
+# sun/util/locale/provider/TimeZoneNameUtility$TimeZoneNameGetter
+# sun/util/cldr/CLDRTimeZoneNameProviderImpl
+# sun/util/locale/provider/TimeZoneNameProviderImpl
+# sun/util/locale/provider/BaseLocaleDataMetaInfo
+# sun/util/resources/cldr/TimeZoneNames
+# sun/util/resources/TimeZoneNamesBundle
+# sun/util/resources/OpenListResourceBundle
+# sun/util/resources/cldr/TimeZoneNames_en
+# java/lang/ProcessEnvironment
+# java/lang/ProcessEnvironment$Variable
+# java/lang/ProcessEnvironment$ExternalData
+# java/lang/ProcessImpl
+# java/lang/ProcessImpl$LaunchMechanism
+# java/lang/ProcessEnvironment$Value
+# java/lang/ProcessEnvironment$StringEnvironment
+# java/util/function/IntUnaryOperator
+# java/util/concurrent/SynchronousQueue
+# java/util/concurrent/SynchronousQueue$TransferStack
+# java/util/concurrent/SynchronousQueue$Transferer
+# java/util/concurrent/SynchronousQueue$TransferStack$SNode
+# java/util/logging/Logger$SystemLoggerHelper
+# java/util/logging/Logger$SystemLoggerHelper$1
+# java/util/function/BiPredicate
+# java/util/IdentityHashMap$IdentityHashMapIterator
+# java/util/IdentityHashMap$KeyIterator
+# java/util/IdentityHashMap$EntrySet
+# java/util/IdentityHashMap$EntryIterator
+# java/util/IdentityHashMap$EntryIterator$Entry
+# jdk/proxy1/$Proxy7
+# jdk/proxy1/$Proxy10
+# java/util/concurrent/atomic/LongAccumulator
+# java/util/function/LongBinaryOperator
+# java/lang/ThreadLocal$SuppliedThreadLocal
+# java/util/regex/Pattern$Caret
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLLLL
+# java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLLLLL
+# java/util/jar/JarInputStream
+# javax/net/ssl/SSLPeerUnverifiedException
+# javax/net/ssl/SSLException
+# java/io/PrintWriter
+# java/io/PrintWriter$1
+# jdk/internal/access/JavaIOPrintWriterAccess
+# java/util/ArrayDeque$DescendingIterator
+# java/util/ArrayList$ListItr
+# sun/nio/ch/IOVecWrapper
+# sun/nio/ch/AllocatedNativeObject
+# sun/nio/ch/NativeObject
+# sun/nio/ch/IOVecWrapper$Deallocator
+# java/nio/HeapByteBufferR
+# java/net/URLEncoder
+# java/util/BitSet
+# java/io/CharArrayWriter
+# java/util/function/ToIntFunction
+# java/util/stream/ReferencePipeline$4
+# java/util/function/IntBinaryOperator
+# java/util/stream/ReduceOps$6
+# java/util/stream/ReduceOps$5ReducingSink
+# java/util/stream/ReferencePipeline$4$1
+# sun/util/PreHashedMap
+# sun/nio/cs/StandardCharsets$Aliases
+# sun/nio/cs/StandardCharsets$Cache
+# java/util/stream/SortedOps
+# java/util/stream/SortedOps$OfRef
+# java/util/Comparators$NaturalOrderComparator
+# java/util/stream/SortedOps$SizedRefSortingSink
+# java/util/stream/SortedOps$AbstractRefSortingSink
+# java/util/Stack
+# java/util/ServiceConfigurationError
+# java/util/WeakHashMap$KeyIterator
+# java/util/WeakHashMap$HashIterator
+# java/text/MessageFormat
+# java/text/MessageFormat$Field
+# java/lang/FunctionalInterface
+# jdk/proxy1/$Proxy22
+# java/util/stream/ReferencePipeline$15
+# java/util/stream/ReferencePipeline$15$1
+# java/lang/invoke/MethodHandleImpl$BindCaller
+# java/lang/invoke/MethodHandleImpl$BindCaller$1
+# java/lang/invoke/MethodHandleImpl$CasesHolder
+# java/lang/invoke/MethodHandleImpl$LoopClauses
+# java/lang/invoke/MethodHandleImpl$ArrayAccess
+# java/lang/invoke/MethodHandleImpl$ArrayAccessor
+# java/lang/invoke/MethodHandleImpl$ArrayAccessor$1
+# java/lang/invoke/MethodHandleImpl$BindCaller$InjectedInvokerHolder
+# java/util/Collections$CopiesList
+# java/lang/invoke/MethodHandleImpl$WrappedMember
+# javax/xml/transform/stream/StreamSource
+# javax/xml/transform/Source
+# javax/xml/transform/sax/SAXSource
+# javax/xml/transform/dom/DOMSource
+# java/awt/image/RenderedImage
+# java/util/Collections$UnmodifiableSortedSet
+# javax/xml/namespace/QName
+# java/util/logging/ConsoleHandler
+# java/util/logging/StreamHandler
+# java/lang/StackTraceElement$HashedModules
+# java/lang/IllegalAccessError
+# org/xml/sax/ErrorHandler
+# org/xml/sax/SAXParseException
+# org/xml/sax/SAXException
+# javax/xml/transform/TransformerConfigurationException
+# javax/xml/transform/TransformerException
+# javax/xml/parsers/ParserConfigurationException
+# javax/xml/parsers/FactoryConfigurationError
+# javax/xml/datatype/DatatypeConstants
+# javax/xml/datatype/DatatypeConstants$Field
+# java/awt/Image
+# java/awt/image/BufferedImage
+# java/awt/image/WritableRenderedImage
+# java/awt/Transparency
+# java/awt/Component
+# java/awt/image/ImageObserver
+# java/awt/MenuContainer
+# java/awt/Graphics
+# java/awt/Graphics2D
+# java/awt/datatransfer/Transferable
+# javax/xml/transform/Result
+# javax/xml/datatype/XMLGregorianCalendar
+# javax/xml/namespace/NamespaceContext
+# javax/xml/datatype/Duration
+# org/xml/sax/Locator
+# org/w3c/dom/Node
+# java/util/stream/ReduceOps$4
+# java/util/stream/ReduceOps$4ReducingSink
+# java/util/WeakHashMap$EntrySet
+# java/util/WeakHashMap$EntryIterator
+# java/util/concurrent/Flow$Subscriber
+# java/util/LinkedList$LLSpliterator
+# java/util/stream/SortedOps$RefSortingSink
+# javax/xml/parsers/SAXParserFactory
+# javax/xml/parsers/DocumentBuilderFactory
+# sun/reflect/generics/tree/ByteSignature
+# sun/reflect/generics/tree/ArrayTypeSignature
+# javax/xml/transform/TransformerFactory
+# sun/reflect/generics/repository/FieldRepository
+# java/util/stream/ReduceOps$5
+# java/util/stream/ReduceOps$CountingSink$OfRef
+# java/util/stream/ReduceOps$CountingSink
+# java/nio/channels/ClosedSelectorException
+# org/w3c/dom/Document
+# sun/reflect/generics/tree/IntSignature
+# sun/reflect/generics/tree/BooleanSignature
+# jdk/internal/ValueBased
+# com/sun/proxy/jdk/proxy1/$Proxy43
+# sun/reflect/generics/tree/ShortSignature
+# java/util/stream/LongStream
+# java/util/stream/DoubleStream
+# jdk/internal/reflect/MethodHandleLongFieldAccessorImpl
+# java/util/concurrent/CancellationException
+# java/util/concurrent/CompletableFuture$UniApply
+# java/util/concurrent/CompletableFuture$Signaller
+# java/security/InvalidKeyException
+# java/util/Base64$Decoder
+# java/util/concurrent/locks/ReentrantReadWriteLock$Sync$HoldCounter
+# java/lang/StringIndexOutOfBoundsException
+# java/util/concurrent/ConcurrentSkipListMap$Values
+# java/util/concurrent/ConcurrentSkipListMap$ValueIterator
+# java/text/DontCareFieldPosition
+# java/text/Format$FieldDelegate
+# java/text/DontCareFieldPosition$1
+# java/text/NumberFormat$Field
+# java/nio/channels/FileChannel$MapMode
+# jdk/internal/misc/ExtendedMapMode
+# sun/nio/ch/FileChannelImpl$DefaultUnmapper
+# sun/nio/ch/FileChannelImpl$Unmapper
+# jdk/internal/access/foreign/UnmapperProxy
+# sun/nio/ch/Util$3
+# java/lang/foreign/MemorySegment
+# java/io/RandomAccessFile$1
+# java/util/TreeMap$DescendingSubMap
+# java/util/TreeMap$NavigableSubMap
+# java/util/Collections$ReverseComparator
+# java/util/TreeMap$DescendingSubMap$DescendingEntrySetView
+# java/util/TreeMap$NavigableSubMap$EntrySetView
+# java/util/TreeMap$NavigableSubMap$DescendingSubMapEntryIterator
+# java/util/TreeMap$NavigableSubMap$SubMapIterator
+# java/util/concurrent/ConcurrentLinkedQueue$Itr
+# java/util/stream/MatchOps$MatchKind
+# java/util/stream/MatchOps
+# java/util/stream/MatchOps$MatchOp
+# java/util/stream/MatchOps$BooleanTerminalSink
+# java/util/stream/MatchOps$1MatchSink
+# java/util/function/ToLongFunction
+# java/util/zip/CRC32C
+# java/nio/channels/AsynchronousCloseException
+# java/nio/channels/ClosedChannelException
+# java/security/CodeSigner
+# java/util/concurrent/ConcurrentHashMap$KeySpliterator
