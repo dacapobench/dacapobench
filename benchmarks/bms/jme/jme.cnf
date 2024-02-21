@@ -1,6 +1,6 @@
 benchmark jme
   class org.dacapo.harness.JME
-  thread-model per_cpu;
+  thread-model single;
 
 size small args "TestMultiPostWater", "10"
   threads 1      // per available processor
@@ -26,5 +26,5 @@ description
   copyright	 "TODO",
   license    "Apache License, Version 2.0",
   url        "https://github.com/jMonkeyEngine/jmonkeyengine",
-  threads    "Explicitly multi-threaded, scaled to available processors.",
+  threads    "Externally single-threaded.  Internally multi-threaded, however this workload is single threaded (dominated by the event loop)",
   repeats	   "Single iteration renders many frames",

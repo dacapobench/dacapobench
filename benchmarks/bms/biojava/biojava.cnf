@@ -1,6 +1,6 @@
 benchmark biojava
   class org.dacapo.harness.BioJava
-  thread-model per_cpu;
+  thread-model single;
 
 size small args "-i","${DATA}/biojava/PF00104_small.fasta",
                 "-o","${SCRATCH}/biojava.out",
@@ -32,4 +32,4 @@ description
   copyright	 "Copyright (C) 2020 Authors of BioJava project",
   license    "GNU Lesser General Public License v2.1",
   url        "https://biojava.org/",
-  threads    "Explicitly multi-threaded, scaled to available processors, however these workloads exhibit very little parallelism",
+  threads    "Externally single-threaded.  Internally multi-threaded, however these workloads exhibit very little parallelism",
