@@ -36,6 +36,7 @@ public class Tradebeans extends Benchmark {
   public Tradebeans(Config config, File scratch, File data) throws Exception {
     super(config, scratch, data, false);
     assertJavaVersionGE(11, "Tradebeans requires at least Java version 11.");
+    assertJavaVersionLE(21, "Wildfly 26 is incompatible with Java versions higher than 21.");
   
     // Find the launcher
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
