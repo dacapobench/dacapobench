@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
@@ -30,7 +30,7 @@ public class LatencyReporter {
   static final int LATENCY_BUFFER_SIZE = 1000 * TAIL_PRECISION;
   static final int NS_COARSENING = 1;   // measure at this precision
   static final int US_DIVISOR = 1000/NS_COARSENING;
-  
+
   private int idxOffset;
   private int idx;
   private double max;
@@ -38,6 +38,8 @@ public class LatencyReporter {
 
   static float[] txbegin;
   static float[] txend;
+  static long requestsStarted;
+  static long requestsFinished;
   private static Integer globalIdx = 0;
   static double fileMax;
   static LatencyReporter[] reporters;
@@ -53,7 +55,7 @@ public class LatencyReporter {
   public static void setCallback(Callback cb) {
     callback = cb;
   }
-  
+
   public static void initialize(int transactions, int threads) {
     initialize(transactions, threads, 1);
   }
@@ -81,9 +83,9 @@ public class LatencyReporter {
 
   /**
    * Start a request
-   * 
+   *
    *   * @param threadID the thread in which the request ran.
-   * 
+   *
    * @return the index
    */
   public static int start(int threadID) {
@@ -98,7 +100,7 @@ public class LatencyReporter {
     return idx;
   }
   private static void startIdx(int index) {
-    if (callback != null) 
+    if (callback != null)
       callback.requestStart(index);
     long start = (System.nanoTime() - timerBase)/NS_COARSENING;
     txbegin[index] = (float) start;
@@ -115,7 +117,7 @@ public class LatencyReporter {
 
   /**
    * A request has just completed.
-   * 
+   *
    * @param threadID the thread in which the request ran.
    */
   public static void end(int threadID) {
@@ -127,7 +129,7 @@ public class LatencyReporter {
 
   /**
    * A request has just completed.
-   * 
+   *
    * @param index the global index for the request that completed.
    */
   public static float endIdx(int index) {
@@ -141,6 +143,7 @@ public class LatencyReporter {
   public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
     if (timerBase != 0) {
       int events = txbegin.length;
+      printRequestTime(events);
 
       // raw latency numbers
       int[] latency = new int[events];
@@ -176,6 +179,15 @@ public class LatencyReporter {
   private static String latency(int[] latency, int numerator, int denominator) {
     int usecs = (latency[latency.length - 1 - (latency.length * numerator) / denominator]);
     return ""+usecs+" usec";
+  }
+
+  public static void printRequestTime(int events) {
+    String report = "===== DaCapo processed "+events+" requests ";
+    long ms = (requestsFinished - requestsStarted)/1000000;
+    report += "in "+ms+" msec, ";
+    long rps = (1000 * events) / ms;
+    report += rps+" requests per second =====";
+    System.out.println(report);
   }
 
   public static void printLatency(int[] latency, float[] txbegin, int events, String kind, int iteration) {
@@ -233,9 +245,11 @@ public class LatencyReporter {
     globalIdx = -stride;
     System.err.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
+    requestsStarted = System.nanoTime();
   }
 
   public static void requestsFinished() {
+    requestsFinished = System.nanoTime();
     System.err.println("Completed requests");
     if (callback != null) callback.requestsFinished();
   }
