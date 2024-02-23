@@ -1,6 +1,7 @@
-diff -ru sunflow-orig/src/org/sunflow/Benchmark.java sunflow/src/org/sunflow/Benchmark.java
---- sunflow-orig/src/org/sunflow/Benchmark.java	2007-01-28 01:10:58.000000000 +1100
-+++ sunflow/src/org/sunflow/Benchmark.java	2018-08-02 16:36:39.000000000 +1000
+Only in ../build: build
+diff '--color=auto' -ur ./sunflow/src/org/sunflow/Benchmark.java ../build/sunflow/src/org/sunflow/Benchmark.java
+--- ./sunflow/src/org/sunflow/Benchmark.java	2007-01-28 01:10:58.000000000 +0000
++++ ../build/sunflow/src/org/sunflow/Benchmark.java	2024-02-23 05:03:20.036076988 +0000
 @@ -41,16 +41,11 @@
      public static void main(String[] args) {
          if (args.length == 0) {
@@ -32,3 +33,22 @@ diff -ru sunflow-orig/src/org/sunflow/Benchmark.java sunflow/src/org/sunflow/Ben
      public void execute() {
          // 10 iterations maximum - 10 minute time limit
          BenchmarkFramework framework = new BenchmarkFramework(10, 600);
+diff '--color=auto' -ur ./sunflow/src/org/sunflow/core/Geometry.java ../build/sunflow/src/org/sunflow/core/Geometry.java
+--- ./sunflow/src/org/sunflow/core/Geometry.java	2007-02-04 12:11:50.000000000 +0000
++++ ../build/sunflow/src/org/sunflow/core/Geometry.java	2024-02-23 05:05:35.135961579 +0000
+@@ -17,7 +17,7 @@
+     private Tesselatable tesselatable;
+     private PrimitiveList primitives;
+     private AccelerationStructure accel;
+-    private int builtAccel;
++    private volatile int builtAccel;
+     private int builtTess;
+     private String acceltype;
+ 
+@@ -141,4 +141,4 @@
+     PrimitiveList getPrimitiveList() {
+         return primitives;
+     }
+-}
+\ No newline at end of file
++}
