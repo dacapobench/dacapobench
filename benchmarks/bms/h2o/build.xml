@@ -67,6 +67,7 @@
     <target name="build-h2o">
         <!-- build h2o with testing-->
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg value="clean"/>
             <arg value="build"/>
         </exec>
@@ -75,6 +76,7 @@
     <target name="build-h2o-without-test">
         <!-- build h2o without testing-->
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg value="clean"/>
             <arg value="build"/>
             <arg value="-x"/>
