@@ -1,958 +1,900 @@
-objects-allocated: 159086750
-bytes-allocated: 6765032248
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
+#
+objects-allocated: 528175994
+bytes-allocated: 22144276720
+# number of objects allocated for each object size
 objects-by-size: 
-  16: 7845396
-  24: 49455580
-  32: 33371280
-  40: 10659141
-  48: 15543175
-  56: 22056222
-  64: 8601980
-  72: 360656
-  80: 1871474
-  88: 787975
-  96: 166820
-  104: 1000309
-  112: 1573090
-  120: 3075483
-  128: 196761
-  136: 127575
-  144: 564643
-  152: 122815
-  160: 112914
-  168: 106120
-  176: 230158
-  184: 558906
-  192: 159819
-  200: 130051
-  208: 103988
-  216: 38210
-  224: 1251
-  232: 89
-  240: 80
-  248: 55
-  256: 212
-  264: 586
-  272: 253257
-  280: 774
-  288: 44
-  296: 85
-  304: 22
-  312: 41
-  320: 11
-  328: 6
-  336: 8
-  344: 3
-  352: 4
-  360: 4
-  368: 9
-  376: 24
-  384: 543
-  392: 338
+  16: 26329141
+  24: 172205545
+  32: 131741637
+  40: 15316471
+  48: 33412677
+  56: 77829202
+  64: 31936011
+  72: 2355938
+  80: 5378783
+  88: 2600705
+  96: 511501
+  104: 3558700
+  112: 5592507
+  120: 9900487
+  128: 730273
+  136: 598382
+  144: 2179679
+  152: 436324
+  160: 370057
+  168: 336882
+  176: 762375
+  184: 1743933
+  192: 403326
+  200: 382101
+  208: 420639
+  216: 174173
+  224: 2453
+  232: 403
+  240: 395
+  248: 384
+  256: 658
+  264: 873
+  272: 943510
+  280: 598
+  288: 259
+  296: 447
+  304: 112
+  312: 111
+  320: 84
+  328: 22
+  336: 19
+  344: 16
+  352: 9
+  360: 5
+  368: 15
+  376: 13
+  384: 7
+  392: 24
   400: 5
-  408: 4
-  416: 14
+  408: 5
+  416: 20
   424: 6
-  432: 21
-  440: 3
-  448: 6
-  456: 3
-  464: 9
+  432: 22
+  440: 2
+  448: 4
+  456: 4
+  464: 7
   472: 3
   480: 1
-  488: 3
+  488: 4
   496: 7
-  504: 2
-  512: 9
-  520: 24
-  528: 583
-  536: 2
-  544: 3
-  552: 1
-  560: 10
-  568: 5
+  504: 4
+  512: 520
+  520: 23
+  528: 173
+  536: 3
+  544: 6
+  552: 73
+  560: 7
+  568: 6
   576: 1
-  584: 321
-  592: 3
+  584: 298
+  592: 5
   600: 1
-  608: 2
-  616: 3962
-  624: 8
-  632: 4
-  640: 3
-  648: 2
-  656: 20
-  664: 3
-  672: 1
-  680: 2
+  608: 1
+  616: 14502
+  624: 6
+  632: 2
+  640: 4
+  648: 3
+  656: 18
+  664: 6
   688: 1
-  696: 4
-  704: 18
-  712: 5
-  720: 3
-  728: 2
-  736: 2
-  744: 2
-  752: 82
+  696: 7
+  704: 10
+  712: 6
+  744: 1
+  752: 73
   760: 1
-  768: 4
-  776: 4
-  792: 4
-  800: 3
+  768: 1
+  776: 3
+  784: 1
+  792: 3
+  800: 10
   808: 4
-  816: 13
-  824: 4
-  832: 2
-  840: 2
-  848: 2
+  816: 16
+  824: 1
+  832: 1
+  840: 3
+  848: 1
   856: 1
-  864: 6
-  880: 3
+  864: 5
+  872: 1
+  880: 2
   888: 3
-  896: 4
-  904: 1
-  912: 3
-  920: 3
-  928: 4
-  936: 1
+  896: 2
+  904: 2
+  912: 1
+  920: 2
+  928: 2
+  936: 3
   944: 3
-  952: 2
-  968: 3
+  952: 1
+  968: 1
   984: 1
   992: 1
   1000: 1
   1008: 10
+  1016: 1
   1024: 1
   1032: 3
-  1040: 93
-  1048: 6
-  1080: 3
-  1096: 30
+  1040: 96
+  1048: 8
+  1080: 1
+  1096: 31
   1104: 2
-  1112: 2
-  1120: 2
-  1128: 1
-  1136: 34
   1144: 1
-  1160: 1
-  1168: 5
-  1176: 3
-  1192: 1
-  1208: 1
+  1152: 1
+  1160: 2
+  1168: 4
+  1176: 2
+  1184: 1
+  1192: 2
   1224: 2
   1240: 2
-  1256: 1
   1264: 1
-  1280: 2
+  1272: 1
+  1280: 3
   1288: 1
-  1296: 2
-  1304: 1
+  1296: 1
   1312: 1
-  1320: 1
+  1320: 37
   1328: 2
-  1344: 3
-  1352: 1
-  1360: 5
+  1344: 2
+  1360: 2
   1368: 1
-  1376: 2
-  1392: 1
+  1376: 1
   1400: 1
-  1416: 1
-  1424: 2
-  1432: 5
-  1440: 2
+  1432: 3
+  1440: 6
   1448: 1
-  1464: 1
-  1472: 4
-  1480: 4
-  1488: 1
-  1496: 8
-  1512: 30
-  1536: 4
-  1544: 6
+  1456: 1
+  1488: 4
+  1504: 5
+  1512: 36
+  1536: 3
   1552: 1
-  1560: 1
+  1560: 4
   1568: 1
-  1584: 1
-  1600: 1
-  1608: 1
-  1616: 3
-  1624: 1
-  1632: 1
-  1640: 4
+  1584: 4
+  1600: 2
+  1608: 2
+  1616: 4
+  1640: 2
+  1648: 1
   1656: 1
-  1664: 3
-  1680: 1
-  1688: 3
+  1688: 4
   1696: 1
-  1704: 1
   1728: 2
   1736: 1
-  1744: 2
+  1744: 1
   1760: 2
-  1800: 3
-  1816: 1
-  1832: 2
-  1840: 2
+  1800: 2
+  1808: 2
+  1824: 1
+  1840: 1
   1848: 1
-  1872: 3
+  1856: 1
+  1872: 1
   1880: 4
-  1888: 1
-  1912: 1
-  1920: 1
-  1960: 807
-  1976: 1
+  1896: 2
+  1904: 2
+  1920: 2
   1992: 3
+  2008: 1
   2016: 2
-  2048: 1
-  2064: 13
+  2064: 20
   2072: 3
+  2080: 1
+  2128: 1
   2144: 3
   2152: 1
   2176: 1
   2184: 1
-  2216: 1
-  2224: 1
+  2200: 1
   2248: 2
-  2264: 31
-  2272: 2
+  2280: 30
   2296: 1
+  2320: 1
   2360: 1
-  2368: 9
+  2368: 10
   2384: 6
   2408: 1
-  2424: 1
   2480: 4
   2488: 2
-  2512: 2
+  2504: 771
   2560: 1
-  2576: 1
-  2648: 1
+  2624: 1
+  2648: 2
   2656: 31
   2680: 1
-  2704: 1
-  2728: 2
-  2736: 1
+  2696: 2
+  2728: 1
+  2744: 1
   2800: 1
   2808: 1
   2816: 1
-  2840: 3
-  2848: 1
-  2856: 1
-  2888: 2
-  2904: 1
-  2936: 1
-  2968: 1
-  3016: 2
-  3048: 1
+  2840: 1
+  2848: 2
+  2880: 2
+  2920: 1
+  2936: 3
+  3008: 1
+  3024: 2
   3056: 2
   3064: 1
-  3072: 1
-  3080: 4
-  3088: 13
-  3104: 2
-  3112: 1
-  3120: 1
-  3160: 1
-  3192: 1
-  3264: 1
+  3080: 3
+  3088: 14
+  3096: 1
+  3104: 1
+  3112: 2
+  3120: 3
+  3168: 2
+  3184: 1
+  3272: 1
   3304: 2
   3344: 1
   3360: 1
   3368: 1
   3376: 3
+  3424: 1
   3440: 1
   3472: 6
   3480: 3
-  3584: 1
-  3592: 2
+  3592: 3
   3600: 1
-  3616: 9
+  3616: 6
   3624: 1
   3664: 1
-  3720: 1
   3728: 1
-  3736: 1
-  3800: 1
-  3824: 12
-  3832: 6
+  3768: 1
+  3792: 1
+  3824: 8
+  3832: 4
   3944: 6
-  3960: 2
-  4008: 1
+  3968: 2
+  4024: 1
   4104: 2
-  4112: 870
-  4152: 2
-  4264: 1
+  4112: 65
+  4168: 2
+  4240: 1
+  4264: 2
+  4272: 1
   4280: 2
-  4336: 8
   4344: 1
   4384: 2
-  4392: 2
-  4440: 1
   4456: 1
   4464: 2
-  4488: 2
-  4512: 1
-  4520: 1
-  4824: 1
+  4560: 1
+  4568: 2
+  4720: 1
+  4832: 12
   4888: 2
   4896: 1
-  4984: 1
+  4920: 1
+  4984: 2
   4992: 1
-  5008: 1
   5040: 8
-  5104: 2
-  5288: 1
+  5104: 3
+  5272: 1
+  5296: 1
   5560: 1
   5800: 2
-  5848: 228
-  5856: 17
-  5864: 17
-  5936: 1
+  5984: 200
+  6032: 1
   6088: 2
-  6144: 1
-  6152: 1
+  6152: 3
   6160: 1
+  6176: 1
   6200: 1
-  6216: 1
-  6304: 1
-  6344: 4
-  6568: 2
+  6336: 1
+  6344: 6
+  6352: 1
   6584: 1
+  6608: 51
   6672: 1
-  6824: 2
-  7024: 1
-  7048: 1
-  7056: 1
-  7184: 4
+  6696: 1
+  6704: 1
+  6856: 3
+  7184: 5
   7312: 1
-  7456: 1
-  7536: 1
+  7472: 4
   7544: 1
-  7664: 1
-  7704: 1
-  8208: 179
-  8288: 2
+  7816: 1
+  8040: 1
+  8208: 11
+  8312: 2
+  8392: 1
+  8520: 1
   8536: 1
-  8752: 1
-  8864: 1
-  8944: 4
-  9072: 4
-  9392: 2
-  9400: 2
-  9560: 1
-  9592: 4
-  9808: 1
-  9816: 1
+  8856: 6
+  9072: 6
+  9096: 1
+  9312: 6
+  9424: 1
+  9712: 6
   9888: 1
+  10008: 2
   10048: 2
   10056: 1
   10080: 1
   10088: 1
-  10424: 4
   10528: 1
-  10616: 1
+  10536: 7
   11584: 1
-  12272: 1
+  11704: 1
+  12112: 1
+  12288: 1
   12344: 1
   12376: 1
-  12408: 1
-  13504: 1
-  13896: 1
+  12648: 1
+  13560: 1
+  14352: 1
   14456: 1
   15376: 2
-  15536: 30
-  16400: 146
-  17160: 1
-  17576: 1
+  15504: 45
+  16400: 1
+  16896: 1
   17864: 2
-  18784: 1
-  19104: 1
   20080: 1
-  20192: 2
+  20616: 3
   21384: 2
   22336: 1
+  22344: 1
   22920: 1
-  23072: 2
   23152: 1
+  23336: 3
+  23384: 1
   24664: 1
-  27816: 2
+  28184: 3
   28888: 1
-  32784: 120
-  34304: 1
-  35224: 6
-  38720: 1
+  33768: 1
+  34688: 9
+  38808: 1
   39288: 1
-  40504: 228
-  65552: 117
-bytes-by-size: 
-  16: 125526336
-  24: 1186933920
-  32: 1067880960
-  40: 426365640
-  48: 746072400
-  56: 1235148432
-  64: 550526720
-  72: 25967232
-  80: 149717920
-  88: 69341800
-  96: 16014720
-  104: 104032136
-  112: 176186080
-  120: 369057960
-  128: 25185408
-  136: 17350200
-  144: 81308592
-  152: 18667880
-  160: 18066240
-  168: 17828160
-  176: 40507808
-  184: 102838704
-  192: 30685248
-  200: 26010200
-  208: 21629504
-  216: 8253360
-  224: 280224
-  232: 20648
-  240: 19200
-  248: 13640
-  256: 54272
-  264: 154704
-  272: 68885904
-  280: 216720
-  288: 12672
-  296: 25160
-  304: 6688
-  312: 12792
-  320: 3520
-  328: 1968
-  336: 2688
-  344: 1032
-  352: 1408
-  360: 1440
-  368: 3312
-  376: 9024
-  384: 208512
-  392: 132496
+  41456: 300
+# number of bytres allocated for each object size
+  16: 421266256
+  24: 4132933080
+  32: 4215732384
+  40: 612658840
+  48: 1603808496
+  56: 4358435312
+  64: 2043904704
+  72: 169627536
+  80: 430302640
+  88: 228862040
+  96: 49104096
+  104: 370104800
+  112: 626360784
+  120: 1188058440
+  128: 93474944
+  136: 81379952
+  144: 313873776
+  152: 66321248
+  160: 59209120
+  168: 56596176
+  176: 134178000
+  184: 320883672
+  192: 77438592
+  200: 76420200
+  208: 87492912
+  216: 37621368
+  224: 549472
+  232: 93496
+  240: 94800
+  248: 95232
+  256: 168448
+  264: 230472
+  272: 256634720
+  280: 167440
+  288: 74592
+  296: 132312
+  304: 34048
+  312: 34632
+  320: 26880
+  328: 7216
+  336: 6384
+  344: 5504
+  352: 3168
+  360: 1800
+  368: 5520
+  376: 4888
+  384: 2688
+  392: 9408
   400: 2000
-  408: 1632
-  416: 5824
+  408: 2040
+  416: 8320
   424: 2544
-  432: 9072
-  440: 1320
-  448: 2688
-  456: 1368
-  464: 4176
+  432: 9504
+  440: 880
+  448: 1792
+  456: 1824
+  464: 3248
   472: 1416
   480: 480
-  488: 1464
+  488: 1952
   496: 3472
-  504: 1008
-  512: 4608
-  520: 12480
-  528: 307824
-  536: 1072
-  544: 1632
-  552: 552
-  560: 5600
-  568: 2840
+  504: 2016
+  512: 266240
+  520: 11960
+  528: 91344
+  536: 1608
+  544: 3264
+  552: 40296
+  560: 3920
+  568: 3408
   576: 576
-  584: 187464
-  592: 1776
+  584: 174032
+  592: 2960
   600: 600
-  608: 1216
-  616: 2440592
-  624: 4992
-  632: 2528
-  640: 1920
-  648: 1296
-  656: 13120
-  664: 1992
-  672: 672
-  680: 1360
+  608: 608
+  616: 8933232
+  624: 3744
+  632: 1264
+  640: 2560
+  648: 1944
+  656: 11808
+  664: 3984
   688: 688
-  696: 2784
-  704: 12672
-  712: 3560
-  720: 2160
-  728: 1456
-  736: 1472
-  744: 1488
-  752: 61664
+  696: 4872
+  704: 7040
+  712: 4272
+  744: 744
+  752: 54896
   760: 760
-  768: 3072
-  776: 3104
-  792: 3168
-  800: 2400
+  768: 768
+  776: 2328
+  784: 784
+  792: 2376
+  800: 8000
   808: 3232
-  816: 10608
-  824: 3296
-  832: 1664
-  840: 1680
-  848: 1696
+  816: 13056
+  824: 824
+  832: 832
+  840: 2520
+  848: 848
   856: 856
-  864: 5184
-  880: 2640
+  864: 4320
+  872: 872
+  880: 1760
   888: 2664
-  896: 3584
-  904: 904
-  912: 2736
-  920: 2760
-  928: 3712
-  936: 936
+  896: 1792
+  904: 1808
+  912: 912
+  920: 1840
+  928: 1856
+  936: 2808
   944: 2832
-  952: 1904
-  968: 2904
+  952: 952
+  968: 968
   984: 984
   992: 992
   1000: 1000
   1008: 10080
+  1016: 1016
   1024: 1024
   1032: 3096
-  1040: 96720
-  1048: 6288
-  1080: 3240
-  1096: 32880
+  1040: 99840
+  1048: 8384
+  1080: 1080
+  1096: 33976
   1104: 2208
-  1112: 2224
-  1120: 2240
-  1128: 1128
-  1136: 38624
   1144: 1144
-  1160: 1160
-  1168: 5840
-  1176: 3528
-  1192: 1192
-  1208: 1208
+  1152: 1152
+  1160: 2320
+  1168: 4672
+  1176: 2352
+  1184: 1184
+  1192: 2384
   1224: 2448
   1240: 2480
-  1256: 1256
   1264: 1264
-  1280: 2560
+  1272: 1272
+  1280: 3840
   1288: 1288
-  1296: 2592
-  1304: 1304
+  1296: 1296
   1312: 1312
-  1320: 1320
+  1320: 48840
   1328: 2656
-  1344: 4032
-  1352: 1352
-  1360: 6800
+  1344: 2688
+  1360: 2720
   1368: 1368
-  1376: 2752
-  1392: 1392
+  1376: 1376
   1400: 1400
-  1416: 1416
-  1424: 2848
-  1432: 7160
-  1440: 2880
+  1432: 4296
+  1440: 8640
   1448: 1448
-  1464: 1464
-  1472: 5888
-  1480: 5920
-  1488: 1488
-  1496: 11968
-  1512: 45360
-  1536: 6144
-  1544: 9264
+  1456: 1456
+  1488: 5952
+  1504: 7520
+  1512: 54432
+  1536: 4608
   1552: 1552
-  1560: 1560
+  1560: 6240
   1568: 1568
-  1584: 1584
-  1600: 1600
-  1608: 1608
-  1616: 4848
-  1624: 1624
-  1632: 1632
-  1640: 6560
+  1584: 6336
+  1600: 3200
+  1608: 3216
+  1616: 6464
+  1640: 3280
+  1648: 1648
   1656: 1656
-  1664: 4992
-  1680: 1680
-  1688: 5064
+  1688: 6752
   1696: 1696
-  1704: 1704
   1728: 3456
   1736: 1736
-  1744: 3488
+  1744: 1744
   1760: 3520
-  1800: 5400
-  1816: 1816
-  1832: 3664
-  1840: 3680
+  1800: 3600
+  1808: 3616
+  1824: 1824
+  1840: 1840
   1848: 1848
-  1872: 5616
+  1856: 1856
+  1872: 1872
   1880: 7520
-  1888: 1888
-  1912: 1912
-  1920: 1920
-  1960: 1581720
-  1976: 1976
+  1896: 3792
+  1904: 3808
+  1920: 3840
   1992: 5976
+  2008: 2008
   2016: 4032
-  2048: 2048
-  2064: 26832
+  2064: 41280
   2072: 6216
+  2080: 2080
+  2128: 2128
   2144: 6432
   2152: 2152
   2176: 2176
   2184: 2184
-  2216: 2216
-  2224: 2224
+  2200: 2200
   2248: 4496
-  2264: 70184
-  2272: 4544
+  2280: 68400
   2296: 2296
+  2320: 2320
   2360: 2360
-  2368: 21312
+  2368: 23680
   2384: 14304
   2408: 2408
-  2424: 2424
   2480: 9920
   2488: 4976
-  2512: 5024
+  2504: 1930584
   2560: 2560
-  2576: 2576
-  2648: 2648
+  2624: 2624
+  2648: 5296
   2656: 82336
   2680: 2680
-  2704: 2704
-  2728: 5456
-  2736: 2736
+  2696: 5392
+  2728: 2728
+  2744: 2744
   2800: 2800
   2808: 2808
   2816: 2816
-  2840: 8520
-  2848: 2848
-  2856: 2856
-  2888: 5776
-  2904: 2904
-  2936: 2936
-  2968: 2968
-  3016: 6032
-  3048: 3048
+  2840: 2840
+  2848: 5696
+  2880: 5760
+  2920: 2920
+  2936: 8808
+  3008: 3008
+  3024: 6048
   3056: 6112
   3064: 3064
-  3072: 3072
-  3080: 12320
-  3088: 40144
-  3104: 6208
-  3112: 3112
-  3120: 3120
-  3160: 3160
-  3192: 3192
-  3264: 3264
+  3080: 9240
+  3088: 43232
+  3096: 3096
+  3104: 3104
+  3112: 6224
+  3120: 9360
+  3168: 6336
+  3184: 3184
+  3272: 3272
   3304: 6608
   3344: 3344
   3360: 3360
   3368: 3368
   3376: 10128
+  3424: 3424
   3440: 3440
   3472: 20832
   3480: 10440
-  3584: 3584
-  3592: 7184
+  3592: 10776
   3600: 3600
-  3616: 32544
+  3616: 21696
   3624: 3624
   3664: 3664
-  3720: 3720
   3728: 3728
-  3736: 3736
-  3800: 3800
-  3824: 45888
-  3832: 22992
+  3768: 3768
+  3792: 3792
+  3824: 30592
+  3832: 15328
   3944: 23664
-  3960: 7920
-  4008: 4008
+  3968: 7936
+  4024: 4024
   4104: 8208
-  4112: 3577440
-  4152: 8304
-  4264: 4264
+  4112: 267280
+  4168: 8336
+  4240: 4240
+  4264: 8528
+  4272: 4272
   4280: 8560
-  4336: 34688
   4344: 4344
   4384: 8768
-  4392: 8784
-  4440: 4440
   4456: 4456
   4464: 8928
-  4488: 8976
-  4512: 4512
-  4520: 4520
-  4824: 4824
+  4560: 4560
+  4568: 9136
+  4720: 4720
+  4832: 57984
   4888: 9776
   4896: 4896
-  4984: 4984
+  4920: 4920
+  4984: 9968
   4992: 4992
-  5008: 5008
   5040: 40320
-  5104: 10208
-  5288: 5288
+  5104: 15312
+  5272: 5272
+  5296: 5296
   5560: 5560
   5800: 11600
-  5848: 1333344
-  5856: 99552
-  5864: 99688
-  5936: 5936
+  5984: 1196800
+  6032: 6032
   6088: 12176
-  6144: 6144
-  6152: 6152
+  6152: 18456
   6160: 6160
+  6176: 6176
   6200: 6200
-  6216: 6216
-  6304: 6304
-  6344: 25376
-  6568: 13136
+  6336: 6336
+  6344: 38064
+  6352: 6352
   6584: 6584
+  6608: 337008
   6672: 6672
-  6824: 13648
-  7024: 7024
-  7048: 7048
-  7056: 7056
-  7184: 28736
+  6696: 6696
+  6704: 6704
+  6856: 20568
+  7184: 35920
   7312: 7312
-  7456: 7456
-  7536: 7536
+  7472: 29888
   7544: 7544
-  7664: 7664
-  7704: 7704
-  8208: 1469232
-  8288: 16576
+  7816: 7816
+  8040: 8040
+  8208: 90288
+  8312: 16624
+  8392: 8392
+  8520: 8520
   8536: 8536
-  8752: 8752
-  8864: 8864
-  8944: 35776
-  9072: 36288
-  9392: 18784
-  9400: 18800
-  9560: 9560
-  9592: 38368
-  9808: 9808
-  9816: 9816
+  8856: 53136
+  9072: 54432
+  9096: 9096
+  9312: 55872
+  9424: 9424
+  9712: 58272
   9888: 9888
+  10008: 20016
   10048: 20096
   10056: 10056
   10080: 10080
   10088: 10088
-  10424: 41696
   10528: 10528
-  10616: 10616
+  10536: 73752
   11584: 11584
-  12272: 12272
+  11704: 11704
+  12112: 12112
+  12288: 12288
   12344: 12344
   12376: 12376
-  12408: 12408
-  13504: 13504
-  13896: 13896
+  12648: 12648
+  13560: 13560
+  14352: 14352
   14456: 14456
   15376: 30752
-  15536: 466080
-  16400: 2394400
-  17160: 17160
-  17576: 17576
+  15504: 697680
+  16400: 16400
+  16896: 16896
   17864: 35728
-  18784: 18784
-  19104: 19104
   20080: 20080
-  20192: 40384
+  20616: 61848
   21384: 42768
   22336: 22336
+  22344: 22344
   22920: 22920
-  23072: 46144
   23152: 23152
+  23336: 70008
+  23384: 23384
   24664: 24664
-  27816: 55632
+  28184: 84552
   28888: 28888
-  32784: 3934080
-  34304: 34304
-  35224: 211344
-  38720: 38720
+  33768: 33768
+  34688: 312192
+  38808: 38808
   39288: 39288
-  40504: 9234912
-  65552: 7669584
+  41456: 12436800
+# number of objects allocated for each class
 objects-by-type: 
-  I: 64
-  J: 303912
-  boolean: 332
-  byte: 10407981
-  char: 190442
-  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 598
-  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 633
-  com/google/monitoring/runtime/instrumentation/StaticClassWriter: 56
-  com/google/monitoring/runtime/instrumentation/StaticClassWriter$ClassInfo: 60
-  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter: 56
-  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 598
-  com/google/monitoring/runtime/instrumentation/asm/AnnotationWriter: 6
-  com/google/monitoring/runtime/instrumentation/asm/Attribute: 56
-  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 2035
-  com/google/monitoring/runtime/instrumentation/asm/ClassReader: 56
-  com/google/monitoring/runtime/instrumentation/asm/Context: 56
-  com/google/monitoring/runtime/instrumentation/asm/Edge: 7264
-  com/google/monitoring/runtime/instrumentation/asm/FieldWriter: 279
-  com/google/monitoring/runtime/instrumentation/asm/Frame: 6980
-  com/google/monitoring/runtime/instrumentation/asm/Handle: 20
-  com/google/monitoring/runtime/instrumentation/asm/Handler: 143
-  com/google/monitoring/runtime/instrumentation/asm/Label: 17176
-  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 598
-  com/google/monitoring/runtime/instrumentation/asm/SymbolTable: 56
-  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 13892
-  com/google/monitoring/runtime/instrumentation/asm/Type: 4053
-  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 598
-  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 598
+  B: 16525
+  I: 193
+  J: 1118904
+  boolean: 5
+  byte: 6882541
+  char: 682715
+  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 570
+  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 597
+  com/google/monitoring/runtime/instrumentation/StaticClassWriter: 48
+  com/google/monitoring/runtime/instrumentation/StaticClassWriter$ClassInfo: 56
+  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter: 48
+  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 570
+  com/google/monitoring/runtime/instrumentation/asm/AnnotationWriter: 3
+  com/google/monitoring/runtime/instrumentation/asm/Attribute: 48
+  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 1900
+  com/google/monitoring/runtime/instrumentation/asm/ClassReader: 48
+  com/google/monitoring/runtime/instrumentation/asm/Context: 48
+  com/google/monitoring/runtime/instrumentation/asm/Edge: 6522
+  com/google/monitoring/runtime/instrumentation/asm/FieldWriter: 264
+  com/google/monitoring/runtime/instrumentation/asm/Frame: 6242
+  com/google/monitoring/runtime/instrumentation/asm/Handle: 24
+  com/google/monitoring/runtime/instrumentation/asm/Handler: 141
+  com/google/monitoring/runtime/instrumentation/asm/Label: 15383
+  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 570
+  com/google/monitoring/runtime/instrumentation/asm/SymbolTable: 48
+  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 13155
+  com/google/monitoring/runtime/instrumentation/asm/Type: 3740
+  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 570
+  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 570
   com/google/monitoring/runtime/instrumentation/asm/tree/AnnotationNode: 1
-  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 1918
-  com/google/monitoring/runtime/instrumentation/asm/tree/IincInsnNode: 148
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 598
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 11114
-  com/google/monitoring/runtime/instrumentation/asm/tree/IntInsnNode: 2259
-  com/google/monitoring/runtime/instrumentation/asm/tree/InvokeDynamicInsnNode: 5
-  com/google/monitoring/runtime/instrumentation/asm/tree/JumpInsnNode: 1850
-  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 6254
-  com/google/monitoring/runtime/instrumentation/asm/tree/LdcInsnNode: 2849
-  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 4465
-  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 1806
-  com/google/monitoring/runtime/instrumentation/asm/tree/LookupSwitchInsnNode: 19
-  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 3338
+  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 1665
+  com/google/monitoring/runtime/instrumentation/asm/tree/IincInsnNode: 112
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 570
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 9650
+  com/google/monitoring/runtime/instrumentation/asm/tree/IntInsnNode: 2088
+  com/google/monitoring/runtime/instrumentation/asm/tree/InvokeDynamicInsnNode: 6
+  com/google/monitoring/runtime/instrumentation/asm/tree/JumpInsnNode: 1651
+  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 5508
+  com/google/monitoring/runtime/instrumentation/asm/tree/LdcInsnNode: 2660
+  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 3856
+  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 1487
+  com/google/monitoring/runtime/instrumentation/asm/tree/LookupSwitchInsnNode: 21
+  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 3192
+  com/google/monitoring/runtime/instrumentation/asm/tree/ParameterNode: 14
   com/google/monitoring/runtime/instrumentation/asm/tree/TableSwitchInsnNode: 27
-  com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 143
-  com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 702
-  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 9109
-  int: 270200
-  java/io/ByteArrayOutputStream: 689
-  java/io/File: 1316
+  com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 141
+  com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 665
+  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 7767
+  int: 945440
+  java/io/ByteArrayOutputStream: 648
+  java/io/File: 600
   java/io/FileCleanable: 2
   java/io/FileDescriptor: 2
   java/io/FileOutputStream: 2
   java/io/FileOutputStream$1: 2
-  java/io/FilePermission: 329
   java/io/IOException: 1
-  java/lang/Byte: 34
-  java/lang/Class: 371
-  java/lang/Class$1: 5
+  java/lang/Byte: 41
+  java/lang/Class: 199
+  java/lang/Class$1: 4
   java/lang/Class$3: 2
-  java/lang/Class$ReflectionData: 19
+  java/lang/Class$ReflectionData: 14
   java/lang/ClassNotFoundException: 6
   java/lang/Float: 8
-  java/lang/Integer: 21814
-  java/lang/Long: 4212416
+  java/lang/Integer: 82284
+  java/lang/Long: 14280379
   java/lang/NamedPackage: 3
-  java/lang/Object: 6538759
+  java/lang/Object: 22620771
   java/lang/Package: 1
   java/lang/PublicMethods$MethodList: 2
   java/lang/RuntimeException: 1
   java/lang/StackTraceElement: 115
-  java/lang/StackWalker: 1
-  java/lang/String: 9796513
-  java/lang/StringBuffer: 17712
-  java/lang/StringBuilder: 416825
+  java/lang/StackWalker: 2
+  java/lang/String: 34037783
+  java/lang/StringBuffer: 57569
+  java/lang/StringBuilder: 1709153
+  java/lang/StringLatin1$CharsSpliterator: 2
+  java/lang/StringUTF16$CharsSpliterator: 1
   java/lang/Thread: 1
+  java/lang/Thread$FieldHolder: 24
   java/lang/Throwable$WrappedPrintWriter: 1
-  java/lang/TypeNotPresentException: 31
-  java/lang/invoke/BoundMethodHandle$Species_L: 43
-  java/lang/invoke/BoundMethodHandle$Species_LL: 27
-  java/lang/invoke/BoundMethodHandle$Species_LLL: 10
-  java/lang/invoke/BoundMethodHandle$Species_LLLL: 17
-  java/lang/invoke/BoundMethodHandle$Species_LLLLL: 10
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLL: 9
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLI: 8
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLII: 8
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLIIL: 16
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLL: 2
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLL: 1
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLL: 1
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLI: 1
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLII: 1
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLIIL: 1
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLIILL: 1
-  java/lang/invoke/ConstantCallSite: 28
-  java/lang/invoke/DirectMethodHandle: 28
-  java/lang/invoke/DirectMethodHandle$Special: 6
-  java/lang/invoke/InfoFromMemberName: 19
-  java/lang/invoke/InnerClassLambdaMetafactory: 19
-  java/lang/invoke/InnerClassLambdaMetafactory$1: 5
-  java/lang/invoke/InnerClassLambdaMetafactory$ForwardingMethodGenerator: 19
-  java/lang/invoke/LambdaForm: 4
-  java/lang/invoke/LambdaForm$Name: 16
-  java/lang/invoke/LambdaForm$NamedFunction: 4
-  java/lang/invoke/LambdaFormEditor: 139
-  java/lang/invoke/LambdaFormEditor$Transform: 139
-  java/lang/invoke/MemberName: 116
-  java/lang/invoke/MethodHandle: 9
-  java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 4
-  java/lang/invoke/MethodHandleImpl$IntrinsicMethodHandle: 5
-  java/lang/invoke/MethodHandleNatives$CallSiteContext: 28
-  java/lang/invoke/MethodHandles$Lookup: 61
-  java/lang/invoke/MethodType: 302
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 390
-  java/lang/invoke/MethodTypeForm: 23
-  java/lang/invoke/SimpleMethodHandle: 5
-  java/lang/invoke/StringConcatFactory$Recipe: 9
-  java/lang/invoke/StringConcatFactory$RecipeElement: 19
-  java/lang/ref/ReferenceQueue$Lock: 3
-  java/lang/ref/SoftReference: 50
-  java/lang/reflect/Constructor: 20
+  java/lang/TypeNotPresentException: 29
+  java/lang/invoke/BoundMethodHandle$Species_L: 23
+  java/lang/invoke/BoundMethodHandle$Species_LL: 22
+  java/lang/invoke/BoundMethodHandle$Species_LLJ: 1
+  java/lang/invoke/BoundMethodHandle$Species_LLL: 3
+  java/lang/invoke/BoundMethodHandle$Species_LLLL: 1
+  java/lang/invoke/BoundMethodHandle$Species_LLLLL: 2
+  java/lang/invoke/ConstantCallSite: 33
+  java/lang/invoke/DirectMethodHandle: 27
+  java/lang/invoke/DirectMethodHandle$Constructor: 69
+  java/lang/invoke/InfoFromMemberName: 24
+  java/lang/invoke/InnerClassLambdaMetafactory: 24
+  java/lang/invoke/InnerClassLambdaMetafactory$ForwardingMethodGenerator: 13
+  java/lang/invoke/Invokers: 1
+  java/lang/invoke/LambdaForm: 5
+  java/lang/invoke/LambdaForm$Name: 20
+  java/lang/invoke/LambdaForm$NamedFunction: 5
+  java/lang/invoke/LambdaFormEditor: 37
+  java/lang/invoke/LambdaFormEditor$TransformKey: 37
+  java/lang/invoke/MemberName: 241
+  java/lang/invoke/MethodHandle: 2
+  java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 3
+  java/lang/invoke/MethodHandleImpl$IntrinsicMethodHandle: 12
+  java/lang/invoke/MethodHandleNatives$CallSiteContext: 33
+  java/lang/invoke/MethodHandles$Lookup: 72
+  java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 13
+  java/lang/invoke/MethodHandles$Lookup$ClassFile: 13
+  java/lang/invoke/MethodType: 269
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 118
+  java/lang/invoke/MethodTypeForm: 14
+  java/lang/invoke/SimpleMethodHandle: 12
+  java/lang/ref/ReferenceQueue: 2
+  java/lang/ref/SoftReference: 54
+  java/lang/ref/WeakReference: 6
+  java/lang/reflect/Constructor: 10
   java/lang/reflect/Method: 2
-  java/math/BigDecimal: 103809
-  java/math/BigInteger: 99850
-  java/net/URI: 360
-  java/net/URI$Parser: 360
-  java/net/URL: 1052
-  java/net/URLClassLoader$1: 38
-  java/net/URLClassLoader$2: 330
-  java/nio/DirectByteBufferR: 4204
-  java/nio/HeapByteBuffer: 330
-  java/nio/HeapCharBuffer: 437
+  java/math/BigDecimal: 392103
+  java/math/BigInteger: 377598
+  java/net/URI: 348
+  java/net/URL: 984
+  java/net/URLClassLoader$1: 39
+  java/net/URLClassLoader$2: 301
+  java/nio/DirectByteBufferR: 352
+  java/nio/HeapByteBuffer: 2
   java/security/AccessControlContext: 7
-  java/security/AccessController$1: 5
-  java/security/CodeSource: 38
+  java/security/CodeSource: 39
   java/security/Permission: 6
   java/security/Permissions: 1
   java/security/Principal: 1
-  java/security/ProtectionDomain: 6
+  java/security/ProtectionDomain: 1
   java/security/ProtectionDomain$Key: 1
-  java/security/SecureClassLoader$1: 38
-  java/security/SecureClassLoader$CodeSourceKey: 38
-  java/sql/SQLException: 37470
-  java/sql/Timestamp: 62588
-  java/text/Format: 63119
-  java/text/MessageFormat: 63119
-  java/time/Instant: 1469188
-  java/time/LocalDateTime: 3
-  java/util/AbstractMap$SimpleImmutableEntry: 2304
-  java/util/ArrayList: 530931
+  java/security/SecureClassLoader$1: 39
+  java/security/SecureClassLoader$CodeSourceKey: 39
+  java/sql/SQLException: 142849
+  java/sql/Timestamp: 218259
+  java/text/Format: 248252
+  java/text/MessageFormat: 248252
+  java/time/Instant: 5020540
+  java/time/LocalDate: 1
+  java/time/LocalDateTime: 1
+  java/time/LocalTime: 1
+  java/time/temporal/ChronoField: 3
+  java/time/temporal/ChronoUnit: 2
+  java/util/AbstractMap$SimpleImmutableEntry: 4464
+  java/util/ArrayList: 1811047
   java/util/ArrayList$ArrayListSpliterator: 2
-  java/util/ArrayList$Itr: 7214168
-  java/util/ArrayList$SubList: 17
+  java/util/ArrayList$Itr: 27304699
+  java/util/ArrayList$SubList: 50
   java/util/ArrayList$SubList$1: 1
-  java/util/Arrays$ArrayItr: 38
-  java/util/Arrays$ArrayList: 38
-  java/util/BitSet: 40467
+  java/util/BitSet: 122796
   java/util/Collections$SetFromMap: 1
-  java/util/Collections$SingletonSet: 1
-  java/util/Collections$UnmodifiableCollection$1: 3
+  java/util/Collections$UnmodifiableCollection$1: 2
   java/util/Collections$UnmodifiableRandomAccessList: 1
   java/util/Formatter: 2
-  java/util/HashMap: 1601094
-  java/util/HashMap$EntryIterator: 2
-  java/util/HashMap$EntrySet: 1
-  java/util/HashMap$KeyIterator: 1694152
-  java/util/HashMap$KeySet: 1143865
-  java/util/HashMap$Node: 11699451
-  java/util/HashMap$ValueIterator: 1338444
-  java/util/HashMap$Values: 130742
-  java/util/HashSet: 1469214
-  java/util/Hashtable$Entry: 1
+  java/util/HashMap: 5507764
+  java/util/HashMap$EntryIterator: 3
+  java/util/HashMap$EntrySet: 2
+  java/util/HashMap$KeyIterator: 5839902
+  java/util/HashMap$KeySet: 3880155
+  java/util/HashMap$Node: 42626858
+  java/util/HashMap$ValueIterator: 4535559
+  java/util/HashMap$Values: 484979
+  java/util/HashSet: 5020604
   java/util/IdentityHashMap: 1
   java/util/IdentityHashMap$KeySet: 1
+  java/util/ImmutableCollections$List12: 3
   java/util/ImmutableCollections$ListItr: 5
-  java/util/ImmutableCollections$SetN: 1
-  java/util/LinkedHashMap$Entry: 256
-  java/util/LinkedList$Node: 6
-  java/util/Locale: 6
-  java/util/Optional: 370
+  java/util/ImmutableCollections$Set12: 13
+  java/util/ImmutableCollections$Set12$1: 13
+  java/util/ImmutableCollections$SetN: 3
+  java/util/LinkedHashMap$Entry: 768
+  java/util/Optional: 357
   java/util/Properties: 1
-  java/util/Random: 32000
-  java/util/RegularEnumSet: 2
+  java/util/Random: 100000
+  java/util/RegularEnumSet: 3
   java/util/ResourceBundle$3: 1
   java/util/ResourceBundle$BundleReference: 3
   java/util/ResourceBundle$CacheKey: 4
@@ -963,49 +905,49 @@ objects-by-type:
   java/util/ServiceLoader$LazyClassPathLookupIterator: 2
   java/util/ServiceLoader$ModuleServicesLookupIterator: 2
   java/util/ServiceLoader$ProviderImpl: 2
-  java/util/TreeMap: 16825
-  java/util/TreeMap$Entry: 17166
-  java/util/TreeMap$EntryIterator: 7912
-  java/util/TreeMap$EntrySet: 7912
-  java/util/TreeSet: 1001
-  java/util/WeakHashMap$Entry: 363
-  java/util/concurrent/ConcurrentHashMap: 2
+  java/util/TreeMap: 51412
+  java/util/TreeMap$Entry: 57639
+  java/util/TreeMap$EntryIterator: 24074
+  java/util/TreeMap$EntrySet: 24074
+  java/util/TreeSet: 3264
+  java/util/WeakHashMap$Entry: 335
+  java/util/concurrent/ConcurrentHashMap: 4
   java/util/concurrent/ConcurrentHashMap$CounterCell: 6
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 1
-  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 3
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 53
-  java/util/concurrent/ConcurrentHashMap$Node: 166692
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 1
-  java/util/concurrent/ConcurrentHashMap$ValueIterator: 378636
+  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 11
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 52
+  java/util/concurrent/ConcurrentHashMap$Node: 588730
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 2
+  java/util/concurrent/ConcurrentHashMap$ValueIterator: 1412316
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 2
-  java/util/concurrent/atomic/AtomicLong: 130763
-  java/util/concurrent/atomic/AtomicReference: 6
-  java/util/jar/JarFile$1: 2435
-  java/util/jar/JarFile$JarFileEntry: 692
-  java/util/logging/ConsoleHandler: 2
+  java/util/concurrent/atomic/AtomicLong: 485038
+  java/util/concurrent/atomic/AtomicReference: 22
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 13
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 4
+  java/util/concurrent/locks/ReentrantLock: 6
+  java/util/concurrent/locks/ReentrantLock$NonfairSync: 6
+  java/util/jar/JarFile$JarFileEntry: 635
+  java/util/logging/ConsoleHandler: 1
   java/util/logging/ErrorManager: 1
   java/util/logging/Handler: 1
   java/util/logging/Handler$1: 1
-  java/util/logging/Level$$Lambda$70/0x0000000800b8c040: 1
-  java/util/logging/Level$KnownLevel$$Lambda$71/0x0000000800b8b040: 1
   java/util/logging/LogManager$4: 1
   java/util/logging/LogRecord: 1
-  java/util/logging/LogRecord$CallerFinder$$Lambda$72/0x0000000800b8b840: 1
-  java/util/logging/SimpleFormatter: 2
-  java/util/logging/SimpleFormatter$$Lambda$69/0x0000000800b8d440: 1
-  java/util/regex/CharPredicates$$Lambda$80/0x0000000800d16040: 1
-  java/util/regex/IntHashSet: 528
-  java/util/regex/Matcher: 528
-  java/util/regex/Pattern: 1
-  java/util/regex/Pattern$BitClass: 3
-  java/util/regex/Pattern$BmpCharProperty: 9
-  java/util/regex/Pattern$BmpCharPropertyGreedy: 4
+  java/util/logging/SimpleFormatter: 1
+  java/util/regex/IntHashSet: 457
+  java/util/regex/Matcher: 457
+  java/util/regex/Pattern: 3
+  java/util/regex/Pattern$BitClass: 5
+  java/util/regex/Pattern$BmpCharProperty: 22
+  java/util/regex/Pattern$BmpCharPropertyGreedy: 7
   java/util/regex/Pattern$Branch: 5
   java/util/regex/Pattern$BranchConn: 5
-  java/util/regex/Pattern$GroupHead: 7
-  java/util/regex/Pattern$GroupTail: 6
+  java/util/regex/Pattern$Curly: 10
+  java/util/regex/Pattern$GroupHead: 11
+  java/util/regex/Pattern$GroupTail: 8
   java/util/regex/Pattern$Ques: 5
-  java/util/regex/Pattern$Start: 1
+  java/util/regex/Pattern$Start: 3
+  java/util/stream/IntPipeline$Head: 3
   java/util/stream/ReferencePipeline$2: 1
   java/util/stream/ReferencePipeline$2$1: 1
   java/util/stream/ReferencePipeline$3: 2
@@ -1014,351 +956,332 @@ objects-by-type:
   java/util/stream/ReferencePipeline$7$1: 2
   java/util/stream/ReferencePipeline$Head: 5
   java/util/stream/Streams$StreamBuilderImpl: 2
-  java/util/zip/CRC32: 34
-  java/util/zip/ZipFile$InflaterCleanupAction: 363
-  java/util/zip/ZipFile$ZipFileInflaterInputStream: 363
-  java/util/zip/ZipFile$ZipFileInputStream: 363
-  jdk/internal/jimage/ImageLocation: 724
+  java/util/zip/CRC32: 35
+  java/util/zip/ZipFile$InflaterCleanupAction: 335
+  java/util/zip/ZipFile$ZipFileInflaterInputStream: 335
+  java/util/zip/ZipFile$ZipFileInputStream: 335
+  jdk/internal/event/ThreadSleepEvent: 1
+  jdk/internal/jimage/ImageLocation: 352
   jdk/internal/loader/BuiltinClassLoader$2: 9
-  jdk/internal/loader/URLClassPath$JarLoader$2: 363
-  jdk/internal/loader/URLClassPath$LoaderSearchCursor: 700
-  jdk/internal/math/DoubleToDecimal: 119427
-  jdk/internal/math/FDBigInteger: 342
-  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 63519
-  jdk/internal/math/FloatingDecimal$BinaryToASCIIBuffer: 1
-  jdk/internal/math/FormattedFloatingDecimal: 8
-  jdk/internal/math/FormattedFloatingDecimal$1: 1
-  jdk/internal/math/FormattedFloatingDecimal$Form: 6
-  jdk/internal/org/objectweb/asm/AnnotationWriter: 19
-  jdk/internal/org/objectweb/asm/ByteVector: 109
-  jdk/internal/org/objectweb/asm/ClassWriter: 19
-  jdk/internal/org/objectweb/asm/FieldWriter: 19
-  jdk/internal/org/objectweb/asm/Item: 643
-  jdk/internal/org/objectweb/asm/Label: 52
-  jdk/internal/org/objectweb/asm/MethodWriter: 52
-  jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 391
-  jdk/internal/reflect/DelegatingConstructorAccessorImpl: 15
-  jdk/internal/reflect/DelegatingMethodAccessorImpl: 3
-  jdk/internal/reflect/NativeConstructorAccessorImpl: 15
-  jdk/internal/reflect/NativeMethodAccessorImpl: 3
-  long: 23557
-  org/apache/derbyTesting/system/oe/direct/OrderItem4Sort: 157865
-  org/apache/derbyTesting/system/oe/model/Address: 66843
-  org/apache/derbyTesting/system/oe/model/Customer: 64284
-  org/apache/derbyTesting/system/oe/model/OrderLine: 14253
-  org/dacapo/h2/TPCC$3: 8
-  org/h2/command/CommandContainer: 256
-  org/h2/command/Parser: 256
-  org/h2/command/Token$EndOfInputToken: 272
-  org/h2/command/Token$IdentifierToken: 2016
-  org/h2/command/Token$IntegerToken: 64
-  org/h2/command/Token$KeywordToken: 3072
-  org/h2/command/Token$ParameterToken: 856
-  org/h2/command/Tokenizer: 256
-  org/h2/command/ddl/Analyze$SelectivityData: 120
-  org/h2/command/dml/Insert: 32
-  org/h2/command/dml/SetClauseList: 48
-  org/h2/command/dml/SetClauseList$SetSimple: 88
-  org/h2/command/dml/SetClauseList$UpdateAction: 50
-  org/h2/command/dml/TransactionCommand: 8
-  org/h2/command/dml/Update: 48
-  org/h2/command/query/AllColumnsForPlan: 216
-  org/h2/command/query/Optimizer: 168
-  org/h2/command/query/Query$OffsetFetch: 337632
-  org/h2/command/query/QueryOrderBy: 16
-  org/h2/command/query/Select: 168
-  org/h2/command/query/Select$LazyResultQueryFlat: 329720
-  org/h2/command/query/SelectGroups$Grouped: 24
-  org/h2/engine/SessionLocal$Savepoint: 584243
-  org/h2/expression/Alias: 24
-  org/h2/expression/BinaryOperation: 88
+  jdk/internal/loader/URLClassPath$JarLoader$2: 335
+  jdk/internal/math/DoubleToDecimal: 429631
+  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 238407
+  jdk/internal/math/FormattedFPDecimal: 8
+  jdk/internal/misc/InternalLock: 1
+  jdk/internal/org/objectweb/asm/ByteVector: 63
+  jdk/internal/org/objectweb/asm/ClassWriter: 24
+  jdk/internal/org/objectweb/asm/FieldWriter: 14
+  jdk/internal/org/objectweb/asm/Label: 26
+  jdk/internal/org/objectweb/asm/MethodWriter: 26
+  jdk/internal/org/objectweb/asm/SymbolTable: 24
+  jdk/internal/org/objectweb/asm/SymbolTable$Entry: 341
+  jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 368
+  jdk/internal/reflect/DirectConstructorHandleAccessor: 10
+  jdk/internal/reflect/DirectMethodHandleAccessor: 3
+  long: 17451
+  org/apache/derbyTesting/system/oe/direct/OrderItem4Sort: 494895
+  org/apache/derbyTesting/system/oe/model/Address: 239770
+  org/apache/derbyTesting/system/oe/model/Customer: 240768
+  org/apache/derbyTesting/system/oe/model/OrderLine: 43736
+  org/dacapo/h2/TPCC$3: 24
+  org/h2/command/CommandContainer: 768
+  org/h2/command/Parser: 768
+  org/h2/command/Token$EndOfInputToken: 816
+  org/h2/command/Token$IdentifierToken: 6048
+  org/h2/command/Token$IntegerToken: 192
+  org/h2/command/Token$KeywordToken: 9216
+  org/h2/command/Token$ParameterToken: 2568
+  org/h2/command/Tokenizer: 768
+  org/h2/command/ddl/Analyze$SelectivityData: 193
+  org/h2/command/dml/Insert: 96
+  org/h2/command/dml/SetClauseList: 144
+  org/h2/command/dml/SetClauseList$SetSimple: 264
+  org/h2/command/dml/SetClauseList$UpdateAction: 146
+  org/h2/command/dml/TransactionCommand: 24
+  org/h2/command/dml/Update: 144
+  org/h2/command/query/AllColumnsForPlan: 648
+  org/h2/command/query/Optimizer: 504
+  org/h2/command/query/Query$OffsetFetch: 1145081
+  org/h2/command/query/QueryOrderBy: 48
+  org/h2/command/query/Select: 504
+  org/h2/command/query/Select$LazyResultQueryFlat: 1121007
+  org/h2/command/query/SelectGroups$Grouped: 72
+  org/h2/engine/SessionLocal$Savepoint: 2006394
+  org/h2/expression/Alias: 72
+  org/h2/expression/BinaryOperation: 264
   org/h2/expression/BinaryOperation$OpType: 6
-  org/h2/expression/Expression: 189736
-  org/h2/expression/ExpressionColumn: 3360304
-  org/h2/expression/ExpressionVisitor: 608282
-  org/h2/expression/Parameter: 808
-  org/h2/expression/ValueExpression: 64
-  org/h2/expression/aggregate/Aggregate: 24
-  org/h2/expression/aggregate/AggregateDataCollecting: 1277
+  org/h2/expression/Expression: 659350
+  org/h2/expression/ExpressionColumn: 11706688
+  org/h2/expression/ExpressionVisitor: 2049968
+  org/h2/expression/Parameter: 2424
+  org/h2/expression/ValueExpression: 192
+  org/h2/expression/aggregate/Aggregate: 72
+  org/h2/expression/aggregate/AggregateDataCollecting: 3973
   org/h2/expression/aggregate/AggregateDataCollecting$NullCollectionMode: 4
-  org/h2/expression/aggregate/AggregateDataDefault: 6635
+  org/h2/expression/aggregate/AggregateDataDefault: 20101
   org/h2/expression/aggregate/AggregateType: 2
-  org/h2/expression/condition/Comparison: 536
-  org/h2/expression/condition/ConditionAndOr: 272
-  org/h2/expression/condition/ConditionAndOrN: 112
-  org/h2/expression/function/CastSpecification: 16
-  org/h2/expression/function/CurrentDateTimeValueFunction: 8
-  org/h2/expression/function/SubstringFunction: 8
-  org/h2/index/IndexCondition: 544
-  org/h2/index/IndexCursor: 224
-  org/h2/jdbc/JdbcPreparedStatement: 248
-  org/h2/jdbc/JdbcResultSet: 337810
-  org/h2/jdbc/JdbcSQLNonTransientException: 60134
+  org/h2/expression/condition/Comparison: 1608
+  org/h2/expression/condition/ConditionAndOr: 816
+  org/h2/expression/condition/ConditionAndOrN: 336
+  org/h2/expression/function/CastSpecification: 48
+  org/h2/expression/function/CurrentDateTimeValueFunction: 24
+  org/h2/expression/function/SubstringFunction: 24
+  org/h2/index/IndexCondition: 1632
+  org/h2/index/IndexCursor: 672
+  org/h2/jdbc/JdbcPreparedStatement: 744
+  org/h2/jdbc/JdbcResultSet: 1145530
+  org/h2/jdbc/JdbcSQLNonTransientException: 217565
   org/h2/jdbc/JdbcSQLSyntaxErrorException: 1
-  org/h2/jdbc/JdbcSQLTransactionRollbackException: 1492
-  org/h2/message/DbException: 61627
-  org/h2/mvstore/Cursor: 2001834
-  org/h2/mvstore/CursorPos: 17077794
-  org/h2/mvstore/MVMap: 6
-  org/h2/mvstore/MVMap$IntValueHolder: 2923996
-  org/h2/mvstore/MVStoreException: 1492
-  org/h2/mvstore/Page$Leaf: 2529754
-  org/h2/mvstore/Page$NonLeaf: 5805083
-  org/h2/mvstore/Page$PageReference: 11649419
-  org/h2/mvstore/RootReference: 5532538
-  org/h2/mvstore/db/MVPrimaryIndex$MVStoreCursor: 9
-  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 895233
-  org/h2/mvstore/tx/CommitDecisionMaker: 19112
-  org/h2/mvstore/tx/Record: 1748522
-  org/h2/mvstore/tx/RollbackDecisionMaker: 25151
-  org/h2/mvstore/tx/Snapshot: 5823611
-  org/h2/mvstore/tx/Transaction: 130751
-  org/h2/mvstore/tx/TransactionMap: 4058690
-  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 587930
-  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 502354
-  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 390084
-  org/h2/mvstore/tx/TxDecisionMaker: 4058690
-  org/h2/mvstore/tx/TxDecisionMaker$LockDecisionMaker: 19984
-  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 4058690
-  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 4038706
-  org/h2/mvstore/tx/VersionedBitSet: 265489
-  org/h2/mvstore/tx/VersionedValueUncommitted: 1404973
-  org/h2/result/DefaultRow: 2373796
-  org/h2/result/LocalResult: 526762
-  org/h2/result/ResultWithGeneratedKeys: 395291
-  org/h2/result/SearchRow: 229338
-  org/h2/result/SimpleRowValue: 638358
-  org/h2/result/SortOrder: 16
-  org/h2/result/Sparse: 2824913
-  org/h2/table/Column: 85
-  org/h2/table/IndexColumn: 232
-  org/h2/table/Plan: 176
-  org/h2/table/PlanItem: 240
-  org/h2/table/Table: 80460
-  org/h2/table/TableFilter: 1144
-  org/h2/util/Permutations: 8
-  org/h2/value/TypeInfo: 104
-  org/h2/value/Value: 5527810
-  org/h2/value/ValueBigint: 193561
-  org/h2/value/ValueChar: 53988
-  org/h2/value/ValueDouble: 193884
-  org/h2/value/ValueInteger: 114609
-  org/h2/value/ValueNumeric: 534532
+  org/h2/jdbc/JdbcSQLTransactionRollbackException: 15343
+  org/h2/message/DbException: 232909
+  org/h2/mvstore/Cursor: 6546449
+  org/h2/mvstore/CursorPos: 57261475
+  org/h2/mvstore/MVMap: 22
+  org/h2/mvstore/MVMap$IntValueHolder: 9678949
+  org/h2/mvstore/MVStoreException: 15343
+  org/h2/mvstore/Page$Leaf: 8756987
+  org/h2/mvstore/Page$NonLeaf: 19782335
+  org/h2/mvstore/Page$PageReference: 39687066
+  org/h2/mvstore/RootReference: 20023520
+  org/h2/mvstore/db/MVPrimaryIndex$MVStoreCursor: 15
+  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 3003341
+  org/h2/mvstore/tx/CommitDecisionMaker: 59213
+  org/h2/mvstore/tx/Record: 6187669
+  org/h2/mvstore/tx/RollbackDecisionMaker: 103904
+  org/h2/mvstore/tx/Snapshot: 23044726
+  org/h2/mvstore/tx/Transaction: 484994
+  org/h2/mvstore/tx/TransactionMap: 15127133
+  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 2031600
+  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 1599787
+  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 1256062
+  org/h2/mvstore/tx/TxDecisionMaker: 15127133
+  org/h2/mvstore/tx/TxDecisionMaker$LockDecisionMaker: 62495
+  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 15127133
+  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 15064638
+  org/h2/mvstore/tx/VersionedBitSet: 999792
+  org/h2/mvstore/tx/VersionedValueUncommitted: 4805368
+  org/h2/result/DefaultRow: 7966189
+  org/h2/result/LocalResult: 1802528
+  org/h2/result/ResultWithGeneratedKeys: 1349396
+  org/h2/result/SearchRow: 721691
+  org/h2/result/SimpleRowValue: 1965518
+  org/h2/result/SortOrder: 48
+  org/h2/result/Sparse: 9468812
+  org/h2/table/Column: 244
+  org/h2/table/IndexColumn: 696
+  org/h2/table/Plan: 528
+  org/h2/table/PlanItem: 720
+  org/h2/table/Table: 286183
+  org/h2/table/TableFilter: 3432
+  org/h2/util/Permutations: 24
+  org/h2/value/TypeInfo: 312
+  org/h2/value/Value: 18540796
+  org/h2/value/ValueBigint: 647205
+  org/h2/value/ValueChar: 162406
+  org/h2/value/ValueDouble: 716587
+  org/h2/value/ValueInteger: 398975
+  org/h2/value/ValueNumeric: 1749425
   org/h2/value/ValueRow: 1
-  org/h2/value/ValueSmallint: 1116566
-  org/h2/value/ValueTimestamp: 19172
-  org/h2/value/ValueTimestampTimeZone: 5421
-  org/h2/value/ValueVarchar: 137054
-  org/h2/value/VersionedValue: 312233
-  short: 28780
-  sun/net/www/MessageHeader: 1347
-  sun/net/www/protocol/file/FileURLConnection: 987
-  sun/net/www/protocol/jar/JarURLConnection: 329
-  sun/net/www/protocol/jar/JarURLConnection$JarURLInputStream: 329
-  sun/net/www/protocol/jar/URLJarFile$URLJarFileEntry: 329
-  sun/net/www/protocol/jrt/JavaRuntimeURLConnection: 360
+  org/h2/value/ValueSmallint: 3792262
+  org/h2/value/ValueTimestamp: 59383
+  org/h2/value/ValueTimestampTimeZone: 32613
+  org/h2/value/ValueVarchar: 468143
+  org/h2/value/VersionedValue: 979947
+  short: 89922
+  sun/net/www/MessageHeader: 948
+  sun/net/www/protocol/file/FileURLConnection: 600
+  sun/net/www/protocol/jar/JarURLConnection: 300
+  sun/net/www/protocol/jar/JarURLConnection$JarURLInputStream: 300
+  sun/net/www/protocol/jar/URLJarFile$URLJarFileEntry: 300
   sun/nio/cs/StreamEncoder: 1
-  sun/nio/cs/UTF_16: 1
-  sun/nio/cs/UTF_16BE: 1
-  sun/nio/cs/UTF_16LE: 1
-  sun/nio/cs/UTF_8$Encoder: 4
-  sun/nio/fs/UnixPath: 658
+  sun/nio/cs/UTF_8$Encoder: 1
   sun/security/util/LazyCodeSourcePermissionCollection: 1
-  sun/text/resources/cldr/ext/FormatData_en_001: 1
-  sun/text/resources/cldr/ext/FormatData_en_AU: 1
   sun/util/calendar/ZoneInfo: 1
-  sun/util/cldr/CLDRLocaleProviderAdapter: 1
-  sun/util/locale/BaseLocale: 16
-  sun/util/locale/BaseLocale$Key: 16
-  sun/util/locale/InternalLocaleBuilder: 5
-  sun/util/locale/LocaleObjectCache$CacheEntry: 14
+  sun/util/locale/BaseLocale: 23
+  sun/util/locale/BaseLocale$Key: 23
+  sun/util/locale/InternalLocaleBuilder: 10
+  sun/util/locale/LocaleObjectCache$CacheEntry: 23
   sun/util/resources/cldr/provider/CLDRLocaleDataMetaInfo: 1
   sun/util/resources/provider/LocaleDataProvider: 1
+# number of bytes allocated for each class
 bytes-by-type: 
-  I: 1536
-  J: 7219912
-  boolean: 11344
-  byte: 493612064
-  char: 6223784
-  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 23920
-  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 20256
-  com/google/monitoring/runtime/instrumentation/StaticClassWriter: 8064
-  com/google/monitoring/runtime/instrumentation/StaticClassWriter$ClassInfo: 1920
-  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter: 2240
-  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 23920
-  com/google/monitoring/runtime/instrumentation/asm/AnnotationWriter: 288
-  com/google/monitoring/runtime/instrumentation/asm/Attribute: 896
-  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 48840
-  com/google/monitoring/runtime/instrumentation/asm/ClassReader: 2688
-  com/google/monitoring/runtime/instrumentation/asm/Context: 4928
-  com/google/monitoring/runtime/instrumentation/asm/Edge: 174336
-  com/google/monitoring/runtime/instrumentation/asm/FieldWriter: 17856
-  com/google/monitoring/runtime/instrumentation/asm/Frame: 335040
-  com/google/monitoring/runtime/instrumentation/asm/Handle: 640
-  com/google/monitoring/runtime/instrumentation/asm/Handler: 5720
-  com/google/monitoring/runtime/instrumentation/asm/Label: 1160440
-  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 133952
-  com/google/monitoring/runtime/instrumentation/asm/SymbolTable: 3584
-  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 886168
-  com/google/monitoring/runtime/instrumentation/asm/Type: 115344
-  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 76544
-  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 23920
+  B: 625736
+  I: 4632
+  J: 26828704
+  boolean: 1360
+  byte: 273283936
+  char: 21892584
+  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 22800
+  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 19104
+  com/google/monitoring/runtime/instrumentation/StaticClassWriter: 7680
+  com/google/monitoring/runtime/instrumentation/StaticClassWriter$ClassInfo: 1792
+  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter: 1920
+  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 22800
+  com/google/monitoring/runtime/instrumentation/asm/AnnotationWriter: 144
+  com/google/monitoring/runtime/instrumentation/asm/Attribute: 768
+  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 45600
+  com/google/monitoring/runtime/instrumentation/asm/ClassReader: 2304
+  com/google/monitoring/runtime/instrumentation/asm/Context: 4224
+  com/google/monitoring/runtime/instrumentation/asm/Edge: 156528
+  com/google/monitoring/runtime/instrumentation/asm/FieldWriter: 16896
+  com/google/monitoring/runtime/instrumentation/asm/Frame: 299616
+  com/google/monitoring/runtime/instrumentation/asm/Handle: 768
+  com/google/monitoring/runtime/instrumentation/asm/Handler: 5640
+  com/google/monitoring/runtime/instrumentation/asm/Label: 1039088
+  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 127680
+  com/google/monitoring/runtime/instrumentation/asm/SymbolTable: 3456
+  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 840480
+  com/google/monitoring/runtime/instrumentation/asm/Type: 106248
+  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 72960
+  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 22800
   com/google/monitoring/runtime/instrumentation/asm/tree/AnnotationNode: 32
-  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 92064
-  com/google/monitoring/runtime/instrumentation/asm/tree/IincInsnNode: 7104
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 19136
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 444560
-  com/google/monitoring/runtime/instrumentation/asm/tree/IntInsnNode: 90360
-  com/google/monitoring/runtime/instrumentation/asm/tree/InvokeDynamicInsnNode: 280
-  com/google/monitoring/runtime/instrumentation/asm/tree/JumpInsnNode: 74000
-  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 250480
-  com/google/monitoring/runtime/instrumentation/asm/tree/LdcInsnNode: 113960
-  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 214320
-  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 72240
-  com/google/monitoring/runtime/instrumentation/asm/tree/LookupSwitchInsnNode: 912
-  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 186928
+  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 79920
+  com/google/monitoring/runtime/instrumentation/asm/tree/IincInsnNode: 5376
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 18240
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 386000
+  com/google/monitoring/runtime/instrumentation/asm/tree/IntInsnNode: 83520
+  com/google/monitoring/runtime/instrumentation/asm/tree/InvokeDynamicInsnNode: 336
+  com/google/monitoring/runtime/instrumentation/asm/tree/JumpInsnNode: 66040
+  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 220600
+  com/google/monitoring/runtime/instrumentation/asm/tree/LdcInsnNode: 106400
+  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 185088
+  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 59480
+  com/google/monitoring/runtime/instrumentation/asm/tree/LookupSwitchInsnNode: 1008
+  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 178752
+  com/google/monitoring/runtime/instrumentation/asm/tree/ParameterNode: 336
   com/google/monitoring/runtime/instrumentation/asm/tree/TableSwitchInsnNode: 1512
-  com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 5720
-  com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 28080
-  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 364360
-  int: 12875176
-  java/io/ByteArrayOutputStream: 16536
-  java/io/File: 42112
+  com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 5640
+  com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 26600
+  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 310680
+  int: 41950888
+  java/io/ByteArrayOutputStream: 15552
+  java/io/File: 19200
   java/io/FileCleanable: 112
   java/io/FileDescriptor: 80
-  java/io/FileOutputStream: 80
+  java/io/FileOutputStream: 64
   java/io/FileOutputStream$1: 32
-  java/io/FilePermission: 13160
   java/io/IOException: 40
-  java/lang/Byte: 544
-  java/lang/Class: 10288
-  java/lang/Class$1: 80
+  java/lang/Byte: 656
+  java/lang/Class: 4800
+  java/lang/Class$1: 64
   java/lang/Class$3: 32
-  java/lang/Class$ReflectionData: 1216
+  java/lang/Class$ReflectionData: 896
   java/lang/ClassNotFoundException: 240
   java/lang/Float: 128
-  java/lang/Integer: 349024
-  java/lang/Long: 123439656
+  java/lang/Integer: 1316544
+  java/lang/Long: 418440384
   java/lang/NamedPackage: 72
-  java/lang/Object: 336470368
+  java/lang/Object: 1154628704
   java/lang/Package: 32
   java/lang/PublicMethods$MethodList: 48
   java/lang/RuntimeException: 40
   java/lang/StackTraceElement: 5880
-  java/lang/StackWalker: 32
-  java/lang/String: 236103584
-  java/lang/StringBuffer: 566784
-  java/lang/StringBuilder: 10508752
-  java/lang/Thread: 48
+  java/lang/StackWalker: 80
+  java/lang/String: 817974104
+  java/lang/StringBuffer: 1842208
+  java/lang/StringBuilder: 43005688
+  java/lang/StringLatin1$CharsSpliterator: 64
+  java/lang/StringUTF16$CharsSpliterator: 32
+  java/lang/Thread: 112
+  java/lang/Thread$FieldHolder: 960
   java/lang/Throwable$WrappedPrintWriter: 16
-  java/lang/TypeNotPresentException: 1240
-  java/lang/invoke/BoundMethodHandle$Species_L: 1376
-  java/lang/invoke/BoundMethodHandle$Species_LL: 1080
-  java/lang/invoke/BoundMethodHandle$Species_LLL: 400
-  java/lang/invoke/BoundMethodHandle$Species_LLLL: 816
-  java/lang/invoke/BoundMethodHandle$Species_LLLLL: 480
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLL: 504
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLI: 448
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLII: 512
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLIIL: 1024
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLL: 112
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLL: 64
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLL: 64
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLI: 72
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLII: 72
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLIIL: 80
-  java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLIILL: 80
-  java/lang/invoke/ConstantCallSite: 672
-  java/lang/invoke/DirectMethodHandle: 896
-  java/lang/invoke/DirectMethodHandle$Special: 240
-  java/lang/invoke/InfoFromMemberName: 456
-  java/lang/invoke/InnerClassLambdaMetafactory: 1976
-  java/lang/invoke/InnerClassLambdaMetafactory$1: 80
-  java/lang/invoke/InnerClassLambdaMetafactory$ForwardingMethodGenerator: 456
-  java/lang/invoke/LambdaForm: 192
-  java/lang/invoke/LambdaForm$Name: 560
-  java/lang/invoke/LambdaForm$NamedFunction: 128
-  java/lang/invoke/LambdaFormEditor: 2224
-  java/lang/invoke/LambdaFormEditor$Transform: 7784
-  java/lang/invoke/MemberName: 5568
-  java/lang/invoke/MethodHandle: 216
-  java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 160
-  java/lang/invoke/MethodHandleImpl$IntrinsicMethodHandle: 200
-  java/lang/invoke/MethodHandleNatives$CallSiteContext: 672
-  java/lang/invoke/MethodHandles$Lookup: 1464
-  java/lang/invoke/MethodType: 12080
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 12480
-  java/lang/invoke/MethodTypeForm: 1288
-  java/lang/invoke/SimpleMethodHandle: 160
-  java/lang/invoke/StringConcatFactory$Recipe: 144
-  java/lang/invoke/StringConcatFactory$RecipeElement: 456
-  java/lang/ref/ReferenceQueue$Lock: 48
-  java/lang/ref/SoftReference: 2504
-  java/lang/reflect/Constructor: 1320
+  java/lang/TypeNotPresentException: 1160
+  java/lang/invoke/BoundMethodHandle$Species_L: 920
+  java/lang/invoke/BoundMethodHandle$Species_LL: 880
+  java/lang/invoke/BoundMethodHandle$Species_LLJ: 48
+  java/lang/invoke/BoundMethodHandle$Species_LLL: 144
+  java/lang/invoke/BoundMethodHandle$Species_LLLL: 48
+  java/lang/invoke/BoundMethodHandle$Species_LLLLL: 112
+  java/lang/invoke/ConstantCallSite: 792
+  java/lang/invoke/DirectMethodHandle: 1080
+  java/lang/invoke/DirectMethodHandle$Constructor: 3312
+  java/lang/invoke/InfoFromMemberName: 576
+  java/lang/invoke/InnerClassLambdaMetafactory: 2496
+  java/lang/invoke/InnerClassLambdaMetafactory$ForwardingMethodGenerator: 312
+  java/lang/invoke/Invokers: 24
+  java/lang/invoke/LambdaForm: 240
+  java/lang/invoke/LambdaForm$Name: 704
+  java/lang/invoke/LambdaForm$NamedFunction: 120
+  java/lang/invoke/LambdaFormEditor: 592
+  java/lang/invoke/LambdaFormEditor$TransformKey: 888
+  java/lang/invoke/MemberName: 11568
+  java/lang/invoke/MethodHandle: 304
+  java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 144
+  java/lang/invoke/MethodHandleImpl$IntrinsicMethodHandle: 576
+  java/lang/invoke/MethodHandleNatives$CallSiteContext: 1056
+  java/lang/invoke/MethodHandles$Lookup: 2304
+  java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 416
+  java/lang/invoke/MethodHandles$Lookup$ClassFile: 312
+  java/lang/invoke/MethodType: 10760
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 3776
+  java/lang/invoke/MethodTypeForm: 448
+  java/lang/invoke/SimpleMethodHandle: 384
+  java/lang/ref/ReferenceQueue: 64
+  java/lang/ref/SoftReference: 3024
+  java/lang/ref/WeakReference: 192
+  java/lang/reflect/Constructor: 720
   java/lang/reflect/Method: 176
-  java/math/BigDecimal: 4152360
-  java/math/BigInteger: 3994000
-  java/net/URI: 28800
-  java/net/URI$Parser: 11520
-  java/net/URL: 67328
-  java/net/URLClassLoader$1: 912
-  java/net/URLClassLoader$2: 7920
-  java/nio/DirectByteBufferR: 269056
-  java/nio/HeapByteBuffer: 15840
-  java/nio/HeapCharBuffer: 20976
+  java/math/BigDecimal: 15684120
+  java/math/BigInteger: 15103920
+  java/net/URI: 27840
+  java/net/URL: 62976
+  java/net/URLClassLoader$1: 936
+  java/net/URLClassLoader$2: 7224
+  java/nio/DirectByteBufferR: 22528
+  java/nio/HeapByteBuffer: 112
   java/security/AccessControlContext: 280
-  java/security/AccessController$1: 80
-  java/security/CodeSource: 1520
+  java/security/CodeSource: 1560
   java/security/Permission: 144
-  java/security/Permissions: 32
+  java/security/Permissions: 24
   java/security/Principal: 16
-  java/security/ProtectionDomain: 160
+  java/security/ProtectionDomain: 40
   java/security/ProtectionDomain$Key: 16
-  java/security/SecureClassLoader$1: 912
-  java/security/SecureClassLoader$CodeSourceKey: 608
-  java/sql/SQLException: 1798560
-  java/sql/Timestamp: 2002816
-  java/text/Format: 3534664
-  java/text/MessageFormat: 2524760
-  java/time/Instant: 35260512
-  java/time/LocalDateTime: 72
-  java/util/AbstractMap$SimpleImmutableEntry: 55296
-  java/util/ArrayList: 12742344
+  java/security/SecureClassLoader$1: 624
+  java/security/SecureClassLoader$CodeSourceKey: 624
+  java/sql/SQLException: 6856752
+  java/sql/Timestamp: 6984288
+  java/text/Format: 13902112
+  java/text/MessageFormat: 9930080
+  java/time/Instant: 120492960
+  java/time/LocalDate: 24
+  java/time/LocalDateTime: 24
+  java/time/LocalTime: 24
+  java/time/temporal/ChronoField: 408
+  java/time/temporal/ChronoUnit: 160
+  java/util/AbstractMap$SimpleImmutableEntry: 107136
+  java/util/ArrayList: 43465128
   java/util/ArrayList$ArrayListSpliterator: 64
-  java/util/ArrayList$Itr: 230853376
-  java/util/ArrayList$SubList: 544
+  java/util/ArrayList$Itr: 873750368
+  java/util/ArrayList$SubList: 1600
   java/util/ArrayList$SubList$1: 32
-  java/util/Arrays$ArrayItr: 912
-  java/util/Arrays$ArrayList: 912
-  java/util/BitSet: 971208
+  java/util/BitSet: 2947104
   java/util/Collections$SetFromMap: 24
-  java/util/Collections$SingletonSet: 16
-  java/util/Collections$UnmodifiableCollection$1: 72
+  java/util/Collections$UnmodifiableCollection$1: 48
   java/util/Collections$UnmodifiableRandomAccessList: 24
-  java/util/Formatter: 64
-  java/util/HashMap: 76852512
-  java/util/HashMap$EntryIterator: 80
-  java/util/HashMap$EntrySet: 16
-  java/util/HashMap$KeyIterator: 67766080
-  java/util/HashMap$KeySet: 18301840
-  java/util/HashMap$Node: 520473616
-  java/util/HashMap$ValueIterator: 53537760
-  java/util/HashMap$Values: 2091872
-  java/util/HashSet: 23507424
-  java/util/Hashtable$Entry: 32
+  java/util/Formatter: 48
+  java/util/HashMap: 264372672
+  java/util/HashMap$EntryIterator: 96
+  java/util/HashMap$EntrySet: 32
+  java/util/HashMap$KeyIterator: 186876864
+  java/util/HashMap$KeySet: 62082480
+  java/util/HashMap$Node: 1893529720
+  java/util/HashMap$ValueIterator: 145137888
+  java/util/HashMap$Values: 7759664
+  java/util/HashSet: 80329664
   java/util/IdentityHashMap: 40
   java/util/IdentityHashMap$KeySet: 16
+  java/util/ImmutableCollections$List12: 72
   java/util/ImmutableCollections$ListItr: 160
-  java/util/ImmutableCollections$SetN: 24
-  java/util/LinkedHashMap$Entry: 10240
-  java/util/LinkedList$Node: 144
-  java/util/Locale: 192
-  java/util/Optional: 5920
+  java/util/ImmutableCollections$Set12: 312
+  java/util/ImmutableCollections$Set12$1: 312
+  java/util/ImmutableCollections$SetN: 72
+  java/util/LinkedHashMap$Entry: 30720
+  java/util/Optional: 5712
   java/util/Properties: 56
-  java/util/Random: 1024000
-  java/util/RegularEnumSet: 64
+  java/util/Random: 3200000
+  java/util/RegularEnumSet: 96
   java/util/ResourceBundle$3: 24
-  java/util/ResourceBundle$BundleReference: 144
+  java/util/ResourceBundle$BundleReference: 120
   java/util/ResourceBundle$CacheKey: 288
   java/util/ServiceLoader: 112
   java/util/ServiceLoader$1: 48
@@ -1367,49 +1290,49 @@ bytes-by-type:
   java/util/ServiceLoader$LazyClassPathLookupIterator: 80
   java/util/ServiceLoader$ModuleServicesLookupIterator: 64
   java/util/ServiceLoader$ProviderImpl: 64
-  java/util/TreeMap: 807600
-  java/util/TreeMap$Entry: 686640
-  java/util/TreeMap$EntryIterator: 253184
-  java/util/TreeMap$EntrySet: 126592
-  java/util/TreeSet: 16016
-  java/util/WeakHashMap$Entry: 14520
-  java/util/concurrent/ConcurrentHashMap: 144
+  java/util/TreeMap: 2467776
+  java/util/TreeMap$Entry: 2305560
+  java/util/TreeMap$EntryIterator: 770368
+  java/util/TreeMap$EntrySet: 385184
+  java/util/TreeSet: 52224
+  java/util/WeakHashMap$Entry: 13400
+  java/util/concurrent/ConcurrentHashMap: 256
   java/util/concurrent/ConcurrentHashMap$CounterCell: 1168
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 56
-  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 96
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 1272
-  java/util/concurrent/ConcurrentHashMap$Node: 5337216
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 32
-  java/util/concurrent/ConcurrentHashMap$ValueIterator: 21203616
+  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 352
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 1248
+  java/util/concurrent/ConcurrentHashMap$Node: 18843824
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 64
+  java/util/concurrent/ConcurrentHashMap$ValueIterator: 79089696
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 48
-  java/util/concurrent/atomic/AtomicLong: 3138312
-  java/util/concurrent/atomic/AtomicReference: 96
-  java/util/jar/JarFile$1: 38960
-  java/util/jar/JarFile$JarFileEntry: 71968
-  java/util/logging/ConsoleHandler: 96
+  java/util/concurrent/atomic/AtomicLong: 11640912
+  java/util/concurrent/atomic/AtomicReference: 352
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 416
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 96
+  java/util/concurrent/locks/ReentrantLock: 96
+  java/util/concurrent/locks/ReentrantLock$NonfairSync: 192
+  java/util/jar/JarFile$JarFileEntry: 66040
+  java/util/logging/ConsoleHandler: 56
   java/util/logging/ErrorManager: 16
   java/util/logging/Handler: 24
   java/util/logging/Handler$1: 32
-  java/util/logging/Level$$Lambda$70/0x0000000800b8c040: 16
-  java/util/logging/Level$KnownLevel$$Lambda$71/0x0000000800b8b040: 16
   java/util/logging/LogManager$4: 32
-  java/util/logging/LogRecord: 72
-  java/util/logging/LogRecord$CallerFinder$$Lambda$72/0x0000000800b8b840: 16
-  java/util/logging/SimpleFormatter: 32
-  java/util/logging/SimpleFormatter$$Lambda$69/0x0000000800b8d440: 16
-  java/util/regex/CharPredicates$$Lambda$80/0x0000000800d16040: 16
-  java/util/regex/IntHashSet: 8448
-  java/util/regex/Matcher: 38016
-  java/util/regex/Pattern: 88
-  java/util/regex/Pattern$BitClass: 72
-  java/util/regex/Pattern$BmpCharProperty: 216
-  java/util/regex/Pattern$BmpCharPropertyGreedy: 96
+  java/util/logging/LogRecord: 80
+  java/util/logging/SimpleFormatter: 16
+  java/util/regex/IntHashSet: 7312
+  java/util/regex/Matcher: 36560
+  java/util/regex/Pattern: 264
+  java/util/regex/Pattern$BitClass: 80
+  java/util/regex/Pattern$BmpCharProperty: 528
+  java/util/regex/Pattern$BmpCharPropertyGreedy: 168
   java/util/regex/Pattern$Branch: 160
   java/util/regex/Pattern$BranchConn: 80
-  java/util/regex/Pattern$GroupHead: 200
-  java/util/regex/Pattern$GroupTail: 144
+  java/util/regex/Pattern$Curly: 320
+  java/util/regex/Pattern$GroupHead: 360
+  java/util/regex/Pattern$GroupTail: 192
   java/util/regex/Pattern$Ques: 120
-  java/util/regex/Pattern$Start: 24
+  java/util/regex/Pattern$Start: 72
+  java/util/stream/IntPipeline$Head: 168
   java/util/stream/ReferencePipeline$2: 56
   java/util/stream/ReferencePipeline$2$1: 24
   java/util/stream/ReferencePipeline$3: 112
@@ -1418,164 +1341,150 @@ bytes-by-type:
   java/util/stream/ReferencePipeline$7$1: 48
   java/util/stream/ReferencePipeline$Head: 280
   java/util/stream/Streams$StreamBuilderImpl: 48
-  java/util/zip/CRC32: 544
-  java/util/zip/ZipFile$InflaterCleanupAction: 8712
-  java/util/zip/ZipFile$ZipFileInflaterInputStream: 20328
-  java/util/zip/ZipFile$ZipFileInputStream: 17424
-  jdk/internal/jimage/ImageLocation: 17376
+  java/util/zip/CRC32: 560
+  java/util/zip/ZipFile$InflaterCleanupAction: 8040
+  java/util/zip/ZipFile$ZipFileInflaterInputStream: 16080
+  java/util/zip/ZipFile$ZipFileInputStream: 18760
+  jdk/internal/event/ThreadSleepEvent: 40
+  jdk/internal/jimage/ImageLocation: 8448
   jdk/internal/loader/BuiltinClassLoader$2: 216
-  jdk/internal/loader/URLClassPath$JarLoader$2: 14520
-  jdk/internal/loader/URLClassPath$LoaderSearchCursor: 22400
-  jdk/internal/math/DoubleToDecimal: 2866248
-  jdk/internal/math/FDBigInteger: 12288
-  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 2032608
-  jdk/internal/math/FloatingDecimal$BinaryToASCIIBuffer: 40
-  jdk/internal/math/FormattedFloatingDecimal: 192
-  jdk/internal/math/FormattedFloatingDecimal$1: 16
-  jdk/internal/math/FormattedFloatingDecimal$Form: 160
-  jdk/internal/org/objectweb/asm/AnnotationWriter: 1064
-  jdk/internal/org/objectweb/asm/ByteVector: 2616
-  jdk/internal/org/objectweb/asm/ClassWriter: 3344
-  jdk/internal/org/objectweb/asm/FieldWriter: 1216
-  jdk/internal/org/objectweb/asm/Item: 54704
-  jdk/internal/org/objectweb/asm/Label: 3328
-  jdk/internal/org/objectweb/asm/MethodWriter: 11648
-  jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 18768
-  jdk/internal/reflect/DelegatingConstructorAccessorImpl: 240
-  jdk/internal/reflect/DelegatingMethodAccessorImpl: 48
-  jdk/internal/reflect/NativeConstructorAccessorImpl: 360
-  jdk/internal/reflect/NativeMethodAccessorImpl: 72
-  long: 548600
-  org/apache/derbyTesting/system/oe/direct/OrderItem4Sort: 4276424
-  org/apache/derbyTesting/system/oe/model/Address: 2138976
-  org/apache/derbyTesting/system/oe/model/Customer: 5142720
-  org/apache/derbyTesting/system/oe/model/OrderLine: 593712
-  org/dacapo/h2/TPCC$3: 3008
-  org/h2/command/CommandContainer: 12288
-  org/h2/command/Parser: 24576
-  org/h2/command/Token$EndOfInputToken: 4352
-  org/h2/command/Token$IdentifierToken: 48384
-  org/h2/command/Token$IntegerToken: 1536
-  org/h2/command/Token$KeywordToken: 73728
-  org/h2/command/Token$ParameterToken: 20544
-  org/h2/command/Tokenizer: 6144
-  org/h2/command/ddl/Analyze$SelectivityData: 5056
-  org/h2/command/dml/Insert: 3840
-  org/h2/command/dml/SetClauseList: 1152
-  org/h2/command/dml/SetClauseList$SetSimple: 1408
-  org/h2/command/dml/SetClauseList$UpdateAction: 3872
-  org/h2/command/dml/TransactionCommand: 640
-  org/h2/command/dml/Update: 4608
-  org/h2/command/query/AllColumnsForPlan: 5184
-  org/h2/command/query/Optimizer: 10752
-  org/h2/command/query/Query$OffsetFetch: 10804224
-  org/h2/command/query/QueryOrderBy: 384
-  org/h2/command/query/Select: 37632
-  org/h2/command/query/Select$LazyResultQueryFlat: 26377600
-  org/h2/command/query/SelectGroups$Grouped: 1344
-  org/h2/engine/SessionLocal$Savepoint: 14021832
-  org/h2/expression/Alias: 768
-  org/h2/expression/BinaryOperation: 3520
+  jdk/internal/loader/URLClassPath$JarLoader$2: 13400
+  jdk/internal/math/DoubleToDecimal: 10311144
+  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 7629024
+  jdk/internal/math/FormattedFPDecimal: 320
+  jdk/internal/misc/InternalLock: 16
+  jdk/internal/org/objectweb/asm/ByteVector: 1512
+  jdk/internal/org/objectweb/asm/ClassWriter: 3648
+  jdk/internal/org/objectweb/asm/FieldWriter: 896
+  jdk/internal/org/objectweb/asm/Label: 1456
+  jdk/internal/org/objectweb/asm/MethodWriter: 5824
+  jdk/internal/org/objectweb/asm/SymbolTable: 1536
+  jdk/internal/org/objectweb/asm/SymbolTable$Entry: 42712
+  jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 17664
+  jdk/internal/reflect/DirectConstructorHandleAccessor: 240
+  jdk/internal/reflect/DirectMethodHandleAccessor: 96
+  long: 423752
+  org/apache/derbyTesting/system/oe/direct/OrderItem4Sort: 13407688
+  org/apache/derbyTesting/system/oe/model/Address: 7672640
+  org/apache/derbyTesting/system/oe/model/Customer: 19261440
+  org/apache/derbyTesting/system/oe/model/OrderLine: 1821008
+  org/dacapo/h2/TPCC$3: 3072
+  org/h2/command/CommandContainer: 30720
+  org/h2/command/Parser: 73728
+  org/h2/command/Token$EndOfInputToken: 13056
+  org/h2/command/Token$IdentifierToken: 145152
+  org/h2/command/Token$IntegerToken: 4608
+  org/h2/command/Token$KeywordToken: 221184
+  org/h2/command/Token$ParameterToken: 61632
+  org/h2/command/Tokenizer: 18432
+  org/h2/command/ddl/Analyze$SelectivityData: 8120
+  org/h2/command/dml/Insert: 10752
+  org/h2/command/dml/SetClauseList: 3456
+  org/h2/command/dml/SetClauseList$SetSimple: 6336
+  org/h2/command/dml/SetClauseList$UpdateAction: 11552
+  org/h2/command/dml/TransactionCommand: 1920
+  org/h2/command/dml/Update: 12672
+  org/h2/command/query/AllColumnsForPlan: 15552
+  org/h2/command/query/Optimizer: 32256
+  org/h2/command/query/Query$OffsetFetch: 36642592
+  org/h2/command/query/QueryOrderBy: 1152
+  org/h2/command/query/Select: 112896
+  org/h2/command/query/Select$LazyResultQueryFlat: 80712504
+  org/h2/command/query/SelectGroups$Grouped: 4032
+  org/h2/engine/SessionLocal$Savepoint: 48153456
+  org/h2/expression/Alias: 1728
+  org/h2/expression/BinaryOperation: 10560
   org/h2/expression/BinaryOperation$OpType: 160
-  org/h2/expression/Expression: 16963800
-  org/h2/expression/ExpressionColumn: 161294592
-  org/h2/expression/ExpressionVisitor: 24331280
-  org/h2/expression/Parameter: 25856
-  org/h2/expression/ValueExpression: 1536
-  org/h2/expression/aggregate/Aggregate: 1728
-  org/h2/expression/aggregate/AggregateDataCollecting: 40864
+  org/h2/expression/Expression: 59040472
+  org/h2/expression/ExpressionColumn: 561921024
+  org/h2/expression/ExpressionVisitor: 81998720
+  org/h2/expression/Parameter: 77568
+  org/h2/expression/ValueExpression: 4608
+  org/h2/expression/aggregate/Aggregate: 5184
+  org/h2/expression/aggregate/AggregateDataCollecting: 127136
   org/h2/expression/aggregate/AggregateDataCollecting$NullCollectionMode: 104
-  org/h2/expression/aggregate/AggregateDataDefault: 159240
-  org/h2/expression/aggregate/AggregateType: 384
-  org/h2/expression/condition/Comparison: 17152
-  org/h2/expression/condition/ConditionAndOr: 8704
-  org/h2/expression/condition/ConditionAndOrN: 3584
-  org/h2/expression/function/CastSpecification: 512
-  org/h2/expression/function/CurrentDateTimeValueFunction: 256
-  org/h2/expression/function/SubstringFunction: 256
-  org/h2/index/IndexCondition: 17408
-  org/h2/index/IndexCursor: 14336
-  org/h2/jdbc/JdbcPreparedStatement: 25792
-  org/h2/jdbc/JdbcResultSet: 24322320
-  org/h2/jdbc/JdbcSQLNonTransientException: 3848576
+  org/h2/expression/aggregate/AggregateDataDefault: 482424
+  org/h2/expression/aggregate/AggregateType: 400
+  org/h2/expression/condition/Comparison: 51456
+  org/h2/expression/condition/ConditionAndOr: 26112
+  org/h2/expression/condition/ConditionAndOrN: 10752
+  org/h2/expression/function/CastSpecification: 1536
+  org/h2/expression/function/CurrentDateTimeValueFunction: 768
+  org/h2/expression/function/SubstringFunction: 768
+  org/h2/index/IndexCondition: 52224
+  org/h2/index/IndexCursor: 43008
+  org/h2/jdbc/JdbcPreparedStatement: 77376
+  org/h2/jdbc/JdbcResultSet: 82478160
+  org/h2/jdbc/JdbcSQLNonTransientException: 13924160
   org/h2/jdbc/JdbcSQLSyntaxErrorException: 64
-  org/h2/jdbc/JdbcSQLTransactionRollbackException: 95488
-  org/h2/message/DbException: 2465080
-  org/h2/mvstore/Cursor: 96088032
-  org/h2/mvstore/CursorPos: 409867056
-  org/h2/mvstore/MVMap: 480
-  org/h2/mvstore/MVMap$IntValueHolder: 46783936
-  org/h2/mvstore/MVStoreException: 59680
-  org/h2/mvstore/Page$Leaf: 121428192
-  org/h2/mvstore/Page$NonLeaf: 325084648
-  org/h2/mvstore/Page$PageReference: 824017376
-  org/h2/mvstore/RootReference: 309818664
-  org/h2/mvstore/db/MVPrimaryIndex$MVStoreCursor: 216
-  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 28647456
-  org/h2/mvstore/tx/CommitDecisionMaker: 458688
-  org/h2/mvstore/tx/Record: 51001920
-  org/h2/mvstore/tx/RollbackDecisionMaker: 1006040
-  org/h2/mvstore/tx/Snapshot: 139766664
-  org/h2/mvstore/tx/Transaction: 10460080
-  org/h2/mvstore/tx/TransactionMap: 227286640
-  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 18813760
-  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 28131824
-  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 12482688
-  org/h2/mvstore/tx/TxDecisionMaker: 227286640
-  org/h2/mvstore/tx/TxDecisionMaker$LockDecisionMaker: 1119104
-  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 259756160
-  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 258477184
-  org/h2/mvstore/tx/VersionedBitSet: 8495648
-  org/h2/mvstore/tx/VersionedValueUncommitted: 44959136
-  org/h2/result/DefaultRow: 75961472
-  org/h2/result/LocalResult: 54783248
-  org/h2/result/ResultWithGeneratedKeys: 9486984
-  org/h2/result/SearchRow: 34567640
-  org/h2/result/SimpleRowValue: 25534320
-  org/h2/result/SortOrder: 512
-  org/h2/result/Sparse: 112996520
-  org/h2/table/Column: 3368
-  org/h2/table/IndexColumn: 18240
-  org/h2/table/Plan: 5632
-  org/h2/table/PlanItem: 9600
-  org/h2/table/Table: 1314280
-  org/h2/table/TableFilter: 46208
-  org/h2/util/Permutations: 320
-  org/h2/value/TypeInfo: 3328
-  org/h2/value/Value: 273070352
-  org/h2/value/ValueBigint: 4645856
-  org/h2/value/ValueChar: 1295712
-  org/h2/value/ValueDouble: 4653216
-  org/h2/value/ValueInteger: 1833744
-  org/h2/value/ValueNumeric: 12828768
+  org/h2/jdbc/JdbcSQLTransactionRollbackException: 981952
+  org/h2/message/DbException: 9316360
+  org/h2/mvstore/Cursor: 314229552
+  org/h2/mvstore/CursorPos: 1374275400
+  org/h2/mvstore/MVMap: 1760
+  org/h2/mvstore/MVMap$IntValueHolder: 154863184
+  org/h2/mvstore/MVStoreException: 613720
+  org/h2/mvstore/Page$Leaf: 420335376
+  org/h2/mvstore/Page$NonLeaf: 1107810760
+  org/h2/mvstore/Page$PageReference: 2776395008
+  org/h2/mvstore/RootReference: 1122251632
+  org/h2/mvstore/db/MVPrimaryIndex$MVStoreCursor: 360
+  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 96106912
+  org/h2/mvstore/tx/CommitDecisionMaker: 1421112
+  org/h2/mvstore/tx/Record: 182305648
+  org/h2/mvstore/tx/RollbackDecisionMaker: 4156160
+  org/h2/mvstore/tx/Snapshot: 553073424
+  org/h2/mvstore/tx/Transaction: 38799520
+  org/h2/mvstore/tx/TransactionMap: 847119448
+  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 65011200
+  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 89588072
+  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 40193984
+  org/h2/mvstore/tx/TxDecisionMaker: 847119448
+  org/h2/mvstore/tx/TxDecisionMaker$LockDecisionMaker: 3499720
+  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 968136512
+  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 964136832
+  org/h2/mvstore/tx/VersionedBitSet: 31993344
+  org/h2/mvstore/tx/VersionedValueUncommitted: 153771776
+  org/h2/result/DefaultRow: 254918048
+  org/h2/result/LocalResult: 187462912
+  org/h2/result/ResultWithGeneratedKeys: 32385504
+  org/h2/result/SearchRow: 111197184
+  org/h2/result/SimpleRowValue: 62896576
+  org/h2/result/SortOrder: 1536
+  org/h2/result/Sparse: 378752480
+  org/h2/table/Column: 9312
+  org/h2/table/IndexColumn: 54720
+  org/h2/table/Plan: 16896
+  org/h2/table/PlanItem: 28800
+  org/h2/table/Table: 4607480
+  org/h2/table/TableFilter: 138624
+  org/h2/util/Permutations: 960
+  org/h2/value/TypeInfo: 9984
+  org/h2/value/Value: 925006312
+  org/h2/value/ValueBigint: 15533312
+  org/h2/value/ValueChar: 3897744
+  org/h2/value/ValueDouble: 17198088
+  org/h2/value/ValueInteger: 6383600
+  org/h2/value/ValueNumeric: 41986200
   org/h2/value/ValueRow: 24
-  org/h2/value/ValueSmallint: 17865056
-  org/h2/value/ValueTimestamp: 613504
-  org/h2/value/ValueTimestampTimeZone: 173472
-  org/h2/value/ValueVarchar: 3289296
-  org/h2/value/VersionedValue: 48211032
-  short: 1127264
-  sun/net/www/MessageHeader: 32328
-  sun/net/www/protocol/file/FileURLConnection: 102648
-  sun/net/www/protocol/jar/JarURLConnection: 28952
-  sun/net/www/protocol/jar/JarURLConnection$JarURLInputStream: 7896
-  sun/net/www/protocol/jar/URLJarFile$URLJarFileEntry: 34216
-  sun/net/www/protocol/jrt/JavaRuntimeURLConnection: 25920
-  sun/nio/cs/StreamEncoder: 48
-  sun/nio/cs/UTF_16: 24
-  sun/nio/cs/UTF_16BE: 24
-  sun/nio/cs/UTF_16LE: 24
-  sun/nio/cs/UTF_8$Encoder: 192
-  sun/nio/fs/UnixPath: 21056
-  sun/security/util/LazyCodeSourcePermissionCollection: 32
-  sun/text/resources/cldr/ext/FormatData_en_001: 40
-  sun/text/resources/cldr/ext/FormatData_en_AU: 40
+  org/h2/value/ValueSmallint: 60676192
+  org/h2/value/ValueTimestamp: 1900256
+  org/h2/value/ValueTimestampTimeZone: 1043616
+  org/h2/value/ValueVarchar: 11235432
+  org/h2/value/VersionedValue: 153627736
+  short: 3527504
+  sun/net/www/MessageHeader: 22752
+  sun/net/www/protocol/file/FileURLConnection: 62400
+  sun/net/www/protocol/jar/JarURLConnection: 21600
+  sun/net/www/protocol/jar/JarURLConnection$JarURLInputStream: 7200
+  sun/net/www/protocol/jar/URLJarFile$URLJarFileEntry: 31200
+  sun/nio/cs/StreamEncoder: 56
+  sun/nio/cs/UTF_8$Encoder: 48
+  sun/security/util/LazyCodeSourcePermissionCollection: 24
   sun/util/calendar/ZoneInfo: 56
-  sun/util/cldr/CLDRLocaleProviderAdapter: 80
-  sun/util/locale/BaseLocale: 512
-  sun/util/locale/BaseLocale$Key: 512
-  sun/util/locale/InternalLocaleBuilder: 200
-  sun/util/locale/LocaleObjectCache$CacheEntry: 672
+  sun/util/locale/BaseLocale: 736
+  sun/util/locale/BaseLocale$Key: 736
+  sun/util/locale/InternalLocaleBuilder: 400
+  sun/util/locale/LocaleObjectCache$CacheEntry: 920
   sun/util/resources/cldr/provider/CLDRLocaleDataMetaInfo: 16
   sun/util/resources/provider/LocaleDataProvider: 16
-
