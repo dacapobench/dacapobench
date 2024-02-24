@@ -127,8 +127,8 @@ public class AllocCallback extends Callback {
     for (long size : objectsBySize.keySet()) {
       yml.println("  "+size+": "+objectsBySize.get(size));
     }
-    yml.println("# number of bytres allocated for each object size");
-    System.out.println("bytes-by-size: ");
+    yml.println("# number of bytes allocated for each object size");
+    yml.println("bytes-by-size: ");
     for (long size : objectsBySize.keySet()) {
       yml.println("  "+size+": "+bytesBySize.get(size));
     }
