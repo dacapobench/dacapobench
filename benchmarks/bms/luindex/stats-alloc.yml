@@ -1,43 +1,46 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 10944411
-bytes-allocated: 2302868608
+objects-allocated: 10943958
+bytes-allocated: 2302858024
 # number of objects allocated for each object size
 objects-by-size: 
   16: 134800
-  24: 4945869
-  32: 1604176
-  40: 841559
-  48: 691237
-  56: 840262
-  64: 33462
-  72: 17982
-  80: 232478
-  88: 1258073
-  96: 33534
+  24: 4945392
+  32: 1604128
+  40: 841597
+  48: 691244
+  56: 840266
+  64: 33465
+  72: 17985
+  80: 232483
+  88: 1258072
+  96: 33537
   104: 8707
   112: 3753
-  120: 25165
-  128: 13425
+  120: 25166
+  128: 13424
   136: 2358
-  144: 7892
+  144: 7889
   152: 2132
   160: 3134
   168: 7809
-  176: 12632
+  176: 12629
   184: 1529
-  192: 824
+  192: 827
   200: 898
-  208: 1363
+  208: 1362
   216: 115034
-  224: 12352
+  224: 12351
   232: 1188
   240: 703
   248: 423
   256: 470
   264: 583
-  272: 4910
+  272: 4919
   280: 767
   288: 324
   296: 544
@@ -45,11 +48,11 @@ objects-by-size:
   312: 332
   320: 1305
   328: 971
-  336: 316
+  336: 315
   344: 273
   352: 163
   360: 203
-  368: 159
+  368: 160
   376: 146
   384: 110
   392: 102
@@ -69,7 +72,7 @@ objects-by-size:
   504: 89
   512: 1233
   520: 160
-  528: 1653
+  528: 1665
   536: 72
   544: 99
   552: 83
@@ -77,7 +80,7 @@ objects-by-size:
   568: 81
   576: 120
   584: 73
-  592: 76
+  592: 77
   600: 66
   608: 151
   616: 95
@@ -93,7 +96,7 @@ objects-by-size:
   696: 55
   704: 122
   712: 58
-  720: 42
+  720: 41
   728: 135
   736: 58
   744: 51
@@ -101,7 +104,7 @@ objects-by-size:
   760: 34
   768: 66
   776: 93
-  784: 153
+  784: 154
   792: 59
   800: 58
   808: 59
@@ -133,7 +136,7 @@ objects-by-size:
   1016: 39
   1024: 43
   1032: 45
-  1040: 2135
+  1040: 2129
   1048: 110
   1056: 65
   1064: 41
@@ -213,7 +216,7 @@ objects-by-size:
   1656: 24
   1664: 70
   1672: 20
-  1680: 35
+  1680: 34
   1688: 22
   1696: 40
   1704: 47
@@ -381,7 +384,7 @@ objects-by-size:
   3000: 24
   3008: 65
   3016: 19
-  3024: 20
+  3024: 19
   3032: 16
   3040: 19
   3048: 9
@@ -421,7 +424,7 @@ objects-by-size:
   3320: 14
   3328: 11
   3336: 30
-  3344: 17
+  3344: 18
   3352: 21
   3360: 25
   3368: 20
@@ -485,7 +488,7 @@ objects-by-size:
   3832: 13
   3840: 20
   3848: 11
-  3856: 18
+  3856: 19
   3864: 17
   3872: 22
   3880: 16
@@ -702,7 +705,7 @@ objects-by-size:
   5568: 18
   5576: 13
   5584: 9
-  5592: 16
+  5592: 15
   5600: 26
   5608: 11
   5616: 12
@@ -9851,40 +9854,41 @@ objects-by-size:
   1088264: 10
   2097168: 3
   4194320: 2
-# number of bytres allocated for each object size
+# number of bytes allocated for each object size
+bytes-by-size: 
   16: 2156800
-  24: 118700856
-  32: 51333632
-  40: 33662360
-  48: 33179376
-  56: 47054672
-  64: 2141568
-  72: 1294704
-  80: 18598240
-  88: 110710424
-  96: 3219264
+  24: 118689408
+  32: 51332096
+  40: 33663880
+  48: 33179712
+  56: 47054896
+  64: 2141760
+  72: 1294920
+  80: 18598640
+  88: 110710336
+  96: 3219552
   104: 905528
   112: 420336
-  120: 3019800
-  128: 1718400
+  120: 3019920
+  128: 1718272
   136: 320688
-  144: 1136448
+  144: 1136016
   152: 324064
   160: 501440
   168: 1311912
-  176: 2223232
+  176: 2222704
   184: 281336
-  192: 158208
+  192: 158784
   200: 179600
-  208: 283504
+  208: 283296
   216: 24847344
-  224: 2766848
+  224: 2766624
   232: 275616
   240: 168720
   248: 104904
   256: 120320
   264: 153912
-  272: 1335520
+  272: 1337968
   280: 214760
   288: 93312
   296: 161024
@@ -9892,11 +9896,11 @@ objects-by-size:
   312: 103584
   320: 417600
   328: 318488
-  336: 106176
+  336: 105840
   344: 93912
   352: 57376
   360: 73080
-  368: 58512
+  368: 58880
   376: 54896
   384: 42240
   392: 39984
@@ -9916,7 +9920,7 @@ objects-by-size:
   504: 44856
   512: 631296
   520: 83200
-  528: 872784
+  528: 879120
   536: 38592
   544: 53856
   552: 45816
@@ -9924,7 +9928,7 @@ objects-by-size:
   568: 46008
   576: 69120
   584: 42632
-  592: 44992
+  592: 45584
   600: 39600
   608: 91808
   616: 58520
@@ -9940,7 +9944,7 @@ objects-by-size:
   696: 38280
   704: 85888
   712: 41296
-  720: 30240
+  720: 29520
   728: 98280
   736: 42688
   744: 37944
@@ -9948,7 +9952,7 @@ objects-by-size:
   760: 25840
   768: 50688
   776: 72168
-  784: 119952
+  784: 120736
   792: 46728
   800: 46400
   808: 47672
@@ -9980,7 +9984,7 @@ objects-by-size:
   1016: 39624
   1024: 44032
   1032: 46440
-  1040: 2220400
+  1040: 2214160
   1048: 115280
   1056: 68640
   1064: 43624
@@ -10060,7 +10064,7 @@ objects-by-size:
   1656: 39744
   1664: 116480
   1672: 33440
-  1680: 58800
+  1680: 57120
   1688: 37136
   1696: 67840
   1704: 80088
@@ -10228,7 +10232,7 @@ objects-by-size:
   3000: 72000
   3008: 195520
   3016: 57304
-  3024: 60480
+  3024: 57456
   3032: 48512
   3040: 57760
   3048: 27432
@@ -10268,7 +10272,7 @@ objects-by-size:
   3320: 46480
   3328: 36608
   3336: 100080
-  3344: 56848
+  3344: 60192
   3352: 70392
   3360: 84000
   3368: 67360
@@ -10332,7 +10336,7 @@ objects-by-size:
   3832: 49816
   3840: 76800
   3848: 42328
-  3856: 69408
+  3856: 73264
   3864: 65688
   3872: 85184
   3880: 62080
@@ -10549,7 +10553,7 @@ objects-by-size:
   5568: 100224
   5576: 72488
   5584: 50256
-  5592: 89472
+  5592: 83880
   5600: 145600
   5608: 61688
   5616: 67392
@@ -19706,7 +19710,7 @@ objects-by-type:
   [C: 1
   [I: 25
   boolean: 8
-  byte: 1845352
+  byte: 1845087
   char: 4074
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 11079
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 6511
@@ -19765,7 +19769,7 @@ objects-by-type:
   com/sun/management/internal/PlatformMBeanProviderImpl$5: 1
   double: 1
   float: 10
-  int: 559500
+  int: 559501
   java/io/BufferedReader: 8
   java/io/ByteArrayInputStream: 4
   java/io/ByteArrayOutputStream: 1107
@@ -19801,7 +19805,7 @@ objects-by-type:
   java/lang/Integer: 1762
   java/lang/Long: 1549
   java/lang/NamedPackage: 3
-  java/lang/Object: 152677
+  java/lang/Object: 152678
   java/lang/Package: 34
   java/lang/Package$VersionInfo: 34
   java/lang/PublicMethods$MethodList: 9
@@ -19812,7 +19816,7 @@ objects-by-type:
   java/lang/StackWalker: 2
   java/lang/StackWalker$ExtendedOption: 2
   java/lang/StackWalker$Option: 5
-  java/lang/String: 233587
+  java/lang/String: 233586
   java/lang/StringBuilder: 21660
   java/lang/StringLatin1$CharsSpliterator: 8
   java/lang/StringUTF16$CharsSpliterator: 4
@@ -20065,8 +20069,8 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 1
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 21
   java/util/concurrent/ConcurrentHashMap$KeySetView: 3
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 52
-  java/util/concurrent/ConcurrentHashMap$Node: 1806
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 54
+  java/util/concurrent/ConcurrentHashMap$Node: 1811
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 11
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 283
   java/util/concurrent/ConcurrentLinkedQueue: 1
@@ -20213,7 +20217,7 @@ objects-by-type:
   jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer: 1
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider: 1
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider$SingleMBeanComponent: 1
-  long: 86590
+  long: 86624
   org/apache/lucene/analysis/Analyzer$1: 1
   org/apache/lucene/analysis/Analyzer$2: 1
   org/apache/lucene/analysis/Analyzer$TokenStreamComponents: 1
@@ -20551,7 +20555,7 @@ objects-by-type:
   org/apache/lucene/util/Bits: 1
   org/apache/lucene/util/ByteBlockPool: 9
   org/apache/lucene/util/ByteBlockPool$DirectTrackingAllocator: 3
-  org/apache/lucene/util/BytesRef: 330230
+  org/apache/lucene/util/BytesRef: 329966
   org/apache/lucene/util/BytesRefBuilder: 43
   org/apache/lucene/util/BytesRefHash: 18
   org/apache/lucene/util/BytesRefHash$1: 9
@@ -20638,11 +20642,11 @@ objects-by-type:
   org/apache/lucene/util/packed/DirectReader$DirectPackedReader16: 9
   org/apache/lucene/util/packed/DirectWriter: 8
   org/apache/lucene/util/packed/GrowableWriter: 23169
-  org/apache/lucene/util/packed/Packed64: 26383
+  org/apache/lucene/util/packed/Packed64: 26400
   org/apache/lucene/util/packed/PackedInts$Format: 3
   org/apache/lucene/util/packed/PackedInts$Format$1: 1
   org/apache/lucene/util/packed/PackedInts$Format$2: 1
-  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 26383
+  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 26400
   org/apache/lucene/util/packed/PackedInts$Mutable: 23169
   org/apache/lucene/util/packed/PackedInts$NullReader: 50
   org/apache/lucene/util/packed/PackedInts$Reader: 18
@@ -20727,7 +20731,7 @@ bytes-by-type:
   [C: 48
   [I: 1752
   boolean: 1688
-  byte: 1718409536
+  byte: 1718394656
   char: 1411392
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 443160
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 208352
@@ -20786,7 +20790,7 @@ bytes-by-type:
   com/sun/management/internal/PlatformMBeanProviderImpl$5: 24
   double: 16
   float: 1272
-  int: 205246896
+  int: 205246936
   java/io/BufferedReader: 384
   java/io/ByteArrayInputStream: 128
   java/io/ByteArrayOutputStream: 26568
@@ -20822,7 +20826,7 @@ bytes-by-type:
   java/lang/Integer: 28192
   java/lang/Long: 37176
   java/lang/NamedPackage: 72
-  java/lang/Object: 7996088
+  java/lang/Object: 7996136
   java/lang/Package: 1088
   java/lang/Package$VersionInfo: 1360
   java/lang/PublicMethods$MethodList: 216
@@ -20833,7 +20837,7 @@ bytes-by-type:
   java/lang/StackWalker: 80
   java/lang/StackWalker$ExtendedOption: 48
   java/lang/StackWalker$Option: 136
-  java/lang/String: 7004208
+  java/lang/String: 7004184
   java/lang/StringBuilder: 519840
   java/lang/StringLatin1$CharsSpliterator: 256
   java/lang/StringUTF16$CharsSpliterator: 128
@@ -21086,8 +21090,8 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 16
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 672
   java/util/concurrent/ConcurrentHashMap$KeySetView: 72
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 1248
-  java/util/concurrent/ConcurrentHashMap$Node: 79504
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 1296
+  java/util/concurrent/ConcurrentHashMap$Node: 79664
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 352
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 15848
   java/util/concurrent/ConcurrentLinkedQueue: 24
@@ -21234,7 +21238,7 @@ bytes-by-type:
   jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer: 24
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider: 16
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider$SingleMBeanComponent: 24
-  long: 5937024
+  long: 5946296
   org/apache/lucene/analysis/Analyzer$1: 16
   org/apache/lucene/analysis/Analyzer$2: 16
   org/apache/lucene/analysis/Analyzer$TokenStreamComponents: 24
@@ -21572,7 +21576,7 @@ bytes-by-type:
   org/apache/lucene/util/Bits: 32
   org/apache/lucene/util/ByteBlockPool: 360
   org/apache/lucene/util/ByteBlockPool$DirectTrackingAllocator: 72
-  org/apache/lucene/util/BytesRef: 7925520
+  org/apache/lucene/util/BytesRef: 7919184
   org/apache/lucene/util/BytesRefBuilder: 688
   org/apache/lucene/util/BytesRefHash: 1008
   org/apache/lucene/util/BytesRefHash$1: 432
@@ -21659,11 +21663,11 @@ bytes-by-type:
   org/apache/lucene/util/packed/DirectReader$DirectPackedReader16: 216
   org/apache/lucene/util/packed/DirectWriter: 448
   org/apache/lucene/util/packed/GrowableWriter: 741408
-  org/apache/lucene/util/packed/Packed64: 1055320
+  org/apache/lucene/util/packed/Packed64: 1056000
   org/apache/lucene/util/packed/PackedInts$Format: 72
   org/apache/lucene/util/packed/PackedInts$Format$1: 32
   org/apache/lucene/util/packed/PackedInts$Format$2: 32
-  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 633192
+  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 633600
   org/apache/lucene/util/packed/PackedInts$Mutable: 556056
   org/apache/lucene/util/packed/PackedInts$NullReader: 800
   org/apache/lucene/util/packed/PackedInts$Reader: 1176

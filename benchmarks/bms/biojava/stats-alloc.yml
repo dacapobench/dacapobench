@@ -1,48 +1,51 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 343433616
-bytes-allocated: 9955482344
+objects-allocated: 343432195
+bytes-allocated: 9955400952
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 1371978
-  24: 334720972
-  32: 3171571
-  40: 2139473
-  48: 441433
-  56: 780713
+  16: 1371986
+  24: 334721078
+  32: 3171581
+  40: 2139470
+  48: 440636
+  56: 780230
   64: 40599
   72: 21509
-  80: 191286
-  88: 18817
-  96: 46032
-  104: 10092
-  112: 5539
+  80: 191059
+  88: 18816
+  96: 46035
+  104: 10062
+  112: 5540
   120: 12739
   128: 18389
-  136: 13661
+  136: 13659
   144: 99418
-  152: 1445
+  152: 1433
   160: 8177
   168: 2170
   176: 23284
   184: 1124
-  192: 569
+  192: 575
   200: 528
   208: 802
-  216: 618
-  224: 16974
-  232: 724
+  216: 612
+  224: 16971
+  232: 727
   240: 606
   248: 506
   256: 448
   264: 364
-  272: 93959
+  272: 93965
   280: 295
   288: 302
   296: 275
   304: 3183
-  312: 229
+  312: 225
   320: 170
   328: 1587
   336: 269
@@ -53,14 +56,14 @@ objects-by-size:
   376: 171
   384: 138
   392: 181
-  400: 139
+  400: 145
   408: 109
   416: 165
   424: 150
   432: 428
   440: 103
   448: 137
-  456: 129
+  456: 127
   464: 117
   472: 131
   480: 121
@@ -87,7 +90,7 @@ objects-by-size:
   648: 73
   656: 61
   664: 68
-  672: 74
+  672: 72
   680: 44
   688: 55
   696: 43
@@ -188,7 +191,7 @@ objects-by-size:
   1456: 30
   1464: 17
   1472: 14
-  1480: 16
+  1480: 17
   1488: 16
   1496: 25
   1504: 11
@@ -280,7 +283,7 @@ objects-by-size:
   2192: 12
   2200: 10
   2208: 13
-  2216: 17
+  2216: 18
   2224: 14
   2232: 9
   2240: 16
@@ -2041,45 +2044,46 @@ objects-by-size:
   106264: 1
   107320: 1
   120128: 1
-# number of bytres allocated for each object size
-  16: 21951648
-  24: 8033303328
-  32: 101490272
-  40: 85578920
-  48: 21188784
-  56: 43719928
+# number of bytes allocated for each object size
+bytes-by-size: 
+  16: 21951776
+  24: 8033305872
+  32: 101490592
+  40: 85578800
+  48: 21150528
+  56: 43692880
   64: 2598336
   72: 1548648
-  80: 15302880
-  88: 1655896
-  96: 4419072
-  104: 1049568
-  112: 620368
+  80: 15284720
+  88: 1655808
+  96: 4419360
+  104: 1046448
+  112: 620480
   120: 1528680
   128: 2353792
-  136: 1857896
+  136: 1857624
   144: 14316192
-  152: 219640
+  152: 217816
   160: 1308320
   168: 364560
   176: 4097984
   184: 206816
-  192: 109248
+  192: 110400
   200: 105600
   208: 166816
-  216: 133488
-  224: 3802176
-  232: 167968
+  216: 132192
+  224: 3801504
+  232: 168664
   240: 145440
   248: 125488
   256: 114688
   264: 96096
-  272: 25556848
+  272: 25558480
   280: 82600
   288: 86976
   296: 81400
   304: 967632
-  312: 71448
+  312: 70200
   320: 54400
   328: 520536
   336: 90384
@@ -2090,14 +2094,14 @@ objects-by-size:
   376: 64296
   384: 52992
   392: 70952
-  400: 55600
+  400: 58000
   408: 44472
   416: 68640
   424: 63600
   432: 184896
   440: 45320
   448: 61376
-  456: 58824
+  456: 57912
   464: 54288
   472: 61832
   480: 58080
@@ -2124,7 +2128,7 @@ objects-by-size:
   648: 47304
   656: 40016
   664: 45152
-  672: 49728
+  672: 48384
   680: 29920
   688: 37840
   696: 29928
@@ -2225,7 +2229,7 @@ objects-by-size:
   1456: 43680
   1464: 24888
   1472: 20608
-  1480: 23680
+  1480: 25160
   1488: 23808
   1496: 37400
   1504: 16544
@@ -2317,7 +2321,7 @@ objects-by-size:
   2192: 26304
   2200: 22000
   2208: 28704
-  2216: 37672
+  2216: 39888
   2224: 31136
   2232: 20088
   2240: 35840
@@ -4080,14 +4084,14 @@ objects-by-size:
   120128: 120128
 # number of objects allocated for each class
 objects-by-type: 
-  B: 49540
+  B: 49544
   C: 2
   I: 3
   [D: 2840
   [I: 5
   [[S: 6
   boolean: 51
-  byte: 162876212
+  byte: 162876282
   char: 46362
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 15704
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 7996
@@ -4274,7 +4278,7 @@ objects-by-type:
   com/sun/xml/internal/stream/util/BufferAllocator: 1
   double: 73837
   float: 1
-  int: 439963
+  int: 439967
   java/beans/PropertyChangeEvent: 2
   java/io/BufferedInputStream: 2
   java/io/BufferedReader: 8
@@ -4299,7 +4303,7 @@ objects-by-type:
   java/io/StringReader: 2
   java/lang/Boolean: 8
   java/lang/Byte: 183
-  java/lang/Class: 5252
+  java/lang/Class: 5253
   java/lang/Class$1: 10
   java/lang/Class$3: 5
   java/lang/Class$AnnotationData: 100
@@ -4318,14 +4322,14 @@ objects-by-type:
   java/lang/NamedPackage: 3
   java/lang/NoSuchFieldException: 1
   java/lang/NoSuchMethodException: 7
-  java/lang/Object: 75483
+  java/lang/Object: 73903
   java/lang/Package: 68
-  java/lang/ProcessEnvironment$StringEntry: 147
+  java/lang/ProcessEnvironment$StringEntry: 150
   java/lang/ProcessEnvironment$StringEntrySet: 1
   java/lang/ProcessEnvironment$StringEntrySet$1: 3
   java/lang/ProcessEnvironment$StringEnvironment: 1
-  java/lang/ProcessEnvironment$Value: 49
-  java/lang/ProcessEnvironment$Variable: 49
+  java/lang/ProcessEnvironment$Value: 50
+  java/lang/ProcessEnvironment$Variable: 50
   java/lang/PublicMethods: 70
   java/lang/PublicMethods$Key: 784
   java/lang/PublicMethods$MethodList: 856
@@ -4337,9 +4341,9 @@ objects-by-type:
   java/lang/StackWalker: 2
   java/lang/StackWalker$ExtendedOption: 2
   java/lang/StackWalker$Option: 5
-  java/lang/String: 162989301
+  java/lang/String: 162989351
   java/lang/StringBuffer: 5531
-  java/lang/StringBuilder: 62135
+  java/lang/StringBuilder: 62146
   java/lang/StringLatin1$CharsSpliterator: 2
   java/lang/StringLatin1$LinesSpliterator: 6
   java/lang/StringUTF16$CharsSpliterator: 1
@@ -4384,7 +4388,7 @@ objects-by-type:
   java/lang/invoke/LambdaFormEditor$1: 2
   java/lang/invoke/LambdaFormEditor$Transform: 52
   java/lang/invoke/LambdaFormEditor$TransformKey: 388
-  java/lang/invoke/MemberName: 1945
+  java/lang/invoke/MemberName: 1943
   java/lang/invoke/MethodHandle: 41
   java/lang/invoke/MethodHandle$1: 3
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 13
@@ -4393,11 +4397,11 @@ objects-by-type:
   java/lang/invoke/MethodHandles$Lookup: 316
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 185
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 185
-  java/lang/invoke/MethodType: 2332
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 828
+  java/lang/invoke/MethodType: 2327
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 826
   java/lang/invoke/MethodTypeForm: 138
   java/lang/invoke/SimpleMethodHandle: 63
-  java/lang/invoke/VarHandle$AccessDescriptor: 6
+  java/lang/invoke/VarHandle$AccessDescriptor: 5
   java/lang/invoke/VarHandle$AccessMode: 1
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 1
   java/lang/invoke/VarHandleInts$FieldInstanceReadWrite: 3
@@ -4477,9 +4481,9 @@ objects-by-type:
   java/util/AbstractMap$SimpleImmutableEntry: 10
   java/util/ArrayDeque: 9
   java/util/ArrayDeque$DeqIterator: 2
-  java/util/ArrayList: 98728
+  java/util/ArrayList: 98730
   java/util/ArrayList$ArrayListSpliterator: 2842
-  java/util/ArrayList$Itr: 61355
+  java/util/ArrayList$Itr: 61361
   java/util/ArrayList$SubList: 18
   java/util/ArrayList$SubList$1: 1
   java/util/Arrays$ArrayItr: 28
@@ -4498,7 +4502,7 @@ objects-by-type:
   java/util/Collections$UnmodifiableMap: 6
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet: 1
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$1: 3
-  java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry: 147
+  java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry: 150
   java/util/Collections$UnmodifiableRandomAccessList: 19
   java/util/Collections$UnmodifiableSet: 5
   java/util/Date: 35
@@ -4511,9 +4515,9 @@ objects-by-type:
   java/util/HashMap$EntryIterator: 401
   java/util/HashMap$EntrySet: 300
   java/util/HashMap$EntrySpliterator: 4
-  java/util/HashMap$KeyIterator: 42760
+  java/util/HashMap$KeyIterator: 42758
   java/util/HashMap$KeySet: 42699
-  java/util/HashMap$Node: 3061727
+  java/util/HashMap$Node: 3061732
   java/util/HashMap$ValueIterator: 12
   java/util/HashMap$ValueSpliterator: 2
   java/util/HashMap$Values: 5689
@@ -4587,8 +4591,8 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 73
   java/util/concurrent/ConcurrentHashMap$KeyIterator: 5
   java/util/concurrent/ConcurrentHashMap$KeySetView: 5
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 139
-  java/util/concurrent/ConcurrentHashMap$Node: 5867
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 141
+  java/util/concurrent/ConcurrentHashMap$Node: 5871
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 18
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 551
   java/util/concurrent/ConcurrentHashMap$ValuesView: 7
@@ -4597,7 +4601,7 @@ objects-by-type:
   java/util/concurrent/ConcurrentLinkedQueue$Node: 1
   java/util/concurrent/ConcurrentMap: 1
   java/util/concurrent/ConcurrentSkipListMap: 1
-  java/util/concurrent/ConcurrentSkipListMap$Index: 2
+  java/util/concurrent/ConcurrentSkipListMap$Index: 1
   java/util/concurrent/ConcurrentSkipListMap$KeyIterator: 1
   java/util/concurrent/ConcurrentSkipListMap$KeySet: 1
   java/util/concurrent/ConcurrentSkipListMap$Node: 2
@@ -4616,7 +4620,7 @@ objects-by-type:
   java/util/concurrent/atomic/AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl$1: 1
   java/util/concurrent/atomic/LongAdder: 1
   java/util/concurrent/atomic/Striped64$1: 1
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 7
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 8
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 49
   java/util/concurrent/locks/ReentrantLock: 76
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 81
@@ -4637,8 +4641,8 @@ objects-by-type:
   java/util/logging/Logger: 9
   java/util/logging/Logger$ConfigurationData: 9
   java/util/logging/Logging: 1
-  java/util/regex/IntHashSet: 9518
-  java/util/regex/Matcher: 9518
+  java/util/regex/IntHashSet: 9520
+  java/util/regex/Matcher: 9520
   java/util/regex/Pattern: 29
   java/util/regex/Pattern$Begin: 5
   java/util/regex/Pattern$BitClass: 19
@@ -5182,14 +5186,14 @@ objects-by-type:
   sun/util/resources/provider/LocaleDataProvider: 1
 # number of bytes allocated for each class
 bytes-by-type: 
-  B: 339051152
+  B: 339051432
   C: 56
   I: 72
   [D: 340776
   [I: 720
   [[S: 240
   boolean: 6592
-  byte: 4396994992
+  byte: 4396997336
   char: 569097152
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 628160
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 255872
@@ -5376,7 +5380,7 @@ bytes-by-type:
   com/sun/xml/internal/stream/util/BufferAllocator: 40
   double: 2956136
   float: 16
-  int: 24244008
+  int: 24244248
   java/beans/PropertyChangeEvent: 64
   java/io/BufferedInputStream: 96
   java/io/BufferedReader: 384
@@ -5420,14 +5424,14 @@ bytes-by-type:
   java/lang/NamedPackage: 72
   java/lang/NoSuchFieldException: 40
   java/lang/NoSuchMethodException: 280
-  java/lang/Object: 179284360
+  java/lang/Object: 179198120
   java/lang/Package: 2176
-  java/lang/ProcessEnvironment$StringEntry: 2352
+  java/lang/ProcessEnvironment$StringEntry: 2400
   java/lang/ProcessEnvironment$StringEntrySet: 16
   java/lang/ProcessEnvironment$StringEntrySet$1: 72
   java/lang/ProcessEnvironment$StringEnvironment: 24
-  java/lang/ProcessEnvironment$Value: 1176
-  java/lang/ProcessEnvironment$Variable: 1176
+  java/lang/ProcessEnvironment$Value: 1200
+  java/lang/ProcessEnvironment$Variable: 1200
   java/lang/PublicMethods: 1680
   java/lang/PublicMethods$Key: 18816
   java/lang/PublicMethods$MethodList: 20544
@@ -5439,9 +5443,9 @@ bytes-by-type:
   java/lang/StackWalker: 80
   java/lang/StackWalker$ExtendedOption: 48
   java/lang/StackWalker$Option: 136
-  java/lang/String: 3911617720
+  java/lang/String: 3911618928
   java/lang/StringBuffer: 176992
-  java/lang/StringBuilder: 1491240
+  java/lang/StringBuilder: 1491504
   java/lang/StringLatin1$CharsSpliterator: 64
   java/lang/StringLatin1$LinesSpliterator: 144
   java/lang/StringUTF16$CharsSpliterator: 32
@@ -5486,7 +5490,7 @@ bytes-by-type:
   java/lang/invoke/LambdaFormEditor$1: 32
   java/lang/invoke/LambdaFormEditor$Transform: 2384
   java/lang/invoke/LambdaFormEditor$TransformKey: 9312
-  java/lang/invoke/MemberName: 93936
+  java/lang/invoke/MemberName: 93840
   java/lang/invoke/MethodHandle: 6232
   java/lang/invoke/MethodHandle$1: 48
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 624
@@ -5495,11 +5499,11 @@ bytes-by-type:
   java/lang/invoke/MethodHandles$Lookup: 10112
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 5920
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 4440
-  java/lang/invoke/MethodType: 93280
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 26496
+  java/lang/invoke/MethodType: 93080
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 26432
   java/lang/invoke/MethodTypeForm: 4416
   java/lang/invoke/SimpleMethodHandle: 2016
-  java/lang/invoke/VarHandle$AccessDescriptor: 240
+  java/lang/invoke/VarHandle$AccessDescriptor: 200
   java/lang/invoke/VarHandle$AccessMode: 144
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 40
   java/lang/invoke/VarHandleInts$FieldInstanceReadWrite: 120
@@ -5579,9 +5583,9 @@ bytes-by-type:
   java/util/AbstractMap$SimpleImmutableEntry: 240
   java/util/ArrayDeque: 216
   java/util/ArrayDeque$DeqIterator: 64
-  java/util/ArrayList: 2369472
+  java/util/ArrayList: 2369520
   java/util/ArrayList$ArrayListSpliterator: 90944
-  java/util/ArrayList$Itr: 1963360
+  java/util/ArrayList$Itr: 1963552
   java/util/ArrayList$SubList: 576
   java/util/ArrayList$SubList$1: 32
   java/util/Arrays$ArrayItr: 672
@@ -5600,7 +5604,7 @@ bytes-by-type:
   java/util/Collections$UnmodifiableMap: 192
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet: 16
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$1: 72
-  java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry: 2352
+  java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry: 2400
   java/util/Collections$UnmodifiableRandomAccessList: 456
   java/util/Collections$UnmodifiableSet: 80
   java/util/Date: 840
@@ -5613,9 +5617,9 @@ bytes-by-type:
   java/util/HashMap$EntryIterator: 12832
   java/util/HashMap$EntrySet: 4800
   java/util/HashMap$EntrySpliterator: 160
-  java/util/HashMap$KeyIterator: 1368320
+  java/util/HashMap$KeyIterator: 1368256
   java/util/HashMap$KeySet: 683184
-  java/util/HashMap$Node: 135181816
+  java/util/HashMap$Node: 135182032
   java/util/HashMap$ValueIterator: 384
   java/util/HashMap$ValueSpliterator: 80
   java/util/HashMap$Values: 91024
@@ -5689,8 +5693,8 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 2336
   java/util/concurrent/ConcurrentHashMap$KeyIterator: 280
   java/util/concurrent/ConcurrentHashMap$KeySetView: 120
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 3336
-  java/util/concurrent/ConcurrentHashMap$Node: 255144
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 3384
+  java/util/concurrent/ConcurrentHashMap$Node: 255272
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 576
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 30856
   java/util/concurrent/ConcurrentHashMap$ValuesView: 112
@@ -5699,7 +5703,7 @@ bytes-by-type:
   java/util/concurrent/ConcurrentLinkedQueue$Node: 24
   java/util/concurrent/ConcurrentMap: 88
   java/util/concurrent/ConcurrentSkipListMap: 48
-  java/util/concurrent/ConcurrentSkipListMap$Index: 48
+  java/util/concurrent/ConcurrentSkipListMap$Index: 24
   java/util/concurrent/ConcurrentSkipListMap$KeyIterator: 32
   java/util/concurrent/ConcurrentSkipListMap$KeySet: 16
   java/util/concurrent/ConcurrentSkipListMap$Node: 48
@@ -5718,7 +5722,7 @@ bytes-by-type:
   java/util/concurrent/atomic/AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl$1: 24
   java/util/concurrent/atomic/LongAdder: 32
   java/util/concurrent/atomic/Striped64$1: 16
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 224
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 256
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 1176
   java/util/concurrent/locks/ReentrantLock: 1216
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 2592
@@ -5739,8 +5743,8 @@ bytes-by-type:
   java/util/logging/Logger: 504
   java/util/logging/Logger$ConfigurationData: 360
   java/util/logging/Logging: 16
-  java/util/regex/IntHashSet: 152288
-  java/util/regex/Matcher: 761440
+  java/util/regex/IntHashSet: 152320
+  java/util/regex/Matcher: 761600
   java/util/regex/Pattern: 2552
   java/util/regex/Pattern$Begin: 80
   java/util/regex/Pattern$BitClass: 304

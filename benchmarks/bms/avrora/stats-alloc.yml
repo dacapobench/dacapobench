@@ -1,18 +1,21 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 5064361
-bytes-allocated: 176258624
+objects-allocated: 5065040
+bytes-allocated: 176275792
 # number of objects allocated for each object size
 objects-by-size: 
   16: 24727
-  24: 1340474
-  32: 3296995
+  24: 1341059
+  32: 3297084
   40: 120520
-  48: 53420
-  56: 142597
+  48: 53422
+  56: 142599
   64: 7622
-  72: 2021
+  72: 2022
   80: 17493
   88: 1699
   96: 5760
@@ -670,15 +673,16 @@ objects-by-size:
   45448: 1
   53080: 2
   53248: 1
-# number of bytres allocated for each object size
+# number of bytes allocated for each object size
+bytes-by-size: 
   16: 395632
-  24: 32171376
-  32: 105503840
+  24: 32185416
+  32: 105506688
   40: 4820800
-  48: 2564160
-  56: 7985432
+  48: 2564256
+  56: 7985544
   64: 487808
-  72: 145512
+  72: 145584
   80: 1399440
   88: 149512
   96: 552960
@@ -1463,13 +1467,13 @@ objects-by-type:
   avrora/sim/SimulatorThread: 9
   avrora/sim/clock/ClockDomain: 9
   avrora/sim/clock/DeltaQueue: 9
-  avrora/sim/clock/DeltaQueue$EventList: 45523
+  avrora/sim/clock/DeltaQueue$EventList: 46106
   avrora/sim/clock/DeltaQueue$Link: 63
   avrora/sim/clock/DerivedClock: 9
   avrora/sim/clock/MainClock: 9
   avrora/sim/clock/RippleSynchronizer: 1
   avrora/sim/clock/RippleSynchronizer$NotifyEvent: 9
-  avrora/sim/clock/RippleSynchronizer$WaitLink: 207207
+  avrora/sim/clock/RippleSynchronizer$WaitLink: 207380
   avrora/sim/energy/Energy: 63
   avrora/sim/energy/EnergyControl: 9
   avrora/sim/mcu/ADC: 9
@@ -1638,7 +1642,7 @@ objects-by-type:
   avrora/sim/util/MulticastProbe: 9
   avrora/sim/util/TransactionalList$Link: 45
   avrora/syntax/elf/ELFParser: 2
-  byte: 413878
+  byte: 413883
   cck/elf/ELFDataInputStream: 10
   cck/elf/ELFHeader: 2
   cck/elf/ELFProgramHeaderTable: 2
@@ -1768,7 +1772,7 @@ objects-by-type:
   java/util/HashMap$Values: 1
   java/util/HashSet: 14
   java/util/LinkedList: 243225
-  java/util/LinkedList$ListItr: 2773253
+  java/util/LinkedList$ListItr: 2773167
   java/util/LinkedList$Node: 250139
   java/util/Optional: 124
   java/util/Properties: 1
@@ -1778,8 +1782,8 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 1
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 1
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 8
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 52
-  java/util/concurrent/ConcurrentHashMap$Node: 187
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 54
+  java/util/concurrent/ConcurrentHashMap$Node: 189
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 39
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 2
   java/util/jar/JarFile$JarFileEntry: 590
@@ -1931,13 +1935,13 @@ bytes-by-type:
   avrora/sim/SimulatorThread: 1152
   avrora/sim/clock/ClockDomain: 216
   avrora/sim/clock/DeltaQueue: 288
-  avrora/sim/clock/DeltaQueue$EventList: 1092552
+  avrora/sim/clock/DeltaQueue$EventList: 1106544
   avrora/sim/clock/DeltaQueue$Link: 2016
   avrora/sim/clock/DerivedClock: 360
   avrora/sim/clock/MainClock: 288
   avrora/sim/clock/RippleSynchronizer: 56
   avrora/sim/clock/RippleSynchronizer$NotifyEvent: 288
-  avrora/sim/clock/RippleSynchronizer$WaitLink: 6630624
+  avrora/sim/clock/RippleSynchronizer$WaitLink: 6636160
   avrora/sim/energy/Energy: 4032
   avrora/sim/energy/EnergyControl: 216
   avrora/sim/mcu/ADC: 648
@@ -2106,7 +2110,7 @@ bytes-by-type:
   avrora/sim/util/MulticastProbe: 288
   avrora/sim/util/TransactionalList$Link: 1080
   avrora/syntax/elf/ELFParser: 128
-  byte: 25669568
+  byte: 25669848
   cck/elf/ELFDataInputStream: 240
   cck/elf/ELFHeader: 112
   cck/elf/ELFProgramHeaderTable: 48
@@ -2236,7 +2240,7 @@ bytes-by-type:
   java/util/HashMap$Values: 16
   java/util/HashSet: 224
   java/util/LinkedList: 7783200
-  java/util/LinkedList$ListItr: 88744096
+  java/util/LinkedList$ListItr: 88741344
   java/util/LinkedList$Node: 6003336
   java/util/Optional: 1984
   java/util/Properties: 56
@@ -2246,8 +2250,8 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 56
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 16
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 256
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 1248
-  java/util/concurrent/ConcurrentHashMap$Node: 8912
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 1296
+  java/util/concurrent/ConcurrentHashMap$Node: 8976
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 2184
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 64
   java/util/jar/JarFile$JarFileEntry: 61360

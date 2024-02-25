@@ -1,27 +1,30 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 17574377
-bytes-allocated: 1053346664
+objects-allocated: 17573114
+bytes-allocated: 1053316472
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 918094
-  24: 6333277
-  32: 3136073
-  40: 2335747
-  48: 969518
-  56: 2310082
+  16: 918096
+  24: 6331954
+  32: 3136135
+  40: 2335753
+  48: 969526
+  56: 2310064
   64: 293072
   72: 202395
-  80: 303757
-  88: 143283
-  96: 121413
+  80: 303764
+  88: 143274
+  96: 121415
   104: 31944
-  112: 28097
+  112: 28098
   120: 39426
   128: 46803
   136: 30207
-  144: 27366
+  144: 27365
   152: 22833
   160: 13064
   168: 3808
@@ -2210,24 +2213,25 @@ objects-by-size:
   331848: 1
   336040: 1
   340136: 1
-# number of bytres allocated for each object size
-  16: 14689504
-  24: 151998648
-  32: 100354336
-  40: 93429880
-  48: 46536864
-  56: 129364592
+# number of bytes allocated for each object size
+bytes-by-size: 
+  16: 14689536
+  24: 151966896
+  32: 100356320
+  40: 93430120
+  48: 46537248
+  56: 129363584
   64: 18756608
   72: 14572440
-  80: 24300560
-  88: 12608904
-  96: 11655648
+  80: 24301120
+  88: 12608112
+  96: 11655840
   104: 3322176
-  112: 3146864
+  112: 3146976
   120: 4731120
   128: 5990784
   136: 4108152
-  144: 3940704
+  144: 3940560
   152: 3470616
   160: 2090240
   168: 639744
@@ -4418,7 +4422,7 @@ objects-by-size:
   340136: 340136
 # number of objects allocated for each class
 objects-by-type: 
-  B: 123270
+  B: 123273
   I: 213
   [B: 454
   [D: 1
@@ -4427,7 +4431,7 @@ objects-by-type:
   [[I: 53710
   [[[S: 2
   boolean: 4903
-  byte: 2329655
+  byte: 2328974
   char: 73268
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 32730
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 30752
@@ -4579,7 +4583,7 @@ objects-by-type:
   java/lang/Boolean: 10
   java/lang/Byte: 111
   java/lang/Character: 279
-  java/lang/Class: 3543
+  java/lang/Class: 3548
   java/lang/Class$1: 12
   java/lang/Class$3: 4
   java/lang/Class$ReflectionData: 172
@@ -4597,19 +4601,19 @@ objects-by-type:
   java/lang/NamedPackage: 3
   java/lang/NoSuchMethodException: 3
   java/lang/NumberFormatException: 16
-  java/lang/Object: 392749
+  java/lang/Object: 392774
   java/lang/Package: 184
   java/lang/Package$VersionInfo: 83
   java/lang/ProcessEnvironment$StringEnvironment: 1
-  java/lang/ProcessEnvironment$Value: 49
-  java/lang/ProcessEnvironment$Variable: 50
+  java/lang/ProcessEnvironment$Value: 50
+  java/lang/ProcessEnvironment$Variable: 51
   java/lang/PublicMethods: 12
   java/lang/PublicMethods$Key: 104
   java/lang/PublicMethods$MethodList: 1160
   java/lang/RuntimePermission: 3
   java/lang/Short: 151
   java/lang/StackTraceElement: 40910
-  java/lang/String: 2219523
+  java/lang/String: 2218847
   java/lang/StringBuffer: 193700
   java/lang/StringBuilder: 323048
   java/lang/StringLatin1$CharsSpliterator: 6
@@ -4654,7 +4658,7 @@ objects-by-type:
   java/lang/invoke/LambdaFormEditor$1: 3
   java/lang/invoke/LambdaFormEditor$Transform: 85
   java/lang/invoke/LambdaFormEditor$TransformKey: 476
-  java/lang/invoke/MemberName: 1495
+  java/lang/invoke/MemberName: 1497
   java/lang/invoke/MethodHandle: 70
   java/lang/invoke/MethodHandle$1: 9
   java/lang/invoke/MethodHandleImpl$ArrayAccess: 4
@@ -4667,12 +4671,12 @@ objects-by-type:
   java/lang/invoke/MethodHandles$Lookup: 223
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 146
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 146
-  java/lang/invoke/MethodType: 2113
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 690
+  java/lang/invoke/MethodType: 2118
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 692
   java/lang/invoke/MethodTypeForm: 138
   java/lang/invoke/SimpleMethodHandle: 53
   java/lang/invoke/TypeConvertingMethodAdapter: 1
-  java/lang/invoke/VarHandle$AccessDescriptor: 5
+  java/lang/invoke/VarHandle$AccessDescriptor: 6
   java/lang/invoke/VarHandle$AccessMode: 1
   java/lang/invoke/VarHandle$AccessType: 2
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 1
@@ -4686,7 +4690,7 @@ objects-by-type:
   java/lang/ref/PhantomReference: 149
   java/lang/ref/ReferenceQueue: 1714
   java/lang/ref/SoftReference: 3821
-  java/lang/ref/WeakReference: 4019
+  java/lang/ref/WeakReference: 4093
   java/lang/reflect/Constructor: 926
   java/lang/reflect/Field: 2
   java/lang/reflect/Method: 1291
@@ -4804,7 +4808,7 @@ objects-by-type:
   java/util/HashMap$EntrySet: 10795
   java/util/HashMap$KeyIterator: 3485
   java/util/HashMap$KeySet: 1313
-  java/util/HashMap$Node: 106855
+  java/util/HashMap$Node: 106856
   java/util/HashMap$TreeNode: 11
   java/util/HashMap$ValueIterator: 2123
   java/util/HashMap$Values: 457
@@ -4880,7 +4884,7 @@ objects-by-type:
   java/util/TreeSet: 624
   java/util/Vector: 15633
   java/util/Vector$Itr: 9977
-  java/util/Vector$ListItr: 2292
+  java/util/Vector$ListItr: 2280
   java/util/WeakHashMap: 359
   java/util/WeakHashMap$Entry: 5533
   java/util/WeakHashMap$KeySet: 15
@@ -4890,9 +4894,9 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 133
   java/util/concurrent/ConcurrentHashMap$KeyIterator: 3
   java/util/concurrent/ConcurrentHashMap$KeySetView: 6
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 4687
-  java/util/concurrent/ConcurrentHashMap$Node: 15737
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 310
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 4689
+  java/util/concurrent/ConcurrentHashMap$Node: 15720
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 311
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 1400
   java/util/concurrent/ConcurrentHashMap$ValuesView: 1
   java/util/concurrent/ConcurrentLinkedDeque: 1
@@ -4900,7 +4904,7 @@ objects-by-type:
   java/util/concurrent/ConcurrentLinkedQueue: 2
   java/util/concurrent/ConcurrentLinkedQueue$Node: 2
   java/util/concurrent/ConcurrentSkipListMap: 1
-  java/util/concurrent/ConcurrentSkipListMap$Index: 1
+  java/util/concurrent/ConcurrentSkipListMap$Index: 2
   java/util/concurrent/ConcurrentSkipListMap$KeyIterator: 1
   java/util/concurrent/ConcurrentSkipListMap$KeySet: 1
   java/util/concurrent/ConcurrentSkipListMap$Node: 2
@@ -4912,7 +4916,7 @@ objects-by-type:
   java/util/concurrent/atomic/AtomicLong: 3
   java/util/concurrent/atomic/LongAdder: 1
   java/util/concurrent/atomic/Striped64$1: 1
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 20
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 21
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 1716
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 2
   java/util/concurrent/locks/ReentrantLock: 3329
@@ -5073,7 +5077,7 @@ objects-by-type:
   jdk/proxy2/$Proxy7: 7
   jdk/proxy2/$Proxy8: 6
   jdk/proxy2/$Proxy9: 2
-  long: 71834
+  long: 71832
   org/apache/batik/anim/dom/AbstractElement$ExtendedNamedNodeHashMap: 1735
   org/apache/batik/anim/dom/AbstractSVGAnimatedLength$BaseSVGLength: 1410
   org/apache/batik/anim/dom/AbstractSVGLength$DefaultContext: 1418
@@ -6791,7 +6795,7 @@ objects-by-type:
   sun/util/resources/provider/NonBaseLocaleDataMetaInfo: 1
 # number of bytes allocated for each class
 bytes-by-type: 
-  B: 6560952
+  B: 6561128
   I: 6720
   [B: 16696
   [D: 88
@@ -6800,7 +6804,7 @@ bytes-by-type:
   [[I: 2000664
   [[[S: 80
   boolean: 233640
-  byte: 269038696
+  byte: 269022304
   char: 15480032
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 1309200
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 984064
@@ -6952,7 +6956,7 @@ bytes-by-type:
   java/lang/Boolean: 288
   java/lang/Byte: 1776
   java/lang/Character: 4464
-  java/lang/Class: 86728
+  java/lang/Class: 86888
   java/lang/Class$1: 192
   java/lang/Class$3: 64
   java/lang/Class$ReflectionData: 11008
@@ -6970,19 +6974,19 @@ bytes-by-type:
   java/lang/NamedPackage: 72
   java/lang/NoSuchMethodException: 120
   java/lang/NumberFormatException: 640
-  java/lang/Object: 21549944
+  java/lang/Object: 21550152
   java/lang/Package: 5888
   java/lang/Package$VersionInfo: 3320
   java/lang/ProcessEnvironment$StringEnvironment: 24
-  java/lang/ProcessEnvironment$Value: 1176
-  java/lang/ProcessEnvironment$Variable: 1200
+  java/lang/ProcessEnvironment$Value: 1200
+  java/lang/ProcessEnvironment$Variable: 1224
   java/lang/PublicMethods: 288
   java/lang/PublicMethods$Key: 2496
   java/lang/PublicMethods$MethodList: 27840
   java/lang/RuntimePermission: 72
   java/lang/Short: 2416
   java/lang/StackTraceElement: 2241136
-  java/lang/String: 59494480
+  java/lang/String: 59478256
   java/lang/StringBuffer: 6198400
   java/lang/StringBuilder: 7753712
   java/lang/StringLatin1$CharsSpliterator: 192
@@ -7027,7 +7031,7 @@ bytes-by-type:
   java/lang/invoke/LambdaFormEditor$1: 48
   java/lang/invoke/LambdaFormEditor$Transform: 3856
   java/lang/invoke/LambdaFormEditor$TransformKey: 11424
-  java/lang/invoke/MemberName: 72336
+  java/lang/invoke/MemberName: 72432
   java/lang/invoke/MethodHandle: 7848
   java/lang/invoke/MethodHandle$1: 144
   java/lang/invoke/MethodHandleImpl$ArrayAccess: 104
@@ -7040,12 +7044,12 @@ bytes-by-type:
   java/lang/invoke/MethodHandles$Lookup: 7136
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 4672
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 3504
-  java/lang/invoke/MethodType: 84520
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 22080
+  java/lang/invoke/MethodType: 84720
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 22144
   java/lang/invoke/MethodTypeForm: 4416
   java/lang/invoke/SimpleMethodHandle: 1696
   java/lang/invoke/TypeConvertingMethodAdapter: 24
-  java/lang/invoke/VarHandle$AccessDescriptor: 200
+  java/lang/invoke/VarHandle$AccessDescriptor: 240
   java/lang/invoke/VarHandle$AccessMode: 144
   java/lang/invoke/VarHandle$AccessType: 80
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 40
@@ -7059,7 +7063,7 @@ bytes-by-type:
   java/lang/ref/PhantomReference: 4768
   java/lang/ref/ReferenceQueue: 54848
   java/lang/ref/SoftReference: 161624
-  java/lang/ref/WeakReference: 128608
+  java/lang/ref/WeakReference: 130976
   java/lang/reflect/Constructor: 66672
   java/lang/reflect/Field: 144
   java/lang/reflect/Method: 112456
@@ -7177,7 +7181,7 @@ bytes-by-type:
   java/util/HashMap$EntrySet: 172720
   java/util/HashMap$KeyIterator: 111520
   java/util/HashMap$KeySet: 21008
-  java/util/HashMap$Node: 4408600
+  java/util/HashMap$Node: 4408632
   java/util/HashMap$TreeNode: 616
   java/util/HashMap$ValueIterator: 67936
   java/util/HashMap$Values: 7312
@@ -7253,7 +7257,7 @@ bytes-by-type:
   java/util/TreeSet: 9984
   java/util/Vector: 500640
   java/util/Vector$Itr: 319264
-  java/util/Vector$ListItr: 73344
+  java/util/Vector$ListItr: 72960
   java/util/WeakHashMap: 17232
   java/util/WeakHashMap$Entry: 235744
   java/util/WeakHashMap$KeySet: 240
@@ -7263,9 +7267,9 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 4256
   java/util/concurrent/ConcurrentHashMap$KeyIterator: 168
   java/util/concurrent/ConcurrentHashMap$KeySetView: 144
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 112488
-  java/util/concurrent/ConcurrentHashMap$Node: 671968
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 9920
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 112536
+  java/util/concurrent/ConcurrentHashMap$Node: 671424
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 9952
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 78400
   java/util/concurrent/ConcurrentHashMap$ValuesView: 16
   java/util/concurrent/ConcurrentLinkedDeque: 24
@@ -7273,7 +7277,7 @@ bytes-by-type:
   java/util/concurrent/ConcurrentLinkedQueue: 48
   java/util/concurrent/ConcurrentLinkedQueue$Node: 48
   java/util/concurrent/ConcurrentSkipListMap: 48
-  java/util/concurrent/ConcurrentSkipListMap$Index: 24
+  java/util/concurrent/ConcurrentSkipListMap$Index: 48
   java/util/concurrent/ConcurrentSkipListMap$KeyIterator: 32
   java/util/concurrent/ConcurrentSkipListMap$KeySet: 16
   java/util/concurrent/ConcurrentSkipListMap$Node: 48
@@ -7285,7 +7289,7 @@ bytes-by-type:
   java/util/concurrent/atomic/AtomicLong: 72
   java/util/concurrent/atomic/LongAdder: 32
   java/util/concurrent/atomic/Striped64$1: 16
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 640
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 672
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 41184
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 64
   java/util/concurrent/locks/ReentrantLock: 53264
@@ -7446,7 +7450,7 @@ bytes-by-type:
   jdk/proxy2/$Proxy7: 112
   jdk/proxy2/$Proxy8: 96
   jdk/proxy2/$Proxy9: 32
-  long: 1979296
+  long: 1979120
   org/apache/batik/anim/dom/AbstractElement$ExtendedNamedNodeHashMap: 55520
   org/apache/batik/anim/dom/AbstractSVGAnimatedLength$BaseSVGLength: 45120
   org/apache/batik/anim/dom/AbstractSVGLength$DefaultContext: 22688
