@@ -1,23 +1,26 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 9562485
-bytes-allocated: 557050064
+objects-allocated: 9562516
+bytes-allocated: 557051088
 # number of objects allocated for each object size
 objects-by-size: 
   16: 221145
-  24: 2903198
-  32: 2293667
+  24: 2903205
+  32: 2293690
   40: 988122
   48: 572913
   56: 1127563
   64: 332028
   72: 404350
   80: 105203
-  88: 22440
-  96: 75492
+  88: 22439
+  96: 75493
   104: 13403
-  112: 51692
+  112: 51693
   120: 16464
   128: 18959
   136: 75026
@@ -1364,20 +1367,21 @@ objects-by-size:
   244656: 1
   10424944: 2
   13369360: 1
-# number of bytres allocated for each object size
+# number of bytes allocated for each object size
+bytes-by-size: 
   16: 3538320
-  24: 69676752
-  32: 73397344
+  24: 69676920
+  32: 73398080
   40: 39524880
   48: 27499824
   56: 63143528
   64: 21249792
   72: 29113200
   80: 8416240
-  88: 1974720
-  96: 7247232
+  88: 1974632
+  96: 7247328
   104: 1393912
-  112: 5789504
+  112: 5789616
   120: 1975680
   128: 2426752
   136: 10203536
@@ -2726,7 +2730,7 @@ objects-by-size:
   13369360: 13369360
 # number of objects allocated for each class
 objects-by-type: 
-  B: 46365
+  B: 46367
   F: 2
   I: 5621
   [D: 2
@@ -2932,11 +2936,11 @@ objects-by-type:
   java/lang/Package: 47
   java/lang/Package$VersionInfo: 47
   java/lang/ProcessEnvironment$StringEnvironment: 1
-  java/lang/ProcessEnvironment$Value: 49
-  java/lang/ProcessEnvironment$Variable: 50
+  java/lang/ProcessEnvironment$Value: 50
+  java/lang/ProcessEnvironment$Variable: 51
   java/lang/PublicMethods$MethodList: 1
   java/lang/RuntimePermission: 2
-  java/lang/String: 897474
+  java/lang/String: 897476
   java/lang/StringBuffer: 2
   java/lang/StringBuilder: 69940
   java/lang/System$Logger$Level: 8
@@ -3044,7 +3048,7 @@ objects-by-type:
   java/util/HashMap$EntrySet: 18
   java/util/HashMap$KeyIterator: 5
   java/util/HashMap$KeySet: 5
-  java/util/HashMap$Node: 38321
+  java/util/HashMap$Node: 38322
   java/util/HashMap$ValueIterator: 1
   java/util/HashMap$Values: 1
   java/util/HashSet: 10
@@ -3095,8 +3099,8 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 1
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 20
   java/util/concurrent/ConcurrentHashMap$KeySetView: 2
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 52
-  java/util/concurrent/ConcurrentHashMap$Node: 1173
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 54
+  java/util/concurrent/ConcurrentHashMap$Node: 1175
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 15
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 425
   java/util/concurrent/ConcurrentLinkedDeque: 1
@@ -3106,9 +3110,9 @@ objects-by-type:
   java/util/concurrent/CopyOnWriteArrayList: 8
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 1
   java/util/concurrent/atomic/AtomicInteger: 1
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 10
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 11
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 16
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 20
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 39
   java/util/concurrent/locks/ReentrantLock: 29
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 38
   java/util/jar/Attributes: 5
@@ -3777,7 +3781,7 @@ objects-by-type:
   sun/util/logging/internal/LoggingProviderImpl$JULWrapper: 7
 # number of bytes allocated for each class
 bytes-by-type: 
-  B: 3110464
+  B: 3110608
   F: 112
   I: 164056
   [D: 144
@@ -3983,11 +3987,11 @@ bytes-by-type:
   java/lang/Package: 1504
   java/lang/Package$VersionInfo: 1880
   java/lang/ProcessEnvironment$StringEnvironment: 24
-  java/lang/ProcessEnvironment$Value: 1176
-  java/lang/ProcessEnvironment$Variable: 1200
+  java/lang/ProcessEnvironment$Value: 1200
+  java/lang/ProcessEnvironment$Variable: 1224
   java/lang/PublicMethods$MethodList: 24
   java/lang/RuntimePermission: 48
-  java/lang/String: 23074784
+  java/lang/String: 23074832
   java/lang/StringBuffer: 64
   java/lang/StringBuilder: 1678584
   java/lang/System$Logger$Level: 272
@@ -4095,7 +4099,7 @@ bytes-by-type:
   java/util/HashMap$EntrySet: 288
   java/util/HashMap$KeyIterator: 160
   java/util/HashMap$KeySet: 80
-  java/util/HashMap$Node: 1579544
+  java/util/HashMap$Node: 1579576
   java/util/HashMap$ValueIterator: 32
   java/util/HashMap$Values: 16
   java/util/HashSet: 160
@@ -4146,8 +4150,8 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 16
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 640
   java/util/concurrent/ConcurrentHashMap$KeySetView: 48
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 1248
-  java/util/concurrent/ConcurrentHashMap$Node: 50544
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 1296
+  java/util/concurrent/ConcurrentHashMap$Node: 50608
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 480
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 23800
   java/util/concurrent/ConcurrentLinkedDeque: 24
@@ -4157,9 +4161,9 @@ bytes-by-type:
   java/util/concurrent/CopyOnWriteArrayList: 192
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 24
   java/util/concurrent/atomic/AtomicInteger: 16
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 320
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 352
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 384
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 640
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 1248
   java/util/concurrent/locks/ReentrantLock: 464
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 1216
   java/util/jar/Attributes: 80

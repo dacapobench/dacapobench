@@ -1,23 +1,26 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 96497553
-bytes-allocated: 3633922872
+objects-allocated: 96477701
+bytes-allocated: 3633542032
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 11372769
-  24: 31262068
-  32: 26489014
-  40: 16813481
-  48: 2374376
-  56: 2325165
-  64: 684029
-  72: 122021
-  80: 170266
-  88: 3497287
-  96: 52870
+  16: 11359754
+  24: 31255965
+  32: 26489019
+  40: 16812611
+  48: 2374360
+  56: 2325261
+  64: 684065
+  72: 122028
+  80: 170268
+  88: 3497283
+  96: 52876
   104: 25343
-  112: 7880
+  112: 7884
   120: 185924
   128: 31374
   136: 6048
@@ -131,14 +134,14 @@ objects-by-size:
   1000: 189
   1008: 76
   1016: 9061
-  1024: 14107
+  1024: 14106
   1032: 68
   1040: 1897
   1048: 79
   1056: 49
   1064: 95
   1072: 329
-  1080: 65
+  1080: 66
   1088: 51
   1096: 52
   1104: 51
@@ -724,7 +727,7 @@ objects-by-size:
   5856: 3
   5864: 2
   5872: 2
-  5880: 3
+  5880: 1
   5888: 1
   5904: 12
   5912: 1
@@ -734,7 +737,7 @@ objects-by-size:
   5952: 2
   5960: 2
   5968: 2
-  5984: 1
+  5984: 3
   5992: 2
   6000: 2
   6008: 20
@@ -1603,20 +1606,21 @@ objects-by-size:
   141056: 2
   200016: 22
   262160: 1
-# number of bytres allocated for each object size
-  16: 181964304
-  24: 750289632
-  32: 847648448
-  40: 672539240
-  48: 113970048
-  56: 130209240
-  64: 43777856
-  72: 8785512
-  80: 13621280
-  88: 307761256
-  96: 5075520
+# number of bytes allocated for each object size
+bytes-by-size: 
+  16: 181756064
+  24: 750143160
+  32: 847648608
+  40: 672504440
+  48: 113969280
+  56: 130214616
+  64: 43780160
+  72: 8786016
+  80: 13621440
+  88: 307760904
+  96: 5076096
   104: 2635672
-  112: 882560
+  112: 883008
   120: 22310880
   128: 4015872
   136: 822528
@@ -1730,14 +1734,14 @@ objects-by-size:
   1000: 189000
   1008: 76608
   1016: 9205976
-  1024: 14445568
+  1024: 14444544
   1032: 70176
   1040: 1972880
   1048: 82792
   1056: 51744
   1064: 101080
   1072: 352688
-  1080: 70200
+  1080: 71280
   1088: 55488
   1096: 56992
   1104: 56304
@@ -2323,7 +2327,7 @@ objects-by-size:
   5856: 17568
   5864: 11728
   5872: 11744
-  5880: 17640
+  5880: 5880
   5888: 5888
   5904: 70848
   5912: 5912
@@ -2333,7 +2337,7 @@ objects-by-size:
   5952: 11904
   5960: 11920
   5968: 11936
-  5984: 5984
+  5984: 17952
   5992: 11984
   6000: 12000
   6008: 120160
@@ -3205,7 +3209,7 @@ objects-by-size:
 # number of objects allocated for each class
 objects-by-type: 
   Arithmetic$py: 1
-  B: 88299
+  B: 88375
   Calls$py: 1
   CommandLine$py: 1
   Constructs$py: 1
@@ -3234,7 +3238,7 @@ objects-by-type:
   abc$py: 1
   atexit$py: 1
   boolean: 64
-  byte: 8610794
+  byte: 8610938
   char: 324285
   collections$py: 1
   com/google/common/base/AbstractIterator$State: 6
@@ -3436,7 +3440,7 @@ objects-by-type:
   getopt$py: 1
   glob$py: 1
   heapq$py: 1
-  int: 6214357
+  int: 6214361
   io$py: 1
   io/netty/buffer/EmptyByteBuf: 2
   io/netty/buffer/PoolArena: 2
@@ -3535,7 +3539,7 @@ objects-by-type:
   java/io/RandomAccessFile$1: 1
   java/io/StringWriter: 25
   java/lang/Byte: 26
-  java/lang/Class: 51998
+  java/lang/Class: 51829
   java/lang/Class$1: 3
   java/lang/Class$2: 249
   java/lang/Class$AnnotationData: 98
@@ -3548,13 +3552,13 @@ objects-by-type:
   java/lang/Double: 102068
   java/lang/Float: 1
   java/lang/IllegalArgumentException: 2
-  java/lang/Integer: 1514104
+  java/lang/Integer: 1501096
   java/lang/Long: 549
   java/lang/Module: 57
   java/lang/NamedPackage: 58
   java/lang/NoSuchMethodException: 1159
   java/lang/NumberFormatException: 2
-  java/lang/Object: 1127540
+  java/lang/Object: 1120618
   java/lang/Package: 105
   java/lang/Package$VersionInfo: 29
   java/lang/ProcessBuilder: 4
@@ -3563,11 +3567,11 @@ objects-by-type:
   java/lang/ProcessBuilder$Redirect$2: 1
   java/lang/ProcessBuilder$Redirect$3: 1
   java/lang/ProcessBuilder$Redirect$Type: 6
-  java/lang/ProcessEnvironment$StringEntry: 98
+  java/lang/ProcessEnvironment$StringEntry: 100
   java/lang/ProcessEnvironment$StringEntrySet: 2
   java/lang/ProcessEnvironment$StringEntrySet$1: 2
   java/lang/ProcessEnvironment$StringEnvironment: 2
-  java/lang/ProcessEnvironment$Variable: 202
+  java/lang/ProcessEnvironment$Variable: 206
   java/lang/ProcessHandleImpl: 4
   java/lang/ProcessHandleImpl$1: 4
   java/lang/ProcessHandleImpl$ExitCompletion: 4
@@ -3581,9 +3585,9 @@ objects-by-type:
   java/lang/RuntimePermission: 1
   java/lang/SecurityException: 1
   java/lang/StackTraceElement: 8532
-  java/lang/String: 10346055
+  java/lang/String: 10346058
   java/lang/StringBuffer: 1110
-  java/lang/StringBuilder: 742551
+  java/lang/StringBuilder: 742564
   java/lang/Thread$FieldHolder: 1
   java/lang/ThreadGroup: 1
   java/lang/ThreadLocal: 3
@@ -3617,7 +3621,7 @@ objects-by-type:
   java/lang/invoke/LambdaFormEditor$1: 1
   java/lang/invoke/LambdaFormEditor$Transform: 61
   java/lang/invoke/LambdaFormEditor$TransformKey: 418
-  java/lang/invoke/MemberName: 1496
+  java/lang/invoke/MemberName: 1494
   java/lang/invoke/MethodHandle: 7
   java/lang/invoke/MethodHandle$1: 15
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 1
@@ -3626,11 +3630,11 @@ objects-by-type:
   java/lang/invoke/MethodHandles$Lookup: 44
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 99
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 99
-  java/lang/invoke/MethodType: 1469
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 302
+  java/lang/invoke/MethodType: 1458
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 300
   java/lang/invoke/MethodTypeForm: 34
   java/lang/invoke/SimpleMethodHandle: 9
-  java/lang/invoke/VarHandle$AccessDescriptor: 9
+  java/lang/invoke/VarHandle$AccessDescriptor: 8
   java/lang/invoke/VarHandle$AccessMode: 3
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 1
   java/lang/invoke/VarHandleInts$FieldInstanceReadWrite: 3
@@ -3653,7 +3657,7 @@ objects-by-type:
   java/lang/ref/Finalizer: 50143
   java/lang/ref/ReferenceQueue: 1621
   java/lang/ref/SoftReference: 466
-  java/lang/ref/WeakReference: 2714
+  java/lang/ref/WeakReference: 2689
   java/lang/reflect/Constructor: 684
   java/lang/reflect/Field: 2804
   java/lang/reflect/InvocationTargetException: 2
@@ -3718,7 +3722,7 @@ objects-by-type:
   java/util/ArrayDeque: 86
   java/util/ArrayDeque$DeqIterator: 2
   java/util/ArrayList: 1457877
-  java/util/ArrayList$Itr: 636243
+  java/util/ArrayList$Itr: 636249
   java/util/ArrayList$SubList: 174277
   java/util/ArrayList$SubList$1: 38
   java/util/Arrays$ArrayItr: 55946
@@ -3748,7 +3752,7 @@ objects-by-type:
   java/util/HashMap$EntrySet: 166
   java/util/HashMap$KeyIterator: 8328
   java/util/HashMap$KeySet: 32
-  java/util/HashMap$Node: 3662
+  java/util/HashMap$Node: 3664
   java/util/HashMap$ValueIterator: 486
   java/util/HashMap$ValueSpliterator: 1
   java/util/HashMap$Values: 487
@@ -3794,7 +3798,7 @@ objects-by-type:
   java/util/Spliterators$1Adapter: 3
   java/util/Spliterators$ArraySpliterator: 1217
   java/util/Spliterators$IteratorSpliterator: 1
-  java/util/Stack: 2356
+  java/util/Stack: 2362
   java/util/StringJoiner: 1169
   java/util/StringTokenizer: 1182
   java/util/TreeMap: 53
@@ -3802,7 +3806,7 @@ objects-by-type:
   java/util/TreeMap$EntryIterator: 1
   java/util/TreeMap$EntrySet: 1
   java/util/Vector: 2646
-  java/util/Vector$Itr: 778
+  java/util/Vector$Itr: 784
   java/util/WeakHashMap: 153
   java/util/WeakHashMap$Entry: 6957
   java/util/WeakHashMap$KeyIterator: 25
@@ -3815,9 +3819,9 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 56841
   java/util/concurrent/ConcurrentHashMap$KeyIterator: 100064
   java/util/concurrent/ConcurrentHashMap$KeySetView: 98
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 1535
-  java/util/concurrent/ConcurrentHashMap$Node: 1958836
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 23
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 1541
+  java/util/concurrent/ConcurrentHashMap$Node: 1958839
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 22
   java/util/concurrent/ConcurrentHashMap$TreeBin: 2
   java/util/concurrent/ConcurrentHashMap$TreeNode: 19
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 642
@@ -3826,7 +3830,7 @@ objects-by-type:
   java/util/concurrent/ConcurrentLinkedQueue: 4
   java/util/concurrent/ConcurrentLinkedQueue$Node: 4
   java/util/concurrent/ConcurrentSkipListMap: 1
-  java/util/concurrent/ConcurrentSkipListMap$Index: 2
+  java/util/concurrent/ConcurrentSkipListMap$Index: 1
   java/util/concurrent/ConcurrentSkipListMap$KeyIterator: 1
   java/util/concurrent/ConcurrentSkipListMap$KeySet: 1
   java/util/concurrent/ConcurrentSkipListMap$Node: 2
@@ -3849,9 +3853,9 @@ objects-by-type:
   java/util/concurrent/atomic/AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl$1: 3
   java/util/concurrent/atomic/LongAdder: 1
   java/util/concurrent/atomic/Striped64$1: 1
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 5
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 6
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 1631
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 1
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 3
   java/util/concurrent/locks/ReentrantLock: 1727
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 1744
   java/util/jar/Attributes: 10
@@ -3867,8 +3871,8 @@ objects-by-type:
   java/util/logging/LogRecord: 25
   java/util/logging/Logger: 28
   java/util/logging/Logger$ConfigurationData: 28
-  java/util/regex/IntHashSet: 11550
-  java/util/regex/Matcher: 11550
+  java/util/regex/IntHashSet: 11552
+  java/util/regex/Matcher: 11552
   java/util/regex/Pattern: 7
   java/util/regex/Pattern$Begin: 1
   java/util/regex/Pattern$BitClass: 5
@@ -3953,8 +3957,8 @@ objects-by-type:
   jdk/internal/org/objectweb/asm/Label: 551
   jdk/internal/org/objectweb/asm/MethodWriter: 221
   jdk/internal/org/objectweb/asm/SymbolTable: 102
-  jdk/internal/org/objectweb/asm/SymbolTable$Entry: 5445
-  jdk/internal/org/objectweb/asm/Type: 534
+  jdk/internal/org/objectweb/asm/SymbolTable$Entry: 5448
+  jdk/internal/org/objectweb/asm/Type: 536
   jdk/internal/ref/Cleaner: 3
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 4505
   jdk/internal/reflect/DirectConstructorHandleAccessor: 82
@@ -4711,7 +4715,7 @@ objects-by-type:
   org/python/core/PyInstance: 112266
   org/python/core/PyInteger: 1151061
   org/python/core/PyJavaPackage: 23
-  org/python/core/PyJavaType: 436
+  org/python/core/PyJavaType: 434
   org/python/core/PyJavaType$1: 5
   org/python/core/PyJavaType$14: 1
   org/python/core/PyJavaType$2: 12
@@ -4727,7 +4731,7 @@ objects-by-type:
   org/python/core/PyList$list_sort_exposer: 175003
   org/python/core/PyListIterator: 500028
   org/python/core/PyLong: 2762395
-  org/python/core/PyMethod: 1093770
+  org/python/core/PyMethod: 1093774
   org/python/core/PyMethodDescr: 301
   org/python/core/PyModule: 51
   org/python/core/PyNullImporter: 1
@@ -4738,14 +4742,14 @@ objects-by-type:
   org/python/core/PyObject$object___init___exposer: 18007
   org/python/core/PyObject$object___setattr___exposer: 270077
   org/python/core/PyObject$object___subclasshook___exposer: 12
-  org/python/core/PyObjectDerived: 84525
+  org/python/core/PyObjectDerived: 84527
   org/python/core/PyProperty: 70
   org/python/core/PyProperty$property___init___exposer: 4
   org/python/core/PyPropertyDerived: 4
   org/python/core/PyReflectedConstructor: 243
   org/python/core/PyReflectedField: 2099
   org/python/core/PyReflectedFunction: 452570
-  org/python/core/PySequence$DefaultIndexDelegate: 8799576
+  org/python/core/PySequence$DefaultIndexDelegate: 8799586
   org/python/core/PySequenceIter: 50130
   org/python/core/PySet: 58
   org/python/core/PySet$set___contains___exposer: 36
@@ -4793,7 +4797,7 @@ objects-by-type:
   org/python/core/PySystemStateRef: 2
   org/python/core/PyTableCode: 1570
   org/python/core/PyTraceback: 144145
-  org/python/core/PyTuple: 912725
+  org/python/core/PyTuple: 912727
   org/python/core/PyTuple$1: 30
   org/python/core/PyTuple$tuple___getitem___exposer: 1
   org/python/core/PyTuple$tuple___len___exposer: 2
@@ -4804,7 +4808,7 @@ objects-by-type:
   org/python/core/PyType$11: 798
   org/python/core/PyType$2: 58
   org/python/core/PyType$MROMergeState: 1251
-  org/python/core/PyType$MethodCache$MethodCacheEntry: 2225
+  org/python/core/PyType$MethodCache$MethodCacheEntry: 2200
   org/python/core/PyType$Registry$IncompleteType: 312
   org/python/core/PyType$type___eq___exposer: 81
   org/python/core/PyType$type___getattribute___exposer: 422
@@ -4813,7 +4817,7 @@ objects-by-type:
   org/python/core/PyType$type___subclasses___exposer: 24
   org/python/core/PyType$type_mro_exposer: 26
   org/python/core/PyTypeDerived: 26
-  org/python/core/PyUnicode: 1771883
+  org/python/core/PyUnicode: 1771891
   org/python/core/PyUnicode$SubsequenceIteratorBasic: 552000
   org/python/core/PyUnicode$Supplementary: 1
   org/python/core/PyUnicode$unicode_encode_exposer: 1
@@ -4834,7 +4838,7 @@ objects-by-type:
   org/python/core/PyXRangeIter$PyExposer: 1
   org/python/core/PyXRangeIter$rangeiterator_next_exposer: 1
   org/python/core/ReflectedArgs: 910142
-  org/python/core/ReflectedCallData: 450879
+  org/python/core/ReflectedCallData: 450883
   org/python/core/StringFormatter: 12
   org/python/core/ThreadContext$1: 1
   org/python/core/ThreadState: 2
@@ -5266,7 +5270,7 @@ objects-by-type:
 # number of bytes allocated for each class
 bytes-by-type: 
   Arithmetic$py: 16
-  B: 18497856
+  B: 18502408
   Calls$py: 16
   CommandLine$py: 16
   Constructs$py: 16
@@ -5295,7 +5299,7 @@ bytes-by-type:
   abc$py: 16
   atexit$py: 16
   boolean: 3080
-  byte: 603534600
+  byte: 603542216
   char: 47453128
   collections$py: 16
   com/google/common/base/AbstractIterator$State: 160
@@ -5497,7 +5501,7 @@ bytes-by-type:
   getopt$py: 16
   glob$py: 16
   heapq$py: 16
-  int: 194616512
+  int: 194616752
   io$py: 16
   io/netty/buffer/EmptyByteBuf: 64
   io/netty/buffer/PoolArena: 416
@@ -5596,7 +5600,7 @@ bytes-by-type:
   java/io/RandomAccessFile$1: 16
   java/io/StringWriter: 600
   java/lang/Byte: 416
-  java/lang/Class: 1227952
+  java/lang/Class: 1223680
   java/lang/Class$1: 48
   java/lang/Class$2: 3984
   java/lang/Class$AnnotationData: 2352
@@ -5609,13 +5613,13 @@ bytes-by-type:
   java/lang/Double: 2449632
   java/lang/Float: 16
   java/lang/IllegalArgumentException: 80
-  java/lang/Integer: 24225664
+  java/lang/Integer: 24017536
   java/lang/Long: 13176
   java/lang/Module: 3192
   java/lang/NamedPackage: 1392
   java/lang/NoSuchMethodException: 46360
   java/lang/NumberFormatException: 80
-  java/lang/Object: 76082888
+  java/lang/Object: 75902928
   java/lang/Package: 40008
   java/lang/Package$VersionInfo: 1160
   java/lang/ProcessBuilder: 128
@@ -5624,11 +5628,11 @@ bytes-by-type:
   java/lang/ProcessBuilder$Redirect$2: 16
   java/lang/ProcessBuilder$Redirect$3: 16
   java/lang/ProcessBuilder$Redirect$Type: 160
-  java/lang/ProcessEnvironment$StringEntry: 1568
+  java/lang/ProcessEnvironment$StringEntry: 1600
   java/lang/ProcessEnvironment$StringEntrySet: 32
   java/lang/ProcessEnvironment$StringEntrySet$1: 48
   java/lang/ProcessEnvironment$StringEnvironment: 48
-  java/lang/ProcessEnvironment$Variable: 4848
+  java/lang/ProcessEnvironment$Variable: 4944
   java/lang/ProcessHandleImpl: 128
   java/lang/ProcessHandleImpl$1: 128
   java/lang/ProcessHandleImpl$ExitCompletion: 96
@@ -5642,9 +5646,9 @@ bytes-by-type:
   java/lang/RuntimePermission: 24
   java/lang/SecurityException: 40
   java/lang/StackTraceElement: 441440
-  java/lang/String: 256167240
+  java/lang/String: 256166064
   java/lang/StringBuffer: 35520
-  java/lang/StringBuilder: 17821224
+  java/lang/StringBuilder: 17821536
   java/lang/Thread$FieldHolder: 40
   java/lang/ThreadGroup: 48
   java/lang/ThreadLocal: 48
@@ -5678,7 +5682,7 @@ bytes-by-type:
   java/lang/invoke/LambdaFormEditor$1: 16
   java/lang/invoke/LambdaFormEditor$Transform: 2816
   java/lang/invoke/LambdaFormEditor$TransformKey: 10032
-  java/lang/invoke/MemberName: 72192
+  java/lang/invoke/MemberName: 72096
   java/lang/invoke/MethodHandle: 1960
   java/lang/invoke/MethodHandle$1: 240
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 48
@@ -5687,11 +5691,11 @@ bytes-by-type:
   java/lang/invoke/MethodHandles$Lookup: 1408
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 3168
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 2376
-  java/lang/invoke/MethodType: 58760
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 9664
+  java/lang/invoke/MethodType: 58320
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 9600
   java/lang/invoke/MethodTypeForm: 1088
   java/lang/invoke/SimpleMethodHandle: 288
-  java/lang/invoke/VarHandle$AccessDescriptor: 360
+  java/lang/invoke/VarHandle$AccessDescriptor: 320
   java/lang/invoke/VarHandle$AccessMode: 432
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 40
   java/lang/invoke/VarHandleInts$FieldInstanceReadWrite: 120
@@ -5714,7 +5718,7 @@ bytes-by-type:
   java/lang/ref/Finalizer: 2005720
   java/lang/ref/ReferenceQueue: 51872
   java/lang/ref/SoftReference: 20360
-  java/lang/ref/WeakReference: 86888
+  java/lang/ref/WeakReference: 86088
   java/lang/reflect/Constructor: 32944
   java/lang/reflect/Field: 188328
   java/lang/reflect/InvocationTargetException: 80
@@ -5779,7 +5783,7 @@ bytes-by-type:
   java/util/ArrayDeque: 2064
   java/util/ArrayDeque$DeqIterator: 64
   java/util/ArrayList: 34989048
-  java/util/ArrayList$Itr: 20359776
+  java/util/ArrayList$Itr: 20359968
   java/util/ArrayList$SubList: 5576864
   java/util/ArrayList$SubList$1: 1216
   java/util/Arrays$ArrayItr: 1342704
@@ -5809,7 +5813,7 @@ bytes-by-type:
   java/util/HashMap$EntrySet: 2656
   java/util/HashMap$KeyIterator: 266496
   java/util/HashMap$KeySet: 512
-  java/util/HashMap$Node: 319232
+  java/util/HashMap$Node: 319296
   java/util/HashMap$ValueIterator: 15552
   java/util/HashMap$ValueSpliterator: 40
   java/util/HashMap$Values: 7792
@@ -5855,7 +5859,7 @@ bytes-by-type:
   java/util/Spliterators$1Adapter: 72
   java/util/Spliterators$ArraySpliterator: 48680
   java/util/Spliterators$IteratorSpliterator: 40
-  java/util/Stack: 75392
+  java/util/Stack: 75584
   java/util/StringJoiner: 46760
   java/util/StringTokenizer: 56736
   java/util/TreeMap: 2544
@@ -5863,7 +5867,7 @@ bytes-by-type:
   java/util/TreeMap$EntryIterator: 32
   java/util/TreeMap$EntrySet: 16
   java/util/Vector: 84672
-  java/util/Vector$Itr: 24896
+  java/util/Vector$Itr: 25088
   java/util/WeakHashMap: 7344
   java/util/WeakHashMap$Entry: 323664
   java/util/WeakHashMap$KeyIterator: 1000
@@ -5876,9 +5880,9 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 1818912
   java/util/concurrent/ConcurrentHashMap$KeyIterator: 5603584
   java/util/concurrent/ConcurrentHashMap$KeySetView: 2352
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 36840
-  java/util/concurrent/ConcurrentHashMap$Node: 90420992
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 736
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 36984
+  java/util/concurrent/ConcurrentHashMap$Node: 90421088
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 704
   java/util/concurrent/ConcurrentHashMap$TreeBin: 96
   java/util/concurrent/ConcurrentHashMap$TreeNode: 912
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 35952
@@ -5887,7 +5891,7 @@ bytes-by-type:
   java/util/concurrent/ConcurrentLinkedQueue: 96
   java/util/concurrent/ConcurrentLinkedQueue$Node: 96
   java/util/concurrent/ConcurrentSkipListMap: 48
-  java/util/concurrent/ConcurrentSkipListMap$Index: 48
+  java/util/concurrent/ConcurrentSkipListMap$Index: 24
   java/util/concurrent/ConcurrentSkipListMap$KeyIterator: 32
   java/util/concurrent/ConcurrentSkipListMap$KeySet: 16
   java/util/concurrent/ConcurrentSkipListMap$Node: 48
@@ -5910,9 +5914,9 @@ bytes-by-type:
   java/util/concurrent/atomic/AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl$1: 72
   java/util/concurrent/atomic/LongAdder: 32
   java/util/concurrent/atomic/Striped64$1: 16
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 160
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 192
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 39144
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 32
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 96
   java/util/concurrent/locks/ReentrantLock: 27632
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 55808
   java/util/jar/Attributes: 160
@@ -5928,8 +5932,8 @@ bytes-by-type:
   java/util/logging/LogRecord: 2000
   java/util/logging/Logger: 1568
   java/util/logging/Logger$ConfigurationData: 1120
-  java/util/regex/IntHashSet: 184800
-  java/util/regex/Matcher: 924000
+  java/util/regex/IntHashSet: 184832
+  java/util/regex/Matcher: 924160
   java/util/regex/Pattern: 616
   java/util/regex/Pattern$Begin: 16
   java/util/regex/Pattern$BitClass: 80
@@ -6014,8 +6018,8 @@ bytes-by-type:
   jdk/internal/org/objectweb/asm/Label: 30856
   jdk/internal/org/objectweb/asm/MethodWriter: 49504
   jdk/internal/org/objectweb/asm/SymbolTable: 6528
-  jdk/internal/org/objectweb/asm/SymbolTable$Entry: 407664
-  jdk/internal/org/objectweb/asm/Type: 15336
+  jdk/internal/org/objectweb/asm/SymbolTable$Entry: 407832
+  jdk/internal/org/objectweb/asm/Type: 15400
   jdk/internal/ref/Cleaner: 120
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 216240
   jdk/internal/reflect/DirectConstructorHandleAccessor: 1968
@@ -6772,7 +6776,7 @@ bytes-by-type:
   org/python/core/PyInstance: 3592512
   org/python/core/PyInteger: 27625464
   org/python/core/PyJavaPackage: 920
-  org/python/core/PyJavaType: 29672
+  org/python/core/PyJavaType: 29624
   org/python/core/PyJavaType$1: 200
   org/python/core/PyJavaType$14: 40
   org/python/core/PyJavaType$2: 576
@@ -6788,25 +6792,25 @@ bytes-by-type:
   org/python/core/PyList$list_sort_exposer: 5600096
   org/python/core/PyListIterator: 20001120
   org/python/core/PyLong: 66297480
-  org/python/core/PyMethod: 35000640
+  org/python/core/PyMethod: 35000768
   org/python/core/PyMethodDescr: 12040
   org/python/core/PyModule: 1632
   org/python/core/PyNullImporter: 24
-  org/python/core/PyObject: 241997016
+  org/python/core/PyObject: 241997144
   org/python/core/PyObject$1: 22368
   org/python/core/PyObject$1$1: 44736
   org/python/core/PyObject$object___getattribute___exposer: 736
   org/python/core/PyObject$object___init___exposer: 576224
   org/python/core/PyObject$object___setattr___exposer: 8642464
   org/python/core/PyObject$object___subclasshook___exposer: 384
-  org/python/core/PyObjectDerived: 2704800
+  org/python/core/PyObjectDerived: 2704864
   org/python/core/PyProperty: 2800
   org/python/core/PyProperty$property___init___exposer: 128
   org/python/core/PyPropertyDerived: 192
   org/python/core/PyReflectedConstructor: 11664
   org/python/core/PyReflectedField: 50376
   org/python/core/PyReflectedFunction: 21723360
-  org/python/core/PySequence$DefaultIndexDelegate: 140793216
+  org/python/core/PySequence$DefaultIndexDelegate: 140793376
   org/python/core/PySequenceIter: 1604160
   org/python/core/PySet: 1392
   org/python/core/PySet$set___contains___exposer: 1152
@@ -6854,7 +6858,7 @@ bytes-by-type:
   org/python/core/PySystemStateRef: 64
   org/python/core/PyTableCode: 125600
   org/python/core/PyTraceback: 4612640
-  org/python/core/PyTuple: 29207200
+  org/python/core/PyTuple: 29207264
   org/python/core/PyTuple$1: 720
   org/python/core/PyTuple$tuple___getitem___exposer: 32
   org/python/core/PyTuple$tuple___len___exposer: 64
@@ -6865,7 +6869,7 @@ bytes-by-type:
   org/python/core/PyType$11: 12768
   org/python/core/PyType$2: 2320
   org/python/core/PyType$MROMergeState: 30776
-  org/python/core/PyType$MethodCache$MethodCacheEntry: 89000
+  org/python/core/PyType$MethodCache$MethodCacheEntry: 88000
   org/python/core/PyType$Registry$IncompleteType: 12480
   org/python/core/PyType$type___eq___exposer: 2592
   org/python/core/PyType$type___getattribute___exposer: 13504
@@ -6874,7 +6878,7 @@ bytes-by-type:
   org/python/core/PyType$type___subclasses___exposer: 768
   org/python/core/PyType$type_mro_exposer: 832
   org/python/core/PyTypeDerived: 2288
-  org/python/core/PyUnicode: 70875320
+  org/python/core/PyUnicode: 70875640
   org/python/core/PyUnicode$SubsequenceIteratorBasic: 17664000
   org/python/core/PyUnicode$Supplementary: 24
   org/python/core/PyUnicode$unicode_encode_exposer: 32
@@ -6895,7 +6899,7 @@ bytes-by-type:
   org/python/core/PyXRangeIter$PyExposer: 48
   org/python/core/PyXRangeIter$rangeiterator_next_exposer: 32
   org/python/core/ReflectedArgs: 22302744
-  org/python/core/ReflectedCallData: 14428128
+  org/python/core/ReflectedCallData: 14428256
   org/python/core/StringFormatter: 480
   org/python/core/ThreadContext$1: 16
   org/python/core/ThreadState: 112
