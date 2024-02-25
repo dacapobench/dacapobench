@@ -1,60 +1,63 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 528175994
-bytes-allocated: 22144276720
+objects-allocated: 527614257
+bytes-allocated: 22122774512
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 26329141
-  24: 172205545
-  32: 131741637
-  40: 15316471
-  48: 33412677
-  56: 77829202
-  64: 31936011
-  72: 2355938
-  80: 5378783
-  88: 2600705
-  96: 511501
-  104: 3558700
-  112: 5592507
-  120: 9900487
-  128: 730273
-  136: 598382
-  144: 2179679
-  152: 436324
-  160: 370057
-  168: 336882
-  176: 762375
-  184: 1743933
-  192: 403326
-  200: 382101
-  208: 420639
-  216: 174173
-  224: 2453
-  232: 403
-  240: 395
-  248: 384
-  256: 658
-  264: 873
-  272: 943510
-  280: 598
-  288: 259
-  296: 447
-  304: 112
-  312: 111
-  320: 84
-  328: 22
-  336: 19
-  344: 16
+  16: 26350955
+  24: 171758186
+  32: 131730439
+  40: 15328659
+  48: 33419187
+  56: 77707331
+  64: 31965715
+  72: 2358140
+  80: 5382859
+  88: 2603327
+  96: 512126
+  104: 3562412
+  112: 5574450
+  120: 9865846
+  128: 727881
+  136: 594480
+  144: 2178202
+  152: 435782
+  160: 369830
+  168: 334643
+  176: 762719
+  184: 1742338
+  192: 401843
+  200: 381911
+  208: 420541
+  216: 174545
+  224: 2570
+  232: 418
+  240: 427
+  248: 396
+  256: 699
+  264: 903
+  272: 944433
+  280: 593
+  288: 293
+  296: 430
+  304: 114
+  312: 110
+  320: 68
+  328: 29
+  336: 30
+  344: 13
   352: 9
-  360: 5
+  360: 4
   368: 15
-  376: 13
+  376: 12
   384: 7
-  392: 24
+  392: 28
   400: 5
-  408: 5
+  408: 6
   416: 20
   424: 6
   432: 22
@@ -80,7 +83,7 @@ objects-by-size:
   592: 5
   600: 1
   608: 1
-  616: 14502
+  616: 14682
   624: 6
   632: 2
   640: 4
@@ -361,57 +364,58 @@ objects-by-size:
   38808: 1
   39288: 1
   41456: 300
-# number of bytres allocated for each object size
-  16: 421266256
-  24: 4132933080
-  32: 4215732384
-  40: 612658840
-  48: 1603808496
-  56: 4358435312
-  64: 2043904704
-  72: 169627536
-  80: 430302640
-  88: 228862040
-  96: 49104096
-  104: 370104800
-  112: 626360784
-  120: 1188058440
-  128: 93474944
-  136: 81379952
-  144: 313873776
-  152: 66321248
-  160: 59209120
-  168: 56596176
-  176: 134178000
-  184: 320883672
-  192: 77438592
-  200: 76420200
-  208: 87492912
-  216: 37621368
-  224: 549472
-  232: 93496
-  240: 94800
-  248: 95232
-  256: 168448
-  264: 230472
-  272: 256634720
-  280: 167440
-  288: 74592
-  296: 132312
-  304: 34048
-  312: 34632
-  320: 26880
-  328: 7216
-  336: 6384
-  344: 5504
+# number of bytes allocated for each object size
+bytes-by-size: 
+  16: 421615280
+  24: 4122196464
+  32: 4215374048
+  40: 613146360
+  48: 1604120976
+  56: 4351610536
+  64: 2045805760
+  72: 169786080
+  80: 430628720
+  88: 229092776
+  96: 49164096
+  104: 370490848
+  112: 624338400
+  120: 1183901520
+  128: 93168768
+  136: 80849280
+  144: 313661088
+  152: 66238864
+  160: 59172800
+  168: 56220024
+  176: 134238544
+  184: 320590192
+  192: 77153856
+  200: 76382200
+  208: 87472528
+  216: 37701720
+  224: 575680
+  232: 96976
+  240: 102480
+  248: 98208
+  256: 178944
+  264: 238392
+  272: 256885776
+  280: 166040
+  288: 84384
+  296: 127280
+  304: 34656
+  312: 34320
+  320: 21760
+  328: 9512
+  336: 10080
+  344: 4472
   352: 3168
-  360: 1800
+  360: 1440
   368: 5520
-  376: 4888
+  376: 4512
   384: 2688
-  392: 9408
+  392: 10976
   400: 2000
-  408: 2040
+  408: 2448
   416: 8320
   424: 2544
   432: 9504
@@ -437,7 +441,7 @@ objects-by-size:
   592: 2960
   600: 600
   608: 608
-  616: 8933232
+  616: 9044112
   624: 3744
   632: 1264
   640: 2560
@@ -720,12 +724,12 @@ objects-by-size:
   41456: 12436800
 # number of objects allocated for each class
 objects-by-type: 
-  B: 16525
+  B: 16480
   I: 193
-  J: 1118904
+  J: 1118234
   boolean: 5
-  byte: 6882541
-  char: 682715
+  byte: 6885712
+  char: 683300
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 570
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 597
   com/google/monitoring/runtime/instrumentation/StaticClassWriter: 48
@@ -768,7 +772,7 @@ objects-by-type:
   com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 141
   com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 665
   com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 7767
-  int: 945440
+  int: 946663
   java/io/ByteArrayOutputStream: 648
   java/io/File: 600
   java/io/FileCleanable: 2
@@ -783,18 +787,18 @@ objects-by-type:
   java/lang/Class$ReflectionData: 14
   java/lang/ClassNotFoundException: 6
   java/lang/Float: 8
-  java/lang/Integer: 82284
-  java/lang/Long: 14280379
+  java/lang/Integer: 82106
+  java/lang/Long: 14270290
   java/lang/NamedPackage: 3
-  java/lang/Object: 22620771
+  java/lang/Object: 22575045
   java/lang/Package: 1
   java/lang/PublicMethods$MethodList: 2
   java/lang/RuntimeException: 1
   java/lang/StackTraceElement: 115
   java/lang/StackWalker: 2
-  java/lang/String: 34037783
-  java/lang/StringBuffer: 57569
-  java/lang/StringBuilder: 1709153
+  java/lang/String: 33960069
+  java/lang/StringBuffer: 57749
+  java/lang/StringBuilder: 1710153
   java/lang/StringLatin1$CharsSpliterator: 2
   java/lang/StringUTF16$CharsSpliterator: 1
   java/lang/Thread: 1
@@ -836,8 +840,8 @@ objects-by-type:
   java/lang/ref/WeakReference: 6
   java/lang/reflect/Constructor: 10
   java/lang/reflect/Method: 2
-  java/math/BigDecimal: 392103
-  java/math/BigInteger: 377598
+  java/math/BigDecimal: 392772
+  java/math/BigInteger: 378087
   java/net/URI: 348
   java/net/URL: 984
   java/net/URLClassLoader$1: 39
@@ -853,36 +857,36 @@ objects-by-type:
   java/security/ProtectionDomain$Key: 1
   java/security/SecureClassLoader$1: 39
   java/security/SecureClassLoader$CodeSourceKey: 39
-  java/sql/SQLException: 142849
-  java/sql/Timestamp: 218259
-  java/text/Format: 248252
-  java/text/MessageFormat: 248252
-  java/time/Instant: 5020540
+  java/sql/SQLException: 142923
+  java/sql/Timestamp: 218241
+  java/text/Format: 248619
+  java/text/MessageFormat: 248619
+  java/time/Instant: 5024812
   java/time/LocalDate: 1
   java/time/LocalDateTime: 1
   java/time/LocalTime: 1
   java/time/temporal/ChronoField: 3
   java/time/temporal/ChronoUnit: 2
   java/util/AbstractMap$SimpleImmutableEntry: 4464
-  java/util/ArrayList: 1811047
+  java/util/ArrayList: 1812600
   java/util/ArrayList$ArrayListSpliterator: 2
-  java/util/ArrayList$Itr: 27304699
+  java/util/ArrayList$Itr: 27325973
   java/util/ArrayList$SubList: 50
   java/util/ArrayList$SubList$1: 1
-  java/util/BitSet: 122796
+  java/util/BitSet: 122820
   java/util/Collections$SetFromMap: 1
   java/util/Collections$UnmodifiableCollection$1: 2
   java/util/Collections$UnmodifiableRandomAccessList: 1
   java/util/Formatter: 2
-  java/util/HashMap: 5507764
+  java/util/HashMap: 5512480
   java/util/HashMap$EntryIterator: 3
   java/util/HashMap$EntrySet: 2
-  java/util/HashMap$KeyIterator: 5839902
-  java/util/HashMap$KeySet: 3880155
-  java/util/HashMap$Node: 42626858
-  java/util/HashMap$ValueIterator: 4535559
-  java/util/HashMap$Values: 484979
-  java/util/HashSet: 5020604
+  java/util/HashMap$KeyIterator: 5835349
+  java/util/HashMap$KeySet: 3883312
+  java/util/HashMap$Node: 42665687
+  java/util/HashMap$ValueIterator: 4539387
+  java/util/HashMap$Values: 485423
+  java/util/HashSet: 5024876
   java/util/IdentityHashMap: 1
   java/util/IdentityHashMap$KeySet: 1
   java/util/ImmutableCollections$List12: 3
@@ -905,24 +909,24 @@ objects-by-type:
   java/util/ServiceLoader$LazyClassPathLookupIterator: 2
   java/util/ServiceLoader$ModuleServicesLookupIterator: 2
   java/util/ServiceLoader$ProviderImpl: 2
-  java/util/TreeMap: 51412
-  java/util/TreeMap$Entry: 57639
-  java/util/TreeMap$EntryIterator: 24074
-  java/util/TreeMap$EntrySet: 24074
-  java/util/TreeSet: 3264
+  java/util/TreeMap: 51419
+  java/util/TreeMap$Entry: 57492
+  java/util/TreeMap$EntryIterator: 24077
+  java/util/TreeMap$EntrySet: 24077
+  java/util/TreeSet: 3265
   java/util/WeakHashMap$Entry: 335
   java/util/concurrent/ConcurrentHashMap: 4
-  java/util/concurrent/ConcurrentHashMap$CounterCell: 6
+  java/util/concurrent/ConcurrentHashMap$CounterCell: 9
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 1
-  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 11
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 52
-  java/util/concurrent/ConcurrentHashMap$Node: 588730
+  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 10
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 54
+  java/util/concurrent/ConcurrentHashMap$Node: 589188
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 2
-  java/util/concurrent/ConcurrentHashMap$ValueIterator: 1412316
+  java/util/concurrent/ConcurrentHashMap$ValueIterator: 1413648
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 2
-  java/util/concurrent/atomic/AtomicLong: 485038
+  java/util/concurrent/atomic/AtomicLong: 485482
   java/util/concurrent/atomic/AtomicReference: 22
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 13
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 11
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 4
   java/util/concurrent/locks/ReentrantLock: 6
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 6
@@ -964,8 +968,8 @@ objects-by-type:
   jdk/internal/jimage/ImageLocation: 352
   jdk/internal/loader/BuiltinClassLoader$2: 9
   jdk/internal/loader/URLClassPath$JarLoader$2: 335
-  jdk/internal/math/DoubleToDecimal: 429631
-  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 238407
+  jdk/internal/math/DoubleToDecimal: 429621
+  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 238822
   jdk/internal/math/FormattedFPDecimal: 8
   jdk/internal/misc/InternalLock: 1
   jdk/internal/org/objectweb/asm/ByteVector: 63
@@ -978,11 +982,11 @@ objects-by-type:
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 368
   jdk/internal/reflect/DirectConstructorHandleAccessor: 10
   jdk/internal/reflect/DirectMethodHandleAccessor: 3
-  long: 17451
+  long: 16553
   org/apache/derbyTesting/system/oe/direct/OrderItem4Sort: 494895
-  org/apache/derbyTesting/system/oe/model/Address: 239770
-  org/apache/derbyTesting/system/oe/model/Customer: 240768
-  org/apache/derbyTesting/system/oe/model/OrderLine: 43736
+  org/apache/derbyTesting/system/oe/model/Address: 239787
+  org/apache/derbyTesting/system/oe/model/Customer: 241183
+  org/apache/derbyTesting/system/oe/model/OrderLine: 43770
   org/dacapo/h2/TPCC$3: 24
   org/h2/command/CommandContainer: 768
   org/h2/command/Parser: 768
@@ -1001,24 +1005,24 @@ objects-by-type:
   org/h2/command/dml/Update: 144
   org/h2/command/query/AllColumnsForPlan: 648
   org/h2/command/query/Optimizer: 504
-  org/h2/command/query/Query$OffsetFetch: 1145081
+  org/h2/command/query/Query$OffsetFetch: 1145897
   org/h2/command/query/QueryOrderBy: 48
   org/h2/command/query/Select: 504
-  org/h2/command/query/Select$LazyResultQueryFlat: 1121007
+  org/h2/command/query/Select$LazyResultQueryFlat: 1121820
   org/h2/command/query/SelectGroups$Grouped: 72
-  org/h2/engine/SessionLocal$Savepoint: 2006394
+  org/h2/engine/SessionLocal$Savepoint: 2008539
   org/h2/expression/Alias: 72
   org/h2/expression/BinaryOperation: 264
   org/h2/expression/BinaryOperation$OpType: 6
-  org/h2/expression/Expression: 659350
-  org/h2/expression/ExpressionColumn: 11706688
-  org/h2/expression/ExpressionVisitor: 2049968
+  org/h2/expression/Expression: 660087
+  org/h2/expression/ExpressionColumn: 11722864
+  org/h2/expression/ExpressionVisitor: 2051492
   org/h2/expression/Parameter: 2424
   org/h2/expression/ValueExpression: 192
   org/h2/expression/aggregate/Aggregate: 72
   org/h2/expression/aggregate/AggregateDataCollecting: 3973
   org/h2/expression/aggregate/AggregateDataCollecting$NullCollectionMode: 4
-  org/h2/expression/aggregate/AggregateDataDefault: 20101
+  org/h2/expression/aggregate/AggregateDataDefault: 20104
   org/h2/expression/aggregate/AggregateType: 2
   org/h2/expression/condition/Comparison: 1608
   org/h2/expression/condition/ConditionAndOr: 816
@@ -1029,64 +1033,64 @@ objects-by-type:
   org/h2/index/IndexCondition: 1632
   org/h2/index/IndexCursor: 672
   org/h2/jdbc/JdbcPreparedStatement: 744
-  org/h2/jdbc/JdbcResultSet: 1145530
-  org/h2/jdbc/JdbcSQLNonTransientException: 217565
+  org/h2/jdbc/JdbcResultSet: 1146303
+  org/h2/jdbc/JdbcSQLNonTransientException: 218022
   org/h2/jdbc/JdbcSQLSyntaxErrorException: 1
-  org/h2/jdbc/JdbcSQLTransactionRollbackException: 15343
-  org/h2/message/DbException: 232909
-  org/h2/mvstore/Cursor: 6546449
-  org/h2/mvstore/CursorPos: 57261475
+  org/h2/jdbc/JdbcSQLTransactionRollbackException: 15298
+  org/h2/message/DbException: 233321
+  org/h2/mvstore/Cursor: 6551650
+  org/h2/mvstore/CursorPos: 57175424
   org/h2/mvstore/MVMap: 22
-  org/h2/mvstore/MVMap$IntValueHolder: 9678949
-  org/h2/mvstore/MVStoreException: 15343
-  org/h2/mvstore/Page$Leaf: 8756987
-  org/h2/mvstore/Page$NonLeaf: 19782335
-  org/h2/mvstore/Page$PageReference: 39687066
-  org/h2/mvstore/RootReference: 20023520
+  org/h2/mvstore/MVMap$IntValueHolder: 9688191
+  org/h2/mvstore/MVStoreException: 15298
+  org/h2/mvstore/Page$Leaf: 8736949
+  org/h2/mvstore/Page$NonLeaf: 19720988
+  org/h2/mvstore/Page$PageReference: 39564340
+  org/h2/mvstore/RootReference: 19936270
   org/h2/mvstore/db/MVPrimaryIndex$MVStoreCursor: 15
-  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 3003341
-  org/h2/mvstore/tx/CommitDecisionMaker: 59213
-  org/h2/mvstore/tx/Record: 6187669
-  org/h2/mvstore/tx/RollbackDecisionMaker: 103904
-  org/h2/mvstore/tx/Snapshot: 23044726
-  org/h2/mvstore/tx/Transaction: 484994
-  org/h2/mvstore/tx/TransactionMap: 15127133
-  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 2031600
-  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 1599787
-  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 1256062
-  org/h2/mvstore/tx/TxDecisionMaker: 15127133
+  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 3005839
+  org/h2/mvstore/tx/CommitDecisionMaker: 59216
+  org/h2/mvstore/tx/Record: 6172844
+  org/h2/mvstore/tx/RollbackDecisionMaker: 103882
+  org/h2/mvstore/tx/Snapshot: 22802147
+  org/h2/mvstore/tx/Transaction: 485438
+  org/h2/mvstore/tx/TransactionMap: 15141341
+  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 2033250
+  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 1601098
+  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 1256988
+  org/h2/mvstore/tx/TxDecisionMaker: 15141341
   org/h2/mvstore/tx/TxDecisionMaker$LockDecisionMaker: 62495
-  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 15127133
-  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 15064638
-  org/h2/mvstore/tx/VersionedBitSet: 999792
-  org/h2/mvstore/tx/VersionedValueUncommitted: 4805368
-  org/h2/result/DefaultRow: 7966189
-  org/h2/result/LocalResult: 1802528
-  org/h2/result/ResultWithGeneratedKeys: 1349396
-  org/h2/result/SearchRow: 721691
-  org/h2/result/SimpleRowValue: 1965518
+  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 15141341
+  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 15078846
+  org/h2/mvstore/tx/VersionedBitSet: 999098
+  org/h2/mvstore/tx/VersionedValueUncommitted: 4788786
+  org/h2/result/DefaultRow: 7972694
+  org/h2/result/LocalResult: 1804038
+  org/h2/result/ResultWithGeneratedKeys: 1350804
+  org/h2/result/SearchRow: 719540
+  org/h2/result/SimpleRowValue: 1966782
   org/h2/result/SortOrder: 48
-  org/h2/result/Sparse: 9468812
+  org/h2/result/Sparse: 9476635
   org/h2/table/Column: 244
   org/h2/table/IndexColumn: 696
   org/h2/table/Plan: 528
   org/h2/table/PlanItem: 720
-  org/h2/table/Table: 286183
+  org/h2/table/Table: 286671
   org/h2/table/TableFilter: 3432
   org/h2/util/Permutations: 24
   org/h2/value/TypeInfo: 312
-  org/h2/value/Value: 18540796
-  org/h2/value/ValueBigint: 647205
-  org/h2/value/ValueChar: 162406
-  org/h2/value/ValueDouble: 716587
-  org/h2/value/ValueInteger: 398975
-  org/h2/value/ValueNumeric: 1749425
+  org/h2/value/Value: 18555163
+  org/h2/value/ValueBigint: 647743
+  org/h2/value/ValueChar: 162527
+  org/h2/value/ValueDouble: 717434
+  org/h2/value/ValueInteger: 399609
+  org/h2/value/ValueNumeric: 1750133
   org/h2/value/ValueRow: 1
-  org/h2/value/ValueSmallint: 3792262
-  org/h2/value/ValueTimestamp: 59383
-  org/h2/value/ValueTimestampTimeZone: 32613
-  org/h2/value/ValueVarchar: 468143
-  org/h2/value/VersionedValue: 979947
+  org/h2/value/ValueSmallint: 3795284
+  org/h2/value/ValueTimestamp: 59391
+  org/h2/value/ValueTimestampTimeZone: 32630
+  org/h2/value/ValueVarchar: 468474
+  org/h2/value/VersionedValue: 977434
   short: 89922
   sun/net/www/MessageHeader: 948
   sun/net/www/protocol/file/FileURLConnection: 600
@@ -1105,12 +1109,12 @@ objects-by-type:
   sun/util/resources/provider/LocaleDataProvider: 1
 # number of bytes allocated for each class
 bytes-by-type: 
-  B: 625736
+  B: 624264
   I: 4632
-  J: 26828704
+  J: 26815712
   boolean: 1360
-  byte: 273283936
-  char: 21892584
+  byte: 273597392
+  char: 21910920
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 22800
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 19104
   com/google/monitoring/runtime/instrumentation/StaticClassWriter: 7680
@@ -1153,7 +1157,7 @@ bytes-by-type:
   com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 5640
   com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 26600
   com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 310680
-  int: 41950888
+  int: 42003728
   java/io/ByteArrayOutputStream: 15552
   java/io/File: 19200
   java/io/FileCleanable: 112
@@ -1168,18 +1172,18 @@ bytes-by-type:
   java/lang/Class$ReflectionData: 896
   java/lang/ClassNotFoundException: 240
   java/lang/Float: 128
-  java/lang/Integer: 1316544
-  java/lang/Long: 418440384
+  java/lang/Integer: 1313696
+  java/lang/Long: 418272864
   java/lang/NamedPackage: 72
-  java/lang/Object: 1154628704
+  java/lang/Object: 1151868448
   java/lang/Package: 32
   java/lang/PublicMethods$MethodList: 48
   java/lang/RuntimeException: 40
   java/lang/StackTraceElement: 5880
   java/lang/StackWalker: 80
-  java/lang/String: 817974104
-  java/lang/StringBuffer: 1842208
-  java/lang/StringBuilder: 43005688
+  java/lang/String: 816111968
+  java/lang/StringBuffer: 1847968
+  java/lang/StringBuilder: 43032624
   java/lang/StringLatin1$CharsSpliterator: 64
   java/lang/StringUTF16$CharsSpliterator: 32
   java/lang/Thread: 112
@@ -1221,8 +1225,8 @@ bytes-by-type:
   java/lang/ref/WeakReference: 192
   java/lang/reflect/Constructor: 720
   java/lang/reflect/Method: 176
-  java/math/BigDecimal: 15684120
-  java/math/BigInteger: 15103920
+  java/math/BigDecimal: 15710880
+  java/math/BigInteger: 15123480
   java/net/URI: 27840
   java/net/URL: 62976
   java/net/URLClassLoader$1: 936
@@ -1238,36 +1242,36 @@ bytes-by-type:
   java/security/ProtectionDomain$Key: 16
   java/security/SecureClassLoader$1: 624
   java/security/SecureClassLoader$CodeSourceKey: 624
-  java/sql/SQLException: 6856752
-  java/sql/Timestamp: 6984288
-  java/text/Format: 13902112
-  java/text/MessageFormat: 9930080
-  java/time/Instant: 120492960
+  java/sql/SQLException: 6860304
+  java/sql/Timestamp: 6983712
+  java/text/Format: 13922664
+  java/text/MessageFormat: 9944760
+  java/time/Instant: 120595488
   java/time/LocalDate: 24
   java/time/LocalDateTime: 24
   java/time/LocalTime: 24
   java/time/temporal/ChronoField: 408
   java/time/temporal/ChronoUnit: 160
   java/util/AbstractMap$SimpleImmutableEntry: 107136
-  java/util/ArrayList: 43465128
+  java/util/ArrayList: 43502400
   java/util/ArrayList$ArrayListSpliterator: 64
-  java/util/ArrayList$Itr: 873750368
+  java/util/ArrayList$Itr: 874431136
   java/util/ArrayList$SubList: 1600
   java/util/ArrayList$SubList$1: 32
-  java/util/BitSet: 2947104
+  java/util/BitSet: 2947680
   java/util/Collections$SetFromMap: 24
   java/util/Collections$UnmodifiableCollection$1: 48
   java/util/Collections$UnmodifiableRandomAccessList: 24
   java/util/Formatter: 48
-  java/util/HashMap: 264372672
+  java/util/HashMap: 264599040
   java/util/HashMap$EntryIterator: 96
   java/util/HashMap$EntrySet: 32
-  java/util/HashMap$KeyIterator: 186876864
-  java/util/HashMap$KeySet: 62082480
-  java/util/HashMap$Node: 1893529720
-  java/util/HashMap$ValueIterator: 145137888
-  java/util/HashMap$Values: 7759664
-  java/util/HashSet: 80329664
+  java/util/HashMap$KeyIterator: 186731168
+  java/util/HashMap$KeySet: 62132992
+  java/util/HashMap$Node: 1895248936
+  java/util/HashMap$ValueIterator: 145260384
+  java/util/HashMap$Values: 7766768
+  java/util/HashSet: 80398016
   java/util/IdentityHashMap: 40
   java/util/IdentityHashMap$KeySet: 16
   java/util/ImmutableCollections$List12: 72
@@ -1290,24 +1294,24 @@ bytes-by-type:
   java/util/ServiceLoader$LazyClassPathLookupIterator: 80
   java/util/ServiceLoader$ModuleServicesLookupIterator: 64
   java/util/ServiceLoader$ProviderImpl: 64
-  java/util/TreeMap: 2467776
-  java/util/TreeMap$Entry: 2305560
-  java/util/TreeMap$EntryIterator: 770368
-  java/util/TreeMap$EntrySet: 385184
-  java/util/TreeSet: 52224
+  java/util/TreeMap: 2468112
+  java/util/TreeMap$Entry: 2299680
+  java/util/TreeMap$EntryIterator: 770464
+  java/util/TreeMap$EntrySet: 385232
+  java/util/TreeSet: 52240
   java/util/WeakHashMap$Entry: 13400
   java/util/concurrent/ConcurrentHashMap: 256
-  java/util/concurrent/ConcurrentHashMap$CounterCell: 1168
+  java/util/concurrent/ConcurrentHashMap$CounterCell: 1752
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 56
-  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 352
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 1248
-  java/util/concurrent/ConcurrentHashMap$Node: 18843824
+  java/util/concurrent/ConcurrentHashMap$ForwardingNode: 320
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 1296
+  java/util/concurrent/ConcurrentHashMap$Node: 18858368
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 64
-  java/util/concurrent/ConcurrentHashMap$ValueIterator: 79089696
+  java/util/concurrent/ConcurrentHashMap$ValueIterator: 79164288
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 48
-  java/util/concurrent/atomic/AtomicLong: 11640912
+  java/util/concurrent/atomic/AtomicLong: 11651568
   java/util/concurrent/atomic/AtomicReference: 352
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 416
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 352
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 96
   java/util/concurrent/locks/ReentrantLock: 96
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 192
@@ -1349,8 +1353,8 @@ bytes-by-type:
   jdk/internal/jimage/ImageLocation: 8448
   jdk/internal/loader/BuiltinClassLoader$2: 216
   jdk/internal/loader/URLClassPath$JarLoader$2: 13400
-  jdk/internal/math/DoubleToDecimal: 10311144
-  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 7629024
+  jdk/internal/math/DoubleToDecimal: 10310904
+  jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 7642304
   jdk/internal/math/FormattedFPDecimal: 320
   jdk/internal/misc/InternalLock: 16
   jdk/internal/org/objectweb/asm/ByteVector: 1512
@@ -1363,11 +1367,11 @@ bytes-by-type:
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 17664
   jdk/internal/reflect/DirectConstructorHandleAccessor: 240
   jdk/internal/reflect/DirectMethodHandleAccessor: 96
-  long: 423752
+  long: 405312
   org/apache/derbyTesting/system/oe/direct/OrderItem4Sort: 13407688
-  org/apache/derbyTesting/system/oe/model/Address: 7672640
-  org/apache/derbyTesting/system/oe/model/Customer: 19261440
-  org/apache/derbyTesting/system/oe/model/OrderLine: 1821008
+  org/apache/derbyTesting/system/oe/model/Address: 7673184
+  org/apache/derbyTesting/system/oe/model/Customer: 19294640
+  org/apache/derbyTesting/system/oe/model/OrderLine: 1822504
   org/dacapo/h2/TPCC$3: 3072
   org/h2/command/CommandContainer: 30720
   org/h2/command/Parser: 73728
@@ -1386,24 +1390,24 @@ bytes-by-type:
   org/h2/command/dml/Update: 12672
   org/h2/command/query/AllColumnsForPlan: 15552
   org/h2/command/query/Optimizer: 32256
-  org/h2/command/query/Query$OffsetFetch: 36642592
+  org/h2/command/query/Query$OffsetFetch: 36668704
   org/h2/command/query/QueryOrderBy: 1152
   org/h2/command/query/Select: 112896
-  org/h2/command/query/Select$LazyResultQueryFlat: 80712504
+  org/h2/command/query/Select$LazyResultQueryFlat: 80771040
   org/h2/command/query/SelectGroups$Grouped: 4032
-  org/h2/engine/SessionLocal$Savepoint: 48153456
+  org/h2/engine/SessionLocal$Savepoint: 48204936
   org/h2/expression/Alias: 1728
   org/h2/expression/BinaryOperation: 10560
   org/h2/expression/BinaryOperation$OpType: 160
-  org/h2/expression/Expression: 59040472
-  org/h2/expression/ExpressionColumn: 561921024
-  org/h2/expression/ExpressionVisitor: 81998720
+  org/h2/expression/Expression: 59119848
+  org/h2/expression/ExpressionColumn: 562697472
+  org/h2/expression/ExpressionVisitor: 82059680
   org/h2/expression/Parameter: 77568
   org/h2/expression/ValueExpression: 4608
   org/h2/expression/aggregate/Aggregate: 5184
   org/h2/expression/aggregate/AggregateDataCollecting: 127136
   org/h2/expression/aggregate/AggregateDataCollecting$NullCollectionMode: 104
-  org/h2/expression/aggregate/AggregateDataDefault: 482424
+  org/h2/expression/aggregate/AggregateDataDefault: 482496
   org/h2/expression/aggregate/AggregateType: 400
   org/h2/expression/condition/Comparison: 51456
   org/h2/expression/condition/ConditionAndOr: 26112
@@ -1414,64 +1418,64 @@ bytes-by-type:
   org/h2/index/IndexCondition: 52224
   org/h2/index/IndexCursor: 43008
   org/h2/jdbc/JdbcPreparedStatement: 77376
-  org/h2/jdbc/JdbcResultSet: 82478160
-  org/h2/jdbc/JdbcSQLNonTransientException: 13924160
+  org/h2/jdbc/JdbcResultSet: 82533816
+  org/h2/jdbc/JdbcSQLNonTransientException: 13953408
   org/h2/jdbc/JdbcSQLSyntaxErrorException: 64
-  org/h2/jdbc/JdbcSQLTransactionRollbackException: 981952
-  org/h2/message/DbException: 9316360
-  org/h2/mvstore/Cursor: 314229552
-  org/h2/mvstore/CursorPos: 1374275400
+  org/h2/jdbc/JdbcSQLTransactionRollbackException: 979072
+  org/h2/message/DbException: 9332840
+  org/h2/mvstore/Cursor: 314479200
+  org/h2/mvstore/CursorPos: 1372210176
   org/h2/mvstore/MVMap: 1760
-  org/h2/mvstore/MVMap$IntValueHolder: 154863184
-  org/h2/mvstore/MVStoreException: 613720
-  org/h2/mvstore/Page$Leaf: 420335376
-  org/h2/mvstore/Page$NonLeaf: 1107810760
-  org/h2/mvstore/Page$PageReference: 2776395008
-  org/h2/mvstore/RootReference: 1122251632
+  org/h2/mvstore/MVMap$IntValueHolder: 155011056
+  org/h2/mvstore/MVStoreException: 611920
+  org/h2/mvstore/Page$Leaf: 419373552
+  org/h2/mvstore/Page$NonLeaf: 1104375328
+  org/h2/mvstore/Page$PageReference: 2767977600
+  org/h2/mvstore/RootReference: 1117358936
   org/h2/mvstore/db/MVPrimaryIndex$MVStoreCursor: 360
-  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 96106912
-  org/h2/mvstore/tx/CommitDecisionMaker: 1421112
-  org/h2/mvstore/tx/Record: 182305648
-  org/h2/mvstore/tx/RollbackDecisionMaker: 4156160
-  org/h2/mvstore/tx/Snapshot: 553073424
-  org/h2/mvstore/tx/Transaction: 38799520
-  org/h2/mvstore/tx/TransactionMap: 847119448
-  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 65011200
-  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 89588072
-  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 40193984
-  org/h2/mvstore/tx/TxDecisionMaker: 847119448
+  org/h2/mvstore/db/MVSecondaryIndex$MVStoreCursor: 96186848
+  org/h2/mvstore/tx/CommitDecisionMaker: 1421184
+  org/h2/mvstore/tx/Record: 182076888
+  org/h2/mvstore/tx/RollbackDecisionMaker: 4155280
+  org/h2/mvstore/tx/Snapshot: 547251528
+  org/h2/mvstore/tx/Transaction: 38835040
+  org/h2/mvstore/tx/TransactionMap: 847915096
+  org/h2/mvstore/tx/TransactionMap$CommittedIterator: 65064000
+  org/h2/mvstore/tx/TransactionMap$RepeatableIterator: 89661488
+  org/h2/mvstore/tx/TransactionMap$ValidationIterator: 40223616
+  org/h2/mvstore/tx/TxDecisionMaker: 847915096
   org/h2/mvstore/tx/TxDecisionMaker$LockDecisionMaker: 3499720
-  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 968136512
-  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 964136832
-  org/h2/mvstore/tx/VersionedBitSet: 31993344
-  org/h2/mvstore/tx/VersionedValueUncommitted: 153771776
-  org/h2/result/DefaultRow: 254918048
-  org/h2/result/LocalResult: 187462912
-  org/h2/result/ResultWithGeneratedKeys: 32385504
-  org/h2/result/SearchRow: 111197184
-  org/h2/result/SimpleRowValue: 62896576
+  org/h2/mvstore/tx/TxDecisionMaker$PutIfAbsentDecisionMaker: 969045824
+  org/h2/mvstore/tx/TxDecisionMaker$RepeatableReadLockDecisionMaker: 965046144
+  org/h2/mvstore/tx/VersionedBitSet: 31971136
+  org/h2/mvstore/tx/VersionedValueUncommitted: 153241152
+  org/h2/result/DefaultRow: 255126208
+  org/h2/result/LocalResult: 187619952
+  org/h2/result/ResultWithGeneratedKeys: 32419296
+  org/h2/result/SearchRow: 110889984
+  org/h2/result/SimpleRowValue: 62937024
   org/h2/result/SortOrder: 1536
-  org/h2/result/Sparse: 378752480
+  org/h2/result/Sparse: 379065400
   org/h2/table/Column: 9312
   org/h2/table/IndexColumn: 54720
   org/h2/table/Plan: 16896
   org/h2/table/PlanItem: 28800
-  org/h2/table/Table: 4607480
+  org/h2/table/Table: 4616088
   org/h2/table/TableFilter: 138624
   org/h2/util/Permutations: 960
   org/h2/value/TypeInfo: 9984
-  org/h2/value/Value: 925006312
-  org/h2/value/ValueBigint: 15533312
-  org/h2/value/ValueChar: 3897744
-  org/h2/value/ValueDouble: 17198088
-  org/h2/value/ValueInteger: 6383600
-  org/h2/value/ValueNumeric: 41986200
+  org/h2/value/Value: 925752176
+  org/h2/value/ValueBigint: 15546224
+  org/h2/value/ValueChar: 3900648
+  org/h2/value/ValueDouble: 17218416
+  org/h2/value/ValueInteger: 6393744
+  org/h2/value/ValueNumeric: 42003192
   org/h2/value/ValueRow: 24
-  org/h2/value/ValueSmallint: 60676192
-  org/h2/value/ValueTimestamp: 1900256
-  org/h2/value/ValueTimestampTimeZone: 1043616
-  org/h2/value/ValueVarchar: 11235432
-  org/h2/value/VersionedValue: 153627736
+  org/h2/value/ValueSmallint: 60724544
+  org/h2/value/ValueTimestamp: 1900512
+  org/h2/value/ValueTimestampTimeZone: 1044160
+  org/h2/value/ValueVarchar: 11243376
+  org/h2/value/VersionedValue: 153265056
   short: 3527504
   sun/net/www/MessageHeader: 22752
   sun/net/www/protocol/file/FileURLConnection: 62400

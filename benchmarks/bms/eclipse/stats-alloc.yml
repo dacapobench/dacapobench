@@ -1,211 +1,214 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 87520188
-bytes-allocated: 7454430248
+objects-allocated: 87529072
+bytes-allocated: 7456843264
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 2406785
-  24: 33796238
-  32: 11253435
-  40: 7548921
-  48: 6946923
-  56: 7245587
-  64: 2872022
-  72: 3384738
-  80: 2780060
-  88: 1817891
-  96: 915893
-  104: 796825
-  112: 497308
-  120: 521006
-  128: 938441
-  136: 419329
-  144: 1208828
-  152: 264392
-  160: 159551
-  168: 133469
-  176: 203490
-  184: 124059
-  192: 115782
-  200: 94982
-  208: 74095
-  216: 55037
-  224: 57965
-  232: 29593
-  240: 24798
-  248: 21625
-  256: 74161
-  264: 98684
-  272: 37326
-  280: 17861
-  288: 14964
-  296: 52633
-  304: 13538
-  312: 13086
-  320: 12902
-  328: 13780
-  336: 16363
-  344: 14522
-  352: 14669
-  360: 13336
-  368: 12315
-  376: 16478
-  384: 9182
-  392: 7549
-  400: 6318
+  16: 2407336
+  24: 33802049
+  32: 11252589
+  40: 7548170
+  48: 6947073
+  56: 7245744
+  64: 2872524
+  72: 3385370
+  80: 2780481
+  88: 1818171
+  96: 916109
+  104: 796931
+  112: 497361
+  120: 521127
+  128: 938579
+  136: 419560
+  144: 1208945
+  152: 264426
+  160: 159587
+  168: 133482
+  176: 203551
+  184: 124184
+  192: 115789
+  200: 95016
+  208: 74141
+  216: 55046
+  224: 57991
+  232: 29610
+  240: 24817
+  248: 21639
+  256: 74244
+  264: 98764
+  272: 37345
+  280: 17874
+  288: 14975
+  296: 52654
+  304: 13560
+  312: 13107
+  320: 12913
+  328: 13782
+  336: 16377
+  344: 14535
+  352: 14693
+  360: 13340
+  368: 12312
+  376: 16479
+  384: 9186
+  392: 7544
+  400: 6317
   408: 9152
-  416: 30882
-  424: 6670
-  432: 3907
-  440: 3260
+  416: 30888
+  424: 6666
+  432: 3906
+  440: 3261
   448: 3161
   456: 3024
-  464: 2123
-  472: 2119
+  464: 2124
+  472: 2111
   480: 2009
-  488: 2411
-  496: 1822
-  504: 2803
-  512: 8148
-  520: 1655
+  488: 2412
+  496: 1824
+  504: 2804
+  512: 8144
+  520: 1656
   528: 5193
-  536: 1451
+  536: 1453
   544: 1095
   552: 1229
-  560: 1562
+  560: 1552
   568: 1121
   576: 1122
-  584: 12853
-  592: 1026
+  584: 12864
+  592: 1030
   600: 871
-  608: 836
-  616: 1008
-  624: 1005
-  632: 744
+  608: 840
+  616: 1006
+  624: 1006
+  632: 745
   640: 723
-  648: 747
-  656: 1337
-  664: 745
-  672: 1146
-  680: 694
-  688: 597
+  648: 749
+  656: 1336
+  664: 743
+  672: 1147
+  680: 696
+  688: 595
   696: 547
-  704: 648
-  712: 753
+  704: 647
+  712: 772
   720: 2117
-  728: 650
+  728: 646
   736: 672
   744: 1097
-  752: 666
+  752: 677
   760: 501
   768: 611
-  776: 5163
-  784: 859
+  776: 5165
+  784: 861
   792: 517
-  800: 521
-  808: 566
-  816: 1046
-  824: 540
-  832: 494
+  800: 518
+  808: 568
+  816: 1050
+  824: 544
+  832: 496
   840: 1825
-  848: 504
-  856: 635
+  848: 510
+  856: 638
   864: 636
-  872: 565
-  880: 654
+  872: 567
+  880: 652
   888: 540
   896: 548
-  904: 401
+  904: 403
   912: 429
   920: 377
   928: 376
-  936: 387
-  944: 390
+  936: 388
+  944: 395
   952: 1303
   960: 342
-  968: 656
-  976: 323
-  984: 337
-  992: 340
-  1000: 1192
-  1008: 567
-  1016: 6230
+  968: 658
+  976: 325
+  984: 338
+  992: 342
+  1000: 1190
+  1008: 569
+  1016: 6228
   1024: 445
   1032: 373
-  1040: 8567
-  1048: 1287
+  1040: 8569
+  1048: 1289
   1056: 586
   1064: 416
-  1072: 356
+  1072: 354
   1080: 241
-  1088: 373
+  1088: 371
   1096: 282
   1104: 434
   1112: 349
   1120: 454
   1128: 418
-  1136: 337
-  1144: 287
+  1136: 340
+  1144: 289
   1152: 254
-  1160: 2792
+  1160: 2795
   1168: 384
   1176: 483
-  1184: 281
+  1184: 279
   1192: 333
   1200: 286
-  1208: 275
-  1216: 340
+  1208: 272
+  1216: 341
   1224: 291
-  1232: 384
-  1240: 343
+  1232: 382
+  1240: 342
   1248: 234
-  1256: 353
-  1264: 218
+  1256: 355
+  1264: 220
   1272: 660
-  1280: 351
+  1280: 353
   1288: 213
-  1296: 376
-  1304: 201
-  1312: 456
+  1296: 379
+  1304: 202
+  1312: 455
   1320: 254
-  1328: 245
-  1336: 511
-  1344: 613
+  1328: 243
+  1336: 512
+  1344: 614
   1352: 364
   1360: 171
   1368: 223
-  1376: 263
+  1376: 261
   1384: 244
   1392: 247
-  1400: 276
+  1400: 286
   1408: 225
-  1416: 294
-  1424: 237
-  1432: 522
-  1440: 610
+  1416: 304
+  1424: 239
+  1432: 524
+  1440: 611
   1448: 236
-  1456: 246
+  1456: 247
   1464: 194
-  1472: 211
-  1480: 221
+  1472: 209
+  1480: 223
   1488: 484
   1496: 215
   1504: 274
-  1512: 236
-  1520: 584
+  1512: 237
+  1520: 583
   1528: 267
   1536: 270
-  1544: 184
-  1552: 190
-  1560: 254
-  1568: 490
-  1576: 157
+  1544: 182
+  1552: 188
+  1560: 253
+  1568: 494
+  1576: 158
   1584: 192
   1592: 234
   1600: 187
   1608: 308
-  1616: 510
+  1616: 511
   1624: 334
   1632: 844
   1640: 194
@@ -217,7 +220,7 @@ objects-by-size:
   1688: 304
   1696: 180
   1704: 323
-  1712: 187
+  1712: 186
   1720: 155
   1728: 195
   1736: 298
@@ -230,7 +233,7 @@ objects-by-size:
   1792: 359
   1800: 159
   1808: 278
-  1816: 174
+  1816: 173
   1824: 140
   1832: 160
   1840: 118
@@ -243,7 +246,7 @@ objects-by-size:
   1896: 177
   1904: 189
   1912: 156
-  1920: 736
+  1920: 740
   1928: 170
   1936: 209
   1944: 133
@@ -254,13 +257,13 @@ objects-by-size:
   1984: 190
   1992: 100
   2000: 144
-  2008: 164
+  2008: 165
   2016: 149
   2024: 117
   2032: 193
   2040: 148
   2048: 133
-  2056: 180
+  2056: 179
   2064: 1687
   2072: 164
   2080: 173
@@ -274,14 +277,14 @@ objects-by-size:
   2144: 119
   2152: 134
   2160: 126
-  2168: 153
+  2168: 154
   2176: 101
   2184: 159
-  2192: 136
+  2192: 137
   2200: 118
   2208: 103
   2216: 127
-  2224: 174
+  2224: 173
   2232: 125
   2240: 295
   2248: 117
@@ -313,21 +316,21 @@ objects-by-size:
   2456: 121
   2464: 146
   2472: 135
-  2480: 108
+  2480: 107
   2488: 115
   2496: 155
   2504: 10062
   2512: 119
   2520: 106
-  2528: 134
+  2528: 135
   2536: 176
   2544: 74
   2552: 79
   2560: 111
   2568: 98
-  2576: 203
+  2576: 205
   2584: 102
-  2592: 121
+  2592: 122
   2600: 124
   2608: 151
   2616: 102
@@ -343,7 +346,7 @@ objects-by-size:
   2696: 92
   2704: 102
   2712: 73
-  2720: 148
+  2720: 149
   2728: 84
   2736: 90
   2744: 107
@@ -354,7 +357,7 @@ objects-by-size:
   2784: 77
   2792: 66
   2800: 103
-  2808: 110
+  2808: 115
   2816: 120
   2824: 64
   2832: 73
@@ -365,47 +368,47 @@ objects-by-size:
   2872: 79
   2880: 61
   2888: 78
-  2896: 64
+  2896: 65
   2904: 76
   2912: 94
   2920: 90
   2928: 576
   2936: 93
   2944: 261
-  2952: 140
-  2960: 67
+  2952: 142
+  2960: 68
   2968: 190
   2976: 116
   2984: 61
   2992: 77
   3000: 111
   3008: 81
-  3016: 551
+  3016: 547
   3024: 98
   3032: 306
   3040: 102
   3048: 117
   3056: 70
-  3064: 738
+  3064: 741
   3072: 71
   3080: 78
   3088: 78
   3096: 109
   3104: 103
   3112: 77
-  3120: 51
-  3128: 730
-  3136: 141
+  3120: 52
+  3128: 734
+  3136: 143
   3144: 112
   3152: 59
   3160: 88
-  3168: 740
+  3168: 744
   3176: 91
   3184: 78
   3192: 67
   3200: 103
   3208: 81
-  3216: 128
+  3216: 130
   3224: 217
   3232: 88
   3240: 68
@@ -417,14 +420,14 @@ objects-by-size:
   3288: 69
   3296: 70
   3304: 48
-  3312: 580
+  3312: 579
   3320: 119
   3328: 99
   3336: 68
   3344: 39
   3352: 99
   3360: 496
-  3368: 85
+  3368: 86
   3376: 68
   3384: 72
   3392: 71
@@ -489,7 +492,7 @@ objects-by-size:
   3864: 30
   3872: 60
   3880: 153
-  3888: 87
+  3888: 106
   3896: 71
   3904: 57
   3912: 58
@@ -738,7 +741,7 @@ objects-by-size:
   5856: 48
   5864: 25
   5872: 35
-  5880: 348
+  5880: 349
   5888: 55
   5896: 90
   5904: 41
@@ -755,13 +758,13 @@ objects-by-size:
   5992: 48
   6000: 40
   6008: 13
-  6016: 138
+  6016: 142
   6024: 24
   6032: 27
   6040: 27
   6048: 41
   6056: 56
-  6064: 64
+  6064: 66
   6072: 37
   6080: 31
   6088: 48
@@ -787,7 +790,7 @@ objects-by-size:
   6248: 34
   6256: 36
   6264: 26
-  6272: 66
+  6272: 68
   6280: 15
   6288: 16
   6296: 21
@@ -920,7 +923,7 @@ objects-by-size:
   7312: 15
   7320: 28
   7328: 10
-  7336: 21
+  7336: 22
   7344: 16
   7352: 33
   7360: 38
@@ -1028,7 +1031,7 @@ objects-by-size:
   8184: 16
   8192: 7
   8200: 19
-  8208: 43857
+  8208: 43921
   8216: 19
   8224: 13
   8232: 38
@@ -1494,7 +1497,7 @@ objects-by-size:
   11992: 9
   12000: 1
   12008: 3
-  12016: 43
+  12016: 46
   12024: 12
   12032: 15
   12040: 7
@@ -1505,7 +1508,7 @@ objects-by-size:
   12080: 4
   12088: 20
   12096: 7
-  12104: 24
+  12104: 25
   12112: 4
   12120: 12
   12128: 1
@@ -1516,7 +1519,7 @@ objects-by-size:
   12168: 2
   12176: 1
   12184: 5
-  12192: 25
+  12192: 23
   12200: 3
   12208: 8
   12216: 13
@@ -1533,7 +1536,7 @@ objects-by-size:
   12304: 20
   12320: 19
   12328: 2
-  12336: 34
+  12336: 28
   12344: 5
   12352: 24
   12360: 21
@@ -1558,7 +1561,7 @@ objects-by-size:
   12520: 1
   12528: 8
   12536: 2
-  12544: 42
+  12544: 44
   12552: 6
   12568: 4
   12576: 27
@@ -1975,7 +1978,7 @@ objects-by-size:
   16376: 4
   16384: 6
   16392: 3
-  16400: 5099
+  16400: 5097
   16408: 3
   16416: 3
   16424: 2
@@ -2527,7 +2530,6 @@ objects-by-size:
   24344: 10
   24352: 5
   24368: 11
-  24376: 2
   24384: 1
   24400: 7
   24408: 2
@@ -2544,7 +2546,7 @@ objects-by-size:
   24592: 2
   24616: 5
   24624: 7
-  24648: 12
+  24648: 9
   24656: 14
   24672: 2
   24752: 2
@@ -2563,7 +2565,7 @@ objects-by-size:
   25000: 6
   25008: 8
   25048: 6
-  25088: 14
+  25088: 16
   25112: 2
   25128: 8
   25136: 1
@@ -2694,7 +2696,7 @@ objects-by-size:
   27608: 1
   27616: 8
   27648: 7
-  27656: 29
+  27656: 30
   27664: 1
   27680: 2
   27696: 2
@@ -3608,7 +3610,7 @@ objects-by-size:
   335032: 10
   344064: 4
   358400: 2
-  377264: 168
+  377264: 171
   401408: 4
   430080: 4
   442376: 2
@@ -3622,208 +3624,209 @@ objects-by-size:
   1903384: 737
   3538952: 2
   8388624: 1
-# number of bytres allocated for each object size
-  16: 38508560
-  24: 811109712
-  32: 360109920
-  40: 301956840
-  48: 333452304
-  56: 405752872
-  64: 183809408
-  72: 243701136
-  80: 222404800
-  88: 159974408
-  96: 87925728
-  104: 82869800
-  112: 55698496
-  120: 62520720
-  128: 120120448
-  136: 57028744
-  144: 174071232
-  152: 40187584
-  160: 25528160
-  168: 22422792
-  176: 35814240
-  184: 22826856
-  192: 22230144
-  200: 18996400
-  208: 15411760
-  216: 11887992
-  224: 12984160
-  232: 6865576
-  240: 5951520
-  248: 5363000
-  256: 18985216
-  264: 26052576
-  272: 10152672
-  280: 5001080
-  288: 4309632
-  296: 15579368
-  304: 4115552
-  312: 4082832
-  320: 4128640
-  328: 4519840
-  336: 5497968
-  344: 4995568
-  352: 5163488
-  360: 4800960
-  368: 4531920
-  376: 6195728
-  384: 3525888
-  392: 2959208
-  400: 2527200
+# number of bytes allocated for each object size
+bytes-by-size: 
+  16: 38517376
+  24: 811249176
+  32: 360082848
+  40: 301926800
+  48: 333459504
+  56: 405761664
+  64: 183841536
+  72: 243746640
+  80: 222438480
+  88: 159999048
+  96: 87946464
+  104: 82880824
+  112: 55704432
+  120: 62535240
+  128: 120138112
+  136: 57060160
+  144: 174088080
+  152: 40192752
+  160: 25533920
+  168: 22424976
+  176: 35824976
+  184: 22849856
+  192: 22231488
+  200: 19003200
+  208: 15421328
+  216: 11889936
+  224: 12989984
+  232: 6869520
+  240: 5956080
+  248: 5366472
+  256: 19006464
+  264: 26073696
+  272: 10157840
+  280: 5004720
+  288: 4312800
+  296: 15585584
+  304: 4122240
+  312: 4089384
+  320: 4132160
+  328: 4520496
+  336: 5502672
+  344: 5000040
+  352: 5171936
+  360: 4802400
+  368: 4530816
+  376: 6196104
+  384: 3527424
+  392: 2957248
+  400: 2526800
   408: 3734016
-  416: 12846912
-  424: 2828080
-  432: 1687824
-  440: 1434400
+  416: 12849408
+  424: 2826384
+  432: 1687392
+  440: 1434840
   448: 1416128
   456: 1378944
-  464: 985072
-  472: 1000168
+  464: 985536
+  472: 996392
   480: 964320
-  488: 1176568
-  496: 903712
-  504: 1412712
-  512: 4171776
-  520: 860600
+  488: 1177056
+  496: 904704
+  504: 1413216
+  512: 4169728
+  520: 861120
   528: 2741904
-  536: 777736
+  536: 778808
   544: 595680
   552: 678408
-  560: 874720
+  560: 869120
   568: 636728
   576: 646272
-  584: 7506152
-  592: 607392
+  584: 7512576
+  592: 609760
   600: 522600
-  608: 508288
-  616: 620928
-  624: 627120
-  632: 470208
+  608: 510720
+  616: 619696
+  624: 627744
+  632: 470840
   640: 462720
-  648: 484056
-  656: 877072
-  664: 494680
-  672: 770112
-  680: 471920
-  688: 410736
+  648: 485352
+  656: 876416
+  664: 493352
+  672: 770784
+  680: 473280
+  688: 409360
   696: 380712
-  704: 456192
-  712: 536136
+  704: 455488
+  712: 549664
   720: 1524240
-  728: 473200
+  728: 470288
   736: 494592
   744: 816168
-  752: 500832
+  752: 509104
   760: 380760
   768: 469248
-  776: 4006488
-  784: 673456
+  776: 4008040
+  784: 675024
   792: 409464
-  800: 416800
-  808: 457328
-  816: 853536
-  824: 444960
-  832: 411008
+  800: 414400
+  808: 458944
+  816: 856800
+  824: 448256
+  832: 412672
   840: 1533000
-  848: 427392
-  856: 543560
+  848: 432480
+  856: 546128
   864: 549504
-  872: 492680
-  880: 575520
+  872: 494424
+  880: 573760
   888: 479520
   896: 491008
-  904: 362504
+  904: 364312
   912: 391248
   920: 346840
   928: 348928
-  936: 362232
-  944: 368160
+  936: 363168
+  944: 372880
   952: 1240456
   960: 328320
-  968: 635008
-  976: 315248
-  984: 331608
-  992: 337280
-  1000: 1192000
-  1008: 571536
-  1016: 6329680
+  968: 636944
+  976: 317200
+  984: 332592
+  992: 339264
+  1000: 1190000
+  1008: 573552
+  1016: 6327648
   1024: 455680
   1032: 384936
-  1040: 8909680
-  1048: 1348776
+  1040: 8911760
+  1048: 1350872
   1056: 618816
   1064: 442624
-  1072: 381632
+  1072: 379488
   1080: 260280
-  1088: 405824
+  1088: 403648
   1096: 309072
   1104: 479136
   1112: 388088
   1120: 508480
   1128: 471504
-  1136: 382832
-  1144: 328328
+  1136: 386240
+  1144: 330616
   1152: 292608
-  1160: 3238720
+  1160: 3242200
   1168: 448512
   1176: 568008
-  1184: 332704
+  1184: 330336
   1192: 396936
   1200: 343200
-  1208: 332200
-  1216: 413440
+  1208: 328576
+  1216: 414656
   1224: 356184
-  1232: 473088
-  1240: 425320
+  1232: 470624
+  1240: 424080
   1248: 292032
-  1256: 443368
-  1264: 275552
+  1256: 445880
+  1264: 278080
   1272: 839520
-  1280: 449280
+  1280: 451840
   1288: 274344
-  1296: 487296
-  1304: 262104
-  1312: 598272
+  1296: 491184
+  1304: 263408
+  1312: 596960
   1320: 335280
-  1328: 325360
-  1336: 682696
-  1344: 823872
+  1328: 322704
+  1336: 684032
+  1344: 825216
   1352: 492128
   1360: 232560
   1368: 305064
-  1376: 361888
+  1376: 359136
   1384: 337696
   1392: 343824
-  1400: 386400
+  1400: 400400
   1408: 316800
-  1416: 416304
-  1424: 337488
-  1432: 747504
-  1440: 878400
+  1416: 430464
+  1424: 340336
+  1432: 750368
+  1440: 879840
   1448: 341728
-  1456: 358176
+  1456: 359632
   1464: 284016
-  1472: 310592
-  1480: 327080
+  1472: 307648
+  1480: 330040
   1488: 720192
   1496: 321640
   1504: 412096
-  1512: 356832
-  1520: 887680
+  1512: 358344
+  1520: 886160
   1528: 407976
   1536: 414720
-  1544: 284096
-  1552: 294880
-  1560: 396240
-  1568: 768320
-  1576: 247432
+  1544: 281008
+  1552: 291776
+  1560: 394680
+  1568: 774592
+  1576: 249008
   1584: 304128
   1592: 372528
   1600: 299200
   1608: 495264
-  1616: 824160
+  1616: 825776
   1624: 542416
   1632: 1377408
   1640: 318160
@@ -3835,7 +3838,7 @@ objects-by-size:
   1688: 513152
   1696: 305280
   1704: 550392
-  1712: 320144
+  1712: 318432
   1720: 266600
   1728: 336960
   1736: 517328
@@ -3848,7 +3851,7 @@ objects-by-size:
   1792: 643328
   1800: 286200
   1808: 502624
-  1816: 315984
+  1816: 314168
   1824: 255360
   1832: 293120
   1840: 217120
@@ -3861,7 +3864,7 @@ objects-by-size:
   1896: 335592
   1904: 359856
   1912: 298272
-  1920: 1413120
+  1920: 1420800
   1928: 327760
   1936: 404624
   1944: 258552
@@ -3872,13 +3875,13 @@ objects-by-size:
   1984: 376960
   1992: 199200
   2000: 288000
-  2008: 329312
+  2008: 331320
   2016: 300384
   2024: 236808
   2032: 392176
   2040: 301920
   2048: 272384
-  2056: 370080
+  2056: 368024
   2064: 3481968
   2072: 339808
   2080: 359840
@@ -3892,14 +3895,14 @@ objects-by-size:
   2144: 255136
   2152: 288368
   2160: 272160
-  2168: 331704
+  2168: 333872
   2176: 219776
   2184: 347256
-  2192: 298112
+  2192: 300304
   2200: 259600
   2208: 227424
   2216: 281432
-  2224: 386976
+  2224: 384752
   2232: 279000
   2240: 660800
   2248: 263016
@@ -3931,21 +3934,21 @@ objects-by-size:
   2456: 297176
   2464: 359744
   2472: 333720
-  2480: 267840
+  2480: 265360
   2488: 286120
   2496: 386880
   2504: 25195248
   2512: 298928
   2520: 267120
-  2528: 338752
+  2528: 341280
   2536: 446336
   2544: 188256
   2552: 201608
   2560: 284160
   2568: 251664
-  2576: 522928
+  2576: 528080
   2584: 263568
-  2592: 313632
+  2592: 316224
   2600: 322400
   2608: 393808
   2616: 266832
@@ -3961,7 +3964,7 @@ objects-by-size:
   2696: 248032
   2704: 275808
   2712: 197976
-  2720: 402560
+  2720: 405280
   2728: 229152
   2736: 246240
   2744: 293608
@@ -3972,7 +3975,7 @@ objects-by-size:
   2784: 214368
   2792: 184272
   2800: 288400
-  2808: 308880
+  2808: 322920
   2816: 337920
   2824: 180736
   2832: 206736
@@ -3983,47 +3986,47 @@ objects-by-size:
   2872: 226888
   2880: 175680
   2888: 225264
-  2896: 185344
+  2896: 188240
   2904: 220704
   2912: 273728
   2920: 262800
   2928: 1686528
   2936: 273048
   2944: 768384
-  2952: 413280
-  2960: 198320
+  2952: 419184
+  2960: 201280
   2968: 563920
   2976: 345216
   2984: 182024
   2992: 230384
   3000: 333000
   3008: 243648
-  3016: 1661816
+  3016: 1649752
   3024: 296352
   3032: 927792
   3040: 310080
   3048: 356616
   3056: 213920
-  3064: 2261232
+  3064: 2270424
   3072: 218112
   3080: 240240
   3088: 240864
   3096: 337464
   3104: 319712
   3112: 239624
-  3120: 159120
-  3128: 2283440
-  3136: 442176
+  3120: 162240
+  3128: 2295952
+  3136: 448448
   3144: 352128
   3152: 185968
   3160: 278080
-  3168: 2344320
+  3168: 2356992
   3176: 289016
   3184: 248352
   3192: 213864
   3200: 329600
   3208: 259848
-  3216: 411648
+  3216: 418080
   3224: 699608
   3232: 284416
   3240: 220320
@@ -4035,14 +4038,14 @@ objects-by-size:
   3288: 226872
   3296: 230720
   3304: 158592
-  3312: 1920960
+  3312: 1917648
   3320: 395080
   3328: 329472
   3336: 226848
   3344: 130416
   3352: 331848
   3360: 1666560
-  3368: 286280
+  3368: 289648
   3376: 229568
   3384: 243648
   3392: 240832
@@ -4107,7 +4110,7 @@ objects-by-size:
   3864: 115920
   3872: 232320
   3880: 593640
-  3888: 338256
+  3888: 412128
   3896: 276616
   3904: 222528
   3912: 226896
@@ -4356,7 +4359,7 @@ objects-by-size:
   5856: 281088
   5864: 146600
   5872: 205520
-  5880: 2046240
+  5880: 2052120
   5888: 323840
   5896: 530640
   5904: 242064
@@ -4373,13 +4376,13 @@ objects-by-size:
   5992: 287616
   6000: 240000
   6008: 78104
-  6016: 830208
+  6016: 854272
   6024: 144576
   6032: 162864
   6040: 163080
   6048: 247968
   6056: 339136
-  6064: 388096
+  6064: 400224
   6072: 224664
   6080: 188480
   6088: 292224
@@ -4405,7 +4408,7 @@ objects-by-size:
   6248: 212432
   6256: 225216
   6264: 162864
-  6272: 413952
+  6272: 426496
   6280: 94200
   6288: 100608
   6296: 132216
@@ -4538,7 +4541,7 @@ objects-by-size:
   7312: 109680
   7320: 204960
   7328: 73280
-  7336: 154056
+  7336: 161392
   7344: 117504
   7352: 242616
   7360: 279680
@@ -4646,7 +4649,7 @@ objects-by-size:
   8184: 130944
   8192: 57344
   8200: 155800
-  8208: 359978256
+  8208: 360503568
   8216: 156104
   8224: 106912
   8232: 312816
@@ -5112,7 +5115,7 @@ objects-by-size:
   11992: 107928
   12000: 12000
   12008: 36024
-  12016: 516688
+  12016: 552736
   12024: 144288
   12032: 180480
   12040: 84280
@@ -5123,7 +5126,7 @@ objects-by-size:
   12080: 48320
   12088: 241760
   12096: 84672
-  12104: 290496
+  12104: 302600
   12112: 48448
   12120: 145440
   12128: 12128
@@ -5134,7 +5137,7 @@ objects-by-size:
   12168: 24336
   12176: 12176
   12184: 60920
-  12192: 304800
+  12192: 280416
   12200: 36600
   12208: 97664
   12216: 158808
@@ -5151,7 +5154,7 @@ objects-by-size:
   12304: 246080
   12320: 234080
   12328: 24656
-  12336: 419424
+  12336: 345408
   12344: 61720
   12352: 296448
   12360: 259560
@@ -5176,7 +5179,7 @@ objects-by-size:
   12520: 12520
   12528: 100224
   12536: 25072
-  12544: 526848
+  12544: 551936
   12552: 75312
   12568: 50272
   12576: 339552
@@ -5593,7 +5596,7 @@ objects-by-size:
   16376: 65504
   16384: 98304
   16392: 49176
-  16400: 83623600
+  16400: 83590800
   16408: 49224
   16416: 49248
   16424: 32848
@@ -6145,7 +6148,6 @@ objects-by-size:
   24344: 243440
   24352: 121760
   24368: 268048
-  24376: 48752
   24384: 24384
   24400: 170800
   24408: 48816
@@ -6162,7 +6164,7 @@ objects-by-size:
   24592: 49184
   24616: 123080
   24624: 172368
-  24648: 295776
+  24648: 221832
   24656: 345184
   24672: 49344
   24752: 49504
@@ -6181,7 +6183,7 @@ objects-by-size:
   25000: 150000
   25008: 200064
   25048: 150288
-  25088: 351232
+  25088: 401408
   25112: 50224
   25128: 201024
   25136: 25136
@@ -6312,7 +6314,7 @@ objects-by-size:
   27608: 27608
   27616: 220928
   27648: 193536
-  27656: 802024
+  27656: 829680
   27664: 27664
   27680: 55360
   27696: 55392
@@ -7226,7 +7228,7 @@ objects-by-size:
   335032: 3350320
   344064: 1376256
   358400: 716800
-  377264: 63380352
+  377264: 64512144
   401408: 1605632
   430080: 1720320
   442376: 884752
@@ -7242,19 +7244,19 @@ objects-by-size:
   8388624: 8388624
 # number of objects allocated for each class
 objects-by-type: 
-  B: 444526
+  B: 444600
   I: 6
   [B: 4070
-  [C: 4302944
+  [C: 4304514
   [I: 1135
   [J: 201337
   [[C: 47281
-  [[I: 14091
+  [[I: 14101
   [[S: 234
   [[[[C: 2
-  boolean: 55151
-  byte: 9337055
-  char: 23958717
+  boolean: 55139
+  byte: 9341211
+  char: 23964201
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 14652
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 8989
   com/google/monitoring/runtime/instrumentation/StaticClassWriter: 1175
@@ -7367,25 +7369,25 @@ objects-by-type:
   com/sun/xml/internal/stream/Entity$ScannedEntity: 154
   com/sun/xml/internal/stream/XMLEntityStorage: 118
   com/sun/xml/internal/stream/util/BufferAllocator: 3
-  double: 7
+  double: 6
   float: 5
-  int: 3415824
-  java/io/BufferedInputStream: 46948
-  java/io/BufferedOutputStream: 1410
-  java/io/BufferedWriter: 336
+  int: 3417000
+  java/io/BufferedInputStream: 46984
+  java/io/BufferedOutputStream: 1438
+  java/io/BufferedWriter: 334
   java/io/ByteArrayInputStream: 3120
   java/io/ByteArrayOutputStream: 11008
   java/io/DataInputStream: 39
-  java/io/DataOutputStream: 1392
+  java/io/DataOutputStream: 1420
   java/io/EOFException: 19
-  java/io/File: 177554
-  java/io/FileCleanable: 22785
-  java/io/FileDescriptor: 22837
-  java/io/FileInputStream: 16816
-  java/io/FileInputStream$1: 16816
-  java/io/FileOutputStream: 4751
-  java/io/FileOutputStream$1: 4751
-  java/io/FileWriter: 251
+  java/io/File: 177838
+  java/io/FileCleanable: 22810
+  java/io/FileDescriptor: 22862
+  java/io/FileInputStream: 16815
+  java/io/FileInputStream$1: 16815
+  java/io/FileOutputStream: 4777
+  java/io/FileOutputStream$1: 4777
+  java/io/FileWriter: 249
   java/io/InputStreamReader: 367
   java/io/ObjectStreamField: 25
   java/io/OutputStreamWriter: 145
@@ -7395,28 +7397,27 @@ objects-by-type:
   java/io/StringReader: 116
   java/io/StringWriter: 39
   java/lang/Byte: 327
-  java/lang/Class: 2179
+  java/lang/Class: 2174
   java/lang/Class$3: 1
   java/lang/Class$ReflectionData: 22
   java/lang/ClassNotFoundException: 26
-  java/lang/CompoundEnumeration: 375
+  java/lang/CompoundEnumeration: 369
   java/lang/Double: 90
-  java/lang/Exception: 797
+  java/lang/Exception: 822
   java/lang/Float: 23917
-  java/lang/IllegalArgumentException: 1
   java/lang/IndexOutOfBoundsException: 17
-  java/lang/Integer: 490815
+  java/lang/Integer: 490829
   java/lang/Long: 891
-  java/lang/Object: 2095018
+  java/lang/Object: 2095686
   java/lang/Package: 16
   java/lang/PublicMethods$MethodList: 2
-  java/lang/String: 7624599
-  java/lang/StringBuffer: 370165
-  java/lang/StringBuilder: 1018178
+  java/lang/String: 7625668
+  java/lang/StringBuffer: 370317
+  java/lang/StringBuilder: 1018614
   java/lang/StringLatin1$CharsSpliterator: 4
   java/lang/StringUTF16$CharsSpliterator: 2
   java/lang/Thread: 238
-  java/lang/Thread$FieldHolder: 557
+  java/lang/Thread$FieldHolder: 570
   java/lang/ThreadLocal: 4211
   java/lang/TypeNotPresentException: 477
   java/lang/UnsatisfiedLinkError: 2
@@ -7442,13 +7443,13 @@ objects-by-type:
   java/lang/invoke/InvokerBytecodeGenerator$ClassData: 42
   java/lang/invoke/Invokers: 9
   java/lang/invoke/LambdaForm: 55
-  java/lang/invoke/LambdaForm$Name: 344
+  java/lang/invoke/LambdaForm$Name: 380
   java/lang/invoke/LambdaForm$NamedFunction: 54
   java/lang/invoke/LambdaFormBuffer: 12
   java/lang/invoke/LambdaFormEditor: 271
   java/lang/invoke/LambdaFormEditor$Transform: 14
   java/lang/invoke/LambdaFormEditor$TransformKey: 271
-  java/lang/invoke/MemberName: 2123
+  java/lang/invoke/MemberName: 2121
   java/lang/invoke/MethodHandle: 15
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 5
   java/lang/invoke/MethodHandleImpl$IntrinsicMethodHandle: 78
@@ -7456,12 +7457,12 @@ objects-by-type:
   java/lang/invoke/MethodHandles$Lookup: 587
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 301
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 301
-  java/lang/invoke/MethodType: 2550
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 750
+  java/lang/invoke/MethodType: 2544
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 748
   java/lang/invoke/MethodTypeForm: 89
   java/lang/invoke/SimpleMethodHandle: 78
   java/lang/invoke/TypeConvertingMethodAdapter: 1
-  java/lang/invoke/VarHandle$AccessDescriptor: 10
+  java/lang/invoke/VarHandle$AccessDescriptor: 9
   java/lang/invoke/VarHandle$AccessMode: 2
   java/lang/ref/ReferenceQueue: 4151
   java/lang/ref/SoftReference: 16826
@@ -7469,8 +7470,8 @@ objects-by-type:
   java/lang/reflect/Constructor: 187
   java/lang/reflect/Field: 82
   java/lang/reflect/Method: 2
-  java/net/URI: 55704
-  java/net/URI$Parser: 51537
+  java/net/URI: 55782
+  java/net/URI$Parser: 51615
   java/net/URL: 9940
   java/net/URLClassLoader$1: 25
   java/net/URLClassLoader$2: 17
@@ -7480,23 +7481,23 @@ objects-by-type:
   java/nio/DirectByteBuffer: 1
   java/nio/DirectByteBuffer$Deallocator: 1
   java/nio/DirectByteBufferR: 4171
-  java/nio/HeapByteBuffer: 13578
+  java/nio/HeapByteBuffer: 13572
   java/nio/file/AccessMode: 2
   java/nio/file/CopyOption: 109
   java/nio/file/DirectoryNotEmptyException: 40
-  java/nio/file/LinkOption: 33924
+  java/nio/file/LinkOption: 33902
   java/nio/file/OpenOption: 4
   java/nio/file/Path$1: 1
   java/nio/file/StandardCopyOption: 4
   java/nio/file/attribute/FileAttribute: 398
-  java/nio/file/attribute/FileTime: 38106
+  java/nio/file/attribute/FileTime: 38116
   java/nio/file/attribute/PosixFilePermission: 1
   java/security/AccessControlContext: 18
   java/security/CodeSigner: 12
   java/security/CodeSource: 7
   java/security/MessageDigest$Delegate$CloneableDelegate: 23
   java/security/Permission: 18
-  java/security/ProtectionDomain: 806
+  java/security/ProtectionDomain: 819
   java/security/SecureClassLoader$1: 7
   java/security/SecureClassLoader$CodeSourceKey: 7
   java/security/cert/Certificate: 21
@@ -7505,26 +7506,26 @@ objects-by-type:
   java/text/DigitList: 2
   java/text/DontCareFieldPosition: 1
   java/text/DontCareFieldPosition$1: 1
-  java/text/FieldPosition: 7501
-  java/text/Format: 7501
-  java/text/MessageFormat: 7501
+  java/text/FieldPosition: 7568
+  java/text/Format: 7568
+  java/text/MessageFormat: 7568
   java/text/MessageFormat$Field: 1
   java/text/NumberFormat$Field: 13
   java/util/AbstractList$Itr: 53765
   java/util/AbstractList$ListItr: 272
-  java/util/AbstractList$RandomAccessSpliterator: 60
+  java/util/AbstractList$RandomAccessSpliterator: 65
   java/util/AbstractList$SubList: 11252
   java/util/AbstractMap$SimpleImmutableEntry: 513
   java/util/ArrayDeque: 4270
-  java/util/ArrayDeque$DeqSpliterator: 44
-  java/util/ArrayList: 1478037
-  java/util/ArrayList$ArrayListSpliterator: 725
-  java/util/ArrayList$Itr: 206383
+  java/util/ArrayDeque$DeqSpliterator: 28
+  java/util/ArrayList: 1477973
+  java/util/ArrayList$ArrayListSpliterator: 736
+  java/util/ArrayList$Itr: 206369
   java/util/ArrayList$ListItr: 531
   java/util/ArrayList$SubList: 80
   java/util/ArrayList$SubList$1: 297
-  java/util/Arrays$ArrayItr: 25077
-  java/util/Arrays$ArrayList: 27267
+  java/util/Arrays$ArrayItr: 25072
+  java/util/Arrays$ArrayList: 27262
   java/util/BitSet: 340414
   java/util/Collections$1: 1042
   java/util/Collections$3: 4
@@ -7533,10 +7534,10 @@ objects-by-type:
   java/util/Collections$SingletonMap: 6
   java/util/Collections$SingletonSet: 735
   java/util/Collections$SynchronizedCollection: 4470
-  java/util/Collections$SynchronizedMap: 490
+  java/util/Collections$SynchronizedMap: 486
   java/util/Collections$SynchronizedSet: 299
   java/util/Collections$UnmodifiableCollection: 66
-  java/util/Collections$UnmodifiableCollection$1: 30788
+  java/util/Collections$UnmodifiableCollection$1: 30776
   java/util/Collections$UnmodifiableMap: 20
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet: 719
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$1: 724
@@ -7545,20 +7546,20 @@ objects-by-type:
   java/util/Collections$UnmodifiableSet: 725
   java/util/ComparableTimSort: 1
   java/util/Date: 46
-  java/util/Enumeration: 375
-  java/util/HashMap: 143869
-  java/util/HashMap$EntryIterator: 22304
-  java/util/HashMap$EntrySet: 3839
+  java/util/Enumeration: 369
+  java/util/HashMap: 143749
+  java/util/HashMap$EntryIterator: 22324
+  java/util/HashMap$EntrySet: 3847
   java/util/HashMap$EntrySpliterator: 20
-  java/util/HashMap$KeyIterator: 62968
-  java/util/HashMap$KeySet: 39860
+  java/util/HashMap$KeyIterator: 63005
+  java/util/HashMap$KeySet: 39871
   java/util/HashMap$KeySpliterator: 245
-  java/util/HashMap$Node: 854748
+  java/util/HashMap$Node: 854671
   java/util/HashMap$ValueIterator: 607
-  java/util/HashMap$Values: 536
-  java/util/HashSet: 87645
-  java/util/Hashtable: 16946
-  java/util/Hashtable$Entry: 292667
+  java/util/HashMap$Values: 539
+  java/util/HashSet: 87556
+  java/util/Hashtable: 16949
+  java/util/Hashtable$Entry: 292670
   java/util/Hashtable$EntrySet: 107
   java/util/Hashtable$Enumerator: 4827
   java/util/Hashtable$KeySet: 1
@@ -7568,29 +7569,29 @@ objects-by-type:
   java/util/IdentityHashMap$KeyIterator: 209
   java/util/IdentityHashMap$KeySet: 215
   java/util/ImmutableCollections$Access$1: 1
-  java/util/ImmutableCollections$List12: 102
+  java/util/ImmutableCollections$List12: 107
   java/util/ImmutableCollections$ListItr: 444
-  java/util/ImmutableCollections$Map1: 148
-  java/util/ImmutableCollections$Set12: 287
-  java/util/ImmutableCollections$Set12$1: 285
+  java/util/ImmutableCollections$Map1: 159
+  java/util/ImmutableCollections$Set12: 290
+  java/util/ImmutableCollections$Set12$1: 288
   java/util/ImmutableCollections$SetN: 50
   java/util/ImmutableCollections$SetN$SetNIterator: 76
-  java/util/KeyValueHolder: 8
-  java/util/LinkedHashMap: 208158
-  java/util/LinkedHashMap$Entry: 268680
+  java/util/KeyValueHolder: 11
+  java/util/LinkedHashMap: 208142
+  java/util/LinkedHashMap$Entry: 268765
   java/util/LinkedHashMap$LinkedEntryIterator: 224
-  java/util/LinkedHashMap$LinkedEntrySet: 137
+  java/util/LinkedHashMap$LinkedEntrySet: 140
   java/util/LinkedHashMap$LinkedKeyIterator: 17606
   java/util/LinkedHashMap$LinkedKeySet: 2849
-  java/util/LinkedHashMap$LinkedValueIterator: 766
-  java/util/LinkedHashMap$LinkedValues: 685
-  java/util/LinkedHashSet: 205248
+  java/util/LinkedHashMap$LinkedValueIterator: 769
+  java/util/LinkedHashMap$LinkedValues: 688
+  java/util/LinkedHashSet: 205226
   java/util/LinkedList: 1163
   java/util/LinkedList$ListItr: 575
   java/util/LinkedList$Node: 8480
   java/util/Map: 728
-  java/util/Map$Entry: 572
-  java/util/Optional: 5082
+  java/util/Map$Entry: 594
+  java/util/Optional: 5079
   java/util/OptionalInt: 6
   java/util/Properties: 127
   java/util/Properties$EntrySet: 119
@@ -7610,45 +7611,44 @@ objects-by-type:
   java/util/ServiceLoader$ModuleServicesLookupIterator: 119
   java/util/ServiceLoader$ProviderImpl: 2
   java/util/ServiceLoader$ProviderSpliterator: 1
-  java/util/Spliterators$1Adapter: 246
-  java/util/Spliterators$ArraySpliterator: 558172
+  java/util/Spliterators$1Adapter: 243
+  java/util/Spliterators$ArraySpliterator: 558171
   java/util/Spliterators$IteratorSpliterator: 12998
-  java/util/Stack: 1078
+  java/util/Stack: 1080
   java/util/StringTokenizer: 596
   java/util/TreeMap: 25
-  java/util/TreeMap$Entry: 1176
+  java/util/TreeMap$Entry: 1218
   java/util/TreeMap$KeyIterator: 25
   java/util/TreeMap$KeySet: 25
   java/util/TreeSet: 25
   java/util/WeakHashMap: 4128
-  java/util/WeakHashMap$Entry: 57769
-  java/util/WeakHashMap$KeyIterator: 170
+  java/util/WeakHashMap$Entry: 57805
+  java/util/WeakHashMap$KeyIterator: 173
   java/util/WeakHashMap$KeySet: 4128
   java/util/concurrent/ConcurrentHashMap: 170
-  java/util/concurrent/ConcurrentHashMap$CounterCell: 3
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 120
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 33
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 56
-  java/util/concurrent/ConcurrentHashMap$KeyIterator: 5759
+  java/util/concurrent/ConcurrentHashMap$KeyIterator: 5756
   java/util/concurrent/ConcurrentHashMap$KeySetView: 25
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 2446
-  java/util/concurrent/ConcurrentHashMap$Node: 21338
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 73
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 2448
+  java/util/concurrent/ConcurrentHashMap$Node: 21414
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 72
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 40
-  java/util/concurrent/ConcurrentLinkedQueue: 88
-  java/util/concurrent/ConcurrentLinkedQueue$Node: 1761
+  java/util/concurrent/ConcurrentLinkedQueue: 95
+  java/util/concurrent/ConcurrentLinkedQueue$Node: 1769
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 272
   java/util/concurrent/ForkJoinPool: 49
-  java/util/concurrent/ForkJoinPool$WorkQueue: 330
-  java/util/concurrent/ForkJoinTask$Aux: 410
+  java/util/concurrent/ForkJoinPool$WorkQueue: 343
+  java/util/concurrent/ForkJoinTask$Aux: 489
   java/util/concurrent/ForkJoinWorkerThread: 23
   java/util/concurrent/atomic/AtomicLong: 58
-  java/util/concurrent/atomic/AtomicReference: 3130
+  java/util/concurrent/atomic/AtomicReference: 3143
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 21
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 4151
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 9
-  java/util/concurrent/locks/ReentrantLock: 53700
-  java/util/concurrent/locks/ReentrantLock$NonfairSync: 53753
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 17
+  java/util/concurrent/locks/ReentrantLock: 53767
+  java/util/concurrent/locks/ReentrantLock$NonfairSync: 53820
   java/util/jar/Attributes: 1204
   java/util/jar/Attributes$Name: 308
   java/util/jar/JarFile: 78
@@ -7690,27 +7690,27 @@ objects-by-type:
   java/util/stream/MatchOps$1MatchSink: 558492
   java/util/stream/MatchOps$MatchKind: 4
   java/util/stream/MatchOps$MatchOp: 558492
-  java/util/stream/Nodes$ArrayNode: 46
-  java/util/stream/Nodes$CollectorTask: 854
+  java/util/stream/Nodes$ArrayNode: 44
+  java/util/stream/Nodes$CollectorTask: 876
   java/util/stream/Nodes$CollectorTask$OfRef: 49
-  java/util/stream/Nodes$FixedNodeBuilder: 12052
+  java/util/stream/Nodes$FixedNodeBuilder: 12051
   java/util/stream/Nodes$IntFixedNodeBuilder: 3
-  java/util/stream/Nodes$SpinedNodeBuilder: 721
-  java/util/stream/Nodes$ToArrayTask$OfRef: 900
+  java/util/stream/Nodes$SpinedNodeBuilder: 732
+  java/util/stream/Nodes$ToArrayTask$OfRef: 920
   java/util/stream/ReduceOps$3: 264
   java/util/stream/ReduceOps$3ReducingSink: 264
-  java/util/stream/ReferencePipeline$2: 361
-  java/util/stream/ReferencePipeline$2$1: 788
-  java/util/stream/ReferencePipeline$3: 12125
-  java/util/stream/ReferencePipeline$3$1: 12552
+  java/util/stream/ReferencePipeline$2: 345
+  java/util/stream/ReferencePipeline$2$1: 783
+  java/util/stream/ReferencePipeline$3: 12124
+  java/util/stream/ReferencePipeline$3$1: 12562
   java/util/stream/ReferencePipeline$4: 3
   java/util/stream/ReferencePipeline$4$1: 3
   java/util/stream/ReferencePipeline$7: 244
   java/util/stream/ReferencePipeline$7$1: 244
-  java/util/stream/ReferencePipeline$Head: 572210
-  java/util/stream/SortedOps$OfRef: 82
+  java/util/stream/ReferencePipeline$Head: 572195
+  java/util/stream/SortedOps$OfRef: 87
   java/util/stream/SortedOps$RefSortingSink: 2
-  java/util/stream/SortedOps$SizedRefSortingSink: 80
+  java/util/stream/SortedOps$SizedRefSortingSink: 85
   java/util/stream/StreamSpliterators$WrappingSpliterator: 244
   java/util/stream/Streams$2: 244
   java/util/stream/Streams$ConcatSpliterator$OfRef: 244
@@ -7720,7 +7720,7 @@ objects-by-type:
   java/util/zip/GZIPOutputStream: 19
   java/util/zip/Inflater: 454
   java/util/zip/Inflater$InflaterZStreamRef: 454
-  java/util/zip/ZipEntry: 145705
+  java/util/zip/ZipEntry: 145741
   java/util/zip/ZipFile: 4049
   java/util/zip/ZipFile$CleanableResource: 4127
   java/util/zip/ZipFile$InflaterCleanupAction: 10531
@@ -7729,11 +7729,11 @@ objects-by-type:
   java/util/zip/ZipFile$Source$Key: 4127
   java/util/zip/ZipFile$ZipEntryIterator: 263
   java/util/zip/ZipFile$ZipFileInflaterInputStream: 10531
-  java/util/zip/ZipFile$ZipFileInputStream: 53558
+  java/util/zip/ZipFile$ZipFileInputStream: 53594
   javax/xml/catalog/CatalogFeatures$Feature: 118
   javax/xml/parsers/FactoryFinder$1: 117
   jdk/internal/jimage/ImageLocation: 4171
-  jdk/internal/loader/BuiltinClassLoader$1: 376
+  jdk/internal/loader/BuiltinClassLoader$1: 370
   jdk/internal/loader/BuiltinClassLoader$2: 31
   jdk/internal/loader/NativeLibraries$1: 13
   jdk/internal/loader/NativeLibraries$2: 1
@@ -7742,7 +7742,7 @@ objects-by-type:
   jdk/internal/loader/URLClassPath$1: 235
   jdk/internal/loader/URLClassPath$JarLoader$2: 23
   jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 80
-  jdk/internal/misc/InternalLock: 49461
+  jdk/internal/misc/InternalLock: 49521
   jdk/internal/org/objectweb/asm/AnnotationWriter: 126
   jdk/internal/org/objectweb/asm/ByteVector: 1331
   jdk/internal/org/objectweb/asm/ClassWriter: 301
@@ -7760,11 +7760,11 @@ objects-by-type:
   jdk/internal/reflect/MethodHandleObjectFieldAccessorImpl: 74
   jdk/internal/vm/SharedThreadContainer: 49
   jdk/xml/internal/JdkProperty$State: 352
-  long: 986778
+  long: 986824
   org/dacapo/eclipse/BenchmarkRunner: 1
   org/eclipse/core/filesystem/IFileInfo: 483
   org/eclipse/core/filesystem/IFileStore: 482
-  org/eclipse/core/filesystem/provider/FileInfo: 26259
+  org/eclipse/core/filesystem/provider/FileInfo: 26269
   org/eclipse/core/internal/content/ContentDescription: 2035
   org/eclipse/core/internal/content/ContentType: 12
   org/eclipse/core/internal/content/ContentTypeBuilder: 1
@@ -7777,37 +7777,36 @@ objects-by-type:
   org/eclipse/core/internal/content/FileSpec: 17
   org/eclipse/core/internal/content/LazyInputStream: 2035
   org/eclipse/core/internal/content/TextContentDescriber: 1
-  org/eclipse/core/internal/dtree/AbstractDataTreeNode: 104975
-  org/eclipse/core/internal/dtree/DataDeltaNode: 18097
-  org/eclipse/core/internal/dtree/DataTreeLookup: 564499
-  org/eclipse/core/internal/dtree/DataTreeNode: 99579
+  org/eclipse/core/internal/dtree/AbstractDataTreeNode: 104535
+  org/eclipse/core/internal/dtree/DataDeltaNode: 18151
+  org/eclipse/core/internal/dtree/DataTreeLookup: 564290
+  org/eclipse/core/internal/dtree/DataTreeNode: 97898
   org/eclipse/core/internal/dtree/DataTreeReader: 76
   org/eclipse/core/internal/dtree/DataTreeWriter: 68
-  org/eclipse/core/internal/dtree/DeletedNode: 2458
-  org/eclipse/core/internal/dtree/DeltaDataTree: 1401
-  org/eclipse/core/internal/dtree/NoDataDeltaNode: 49020
-  org/eclipse/core/internal/dtree/NodeComparison: 53550
-  org/eclipse/core/internal/events/BuildCommand: 444
+  org/eclipse/core/internal/dtree/DeletedNode: 2453
+  org/eclipse/core/internal/dtree/DeltaDataTree: 1429
+  org/eclipse/core/internal/dtree/NoDataDeltaNode: 48776
+  org/eclipse/core/internal/dtree/NodeComparison: 51782
+  org/eclipse/core/internal/events/BuildCommand: 440
   org/eclipse/core/internal/events/BuildContext: 38
   org/eclipse/core/internal/events/BuildManager$1: 19
   org/eclipse/core/internal/events/BuildManager$2: 19
   org/eclipse/core/internal/events/BuilderPersistentInfo: 38
   org/eclipse/core/internal/events/LifecycleEvent: 1
-  org/eclipse/core/internal/events/NodeIDMap: 329
-  org/eclipse/core/internal/events/NotificationManager$1: 1200
-  org/eclipse/core/internal/events/ResourceChangeEvent: 421
-  org/eclipse/core/internal/events/ResourceChangeListenerList$ListenerEntry: 666
+  org/eclipse/core/internal/events/NodeIDMap: 336
+  org/eclipse/core/internal/events/NotificationManager$1: 1229
+  org/eclipse/core/internal/events/ResourceChangeEvent: 427
+  org/eclipse/core/internal/events/ResourceChangeListenerList$ListenerEntry: 684
   org/eclipse/core/internal/events/ResourceComparator: 68
-  org/eclipse/core/internal/events/ResourceDelta: 55385
-  org/eclipse/core/internal/events/ResourceDeltaInfo: 329
+  org/eclipse/core/internal/events/ResourceDelta: 52819
+  org/eclipse/core/internal/events/ResourceDeltaInfo: 336
   org/eclipse/core/internal/filesystem/local/InfiniteProgress: 198
-  org/eclipse/core/internal/filesystem/local/LocalFile: 67114
+  org/eclipse/core/internal/filesystem/local/LocalFile: 67228
   org/eclipse/core/internal/filesystem/local/nio/PosixHandler: 1
-  org/eclipse/core/internal/jobs/JobChangeEvent: 1673
+  org/eclipse/core/internal/jobs/JobChangeEvent: 1674
   org/eclipse/core/internal/jobs/JobManager$3: 1
-  org/eclipse/core/internal/jobs/JobQueue$2: 1
-  org/eclipse/core/internal/jobs/Semaphore: 44
-  org/eclipse/core/internal/jobs/ThreadJob: 62
+  org/eclipse/core/internal/jobs/Semaphore: 28
+  org/eclipse/core/internal/jobs/ThreadJob: 69
   org/eclipse/core/internal/jobs/Worker: 3
   org/eclipse/core/internal/localstore/BlobStore: 1
   org/eclipse/core/internal/localstore/BucketTree: 1
@@ -7821,14 +7820,14 @@ objects-by-type:
   org/eclipse/core/internal/localstore/HistoryStore2$HistoryCopyVisitor: 126
   org/eclipse/core/internal/localstore/IsSynchronizedVisitor: 20
   org/eclipse/core/internal/localstore/RefreshLocalAliasVisitor: 79
-  org/eclipse/core/internal/localstore/SafeChunkyOutputStream: 1078
+  org/eclipse/core/internal/localstore/SafeChunkyOutputStream: 1098
   org/eclipse/core/internal/localstore/SafeFileInputStream: 38
   org/eclipse/core/internal/localstore/SafeFileOutputStream: 57
   org/eclipse/core/internal/localstore/UnifiedTree: 245
   org/eclipse/core/internal/localstore/UnifiedTreeNode: 2018
   org/eclipse/core/internal/preferences/ConfigurationPreferences: 2
   org/eclipse/core/internal/preferences/DefaultPreferences: 1
-  org/eclipse/core/internal/preferences/EclipsePreferences$1: 104
+  org/eclipse/core/internal/preferences/EclipsePreferences$1: 103
   org/eclipse/core/internal/preferences/EclipsePreferences$2: 18
   org/eclipse/core/internal/preferences/ImmutableMap$ArrayMap: 27
   org/eclipse/core/internal/preferences/InstancePreferences: 3
@@ -7843,44 +7842,44 @@ objects-by-type:
   org/eclipse/core/internal/registry/ConfigurationElementHandle: 403
   org/eclipse/core/internal/registry/Extension: 1
   org/eclipse/core/internal/registry/ExtensionHandle: 149
-  org/eclipse/core/internal/registry/ExtensionPointHandle: 249
+  org/eclipse/core/internal/registry/ExtensionPointHandle: 245
   org/eclipse/core/internal/registry/ReferenceMap$SoftRef: 1
-  org/eclipse/core/internal/resources/BuildConfiguration: 81
+  org/eclipse/core/internal/resources/BuildConfiguration: 78
   org/eclipse/core/internal/resources/CharsetDeltaJob$1: 20
   org/eclipse/core/internal/resources/ComputeProjectOrder$Digraph: 2
   org/eclipse/core/internal/resources/ComputeProjectOrder$Digraph$Vertex: 38
   org/eclipse/core/internal/resources/ComputeProjectOrder$VertexOrder: 1
   org/eclipse/core/internal/resources/ContentDescriptionManager$LazyFileInputStream: 2035
-  org/eclipse/core/internal/resources/File: 46204
-  org/eclipse/core/internal/resources/Folder: 96238
-  org/eclipse/core/internal/resources/IMarkerSetElement: 6570
-  org/eclipse/core/internal/resources/Marker: 1986
-  org/eclipse/core/internal/resources/MarkerAttributeMap: 1454
-  org/eclipse/core/internal/resources/MarkerDelta: 2520
-  org/eclipse/core/internal/resources/MarkerInfo: 1865
+  org/eclipse/core/internal/resources/File: 46133
+  org/eclipse/core/internal/resources/Folder: 96267
+  org/eclipse/core/internal/resources/IMarkerSetElement: 6481
+  org/eclipse/core/internal/resources/Marker: 2029
+  org/eclipse/core/internal/resources/MarkerAttributeMap: 1460
+  org/eclipse/core/internal/resources/MarkerDelta: 2529
+  org/eclipse/core/internal/resources/MarkerInfo: 1873
   org/eclipse/core/internal/resources/MarkerManager$1: 40
   org/eclipse/core/internal/resources/MarkerReader: 19
   org/eclipse/core/internal/resources/MarkerReader_3: 19
-  org/eclipse/core/internal/resources/MarkerSet: 2249
+  org/eclipse/core/internal/resources/MarkerSet: 2253
   org/eclipse/core/internal/resources/ModelObjectWriter: 60
   org/eclipse/core/internal/resources/NatureManager$1: 20
   org/eclipse/core/internal/resources/Project: 78
   org/eclipse/core/internal/resources/ProjectContentTypes$ProjectContentTypeSelectionPolicy: 14
-  org/eclipse/core/internal/resources/ProjectDescription: 426
+  org/eclipse/core/internal/resources/ProjectDescription: 422
   org/eclipse/core/internal/resources/ProjectDescriptionReader: 38
   org/eclipse/core/internal/resources/ProjectInfo: 235
   org/eclipse/core/internal/resources/ProjectNatureDescriptor: 2
-  org/eclipse/core/internal/resources/ProjectPathVariableManager: 32094
+  org/eclipse/core/internal/resources/ProjectPathVariableManager: 32095
   org/eclipse/core/internal/resources/ProjectPreferences: 177
   org/eclipse/core/internal/resources/ProjectVariableProviderManager: 1
   org/eclipse/core/internal/resources/ProjectVariableProviderManager$Descriptor: 6
-  org/eclipse/core/internal/resources/Resource: 2513
-  org/eclipse/core/internal/resources/ResourceException: 797
-  org/eclipse/core/internal/resources/ResourceInfo: 13711
+  org/eclipse/core/internal/resources/Resource: 2524
+  org/eclipse/core/internal/resources/ResourceException: 822
+  org/eclipse/core/internal/resources/ResourceInfo: 13702
   org/eclipse/core/internal/resources/ResourceProxy: 136
-  org/eclipse/core/internal/resources/ResourceStatus: 798
+  org/eclipse/core/internal/resources/ResourceStatus: 823
   org/eclipse/core/internal/resources/ResourceTree: 20
-  org/eclipse/core/internal/resources/RootInfo: 293
+  org/eclipse/core/internal/resources/RootInfo: 300
   org/eclipse/core/internal/resources/SafeFileTable: 68
   org/eclipse/core/internal/resources/SaveContext: 68
   org/eclipse/core/internal/resources/SaveManager$1: 204
@@ -7895,46 +7894,46 @@ objects-by-type:
   org/eclipse/core/internal/resources/projectvariables/ProjectLocationVariableResolver: 1
   org/eclipse/core/internal/resources/projectvariables/WorkspaceLocationVariableResolver: 1
   org/eclipse/core/internal/resources/projectvariables/WorkspaceParentLocationVariableResolver: 1
-  org/eclipse/core/internal/utils/KeyedHashSet$KeyedElement: 69
+  org/eclipse/core/internal/utils/KeyedHashSet$KeyedElement: 73
   org/eclipse/core/internal/utils/ObjectMap: 19
-  org/eclipse/core/internal/watson/ElementTree: 388
-  org/eclipse/core/internal/watson/ElementTree$ChildIDsCache: 2675
-  org/eclipse/core/internal/watson/ElementTreeIterator: 834
+  org/eclipse/core/internal/watson/ElementTree: 395
+  org/eclipse/core/internal/watson/ElementTree$ChildIDsCache: 2676
+  org/eclipse/core/internal/watson/ElementTreeIterator: 844
   org/eclipse/core/internal/watson/ElementTreeReader: 19
   org/eclipse/core/internal/watson/ElementTreeReader$1: 76
   org/eclipse/core/internal/watson/ElementTreeReaderImpl_1: 57
   org/eclipse/core/internal/watson/ElementTreeWriter: 68
   org/eclipse/core/internal/watson/ElementTreeWriter$1: 68
-  org/eclipse/core/resources/IBuildConfiguration: 923
-  org/eclipse/core/resources/ICommand: 605
-  org/eclipse/core/resources/IMarker: 212
+  org/eclipse/core/resources/IBuildConfiguration: 930
+  org/eclipse/core/resources/ICommand: 601
+  org/eclipse/core/resources/IMarker: 214
   org/eclipse/core/resources/IMarkerDelta: 252
-  org/eclipse/core/resources/IProject: 697
+  org/eclipse/core/resources/IProject: 708
   org/eclipse/core/resources/IResource: 1
-  org/eclipse/core/resources/IResourceDelta: 4497
-  org/eclipse/core/resources/ProjectScope: 128
+  org/eclipse/core/resources/IResourceDelta: 4479
+  org/eclipse/core/resources/ProjectScope: 125
   org/eclipse/core/resources/ResourceAttributes: 145
   org/eclipse/core/runtime/IConfigurationElement: 29
   org/eclipse/core/runtime/IExtension: 1
-  org/eclipse/core/runtime/IPath: 12494
-  org/eclipse/core/runtime/IProgressMonitor: 298
+  org/eclipse/core/runtime/IPath: 12106
+  org/eclipse/core/runtime/IProgressMonitor: 301
   org/eclipse/core/runtime/IStatus: 69
-  org/eclipse/core/runtime/ListenerList: 607
-  org/eclipse/core/runtime/ListenerList$ListenerListIterator: 3851
+  org/eclipse/core/runtime/ListenerList: 614
+  org/eclipse/core/runtime/ListenerList$ListenerListIterator: 3853
   org/eclipse/core/runtime/MultiStatus: 915
-  org/eclipse/core/runtime/NullProgressMonitor: 5564
-  org/eclipse/core/runtime/Path: 865715
+  org/eclipse/core/runtime/NullProgressMonitor: 5579
+  org/eclipse/core/runtime/Path: 863528
   org/eclipse/core/runtime/Preferences$1: 8
   org/eclipse/core/runtime/Preferences$PropertyChangeEvent: 2
   org/eclipse/core/runtime/QualifiedName: 103
   org/eclipse/core/runtime/ServiceCaller: 1
   org/eclipse/core/runtime/ServiceCaller$ReferenceAndService: 1
-  org/eclipse/core/runtime/Status: 258
-  org/eclipse/core/runtime/SubMonitor: 10849
-  org/eclipse/core/runtime/SubMonitor$RootInfo: 4106
+  org/eclipse/core/runtime/Status: 263
+  org/eclipse/core/runtime/SubMonitor: 10754
+  org/eclipse/core/runtime/SubMonitor$RootInfo: 4103
   org/eclipse/core/runtime/SubProgressMonitor: 701
   org/eclipse/core/runtime/content/IContentType: 45487
-  org/eclipse/core/runtime/jobs/ISchedulingRule: 234
+  org/eclipse/core/runtime/jobs/ISchedulingRule: 224
   org/eclipse/core/runtime/jobs/MultiRule: 39
   org/eclipse/core/runtime/preferences/IEclipsePreferences$NodeChangeEvent: 303
   org/eclipse/core/runtime/preferences/IEclipsePreferences$PreferenceChangeEvent: 47
@@ -7943,29 +7942,29 @@ objects-by-type:
   org/eclipse/equinox/internal/app/EclipseAppContainer$RegisterService: 1
   org/eclipse/equinox/internal/app/EclipseAppHandle: 1
   org/eclipse/jdt/core/BufferChangedEvent: 153
-  org/eclipse/jdt/core/ElementChangedEvent: 170
+  org/eclipse/jdt/core/ElementChangedEvent: 173
   org/eclipse/jdt/core/IAccessRule: 1
   org/eclipse/jdt/core/IAnnotation: 1
   org/eclipse/jdt/core/IClassFile: 1
   org/eclipse/jdt/core/IClasspathAttribute: 1
-  org/eclipse/jdt/core/IClasspathEntry: 1789
+  org/eclipse/jdt/core/IClasspathEntry: 1775
   org/eclipse/jdt/core/ICompilationUnit: 25
   org/eclipse/jdt/core/IField: 3
   org/eclipse/jdt/core/IImportDeclaration: 3057
   org/eclipse/jdt/core/IInitializer: 2
-  org/eclipse/jdt/core/IJavaElement: 2623
+  org/eclipse/jdt/core/IJavaElement: 2643
   org/eclipse/jdt/core/IJavaElementDelta: 483
-  org/eclipse/jdt/core/IJavaProject: 1624
+  org/eclipse/jdt/core/IJavaProject: 1678
   org/eclipse/jdt/core/ILocalVariable: 1
   org/eclipse/jdt/core/IMemberValuePair: 1
   org/eclipse/jdt/core/IMethod: 2
   org/eclipse/jdt/core/IModuleDescription: 1
   org/eclipse/jdt/core/IOrdinaryClassFile: 1
-  org/eclipse/jdt/core/IPackageFragment: 26783
+  org/eclipse/jdt/core/IPackageFragment: 26782
   org/eclipse/jdt/core/IPackageFragmentRoot: 2356
   org/eclipse/jdt/core/IType: 5506
   org/eclipse/jdt/core/ITypeParameter: 1
-  org/eclipse/jdt/core/JavaModelException: 275
+  org/eclipse/jdt/core/JavaModelException: 285
   org/eclipse/jdt/core/compiler/CategorizedProblem: 795
   org/eclipse/jdt/core/compiler/IProblem: 1
   org/eclipse/jdt/core/compiler/InvalidInputException: 12
@@ -8114,7 +8113,7 @@ objects-by-type:
   org/eclipse/jdt/internal/codeassist/complete/CompletionScanner: 180
   org/eclipse/jdt/internal/codeassist/impl/AssistOptions: 90
   org/eclipse/jdt/internal/codeassist/impl/AssistParser: 90
-  org/eclipse/jdt/internal/compiler/ClassFile: 6984
+  org/eclipse/jdt/internal/compiler/ClassFile: 6986
   org/eclipse/jdt/internal/compiler/ClassFile$1: 880
   org/eclipse/jdt/internal/compiler/ClassFilePool: 160
   org/eclipse/jdt/internal/compiler/CompilationResult: 15473
@@ -8247,28 +8246,28 @@ objects-by-type:
   org/eclipse/jdt/internal/compiler/ast/UnaryExpression: 27882
   org/eclipse/jdt/internal/compiler/ast/UnlikelyArgumentCheck: 1715
   org/eclipse/jdt/internal/compiler/ast/WhileStatement: 6134
-  org/eclipse/jdt/internal/compiler/classfmt/AnnotationInfo: 16480
+  org/eclipse/jdt/internal/compiler/classfmt/AnnotationInfo: 16545
   org/eclipse/jdt/internal/compiler/classfmt/AnnotationMethodInfo: 318
   org/eclipse/jdt/internal/compiler/classfmt/AnnotationMethodInfoWithAnnotations: 14
-  org/eclipse/jdt/internal/compiler/classfmt/ClassFileReader: 47283
+  org/eclipse/jdt/internal/compiler/classfmt/ClassFileReader: 47319
   org/eclipse/jdt/internal/compiler/classfmt/ElementValuePairInfo: 1781
-  org/eclipse/jdt/internal/compiler/classfmt/FieldInfo: 227179
+  org/eclipse/jdt/internal/compiler/classfmt/FieldInfo: 227233
   org/eclipse/jdt/internal/compiler/classfmt/FieldInfoWithAnnotation: 348
-  org/eclipse/jdt/internal/compiler/classfmt/InnerClassInfo: 74444
-  org/eclipse/jdt/internal/compiler/classfmt/MethodInfo: 496389
+  org/eclipse/jdt/internal/compiler/classfmt/InnerClassInfo: 74541
+  org/eclipse/jdt/internal/compiler/classfmt/MethodInfo: 496589
   org/eclipse/jdt/internal/compiler/classfmt/MethodInfoWithAnnotations: 2543
   org/eclipse/jdt/internal/compiler/classfmt/MethodInfoWithParameterAnnotations: 964
   org/eclipse/jdt/internal/compiler/codegen/BranchLabel: 89524
   org/eclipse/jdt/internal/compiler/codegen/CachedIndexEntry: 126056
   org/eclipse/jdt/internal/compiler/codegen/CaseLabel: 2156
-  org/eclipse/jdt/internal/compiler/codegen/CharArrayCache: 8435
-  org/eclipse/jdt/internal/compiler/codegen/CodeStream: 320
-  org/eclipse/jdt/internal/compiler/codegen/ConstantPool: 320
-  org/eclipse/jdt/internal/compiler/codegen/DoubleCache: 7
-  org/eclipse/jdt/internal/compiler/codegen/ExceptionLabel: 7834
+  org/eclipse/jdt/internal/compiler/codegen/CharArrayCache: 8445
+  org/eclipse/jdt/internal/compiler/codegen/CodeStream: 322
+  org/eclipse/jdt/internal/compiler/codegen/ConstantPool: 322
+  org/eclipse/jdt/internal/compiler/codegen/DoubleCache: 6
+  org/eclipse/jdt/internal/compiler/codegen/ExceptionLabel: 7836
   org/eclipse/jdt/internal/compiler/codegen/FloatCache: 5
-  org/eclipse/jdt/internal/compiler/codegen/IntegerCache: 82
-  org/eclipse/jdt/internal/compiler/codegen/LongCache: 41
+  org/eclipse/jdt/internal/compiler/codegen/IntegerCache: 83
+  org/eclipse/jdt/internal/compiler/codegen/LongCache: 40
   org/eclipse/jdt/internal/compiler/codegen/ObjectCache: 34603
   org/eclipse/jdt/internal/compiler/env/AccessRuleSet: 1
   org/eclipse/jdt/internal/compiler/env/ClassSignature: 42
@@ -8276,7 +8275,7 @@ objects-by-type:
   org/eclipse/jdt/internal/compiler/env/IBinaryAnnotation: 1
   org/eclipse/jdt/internal/compiler/env/IBinaryField: 1
   org/eclipse/jdt/internal/compiler/env/IBinaryMethod: 1549
-  org/eclipse/jdt/internal/compiler/env/IBinaryNestedType: 17994
+  org/eclipse/jdt/internal/compiler/env/IBinaryNestedType: 18021
   org/eclipse/jdt/internal/compiler/env/ICompilationUnit: 29
   org/eclipse/jdt/internal/compiler/env/IGenericType: 9
   org/eclipse/jdt/internal/compiler/env/IModuleAwareNameEnvironment$LookupStrategy: 4
@@ -8317,7 +8316,7 @@ objects-by-type:
   org/eclipse/jdt/internal/compiler/impl/StringConstant: 20830
   org/eclipse/jdt/internal/compiler/lookup/AnnotationBinding: 2069
   org/eclipse/jdt/internal/compiler/lookup/AnnotationHolder: 3029
-  org/eclipse/jdt/internal/compiler/lookup/ArrayBinding: 4542
+  org/eclipse/jdt/internal/compiler/lookup/ArrayBinding: 4543
   org/eclipse/jdt/internal/compiler/lookup/ArrayBinding$1: 20
   org/eclipse/jdt/internal/compiler/lookup/BinaryTypeBinding: 4740
   org/eclipse/jdt/internal/compiler/lookup/BinaryTypeBinding$1: 1
@@ -8334,10 +8333,10 @@ objects-by-type:
   org/eclipse/jdt/internal/compiler/lookup/ImportBinding: 87411
   org/eclipse/jdt/internal/compiler/lookup/InnerEmulationDependency: 24
   org/eclipse/jdt/internal/compiler/lookup/LocalTypeBinding: 559
-  org/eclipse/jdt/internal/compiler/lookup/LocalVariableBinding: 335797
+  org/eclipse/jdt/internal/compiler/lookup/LocalVariableBinding: 335799
   org/eclipse/jdt/internal/compiler/lookup/LookupEnvironment: 160
   org/eclipse/jdt/internal/compiler/lookup/MemberTypeBinding: 925
-  org/eclipse/jdt/internal/compiler/lookup/MethodBinding: 479930
+  org/eclipse/jdt/internal/compiler/lookup/MethodBinding: 479928
   org/eclipse/jdt/internal/compiler/lookup/MethodScope: 177515
   org/eclipse/jdt/internal/compiler/lookup/MethodVerifier15: 81
   org/eclipse/jdt/internal/compiler/lookup/MissingTypeBinding: 54
@@ -8348,7 +8347,7 @@ objects-by-type:
   org/eclipse/jdt/internal/compiler/lookup/ParameterNonNullDefaultProvider$2: 1
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedFieldBinding: 84
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedGenericMethodBinding: 412
-  org/eclipse/jdt/internal/compiler/lookup/ParameterizedMethodBinding: 4460
+  org/eclipse/jdt/internal/compiler/lookup/ParameterizedMethodBinding: 4462
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedMethodBinding$1: 72
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedTypeBinding: 3588
   org/eclipse/jdt/internal/compiler/lookup/PlainPackageBinding: 5849
@@ -8373,14 +8372,14 @@ objects-by-type:
   org/eclipse/jdt/internal/compiler/lookup/SyntheticArgumentBinding: 1809
   org/eclipse/jdt/internal/compiler/lookup/SyntheticFieldBinding: 1333
   org/eclipse/jdt/internal/compiler/lookup/SyntheticMethodBinding: 827
-  org/eclipse/jdt/internal/compiler/lookup/TypeBinding: 243147
+  org/eclipse/jdt/internal/compiler/lookup/TypeBinding: 243153
   org/eclipse/jdt/internal/compiler/lookup/TypeConstants$DangerousMethod: 13
   org/eclipse/jdt/internal/compiler/lookup/TypeSystem: 160
   org/eclipse/jdt/internal/compiler/lookup/TypeSystem$HashedParameterizedTypes: 175
   org/eclipse/jdt/internal/compiler/lookup/TypeSystem$HashedParameterizedTypes$PTBKey: 3762
   org/eclipse/jdt/internal/compiler/lookup/TypeVariableBinding: 6443
   org/eclipse/jdt/internal/compiler/lookup/UnresolvedAnnotationBinding: 1
-  org/eclipse/jdt/internal/compiler/lookup/UnresolvedReferenceBinding: 14064
+  org/eclipse/jdt/internal/compiler/lookup/UnresolvedReferenceBinding: 14062
   org/eclipse/jdt/internal/compiler/lookup/VariableBinding: 1264
   org/eclipse/jdt/internal/compiler/parser/JavadocParser: 291
   org/eclipse/jdt/internal/compiler/parser/Parser: 54
@@ -8403,25 +8402,25 @@ objects-by-type:
   org/eclipse/jdt/internal/compiler/problem/DefaultProblem: 2131
   org/eclipse/jdt/internal/compiler/problem/DefaultProblemFactory: 254
   org/eclipse/jdt/internal/compiler/problem/ProblemReporter: 383
-  org/eclipse/jdt/internal/compiler/util/CharArray: 366831
+  org/eclipse/jdt/internal/compiler/util/CharArray: 366876
   org/eclipse/jdt/internal/compiler/util/CharArrayHashMap: 956
   org/eclipse/jdt/internal/compiler/util/CharArrayMap: 6200
   org/eclipse/jdt/internal/compiler/util/CharDeduplication$CacheReference: 2
   org/eclipse/jdt/internal/compiler/util/GenericXMLWriter$1: 198
   org/eclipse/jdt/internal/compiler/util/HashtableOfInt: 2
   org/eclipse/jdt/internal/compiler/util/HashtableOfIntValues: 4835
-  org/eclipse/jdt/internal/compiler/util/HashtableOfInteger: 320
+  org/eclipse/jdt/internal/compiler/util/HashtableOfInteger: 322
   org/eclipse/jdt/internal/compiler/util/HashtableOfLong: 5218
   org/eclipse/jdt/internal/compiler/util/HashtableOfModule: 175
-  org/eclipse/jdt/internal/compiler/util/HashtableOfObject: 200232
-  org/eclipse/jdt/internal/compiler/util/HashtableOfObjectToInt: 7389
+  org/eclipse/jdt/internal/compiler/util/HashtableOfObject: 200344
+  org/eclipse/jdt/internal/compiler/util/HashtableOfObjectToInt: 7391
   org/eclipse/jdt/internal/compiler/util/HashtableOfPackage: 6200
   org/eclipse/jdt/internal/compiler/util/HashtableOfType: 9007
   org/eclipse/jdt/internal/compiler/util/ManifestAnalyzer: 160
   org/eclipse/jdt/internal/compiler/util/Messages$MessagesProperties: 1
   org/eclipse/jdt/internal/compiler/util/ObjectVector: 27206
-  org/eclipse/jdt/internal/compiler/util/SimpleLookupTable: 14386
-  org/eclipse/jdt/internal/compiler/util/SimpleSet: 6961
+  org/eclipse/jdt/internal/compiler/util/SimpleLookupTable: 14390
+  org/eclipse/jdt/internal/compiler/util/SimpleSet: 6963
   org/eclipse/jdt/internal/compiler/util/SimpleSetOfCharArray: 3384
   org/eclipse/jdt/internal/core/AnnotatableInfo: 4714
   org/eclipse/jdt/internal/core/Annotation: 2279
@@ -8436,8 +8435,8 @@ objects-by-type:
   org/eclipse/jdt/internal/core/CancelableProblemFactory: 1
   org/eclipse/jdt/internal/core/ClassFile: 4834
   org/eclipse/jdt/internal/core/ClasspathChange: 170
-  org/eclipse/jdt/internal/core/ClasspathEntry: 3376
-  org/eclipse/jdt/internal/core/ClasspathValidation: 204
+  org/eclipse/jdt/internal/core/ClasspathEntry: 3354
+  org/eclipse/jdt/internal/core/ClasspathValidation: 192
   org/eclipse/jdt/internal/core/CompilationGroup: 3
   org/eclipse/jdt/internal/core/CompilationUnit: 3409
   org/eclipse/jdt/internal/core/CompilationUnit$1: 148
@@ -8445,12 +8444,12 @@ objects-by-type:
   org/eclipse/jdt/internal/core/CompilationUnitStructureRequestor: 148
   org/eclipse/jdt/internal/core/CreateTypeHierarchyOperation: 1
   org/eclipse/jdt/internal/core/DefaultWorkingCopyOwner: 1
-  org/eclipse/jdt/internal/core/DeltaProcessingState$RootInfos: 169
-  org/eclipse/jdt/internal/core/DeltaProcessor: 211
-  org/eclipse/jdt/internal/core/DeltaProcessor$1FoundRelevantDeltaException: 199
-  org/eclipse/jdt/internal/core/DeltaProcessor$2: 231
+  org/eclipse/jdt/internal/core/DeltaProcessingState$RootInfos: 172
+  org/eclipse/jdt/internal/core/DeltaProcessor: 215
+  org/eclipse/jdt/internal/core/DeltaProcessor$1FoundRelevantDeltaException: 204
+  org/eclipse/jdt/internal/core/DeltaProcessor$2: 238
   org/eclipse/jdt/internal/core/DeltaProcessor$OutputsInfo: 138
-  org/eclipse/jdt/internal/core/DeltaProcessor$RootInfo: 5069
+  org/eclipse/jdt/internal/core/DeltaProcessor$RootInfo: 5245
   org/eclipse/jdt/internal/core/DynamicProjectReferences: 19
   org/eclipse/jdt/internal/core/ExternalFolderChange: 155
   org/eclipse/jdt/internal/core/ImportContainer: 5321
@@ -8459,30 +8458,30 @@ objects-by-type:
   org/eclipse/jdt/internal/core/ImportDeclarationElementInfo: 726
   org/eclipse/jdt/internal/core/Initializer: 9
   org/eclipse/jdt/internal/core/InitializerElementInfo: 6
-  org/eclipse/jdt/internal/core/JarPackageFragment: 8789
-  org/eclipse/jdt/internal/core/JarPackageFragmentRoot: 4064
+  org/eclipse/jdt/internal/core/JarPackageFragment: 8788
+  org/eclipse/jdt/internal/core/JarPackageFragmentRoot: 4180
   org/eclipse/jdt/internal/core/JarPackageFragmentRootInfo: 73
-  org/eclipse/jdt/internal/core/JavaElementDelta: 758
-  org/eclipse/jdt/internal/core/JavaElementDelta$Key: 866
+  org/eclipse/jdt/internal/core/JavaElementDelta: 764
+  org/eclipse/jdt/internal/core/JavaElementDelta$Key: 862
   org/eclipse/jdt/internal/core/JavaElementRequestor: 23870
   org/eclipse/jdt/internal/core/JavaModelInfo: 1
-  org/eclipse/jdt/internal/core/JavaModelManager$16: 307
+  org/eclipse/jdt/internal/core/JavaModelManager$16: 320
   org/eclipse/jdt/internal/core/JavaModelManager$18: 11
   org/eclipse/jdt/internal/core/JavaModelManager$ArchiveValidity: 3
   org/eclipse/jdt/internal/core/JavaModelManager$InvalidArchiveInfo: 975
   org/eclipse/jdt/internal/core/JavaModelManager$PerProjectInfo: 58
   org/eclipse/jdt/internal/core/JavaModelManager$VariablesAndContainersSaveHelper: 68
   org/eclipse/jdt/internal/core/JavaModelManager$ZipCache: 3
-  org/eclipse/jdt/internal/core/JavaModelStatus: 452
-  org/eclipse/jdt/internal/core/JavaProject: 63511
-  org/eclipse/jdt/internal/core/JavaProject$2: 55
-  org/eclipse/jdt/internal/core/JavaProject$3: 55
-  org/eclipse/jdt/internal/core/JavaProject$ResolvedClasspath: 486
+  org/eclipse/jdt/internal/core/JavaModelStatus: 466
+  org/eclipse/jdt/internal/core/JavaProject: 63561
+  org/eclipse/jdt/internal/core/JavaProject$2: 52
+  org/eclipse/jdt/internal/core/JavaProject$3: 52
+  org/eclipse/jdt/internal/core/JavaProject$ResolvedClasspath: 472
   org/eclipse/jdt/internal/core/JavaProjectElementInfo: 39
   org/eclipse/jdt/internal/core/JavaProjectElementInfo$ProjectCache: 35
   org/eclipse/jdt/internal/core/JavadocContents: 1
   org/eclipse/jdt/internal/core/LocalVariable: 6845
-  org/eclipse/jdt/internal/core/ModelUpdater: 211
+  org/eclipse/jdt/internal/core/ModelUpdater: 215
   org/eclipse/jdt/internal/core/ModuleSourcePathManager: 1
   org/eclipse/jdt/internal/core/NameLookup: 166
   org/eclipse/jdt/internal/core/NameLookup$Answer: 6679
@@ -8490,7 +8489,7 @@ objects-by-type:
   org/eclipse/jdt/internal/core/PackageDeclaration: 148
   org/eclipse/jdt/internal/core/PackageFragment: 55435
   org/eclipse/jdt/internal/core/PackageFragmentInfo: 74
-  org/eclipse/jdt/internal/core/PackageFragmentRoot: 2371
+  org/eclipse/jdt/internal/core/PackageFragmentRoot: 2431
   org/eclipse/jdt/internal/core/PackageFragmentRootInfo: 36
   org/eclipse/jdt/internal/core/Region: 2
   org/eclipse/jdt/internal/core/Region$Node: 22
@@ -8549,7 +8548,7 @@ objects-by-type:
   org/eclipse/jdt/internal/core/hierarchy/IndexBasedHierarchyBuilder$SubtypeQuery: 250
   org/eclipse/jdt/internal/core/hierarchy/TypeHierarchy: 1
   org/eclipse/jdt/internal/core/index/DiskIndex: 324
-  org/eclipse/jdt/internal/core/index/DiskIndex$IntList: 290298
+  org/eclipse/jdt/internal/core/index/DiskIndex$IntList: 290476
   org/eclipse/jdt/internal/core/index/EntryResult: 635420
   org/eclipse/jdt/internal/core/index/FileIndexLocation: 244
   org/eclipse/jdt/internal/core/index/Index: 499
@@ -8563,7 +8562,7 @@ objects-by-type:
   org/eclipse/jdt/internal/core/search/BasicSearchEngine$4: 11
   org/eclipse/jdt/internal/core/search/BasicSearchEngine$5: 44
   org/eclipse/jdt/internal/core/search/IndexSelector: 58
-  org/eclipse/jdt/internal/core/search/JavaSearchDocument: 49886
+  org/eclipse/jdt/internal/core/search/JavaSearchDocument: 49922
   org/eclipse/jdt/internal/core/search/JavaSearchParticipant: 4207
   org/eclipse/jdt/internal/core/search/JavaSearchScope: 1429
   org/eclipse/jdt/internal/core/search/JavaWorkspaceScope: 1019
@@ -8576,7 +8575,7 @@ objects-by-type:
   org/eclipse/jdt/internal/core/search/SubTypeSearchJob: 1
   org/eclipse/jdt/internal/core/search/TypeNameRequestorWrapper: 14
   org/eclipse/jdt/internal/core/search/indexing/AddJarFileToIndex: 205
-  org/eclipse/jdt/internal/core/search/indexing/BinaryIndexer: 43644
+  org/eclipse/jdt/internal/core/search/indexing/BinaryIndexer: 43680
   org/eclipse/jdt/internal/core/search/indexing/IndexAllProject: 94
   org/eclipse/jdt/internal/core/search/indexing/IndexAllProject$1: 68
   org/eclipse/jdt/internal/core/search/indexing/IndexManager$2: 4070
@@ -8615,12 +8614,12 @@ objects-by-type:
   org/eclipse/jdt/internal/core/util/HandleFactory: 4
   org/eclipse/jdt/internal/core/util/HashSetOfArray: 99
   org/eclipse/jdt/internal/core/util/HashtableOfArrayToObject: 493
-  org/eclipse/jdt/internal/core/util/LRUCache: 721
+  org/eclipse/jdt/internal/core/util/LRUCache: 724
   org/eclipse/jdt/internal/core/util/LRUCache$LRUCacheEntry: 1213
   org/eclipse/jdt/internal/core/util/ResourceCompilationUnit: 1186
-  org/eclipse/jdt/internal/core/util/SimpleWordSet: 1160462
+  org/eclipse/jdt/internal/core/util/SimpleWordSet: 1161168
   org/eclipse/jdt/internal/core/util/WeakHashSet: 12
-  org/eclipse/jdt/internal/core/util/WeakHashSet$HashableWeakReference: 6071
+  org/eclipse/jdt/internal/core/util/WeakHashSet$HashableWeakReference: 6074
   org/eclipse/jdt/internal/core/util/WeakHashSetOfCharArray: 9
   org/eclipse/jdt/internal/core/util/WeakHashSetOfCharArray$HashableWeakReference: 1357
   org/eclipse/jdt/internal/formatter/CommentsPreparator: 28
@@ -8670,7 +8669,7 @@ objects-by-type:
   org/eclipse/osgi/internal/framework/FilterImpl$Equal: 7
   org/eclipse/osgi/internal/framework/FilterImpl$Parser: 7
   org/eclipse/osgi/internal/loader/ModuleClassLoader$DefineClassResult: 1064
-  org/eclipse/osgi/internal/loader/classpath/ClasspathManager$DefineContext: 14
+  org/eclipse/osgi/internal/loader/classpath/ClasspathManager$DefineContext: 12
   org/eclipse/osgi/internal/loader/sources/MultiSourcePackage: 1
   org/eclipse/osgi/internal/loader/sources/NullPackageSource: 11
   org/eclipse/osgi/internal/loader/sources/PackageSource: 1
@@ -8686,7 +8685,7 @@ objects-by-type:
   org/eclipse/osgi/internal/serviceregistry/ShrinkableCollection: 3
   org/eclipse/osgi/internal/serviceregistry/ShrinkableValueCollectionMap: 13
   org/eclipse/osgi/internal/weaving/DynamicImportList: 1064
-  org/eclipse/osgi/internal/weaving/WeavingHookConfigurator$WovenClassContext: 6
+  org/eclipse/osgi/internal/weaving/WeavingHookConfigurator$WovenClassContext: 5
   org/eclipse/osgi/internal/weaving/WovenClassImpl: 1064
   org/eclipse/osgi/storage/NativeCodeFinder: 1
   org/eclipse/osgi/storage/bundlefile/CloseableBundleFile$BundleEntryInputStream: 6553
@@ -8727,22 +8726,22 @@ objects-by-type:
   sun/nio/ch/Util$BufferCache: 1
   sun/nio/cs/ISO_8859_1$Encoder: 46
   sun/nio/cs/StreamDecoder: 371
-  sun/nio/cs/StreamEncoder: 396
+  sun/nio/cs/StreamEncoder: 394
   sun/nio/cs/Surrogate$Parser: 46
   sun/nio/cs/ThreadLocalCoders$1: 1
   sun/nio/cs/ThreadLocalCoders$2: 1
-  sun/nio/cs/UTF_8$Decoder: 583
-  sun/nio/cs/UTF_8$Encoder: 350
+  sun/nio/cs/UTF_8$Decoder: 582
+  sun/nio/cs/UTF_8$Encoder: 348
   sun/nio/fs/NativeBuffer: 433
   sun/nio/fs/NativeBuffer$Deallocator: 218
   sun/nio/fs/UnixChannelFactory$Flags: 4
   sun/nio/fs/UnixFileAttributeViews$Basic: 4127
-  sun/nio/fs/UnixFileAttributeViews$Posix: 26385
-  sun/nio/fs/UnixFileAttributes: 37274
+  sun/nio/fs/UnixFileAttributeViews$Posix: 26395
+  sun/nio/fs/UnixFileAttributes: 37252
   sun/nio/fs/UnixFileAttributes$UnixAsBasicFileAttributes: 4127
   sun/nio/fs/UnixFileKey: 3154
   sun/nio/fs/UnixFileSystem$Flags: 109
-  sun/nio/fs/UnixPath: 62278
+  sun/nio/fs/UnixPath: 62282
   sun/security/jca/GetInstance$Instance: 23
   sun/security/provider/SHA2$SHA256: 23
   sun/security/util/ManifestEntryVerifier: 23
@@ -8767,19 +8766,19 @@ objects-by-type:
   sun/util/resources/provider/NonBaseLocaleDataMetaInfo: 1
 # number of bytes allocated for each class
 bytes-by-type: 
-  B: 58842288
+  B: 58852896
   I: 4208
   [B: 81400
-  [C: 266992792
+  [C: 267200760
   [I: 124200
   [J: 6932928
   [[C: 2554576
-  [[I: 881288
+  [[I: 881528
   [[S: 9360
   [[[[C: 80
-  boolean: 1363912
-  byte: 3016499280
-  char: 1607244112
+  boolean: 1363616
+  byte: 3017331936
+  char: 1607555712
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 586080
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 287648
   com/google/monitoring/runtime/instrumentation/StaticClassWriter: 188000
@@ -8892,25 +8891,25 @@ bytes-by-type:
   com/sun/xml/internal/stream/Entity$ScannedEntity: 13552
   com/sun/xml/internal/stream/XMLEntityStorage: 4720
   com/sun/xml/internal/stream/util/BufferAllocator: 120
-  double: 392
+  double: 336
   float: 160
-  int: 438583736
-  java/io/BufferedInputStream: 2253504
-  java/io/BufferedOutputStream: 56400
-  java/io/BufferedWriter: 13440
+  int: 438654984
+  java/io/BufferedInputStream: 2255232
+  java/io/BufferedOutputStream: 57520
+  java/io/BufferedWriter: 13360
   java/io/ByteArrayInputStream: 99840
   java/io/ByteArrayOutputStream: 264192
   java/io/DataInputStream: 1248
-  java/io/DataOutputStream: 55680
+  java/io/DataOutputStream: 56800
   java/io/EOFException: 760
-  java/io/File: 5681784
-  java/io/FileCleanable: 1275960
-  java/io/FileDescriptor: 913480
-  java/io/FileInputStream: 538112
-  java/io/FileInputStream$1: 269056
-  java/io/FileOutputStream: 152032
-  java/io/FileOutputStream$1: 76016
-  java/io/FileWriter: 6024
+  java/io/File: 5690872
+  java/io/FileCleanable: 1277360
+  java/io/FileDescriptor: 914480
+  java/io/FileInputStream: 538080
+  java/io/FileInputStream$1: 269040
+  java/io/FileOutputStream: 152864
+  java/io/FileOutputStream$1: 76432
+  java/io/FileWriter: 5976
   java/io/InputStreamReader: 8808
   java/io/ObjectStreamField: 1048
   java/io/OutputStreamWriter: 3480
@@ -8920,28 +8919,27 @@ bytes-by-type:
   java/io/StringReader: 4640
   java/io/StringWriter: 936
   java/lang/Byte: 5232
-  java/lang/Class: 58168
+  java/lang/Class: 57992
   java/lang/Class$3: 16
   java/lang/Class$ReflectionData: 1408
   java/lang/ClassNotFoundException: 1040
-  java/lang/CompoundEnumeration: 9000
+  java/lang/CompoundEnumeration: 8856
   java/lang/Double: 2160
-  java/lang/Exception: 31880
+  java/lang/Exception: 32880
   java/lang/Float: 382672
-  java/lang/IllegalArgumentException: 40
   java/lang/IndexOutOfBoundsException: 680
-  java/lang/Integer: 7876080
+  java/lang/Integer: 7876448
   java/lang/Long: 21384
-  java/lang/Object: 132535456
+  java/lang/Object: 132595424
   java/lang/Package: 512
   java/lang/PublicMethods$MethodList: 48
-  java/lang/String: 216071208
-  java/lang/StringBuffer: 11845280
-  java/lang/StringBuilder: 24496280
+  java/lang/String: 216054256
+  java/lang/StringBuffer: 11850144
+  java/lang/StringBuilder: 24507280
   java/lang/StringLatin1$CharsSpliterator: 128
   java/lang/StringUTF16$CharsSpliterator: 64
   java/lang/Thread: 28000
-  java/lang/Thread$FieldHolder: 22280
+  java/lang/Thread$FieldHolder: 22800
   java/lang/ThreadLocal: 67376
   java/lang/TypeNotPresentException: 19080
   java/lang/UnsatisfiedLinkError: 80
@@ -8967,13 +8965,13 @@ bytes-by-type:
   java/lang/invoke/InvokerBytecodeGenerator$ClassData: 1008
   java/lang/invoke/Invokers: 216
   java/lang/invoke/LambdaForm: 2640
-  java/lang/invoke/LambdaForm$Name: 13024
+  java/lang/invoke/LambdaForm$Name: 15040
   java/lang/invoke/LambdaForm$NamedFunction: 1296
   java/lang/invoke/LambdaFormBuffer: 576
   java/lang/invoke/LambdaFormEditor: 4336
   java/lang/invoke/LambdaFormEditor$Transform: 640
   java/lang/invoke/LambdaFormEditor$TransformKey: 6504
-  java/lang/invoke/MemberName: 101904
+  java/lang/invoke/MemberName: 101808
   java/lang/invoke/MethodHandle: 2680
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 240
   java/lang/invoke/MethodHandleImpl$IntrinsicMethodHandle: 3744
@@ -8981,12 +8979,12 @@ bytes-by-type:
   java/lang/invoke/MethodHandles$Lookup: 18784
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 9632
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 7224
-  java/lang/invoke/MethodType: 102000
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 24000
+  java/lang/invoke/MethodType: 101760
+  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 23936
   java/lang/invoke/MethodTypeForm: 2848
   java/lang/invoke/SimpleMethodHandle: 2496
   java/lang/invoke/TypeConvertingMethodAdapter: 24
-  java/lang/invoke/VarHandle$AccessDescriptor: 400
+  java/lang/invoke/VarHandle$AccessDescriptor: 360
   java/lang/invoke/VarHandle$AccessMode: 288
   java/lang/ref/ReferenceQueue: 132832
   java/lang/ref/SoftReference: 677864
@@ -8994,8 +8992,8 @@ bytes-by-type:
   java/lang/reflect/Constructor: 13464
   java/lang/reflect/Field: 6056
   java/lang/reflect/Method: 176
-  java/net/URI: 4456320
-  java/net/URI$Parser: 1649184
+  java/net/URI: 4462560
+  java/net/URI$Parser: 1651680
   java/net/URL: 636160
   java/net/URLClassLoader$1: 600
   java/net/URLClassLoader$2: 408
@@ -9005,23 +9003,23 @@ bytes-by-type:
   java/nio/DirectByteBuffer: 64
   java/nio/DirectByteBuffer$Deallocator: 32
   java/nio/DirectByteBufferR: 266944
-  java/nio/HeapByteBuffer: 760368
+  java/nio/HeapByteBuffer: 760032
   java/nio/file/AccessMode: 32
   java/nio/file/CopyOption: 2616
   java/nio/file/DirectoryNotEmptyException: 1920
-  java/nio/file/LinkOption: 751848
+  java/nio/file/LinkOption: 751576
   java/nio/file/OpenOption: 64
   java/nio/file/Path$1: 24
   java/nio/file/StandardCopyOption: 104
   java/nio/file/attribute/FileAttribute: 6368
-  java/nio/file/attribute/FileTime: 1219392
+  java/nio/file/attribute/FileTime: 1219712
   java/nio/file/attribute/PosixFilePermission: 56
   java/security/AccessControlContext: 720
   java/security/CodeSigner: 288
   java/security/CodeSource: 280
   java/security/MessageDigest$Delegate$CloneableDelegate: 736
   java/security/Permission: 432
-  java/security/ProtectionDomain: 43128
+  java/security/ProtectionDomain: 42216
   java/security/SecureClassLoader$1: 112
   java/security/SecureClassLoader$CodeSourceKey: 112
   java/security/cert/Certificate: 672
@@ -9030,26 +9028,26 @@ bytes-by-type:
   java/text/DigitList: 80
   java/text/DontCareFieldPosition: 32
   java/text/DontCareFieldPosition$1: 16
-  java/text/FieldPosition: 240032
-  java/text/Format: 420056
-  java/text/MessageFormat: 300040
+  java/text/FieldPosition: 242176
+  java/text/Format: 423808
+  java/text/MessageFormat: 302720
   java/text/MessageFormat$Field: 16
   java/text/NumberFormat$Field: 208
   java/util/AbstractList$Itr: 1720480
   java/util/AbstractList$ListItr: 8704
-  java/util/AbstractList$RandomAccessSpliterator: 1920
+  java/util/AbstractList$RandomAccessSpliterator: 2080
   java/util/AbstractList$SubList: 360064
   java/util/AbstractMap$SimpleImmutableEntry: 12312
   java/util/ArrayDeque: 102480
-  java/util/ArrayDeque$DeqSpliterator: 1056
-  java/util/ArrayList: 35472888
-  java/util/ArrayList$ArrayListSpliterator: 23200
-  java/util/ArrayList$Itr: 6604256
+  java/util/ArrayDeque$DeqSpliterator: 672
+  java/util/ArrayList: 35471352
+  java/util/ArrayList$ArrayListSpliterator: 23552
+  java/util/ArrayList$Itr: 6603808
   java/util/ArrayList$ListItr: 16992
   java/util/ArrayList$SubList: 2560
   java/util/ArrayList$SubList$1: 9504
-  java/util/Arrays$ArrayItr: 601848
-  java/util/Arrays$ArrayList: 654408
+  java/util/Arrays$ArrayItr: 601728
+  java/util/Arrays$ArrayList: 654288
   java/util/BitSet: 8169936
   java/util/Collections$1: 25008
   java/util/Collections$3: 96
@@ -9058,10 +9056,10 @@ bytes-by-type:
   java/util/Collections$SingletonMap: 240
   java/util/Collections$SingletonSet: 11760
   java/util/Collections$SynchronizedCollection: 107280
-  java/util/Collections$SynchronizedMap: 15680
+  java/util/Collections$SynchronizedMap: 15552
   java/util/Collections$SynchronizedSet: 7176
   java/util/Collections$UnmodifiableCollection: 1056
-  java/util/Collections$UnmodifiableCollection$1: 738912
+  java/util/Collections$UnmodifiableCollection$1: 738624
   java/util/Collections$UnmodifiableMap: 640
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet: 11504
   java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$1: 17376
@@ -9070,20 +9068,20 @@ bytes-by-type:
   java/util/Collections$UnmodifiableSet: 11600
   java/util/ComparableTimSort: 48
   java/util/Date: 1104
-  java/util/Enumeration: 9000
-  java/util/HashMap: 6905712
-  java/util/HashMap$EntryIterator: 713728
-  java/util/HashMap$EntrySet: 61424
+  java/util/Enumeration: 8856
+  java/util/HashMap: 6899952
+  java/util/HashMap$EntryIterator: 714368
+  java/util/HashMap$EntrySet: 61552
   java/util/HashMap$EntrySpliterator: 800
-  java/util/HashMap$KeyIterator: 2014976
-  java/util/HashMap$KeySet: 637760
+  java/util/HashMap$KeyIterator: 2016160
+  java/util/HashMap$KeySet: 637936
   java/util/HashMap$KeySpliterator: 9800
-  java/util/HashMap$Node: 49495184
+  java/util/HashMap$Node: 49493944
   java/util/HashMap$ValueIterator: 19424
-  java/util/HashMap$Values: 8576
-  java/util/HashSet: 1402320
-  java/util/Hashtable: 813408
-  java/util/Hashtable$Entry: 75436216
+  java/util/HashMap$Values: 8624
+  java/util/HashSet: 1400896
+  java/util/Hashtable: 813552
+  java/util/Hashtable$Entry: 76568008
   java/util/Hashtable$EntrySet: 1712
   java/util/Hashtable$Enumerator: 231696
   java/util/Hashtable$KeySet: 16
@@ -9093,29 +9091,29 @@ bytes-by-type:
   java/util/IdentityHashMap$KeyIterator: 8360
   java/util/IdentityHashMap$KeySet: 3440
   java/util/ImmutableCollections$Access$1: 16
-  java/util/ImmutableCollections$List12: 2448
+  java/util/ImmutableCollections$List12: 2568
   java/util/ImmutableCollections$ListItr: 14208
-  java/util/ImmutableCollections$Map1: 4736
-  java/util/ImmutableCollections$Set12: 6888
-  java/util/ImmutableCollections$Set12$1: 6840
+  java/util/ImmutableCollections$Map1: 5088
+  java/util/ImmutableCollections$Set12: 6960
+  java/util/ImmutableCollections$Set12$1: 6912
   java/util/ImmutableCollections$SetN: 1200
   java/util/ImmutableCollections$SetN$SetNIterator: 1824
-  java/util/KeyValueHolder: 192
-  java/util/LinkedHashMap: 13316160
-  java/util/LinkedHashMap$Entry: 10747200
+  java/util/KeyValueHolder: 264
+  java/util/LinkedHashMap: 13315136
+  java/util/LinkedHashMap$Entry: 10750600
   java/util/LinkedHashMap$LinkedEntryIterator: 7168
-  java/util/LinkedHashMap$LinkedEntrySet: 3288
+  java/util/LinkedHashMap$LinkedEntrySet: 3360
   java/util/LinkedHashMap$LinkedKeyIterator: 563392
   java/util/LinkedHashMap$LinkedKeySet: 68376
-  java/util/LinkedHashMap$LinkedValueIterator: 24512
-  java/util/LinkedHashMap$LinkedValues: 16440
-  java/util/LinkedHashSet: 3283968
+  java/util/LinkedHashMap$LinkedValueIterator: 24608
+  java/util/LinkedHashMap$LinkedValues: 16512
+  java/util/LinkedHashSet: 3283616
   java/util/LinkedList: 37216
   java/util/LinkedList$ListItr: 18400
   java/util/LinkedList$Node: 203520
   java/util/Map: 27080
-  java/util/Map$Entry: 12400
-  java/util/Optional: 81312
+  java/util/Map$Entry: 12840
+  java/util/Optional: 81264
   java/util/OptionalInt: 144
   java/util/Properties: 7112
   java/util/Properties$EntrySet: 1904
@@ -9135,45 +9133,44 @@ bytes-by-type:
   java/util/ServiceLoader$ModuleServicesLookupIterator: 3808
   java/util/ServiceLoader$ProviderImpl: 64
   java/util/ServiceLoader$ProviderSpliterator: 32
-  java/util/Spliterators$1Adapter: 5904
-  java/util/Spliterators$ArraySpliterator: 22326880
+  java/util/Spliterators$1Adapter: 5832
+  java/util/Spliterators$ArraySpliterator: 22326840
   java/util/Spliterators$IteratorSpliterator: 519920
-  java/util/Stack: 34496
+  java/util/Stack: 34560
   java/util/StringTokenizer: 28608
   java/util/TreeMap: 1200
-  java/util/TreeMap$Entry: 47040
+  java/util/TreeMap$Entry: 48720
   java/util/TreeMap$KeyIterator: 800
   java/util/TreeMap$KeySet: 400
   java/util/TreeSet: 400
   java/util/WeakHashMap: 198144
-  java/util/WeakHashMap$Entry: 2475984
-  java/util/WeakHashMap$KeyIterator: 6800
+  java/util/WeakHashMap$Entry: 2477424
+  java/util/WeakHashMap$KeyIterator: 6920
   java/util/WeakHashMap$KeySet: 66048
   java/util/concurrent/ConcurrentHashMap: 10880
-  java/util/concurrent/ConcurrentHashMap$CounterCell: 584
   java/util/concurrent/ConcurrentHashMap$EntryIterator: 6720
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 528
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 1792
-  java/util/concurrent/ConcurrentHashMap$KeyIterator: 322504
+  java/util/concurrent/ConcurrentHashMap$KeyIterator: 322336
   java/util/concurrent/ConcurrentHashMap$KeySetView: 600
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 58704
-  java/util/concurrent/ConcurrentHashMap$Node: 985664
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 2336
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 58752
+  java/util/concurrent/ConcurrentHashMap$Node: 988096
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 2304
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 2240
-  java/util/concurrent/ConcurrentLinkedQueue: 2112
-  java/util/concurrent/ConcurrentLinkedQueue$Node: 42264
+  java/util/concurrent/ConcurrentLinkedQueue: 2280
+  java/util/concurrent/ConcurrentLinkedQueue$Node: 42456
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 6528
   java/util/concurrent/ForkJoinPool: 17640
-  java/util/concurrent/ForkJoinPool$WorkQueue: 102960
-  java/util/concurrent/ForkJoinTask$Aux: 9840
+  java/util/concurrent/ForkJoinPool$WorkQueue: 107016
+  java/util/concurrent/ForkJoinTask$Aux: 11736
   java/util/concurrent/ForkJoinWorkerThread: 2944
   java/util/concurrent/atomic/AtomicLong: 1392
-  java/util/concurrent/atomic/AtomicReference: 50080
+  java/util/concurrent/atomic/AtomicReference: 50288
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 672
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 99624
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 288
-  java/util/concurrent/locks/ReentrantLock: 859200
-  java/util/concurrent/locks/ReentrantLock$NonfairSync: 1720096
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 544
+  java/util/concurrent/locks/ReentrantLock: 860272
+  java/util/concurrent/locks/ReentrantLock$NonfairSync: 1722240
   java/util/jar/Attributes: 19264
   java/util/jar/Attributes$Name: 7392
   java/util/jar/JarFile: 4368
@@ -9215,27 +9212,27 @@ bytes-by-type:
   java/util/stream/MatchOps$1MatchSink: 13403808
   java/util/stream/MatchOps$MatchKind: 128
   java/util/stream/MatchOps$MatchOp: 13403808
-  java/util/stream/Nodes$ArrayNode: 1104
-  java/util/stream/Nodes$CollectorTask: 61488
+  java/util/stream/Nodes$ArrayNode: 1056
+  java/util/stream/Nodes$CollectorTask: 63072
   java/util/stream/Nodes$CollectorTask$OfRef: 3528
-  java/util/stream/Nodes$FixedNodeBuilder: 289248
+  java/util/stream/Nodes$FixedNodeBuilder: 289224
   java/util/stream/Nodes$IntFixedNodeBuilder: 72
-  java/util/stream/Nodes$SpinedNodeBuilder: 28840
-  java/util/stream/Nodes$ToArrayTask$OfRef: 36000
+  java/util/stream/Nodes$SpinedNodeBuilder: 29280
+  java/util/stream/Nodes$ToArrayTask$OfRef: 36800
   java/util/stream/ReduceOps$3: 8448
   java/util/stream/ReduceOps$3ReducingSink: 8448
-  java/util/stream/ReferencePipeline$2: 20216
-  java/util/stream/ReferencePipeline$2$1: 18912
-  java/util/stream/ReferencePipeline$3: 679000
-  java/util/stream/ReferencePipeline$3$1: 301248
+  java/util/stream/ReferencePipeline$2: 19320
+  java/util/stream/ReferencePipeline$2$1: 18792
+  java/util/stream/ReferencePipeline$3: 678944
+  java/util/stream/ReferencePipeline$3$1: 301488
   java/util/stream/ReferencePipeline$4: 168
   java/util/stream/ReferencePipeline$4$1: 72
   java/util/stream/ReferencePipeline$7: 13664
   java/util/stream/ReferencePipeline$7$1: 5856
-  java/util/stream/ReferencePipeline$Head: 32043760
-  java/util/stream/SortedOps$OfRef: 4592
+  java/util/stream/ReferencePipeline$Head: 32042920
+  java/util/stream/SortedOps$OfRef: 4872
   java/util/stream/SortedOps$RefSortingSink: 64
-  java/util/stream/SortedOps$SizedRefSortingSink: 2560
+  java/util/stream/SortedOps$SizedRefSortingSink: 2720
   java/util/stream/StreamSpliterators$WrappingSpliterator: 11712
   java/util/stream/Streams$2: 5856
   java/util/stream/Streams$ConcatSpliterator$OfRef: 5856
@@ -9245,7 +9242,7 @@ bytes-by-type:
   java/util/zip/GZIPOutputStream: 760
   java/util/zip/Inflater: 29056
   java/util/zip/Inflater$InflaterZStreamRef: 10896
-  java/util/zip/ZipEntry: 12822040
+  java/util/zip/ZipEntry: 12825208
   java/util/zip/ZipFile: 129568
   java/util/zip/ZipFile$CleanableResource: 132064
   java/util/zip/ZipFile$InflaterCleanupAction: 252744
@@ -9254,11 +9251,11 @@ bytes-by-type:
   java/util/zip/ZipFile$Source$Key: 99048
   java/util/zip/ZipFile$ZipEntryIterator: 6312
   java/util/zip/ZipFile$ZipFileInflaterInputStream: 505488
-  java/util/zip/ZipFile$ZipFileInputStream: 2999248
+  java/util/zip/ZipFile$ZipFileInputStream: 3001264
   javax/xml/catalog/CatalogFeatures$Feature: 3776
   javax/xml/parsers/FactoryFinder$1: 1872
   jdk/internal/jimage/ImageLocation: 100104
-  jdk/internal/loader/BuiltinClassLoader$1: 12032
+  jdk/internal/loader/BuiltinClassLoader$1: 11840
   jdk/internal/loader/BuiltinClassLoader$2: 744
   jdk/internal/loader/NativeLibraries$1: 208
   jdk/internal/loader/NativeLibraries$2: 16
@@ -9267,7 +9264,7 @@ bytes-by-type:
   jdk/internal/loader/URLClassPath$1: 7520
   jdk/internal/loader/URLClassPath$JarLoader$2: 920
   jdk/internal/math/FloatingDecimal$ASCIIToBinaryBuffer: 2560
-  jdk/internal/misc/InternalLock: 791376
+  jdk/internal/misc/InternalLock: 792336
   jdk/internal/org/objectweb/asm/AnnotationWriter: 6048
   jdk/internal/org/objectweb/asm/ByteVector: 31944
   jdk/internal/org/objectweb/asm/ClassWriter: 45752
@@ -9285,11 +9282,11 @@ bytes-by-type:
   jdk/internal/reflect/MethodHandleObjectFieldAccessorImpl: 2368
   jdk/internal/vm/SharedThreadContainer: 1960
   jdk/xml/internal/JdkProperty$State: 19712
-  long: 39611824
+  long: 39589696
   org/dacapo/eclipse/BenchmarkRunner: 16
   org/eclipse/core/filesystem/IFileInfo: 20576
   org/eclipse/core/filesystem/IFileStore: 20560
-  org/eclipse/core/filesystem/provider/FileInfo: 1260432
+  org/eclipse/core/filesystem/provider/FileInfo: 1260912
   org/eclipse/core/internal/content/ContentDescription: 65120
   org/eclipse/core/internal/content/ContentType: 808
   org/eclipse/core/internal/content/ContentTypeBuilder: 16
@@ -9302,37 +9299,36 @@ bytes-by-type:
   org/eclipse/core/internal/content/FileSpec: 408
   org/eclipse/core/internal/content/LazyInputStream: 81400
   org/eclipse/core/internal/content/TextContentDescriber: 16
-  org/eclipse/core/internal/dtree/AbstractDataTreeNode: 4338000
-  org/eclipse/core/internal/dtree/DataDeltaNode: 434328
-  org/eclipse/core/internal/dtree/DataTreeLookup: 13547976
-  org/eclipse/core/internal/dtree/DataTreeNode: 2389896
+  org/eclipse/core/internal/dtree/AbstractDataTreeNode: 4328920
+  org/eclipse/core/internal/dtree/DataDeltaNode: 435624
+  org/eclipse/core/internal/dtree/DataTreeLookup: 13542960
+  org/eclipse/core/internal/dtree/DataTreeNode: 2349552
   org/eclipse/core/internal/dtree/DataTreeReader: 1824
   org/eclipse/core/internal/dtree/DataTreeWriter: 1632
-  org/eclipse/core/internal/dtree/DeletedNode: 58992
-  org/eclipse/core/internal/dtree/DeltaDataTree: 33624
-  org/eclipse/core/internal/dtree/NoDataDeltaNode: 1176480
-  org/eclipse/core/internal/dtree/NodeComparison: 1713600
-  org/eclipse/core/internal/events/BuildCommand: 17760
+  org/eclipse/core/internal/dtree/DeletedNode: 58872
+  org/eclipse/core/internal/dtree/DeltaDataTree: 34296
+  org/eclipse/core/internal/dtree/NoDataDeltaNode: 1170624
+  org/eclipse/core/internal/dtree/NodeComparison: 1657024
+  org/eclipse/core/internal/events/BuildCommand: 17600
   org/eclipse/core/internal/events/BuildContext: 912
   org/eclipse/core/internal/events/BuildManager$1: 912
   org/eclipse/core/internal/events/BuildManager$2: 760
   org/eclipse/core/internal/events/BuilderPersistentInfo: 1520
   org/eclipse/core/internal/events/LifecycleEvent: 32
-  org/eclipse/core/internal/events/NodeIDMap: 10528
-  org/eclipse/core/internal/events/NotificationManager$1: 28800
-  org/eclipse/core/internal/events/ResourceChangeEvent: 13472
-  org/eclipse/core/internal/events/ResourceChangeListenerList$ListenerEntry: 18648
+  org/eclipse/core/internal/events/NodeIDMap: 10752
+  org/eclipse/core/internal/events/NotificationManager$1: 29496
+  org/eclipse/core/internal/events/ResourceChangeEvent: 13664
+  org/eclipse/core/internal/events/ResourceChangeListenerList$ListenerEntry: 19152
   org/eclipse/core/internal/events/ResourceComparator: 1088
-  org/eclipse/core/internal/events/ResourceDelta: 2264664
-  org/eclipse/core/internal/events/ResourceDeltaInfo: 10528
+  org/eclipse/core/internal/events/ResourceDelta: 2163104
+  org/eclipse/core/internal/events/ResourceDeltaInfo: 10752
   org/eclipse/core/internal/filesystem/local/InfiniteProgress: 7920
-  org/eclipse/core/internal/filesystem/local/LocalFile: 1610736
+  org/eclipse/core/internal/filesystem/local/LocalFile: 1613472
   org/eclipse/core/internal/filesystem/local/nio/PosixHandler: 16
-  org/eclipse/core/internal/jobs/JobChangeEvent: 66920
+  org/eclipse/core/internal/jobs/JobChangeEvent: 66960
   org/eclipse/core/internal/jobs/JobManager$3: 24
-  org/eclipse/core/internal/jobs/JobQueue$2: 24
-  org/eclipse/core/internal/jobs/Semaphore: 1056
-  org/eclipse/core/internal/jobs/ThreadJob: 7440
+  org/eclipse/core/internal/jobs/Semaphore: 672
+  org/eclipse/core/internal/jobs/ThreadJob: 8280
   org/eclipse/core/internal/jobs/Worker: 384
   org/eclipse/core/internal/localstore/BlobStore: 24
   org/eclipse/core/internal/localstore/BucketTree: 24
@@ -9346,14 +9342,14 @@ bytes-by-type:
   org/eclipse/core/internal/localstore/HistoryStore2$HistoryCopyVisitor: 4032
   org/eclipse/core/internal/localstore/IsSynchronizedVisitor: 800
   org/eclipse/core/internal/localstore/RefreshLocalAliasVisitor: 2528
-  org/eclipse/core/internal/localstore/SafeChunkyOutputStream: 34496
+  org/eclipse/core/internal/localstore/SafeChunkyOutputStream: 35136
   org/eclipse/core/internal/localstore/SafeFileInputStream: 608
   org/eclipse/core/internal/localstore/SafeFileOutputStream: 1824
   org/eclipse/core/internal/localstore/UnifiedTree: 11760
   org/eclipse/core/internal/localstore/UnifiedTreeNode: 80720
   org/eclipse/core/internal/preferences/ConfigurationPreferences: 144
   org/eclipse/core/internal/preferences/DefaultPreferences: 80
-  org/eclipse/core/internal/preferences/EclipsePreferences$1: 3328
+  org/eclipse/core/internal/preferences/EclipsePreferences$1: 3296
   org/eclipse/core/internal/preferences/EclipsePreferences$2: 432
   org/eclipse/core/internal/preferences/ImmutableMap$ArrayMap: 864
   org/eclipse/core/internal/preferences/InstancePreferences: 216
@@ -9368,44 +9364,44 @@ bytes-by-type:
   org/eclipse/core/internal/registry/ConfigurationElementHandle: 9712
   org/eclipse/core/internal/registry/Extension: 40
   org/eclipse/core/internal/registry/ExtensionHandle: 3584
-  org/eclipse/core/internal/registry/ExtensionPointHandle: 5976
+  org/eclipse/core/internal/registry/ExtensionPointHandle: 5880
   org/eclipse/core/internal/registry/ReferenceMap$SoftRef: 48
-  org/eclipse/core/internal/resources/BuildConfiguration: 1944
+  org/eclipse/core/internal/resources/BuildConfiguration: 1872
   org/eclipse/core/internal/resources/CharsetDeltaJob$1: 640
   org/eclipse/core/internal/resources/ComputeProjectOrder$Digraph: 64
   org/eclipse/core/internal/resources/ComputeProjectOrder$Digraph$Vertex: 1216
   org/eclipse/core/internal/resources/ComputeProjectOrder$VertexOrder: 24
   org/eclipse/core/internal/resources/ContentDescriptionManager$LazyFileInputStream: 48840
-  org/eclipse/core/internal/resources/File: 1108896
-  org/eclipse/core/internal/resources/Folder: 2309712
-  org/eclipse/core/internal/resources/IMarkerSetElement: 334920
-  org/eclipse/core/internal/resources/Marker: 47664
-  org/eclipse/core/internal/resources/MarkerAttributeMap: 23264
-  org/eclipse/core/internal/resources/MarkerDelta: 60480
-  org/eclipse/core/internal/resources/MarkerInfo: 72168
+  org/eclipse/core/internal/resources/File: 1107192
+  org/eclipse/core/internal/resources/Folder: 2310408
+  org/eclipse/core/internal/resources/IMarkerSetElement: 333312
+  org/eclipse/core/internal/resources/Marker: 48696
+  org/eclipse/core/internal/resources/MarkerAttributeMap: 23360
+  org/eclipse/core/internal/resources/MarkerDelta: 60696
+  org/eclipse/core/internal/resources/MarkerInfo: 72528
   org/eclipse/core/internal/resources/MarkerManager$1: 960
   org/eclipse/core/internal/resources/MarkerReader: 304
   org/eclipse/core/internal/resources/MarkerReader_3: 304
-  org/eclipse/core/internal/resources/MarkerSet: 53976
+  org/eclipse/core/internal/resources/MarkerSet: 54072
   org/eclipse/core/internal/resources/ModelObjectWriter: 960
   org/eclipse/core/internal/resources/NatureManager$1: 640
   org/eclipse/core/internal/resources/Project: 1872
   org/eclipse/core/internal/resources/ProjectContentTypes$ProjectContentTypeSelectionPolicy: 336
-  org/eclipse/core/internal/resources/ProjectDescription: 37488
+  org/eclipse/core/internal/resources/ProjectDescription: 37136
   org/eclipse/core/internal/resources/ProjectDescriptionReader: 1520
   org/eclipse/core/internal/resources/ProjectInfo: 18800
   org/eclipse/core/internal/resources/ProjectNatureDescriptor: 64
-  org/eclipse/core/internal/resources/ProjectPathVariableManager: 770256
+  org/eclipse/core/internal/resources/ProjectPathVariableManager: 770280
   org/eclipse/core/internal/resources/ProjectPreferences: 15576
   org/eclipse/core/internal/resources/ProjectVariableProviderManager: 16
   org/eclipse/core/internal/resources/ProjectVariableProviderManager$Descriptor: 160
-  org/eclipse/core/internal/resources/Resource: 140160
-  org/eclipse/core/internal/resources/ResourceException: 31880
-  org/eclipse/core/internal/resources/ResourceInfo: 877504
+  org/eclipse/core/internal/resources/Resource: 140928
+  org/eclipse/core/internal/resources/ResourceException: 32880
+  org/eclipse/core/internal/resources/ResourceInfo: 876928
   org/eclipse/core/internal/resources/ResourceProxy: 4352
-  org/eclipse/core/internal/resources/ResourceStatus: 31920
+  org/eclipse/core/internal/resources/ResourceStatus: 32920
   org/eclipse/core/internal/resources/ResourceTree: 640
-  org/eclipse/core/internal/resources/RootInfo: 21096
+  org/eclipse/core/internal/resources/RootInfo: 21600
   org/eclipse/core/internal/resources/SafeFileTable: 1632
   org/eclipse/core/internal/resources/SaveContext: 2720
   org/eclipse/core/internal/resources/SaveManager$1: 8160
@@ -9420,46 +9416,46 @@ bytes-by-type:
   org/eclipse/core/internal/resources/projectvariables/ProjectLocationVariableResolver: 16
   org/eclipse/core/internal/resources/projectvariables/WorkspaceLocationVariableResolver: 16
   org/eclipse/core/internal/resources/projectvariables/WorkspaceParentLocationVariableResolver: 16
-  org/eclipse/core/internal/utils/KeyedHashSet$KeyedElement: 56304
+  org/eclipse/core/internal/utils/KeyedHashSet$KeyedElement: 59568
   org/eclipse/core/internal/utils/ObjectMap: 456
-  org/eclipse/core/internal/watson/ElementTree: 14608
-  org/eclipse/core/internal/watson/ElementTree$ChildIDsCache: 64200
-  org/eclipse/core/internal/watson/ElementTreeIterator: 26688
+  org/eclipse/core/internal/watson/ElementTree: 14888
+  org/eclipse/core/internal/watson/ElementTree$ChildIDsCache: 64224
+  org/eclipse/core/internal/watson/ElementTreeIterator: 27008
   org/eclipse/core/internal/watson/ElementTreeReader: 456
   org/eclipse/core/internal/watson/ElementTreeReader$1: 1824
   org/eclipse/core/internal/watson/ElementTreeReaderImpl_1: 1368
   org/eclipse/core/internal/watson/ElementTreeWriter: 1088
   org/eclipse/core/internal/watson/ElementTreeWriter$1: 1632
-  org/eclipse/core/resources/IBuildConfiguration: 22320
-  org/eclipse/core/resources/ICommand: 13080
-  org/eclipse/core/resources/IMarker: 7808
+  org/eclipse/core/resources/IBuildConfiguration: 22488
+  org/eclipse/core/resources/ICommand: 12984
+  org/eclipse/core/resources/IMarker: 7928
   org/eclipse/core/resources/IMarkerDelta: 8688
-  org/eclipse/core/resources/IProject: 48352
+  org/eclipse/core/resources/IProject: 49120
   org/eclipse/core/resources/IResource: 16
-  org/eclipse/core/resources/IResourceDelta: 146992
-  org/eclipse/core/resources/ProjectScope: 2048
+  org/eclipse/core/resources/IResourceDelta: 146352
+  org/eclipse/core/resources/ProjectScope: 2000
   org/eclipse/core/resources/ResourceAttributes: 2320
   org/eclipse/core/runtime/IConfigurationElement: 784
   org/eclipse/core/runtime/IExtension: 40
-  org/eclipse/core/runtime/IPath: 1979608
-  org/eclipse/core/runtime/IProgressMonitor: 7152
+  org/eclipse/core/runtime/IPath: 1940528
+  org/eclipse/core/runtime/IProgressMonitor: 7224
   org/eclipse/core/runtime/IStatus: 1104
-  org/eclipse/core/runtime/ListenerList: 14568
-  org/eclipse/core/runtime/ListenerList$ListenerListIterator: 92424
+  org/eclipse/core/runtime/ListenerList: 14736
+  org/eclipse/core/runtime/ListenerList$ListenerListIterator: 92472
   org/eclipse/core/runtime/MultiStatus: 36600
-  org/eclipse/core/runtime/NullProgressMonitor: 89024
-  org/eclipse/core/runtime/Path: 27702880
+  org/eclipse/core/runtime/NullProgressMonitor: 89264
+  org/eclipse/core/runtime/Path: 27632896
   org/eclipse/core/runtime/Preferences$1: 192
   org/eclipse/core/runtime/Preferences$PropertyChangeEvent: 64
   org/eclipse/core/runtime/QualifiedName: 2472
   org/eclipse/core/runtime/ServiceCaller: 32
   org/eclipse/core/runtime/ServiceCaller$ReferenceAndService: 32
-  org/eclipse/core/runtime/Status: 8256
-  org/eclipse/core/runtime/SubMonitor: 520752
-  org/eclipse/core/runtime/SubMonitor$RootInfo: 131392
+  org/eclipse/core/runtime/Status: 8416
+  org/eclipse/core/runtime/SubMonitor: 516192
+  org/eclipse/core/runtime/SubMonitor$RootInfo: 131296
   org/eclipse/core/runtime/SubProgressMonitor: 39256
   org/eclipse/core/runtime/content/IContentType: 1091744
-  org/eclipse/core/runtime/jobs/ISchedulingRule: 5768
+  org/eclipse/core/runtime/jobs/ISchedulingRule: 5528
   org/eclipse/core/runtime/jobs/MultiRule: 624
   org/eclipse/core/runtime/preferences/IEclipsePreferences$NodeChangeEvent: 7272
   org/eclipse/core/runtime/preferences/IEclipsePreferences$PreferenceChangeEvent: 1504
@@ -9468,29 +9464,29 @@ bytes-by-type:
   org/eclipse/equinox/internal/app/EclipseAppContainer$RegisterService: 32
   org/eclipse/equinox/internal/app/EclipseAppHandle: 56
   org/eclipse/jdt/core/BufferChangedEvent: 4896
-  org/eclipse/jdt/core/ElementChangedEvent: 4080
+  org/eclipse/jdt/core/ElementChangedEvent: 4152
   org/eclipse/jdt/core/IAccessRule: 16
   org/eclipse/jdt/core/IAnnotation: 16
   org/eclipse/jdt/core/IClassFile: 16
   org/eclipse/jdt/core/IClasspathAttribute: 16
-  org/eclipse/jdt/core/IClasspathEntry: 57264
+  org/eclipse/jdt/core/IClasspathEntry: 56736
   org/eclipse/jdt/core/ICompilationUnit: 2688
   org/eclipse/jdt/core/IField: 48
   org/eclipse/jdt/core/IImportDeclaration: 145632
   org/eclipse/jdt/core/IInitializer: 32
-  org/eclipse/jdt/core/IJavaElement: 111480
-  org/eclipse/jdt/core/IJavaElementDelta: 14624
-  org/eclipse/jdt/core/IJavaProject: 61152
+  org/eclipse/jdt/core/IJavaElement: 111848
+  org/eclipse/jdt/core/IJavaElementDelta: 14496
+  org/eclipse/jdt/core/IJavaProject: 62888
   org/eclipse/jdt/core/ILocalVariable: 16
   org/eclipse/jdt/core/IMemberValuePair: 16
   org/eclipse/jdt/core/IMethod: 32
   org/eclipse/jdt/core/IModuleDescription: 16
   org/eclipse/jdt/core/IOrdinaryClassFile: 16
-  org/eclipse/jdt/core/IPackageFragment: 746976
+  org/eclipse/jdt/core/IPackageFragment: 746952
   org/eclipse/jdt/core/IPackageFragmentRoot: 108064
   org/eclipse/jdt/core/IType: 137640
   org/eclipse/jdt/core/ITypeParameter: 16
-  org/eclipse/jdt/core/JavaModelException: 13200
+  org/eclipse/jdt/core/JavaModelException: 13680
   org/eclipse/jdt/core/compiler/CategorizedProblem: 44864
   org/eclipse/jdt/core/compiler/IProblem: 16
   org/eclipse/jdt/core/compiler/InvalidInputException: 480
@@ -9639,7 +9635,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/codeassist/complete/CompletionScanner: 40320
   org/eclipse/jdt/internal/codeassist/impl/AssistOptions: 5760
   org/eclipse/jdt/internal/codeassist/impl/AssistParser: 2880
-  org/eclipse/jdt/internal/compiler/ClassFile: 190576
+  org/eclipse/jdt/internal/compiler/ClassFile: 190768
   org/eclipse/jdt/internal/compiler/ClassFile$1: 14080
   org/eclipse/jdt/internal/compiler/ClassFilePool: 2560
   org/eclipse/jdt/internal/compiler/CompilationResult: 1485408
@@ -9772,28 +9768,28 @@ bytes-by-type:
   org/eclipse/jdt/internal/compiler/ast/UnaryExpression: 1561392
   org/eclipse/jdt/internal/compiler/ast/UnlikelyArgumentCheck: 54880
   org/eclipse/jdt/internal/compiler/ast/WhileStatement: 392576
-  org/eclipse/jdt/internal/compiler/classfmt/AnnotationInfo: 599016
+  org/eclipse/jdt/internal/compiler/classfmt/AnnotationInfo: 601392
   org/eclipse/jdt/internal/compiler/classfmt/AnnotationMethodInfo: 25440
   org/eclipse/jdt/internal/compiler/classfmt/AnnotationMethodInfoWithAnnotations: 1120
-  org/eclipse/jdt/internal/compiler/classfmt/ClassFileReader: 8321808
+  org/eclipse/jdt/internal/compiler/classfmt/ClassFileReader: 8328144
   org/eclipse/jdt/internal/compiler/classfmt/ElementValuePairInfo: 42800
-  org/eclipse/jdt/internal/compiler/classfmt/FieldInfo: 15430208
+  org/eclipse/jdt/internal/compiler/classfmt/FieldInfo: 15433344
   org/eclipse/jdt/internal/compiler/classfmt/FieldInfoWithAnnotation: 27840
-  org/eclipse/jdt/internal/compiler/classfmt/InnerClassInfo: 3536800
-  org/eclipse/jdt/internal/compiler/classfmt/MethodInfo: 35054816
+  org/eclipse/jdt/internal/compiler/classfmt/InnerClassInfo: 3541472
+  org/eclipse/jdt/internal/compiler/classfmt/MethodInfo: 35067984
   org/eclipse/jdt/internal/compiler/classfmt/MethodInfoWithAnnotations: 203440
   org/eclipse/jdt/internal/compiler/classfmt/MethodInfoWithParameterAnnotations: 77120
-  org/eclipse/jdt/internal/compiler/codegen/BranchLabel: 3384688
+  org/eclipse/jdt/internal/compiler/codegen/BranchLabel: 3384656
   org/eclipse/jdt/internal/compiler/codegen/CachedIndexEntry: 3025344
   org/eclipse/jdt/internal/compiler/codegen/CaseLabel: 87336
-  org/eclipse/jdt/internal/compiler/codegen/CharArrayCache: 269920
-  org/eclipse/jdt/internal/compiler/codegen/CodeStream: 46080
-  org/eclipse/jdt/internal/compiler/codegen/ConstantPool: 25600
-  org/eclipse/jdt/internal/compiler/codegen/DoubleCache: 168
-  org/eclipse/jdt/internal/compiler/codegen/ExceptionLabel: 278344
+  org/eclipse/jdt/internal/compiler/codegen/CharArrayCache: 270240
+  org/eclipse/jdt/internal/compiler/codegen/CodeStream: 46368
+  org/eclipse/jdt/internal/compiler/codegen/ConstantPool: 25760
+  org/eclipse/jdt/internal/compiler/codegen/DoubleCache: 144
+  org/eclipse/jdt/internal/compiler/codegen/ExceptionLabel: 278424
   org/eclipse/jdt/internal/compiler/codegen/FloatCache: 120
-  org/eclipse/jdt/internal/compiler/codegen/IntegerCache: 2624
-  org/eclipse/jdt/internal/compiler/codegen/LongCache: 1312
+  org/eclipse/jdt/internal/compiler/codegen/IntegerCache: 2656
+  org/eclipse/jdt/internal/compiler/codegen/LongCache: 1280
   org/eclipse/jdt/internal/compiler/codegen/ObjectCache: 1107296
   org/eclipse/jdt/internal/compiler/env/AccessRuleSet: 24
   org/eclipse/jdt/internal/compiler/env/ClassSignature: 672
@@ -9801,7 +9797,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/compiler/env/IBinaryAnnotation: 16
   org/eclipse/jdt/internal/compiler/env/IBinaryField: 16
   org/eclipse/jdt/internal/compiler/env/IBinaryMethod: 313496
-  org/eclipse/jdt/internal/compiler/env/IBinaryNestedType: 534776
+  org/eclipse/jdt/internal/compiler/env/IBinaryNestedType: 535512
   org/eclipse/jdt/internal/compiler/env/ICompilationUnit: 10160
   org/eclipse/jdt/internal/compiler/env/IGenericType: 2736
   org/eclipse/jdt/internal/compiler/env/IModuleAwareNameEnvironment$LookupStrategy: 128
@@ -9842,7 +9838,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/compiler/impl/StringConstant: 333280
   org/eclipse/jdt/internal/compiler/lookup/AnnotationBinding: 52648
   org/eclipse/jdt/internal/compiler/lookup/AnnotationHolder: 48464
-  org/eclipse/jdt/internal/compiler/lookup/ArrayBinding: 290688
+  org/eclipse/jdt/internal/compiler/lookup/ArrayBinding: 290752
   org/eclipse/jdt/internal/compiler/lookup/ArrayBinding$1: 1760
   org/eclipse/jdt/internal/compiler/lookup/BinaryTypeBinding: 682560
   org/eclipse/jdt/internal/compiler/lookup/BinaryTypeBinding$1: 16
@@ -9859,10 +9855,10 @@ bytes-by-type:
   org/eclipse/jdt/internal/compiler/lookup/ImportBinding: 3024632
   org/eclipse/jdt/internal/compiler/lookup/InnerEmulationDependency: 704
   org/eclipse/jdt/internal/compiler/lookup/LocalTypeBinding: 111800
-  org/eclipse/jdt/internal/compiler/lookup/LocalVariableBinding: 17231064
+  org/eclipse/jdt/internal/compiler/lookup/LocalVariableBinding: 17230976
   org/eclipse/jdt/internal/compiler/lookup/LookupEnvironment: 26880
   org/eclipse/jdt/internal/compiler/lookup/MemberTypeBinding: 170200
-  org/eclipse/jdt/internal/compiler/lookup/MethodBinding: 27928984
+  org/eclipse/jdt/internal/compiler/lookup/MethodBinding: 27928952
   org/eclipse/jdt/internal/compiler/lookup/MethodScope: 21301800
   org/eclipse/jdt/internal/compiler/lookup/MethodVerifier15: 3240
   org/eclipse/jdt/internal/compiler/lookup/MissingTypeBinding: 7776
@@ -9873,7 +9869,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/compiler/lookup/ParameterNonNullDefaultProvider$2: 16
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedFieldBinding: 4704
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedGenericMethodBinding: 31712
-  org/eclipse/jdt/internal/compiler/lookup/ParameterizedMethodBinding: 356800
+  org/eclipse/jdt/internal/compiler/lookup/ParameterizedMethodBinding: 356960
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedMethodBinding$1: 2880
   org/eclipse/jdt/internal/compiler/lookup/ParameterizedTypeBinding: 243984
   org/eclipse/jdt/internal/compiler/lookup/PlainPackageBinding: 327544
@@ -9898,14 +9894,14 @@ bytes-by-type:
   org/eclipse/jdt/internal/compiler/lookup/SyntheticArgumentBinding: 94904
   org/eclipse/jdt/internal/compiler/lookup/SyntheticFieldBinding: 74648
   org/eclipse/jdt/internal/compiler/lookup/SyntheticMethodBinding: 42440
-  org/eclipse/jdt/internal/compiler/lookup/TypeBinding: 6578088
+  org/eclipse/jdt/internal/compiler/lookup/TypeBinding: 6578232
   org/eclipse/jdt/internal/compiler/lookup/TypeConstants$DangerousMethod: 392
   org/eclipse/jdt/internal/compiler/lookup/TypeSystem: 5120
   org/eclipse/jdt/internal/compiler/lookup/TypeSystem$HashedParameterizedTypes: 4200
   org/eclipse/jdt/internal/compiler/lookup/TypeSystem$HashedParameterizedTypes$PTBKey: 331056
   org/eclipse/jdt/internal/compiler/lookup/TypeVariableBinding: 430232
   org/eclipse/jdt/internal/compiler/lookup/UnresolvedAnnotationBinding: 32
-  org/eclipse/jdt/internal/compiler/lookup/UnresolvedReferenceBinding: 1237632
+  org/eclipse/jdt/internal/compiler/lookup/UnresolvedReferenceBinding: 1237456
   org/eclipse/jdt/internal/compiler/lookup/VariableBinding: 51912
   org/eclipse/jdt/internal/compiler/parser/JavadocParser: 76824
   org/eclipse/jdt/internal/compiler/parser/Parser: 21600
@@ -9928,25 +9924,25 @@ bytes-by-type:
   org/eclipse/jdt/internal/compiler/problem/DefaultProblem: 102288
   org/eclipse/jdt/internal/compiler/problem/DefaultProblemFactory: 6096
   org/eclipse/jdt/internal/compiler/problem/ProblemReporter: 15320
-  org/eclipse/jdt/internal/compiler/util/CharArray: 5869296
+  org/eclipse/jdt/internal/compiler/util/CharArray: 5870016
   org/eclipse/jdt/internal/compiler/util/CharArrayHashMap: 15296
   org/eclipse/jdt/internal/compiler/util/CharArrayMap: 148800
   org/eclipse/jdt/internal/compiler/util/CharDeduplication$CacheReference: 48
   org/eclipse/jdt/internal/compiler/util/GenericXMLWriter$1: 3168
   org/eclipse/jdt/internal/compiler/util/HashtableOfInt: 64
   org/eclipse/jdt/internal/compiler/util/HashtableOfIntValues: 154720
-  org/eclipse/jdt/internal/compiler/util/HashtableOfInteger: 10240
+  org/eclipse/jdt/internal/compiler/util/HashtableOfInteger: 10304
   org/eclipse/jdt/internal/compiler/util/HashtableOfLong: 166976
   org/eclipse/jdt/internal/compiler/util/HashtableOfModule: 5600
-  org/eclipse/jdt/internal/compiler/util/HashtableOfObject: 6407424
-  org/eclipse/jdt/internal/compiler/util/HashtableOfObjectToInt: 236448
+  org/eclipse/jdt/internal/compiler/util/HashtableOfObject: 6411008
+  org/eclipse/jdt/internal/compiler/util/HashtableOfObjectToInt: 236512
   org/eclipse/jdt/internal/compiler/util/HashtableOfPackage: 148800
   org/eclipse/jdt/internal/compiler/util/HashtableOfType: 288224
   org/eclipse/jdt/internal/compiler/util/ManifestAnalyzer: 3840
   org/eclipse/jdt/internal/compiler/util/Messages$MessagesProperties: 56
   org/eclipse/jdt/internal/compiler/util/ObjectVector: 652944
-  org/eclipse/jdt/internal/compiler/util/SimpleLookupTable: 460352
-  org/eclipse/jdt/internal/compiler/util/SimpleSet: 167064
+  org/eclipse/jdt/internal/compiler/util/SimpleLookupTable: 460480
+  org/eclipse/jdt/internal/compiler/util/SimpleSet: 167112
   org/eclipse/jdt/internal/compiler/util/SimpleSetOfCharArray: 81216
   org/eclipse/jdt/internal/core/AnnotatableInfo: 188560
   org/eclipse/jdt/internal/core/Annotation: 60064
@@ -9961,8 +9957,8 @@ bytes-by-type:
   org/eclipse/jdt/internal/core/CancelableProblemFactory: 24
   org/eclipse/jdt/internal/core/ClassFile: 154688
   org/eclipse/jdt/internal/core/ClasspathChange: 5440
-  org/eclipse/jdt/internal/core/ClasspathEntry: 243016
-  org/eclipse/jdt/internal/core/ClasspathValidation: 3816
+  org/eclipse/jdt/internal/core/ClasspathEntry: 241432
+  org/eclipse/jdt/internal/core/ClasspathValidation: 3584
   org/eclipse/jdt/internal/core/CompilationGroup: 72
   org/eclipse/jdt/internal/core/CompilationUnit: 109088
   org/eclipse/jdt/internal/core/CompilationUnit$1: 5920
@@ -9970,44 +9966,44 @@ bytes-by-type:
   org/eclipse/jdt/internal/core/CompilationUnitStructureRequestor: 11840
   org/eclipse/jdt/internal/core/CreateTypeHierarchyOperation: 56
   org/eclipse/jdt/internal/core/DefaultWorkingCopyOwner: 16
-  org/eclipse/jdt/internal/core/DeltaProcessingState$RootInfos: 5408
-  org/eclipse/jdt/internal/core/DeltaProcessor: 13504
-  org/eclipse/jdt/internal/core/DeltaProcessor$1FoundRelevantDeltaException: 7960
-  org/eclipse/jdt/internal/core/DeltaProcessor$2: 3696
+  org/eclipse/jdt/internal/core/DeltaProcessingState$RootInfos: 5504
+  org/eclipse/jdt/internal/core/DeltaProcessor: 13760
+  org/eclipse/jdt/internal/core/DeltaProcessor$1FoundRelevantDeltaException: 8160
+  org/eclipse/jdt/internal/core/DeltaProcessor$2: 3808
   org/eclipse/jdt/internal/core/DeltaProcessor$OutputsInfo: 3312
-  org/eclipse/jdt/internal/core/DeltaProcessor$RootInfo: 243312
+  org/eclipse/jdt/internal/core/DeltaProcessor$RootInfo: 251760
   org/eclipse/jdt/internal/core/DynamicProjectReferences: 304
-  org/eclipse/jdt/internal/core/ExternalFolderChange: 3936
+  org/eclipse/jdt/internal/core/ExternalFolderChange: 3888
   org/eclipse/jdt/internal/core/ImportContainer: 127704
   org/eclipse/jdt/internal/core/ImportContainerInfo: 1520
   org/eclipse/jdt/internal/core/ImportDeclaration: 23232
   org/eclipse/jdt/internal/core/ImportDeclarationElementInfo: 23232
   org/eclipse/jdt/internal/core/Initializer: 216
   org/eclipse/jdt/internal/core/InitializerElementInfo: 136
-  org/eclipse/jdt/internal/core/JarPackageFragment: 281248
-  org/eclipse/jdt/internal/core/JarPackageFragmentRoot: 162560
+  org/eclipse/jdt/internal/core/JarPackageFragment: 281216
+  org/eclipse/jdt/internal/core/JarPackageFragmentRoot: 167200
   org/eclipse/jdt/internal/core/JarPackageFragmentRootInfo: 3504
-  org/eclipse/jdt/internal/core/JavaElementDelta: 48512
-  org/eclipse/jdt/internal/core/JavaElementDelta$Key: 13856
+  org/eclipse/jdt/internal/core/JavaElementDelta: 48896
+  org/eclipse/jdt/internal/core/JavaElementDelta$Key: 13792
   org/eclipse/jdt/internal/core/JavaElementRequestor: 1145760
   org/eclipse/jdt/internal/core/JavaModelInfo: 32
-  org/eclipse/jdt/internal/core/JavaModelManager$16: 39296
+  org/eclipse/jdt/internal/core/JavaModelManager$16: 40960
   org/eclipse/jdt/internal/core/JavaModelManager$18: 176
   org/eclipse/jdt/internal/core/JavaModelManager$ArchiveValidity: 72
   org/eclipse/jdt/internal/core/JavaModelManager$InvalidArchiveInfo: 23400
   org/eclipse/jdt/internal/core/JavaModelManager$PerProjectInfo: 5104
   org/eclipse/jdt/internal/core/JavaModelManager$VariablesAndContainersSaveHelper: 2176
   org/eclipse/jdt/internal/core/JavaModelManager$ZipCache: 72
-  org/eclipse/jdt/internal/core/JavaModelStatus: 21696
-  org/eclipse/jdt/internal/core/JavaProject: 2033984
-  org/eclipse/jdt/internal/core/JavaProject$2: 1320
-  org/eclipse/jdt/internal/core/JavaProject$3: 880
-  org/eclipse/jdt/internal/core/JavaProject$ResolvedClasspath: 15552
+  org/eclipse/jdt/internal/core/JavaModelStatus: 22368
+  org/eclipse/jdt/internal/core/JavaProject: 2035664
+  org/eclipse/jdt/internal/core/JavaProject$2: 1248
+  org/eclipse/jdt/internal/core/JavaProject$3: 832
+  org/eclipse/jdt/internal/core/JavaProject$ResolvedClasspath: 15104
   org/eclipse/jdt/internal/core/JavaProjectElementInfo: 1560
   org/eclipse/jdt/internal/core/JavaProjectElementInfo$ProjectCache: 1120
   org/eclipse/jdt/internal/core/JavadocContents: 120
   org/eclipse/jdt/internal/core/LocalVariable: 352288
-  org/eclipse/jdt/internal/core/ModelUpdater: 3376
+  org/eclipse/jdt/internal/core/ModelUpdater: 3440
   org/eclipse/jdt/internal/core/ModuleSourcePathManager: 16
   org/eclipse/jdt/internal/core/NameLookup: 17264
   org/eclipse/jdt/internal/core/NameLookup$Answer: 213728
@@ -10015,7 +10011,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/core/PackageDeclaration: 4736
   org/eclipse/jdt/internal/core/PackageFragment: 1773920
   org/eclipse/jdt/internal/core/PackageFragmentInfo: 2368
-  org/eclipse/jdt/internal/core/PackageFragmentRoot: 56904
+  org/eclipse/jdt/internal/core/PackageFragmentRoot: 58344
   org/eclipse/jdt/internal/core/PackageFragmentRootInfo: 1440
   org/eclipse/jdt/internal/core/Region: 32
   org/eclipse/jdt/internal/core/Region$Node: 352
@@ -10074,7 +10070,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/core/hierarchy/IndexBasedHierarchyBuilder$SubtypeQuery: 7880
   org/eclipse/jdt/internal/core/hierarchy/TypeHierarchy: 88
   org/eclipse/jdt/internal/core/index/DiskIndex: 28512
-  org/eclipse/jdt/internal/core/index/DiskIndex$IntList: 6967152
+  org/eclipse/jdt/internal/core/index/DiskIndex$IntList: 6971424
   org/eclipse/jdt/internal/core/index/EntryResult: 17773696
   org/eclipse/jdt/internal/core/index/FileIndexLocation: 7808
   org/eclipse/jdt/internal/core/index/Index: 28688
@@ -10088,7 +10084,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/core/search/BasicSearchEngine$4: 352
   org/eclipse/jdt/internal/core/search/BasicSearchEngine$5: 1408
   org/eclipse/jdt/internal/core/search/IndexSelector: 1392
-  org/eclipse/jdt/internal/core/search/JavaSearchDocument: 2394528
+  org/eclipse/jdt/internal/core/search/JavaSearchDocument: 2396256
   org/eclipse/jdt/internal/core/search/JavaSearchParticipant: 100968
   org/eclipse/jdt/internal/core/search/JavaSearchScope: 80024
   org/eclipse/jdt/internal/core/search/JavaWorkspaceScope: 16304
@@ -10101,7 +10097,7 @@ bytes-by-type:
   org/eclipse/jdt/internal/core/search/SubTypeSearchJob: 40
   org/eclipse/jdt/internal/core/search/TypeNameRequestorWrapper: 224
   org/eclipse/jdt/internal/core/search/indexing/AddJarFileToIndex: 8200
-  org/eclipse/jdt/internal/core/search/indexing/BinaryIndexer: 698304
+  org/eclipse/jdt/internal/core/search/indexing/BinaryIndexer: 698880
   org/eclipse/jdt/internal/core/search/indexing/IndexAllProject: 3008
   org/eclipse/jdt/internal/core/search/indexing/IndexAllProject$1: 2720
   org/eclipse/jdt/internal/core/search/indexing/IndexManager$2: 162800
@@ -10140,12 +10136,12 @@ bytes-by-type:
   org/eclipse/jdt/internal/core/util/HandleFactory: 128
   org/eclipse/jdt/internal/core/util/HashSetOfArray: 2376
   org/eclipse/jdt/internal/core/util/HashtableOfArrayToObject: 15776
-  org/eclipse/jdt/internal/core/util/LRUCache: 28840
+  org/eclipse/jdt/internal/core/util/LRUCache: 28960
   org/eclipse/jdt/internal/core/util/LRUCache$LRUCacheEntry: 48520
   org/eclipse/jdt/internal/core/util/ResourceCompilationUnit: 37952
-  org/eclipse/jdt/internal/core/util/SimpleWordSet: 27851088
+  org/eclipse/jdt/internal/core/util/SimpleWordSet: 27868032
   org/eclipse/jdt/internal/core/util/WeakHashSet: 384
-  org/eclipse/jdt/internal/core/util/WeakHashSet$HashableWeakReference: 294248
+  org/eclipse/jdt/internal/core/util/WeakHashSet$HashableWeakReference: 294344
   org/eclipse/jdt/internal/core/util/WeakHashSetOfCharArray: 288
   org/eclipse/jdt/internal/core/util/WeakHashSetOfCharArray$HashableWeakReference: 68184
   org/eclipse/jdt/internal/formatter/CommentsPreparator: 2464
@@ -10195,7 +10191,7 @@ bytes-by-type:
   org/eclipse/osgi/internal/framework/FilterImpl$Equal: 224
   org/eclipse/osgi/internal/framework/FilterImpl$Parser: 224
   org/eclipse/osgi/internal/loader/ModuleClassLoader$DefineClassResult: 25536
-  org/eclipse/osgi/internal/loader/classpath/ClasspathManager$DefineContext: 336
+  org/eclipse/osgi/internal/loader/classpath/ClasspathManager$DefineContext: 288
   org/eclipse/osgi/internal/loader/sources/MultiSourcePackage: 24
   org/eclipse/osgi/internal/loader/sources/NullPackageSource: 176
   org/eclipse/osgi/internal/loader/sources/PackageSource: 32
@@ -10211,7 +10207,7 @@ bytes-by-type:
   org/eclipse/osgi/internal/serviceregistry/ShrinkableCollection: 72
   org/eclipse/osgi/internal/serviceregistry/ShrinkableValueCollectionMap: 416
   org/eclipse/osgi/internal/weaving/DynamicImportList: 25536
-  org/eclipse/osgi/internal/weaving/WeavingHookConfigurator$WovenClassContext: 144
+  org/eclipse/osgi/internal/weaving/WeavingHookConfigurator$WovenClassContext: 120
   org/eclipse/osgi/internal/weaving/WovenClassImpl: 76608
   org/eclipse/osgi/storage/NativeCodeFinder: 24
   org/eclipse/osgi/storage/bundlefile/CloseableBundleFile$BundleEntryInputStream: 157272
@@ -10252,22 +10248,22 @@ bytes-by-type:
   sun/nio/ch/Util$BufferCache: 24
   sun/nio/cs/ISO_8859_1$Encoder: 2208
   sun/nio/cs/StreamDecoder: 17808
-  sun/nio/cs/StreamEncoder: 22176
+  sun/nio/cs/StreamEncoder: 22064
   sun/nio/cs/Surrogate$Parser: 1104
   sun/nio/cs/ThreadLocalCoders$1: 24
   sun/nio/cs/ThreadLocalCoders$2: 24
-  sun/nio/cs/UTF_8$Decoder: 23320
-  sun/nio/cs/UTF_8$Encoder: 16800
+  sun/nio/cs/UTF_8$Decoder: 23280
+  sun/nio/cs/UTF_8$Encoder: 16704
   sun/nio/fs/NativeBuffer: 13856
   sun/nio/fs/NativeBuffer$Deallocator: 5232
   sun/nio/fs/UnixChannelFactory$Flags: 96
   sun/nio/fs/UnixFileAttributeViews$Basic: 99048
-  sun/nio/fs/UnixFileAttributeViews$Posix: 633240
-  sun/nio/fs/UnixFileAttributes: 4771072
+  sun/nio/fs/UnixFileAttributeViews$Posix: 633480
+  sun/nio/fs/UnixFileAttributes: 4768256
   sun/nio/fs/UnixFileAttributes$UnixAsBasicFileAttributes: 66032
   sun/nio/fs/UnixFileKey: 100928
   sun/nio/fs/UnixFileSystem$Flags: 2616
-  sun/nio/fs/UnixPath: 1992896
+  sun/nio/fs/UnixPath: 1993024
   sun/security/jca/GetInstance$Instance: 552
   sun/security/provider/SHA2$SHA256: 1472
   sun/security/util/ManifestEntryVerifier: 1104

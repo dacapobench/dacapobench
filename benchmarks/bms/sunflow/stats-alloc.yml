@@ -1,13 +1,16 @@
+#
+# Trace generated using dacapo-evaluation-git-458822b9
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 530961452
-bytes-allocated: 21632154520
+objects-allocated: 530961457
+bytes-allocated: 21632154664
 # number of objects allocated for each object size
 objects-by-size: 
   16: 890027
-  24: 151235623
-  32: 23902434
+  24: 151235625
+  32: 23902437
   40: 250805
   48: 348389484
   56: 5114095
@@ -944,10 +947,11 @@ objects-by-size:
   98368: 1
   192496: 1
   196624: 1
-# number of bytres allocated for each object size
+# number of bytes allocated for each object size
+bytes-by-size: 
   16: 14240432
-  24: 3629654952
-  32: 764877888
+  24: 3629655000
+  32: 764877984
   40: 10032200
   48: 16722695232
   56: 286389320
@@ -2151,9 +2155,9 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 1
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 11
   java/util/concurrent/ConcurrentHashMap$KeySetView: 1
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 52
-  java/util/concurrent/ConcurrentHashMap$Node: 540
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 2
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 54
+  java/util/concurrent/ConcurrentHashMap$Node: 542
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 3
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 81
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 2
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 11
@@ -2655,9 +2659,9 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$EntrySetView: 16
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 352
   java/util/concurrent/ConcurrentHashMap$KeySetView: 24
-  java/util/concurrent/ConcurrentHashMap$MapEntry: 1248
-  java/util/concurrent/ConcurrentHashMap$Node: 24576
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 64
+  java/util/concurrent/ConcurrentHashMap$MapEntry: 1296
+  java/util/concurrent/ConcurrentHashMap$Node: 24640
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 96
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 4536
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 48
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 352
