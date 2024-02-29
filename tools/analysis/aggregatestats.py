@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 #
-# Take the nominal stats of all benchmarks and for each statistic
-# find the median result and the rank of a given benchmark among
-# the set (so we can see, for example, what the median min heap is,
-# and rank the benchmarks according to their min heap).
+# Aggregate the various raw statistics.  This needs to be followed by using normalizestats.py
+#
+# Example usage:
+# for bm in `ls ../../benchmarks/bms/ | grep -v common.xml`; do
+#   echo $bm
+#   ./aggregatestats.py -b ../../benchmarks/bms/$bm > ../../benchmarks/bms/$bm/stats-nominal.yml
+# done
+# ./normalizestats.py -p ../../benchmarks/bms
 #
 # Author: Steve Blackburn 2023
 #
@@ -64,7 +68,7 @@ def load_yml(bmpath):
     if os.path.exists(yml):
         with open(yml, 'r') as y:
             kernel = yaml.load(y, Loader=yaml.Loader)
-            
+
     yml = bmpath + '/stats-gc.yml'
     if os.path.exists(yml):
         with open(yml, 'r') as y:
@@ -216,8 +220,8 @@ def get_perf_stats():
             mem[c] += res[(len(res)-1)]
         mem[c] = mem[c]/len(res)
     mems = mem['slow-memory']/mem['resctrl-ffff']
-    mempct = int(100*(mems-1)) 
-    
+    mempct = int(100*(mems-1))
+
     # turbo boost sensitivity
     hf = 2.0
     tb = {}
@@ -244,7 +248,36 @@ def get_perf_stats():
     ins = intp['interpreter']/intp['resctrl-ffff']
     inpct = int(100*(ins-1))
 
-    return best, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct, inpct;
+    # arm
+    hf = 2.0
+    intp = {}
+    cfgs = ['taskset-0', 'arm.taskset-0']
+    if 'open-jdk-21.server.G1.arm.taskset-0' in perf:
+        for c in cfgs:
+            vm = 'open-jdk-21.server.G1.'+c
+            intp[c] = 0
+            for res in perf[vm][hf]:
+                intp[c] += res[(len(res)-1)]
+            intp[c] = intp[c]/len(res)
+        ins = intp['arm.taskset-0']/intp['taskset-0']
+        armpct = int(100*(ins-1))
+    else:
+        armpct = None
+
+    # intel
+    hf = 2.0
+    intp = {}
+    cfgs = ['taskset-0', 'intel.taskset-0']
+    for c in cfgs:
+        vm = 'open-jdk-21.server.G1.'+c
+        intp[c] = 0
+        for res in perf[vm][hf]:
+            intp[c] += res[(len(res)-1)]
+        intp[c] = intp[c]/len(res)
+    ins = intp['intel.taskset-0']/intp['taskset-0']
+    intelpct = int(100*(ins-1))
+
+    return best, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct, inpct, armpct, intelpct;
 
 def objectsizehisto():
     if alloc is None:
@@ -254,7 +287,7 @@ def objectsizehisto():
     for s in alloc['objects-by-size']:
         total = total + alloc['objects-by-size'][s]
         histo[s] = total
-    
+
     return histo, total;
 
 def get_percentile(histo, total, percentile):
@@ -293,7 +326,7 @@ def get_gc_stats():
     return summary
 
 def nominal():
-    ap, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct, inpct = get_perf_stats()
+    ap, np, wu, st, pa, tight, kpct, cspct, ccpct, llcpct, mempct, tbpct, inpct, armpct, intelpct = get_perf_stats()
 
 
     if (not alloc is None):
@@ -310,7 +343,7 @@ def nominal():
 
         nom['AOA'] = int(alloc['bytes-allocated']/alloc['objects-allocated'])
         desc['AOA'] = 'nominal average object size (bytes)'
-        
+
         nom['ARA'] = int(alloc['bytes-allocated']/(1000*ap))
         desc['ARA'] = 'nominal allocation rate (bytes / usec) ('+str(alloc['bytes-allocated'])+'/'+str(1000*ap)+')'
 
@@ -344,7 +377,7 @@ def nominal():
         nom['GMV'] = statistics.median(minheap[hscfg])
         desc['GMV'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
-       
+
     nom['GMU'] = statistics.median(minheap['open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1'])
     desc['GMU'] = 'nominal minimum heap size (MB) for default size without compressed pointers'
 
@@ -386,7 +419,7 @@ def nominal():
 
     nom['PMS'] = mempct
     desc['PMS'] = 'nominal percentage slowdown due to slower memory (memory speed sensitivity)'
-    
+
     nom['PFS'] = tbpct
     desc['PFS'] = 'nominal percentage speedup due to enabling frequency scaling (CPU frequency sensitivity)'
 
@@ -402,7 +435,7 @@ def nominal():
 
         nom['BPF'] = int(bytecode['opcodes']['putfield']/(1000*ap))
         desc['BPF'] = 'nominal putfield per usec'
-    
+
         nom['BGF'] = int(bytecode['opcodes']['getfield']/(1000*ap))
         desc['BGF'] = 'nominal getfield per usec'
 
@@ -413,7 +446,7 @@ def nominal():
         desc['BAL'] = 'nominal aaload per usec'
 
     gc_summary = get_gc_stats()
-    
+
     nom['GCC'] = gc_summary[2.0][0]
     desc['GCC'] = 'nominal GC count at 2X heap size (G1)'
 
@@ -427,6 +460,13 @@ def nominal():
     desc['GCM'] = 'nominal median post-GC heap size as percent of min heap, when run at 2X min heap with G1 ('+str(gc_summary[2.0][4])+'/'+str(ten)+')'
 
     # uarch
+    if not armpct is None:
+        nom['UAA'] = int(armpct)
+        desc['UAA'] = 'nominal percentage change (slowdown) due to when running on ARM Calvium Thunder v AMD Zen4'
+
+    nom['UAI'] = int(intelpct)
+    desc['UAI'] = 'nominal percentage change (slowdown) when running on Intel Alderlake v AMD Zen4'
+
     cfg = 'open-jdk-21.server.G1.t-32'
     hf = 2.0
     ua = uarch[cfg][hf]
@@ -470,14 +510,14 @@ def nominal():
     print("# [value, mean, benchmark rank, description]")
     for x in sorted(nom):
         print(x+": ["+str(nom[x])+", '"+desc[x]+"']")
-  
+
     # scalability (1 thread v N threads)
     # heap leakage (minheap 1 it v minheap 10 it)
     # heap threads (minheap 1 thread v minheap N threads)
     # heap turnover (alloc / minheap)
     # median object size
     # code intensity (hotspot)
-    # 
+    #
 
 def main(argv):
     bmpath = None
@@ -494,7 +534,7 @@ def main(argv):
             verbose = True
         elif opt == '-b':
             bmpath = arg
-    
+
     if bmpath is None or not os.path.exists(bmpath):
         print ('ERROR: You must specify a valid path to a benchmark')
         usage(2)
