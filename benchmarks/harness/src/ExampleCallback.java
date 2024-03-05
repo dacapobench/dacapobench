@@ -70,13 +70,16 @@ public class ExampleCallback extends Callback {
    *
    * The following callbacks are invoked on the server side, and thus only capture
    * part of the latency of the request.
+   *
+   * IMPORTANT: these callbacks capture server tasks which may not map 1:1 to
+   * client requests.
    */
 
-  /* Called by server-side code at the start of servicing a request (request-based workloads only) */
+  /* Called by server-side code at the start of servicing a task (request-based workloads only) */
   @Override
-  public void serverRequestStart() { /* your code here */ }
+  public void serverTaskStart() { /* your code here */ }
 
-  /* Called by server-side code at completion of servicing a request (request-based workloads only) */
+  /* Called by server-side code at completion of servicing a task (request-based workloads only) */
   @Override
-  public void serverRequestEnd() { /* your code here */ }
+  public void serverTaskEnd() { /* your code here */ }
 }

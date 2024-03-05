@@ -238,11 +238,14 @@ public class Callback {
    *
    * The following callbacks are invoked on the server side, and thus only capture
    * part of the latency of the request.
+   *
+   * IMPORTANT: these callbacks capture server tasks which may not map 1:1 to
+   * client requests.
    */
 
   /* Called by server-side code at the start of servicing a request (request-based workloads only) */
-  public void serverRequestStart() {}
+  public void serverTaskStart() {}
 
   /* Called by server-side code at completion of servicing a request (request-based workloads only) */
-  public void serverRequestEnd() {}
+  public void serverTaskEnd() {}
 }

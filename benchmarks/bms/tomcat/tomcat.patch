@@ -1,6 +1,6 @@
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/catalina.properties ../build/apache-tomcat-10.1.11-src/conf/catalina.properties
 --- ./apache-tomcat-10.1.11-src/conf/catalina.properties	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2024-03-05 09:10:02.323483548 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2024-03-05 11:05:51.077570511 +0000
 @@ -50,7 +50,7 @@
  #       ${catalina.base} path or the ${catalina.home} path contains a comma.
  #       Because double quotes are used for quoting, the double quote character
@@ -12,7 +12,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/catalina.properties ../
  # List of comma-separated paths defining the contents of the "server"
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/server.xml ../build/apache-tomcat-10.1.11-src/conf/server.xml
 --- ./apache-tomcat-10.1.11-src/conf/server.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2024-03-05 09:10:02.323483548 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2024-03-05 11:05:51.077570511 +0000
 @@ -65,7 +65,7 @@
           AJP  Connector: /docs/config/ajp.html
           Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
@@ -24,7 +24,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/server.xml ../build/apa
                 maxParameterCount="1000"
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml
 --- ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2024-03-05 09:10:02.323483548 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2024-03-05 11:05:51.077570511 +0000
 @@ -46,11 +46,9 @@
    examples web application, do not forget to remove the <!.. ..> that surrounds
    them. You will also need to set the passwords to something appropriate.
@@ -44,7 +44,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../bui
  </tomcat-users>
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java
 --- ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2024-03-05 09:13:18.266871724 +0000
++++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2024-03-05 11:08:50.720896474 +0000
 @@ -24,6 +24,7 @@
   */
  package org.apache.tomcat.util.threads;
@@ -58,8 +58,8 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
          new RuntimePermission("modifyThread");
  
 +    private final Object dacapoCallback;
-+    private final Method rqStartMethod;
-+    private final Method rqEndMethod;
++    private final Method taskStartMethod;
++    private final Method taskEndMethod;
 +
      /**
       * Class Worker mainly maintains interrupt control state for
@@ -75,14 +75,14 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
 +            Class clazz = Class.forName("org.dacapo.harness.Callback");
 +            Method getter = clazz.getMethod("getCallback");
 +            callback = getter.invoke(getter, null);
-+            start = clazz.getMethod("serverRequestStart");
-+            end = clazz.getMethod("serverRequestEnd");
++            start = clazz.getMethod("serverTaskStart");
++            end = clazz.getMethod("serverTaskEnd");
 +        } catch (Exception e) {
 +            System.err.println("Could not initialize DaCapo callbacks: "+e);
 +        }
 +        this.dacapoCallback = callback;
-+        this.rqStartMethod = start;
-+        this.rqEndMethod = end;
++        this.taskStartMethod = start;
++        this.taskEndMethod = end;
          prestartAllCoreThreads();
      }
  
@@ -94,7 +94,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
 +    protected void beforeExecute(Thread t, Runnable r) {
 +        try {
 +            if (dacapoCallback != null)
-+                rqStartMethod.invoke(dacapoCallback);
++                taskStartMethod.invoke(dacapoCallback);
 +        } catch (Exception e) {
 +            System.err.println("Could not invoke DaCapo callbacks: "+e);
 +        }
@@ -108,7 +108,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
      protected void afterExecute(Runnable r, Throwable t) {
 +        try {
 +            if (dacapoCallback != null)
-+                rqEndMethod.invoke(dacapoCallback);
++                taskEndMethod.invoke(dacapoCallback);
 +        } catch (Exception e) {
 +            System.err.println("Could not invoke DaCapo callbacks: "+e);
 +        }
