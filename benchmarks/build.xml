@@ -311,7 +311,7 @@
          ================================= -->
     <target name="bootstrap" depends="init">
     	<!-- construct the bootstrap -->
-        <javac srcdir="${dacapo.src.dir}" destdir="${dacapo.build.dir}"/>
+        <javac srcdir="${dacapo.src.dir}" debug="true" debuglevel="lines,vars,source" destdir="${dacapo.build.dir}"/>
 
     	<!-- set the manifest for the jar -->
         <copy file="${dacapo.src.dir}/META-INF/MANIFEST.MF" todir="${dacapo.build.dir}"/>
