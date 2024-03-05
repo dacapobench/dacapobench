@@ -1,6 +1,6 @@
-diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/conf/catalina.properties ../build/apache-tomcat-10.1.11-src/conf/catalina.properties
---- apache-tomcat-10.1.11-src/conf/catalina.properties	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2023-10-04 02:22:00.677613231 +0000
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/catalina.properties ../build/apache-tomcat-10.1.11-src/conf/catalina.properties
+--- ./apache-tomcat-10.1.11-src/conf/catalina.properties	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2024-03-05 23:32:07.680686983 +0000
 @@ -50,7 +50,7 @@
  #       ${catalina.base} path or the ${catalina.home} path contains a comma.
  #       Because double quotes are used for quoting, the double quote character
@@ -10,9 +10,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/c
  
  #
  # List of comma-separated paths defining the contents of the "server"
-diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/conf/server.xml ../build/apache-tomcat-10.1.11-src/conf/server.xml
---- apache-tomcat-10.1.11-src/conf/server.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2023-10-04 02:38:39.375577943 +0000
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/server.xml ../build/apache-tomcat-10.1.11-src/conf/server.xml
+--- ./apache-tomcat-10.1.11-src/conf/server.xml	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2024-03-05 23:32:07.680686983 +0000
 @@ -65,7 +65,7 @@
           AJP  Connector: /docs/config/ajp.html
           Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
@@ -22,9 +22,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/c
                 connectionTimeout="20000"
                 redirectPort="8443"
                 maxParameterCount="1000"
-diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml
---- apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-10-04 02:22:00.681613227 +0000
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml
+--- ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2024-03-05 23:32:07.680686983 +0000
 @@ -46,11 +46,9 @@
    examples web application, do not forget to remove the <!.. ..> that surrounds
    them. You will also need to set the passwords to something appropriate.
@@ -42,3 +42,24 @@ diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/c
 +<role rolename="manager-jmx"/>
 +<user username="tomcat" password="s3cret" roles="manager-gui,manager-status,manager-script,manager-jmx"/>
  </tomcat-users>
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java
+--- ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java	2024-03-05 23:36:35.960390244 +0000
+@@ -803,7 +803,16 @@
+     }
+     public int getMaxThreads() {
+         if (internalExecutor) {
+-            return maxThreads;
++            String prop = System.getProperty("dacapo.tomcat.maxthreads");
++            int mt = maxThreads;
++            if (prop != null) {
++                try {
++                    mt = Integer.parseInt(prop);
++                } catch (Exception e) {
++                    System.err.println("Error parsing dacapo.tomcat.maxthreads, was '"+prop+"' "+e);
++                }
++            }
++            return mt;
+         } else {
+             return -1;
+         }
