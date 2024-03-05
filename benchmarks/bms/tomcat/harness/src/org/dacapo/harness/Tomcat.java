@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
@@ -23,10 +23,10 @@ import org.dacapo.harness.util.AvailablePortFinder;
 
 /**
  * Benchmark harness for the Tomcat benchmark
- * 
+ *
  * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
  * id: $Id: Tomcat.java 738 2009-12-24 00:19:36Z steveb-oss $
- * 
+ *
  */
 public class Tomcat extends Benchmark {
 
@@ -39,7 +39,7 @@ public class Tomcat extends Benchmark {
 
   /**
    * Benchmark constructor - invoked reflectively by the harness.
-   * 
+   *
    * @param config Benchmark configuration object
    * @param scratch Scratch directory
    * @param data Data directory
@@ -76,12 +76,12 @@ public class Tomcat extends Benchmark {
 
       /*
        * FIXME
-       * 
+       *
        * This workaround silences JDK11 warnings relating to use of
        * reflection.
        *
        * Specifically, catalina generates the following warning:
-       * 
+       *
        *  WARNING: Illegal reflective access by org.apache.catalina.loader.WebappClassLoaderBase (file:[...]/tomcat/catalina.jar) to field java.io.ObjectStreamClass$Caches.localDescs
        *
        * Fixing the underlying issue means changing the upstream library,
@@ -91,7 +91,7 @@ public class Tomcat extends Benchmark {
           Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
           theUnsafe.setAccessible(true);
           Unsafe u = (Unsafe) theUnsafe.get(null);
-    
+
           Class cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
           Field logger = cls.getDeclaredField("logger");
           u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
@@ -106,10 +106,11 @@ public class Tomcat extends Benchmark {
         System.setProperty("catalina.config", new File(fileInData("dat"+File.separator+"tomcat"+File.separator+"catalina.properties")).toURL().toExternalForm());
         String jar = fileInData("jar"+File.separator+"tomcat"+File.separator+"*.jar");
         System.setProperty("catalina.cl.repo", jar);
+        System.setProperty("dacapo.tomcat.maxthreads", Integer.toString(config.getThreadCount(size)));
 
         method.invoke(controller, "prepare");
 
-        System.out.println("Server thread created");
+        System.out.println("Server created with thread pool size "+config.getThreadCount(size));
       } finally {
         revertClassLoader();
       }
@@ -143,7 +144,7 @@ public class Tomcat extends Benchmark {
     } catch (Exception e) {
       System.err.println("Failed to copy path "+path);
       e.printStackTrace();
-    } 
+    }
    }
 
   /**
@@ -237,7 +238,7 @@ public class Tomcat extends Benchmark {
   public class Copy extends SimpleFileVisitor<Path> {
     private Path src;
     private Path tgt;
- 
+
     public Copy(Path src, Path tgt) {
         this.src = src;
         this.tgt = tgt;
@@ -253,7 +254,7 @@ public class Tomcat extends Benchmark {
       }
       return FileVisitResult.CONTINUE;
     }
- 
+
     @Override
     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) {
       try {
