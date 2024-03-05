@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
@@ -16,6 +16,16 @@ import org.dacapo.parser.Config;
  * id: $Id: Callback.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
 public class Callback {
+
+  private static Callback callbackInstance;
+
+  public static Callback getCallback() {
+    if (callbackInstance.getClass() == Callback.class) {
+      return null;             // not overridden
+    } else {
+      return callbackInstance; // overridden
+    }
+  }
 
   /**
    * Support for timing methodologies that have timing and warmup runs.
@@ -42,7 +52,7 @@ public class Callback {
   protected long[] times;
 
   /**
-   * 
+   *
    */
   protected long elapsed;
 
@@ -50,7 +60,7 @@ public class Callback {
 
   /**
    * Create a new callback.
-   * 
+   *
    * @param args The parsed command-line arguments.
    */
   public Callback(CommandLineArgs args) {
@@ -59,6 +69,8 @@ public class Callback {
       times = new long[args.getWindow()];
     }
     verbose |= args.getDebug();
+    callbackInstance = this;
+    System.err.println("This callback -> "+this);
   }
 
   public void init(Config config) {
@@ -88,10 +100,10 @@ public class Callback {
   /**
    * This method governs the benchmark iteration process. The test harness will
    * run the benchmark repeatedly until this method returns 'false'.
-   * 
+   *
    * The default methodologies consist of 0 or more 'warmup' iterations,
    * followed by a single timing iteration.
-   * 
+   *
    * @return Whether to run another iteration.
    */
   public boolean runAgain() {
@@ -190,7 +202,7 @@ public class Callback {
 
   /**
    * The workload is about to start issuing requests.
-   * 
+   *
    * Some workloads do substantial work prior (e.g. building a
    * database) prior to issuing requests.  This call brackets
    * the begining of the request-based behavior.
@@ -206,7 +218,7 @@ public class Callback {
    * Announce that a request is about to start (called at
    * the start of each request within request-based
    * workloads).
-   * 
+   *
    * @param id A unique ID for the request.
    */
   public void requestStart(int id) {}
@@ -215,8 +227,22 @@ public class Callback {
    * Announce that a request has just ended (called at
    * the completion of each request within request-based
    * workloads).
-   * 
+   *
    * @param id A unique ID for the request.
    */
   public void requestEnd(int id) {}
+
+  /*
+   * Many of the workloads model client-server requests. The above callbacks capture
+   * the entire request, from the client's perspective.
+   *
+   * The following callbacks are invoked on the server side, and thus only capture
+   * part of the latency of the request.
+   */
+
+  /* Called by server-side code at the start of servicing a request (request-based workloads only) */
+  public void serverRequestStart() {}
+
+  /* Called by server-side code at completion of servicing a request (request-based workloads only) */
+  public void serverRequestEnd() {}
 }

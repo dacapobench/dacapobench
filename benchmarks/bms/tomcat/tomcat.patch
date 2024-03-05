@@ -1,6 +1,6 @@
-diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/conf/catalina.properties ../build/apache-tomcat-10.1.11-src/conf/catalina.properties
---- apache-tomcat-10.1.11-src/conf/catalina.properties	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2023-10-04 02:22:00.677613231 +0000
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/catalina.properties ../build/apache-tomcat-10.1.11-src/conf/catalina.properties
+--- ./apache-tomcat-10.1.11-src/conf/catalina.properties	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2024-03-05 09:10:02.323483548 +0000
 @@ -50,7 +50,7 @@
  #       ${catalina.base} path or the ${catalina.home} path contains a comma.
  #       Because double quotes are used for quoting, the double quote character
@@ -10,9 +10,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/c
  
  #
  # List of comma-separated paths defining the contents of the "server"
-diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/conf/server.xml ../build/apache-tomcat-10.1.11-src/conf/server.xml
---- apache-tomcat-10.1.11-src/conf/server.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2023-10-04 02:38:39.375577943 +0000
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/server.xml ../build/apache-tomcat-10.1.11-src/conf/server.xml
+--- ./apache-tomcat-10.1.11-src/conf/server.xml	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2024-03-05 09:10:02.323483548 +0000
 @@ -65,7 +65,7 @@
           AJP  Connector: /docs/config/ajp.html
           Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
@@ -22,9 +22,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/c
                 connectionTimeout="20000"
                 redirectPort="8443"
                 maxParameterCount="1000"
-diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml
---- apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-10-04 02:22:00.681613227 +0000
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml
+--- ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2024-03-05 09:10:02.323483548 +0000
 @@ -46,11 +46,9 @@
    examples web application, do not forget to remove the <!.. ..> that surrounds
    them. You will also need to set the passwords to something appropriate.
@@ -42,3 +42,77 @@ diff '--color=auto' -ur '--exclude=cache.properties' apache-tomcat-10.1.11-src/c
 +<role rolename="manager-jmx"/>
 +<user username="tomcat" password="s3cret" roles="manager-gui,manager-status,manager-script,manager-jmx"/>
  </tomcat-users>
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java
+--- ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2024-03-05 09:13:18.266871724 +0000
+@@ -24,6 +24,7 @@
+  */
+ package org.apache.tomcat.util.threads;
+ 
++import java.lang.reflect.Method;
+ import java.util.ArrayList;
+ import java.util.ConcurrentModificationException;
+ import java.util.HashSet;
+@@ -607,6 +608,10 @@
+     private static final RuntimePermission shutdownPerm =
+         new RuntimePermission("modifyThread");
+ 
++    private final Object dacapoCallback;
++    private final Method rqStartMethod;
++    private final Method rqEndMethod;
++
+     /**
+      * Class Worker mainly maintains interrupt control state for
+      * threads running tasks, along with other minor bookkeeping.
+@@ -1367,6 +1372,21 @@
+         this.threadFactory = threadFactory;
+         this.handler = handler;
+ 
++        Object callback = null;
++        Method start = null;
++        Method end = null;
++        try {
++            Class clazz = Class.forName("org.dacapo.harness.Callback");
++            Method getter = clazz.getMethod("getCallback");
++            callback = getter.invoke(getter, null);
++            start = clazz.getMethod("serverRequestStart");
++            end = clazz.getMethod("serverRequestEnd");
++        } catch (Exception e) {
++            System.err.println("Could not initialize DaCapo callbacks: "+e);
++        }
++        this.dacapoCallback = callback;
++        this.rqStartMethod = start;
++        this.rqEndMethod = end;
+         prestartAllCoreThreads();
+     }
+ 
+@@ -2101,7 +2121,14 @@
+      * @param t the thread that will run task {@code r}
+      * @param r the task that will be executed
+      */
+-    protected void beforeExecute(Thread t, Runnable r) { }
++    protected void beforeExecute(Thread t, Runnable r) {
++        try {
++            if (dacapoCallback != null)
++                rqStartMethod.invoke(dacapoCallback);
++        } catch (Exception e) {
++            System.err.println("Could not invoke DaCapo callbacks: "+e);
++        }
++    }
+ 
+ 
+     /**
+@@ -2155,6 +2182,13 @@
+      * execution completed normally
+      */
+     protected void afterExecute(Runnable r, Throwable t) {
++        try {
++            if (dacapoCallback != null)
++                rqEndMethod.invoke(dacapoCallback);
++        } catch (Exception e) {
++            System.err.println("Could not invoke DaCapo callbacks: "+e);
++        }
++
+         // Throwing StopPooledThreadException is likely to cause this method to
+         // be called more than once for a given task based on the typical
+         // implementations of the parent class. This test ensures that

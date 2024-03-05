@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 import org.dacapo.harness.Callback;
@@ -63,4 +63,20 @@ public class ExampleCallback extends Callback {
   /* Called immediately after each request ends (request-based workloads only) */
   @Override
   public void requestEnd(int id) { /* your code here */ }
+
+  /*
+   * Many of the workloads model client-server requests. The above callbacks capture
+   * the entire request, from the client's perspective.
+   *
+   * The following callbacks are invoked on the server side, and thus only capture
+   * part of the latency of the request.
+   */
+
+  /* Called by server-side code at the start of servicing a request (request-based workloads only) */
+  @Override
+  public void serverRequestStart() { /* your code here */ }
+
+  /* Called by server-side code at completion of servicing a request (request-based workloads only) */
+  @Override
+  public void serverRequestEnd() { /* your code here */ }
 }
