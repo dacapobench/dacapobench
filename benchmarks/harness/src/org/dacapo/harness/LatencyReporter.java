@@ -147,8 +147,12 @@ public class LatencyReporter {
 
       // raw latency numbers
       int[] latency = new int[events];
+      float end = 0;
       for(int i = 0; i < events; i++) {
         latency[i] = (int) ((txend[i] - txbegin[i])/1000);
+        if (txend[i] > end) {
+          end = txend[i];
+        }
       }
       if (dumpLatencyCSV)
         dumpLatencyCSV(latency, txbegin, "simple", baseLatencyFileName, iteration);
@@ -159,11 +163,12 @@ public class LatencyReporter {
       // synthetically metered --- each query start is evenly spaced, so delays will compound
       float[] sorted = Arrays.copyOf(txbegin, events);
       Arrays.sort(sorted);
-      double len = sorted[sorted.length-1]-sorted[0];
+      double start = sorted[0];
+      double elapsed = end - start;
       double synthstart = 0;
       for(int i = 0; i < events; i++) {
-        int pos = Arrays.binarySearch(sorted, txbegin[i]);
-        synthstart = sorted[0] + (len*(double) pos / (double) txbegin.length);
+        double relativePosition = (double) Arrays.binarySearch(sorted, txbegin[i]) / (double) events;
+        synthstart = start + (elapsed * relativePosition);
         int actual = (int) ((txend[i] - txbegin[i])/1000);
         int synth = (int) ((txend[i] - synthstart)/1000);
         latency[i] = (synth > actual) ? synth : actual;
