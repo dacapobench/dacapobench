@@ -2,17 +2,17 @@ benchmark kafka
   class org.dacapo.harness.Kafka
   thread-model per_cpu;
 
-size small args "simple_produce_bench-small.json", "10000"
-  output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x49eb5f30bb81b66c3e38a78f9122256c85254479;
+size small args "simple_produce_bench.json", "simple_produce_bench_small.json", "500000", "8", "128", "100", "10"
+  output stdout digest 0xda227bc97a9995dc07e939807ed6902ffbe12cb8,
+         stderr digest 0x5dd04ec3227b475c487f6c5fc09d08ba07fdbc94;
          
-size default args "simple_produce_bench.json", "1000000"
-  output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
+size default args "simple_produce_bench.json", "simple_produce_bench_default.json", "1000000", "8", "128", "100", "10"
+  output stdout digest 0xda227bc97a9995dc07e939807ed6902ffbe12cb8,
          stderr digest 0x36fed859a569f5840cd873e556ce3028dcac3371;
          
-size large args "simple_produce_bench-large.json", "10000000"
-  output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x452a8ac06032778f38bc1853b00dbdfb170bea3b;
+size large args "simple_produce_bench.json", "simple_produce_bench_large.json", "4000000", "8", "128", "100", "10"
+  output stdout digest 0xda227bc97a9995dc07e939807ed6902ffbe12cb8,
+         stderr digest 0x6b9a6e2697251ff35f3bf282bf8728bf369bcb1c;
 
 description
   short	     "Apache Kafka® is a distributed streaming platform.",
