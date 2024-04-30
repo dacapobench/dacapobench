@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  * Contributors:
- *     Apache Software Foundation 
+ *     Apache Software Foundation
  *     Australian National University - adaptation to DaCapo test harness
  */
 package org.dacapo.lusearch;
@@ -34,8 +34,6 @@ import org.dacapo.harness.LatencyReporter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-//import org.apache.lucene.index.FilterIndexReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -47,7 +45,7 @@ import org.apache.lucene.search.TopScoreDocCollector;
 
 /**
  * Simple command-line based search demo.
- * 
+ *
  * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
  * id: $Id: Search.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
@@ -55,26 +53,6 @@ public class Search {
 
   static final int MAX_DOCS_TO_COLLECT = 20;
   public int completed = 0;
-
-  /**
-   * Use the norms from one field for all fields. Norms are read into memory,
-   * using a byte of memory per document per searched field. This can cause
-   * search of large collections with a large number of fields to run out of
-   * memory. If all of the fields contain only a single token, then the norms
-   * are all identical, then single norm vector may be shared.
-   */
-  /*private static class OneNormsReader extends FilterIndexReader {
-    private String field;
-
-    public OneNormsReader(IndexReader in, String field) {
-      super(in);
-      this.field = field;
-    }
-
-    public byte[] norms(String field) throws IOException {
-      return in.norms(this.field);
-    }
-  }*/
 
   public Search() {
   }
@@ -141,50 +119,58 @@ public class Search {
     LatencyReporter.initialize(totalQueries, threads, querySetSize);
     LatencyReporter.requestsStarting();
 
-    for (int j = 0; j < threads; j++) {
-      new QueryThread(this, "Query" + j, j, threads, totalQuerieSets, index, outBase, queryBase, field, normsField, raw, hitsPerPage, iterations).start();
-    }
-    synchronized (this) {
-      while (completed != totalQuerieSets*iterations) {
-        try {
-          this.wait();
-        } catch (InterruptedException e) {
-        }
+    try {
+      DirectoryReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
+      IndexSearcher searcher = new IndexSearcher(reader);
+
+      for (int j = 0; j < threads; j++) {
+        new QueryThread(this, reader, searcher, "Query" + j, j, threads, totalQuerieSets, outBase, queryBase, field, raw, hitsPerPage, iterations).start();
       }
-      System.out.println();
+
+      synchronized (this) {
+        while (completed != totalQuerieSets*iterations) {
+          try {
+            this.wait();
+          } catch (InterruptedException e) {
+          }
+        }
+        System.out.println();
+      }
+      reader.close();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     LatencyReporter.requestsFinished();
   }
 
   class QueryThread extends Thread {
 
-    Search parent;
-    int threadID;
-    int threadCount;
-    int totalQueries;
-    String name;
-    String index;
-    String outBase;
-    String queryBase;
-    String field;
-    String normsField;
-    boolean raw;
-    int hitsPerPage;
-    int iterations;
+    final Search parent;
+    final DirectoryReader reader;
+    final IndexSearcher searcher;
+    final int threadID;
+    final int threadCount;
+    final int totalQueries;
+    final String name;
+    final String outBase;
+    final String queryBase;
+    final String field;
+    final boolean raw;
+    final int hitsPerPage;
+    final int iterations;
 
-    public QueryThread(Search parent, String name, int threadID, int threadCount, int totalQueries, String index, String outBase, String queryBase, String field,
-        String normsField, boolean raw, int hitsPerPage, int iterations) {
+    public QueryThread(Search parent, DirectoryReader reader, IndexSearcher searcher, String name, int threadID, int threadCount, int totalQueries, String outBase, String queryBase, String field, boolean raw, int hitsPerPage, int iterations) {
       super(name);
       this.parent = parent;
+      this.reader = reader;
+      this.searcher = searcher;
       this.threadID = threadID;
       this.threadCount = threadCount;
       this.totalQueries = totalQueries;
       this.name = name;
-      this.index = index;
       this.outBase = outBase;
       this.queryBase = queryBase;
       this.field = field;
-      this.normsField = normsField;
       this.raw = raw;
       this.hitsPerPage = hitsPerPage;
       this.iterations = iterations;
@@ -196,7 +182,7 @@ public class Search {
         for (int r = 0; r < iterations; r++) {
           for (int i = 0, queryId = threadID; i < count; i++, queryId += threadCount) {
             // make and run query
-            new QueryProcessor(parent, name, queryId, index, outBase, queryBase, field, normsField, raw, hitsPerPage, totalQueries, iterations, threadID).run();
+            new QueryProcessor(parent, reader, searcher, queryId, outBase, queryBase, field, raw, hitsPerPage, totalQueries, iterations, threadID).run();
           }
         }
       } catch (Exception e) {
@@ -207,21 +193,23 @@ public class Search {
   }
 
   public class QueryProcessor {
-    Search parent;
-    String field;
-    int hitsPerPage;
-    boolean raw;
-    DirectoryReader reader;
-    IndexSearcher searcher;
+    final Search parent;
+    final String field;
+    final DirectoryReader reader;
+    final IndexSearcher searcher;
+    final int hitsPerPage;
+    final boolean raw;
     BufferedReader in;
     PrintWriter out;
-    int iterations;
-    int fivePercent;
-    int threadID;
+    final int iterations;
+    final int fivePercent;
+    final int threadID;
 
-    public QueryProcessor(Search parent, String name, int queryID, String index, String outBase, String queryBase, String field, String normsField, boolean raw,
+    public QueryProcessor(Search parent, DirectoryReader reader, IndexSearcher searcher, int queryID, String outBase, String queryBase, String field, boolean raw,
         int hitsPerPage, int totalQueries, int iterations, int threadID) {
       this.parent = parent;
+      this.reader = reader;
+      this.searcher = searcher;
       this.threadID = threadID;
       this.field = field;
       this.raw = raw;
@@ -229,11 +217,6 @@ public class Search {
       this.fivePercent = iterations*totalQueries/20;
       this.iterations = iterations;
       try {
-        reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
-        /*if (normsField != null)
-          reader = new OneNormsReader(reader, normsField);*/
-        searcher = new IndexSearcher(reader);
-
         String query = queryBase + File.separator + "query" + (queryID < 10 ? "000" : (queryID < 100 ? "00" : (queryID < 1000 ? "0" : ""))) + queryID + ".txt";
         in = new BufferedReader(new FileReader(query));
         out = new PrintWriter(new BufferedWriter(new FileWriter(outBase + queryID)));
@@ -273,7 +256,6 @@ public class Search {
         LatencyReporter.end(threadID);
       }
 
-      reader.close();
       in.close();
       out.flush();
       out.close();
@@ -293,12 +275,12 @@ public class Search {
      * This demonstrates a typical paging search scenario, where the search
      * engine presents pages of size n to the user. The user can then go to the
      * next page if interested in the next hits.
-     * 
+     *
      * When the query is executed for the first time, then only enough results
      * are collected to fill 5 result pages. If the user wants to page beyond
      * this limit, then the query is executed another time and all hits are
      * collected.
-     * 
+     *
      */
     public void doPagingSearch(Query query) throws IOException {
 
