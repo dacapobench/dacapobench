@@ -15,12 +15,18 @@ from pathlib import Path
 def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
     jar_name = name + ".jar"
     output_jar_path = dest_dir / jar_name
-    relative_jar_paths = [os.path.relpath(jar, dest_dir) for jar in jars]
+    relative_jar_paths = [str(os.path.relpath(jar, dest_dir)) for jar in jars]
 
     print("Generating launcher JAR " + str(output_jar_path))
     print("main_class = " + main_class)
     print("dest_dir = " + str(dest_dir))
     print("jars = " + str(relative_jar_paths))
+
+    with zipfile.ZipFile(output_jar_path, mode="w") as archive:
+        with archive.open("META-INF/MANIFEST.MF", "w") as meta:
+            meta.write(bytes("Manifest-Version: 1.0\n", "utf-8"))
+            meta.write(bytes("Main-Class: " + main_class + "\n", "utf-8"))
+            meta.write(bytes("Class-Path: " + ':'.join(relative_jar_paths) + "\n", "utf-8"))
 
 def main() -> int:
     help = "Usage: python LauncherGenerator.py Harness dacapo-evaluation-git-2cb70cd1.jar dacapo-evaluation-git-2cb70cd1/standalone"
