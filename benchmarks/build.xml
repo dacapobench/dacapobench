@@ -620,9 +620,11 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="create-zip-directory" depends="set-build-version-info,set-delete-zip-dir-property,delete-zip-directory">
         <property name="build.target-jars" value="${build.target-dir}/jar"/>
         <property name="build.target-data" value="${build.target-dir}/dat"/>
-        
+        <property name="build.target-launchers" value="${build.target-dir}/launchers"/>
+
         <mkdir dir="${build.target-jars}"/>
         <mkdir dir="${build.target-data}"/>
+        <mkdir dir="${build.target-launchers}"/>
     </target>
 
     <target name="generate-launcher-jars" depends="compile">
@@ -631,8 +633,7 @@ See ${log.build.report} for a summary of benchmark build status.
         <exec executable="python" failifexecutionfails="yes" failonerror="yes">
             <arg value="LauncherGenerator.py"/>
             <arg value="${build.target-jar}"/>
-            <arg value="${build.target-jars}"/>
-            <arg value="${build.target-data}"/>
+            <arg value="${build.target-launchers}"/>
         </exec>
     </target>
 
