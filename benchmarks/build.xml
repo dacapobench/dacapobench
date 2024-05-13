@@ -625,6 +625,17 @@ See ${log.build.report} for a summary of benchmark build status.
         <mkdir dir="${build.target-data}"/>
     </target>
 
+    <target name="generate-launcher-jars" depends="compile">
+        <property name="build.target-jars" value="${build.target-dir}/jar"/>
+        <property name="build.target-data" value="${build.target-dir}/dat"/>
+        <exec executable="python" failifexecutionfails="yes" failonerror="yes">
+            <arg value="LauncherGenerator.py"/>
+            <arg value="${build.target-jar}"/>
+            <arg value="${build.target-jars}"/>
+            <arg value="${build.target-data}"/>
+        </exec>
+    </target>
+
     <target name="create-zip" depends="set-build-version-info">
         <zip destfile="${build.target-zip}">
             <zipfileset dir="." includes="${build.target-dir}/**" excludes="${build.target-dir}/**/jboss-cli.sh ${build.target-dir}/**/jboss-cli.bat"/>
