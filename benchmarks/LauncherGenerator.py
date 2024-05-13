@@ -9,13 +9,18 @@
 
 import sys
 import zipfile
+import os
 from pathlib import Path
 
-def generate_jar(name: str, main_class: str, dest_dir: str, jars):
-    print("Generating launcher JAR " + name + ".jar")
+def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
+    jar_name = name + ".jar"
+    output_jar_path = dest_dir / jar_name
+    relative_jar_paths = [os.path.relpath(jar, dest_dir) for jar in jars]
+
+    print("Generating launcher JAR " + str(output_jar_path))
     print("main_class = " + main_class)
-    print("dest_dir = " + dest_dir)
-    print("jars = " + str(jars))
+    print("dest_dir = " + str(dest_dir))
+    print("jars = " + str(relative_jar_paths))
 
 def main() -> int:
     help = "Usage: python LauncherGenerator.py Harness dacapo-evaluation-git-2cb70cd1.jar dacapo-evaluation-git-2cb70cd1/standalone"
@@ -30,7 +35,9 @@ def main() -> int:
     harness_jar = sys.argv[2]
     dest_dir = sys.argv[3]
 
-    jar_parent_dir = Path(harness_jar).with_suffix('')
+    dest_dir_path = Path(dest_dir)
+    harness_jar_path = Path(harness_jar)
+    jar_parent_dir = harness_jar_path.with_suffix('')
 
     md5dir = zipfile.Path(harness_jar, "META-INF/md5/")
     for md5 in md5dir.iterdir():
@@ -38,8 +45,8 @@ def main() -> int:
         print(benchmark_name)
         with md5.open(mode="r") as lines:
             jars = [jar_parent_dir / line.split()[1] for line in lines]
-            jars += [harness_jar]
-            generate_jar(benchmark_name, main_class, dest_dir, jars)
+            jars += [harness_jar_path]
+            generate_jar(benchmark_name, main_class, dest_dir_path, jars)
 
     return 0
 
