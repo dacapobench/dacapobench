@@ -26,7 +26,7 @@ def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
         with archive.open("META-INF/MANIFEST.MF", "w") as meta:
             meta.write(bytes("Manifest-Version: 1.0\n", "utf-8"))
             meta.write(bytes("Main-Class: " + main_class + "\n", "utf-8"))
-            meta.write(bytes("Class-Path: " + ':'.join(relative_jar_paths) + "\n", "utf-8"))
+            meta.write(bytes("Class-Path: " + ' '.join(relative_jar_paths) + "\n", "utf-8"))
 
 def main() -> int:
     help = "Usage: python LauncherGenerator.py Harness dacapo-evaluation-git-2cb70cd1.jar dacapo-evaluation-git-2cb70cd1/standalone"
