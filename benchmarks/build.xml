@@ -535,70 +535,92 @@ See ${log.build.report} for a summary of benchmark build status.
 
     <target name="avrora" depends="init,harness">
         <build.bm benchmark="avrora"/>
+        <generate-launcher-jars benchmark="avrora"/>
     </target>
     <target name="batik" depends="init,harness">
         <build.bm benchmark="batik"/>
+        <generate-launcher-jars benchmark="batik"/>
     </target>
     <target name="biojava" depends="init,harness">
         <build.bm benchmark="biojava"/>
+        <generate-launcher-jars benchmark="biojava"/>
     </target>
     <target name="cassandra" depends="init,harness">
         <build.bm benchmark="cassandra"/>
+        <generate-launcher-jars benchmark="cassandra"/>
     </target>
     <target name="daytrader" depends="tradebeans, tradesoap"/>
     <target name="eclipse" depends="init,harness">
         <build.bm benchmark="eclipse"/>
+        <generate-launcher-jars benchmark="eclipse"/>
     </target>
     <target name="fop" depends="init,harness">
         <build.bm benchmark="fop"/>
+        <generate-launcher-jars benchmark="fop"/>
     </target>
     <target name="graphchi" depends="init,harness">
         <build.bm benchmark="graphchi"/>
+        <generate-launcher-jars benchmark="graphchi"/>
     </target>
     <target name="h2" depends="init,harness">
         <build.bm benchmark="h2"/>
+        <generate-launcher-jars benchmark="h2"/>
     </target>
     <target name="h2o" depends="init,harness">
         <build.bm benchmark="h2o"/>
+        <generate-launcher-jars benchmark="h2o"/>
     </target>
     <target name="jme" depends="init,harness">
         <build.bm benchmark="jme"/>
+        <generate-launcher-jars benchmark="jme"/>
     </target>
     <target name="jython" depends="init,harness">
         <build.bm benchmark="jython"/>
+        <generate-launcher-jars benchmark="jython"/>
     </target>
     <target name="kafka" depends="init,harness">
         <build.bm benchmark="kafka"/>
+        <generate-launcher-jars benchmark="kafka"/>
     </target>
    <target name="luindex" depends="init,harness">
         <build.bm benchmark="luindex"/>
+        <generate-launcher-jars benchmark="luindex"/>
     </target>
     <target name="lusearch" depends="init,harness">
         <build.bm benchmark="lusearch"/>
+        <generate-launcher-jars benchmark="lusearch"/>
     </target>
     <target name="pmd" depends="init,harness">
         <build.bm benchmark="pmd"/>
+        <generate-launcher-jars benchmark="pmd"/>
     </target>
     <target name="spring" depends="init,harness">
         <build.bm benchmark="spring"/>
+        <generate-launcher-jars benchmark="spring"/>
     </target>
     <target name="sunflow" depends="init,harness">
         <build.bm benchmark="sunflow"/>
+        <generate-launcher-jars benchmark="sunflow"/>
     </target>
     <target name="tomcat" depends="init,harness">
         <build.bm benchmark="tomcat"/>
+        <generate-launcher-jars benchmark="tomcat"/>
     </target>
     <target name="tradebeans" depends="init,harness">
         <build.bm benchmark="tradebeans"/>
+        <generate-launcher-jars benchmark="tradebeans"/>
     </target>
     <target name="tradesoap" depends="init,harness">
         <build.bm benchmark="tradesoap"/>
+        <generate-launcher-jars benchmark="tradesoap"/>
     </target>
     <target name="xalan" depends="init,harness">
         <build.bm benchmark="xalan"/>
+        <generate-launcher-jars benchmark="xalan"/>
     </target>
     <target name="zxing" depends="init,harness">
         <build.bm benchmark="zxing"/>
+        <generate-launcher-jars benchmark="zxing"/>
     </target>
 
     <target name="set-delete-zip-dir-property">
@@ -620,22 +642,23 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="create-zip-directory" depends="set-build-version-info,set-delete-zip-dir-property,delete-zip-directory">
         <property name="build.target-jars" value="${build.target-dir}/jar"/>
         <property name="build.target-data" value="${build.target-dir}/dat"/>
+        <property name="build.target-launchers" value="${build.target-dir}/launchers"/>
 
         <mkdir dir="${build.target-jars}"/>
         <mkdir dir="${build.target-data}"/>
+        <mkdir dir="${build.target-launchers}"/>
     </target>
 
-    <target name="generate-launcher-jars">
-        <property name="build.target-launchers" value="${build.target-dir}/launchers"/>
-        <mkdir dir="${build.target-launchers}"/>
-
+    <macrodef name="generate-launcher-jars">
+        <attribute name="benchmark"/>
         <exec executable="python" failifexecutionfails="yes" failonerror="yes">
             <arg value="LauncherGenerator.py"/>
+            <arg value="@{benchmark}"/>
             <arg value="Harnes"/>
             <arg value="${build.target-jar}"/>
             <arg value="${build.target-launchers}"/>
         </exec>
-    </target>
+    </macrodef>
 
     <target name="create-zip" depends="set-build-version-info">
         <zip destfile="${build.target-zip}">

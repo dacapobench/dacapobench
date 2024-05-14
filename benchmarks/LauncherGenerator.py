@@ -29,30 +29,29 @@ def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
             meta.write(bytes("Class-Path: " + ' '.join(relative_jar_paths) + "\n", "utf-8"))
 
 def main() -> int:
-    help = "Usage: python LauncherGenerator.py Harness dacapo-evaluation-git-2cb70cd1.jar dacapo-evaluation-git-2cb70cd1/standalone"
+    help = "Usage: python LauncherGenerator.py sunflow Harness dacapo-evaluation-git-2cb70cd1.jar dacapo-evaluation-git-2cb70cd1/standalone"
 
     argc = len(sys.argv) - 1
-    if argc != 3:
+    if argc != 4:
         print("3 arguments expected, found = " + str(argc))
         print(help)
         sys.exit(1)
 
-    main_class = sys.argv[1]
-    harness_jar = sys.argv[2]
-    dest_dir = sys.argv[3]
+    benchmark = sys.argv[1]
+    main_class = sys.argv[2]
+    harness_jar = sys.argv[3]
+    dest_dir = sys.argv[4]
 
     dest_dir_path = Path(dest_dir)
     harness_jar_path = Path(harness_jar)
     jar_parent_dir = harness_jar_path.with_suffix('')
 
-    md5dir = zipfile.Path(harness_jar, "META-INF/md5/")
-    for md5 in md5dir.iterdir():
-        benchmark_name = md5.name.split('.')[0]
-        print(benchmark_name)
-        with md5.open(mode="r") as lines:
-            jars = [jar_parent_dir / line.split()[1] for line in lines]
-            jars += [harness_jar_path]
-            generate_jar(benchmark_name, main_class, dest_dir_path, jars)
+    benchmark_md5_name = "META-INF/md5/" + benchmark + ".MD5"
+    md5_file = zipfile.Path(harness_jar, benchmark_md5_name)
+    with md5_file.open(mode="r") as lines:
+        jars = [jar_parent_dir / line.split()[1] for line in lines]
+        jars += [harness_jar_path]
+        generate_jar(benchmark, main_class, dest_dir_path, jars)
 
     return 0
 
