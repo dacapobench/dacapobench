@@ -651,13 +651,15 @@ See ${log.build.report} for a summary of benchmark build status.
 
     <macrodef name="generate-launcher-jars">
         <attribute name="benchmark"/>
-        <exec executable="python" failifexecutionfails="yes" failonerror="yes">
-            <arg value="LauncherGenerator.py"/>
-            <arg value="@{benchmark}"/>
-            <arg value="Harnes"/>
-            <arg value="${build.target-jar}"/>
-            <arg value="${build.target-launchers}"/>
-        </exec>
+        <sequential>
+            <exec executable="python" failifexecutionfails="yes" failonerror="yes">
+                <arg value="LauncherGenerator.py"/>
+                <arg value="@{benchmark}"/>
+                <arg value="Harness"/>
+                <arg value="${build.target-jar}"/>
+                <arg value="${build.target-launchers}"/>
+            </exec>
+        </sequential>
     </macrodef>
 
     <target name="create-zip" depends="set-build-version-info">
