@@ -45,7 +45,7 @@ Now we can run the compiled executable:
 
 ##  Implementation
 
-Link:  https://github.com/dacapobench/dacapobench/compare/main...liufengyun:fliu/standalone-launcher-jar
+Diff:  https://github.com/dacapobench/dacapobench/compare/main...liufengyun:fliu/standalone-launcher-jar
 
 We tried to minimize the changes to Dacapo --- the build workflow is exactly the same as before.
 
