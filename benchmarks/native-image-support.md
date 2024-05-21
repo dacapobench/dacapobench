@@ -19,7 +19,7 @@ Class-Path: ../jar/lib/janino/janino-2.5.15.jar ../jar/sunflow/sunflow-0.07.2.ja
 To run the benchmark with `java`, it suffices to issue the following command:
 
 ```
-java -jar path/to/launchers/sunflow.jar
+java -jar path/to/launchers/sunflow.jar sunflow
 ```
 
 ## Usage with Native Image
