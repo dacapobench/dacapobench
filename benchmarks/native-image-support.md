@@ -40,7 +40,7 @@ path/to/graalvm/bin/native-image -H:ConfigurationFileDirectories=./dacapo -jar p
 Now we can run the compiled executable:
 
 ```
-./sunflow
+./sunflow sunflow
 ```
 
 ##  Implementation
