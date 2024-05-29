@@ -51,7 +51,7 @@ def main() -> int:
     benchmark_md5_name = "META-INF/md5/" + benchmark + ".MD5"
     md5_file = zipfile.Path(harness_jar, benchmark_md5_name)
     with md5_file.open(mode="r") as lines:
-        jars = [jar_parent_dir / line.split()[1] for line in lines]
+        jars = [jar_parent_dir / line.split()[1] for line in lines if line.endswith('.jar')]
         jars += [harness_jar_path]
         generate_jar(benchmark, main_class, dest_dir_path, jars)
 
