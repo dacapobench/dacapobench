@@ -10,6 +10,7 @@
 import sys
 import zipfile
 import os
+import re
 from pathlib import Path
 
 def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
@@ -51,7 +52,11 @@ def main() -> int:
     benchmark_md5_name = "META-INF/md5/" + benchmark + ".MD5"
     md5_file = zipfile.Path(harness_jar, benchmark_md5_name)
     with md5_file.open(mode="r") as lines:
-        jars = [jar_parent_dir / line.split()[1] for line in lines if line.endswith('.jar')]
+        jars = []
+        for line in lines:
+            # use regex to simplify handling with line endings
+            if re.match(r".*\.jar$", line):
+                jars += [jar_parent_dir / line.split()[1]]
         jars += [harness_jar_path]
         generate_jar(benchmark, main_class, dest_dir_path, jars)
 
