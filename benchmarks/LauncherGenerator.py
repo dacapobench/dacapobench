@@ -26,8 +26,8 @@ def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
         with archive.open("META-INF/MANIFEST.MF", "w") as meta:
             meta.write(bytes("Manifest-Version: 1.0\n", "utf-8"))
             meta.write(bytes("Main-Class: " + main_class + "\n", "utf-8"))
-            meta.write(bytes("Add-Exports: java.base/jdk.internal.ref java.base/jdk.internal.misc java.base/jdk.internal.ref java.base/sun.nio.ch java.management.rmi/com.sun.jmx.remote.internal.rmi java.rmi/sun.rmi.registry java.rmi/sun.rmi.server java.sql/java.sql java.base/jdk.internal.math java.base/jdk.internal.module java.base/jdk.internal.util.jar jdk.management/com.sun.management.internal\n", "utf-8"))
-            meta.write(bytes("Add-Opens: java.base/java.lang java.base/java.lang.module java.base/java.net java.base/jdk.internal.loader java.base/jdk.internal.ref java.base/jdk.internal.reflect java.base/java.io java.base/sun.nio.ch java.base/java.util java.base/java.util.concurrent java.base/java.util.concurrent.atomic java.base/java.nio\n", "utf-8"))
+            # meta.write(bytes("Add-Exports: java.base/jdk.internal.ref java.base/jdk.internal.misc java.base/jdk.internal.ref java.base/sun.nio.ch java.management.rmi/com.sun.jmx.remote.internal.rmi java.rmi/sun.rmi.registry java.rmi/sun.rmi.server java.sql/java.sql java.base/jdk.internal.math java.base/jdk.internal.module java.base/jdk.internal.util.jar jdk.management/com.sun.management.internal\n", "utf-8"))
+            # meta.write(bytes("Add-Opens: java.base/java.lang java.base/java.lang.module java.base/java.net java.base/jdk.internal.loader java.base/jdk.internal.ref java.base/jdk.internal.reflect java.base/java.io java.base/sun.nio.ch java.base/java.util java.base/java.util.concurrent java.base/java.util.concurrent.atomic java.base/java.nio\n", "utf-8"))
             meta.write(bytes("Class-Path: " + ' '.join(relative_jar_paths) + "\n", "utf-8"))
 
 def main() -> int:
