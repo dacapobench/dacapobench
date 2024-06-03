@@ -13,6 +13,38 @@ import os
 import re
 from pathlib import Path
 
+# The specification for manifest files restricts line length to 72 bytes.
+#
+# Extra content should be followed by lines (length <= 72) staring with a single
+# space.
+#
+# See https://docs.oracle.com/javase/7/docs/technotes/guides/jar/jar.html#Manifest_Specification
+def format_line(input):
+    """The input should not contain new line"""
+    result = ""
+    line_size = 0
+    index = 0
+    input_size = len(input)
+
+    # invariant: `result` never ends with a new line
+    while index < input_size:
+        c = input[index]
+        assert c != '\n', "input should not contain new line"
+        # reserve one byte for new line
+        if line_size < 71:
+            result = result + input[index]
+            line_size = line_size + 1
+            index = index + 1
+        else:
+            # empty lines with just a space cannot happen as index < input_size
+            result = result + '\n'
+            result = result + ' '
+            line_size = 1
+
+    # result cannot already end with new line
+    result = result + '\n'
+    return bytes(result, "utf-8")
+
 def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
     jar_name = name + ".jar"
     output_jar_path = dest_dir / jar_name
@@ -25,11 +57,13 @@ def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
 
     with zipfile.ZipFile(output_jar_path, mode="w") as archive:
         with archive.open("META-INF/MANIFEST.MF", "w") as meta:
-            meta.write(bytes("Manifest-Version: 1.0\n", "utf-8"))
-            meta.write(bytes("Main-Class: " + main_class + "\n", "utf-8"))
-            # meta.write(bytes("Add-Exports: java.base/jdk.internal.ref java.base/jdk.internal.misc java.base/jdk.internal.ref java.base/sun.nio.ch java.management.rmi/com.sun.jmx.remote.internal.rmi java.rmi/sun.rmi.registry java.rmi/sun.rmi.server java.sql/java.sql java.base/jdk.internal.math java.base/jdk.internal.module java.base/jdk.internal.util.jar jdk.management/com.sun.management.internal\n", "utf-8"))
-            # meta.write(bytes("Add-Opens: java.base/java.lang java.base/java.lang.module java.base/java.net java.base/jdk.internal.loader java.base/jdk.internal.ref java.base/jdk.internal.reflect java.base/java.io java.base/sun.nio.ch java.base/java.util java.base/java.util.concurrent java.base/java.util.concurrent.atomic java.base/java.nio\n", "utf-8"))
-            meta.write(bytes("Class-Path: " + ' '.join(relative_jar_paths) + "\n", "utf-8"))
+            meta.write(format_line("Manifest-Version: 1.0"))
+            meta.write(format_line("Main-Class: " + main_class))
+            # cassandra
+            # meta.write(format_line("Add-Exports: java.base/jdk.internal.ref java.base/jdk.internal.misc java.base/jdk.internal.ref java.base/sun.nio.ch java.management.rmi/com.sun.jmx.remote.internal.rmi java.rmi/sun.rmi.registry java.rmi/sun.rmi.server java.sql/java.sql java.base/jdk.internal.math java.base/jdk.internal.module java.base/jdk.internal.util.jar jdk.management/com.sun.management.internal"))
+            # h2o
+            # meta.write(format_line("Add-Opens: java.base/java.lang java.base/java.lang.module java.base/java.net java.base/jdk.internal.loader java.base/jdk.internal.ref java.base/jdk.internal.reflect java.base/java.io java.base/sun.nio.ch java.base/java.util java.base/java.util.concurrent java.base/java.util.concurrent.atomic java.base/java.nio"))
+            meta.write(format_line("Class-Path: " + ' '.join(relative_jar_paths)))
 
 def main() -> int:
     help = "Usage: python LauncherGenerator.py sunflow Harness dacapo-evaluation-git-2cb70cd1.jar dacapo-evaluation-git-2cb70cd1/standalone"
