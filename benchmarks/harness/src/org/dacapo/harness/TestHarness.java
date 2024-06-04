@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
@@ -26,7 +26,7 @@ import org.dacapo.parser.Config;
  * Main class for the Dacapo benchmark suite. Locates the configuration file for
  * the specified benchmark, interprets command line arguments, and invokes the
  * benchmark-specific harness class.
- * 
+ *
  * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
  * id: $Id: TestHarness.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
@@ -53,7 +53,7 @@ public class TestHarness {
   /**
    * Calculates coefficient of variation of a set of longs (standard deviation
    * divided by mean).
-   * 
+   *
    * @param times Array of input values
    * @return Coefficient of variation
    */
@@ -128,7 +128,7 @@ public class TestHarness {
           try {
             ins = new FileInputStream(cnf);
           } catch (FileNotFoundException e) {
-            System.err.println("Count not find cnf file: '" + cnf + "'");
+            System.err.println("Could not find cnf file: '" + cnf + "'");
             System.exit(20);
           }
         }
@@ -247,11 +247,11 @@ public class TestHarness {
   }
 
   private void bmInfo(String size) {
-    config.describe(System.err, size);
+    config.describe(System.out, size);
   }
 
   private void bmSizes() {
-    config.describeSizes(System.err);
+    config.describeSizes(System.out);
   }
 
   private void dump(boolean verbose) {
