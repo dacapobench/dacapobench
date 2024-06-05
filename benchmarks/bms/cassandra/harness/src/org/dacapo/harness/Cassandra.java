@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
@@ -73,6 +73,7 @@ public class Cassandra extends Benchmark {
             System.setProperty("cassandra.logdir", dirCassandraLog.toString());
             System.setProperty("cassandra.config", ymlConf.toPath().toUri().toString());
             System.setProperty("cassandra.logback.configurationFile", xmlLogback.toString());
+            System.setProperty("logback.configurationFile", xmlLogback.toString());
             System.setProperty("cassandra-foreground", "yes");
             System.setProperty("java.security.manager", "allow");
 
@@ -169,7 +170,7 @@ public class Cassandra extends Benchmark {
 
     private void prepareYCSBArgs(String size) {
         ArrayList<String> baseArgs = new ArrayList<String>(Arrays.asList(
-            "-db", "site.ycsb.db.CassandraCQLClient", 
+            "-db", "site.ycsb.db.CassandraCQLClient",
             "-threads", Integer.toString(config.getThreadCount(size)),
             "-p", "hosts=localhost"
             ));
@@ -187,7 +188,7 @@ public class Cassandra extends Benchmark {
         // load workload
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-load";
         mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
-        
+
         // run transactions
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-t";
         mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
