@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  -->
  <project name="cassandra" default="all" basedir="../..">
@@ -12,9 +12,8 @@
      <property file="dacapo.properties"/>
 
     <property name="bm-name" value="cassandra"/>
-    <property name="git-hash" value="1ba458c"/>
-    <property name="version" value="5.1"/>
-    <property name="bm-version" value="${git-hash}-pre-${version}"/>
+    <property name="git-hash" value="87fd1fa"/>
+    <property name="bm-version" value="5.0-beta1"/>
     <property name="bm-src" value="${bm-name}-${bm-version}.tar.gz"/>
     <property name="bm-git-url" value="https://gitbox.apache.org/repos/asf/cassandra.git"/>
     <property name="bm-git-commit" value="${git-hash}"/>
@@ -36,7 +35,7 @@
     <property name="datastax-driver-url" value="${maven.url}/com/datastax/oss/java-driver-core/${datastax-driver-version}"/>
     <property name="datastax-driver-jar" value="java-driver-core-${datastax-driver-version}.jar"/>
 
-    <property name="bm-version-str" value="cassandra ${git-hash}-pre-5.0 ycsb ${ycsb-version} datastax ${datastax-driver-version}"/> <!-- FIXME hard-coded version number due to cassandra's versioning scheme -->
+    <property name="bm-version-str" value="cassandra ${bm-version} ycsb ${ycsb-version} datastax ${datastax-driver-version}"/> <!-- FIXME hard-coded version number due to cassandra's versioning scheme -->
 
     <target name="source">
         <antcall target="check-source">
@@ -60,7 +59,7 @@
 
     <property name="cassandra-build-top" value="${bm-build-dir}/cassandra-${bm-version}"/>
 
-    <target name="cassandra-build">    
+    <target name="cassandra-build">
         <mkdir dir="${cassandra-build-top}"/>
         <untar src="${bm-downloads}/${bm-src}" dest="${cassandra-build-top}" compression="gzip"/>
         <patch patchfile="${bm-files}/cassandra.patch" dir="${bm-build-dir}/${bm-name}-${bm-version}" strip="3" ignorewhitespace="yes" failonerror="true"/>
@@ -118,7 +117,7 @@
     </target>
 
     <target name="jar" depends="libs">
-        <copy file="${cassandra-build-top}/build/apache-cassandra-${version}-SNAPSHOT.jar"
+        <copy file="${cassandra-build-top}/build/apache-cassandra-${bm-version}-SNAPSHOT.jar"
             tofile="${bm-jars}/cassandra-${bm-version}.jar"/>
     </target>
 
