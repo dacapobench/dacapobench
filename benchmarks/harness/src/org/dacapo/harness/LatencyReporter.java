@@ -34,6 +34,7 @@ public class LatencyReporter {
   private int id;
   private int idxOffset;
   private int idx;
+  private int next_idx;
   private double max;
   private static int stride;
 
@@ -50,7 +51,8 @@ public class LatencyReporter {
 
   public LatencyReporter(int threadID, int threads, int transactions, int stride) {
     id = threadID;
-    idx = -1;
+    idx = 0;
+    next_idx = 0;
     max = 0;
     reporters[threadID] = this;
   }
@@ -96,11 +98,11 @@ public class LatencyReporter {
     return reporters[threadID].start();
   }
   public int start() {
-    idx++;
-    if (idx % stride == 0)
-      idx = inc();
-    if (idx < txbegin.length)
-      startIdx(idx, id);
+    if (next_idx % stride == 0) {
+      next_idx = inc();
+    }
+    idx = next_idx++;
+    startIdx(idx, id);
     return idx;
   }
   private static void startIdx(int index, int threadID) {
@@ -115,7 +117,8 @@ public class LatencyReporter {
   private static int inc() {
     int rtn;
     synchronized (globalIdx) {
-       rtn = globalIdx += stride;
+       rtn = globalIdx;
+       globalIdx += stride;
     }
     return rtn;
   }
@@ -252,7 +255,6 @@ public class LatencyReporter {
   }
 
   public static void requestsStarting() {
-    globalIdx = -stride;
     System.err.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
     requestsStarted = System.nanoTime();
