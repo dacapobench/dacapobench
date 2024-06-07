@@ -31,6 +31,7 @@ public class LatencyReporter {
   static final int NS_COARSENING = 1;   // measure at this precision
   static final int US_DIVISOR = 1000/NS_COARSENING;
 
+  private int id;
   private int idxOffset;
   private int idx;
   private double max;
@@ -38,6 +39,7 @@ public class LatencyReporter {
 
   static float[] txbegin;
   static float[] txend;
+  static int[] txowner;
   static long requestsStarted;
   static long requestsFinished;
   private static Integer globalIdx = 0;
@@ -47,6 +49,7 @@ public class LatencyReporter {
   private static Callback callback = null;
 
   public LatencyReporter(int threadID, int threads, int transactions, int stride) {
+    id = threadID;
     idx = -1;
     max = 0;
     reporters[threadID] = this;
@@ -70,6 +73,7 @@ public class LatencyReporter {
     } else {
       txbegin = new float[transactions];
       txend = new float[transactions];
+      txowner = new int[transactions];
       reporters = new LatencyReporter[threads];
       for (int i = 0; i < threads; i++) {
         reporters[i] = new LatencyReporter(i, threads, transactions, stride);
@@ -96,15 +100,16 @@ public class LatencyReporter {
     if (idx % stride == 0)
       idx = inc();
     if (idx < txbegin.length)
-      startIdx(idx);
+      startIdx(idx, id);
     return idx;
   }
-  private static void startIdx(int index) {
+  private static void startIdx(int index, int threadID) {
     if (callback != null)
       callback.requestStart(index);
     long start = (System.nanoTime() - timerBase)/NS_COARSENING;
     txbegin[index] = (float) start;
     txend[index] = -1;
+    txowner[index] = threadID;
   }
 
   private static int inc() {
@@ -155,7 +160,7 @@ public class LatencyReporter {
         }
       }
       if (dumpLatencyCSV)
-        dumpLatencyCSV(latency, txbegin, "simple", baseLatencyFileName, iteration);
+        dumpLatencyCSV(latency, txbegin, txowner, "simple", baseLatencyFileName, iteration);
       if (dumpLatencyHDR)
         dumpLatencyHDR(latency, txbegin, "simple", baseLatencyFileName, iteration);
       printLatency(latency, txbegin, events, "simple", iteration);
@@ -174,7 +179,7 @@ public class LatencyReporter {
         latency[i] = (synth > actual) ? synth : actual;
       }
       if (dumpLatencyCSV)
-        dumpLatencyCSV(latency, txbegin, "metered", baseLatencyFileName, iteration);
+        dumpLatencyCSV(latency, txbegin, txowner, "metered", baseLatencyFileName, iteration);
       if (dumpLatencyHDR)
         dumpLatencyHDR(latency, txbegin, "metered", baseLatencyFileName, iteration);
       printLatency(latency, txbegin, events, "metered", iteration);
@@ -214,14 +219,14 @@ public class LatencyReporter {
     System.out.println(report);
   }
 
-  private static void dumpLatencyCSV(int[] latency, float[] txbegin, String kind, String baseFilename, int iteration) {
+  private static void dumpLatencyCSV(int[] latency, float[] txbegin, int[] txowner, String kind, String baseFilename, int iteration) {
     String filename = baseFilename+"-usec-"+kind+"-"+(iteration-1)+".csv";
     try {
       File file = new File(filename);
       BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
       for (int i = 0; i < latency.length; i++) {
         int start = (int) (txbegin[i]/1000);
-        latencyFile.write(start+", "+(start+latency[i])+System.lineSeparator());
+        latencyFile.write(start+", "+(start+latency[i])+", "+txowner[i]+System.lineSeparator());
       }
       latencyFile.close();
     } catch (IOException e) {
