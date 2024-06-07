@@ -1,19 +1,6 @@
-diff '--color=auto' -ur ./biojava-aa-prop/pom.xml ../build/biojava-aa-prop/pom.xml
---- ./biojava-aa-prop/pom.xml	2023-08-02 07:07:41.000000000 +0000
-+++ ../build/biojava-aa-prop/pom.xml	2023-08-02 09:45:00.511120873 +0000
-@@ -40,6 +40,9 @@
- 							<addClasspath>true</addClasspath>
- 							<mainClass>org.biojava.nbio.aaproperties.CommandPrompt</mainClass>
- 						</manifest>
-+				        <manifestEntries>
-+					        <Multi-Release>true</Multi-Release>
-+       				</manifestEntries>
- 					</archive>
- 					<descriptorRefs>
- 						<descriptorRef>jar-with-dependencies</descriptorRef>
 diff '--color=auto' -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java
---- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2023-08-02 07:07:41.000000000 +0000
-+++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2023-08-02 09:52:16.638386388 +0000
+--- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2024-06-05 09:18:55.000000000 +0000
++++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/CommandPrompt.java	2024-06-07 07:45:43.170810659 +0000
 @@ -84,10 +84,20 @@
  		printHeader(output, propertyList, specificList, delimiter);
  		LinkedHashMap<String, ProteinSequence> a = readInputFile(inputLocation, aaTable);
@@ -36,8 +23,8 @@ diff '--color=auto' -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaprope
  	}
  
 diff '--color=auto' -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java
---- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java	2023-08-02 07:07:41.000000000 +0000
-+++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java	2023-08-02 09:45:00.511120873 +0000
+--- ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java	2024-06-05 09:18:55.000000000 +0000
++++ ../build/biojava-aa-prop/src/main/java/org/biojava/nbio/aaproperties/Utils.java	2024-06-07 07:45:43.170810659 +0000
 @@ -119,13 +119,13 @@
  		}
  
@@ -71,3 +58,80 @@ diff '--color=auto' -ur ./biojava-aa-prop/src/main/java/org/biojava/nbio/aaprope
  			return cSeq;
  		}
  		else{
+diff '--color=auto' -ur ./biojava-protein-disorder/pom.xml ../build/biojava-protein-disorder/pom.xml
+--- ./biojava-protein-disorder/pom.xml	2024-06-05 09:18:56.000000000 +0000
++++ ../build/biojava-protein-disorder/pom.xml	2024-06-07 07:47:51.718439137 +0000
+@@ -47,6 +47,7 @@
+ 							<product>JRONN a Java RONN (www.strubi.ox.ac.uk/RONN)</product>
+ 							<url>${project.url}</url>
+ 							<author>Peter Troshin</author>
++							<Multi-Release>true</Multi-Release>
+ 						</manifestEntries>
+ 					</archive>
+ 				</configuration>
+diff '--color=auto' -ur ./biojava-protein-disorder/src/main/java/org/biojava/nbio/ronn/ORonn.java ../build/biojava-protein-disorder/src/main/java/org/biojava/nbio/ronn/ORonn.java
+--- ./biojava-protein-disorder/src/main/java/org/biojava/nbio/ronn/ORonn.java	2024-06-05 09:18:55.000000000 +0000
++++ ../build/biojava-protein-disorder/src/main/java/org/biojava/nbio/ronn/ORonn.java	2024-06-07 07:45:43.170810659 +0000
+@@ -81,7 +81,7 @@
+ 
+ 
+ 	ORonn(final FastaSequence sequence, final ModelLoader mloader,
+-			final InputParameters params) throws 
++			final InputParameters params) throws
+ 		IOException {
+ 		this.sequence = sequence;
+ 		this.mloader = mloader;
+@@ -93,7 +93,7 @@
+ 		timer = new Timer(TimeUnit.MILLISECONDS);
+ 	}
+ 	//This constructor is for API calls where the caller collects the results directly
+-	ORonn(final FastaSequence sequence, final ModelLoader mloader) throws 
++	ORonn(final FastaSequence sequence, final ModelLoader mloader) throws
+ IOException {
+ 		this.sequence = sequence;
+ 		this.mloader = mloader;
+@@ -137,6 +137,15 @@
+ 		return fsequence.getLength() > RonnConstraint.MIN_SEQUENCE_LENGTH;
+ 	}
+ 
++	synchronized private void status() {
++		int fivePercent = numSequences / 20;
++		complete++;
++		if (complete % fivePercent == 0) {
++			int percentage = 5 * (complete / fivePercent);
++			System.out.print("Processing sequences: "+percentage+"%\r");
++		}
++	}
++
+ 	@Override
+ 	public ORonn call() throws IOException {
+ 		final String seq = sequence.getSequence();
+@@ -144,6 +153,7 @@
+ 		Stream.iterate(0, n -> n +1).limit(NUMBER_OF_MODELS).map(modelNumber -> mloader.getModel(modelNumber))
+ 																 .map(rmodel -> new ORonnModel(seq, rmodel, disorder).detect())
+ 																 .forEach(score ->addScore(score));
++		status();
+ 		final char[] ch = seq.toCharArray();
+ 		final float[] meanScores = getMeanScores();
+ 		assert meanScores.length == seq.length() : "Scores are not calculated for "
+@@ -277,7 +287,10 @@
+ 		return prms;
+ 	}
+ 
+-	public static void main(final String[] args) throws 
++	private static int numSequences = 0;
++	private static int complete = 0;
++
++	public static void main(final String[] args) throws
+ IOException {
+ 
+ 		if ((args.length == 0) || (args.length > 5)) {
+@@ -301,6 +314,8 @@
+ 		// The stream is closed after reading inside readFasta
+ 		final List<FastaSequence> sequences = SequenceUtil
+ 				.readFasta(new FileInputStream(prms.getInput()));
++		numSequences = sequences.size();
++		System.out.println("Predicting disorder for "+numSequences+" protien sequences...");
+ 		stat.println(timer.getStepTime(TimeUnit.MILLISECONDS)
+ 				+ "ms input file loaded");
+ 		stat.println("Input file has " + sequences.size() + " sequences");

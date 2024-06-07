@@ -12,7 +12,7 @@ public class BioJava extends Benchmark {
     public BioJava(Config config, File scratch, File data) throws Exception {
         super(config, scratch, data, false);
         assertJavaVersionGE(11, "Biojava requires Java version 11 or higher.");
-        Class<?> clazz = Class.forName("org.biojava.nbio.aaproperties.CommandPrompt", true, loader);
+        Class<?> clazz = Class.forName("org.biojava.nbio.ronn.ORonn", true, loader);
         this.method = clazz.getMethod("main", String[].class);
     }
 
@@ -24,6 +24,11 @@ public class BioJava extends Benchmark {
 
     @Override
     public void iterate(String size) throws Exception {
-        this.method.invoke(null, (Object) args);
+        String in = args[0]+"="+args[1];
+        String out = args[2]+"="+args[3];
+        String stats = args[4]+"="+args[5];
+        String threads = args[6]+"="+args[7];
+        String[] newArgs = { in, out, stats, threads};
+        this.method.invoke(null, (Object) newArgs);
     }
 }

@@ -26,15 +26,6 @@
         <os family="windows"/>
     </condition>
 
-    <target name="source">
-        <antcall target="check-source">
-            <param name="target-dir" value="${bm-downloads}"/>
-            <param name="target-url" value="${dacapo.dat.url}"/>
-            <param name="target-file" value="biojava-data.zip"/>
-        </antcall>
-    </target>
-
-
     <target name="unpack" depends="untar, patch"/>
 
     <target name="patch">
@@ -51,14 +42,15 @@
     </target>
 
     <target name="jar">
-        <copy file="${bm-build-dir}/biojava-aa-prop/target/AAProperties-jar-with-dependencies.jar"
+        <copy file="${bm-build-dir}/biojava-protein-comparison-tool/target/biojava-protein-comparison-tool-${bm-version}.jar"
+              todir="${bm-jars}"/>
+        <copy file="${bm-build-dir}/biojava-protein-disorder/target/biojava-protein-disorder-${bm-version}.jar"
               todir="${bm-jars}"/>
     </target>
 
     <target name="data">
-        <unzip dest="${bm-data}" src="${bm-downloads}/biojava-data.zip"/>
         <copy todir="${bm-data}">
-            <fileset file="${bm-build-dir}/biojava-core/src/test/resources/PF00104_small.fasta"/>
+            <fileset file="${bm-files}/dat/*"/>
         </copy>
     </target>
 
