@@ -31,15 +31,15 @@ def format_line(input):
         c = input[index]
         assert c != '\n', "input should not contain new line"
         # reserve one byte for new line
-        if line_size < 71:
-            result = result + input[index]
-            line_size = line_size + 1
-            index = index + 1
-        else:
+        if line_size == 71:
             # empty lines with just a space cannot happen as index < input_size
             result = result + '\n'
             result = result + ' '
             line_size = 1
+
+        result = result + c
+        line_size = line_size + 1
+        index = index + 1
 
     # result cannot already end with new line
     result = result + '\n'
