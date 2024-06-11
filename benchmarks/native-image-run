@@ -35,6 +35,8 @@ run_native_image(){
   $NATIVE_IMAGE -H:ConfigurationFileDirectories=./$CONFIG_DIR -jar "$JAR" "$@"
 }
 
+fixDataDir
+
 case "$BENCHMARK" in
     "avrora" | "batik" | "biojava" | "graphchi" | "h2" | "sunflow")
       run_agent
