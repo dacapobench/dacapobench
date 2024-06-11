@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z "${GRAALVM_HOME}" ]]; then
+  echo "GRAALVM_HOME is not set"
+  exit 1
+fi
+
+if test "$#" -ne 2; then
+  echo "Expect 2 argument, found = $#"
+  echo "Usage: ./native-image-run <launchers-dir> <benchmark>"
+  exit 1
+fi
+
+AGENT="$GRAALVM_HOME/bin/java"
+NATIVE_IMAGE="$GRAALVM_HOME/bin/native-image"
+
+LAUNCHERS_DIR=$1
+BENCHMARK=$2
+
+fixDataDir(){
+  parent_dir="$(dirname "$LAUNCHERS_DIR")"
+  echo "Data-Location=$parent_dir" > ~/.dacapo-config.properties
+}
+
+JAR="$LAUNCHERS_DIR/$BENCHMARK.jar"
+CONFIG_DIR=$BENCHMARK-config
+
+run_agent(){
+  $AGENT -agentlib:native-image-agent=config-output-dir=$CONFIG_DIR -jar "$JAR" $BENCHMARK
+}
+
+run_native_image(){
+  $NATIVE_IMAGE -H:ConfigurationFileDirectories=./$CONFIG_DIR -jar "$JAR" "$@"
+}
+
+case "$BENCHMARK" in
+    "avrora" | "batik" | "biojava" | "graphchi" | "h2" | "sunflow")
+      run_agent
+      run_native_image
+      ./$BENCHMARK $BENCHMARK;;
+
+    "fop")
+      config_file=$CONFIG_DIR/empty
+      touch $config_file
+      run_agent
+      run_native_image                                                             \
+          --initialize-at-run-time=org.apache.fop.render.rtf.rtflib.rtfdoc.RtfList \
+          -Djava.util.logging.config.file=$config_file                             \
+
+      ./$BENCHMARK -Djava.home=$GRAALVM_HOME $BENCHMARK;;
+
+    "lusearch" | "luindex")
+      run_agent
+      run_native_image
+      ./$BENCHMARK -Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false --no-validation $BENCHMARK;;
+
+    "pmd")
+      run_agent
+      run_native_image
+      ./$BENCHMARK --no-validation $BENCHMARK;;
+
+    "xalan")
+      run_agent
+      run_native_image "--initialize-at-build-time=org.apache.crimson.parser.Parser2,org.apache.crimson.parser.Parser2\$Catalog,org.apache.crimson.parser.Parser2\$NullHandler,org.apache.xml.utils.res.CharArrayWrapper"
+
+      ./$BENCHMARK $BENCHMARK;;
+
+
+    *)
+      echo "The benchmark $BENCHMARK" is not supported by Native Image currently.
+      exit 1
+esac
