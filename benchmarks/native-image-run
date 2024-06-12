@@ -19,13 +19,13 @@ NATIVE_IMAGE="$GRAALVM_HOME/bin/native-image"
 LAUNCHERS_DIR=$1
 BENCHMARK=$2
 
+JAR="$LAUNCHERS_DIR/$BENCHMARK.jar"
+CONFIG_DIR=$BENCHMARK-config
+
 fix_data_dir(){
   parent_dir="$(dirname "$LAUNCHERS_DIR")"
   echo "Data-Location=$parent_dir" > ~/.dacapo-config.properties
 }
-
-JAR="$LAUNCHERS_DIR/$BENCHMARK.jar"
-CONFIG_DIR=$BENCHMARK-config
 
 run_agent(){
   $AGENT -agentlib:native-image-agent=config-output-dir=$CONFIG_DIR -jar "$JAR" $BENCHMARK
