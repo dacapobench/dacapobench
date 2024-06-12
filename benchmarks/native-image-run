@@ -19,7 +19,7 @@ NATIVE_IMAGE="$GRAALVM_HOME/bin/native-image"
 LAUNCHERS_DIR=$1
 BENCHMARK=$2
 
-fixDataDir(){
+fix_data_dir(){
   parent_dir="$(dirname "$LAUNCHERS_DIR")"
   echo "Data-Location=$parent_dir" > ~/.dacapo-config.properties
 }
@@ -35,7 +35,7 @@ run_native_image(){
   $NATIVE_IMAGE -H:ConfigurationFileDirectories=./$CONFIG_DIR -jar "$JAR" "$@"
 }
 
-fixDataDir
+fix_data_dir
 
 case "$BENCHMARK" in
     "avrora" | "batik" | "biojava" | "graphchi" | "h2" | "sunflow")
