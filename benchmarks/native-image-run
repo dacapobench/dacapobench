@@ -37,12 +37,12 @@ fix_data_dir(){
 
 run_agent(){
     # Run agent to collect reflection and resource information
-    echo "Collecting reflection and resource usage information..."
+    echo "\nCollecting reflection and resource usage information...\n"
     $AGENT -agentlib:native-image-agent=config-output-dir=$CONFIG_DIR -jar "$JAR" $BENCHMARK
 }
 
 run_native_image(){
-    echo "Running Native Image compilation..."
+    echo "\nRunning Native Image compilation...\n"
     $NATIVE_IMAGE -H:ConfigurationFileDirectories=./$CONFIG_DIR -jar "$JAR" "$@"
 }
 
@@ -50,7 +50,7 @@ fix_data_dir
 
 # check existence of launcher JAR
 if [ ! -f "$JAR" ]; then
-    echo "The launcher for $BANCHMARK cannot be found: $JAR"
+    echo "The launcher for $BENCHMARK cannot be found: $JAR"
     exit 1
 fi
 
