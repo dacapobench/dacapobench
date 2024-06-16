@@ -1,6 +1,6 @@
 diff -ur ./kafka-3.3.1-src/config/log4j.properties ../build/kafka-3.3.1-src/config/log4j.properties
 --- ./kafka-3.3.1-src/config/log4j.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/log4j.properties	2023-09-28 07:45:35.897670292 +0000
++++ ../build/kafka-3.3.1-src/config/log4j.properties	2024-04-26 02:56:10.305554934 +0000
 @@ -14,8 +14,8 @@
  # limitations under the License.
  
@@ -63,7 +63,7 @@ diff -ur ./kafka-3.3.1-src/config/log4j.properties ../build/kafka-3.3.1-src/conf
  
 diff -ur ./kafka-3.3.1-src/config/server.properties ../build/kafka-3.3.1-src/config/server.properties
 --- ./kafka-3.3.1-src/config/server.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/server.properties	2023-09-28 07:45:35.897670292 +0000
++++ ../build/kafka-3.3.1-src/config/server.properties	2024-04-26 02:58:22.316218739 +0000
 @@ -59,7 +59,7 @@
  ############################# Log Basics #############################
  
@@ -73,21 +73,17 @@ diff -ur ./kafka-3.3.1-src/config/server.properties ../build/kafka-3.3.1-src/con
  
  # The default number of log partitions per topic. More partitions allow greater
  # parallelism for consumption, but this will also result in more files across
-@@ -113,7 +113,10 @@
- 
+@@ -114,6 +114,7 @@
  # The interval at which log segments are checked to see if they can be deleted according
  # to the retention policies
--log.retention.check.interval.ms=300000
-+log.retention.check.interval.ms=10
+ log.retention.check.interval.ms=300000
 +log.segment.delete.delay.ms = 10
-+file.delete.delay.ms = 10
-+log.cleaner.backoff.ms = 10
  
  ############################# Zookeeper #############################
  
 diff -ur ./kafka-3.3.1-src/config/tools-log4j.properties ../build/kafka-3.3.1-src/config/tools-log4j.properties
 --- ./kafka-3.3.1-src/config/tools-log4j.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/tools-log4j.properties	2023-09-28 07:45:35.897670292 +0000
++++ ../build/kafka-3.3.1-src/config/tools-log4j.properties	2024-04-26 02:56:10.305554934 +0000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -99,7 +95,7 @@ diff -ur ./kafka-3.3.1-src/config/tools-log4j.properties ../build/kafka-3.3.1-sr
  log4j.appender.stderr.layout=org.apache.log4j.PatternLayout
 diff -ur ./kafka-3.3.1-src/config/zookeeper.properties ../build/kafka-3.3.1-src/config/zookeeper.properties
 --- ./kafka-3.3.1-src/config/zookeeper.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/zookeeper.properties	2023-09-28 07:45:35.897670292 +0000
++++ ../build/kafka-3.3.1-src/config/zookeeper.properties	2024-04-26 02:56:10.305554934 +0000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -111,7 +107,7 @@ diff -ur ./kafka-3.3.1-src/config/zookeeper.properties ../build/kafka-3.3.1-src/
  # disable the per-ip limit on the number of connections since this is a non-production config
 diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala
 --- ./kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala	2023-09-28 07:45:35.897670292 +0000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala	2024-04-26 02:56:10.305554934 +0000
 @@ -73,7 +73,8 @@
          exitCode = 1
      } finally {
@@ -124,7 +120,7 @@ diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala ..
  
 diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala
 --- ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2023-09-28 07:45:35.897670292 +0000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2024-04-26 02:56:10.305554934 +0000
 @@ -76,7 +76,7 @@
    import LogManager._
  
@@ -136,7 +132,7 @@ diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala ../bui
    private val currentLogs = new Pool[TopicPartition, UnifiedLog]()
 diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
 --- ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2023-09-28 07:45:35.897670292 +0000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2024-04-26 02:56:10.305554934 +0000
 @@ -237,7 +237,7 @@
          Some(Utils.loadProps(absolutePath))
        } catch {
@@ -148,48 +144,66 @@ diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckp
            error(s"Failed to read meta.properties file under dir $absolutePath", e)
 diff -ur ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json
 --- ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2023-09-28 07:45:35.897670292 +0000
-@@ -23,16 +23,16 @@
++++ ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2024-04-26 02:56:10.309554893 +0000
+@@ -1,40 +1,22 @@
+-// Licensed to the Apache Software Foundation (ASF) under one or more
+-// contributor license agreements.  See the NOTICE file distributed with
+-// this work for additional information regarding copyright ownership.
+-// The ASF licenses this file to You under the Apache License, Version 2.0
+-// (the "License"); you may not use this file except in compliance with
+-// the License.  You may obtain a copy of the License at
+-//
+-//    http://www.apache.org/licenses/LICENSE-2.0
+-//
+-// Unless required by applicable law or agreed to in writing, software
+-// distributed under the License is distributed on an "AS IS" BASIS,
+-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-// See the License for the specific language governing permissions and
+-// limitations under the License.
+-
+-//
+-// An example task specification for running a producer benchmark in Trogdor.
+-// See TROGDOR.md for details.
+-//
+-
+ {
+   "class": "org.apache.kafka.trogdor.workload.ProduceBenchSpec",
    "durationMs": 10000000,
    "producerNode": "node0",
++  "producers": %s,
    "bootstrapServers": "localhost:9092",
 -  "targetMessagesPerSec": 10000,
 -  "maxMessages": 50000,
-+  "targetMessagesPerSec": 200000,
-+  "maxMessages": 1000000,
++  "maxMessages": %s,
++  "producerConf": {
++    "linger.ms": 0
++  },
    "activeTopics": {
 -    "foo[1-3]": {
-+    "dacapo-[1-2]": {
-       "numPartitions": 10,
+-      "numPartitions": 10,
++    "dacapo": {
++      "numPartitions": %s,
        "replicationFactor": 1
      }
    },
-   "inactiveTopics": {
+-  "inactiveTopics": {
 -    "foo[4-5]": {
-+    "dacapo-[3-4]": {
-       "numPartitions": 10,
-       "replicationFactor": 1
-     }
+-      "numPartitions": 10,
+-      "replicationFactor": 1
+-    }
+-  }
+-}
++    "valueGenerator": {
++        "type": "constant",
++        "size": %s
++    },
++  "messagesPerFlush": %s
++}
+\ No newline at end of file
 diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2023-09-28 07:45:35.897670292 +0000
-@@ -20,6 +20,7 @@
- import com.fasterxml.jackson.databind.node.LongNode;
- import com.fasterxml.jackson.databind.node.ObjectNode;
- import net.sourceforge.argparse4j.ArgumentParsers;
-+
- import net.sourceforge.argparse4j.inf.ArgumentParser;
- import net.sourceforge.argparse4j.inf.ArgumentParserException;
- import net.sourceforge.argparse4j.inf.Namespace;
-@@ -31,6 +32,7 @@
- import org.apache.kafka.trogdor.common.JsonUtil;
- import org.apache.kafka.trogdor.common.Node;
- import org.apache.kafka.trogdor.common.Platform;
-+
- import org.apache.kafka.trogdor.rest.AgentStatusResponse;
- import org.apache.kafka.trogdor.rest.CreateWorkerRequest;
- import org.apache.kafka.trogdor.rest.DestroyWorkerRequest;
-@@ -187,16 +189,16 @@
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2024-04-26 03:01:50.682231840 +0000
+@@ -187,16 +187,16 @@
              e.printStackTrace(out);
              return false;
          }
@@ -212,7 +226,7 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/
              return false;
          }
      }
-@@ -250,7 +252,7 @@
+@@ -250,7 +250,7 @@
          final Agent agent = new Agent(platform, Scheduler.SYSTEM, restServer, resource);
          restServer.start(resource);
          Exit.addShutdownHook("agent-shutdown-hook", () -> {
@@ -221,30 +235,26 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/
              try {
                  agent.beginShutdown();
                  agent.waitForShutdown();
-@@ -265,11 +267,15 @@
+@@ -265,10 +265,14 @@
              } catch (Exception e) {
                  System.out.println("Unable to parse the supplied task spec.");
                  e.printStackTrace();
 -                Exit.exit(1);
--            }
--            TaskSpec effectiveSpec = agent.rebaseTaskSpecTime(spec);
--            Exit.exit(agent.exec(effectiveSpec, System.out) ? 0 : 1);
--        }
 +                agent.beginShutdown();                 
 +                //Exit.exit(1);
-+            }            
-+            TaskSpec effectiveSpec = agent.rebaseTaskSpecTime(spec);            
+             }
+             TaskSpec effectiveSpec = agent.rebaseTaskSpecTime(spec);
+-            Exit.exit(agent.exec(effectiveSpec, System.out) ? 0 : 1);
 +            agent.exec(effectiveSpec, System.out);            
 +            agent.beginShutdown();
 +            //Remove Exit.exit because the agent is executed in the Dacapo thread
 +            //Exit.exit(agent.exec(effectiveSpec, System.out) ? 0 : 1);
-+        }           
+         }
          agent.waitForShutdown();
      }
- }
 diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java	2023-09-28 07:54:20.458881135 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java	2024-04-26 03:02:43.809743696 +0000
 @@ -106,6 +106,7 @@
  
      private static final int ADMIN_REQUEST_TIMEOUT = 25000;
@@ -253,15 +263,6 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common
      private static final int MAX_CREATE_TOPICS_BATCH_SIZE = 10;
  
              //Map<String, Map<Integer, List<Integer>>> topics) throws Throwable {
-@@ -135,7 +136,7 @@
-         try (Admin adminClient
-                  = createAdminClient(bootstrapServers, commonClientConf, adminClientConf)) {
-             createTopics(log, adminClient, topics, failOnExisting);
--        } catch (Exception e) {
-+        } catch (Exception e) { 
-             log.warn("Failed to create or verify topics {}", topics, e);
-             throw e;
-         }
 @@ -180,6 +181,7 @@
          long startMs = Time.SYSTEM.milliseconds();
          int tries = 0;
@@ -270,21 +271,10 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common
  
          Map<String, NewTopic> newTopics = new HashMap<>();
          for (NewTopic newTopic : topics) {
-@@ -205,7 +207,7 @@
-                 Future<Void> future = entry.getValue();
-                 try {
-                     future.get();
--                    log.debug("Successfully created {}.", topicName);
-+                    log.debug("Successfully created {}.", topicName);                    
-                 } catch (Exception e) {
-                     if ((e.getCause() instanceof TimeoutException)
-                         || (e.getCause() instanceof NotEnoughReplicasException)) {
-@@ -213,7 +215,8 @@
-                                  e.getCause().getMessage());
+@@ -214,6 +216,7 @@
                          topicsToCreate.add(topicName);
                      } else if (e.getCause() instanceof TopicExistsException) {
--                        log.info("Topic {} already exists.", topicName);
-+                        log.info("Topic {} already exists.", topicName);                        
+                         log.info("Topic {} already exists.", topicName);
 +                        topicsToCreate.add(topicName);
                          existingTopics.add(topicName);
                      } else {
@@ -307,18 +297,80 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common
          }
          return existingTopics;
      }
+diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchSpec.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchSpec.java
+--- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchSpec.java	2022-09-29 19:03:49.000000000 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchSpec.java	2024-04-26 02:56:10.309554893 +0000
+@@ -60,6 +60,7 @@
+  */
+ public class ProduceBenchSpec extends TaskSpec {
+     private final String producerNode;
++    private final int producers;
+     private final String bootstrapServers;
+     private final int targetMessagesPerSec;
+     private final long maxMessages;
+@@ -73,11 +74,13 @@
+     private final TopicsSpec inactiveTopics;
+     private final boolean useConfiguredPartitioner;
+     private final boolean skipFlush;
++    private final int messagesPerFlush;
+ 
+     @JsonCreator
+     public ProduceBenchSpec(@JsonProperty("startMs") long startMs,
+                          @JsonProperty("durationMs") long durationMs,
+                          @JsonProperty("producerNode") String producerNode,
++                         @JsonProperty("producers") int producers,
+                          @JsonProperty("bootstrapServers") String bootstrapServers,
+                          @JsonProperty("targetMessagesPerSec") int targetMessagesPerSec,
+                          @JsonProperty("maxMessages") long maxMessages,
+@@ -90,9 +93,11 @@
+                          @JsonProperty("activeTopics") TopicsSpec activeTopics,
+                          @JsonProperty("inactiveTopics") TopicsSpec inactiveTopics,
+                          @JsonProperty("useConfiguredPartitioner") boolean useConfiguredPartitioner, 
+-                         @JsonProperty("skipFlush") boolean skipFlush) {
++                         @JsonProperty("skipFlush") boolean skipFlush,
++                         @JsonProperty("messagesPerFlush") int messagesPerFlush) {
+         super(startMs, durationMs);
+         this.producerNode = (producerNode == null) ? "" : producerNode;
++        this.producers = producers == 0? 1: producers;
+         this.bootstrapServers = (bootstrapServers == null) ? "" : bootstrapServers;
+         this.targetMessagesPerSec = targetMessagesPerSec;
+         this.maxMessages = maxMessages;
+@@ -110,6 +115,7 @@
+             TopicsSpec.EMPTY : inactiveTopics.immutableCopy();
+         this.useConfiguredPartitioner = useConfiguredPartitioner;
+         this.skipFlush = skipFlush;
++        this.messagesPerFlush = messagesPerFlush;
+     }
+ 
+     @JsonProperty
+@@ -118,6 +124,11 @@
+     }
+ 
+     @JsonProperty
++    public int producers() {
++      return producers;
++    }
++
++    @JsonProperty
+     public String bootstrapServers() {
+         return bootstrapServers;
+     }
+@@ -182,6 +193,11 @@
+         return skipFlush;
+     }
+ 
++    @JsonProperty
++    public int messagesPerFlush() {
++      return messagesPerFlush;
++    }
++
+     @Override
+     public TaskController newController(String id) {
+         return topology -> Collections.singleton(producerNode);
 diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
 --- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2023-09-28 07:45:35.897670292 +0000
-@@ -27,6 +27,7 @@
- import org.apache.kafka.clients.producer.ProducerRecord;
- import org.apache.kafka.clients.producer.RecordMetadata;
- import org.apache.kafka.common.TopicPartition;
-+import org.apache.kafka.common.errors.TopicExistsException;
- import org.apache.kafka.common.internals.KafkaFutureImpl;
- import org.apache.kafka.common.serialization.ByteArraySerializer;
- import org.apache.kafka.common.utils.ThreadUtils;
-@@ -55,6 +56,9 @@
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2024-04-26 03:05:57.452011629 +0000
+@@ -55,6 +55,9 @@
  import java.util.concurrent.atomic.AtomicBoolean;
  import java.util.concurrent.atomic.AtomicLong;
  
@@ -328,7 +380,7 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
  public class ProduceBenchWorker implements TaskWorker {
      private static final Logger log = LoggerFactory.getLogger(ProduceBenchWorker.class);
      
-@@ -72,6 +76,14 @@
+@@ -72,6 +75,11 @@
  
      private KafkaFutureImpl<String> doneFuture;
  
@@ -336,30 +388,14 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
 +    Method dacapoEnd;
 +    Method dacapoStarting;
 +    Method dacapoFinished;
-+    private int tx = 0;
-+    private static int txCount = 0;
-+    public static void setTxCount(int count) { txCount = count; }
 +
      public ProduceBenchWorker(String id, ProduceBenchSpec spec) {
          this.id = id;
          this.spec = spec;
-@@ -79,7 +91,7 @@
+@@ -93,6 +101,26 @@
+         executor.submit(new Prepare());
+     }
  
-     @Override
-     public void start(Platform platform, WorkerStatusTracker status,
--                      KafkaFutureImpl<String> doneFuture) {
-+                      KafkaFutureImpl<String> doneFuture) {       
-         if (!running.compareAndSet(false, true)) {
-             throw new IllegalStateException("ProducerBenchWorker is already running.");
-         }
-@@ -90,12 +102,32 @@
-             ThreadUtils.createThreadFactory("ProduceBenchWorkerThread%d", false));
-         this.status = status;
-         this.doneFuture = doneFuture;
--        executor.submit(new Prepare());
-+        executor.submit(new Prepare());        
-+    }
-+
 +    public void dacapoStarting() {
 +        try {
 +            dacapoStarting.invoke(null);
@@ -378,21 +414,17 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
 +        } catch (InvocationTargetException e) {
 +            System.err.println("Failed to invoke DaCapo latency reporter requestsFinished(): "+e);
 +        }
-     }
- 
++    }
++
      public class Prepare implements Runnable {
          @Override
--        public void run() {
-+        public void run() {            
-             try {
-                 Map<String, NewTopic> newTopics = new HashMap<>();
-                 HashSet<TopicPartition> active = new HashSet<>();
-@@ -119,8 +151,20 @@
+         public void run() {
+@@ -119,8 +147,20 @@
                  }
                  status.update(new TextNode("Creating " + newTopics.keySet().size() + " topic(s)"));
                  WorkerUtils.createTopics(log, spec.bootstrapServers(), spec.commonClientConf(),
 -                                         spec.adminClientConf(), newTopics, false);
-+                    spec.adminClientConf(), newTopics, false);               
++                    spec.adminClientConf(), newTopics, false);
                  status.update(new TextNode("Created " + newTopics.keySet().size() + " topic(s)"));
 +                try {
 +                    Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter", true, ProduceBenchWorker.class.getClassLoader());
@@ -405,24 +437,22 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
 +                } catch (NoSuchMethodException e) {
 +                    System.err.println("Failed trying to create latency stats: "+e);
 +                }
-+                dacapoStarting(); 
++                dacapoStarting();
                  executor.submit(new SendRecords(active));
              } catch (Throwable e) {
                  WorkerUtils.abort(log, "Prepare", e, doneFuture);
-@@ -131,23 +175,61 @@
+@@ -131,23 +171,57 @@
      private static class SendRecordsCallback implements Callback {
          private final SendRecords sendRecords;
          private final long startMs;
-+        private long lastStart;
 +        private Method dacapoEnd;
 +        private Method dacapoStart;
 +        private int idx;
  
 -        SendRecordsCallback(SendRecords sendRecords, long startMs) {
-+        SendRecordsCallback(SendRecords sendRecords, long startMs, int idx, Method dacapoEnd,  Method dacapoStart) {
++        SendRecordsCallback(SendRecords sendRecords, long startMs, Method dacapoEnd,  Method dacapoStart) {
              this.sendRecords = sendRecords;
              this.startMs = startMs;
-+            this.lastStart = System.nanoTime();
 +            this.dacapoEnd = dacapoEnd;
 +            this.dacapoStart = dacapoStart;
 +            this.idx = dacapoStart();
@@ -432,10 +462,8 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
          public void onCompletion(RecordMetadata metadata, Exception exception) {
              long now = Time.SYSTEM.milliseconds();
              long durationMs = now - startMs;
-+            long start = System.nanoTime();
 +            dacapoEnd(idx);
              sendRecords.recordDuration(durationMs);
-+            lastStart = System.nanoTime();
              if (exception != null) {
                  log.error("SendRecordsCallback: error", exception);
              }
@@ -472,35 +500,182 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
      /**
       * A subclass of Throttle which flushes the Producer right before the throttle injects a delay.
       * This avoids including throttling latency in latency measurements.
-@@ -293,6 +375,7 @@
+@@ -159,14 +233,22 @@
+             super(maxPerPeriod, THROTTLE_PERIOD_MS);
+             this.producer = producer;
+         }
++        SendRecordsThrottle(int maxPerPeriod, int throttle_period, KafkaProducer<?, ?> producer) {
++          super(maxPerPeriod, throttle_period);
++          this.producer = producer;
++      }
+ 
+         @Override
+         protected synchronized void delay(long amount) throws InterruptedException {
++          if (amount == -1) {
++            producer.flush();
++          } else {
+             long startMs = time().milliseconds();
+             producer.flush();
+             long endMs = time().milliseconds();
+             long delta = endMs - startMs;
+             super.delay(amount - delta);
++          }
+         }
+     }
+ 
+@@ -177,7 +259,11 @@
+ 
+         private final Future<?> statusUpdaterFuture;
+ 
+-        private final KafkaProducer<byte[], byte[]> producer;
++        // private final KafkaProducer<byte[],
++        private final KafkaProducer<byte[], byte[]> producers[];
++        private final Throttle throttles[];
++
++        private int currentProducer;
+ 
+         private final PayloadIterator keys;
+ 
+@@ -185,13 +271,14 @@
+ 
+         private final Optional<TransactionGenerator> transactionGenerator;
+ 
+-        private final Throttle throttle;
++        //private final Throttle throttle;
+ 
+         private Iterator<TopicPartition> partitionsIterator;
+         private Future<RecordMetadata> sendFuture;
+         private AtomicLong transactionsCommitted;
+         private boolean enableTransactions;
+ 
++        @SuppressWarnings("unchecked")
+         SendRecords(HashSet<TopicPartition> activePartitions) {
+             this.activePartitions = activePartitions;
+             this.partitionsIterator = activePartitions.iterator();
+@@ -211,14 +298,30 @@
+                 props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "produce-bench-transaction-id-" + UUID.randomUUID());
+             // add common client configs to producer properties, and then user-specified producer configs
+             WorkerUtils.addConfigsToProperties(props, spec.commonClientConf(), spec.producerConf());
+-            this.producer = new KafkaProducer<>(props, new ByteArraySerializer(), new ByteArraySerializer());
++            this.producers = (KafkaProducer<byte[], byte[]>[]) new KafkaProducer[spec.producers()];
++            //this.producers = (KafkaProducer<byte[], byte[]>[])  new ArrayList<KafkaProducer<byte[], byte[]>>(spec.producers()).toArray();        
++            this.throttles = new Throttle[spec.producers()];
++            for (int i=0; i<spec.producers(); i++) {
++              this.producers[i] = new KafkaProducer<>(props, new ByteArraySerializer(), new ByteArraySerializer());
++              if (spec.messagesPerFlush() > 0) {
++                if (spec.skipFlush()) {
++                  this.throttles[i] = new Throttle(spec.messagesPerFlush(), -1);
++                } else {
++                  this.throttles[i] = new SendRecordsThrottle(spec.messagesPerFlush(), -1, this.producers[i]);
++                }
++              } else {
++                if (spec.skipFlush()) {
++                    this.throttles[i] = new Throttle(perPeriod, THROTTLE_PERIOD_MS);
++                } else {
++                    this.throttles[i] = new SendRecordsThrottle(perPeriod, producers[i]);
++                }
++              }
++            }
++
+             this.keys = new PayloadIterator(spec.keyGenerator());
+             this.values = new PayloadIterator(spec.valueGenerator());
+-            if (spec.skipFlush()) {
+-                this.throttle = new Throttle(perPeriod, THROTTLE_PERIOD_MS);
+-            } else {
+-                this.throttle = new SendRecordsThrottle(perPeriod, producer);
+-            }
++
++
          }
  
-         private void sendMessage() throws InterruptedException {
-+            int idx = 0;// dacapoStart();
-             if (!partitionsIterator.hasNext())
-                 partitionsIterator = activePartitions.iterator();
+         @Override
+@@ -226,8 +329,10 @@
+             long startTimeMs = Time.SYSTEM.milliseconds();
+             try {
+                 try {
+-                    if (enableTransactions)
+-                        producer.initTransactions();
++                    if (enableTransactions) {
++                      for (int i=0; i<this.producers.length; i++) 
++                        producers[i].initTransactions();
++                    }
  
-@@ -306,11 +389,18 @@
+                     long sentMessages = 0;
+                     while (sentMessages < spec.maxMessages()) {
+@@ -242,8 +347,10 @@
+                     if (enableTransactions)
+                         takeTransactionAction(); // give the transactionGenerator a chance to commit if configured evenly
+                 } catch (Exception e) {
+-                    if (enableTransactions)
+-                        producer.abortTransaction();
++                    if (enableTransactions) {
++                      for (int i=0; i<this.producers.length; i++)
++                        producers[i].abortTransaction();
++                    }
+                     throw e;
+                 } finally {
+                     if (sendFuture != null) {
+@@ -253,7 +360,8 @@
+                             log.error("Exception on final future", e);
+                         }
+                     }
+-                    producer.close();
++                    for (int i=0; i<this.producers.length; i++)
++                      producers[i].close();
+                 }
+             } catch (Exception e) {
+                 WorkerUtils.abort(log, "SendRecords", e, doneFuture);
+@@ -261,8 +369,8 @@
+                 statusUpdaterFuture.cancel(false);
+                 StatusData statusData = new StatusUpdater(histogram, transactionsCommitted).update();
+                 long curTimeMs = Time.SYSTEM.milliseconds();
+-                log.info("Sent {} total record(s) in {} ms.  status: {}",
+-                    histogram.summarize().numSamples(), curTimeMs - startTimeMs, statusData);
++                log.info("Sent {} total record(s) in {} ms at rate {}/s.  status: {}",
++                    histogram.summarize().numSamples(), curTimeMs - startTimeMs, histogram.summarize().numSamples() * 1000.0 / (curTimeMs-startTimeMs), statusData);
+             }
+             doneFuture.complete("");
+             return null;
+@@ -274,16 +382,19 @@
+             switch (nextAction) {
+                 case BEGIN_TRANSACTION:
+                     log.debug("Beginning transaction.");
+-                    producer.beginTransaction();
++                    for (int i=0; i<this.producers.length; i++)              
++                      producers[i].beginTransaction();
+                     break;
+                 case COMMIT_TRANSACTION:
+                     log.debug("Committing transaction.");
+-                    producer.commitTransaction();
++                    for (int i=0; i<this.producers.length; i++)
++                      producers[i].commitTransaction();
+                     transactionsCommitted.getAndIncrement();
+                     break;
+                 case ABORT_TRANSACTION:
+                     log.debug("Aborting transaction.");
+-                    producer.abortTransaction();
++                    for (int i=0; i<this.producers.length; i++)
++                      producers[i].abortTransaction();
+                     break;
+                 case NO_OP:
+                     tookAction = false;
+@@ -305,9 +416,12 @@
+                 record = new ProducerRecord<>(
                      partition.topic(), partition.partition(), keys.next(), values.next());
              }
-             sendFuture = producer.send(record,
+-            sendFuture = producer.send(record,
 -                new SendRecordsCallback(this, Time.SYSTEM.milliseconds()));
-+                new SendRecordsCallback(this, Time.SYSTEM.milliseconds(), idx,dacapoEnd, dacapoStart));
-             throttle.increment();
+-            throttle.increment();
++            sendFuture = producers[this.currentProducer].send(record,
++                new SendRecordsCallback(this, Time.SYSTEM.milliseconds(), dacapoEnd, dacapoStart));
++            throttles[this.currentProducer].increment();
++            this.currentProducer += 1;
++            if (this.currentProducer == this.producers.length)
++              this.currentProducer = 0;
          }
  
          void recordDuration(long durationMs) {
-+            tx++;
-+            int fivePercent = txCount / 20;
-+            if (tx % fivePercent == 0) {
-+                System.out.print("\r"+(5* tx / fivePercent)+"%");
-+                if (tx == txCount)
-+                    System.out.println();
-+            }
-             histogram.add(durationMs);
-         }
-     }
-@@ -407,6 +497,8 @@
+@@ -407,6 +521,8 @@
  
      @Override
      public void stop(Platform platform) throws Exception {
@@ -509,4 +684,19 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
          if (!running.compareAndSet(true, false)) {
              throw new IllegalStateException("ProduceBenchWorker is not running.");
          }
+diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/Throttle.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/Throttle.java
+--- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/Throttle.java	2022-09-29 19:03:49.000000000 +0000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/Throttle.java	2024-04-26 02:56:10.309554893 +0000
+@@ -41,6 +41,11 @@
+                 count++;
+                 return throttled;
+             }
++            if (periodMs == -1) {
++              // we are not using the periodMs
++              delay(-1);
++              count = 0;
++            }
+             lastTimeMs = time().milliseconds();
+             long curPeriod = lastTimeMs / periodMs;
+             if (curPeriod <= prevPeriod) {
 Only in .: kafka.patch
