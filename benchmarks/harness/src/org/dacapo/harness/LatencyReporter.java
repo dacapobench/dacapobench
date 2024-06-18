@@ -102,7 +102,9 @@ public class LatencyReporter {
       next_idx = inc();
     }
     idx = next_idx++;
-    startIdx(idx, id);
+    if (idx < txbegin.length) {
+      startIdx(idx, id);
+    }
     return idx;
   }
   private static void startIdx(int index, int threadID) {
