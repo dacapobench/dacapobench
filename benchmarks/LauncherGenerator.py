@@ -59,10 +59,13 @@ def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
         with archive.open("META-INF/MANIFEST.MF", "w") as meta:
             meta.write(format_line("Manifest-Version: 1.0"))
             meta.write(format_line("Main-Class: " + main_class))
-            # cassandra
-            # meta.write(format_line("Add-Exports: java.base/jdk.internal.ref java.base/jdk.internal.misc java.base/jdk.internal.ref java.base/sun.nio.ch java.management.rmi/com.sun.jmx.remote.internal.rmi java.rmi/sun.rmi.registry java.rmi/sun.rmi.server java.sql/java.sql java.base/jdk.internal.math java.base/jdk.internal.module java.base/jdk.internal.util.jar jdk.management/com.sun.management.internal"))
-            # h2o
-            # meta.write(format_line("Add-Opens: java.base/java.lang java.base/java.lang.module java.base/java.net java.base/jdk.internal.loader java.base/jdk.internal.ref java.base/jdk.internal.reflect java.base/java.io java.base/sun.nio.ch java.base/java.util java.base/java.util.concurrent java.base/java.util.concurrent.atomic java.base/java.nio"))
+
+            # cassandra and h2o need special handling for modules
+            #
+            # Note: unlike the note in build.xml, the following line is sufficient for both
+            if name == 'cassandra' or name == 'h2o' or name == 'tradesoap' or name == 'tradebeans':
+                meta.write(format_line("Add-Opens: java.base/java.lang java.base/java.lang.module java.base/java.net java.base/jdk.internal.loader java.base/jdk.internal.ref java.base/jdk.internal.reflect java.base/java.io java.base/sun.nio.ch java.base/java.util java.base/java.util.concurrent java.base/java.util.concurrent.atomic java.base/java.nio"))
+
             meta.write(format_line("Class-Path: " + ' '.join(relative_jar_paths)))
 
 def main() -> int:
