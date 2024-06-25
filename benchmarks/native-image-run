@@ -1,0 +1,95 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z "${GRAALVM_HOME}" ]]; then
+    echo "GRAALVM_HOME is not set"
+    exit 1
+fi
+
+if test "$#" -ne 2; then
+    echo "Expect 2 argument, found = $#"
+    echo "Usage: ./native-image-run <launchers-dir> <benchmark>"
+    echo
+    echo "The <launchers-dir> is next to dat/ and jars/ in the distribution."
+    echo
+    echo "The script helps to run the benchmarks with GraalVM Native Image."
+    echo "It will first run the Java agent to collect reflection and resource"
+    echo "information, and then supply the information as intput to Native"
+    echo "Image compiler."
+    echo
+    echo "Prerequisite:"
+    echo "- The GRAALVM_HOME environment variable should be set."
+    exit 1
+fi
+
+AGENT="$GRAALVM_HOME/bin/java"
+NATIVE_IMAGE="$GRAALVM_HOME/bin/native-image"
+
+LAUNCHERS_DIR=$1
+BENCHMARK=$2
+
+JAR="$LAUNCHERS_DIR/$BENCHMARK.jar"
+CONFIG_DIR=$BENCHMARK-config
+
+fix_data_dir(){
+    parent_dir="$(dirname "$LAUNCHERS_DIR")"
+    echo "Data-Location=$parent_dir" > ~/.dacapo-config.properties
+}
+
+run_agent(){
+    # Run agent to collect reflection and resource information
+    echo "\nCollecting reflection and resource usage information...\n"
+    $AGENT -agentlib:native-image-agent=config-output-dir=$CONFIG_DIR -jar "$JAR" $BENCHMARK
+}
+
+run_native_image(){
+    echo "\nRunning Native Image compilation...\n"
+    $NATIVE_IMAGE -H:ConfigurationFileDirectories=./$CONFIG_DIR -jar "$JAR" "$@"
+}
+
+fix_data_dir
+
+# check existence of launcher JAR
+if [ ! -f "$JAR" ]; then
+    echo "The launcher for $BENCHMARK cannot be found: $JAR"
+    exit 1
+fi
+
+case "$BENCHMARK" in
+    "avrora" | "batik" | "biojava" | "graphchi" | "h2" | "sunflow")
+        run_agent
+        run_native_image
+        ./$BENCHMARK $BENCHMARK;;
+
+    "fop")
+        config_file=$CONFIG_DIR/empty
+        touch $config_file
+        run_agent
+        run_native_image                                                             \
+            --initialize-at-run-time=org.apache.fop.render.rtf.rtflib.rtfdoc.RtfList \
+            -Djava.util.logging.config.file=$config_file                             \
+
+        ./$BENCHMARK -Djava.home=$GRAALVM_HOME $BENCHMARK;;
+
+    "lusearch" | "luindex")
+        run_agent
+        run_native_image
+        ./$BENCHMARK -Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false --no-validation $BENCHMARK;;
+
+    "pmd")
+        run_agent
+        run_native_image
+        ./$BENCHMARK --no-validation $BENCHMARK;;
+
+    "xalan")
+        run_agent
+        run_native_image "--initialize-at-build-time=org.apache.crimson.parser.Parser2,org.apache.crimson.parser.Parser2\$Catalog,org.apache.crimson.parser.Parser2\$NullHandler,org.apache.xml.utils.res.CharArrayWrapper"
+
+        ./$BENCHMARK $BENCHMARK;;
+
+
+    *)
+        echo "The benchmark $BENCHMARK" is not supported by Native Image currently.
+        exit 1
+esac

@@ -314,7 +314,10 @@ public abstract class Benchmark {
         err.enableOutput(!silentErr);
       }
     }
-    if (!getDeps("META-INF/md5/" + config.name  + ".MD5"))
+
+    boolean isNativeImage = System.getProperty("java.vm.name").equals("Substrate VM");
+
+    if (!isNativeImage && !getDeps("META-INF/md5/" + config.name  + ".MD5"))
       System.exit(-1);
 
     if (!loadStats("META-INF/yml/" + config.name  + ".yml"))
