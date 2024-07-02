@@ -63,7 +63,7 @@ def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
             # cassandra and h2o need special handling for modules
             #
             # Note: unlike the note in build.xml, the following line is sufficient for both
-            if name == 'cassandra' or name == 'h2o' or name == 'tradesoap' or name == 'tradebeans':
+            if name == 'cassandra' or name == 'h2o':
                 meta.write(format_line("Add-Opens: java.base/java.lang java.base/java.lang.module java.base/java.net java.base/jdk.internal.loader java.base/jdk.internal.ref java.base/jdk.internal.reflect java.base/java.io java.base/sun.nio.ch java.base/java.util java.base/java.util.concurrent java.base/java.util.concurrent.atomic java.base/java.nio"))
 
             meta.write(format_line("Class-Path: " + ' '.join(relative_jar_paths)))
