@@ -26,7 +26,7 @@ def format_line(input):
     index = 0
     input_size = len(input)
 
-    # invariant: `result` never ends with a new line
+    # invariant: `result` never ends with a new line and line length <= 71
     while index < input_size:
         c = input[index]
         assert c != '\n', "input should not contain new line"
