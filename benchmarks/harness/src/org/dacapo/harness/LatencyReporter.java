@@ -257,6 +257,7 @@ public class LatencyReporter {
   }
 
   public static void requestsStarting() {
+    globalIdx = 0;
     System.err.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
     requestsStarted = System.nanoTime();
