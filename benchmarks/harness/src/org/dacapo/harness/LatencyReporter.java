@@ -9,7 +9,6 @@
 package org.dacapo.harness;
 
 import java.util.Arrays;
-
 import java.lang.reflect.Method;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -150,8 +149,36 @@ public class LatencyReporter {
     return txend[index];
   }
 
+  /**
+   * Sort the start and end time arrays so that the events occur in chronological
+   * order (batching by threads means they generally will not be in order).  The
+   * order is defined by the start time, so the end time is sorted
+   * according to when the respective event *started* so that start and end
+   * entries retain the same indexing.
+   */
+  private static void sortEvents() {
+    int[] events = IntStream.range(0, txbegin.length)
+      .boxed().sorted((i, j) -> Float.compare(txbegin[i], txbegin[j]))
+      .mapToInt(i -> i).toArray();
+
+    float[] bSorted = new float[txbegin.length];
+    float[] eSorted = new float[txbegin.length];
+    for (int i = 0; i < txbegin.length; i++) {
+      bSorted[i] = txbegin[events[i]];
+      eSorted[i] = txend[events[i]];
+    }
+    txbegin = bSorted;
+    txend = eSorted;
+    for (int i = 1; i < txbegin.length; i++) {
+      if (txbegin[i] < txbegin[i-1]) {
+        System.err.println("Unsorted!! "+i+" "+txbegin[i]+" "+txbegin[i-1]);
+       }
+    }
+  }
+
   public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
     if (timerBase != 0) {
+      sortEvents();
       int events = txbegin.length;
       printRequestTime(events);
 
@@ -171,13 +198,11 @@ public class LatencyReporter {
       printLatency(latency, txbegin, events, "simple", iteration);
 
       // synthetically metered --- each query start is evenly spaced, so delays will compound
-      float[] sorted = Arrays.copyOf(txbegin, events);
-      Arrays.sort(sorted);
-      double start = sorted[0];
+      double start = txbegin[0];
       double elapsed = end - start;
       double synthstart = 0;
       for(int i = 0; i < events; i++) {
-        double relativePosition = (double) Arrays.binarySearch(sorted, txbegin[i]) / (double) events;
+        double relativePosition = (double) i / (double) events;
         synthstart = start + (elapsed * relativePosition);
         int actual = (int) ((txend[i] - txbegin[i])/1000);
         int synth = (int) ((txend[i] - synthstart)/1000);
