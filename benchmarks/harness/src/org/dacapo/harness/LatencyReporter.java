@@ -177,21 +177,32 @@ public class LatencyReporter {
     }
   }
 
-  private static float[] smoothedStart() {
+  /**
+   * Apply a smoothing function to start times, using a sliding window of
+   * N events.
+   */
+  private static float[] smoothedStart(int window) {
     int events = txbegin.length;
     float[] smoothed = new float[events];
 
-    float elapsed = txend[events - 1] - txbegin[0];
-    float interval = elapsed / events;
     for(int i = 0; i < events; i++) {
-      smoothed[i] = txbegin[0] + (i * interval);
+      int start = i - (window / 2);
+      start = start < 0 ? 0 : start;
+      int end = i + (window / 2);
+      end = end >= events ? events - 1 : end;
+      float elapsed = txend[end] - txbegin[start];
+      float interval = elapsed / (1 + end - start);
+      smoothed[i] = txbegin[start] + ((i - start) * interval);
     }
     return smoothed;
   }
 
-  private static void meteredLatency(int[] latency) {
+  private static void meteredLatency(int[] latency, int windowms) {
     int events = txbegin.length;
-    float[] smoothed = smoothedStart();
+    double elapsed = txend[events - 1] - txbegin[0];
+    double windowns = 1000000.0 * windowms;
+    int window = (int) (events * (windowns / elapsed));
+    float[] smoothed = smoothedStart(window);
 
     for(int i = 0; i < events; i++) {
       int actual = (int) ((txend[i] - txbegin[i])/1000);
@@ -221,13 +232,17 @@ public class LatencyReporter {
         dumpLatencyHDR(latency, txbegin, "simple", baseLatencyFileName, iteration);
       printLatency(latency, txbegin, events, "simple", iteration);
 
-      // synthetically metered --- each query start is evenly spaced, so delays will compound
-      meteredLatency(latency);
-      if (dumpLatencyCSV)
-        dumpLatencyCSV(latency, txbegin, txowner, "metered", baseLatencyFileName, iteration);
-      if (dumpLatencyHDR)
-        dumpLatencyHDR(latency, txbegin, "metered", baseLatencyFileName, iteration);
-      printLatency(latency, txbegin, events, "metered", iteration);
+      int elapsedMS = (int) ((txend[events - 1] - txbegin[0])/1000000.0);
+      int limitMS = elapsedMS * 10;
+      for (int smoothingWindowMS = 10; smoothingWindowMS < limitMS; smoothingWindowMS *= 10) {
+        meteredLatency(latency, smoothingWindowMS);
+        String desc = smoothingWindowMS+"ms metered";
+        if (dumpLatencyCSV)
+          dumpLatencyCSV(latency, txbegin, txowner, desc, baseLatencyFileName, iteration);
+        if (dumpLatencyHDR)
+          dumpLatencyHDR(latency, txbegin, desc, baseLatencyFileName, iteration);
+        printLatency(latency, txbegin, events, desc, iteration);
+      }
     }
   }
 
