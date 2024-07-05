@@ -9,6 +9,7 @@
 package org.dacapo.harness;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 import java.lang.reflect.Method;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -176,6 +177,29 @@ public class LatencyReporter {
     }
   }
 
+  private static float[] smoothedStart() {
+    int events = txbegin.length;
+    float[] smoothed = new float[events];
+
+    float elapsed = txend[events - 1] - txbegin[0];
+    float interval = elapsed / events;
+    for(int i = 0; i < events; i++) {
+      smoothed[i] = txbegin[0] + (i * interval);
+    }
+    return smoothed;
+  }
+
+  private static void meteredLatency(int[] latency) {
+    int events = txbegin.length;
+    float[] smoothed = smoothedStart();
+
+    for(int i = 0; i < events; i++) {
+      int actual = (int) ((txend[i] - txbegin[i])/1000);
+      int synth = (int) ((txend[i] - smoothed[i])/1000);
+      latency[i] = (synth > actual) ? synth : actual;
+    }
+  }
+
   public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
     if (timerBase != 0) {
       sortEvents();
@@ -198,16 +222,7 @@ public class LatencyReporter {
       printLatency(latency, txbegin, events, "simple", iteration);
 
       // synthetically metered --- each query start is evenly spaced, so delays will compound
-      double start = txbegin[0];
-      double elapsed = end - start;
-      double synthstart = 0;
-      for(int i = 0; i < events; i++) {
-        double relativePosition = (double) i / (double) events;
-        synthstart = start + (elapsed * relativePosition);
-        int actual = (int) ((txend[i] - txbegin[i])/1000);
-        int synth = (int) ((txend[i] - synthstart)/1000);
-        latency[i] = (synth > actual) ? synth : actual;
-      }
+      meteredLatency(latency);
       if (dumpLatencyCSV)
         dumpLatencyCSV(latency, txbegin, txowner, "metered", baseLatencyFileName, iteration);
       if (dumpLatencyHDR)
