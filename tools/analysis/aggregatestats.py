@@ -462,7 +462,7 @@ def nominal():
     # uarch
     if not armpct is None:
         nom['UAA'] = int(armpct)
-        desc['UAA'] = 'nominal percentage change (slowdown) when running on ARM Calvium ThunderX v AMD Zen4 on a single core (taskset 0)'
+        desc['UAA'] = 'nominal percentage change (slowdown) when running on Ampere Altra Q80-30 v AMD Zen4 on a single core (taskset 0)'
 
     nom['UAI'] = int(intelpct)
     desc['UAI'] = 'nominal percentage change (slowdown) when running on Intel Alderlake v AMD Zen4 on a single core (taskset 0)'
