@@ -465,7 +465,7 @@ def nominal():
         desc['UAA'] = 'nominal percentage change (slowdown) when running on ARM Neoverse N1 (Ampere Altra Q80-30) v AMD Zen 4 (Ryzen 9 7950X) on a single core (taskset 0)'
 
     nom['UAI'] = int(intelpct)
-    desc['UAI'] = 'nominal percentage change (slowdown) when running on Intel Golden Cove (i9-12900KF) v AMD Zen 4 (Ryzen 950X) on a single core (taskset 0)'
+    desc['UAI'] = 'nominal percentage change (slowdown) when running on Intel Golden Cove (i9-12900KF) v AMD Zen 4 (Ryzen 9 7950X) on a single core (taskset 0)'
 
     cfg = 'open-jdk-21.server.G1.t-32'
     hf = 2.0
