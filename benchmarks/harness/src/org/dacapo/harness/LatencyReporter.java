@@ -164,12 +164,15 @@ public class LatencyReporter {
 
     float[] bSorted = new float[txbegin.length];
     float[] eSorted = new float[txbegin.length];
+    int[] ownerSorted = new int[txbegin.length];
     for (int i = 0; i < txbegin.length; i++) {
       bSorted[i] = txbegin[events[i]];
       eSorted[i] = txend[events[i]];
+      ownerSorted[i] = txowner[events[i]];
     }
     txbegin = bSorted;
     txend = eSorted;
+    txowner = ownerSorted;
     for (int i = 1; i < txbegin.length; i++) {
       if (txbegin[i] < txbegin[i-1]) {
         System.err.println("Unsorted!! "+i+" "+txbegin[i]+" "+txbegin[i-1]);
