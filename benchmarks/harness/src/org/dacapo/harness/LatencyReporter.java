@@ -283,7 +283,7 @@ public class LatencyReporter {
   }
 
   private static void dumpLatencyCSV(int[] latency, float[] txbegin, int[] txowner, String kind, String baseFilename, int iteration) {
-    String filename = baseFilename+"-usec-"+kind+"-"+(iteration-1)+".csv";
+    String filename = baseFilename+"-usec-"+kind.replace(" ", "-")+"-"+(iteration-1)+".csv";
     try {
       File file = new File(filename);
       BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
