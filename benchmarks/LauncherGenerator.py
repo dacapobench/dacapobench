@@ -11,6 +11,8 @@ import sys
 import zipfile
 import os
 import re
+import sys
+import io
 from pathlib import Path
 
 # The specification for manifest files restricts line length to 72 bytes.
@@ -44,6 +46,13 @@ def format_line(input):
     # result cannot already end with new line
     result = result + '\n'
     return bytes(result, "utf-8")
+
+def zipfile_3_8_compat(context_manager):
+    # https://docs.python.org/3.8/library/zipfile.html#zipfile.Path.open
+    if sys.version_info >= (3, 9):
+        return context_manager
+    else:
+        return io.TextIOWrapper(context_manager)
 
 def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
     jar_name = name + ".jar"
@@ -88,7 +97,8 @@ def main() -> int:
 
     benchmark_md5_name = "META-INF/md5/" + benchmark + ".MD5"
     md5_file = zipfile.Path(harness_jar, benchmark_md5_name)
-    with md5_file.open(mode="r") as lines:
+
+    with zipfile_3_8_compat(md5_file.open(mode="r")) as lines:
         jars = []
         for line in lines:
             # use regex to simplify handling with line endings
