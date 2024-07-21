@@ -180,41 +180,132 @@ public class LatencyReporter {
     }
   }
 
+  private static float smoothedStart(int window, int event) {
+    int start = event - (window / 2);
+    start = start < 0 ? 0 : start;
+    int end = event + (window / 2);
+    end = end >= txbegin.length ? txbegin.length - 1 : end;
+    float elapsed = txend[end] - txbegin[start];
+    float interval = elapsed / (1 + end - start);
+    return txbegin[start] + ((event - start) * interval);
+  }
+
   /**
    * Apply a smoothing function to start times, using a sliding window of
-   * N events.
+   * N events, where N reflects the average number of events that cover
+   * a window of the specified size.
    */
-  private static float[] smoothedStart(int window) {
+  private static float[] smoothedStartEvents(int windowus) {
     int events = txbegin.length;
+    double elapsed = txend[events - 1] - txbegin[0];
+    int window = (int) (events * ((long) windowus * 1000L / elapsed)); // nanoseconds
     float[] smoothed = new float[events];
 
+    int bigger = 0;
     for(int i = 0; i < events; i++) {
-      int start = i - (window / 2);
-      start = start < 0 ? 0 : start;
-      int end = i + (window / 2);
-      end = end >= events ? events - 1 : end;
-      float elapsed = txend[end] - txbegin[start];
-      float interval = elapsed / (1 + end - start);
+      smoothed[i] = smoothedStart(window, i);
+      float tmp = smoothedStart(window/2, i);
+      if (smoothed[i] < tmp) {
+        bigger++;
+      }
+    }
+    return smoothed;
+  }
+
+  /**
+   * Apply a smoothing function to start times, using a sliding window of
+   * specified microseconds.
+   */
+  private static float[] smoothedStartTime(int windowus) {
+    int start = 0;
+    int end = 0;
+
+    int events = txbegin.length;
+    float[] smoothed = new float[events];
+    float halfWindow = ((long) windowus * 1000L / 2); // nano seconds
+
+    for(int i = 0; i < events; i++) {
+      float startns = txbegin[i] - halfWindow;
+      while (txbegin[start] < startns) // find the event marking the start of the window
+        start++;
+      float endns = txbegin[i] + halfWindow;
+      while (txbegin[end] < endns && end < (events - 1)) // find the event marking the end of the window
+        end++;
+
+      float interval = (txbegin[end] - txbegin[start])/(end - start); // average event interval within the window
+
       smoothed[i] = txbegin[start] + ((i - start) * interval);
     }
     return smoothed;
   }
 
-  private static void meteredLatency(int[] latency, int windowms) {
+  private static void meteredLatency(int[] latency, int windowus, boolean timed) {
     int events = txbegin.length;
-    double elapsed = txend[events - 1] - txbegin[0];
-    double windowns = 1000000.0 * windowms;
-    int window = (int) (events * (windowns / elapsed));
-    float[] smoothed = smoothedStart(window);
+
+    float[] smoothed = timed ? smoothedStartTime(windowus) : smoothedStartEvents(windowus);
 
     for(int i = 0; i < events; i++) {
-      int actual = (int) ((txend[i] - txbegin[i])/1000);
-      int synth = (int) ((txend[i] - smoothed[i])/1000);
+      int actual = (int) ((txend[i] - txbegin[i]) / 1000); // usec
+      int synth = (int) ((txend[i] - smoothed[i]) / 1000); // usec
       latency[i] = (synth > actual) ? synth : actual;
     }
   }
 
-  public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
+  private static void meteredLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration, int[] latency, int windowus, String desc) {
+    meteredLatency(latency, windowus, true);
+
+    if (dumpLatencyCSV)
+      dumpLatencyCSV(latency, txbegin, txowner, desc, baseLatencyFileName, iteration);
+    if (dumpLatencyHDR)
+      dumpLatencyHDR(latency, txbegin, desc, baseLatencyFileName, iteration);
+    printLatency(latency, txbegin, txbegin.length, desc, iteration);
+  }
+
+  private static void dumpSmoothingCSV(String baseLatencyFileName, int iteration, int[] latency, int elapsedus, boolean timed) {
+    int limitus = elapsedus * 2;
+
+    String filename = baseLatencyFileName+"-usec-metered-"+(timed ? "time-" : "events-")+(iteration-1)+".csv";
+    try {
+      File file = new File(filename);
+      BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
+
+      String header = "# window us, 50";
+      int precision = 10;
+      String precstr = "90";
+      while (precision <= TAIL_PRECISION) {
+        header += ", "+precstr;
+        precision *= 10;
+        if (precstr.equals("90"))
+          precstr = "99";
+        else
+          precstr += precstr.equals("99") ? ".9" : "9";
+      }
+
+      latencyFile.write(header + System.lineSeparator());
+
+      double step = Math.pow(2.0, 0.125); // exponential steps in 1/8 of powers of two
+      for (double windowus = 100; windowus <= limitus; windowus *= step) {
+        meteredLatency(latency, (int) windowus, timed);
+        Arrays.sort(latency);
+
+        String row = ""+windowus;
+        row += ", "+latency(latency, 50, 100);
+        precision = 10;
+        while (precision <= TAIL_PRECISION) {
+          row += ", "+latency(latency, 1, precision);
+          precision *= 10;
+        }
+        latencyFile.write(row + System.lineSeparator());
+      }
+
+      latencyFile.close();
+    } catch (IOException e) {
+      System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
+    }
+  }
+
+
+  public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, boolean dumpLatencySmoothing, int iteration) {
     if (timerBase != 0) {
       sortEvents();
       int events = txbegin.length;
@@ -235,23 +326,23 @@ public class LatencyReporter {
         dumpLatencyHDR(latency, txbegin, "simple", baseLatencyFileName, iteration);
       printLatency(latency, txbegin, events, "simple", iteration);
 
-      int elapsedMS = (int) ((txend[events - 1] - txbegin[0])/1000000.0);
-      int limitMS = elapsedMS * 10;
-      for (int smoothingWindowMS = 10; smoothingWindowMS < limitMS; smoothingWindowMS *= 10) {
-        meteredLatency(latency, smoothingWindowMS);
-        String desc = smoothingWindowMS+"ms metered";
-        if (dumpLatencyCSV)
-          dumpLatencyCSV(latency, txbegin, txowner, desc, baseLatencyFileName, iteration);
-        if (dumpLatencyHDR)
-          dumpLatencyHDR(latency, txbegin, desc, baseLatencyFileName, iteration);
-        printLatency(latency, txbegin, events, desc, iteration);
+      meteredLatency(baseLatencyFileName, dumpLatencyCSV, dumpLatencyHDR, iteration, latency, 100000, "metered 100ms smoothing");
+
+      int elapsedus = (int) ((txend[events - 1] - txbegin[0])/1000.0);
+      int limitus = elapsedus * 10;
+      meteredLatency(baseLatencyFileName, dumpLatencyCSV, dumpLatencyHDR, iteration, latency, limitus, "fully metered");
+
+
+      if (dumpLatencySmoothing) {
+        dumpSmoothingCSV(baseLatencyFileName, iteration, latency, elapsedus, true);
       }
     }
   }
 
-  private static String latency(int[] latency, int numerator, int denominator) {
+
+  private static int latency(int[] latency, int numerator, int denominator) {
     int usecs = (latency[latency.length - 1 - (latency.length * numerator) / denominator]);
-    return ""+usecs+" usec";
+    return usecs;
   }
 
   public static void printRequestTime(int events) {
@@ -265,12 +356,12 @@ public class LatencyReporter {
 
   public static void printLatency(int[] latency, float[] txbegin, int events, String kind, int iteration) {
     Arrays.sort(latency);
-    String report = "===== DaCapo "+kind+" tail latency: ";
-    report += "50% " + latency(latency, 50, 100);
+    String report = "===== DaCapo tail latency, "+kind+": ";
+    report += "50% " + latency(latency, 50, 100)+" usec";
     int precision = 10;
     String precstr = "90";
     while (precision <= TAIL_PRECISION) {
-      report += ", " + precstr + "% " + latency(latency, 1, precision);
+      report += ", " + precstr + "% " + latency(latency, 1, precision)+" usec";
       precision *= 10;
       if (precstr.equals("90"))
         precstr = "99";
