@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
@@ -43,9 +43,9 @@ import org.dacapo.parser.Config;
 
 /**
  * Command line arguments for a dacapo benchmark run.
- * 
+ *
  * Encapsulated in an object so that it can be passed to user-written callbacks.
- * 
+ *
  * date:  $Date: 2009-12-24 11:19:36 +1100 (Thu, 24 Dec 2009) $
  * id: $Id: CommandLineArgs.java 738 2009-12-24 00:19:36Z steveb-oss $
  */
@@ -74,7 +74,7 @@ public class CommandLineArgs {
   public static final String DEFAULT_THREAD_FACTOR = "0"; // 0 represents
                                                           // unspecified
   public static final String DEFAULT_TIMEOUT_DIALATION = "1";
-  
+
   private static final String OPT_CALLBACK = "callback";
   private static final String OPT_HELP = "help";
   private static final String OPT_RELEASE_NOTES = "release-notes";
@@ -86,6 +86,7 @@ public class CommandLineArgs {
   private static final String OPT_LOG_DIR = "log-directory";
   private static final String OPT_LATENCY_CSV = "latency-csv";
   private static final String OPT_LATENCY_HDR = "latency-hdr";
+  private static final String OPT_LATENCY_SMOOTHING = "latency-metered";
   private static final String OPT_CONVERGE = "converge";
   private static final String OPT_MAX_ITERATIONS = "max-iterations";
   private static final String OPT_VARIANCE = "variance";
@@ -106,7 +107,7 @@ public class CommandLineArgs {
   private static final String OPT_PRINT_STATS = "print-stats";
   private static final String OPT_WATCHDOG = "watchdog";
 
-  private static final Option[] OPTIONS = { 
+  private static final Option[] OPTIONS = {
     makeOption("c",  OPT_CALLBACK,            "Use class <callback> to bracket benchmark runs", "callback"),
     makeOption("h",  OPT_HELP,                "Print this help", null),
     makeOption("r",  OPT_RELEASE_NOTES,       "Print the release notes", null),
@@ -134,6 +135,7 @@ public class CommandLineArgs {
     makeOption("v",  OPT_VERBOSE,             "Verbose output", null),
     makeOption(null, OPT_LATENCY_CSV,         "Dump latency data to csv file in log directory", null),
     makeOption(null, OPT_LATENCY_HDR,         "Dump latency data to HDR histogram file in log directory", null),
+    makeOption(null, OPT_LATENCY_SMOOTHING,   "Dump metered latency smoothing data to csv file in log directory", null),
     makeOption(null, OPT_LOG_DIR,             "Directory in which log files will be written (default is scratch)", "log_dir"),
     makeOption("p",  OPT_PRINT_STATS,         "Print nominal benchmark statistics", null),
     makeOption("w",  OPT_WATCHDOG,            "Terminate the JVM after <s> seconds have elapsed, if it is still running", "seconds"),
@@ -388,7 +390,7 @@ public class CommandLineArgs {
   public String getThreadFactor() {
     return line.getOptionValue(OPT_THREAD_FACTOR, DEFAULT_THREAD_FACTOR);
   }
-  
+
   public String getTimeoutDialation() {
 	  return line.getOptionValue(OPT_TIMEOUT_DIALATION, DEFAULT_TIMEOUT_DIALATION);
   }
@@ -403,6 +405,10 @@ public class CommandLineArgs {
 
   public boolean getLatencyHDR() {
     return line.hasOption(OPT_LATENCY_HDR);
+  }
+
+  public boolean getLatencySmoothing() {
+    return line.hasOption(OPT_LATENCY_SMOOTHING);
   }
 
   public boolean getStats() {
@@ -457,16 +463,16 @@ public class CommandLineArgs {
 
   /*
    * Define a commandline option.
-   * 
+   *
    * @param shortName An optional short form name for the command line option.
-   * 
+   *
    * @param longname A commandline option must have a long form name.
-   * 
+   *
    * @param description All commandline options that are visible options must
    * have a description, commandline options that are for internal development
    * usage must not have a description and must instead be documented in the
    * code.
-   * 
+   *
    * @param argName A commandline option that requires has an argument must
    * specify an argument name.
    */
