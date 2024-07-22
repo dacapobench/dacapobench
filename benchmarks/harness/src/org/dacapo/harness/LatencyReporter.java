@@ -330,7 +330,7 @@ public class LatencyReporter {
 
       int elapsedus = (int) ((txend[events - 1] - txbegin[0])/1000.0);
       int limitus = elapsedus * 10;
-      meteredLatency(baseLatencyFileName, dumpLatencyCSV, dumpLatencyHDR, iteration, latency, limitus, "fully metered");
+      meteredLatency(baseLatencyFileName, dumpLatencyCSV, dumpLatencyHDR, iteration, latency, limitus, "metered full smoothing");
 
 
       if (dumpLatencySmoothing) {
