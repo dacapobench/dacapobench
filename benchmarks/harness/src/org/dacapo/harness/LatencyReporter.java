@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.NoSuchMethodException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.HdrHistogram.*;
 
@@ -43,7 +44,7 @@ public class LatencyReporter {
   static int[] txowner;
   static long requestsStarted;
   static long requestsFinished;
-  private static Integer globalIdx = 0;
+  private static AtomicInteger globalIdx = new AtomicInteger(0);
   static double fileMax;
   static LatencyReporter[] reporters;
   private static long timerBase = 0;  // used to improve precision (when using floats)
@@ -117,12 +118,7 @@ public class LatencyReporter {
   }
 
   private static int inc() {
-    int rtn;
-    synchronized (globalIdx) {
-       rtn = globalIdx;
-       globalIdx += stride;
-    }
-    return rtn;
+    return globalIdx.getAndAdd(stride);
   }
 
   /**
@@ -406,7 +402,7 @@ public class LatencyReporter {
   }
 
   public static void requestsStarting() {
-    globalIdx = 0;
+    globalIdx.set(0);
     System.err.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
     requestsStarted = System.nanoTime();
