@@ -96,10 +96,7 @@ public class Cassandra extends Benchmark {
 
         setupCassandra();
 
-        // Avoiding the long output of cassandra starting process
-        System.setOut(logStream);
-
-        outStream.println("Cassandra starting...");
+        System.out.println("Cassandra starting...");
         Method startMethod = EmbeddedCassandraServiceClass.getMethod("start");
         startMethod.invoke(cassandra);
 
@@ -112,7 +109,7 @@ public class Cassandra extends Benchmark {
     }
 
     private void prepareYCSBCQL() {
-        outStream.println("YCSB starting...");
+        System.out.println("YCSB starting...");
 
         try {
             Object sess;
@@ -183,8 +180,6 @@ public class Cassandra extends Benchmark {
     }
 
     public void iterate(String size) throws Exception {
-        System.setOut(logStream);
-
         // load workload
         ycsbWorkloadArgs[ycsbWorkloadArgs.length - 1] = "-load";
         mtdYCSBClientMain.invoke(null, (Object)ycsbWorkloadArgs);
@@ -197,11 +192,10 @@ public class Cassandra extends Benchmark {
     @Override
     public void postIteration(String size) throws Exception {
         super.postIteration(size);
-        //Preventing the long stopping log information from cassandra
-        System.setOut(logStream);
     }
 
     public void cleanup() {
+        System.setOut(logStream);
         // Clean the scratch up
         if (!getPreserve()) {
             deleteTree(dirCassandraStorage);

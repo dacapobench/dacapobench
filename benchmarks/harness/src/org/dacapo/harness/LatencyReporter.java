@@ -403,14 +403,14 @@ public class LatencyReporter {
 
   public static void requestsStarting() {
     globalIdx.set(0);
-    System.err.println("Starting "+txbegin.length+" requests...");
+    System.out.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
     requestsStarted = System.nanoTime();
   }
 
   public static void requestsFinished() {
     requestsFinished = System.nanoTime();
-    System.err.println("Completed requests");
+    System.out.println("Completed requests");
     if (callback != null) callback.requestsFinished();
   }
 

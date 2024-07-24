@@ -34,7 +34,7 @@ public class ClientRunner{
         dhf.deleteFrames(source);
         stdout.println("Frames deleted");
 
-        stderr.println("H2O finished");
+        stdout.println("H2O finished");
     }
 
     public static void postIteration(String restURL) throws IOException, NoSuchMethodException, ClassNotFoundException {

@@ -5,20 +5,20 @@ benchmark jme
 size small args "TestMultiPostWater", "10"
   threads 1      // per available processor
   output
-      stdout digest 0x1badcf6a70c90d1be177b3c7ee1003a82669ccfc,
-      stderr digest 0xd413ed1274b62edc9e59fc1976947e45cc4143e3;
+      stdout digest 0x3f5ea8883d81c6e4f12e5a6d9efed31d75b3da3d,
+      stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "TestMultiPostWater", "400"
   threads 1      // per available processor
   output
-      stdout digest 0x3689acff0669d2036f16586f193a1275e97c0cbc,
-      stderr digest 0xcf2894f2ad60a686300152c79149a18848b46f28;
+      stdout digest 0xff9ef577eb857541925b0cc2740f235346285a1b,
+      stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "TestMultiPostWater", "8000"
   threads 1      // per available processor
   output
-      stdout digest 0xc6367d78c6d287197db2e3e30d126c0d574c9131,
-      stderr digest 0x2e91d021d5a79c4f1c5b42fd3da7a948f78305a6;
+      stdout digest 0xb6ba824ddff3bec9c0fb410c228b0a3c6f78cdf9,
+      stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	     "A complete 3D game development suite written purely in Java.",

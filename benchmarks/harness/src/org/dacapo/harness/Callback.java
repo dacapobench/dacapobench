@@ -3,7 +3,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0.
  * You may obtain the license at
- * 
+ *
  *    http://www.opensource.org/licenses/apache2.0.php
  */
 package org.dacapo.harness;
@@ -42,7 +42,7 @@ public class Callback {
   protected long[] times;
 
   /**
-   * 
+   *
    */
   protected long elapsed;
 
@@ -50,7 +50,7 @@ public class Callback {
 
   /**
    * Create a new callback.
-   * 
+   *
    * @param args The parsed command-line arguments.
    */
   public Callback(CommandLineArgs args) {
@@ -88,10 +88,10 @@ public class Callback {
   /**
    * This method governs the benchmark iteration process. The test harness will
    * run the benchmark repeatedly until this method returns 'false'.
-   * 
+   *
    * The default methodologies consist of 0 or more 'warmup' iterations,
    * followed by a single timing iteration.
-   * 
+   *
    * @return Whether to run another iteration.
    */
   public boolean runAgain() {
@@ -128,7 +128,7 @@ public class Callback {
 
       /* Optionally report on progress towards convergence */
       if (iterations >= args.getWindow() && args.getVerbose()) {
-        System.err.printf("Variation %4.2f%% achieved after %d iterations, target = %4.2f%%\n", TestHarness.coeff_of_var(times) * 100, iterations, args
+        System.out.printf("Variation %4.2f%% achieved after %d iterations, target = %4.2f%%\n", TestHarness.coeff_of_var(times) * 100, iterations, args
             .getTargetVar() * 100);
       }
 
@@ -158,9 +158,9 @@ public class Callback {
   };
 
   protected void start(String benchmark, boolean warmup) {
-    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
-    System.err.println((warmup ? ("warmup " + (iterations + 1) + " ") : "") + "=====");
-    System.err.flush();
+    System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
+    System.out.println((warmup ? ("warmup " + (iterations + 1) + " ") : "") + "=====");
+    System.out.flush();
   }
 
   public void stop(long duration) {
@@ -177,20 +177,20 @@ public class Callback {
   };
 
   protected void complete(String benchmark, boolean valid, boolean warmup) {
-    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);
+    System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);
     if (valid) {
-      System.err.print(warmup ? (" completed warmup " + (iterations + 1) + " ") : " PASSED ");
-      System.err.print("in " + elapsed + " msec ");
+      System.out.print(warmup ? (" completed warmup " + (iterations + 1) + " ") : " PASSED ");
+      System.out.print("in " + elapsed + " msec ");
     } else {
-      System.err.print(" FAILED " + (warmup ? "warmup " : ""));
+      System.out.print(" FAILED " + (warmup ? "warmup " : ""));
     }
-    System.err.println("=====");
-    System.err.flush();
+    System.out.println("=====");
+    System.out.flush();
   }
 
   /**
    * The workload is about to start issuing requests.
-   * 
+   *
    * Some workloads do substantial work prior (e.g. building a
    * database) prior to issuing requests.  This call brackets
    * the begining of the request-based behavior.
@@ -206,7 +206,7 @@ public class Callback {
    * Announce that a request is about to start (called at
    * the start of each request within request-based
    * workloads).
-   * 
+   *
    * @param id A unique ID for the request.
    */
   public void requestStart(int id) {}
@@ -215,7 +215,7 @@ public class Callback {
    * Announce that a request has just ended (called at
    * the completion of each request within request-based
    * workloads).
-   * 
+   *
    * @param id A unique ID for the request.
    */
   public void requestEnd(int id) {}

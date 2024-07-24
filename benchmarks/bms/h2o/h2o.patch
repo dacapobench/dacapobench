@@ -142,9 +142,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-core/src/main/java/wa
 +        System.err.println("Could not parse dacapo.h2o.target: '"+System.getProperty("dacapo.h2o.target")+"'");
 +      }
 +      if (rtn == 0)
-+        System.err.println("H2O cache target dynamically sized by h2o according to heap capacity.");
++        System.out.println("H2O cache target dynamically sized by h2o according to heap capacity.");
 +      else
-+        System.err.println("H2O cache target set to "+rtn+" ("+(rtn>>20)+"MB) by DaCapo.");
++        System.out.println("H2O cache target set to "+rtn+" ("+(rtn>>20)+"MB) by DaCapo.");
 +    }
 +    return rtn;
 +  }
