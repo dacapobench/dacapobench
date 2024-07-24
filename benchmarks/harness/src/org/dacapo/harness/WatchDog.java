@@ -27,7 +27,7 @@ public class WatchDog {
       System.err.println("WARNING: Attempt by " + actor + " to set the watchdog timer is being ignored since it was already set by " + instigator);
     } else {
       instigator = actor;
-      System.err.println("NOTE: Starting watchdog timer with timeout of "+seconds+" seconds. " + usage);
+      System.out.println("NOTE: Starting watchdog timer with timeout of "+seconds+" seconds. " + usage);
       new Thread(() -> {
         try {
           Thread.sleep(seconds*1000);

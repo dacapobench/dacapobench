@@ -74,7 +74,7 @@ public class Spring extends Benchmark {
         } catch (java.io.FileNotFoundException e) {
             System.err.println("Failed to open "+filename+":"+e);
         }
-        System.err.println("Loaded "+requests.length+" requests");
+        System.out.println("Loaded "+requests.length+" requests");
     }
 
     @Override
