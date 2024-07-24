@@ -42,7 +42,6 @@ public class ClientRunner{
         setTxCount.invoke(null, txCount);
         // Using the Trogodr exec mode to send requests
         agentStarter.invoke(null, (Object) new String[]{"-c", agentConfig, "-n", "node0", "--exec", produceBench});
-        System.err.println("Finished");
     }
 
     void finishUp() throws Exception{

@@ -99,7 +99,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
            }
          }
 -
-+        System.err.println("\r    100%");
++        System.out.println("\r    100%");
 +        if (Boolean.valueOf(props.getProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(true)))) {
 +          dacapoRequestsFinished();
 +        }
@@ -202,7 +202,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
          } else {
            opcount = Integer.parseInt(props.getProperty(RECORD_COUNT_PROPERTY, DEFAULT_RECORD_COUNT));
          }
-+        System.err.println("    records: "+props.getProperty(RECORD_COUNT_PROPERTY));
++        System.out.println("    records: "+props.getProperty(RECORD_COUNT_PROPERTY));
        }
        if (threadcount > opcount){
          threadcount = opcount;
@@ -218,8 +218,8 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
        projectProp.load(classLoader.getResourceAsStream("project.properties"));
 -      System.err.println("YCSB Client " + projectProp.getProperty("version"));
 +      if (props.getProperty(DO_TRANSACTIONS_PROPERTY).equals(String.valueOf(false))) {
-+        System.err.println("    YCSB Client " + projectProp.getProperty("version"));
-+        System.err.println("    workload: "+props.getProperty(WORKLOAD_PROPERTY));
++        System.out.println("    YCSB Client " + projectProp.getProperty("version"));
++        System.out.println("    workload: "+props.getProperty(WORKLOAD_PROPERTY));
 +      }
      } catch (IOException e) {
        System.err.println("Unable to retrieve client version.");
@@ -250,7 +250,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/Client.java ../
          props.setProperty(TARGET_PROPERTY, String.valueOf(ttarget));
          argindex++;
        } else if (args[argindex].compareTo("-load") == 0) {
-+        System.err.println("Loading database... ");
++        System.out.println("Loading database... ");
          props.setProperty(DO_TRANSACTIONS_PROPERTY, String.valueOf(false));
          argindex++;
        } else if (args[argindex].compareTo("-t") == 0) {
@@ -321,7 +321,7 @@ diff '--color=auto' -ur ycsb-0.17.0/core/src/main/java/site/ycsb/ClientThread.ja
 +    if (fivepercent > 0 && opsdone % fivepercent == 0) {
 +      int pct = 5*opsdone/fivepercent;
 +      if (pct < 100) {
-+        System.err.print("\r    "+pct+"%");
++        System.out.print("\r    "+pct+"%");
 +      }
 +    }
 +  }

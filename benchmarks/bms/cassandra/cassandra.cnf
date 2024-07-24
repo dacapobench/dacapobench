@@ -3,14 +3,14 @@ benchmark cassandra
   thread-model per_cpu;
 
 size small args "workload-small", "-threads", "${THREADS}"
-    output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0x2ccb6dd6b92a231f04c43f82988dd9277a278b72;
+    output stdout digest 0x2ccb6dd6b92a231f04c43f82988dd9277a278b72,
+           stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size default args "workload-default", "-threads", "${THREADS}"
-    output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0x889ff68348c2eca934e601276986fca1e2bc418d;
+    output stdout digest 0x889ff68348c2eca934e601276986fca1e2bc418d,
+           stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 size large args "workload-large", "-threads", "${THREADS}"
-    output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-           stderr digest 0x6a6b227473f1c4eda44f854faefbe9d8d1ace362;
+    output stdout digest 0x6a6b227473f1c4eda44f854faefbe9d8d1ace362,
+           stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	     "Apache Cassandra is a highly-scalable partitioned row store.",

@@ -6,26 +6,26 @@ benchmark tradesoap
 size small args "3", "12"
   threads 1      // per available processor
   thread-limit 8
-  output stdout  digest 0x5b774ef47622f4e36e305f179a8f8cb070e42de9,
-         stderr  digest 0x335f0e66cf39d71f444de34ee490a02d80ac5772;
+  output stdout  digest 0x11c54677664e32ab2f010629562f6380cf7273e6,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "8", "25"
   threads 1      // per available processor
   thread-limit 128
-  output stdout  digest 0x78f219b58fc42373c0bfd10ec0f2e3a529433531,
-         stderr  digest 0xb249fe5bd6503716748c5c12c4a5f2eac25c3549;
+  output stdout  digest 0x730ae3383014534dd0acf0a36ef0051064062c9d,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "12", "180"
   threads 1      // per available processor
   thread-limit 1024 // see <max-pool-size> in wildfly.patch
-  output stdout  digest 0x70bf4ebc265ee457c09fffa01402369d6f91ec4c,
-         stderr  digest 0xeee19674a0913d5ff9ea231f061fbcf53a84fe09;
+  output stdout  digest 0x071ff7aaab548975d5033bbf0ff3df5d76bb16ab,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size vlarge args "13", "630"
   threads 1      // per available processor
   thread-limit 2048
-  output stdout  digest 0x62a56965fa2fc174cd33daa77f51a649922f5d5f,
-         stderr  digest 0x9091250ce46ff1ad0f8c4b141b2ea34acac9fc0e;
+  output stdout  digest 0x2eea8995ccf754fa4665fccfc8be2c829741a65d,
+         stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"Tradesoap SOAP Daytrader benchmark",

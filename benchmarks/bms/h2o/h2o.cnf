@@ -6,20 +6,20 @@ benchmark h2o
 size small args "2097152", "${DATA}/h2o", "citibiketripdata201908s.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
-  output stdout digest 0x2b40279dd7fc87aae163726d68e53a7841728308,
-         stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
+  output stdout digest 0x606c4df5580a9c31c805924ae5bf1deafde6f207,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "20971520", "${DATA}/h2o", "citibiketripdata201908.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
-  output stdout digest 0x1aab065a1376445d213907a200012d8bed338f45,
-         stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
+  output stdout digest 0x3e8364df8829c4d32e525e23a07481d54c3e033e,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "209715200", "${DATA}/h2o", "citibiketripdata201908h.csv", "drf" , "tripduration"
   threads 1      // per available processor
   thread-limit 1024
-  output stdout digest 0xf7333758241d1f0934939f35320fd51b3181941c,
-         stderr digest 0xf1c22dc2fa32f9c5955da64c58783b2b839c55e9;
+  output stdout digest 0x73f888477bd111b5178a8b7eb0cee5828b8ef641,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	     "Open Source Fast Scalable Machine Learning Platform.",
