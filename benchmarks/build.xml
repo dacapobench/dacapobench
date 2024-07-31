@@ -168,6 +168,12 @@
                 </outputfilterchain>
             </redirector>
         </exec>
+        <exec executable="${git.exe}" resultproperty="git.rc" failonerror="no" failifexecutionfails="no">
+            <arg line="diff-index --quiet HEAD"/>
+        </exec>
+        <condition property="git.dirty" value="-dirty" else="">
+            <equals arg1="${git.rc}" arg2="1"/>
+        </condition>
     </target>
 
     <target name="get-git-revision" depends="extract-git-revision" unless="git.hash">
@@ -180,7 +186,7 @@
         <!-- overwritable with -Dbuild.is-official=true on commandline-->
         <condition property="build.version"
                     value="${dacapo.version}-${dacapo.nickname}"
-                    else="${dacapo.version}-git-${git.hash}">
+                    else="${dacapo.version}-git-${git.hash}${git.dirty}">
             <isset property="build.is-official"/>
         </condition>
         <!-- set target data directory and jar name -->
