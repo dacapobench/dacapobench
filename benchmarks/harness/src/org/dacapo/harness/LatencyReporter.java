@@ -147,33 +147,74 @@ public class LatencyReporter {
   }
 
   /**
-   * Sort the start and end time arrays so that the events occur in chronological
-   * order (batching by threads means they generally will not be in order).  The
-   * order is defined by the start time, so the end time is sorted
-   * according to when the respective event *started* so that start and end
-   * entries retain the same indexing.
+   * Swap elements of txbegin, txend and txowner at
+   * indexes i and j.  This allows a sort based on 
+   * txbegin with elements of all three arrays retaining
+   * the same relative order.
+   * 
+   * @param i
+   * @param j
+   */
+  private static void swap(int i, int j) {
+    float tmp = txbegin[i];
+    txbegin[i] = txbegin[j];
+    txbegin[j] = tmp;
+
+    tmp = txend[i];
+    txend[i] = txend[j];
+    txend[j] = tmp;
+
+    int tmpi = txowner[i];
+    txowner[i] = txowner[j];
+    txowner[j] = tmpi;
+  }
+
+  /**
+   * Partition sub-array of txbegin using Hoare-style partitioning,
+   * and return the pivot.
+   * 
+   * @param low index of sub-array start
+   * @param high index of sub-array end
+   * @return index of pivot
+   */
+  private static int partition(int low, int high) {
+    float pivot = txbegin[low];
+    int i = low - 1;
+    int j = high + 1;
+
+    while (true) {
+      while (txbegin[++i] < pivot);
+      while (txbegin[--j] > pivot);
+      if (i >= j) {
+        return j;
+      }
+      swap(i, j);
+    }
+  }
+
+  /**
+   * Quicksort of sub-array of txbegin, moving txend and
+   * txowner elements in step, so all three arrays are
+   * coherently sorted.
+   * 
+   * @param low index of sub-array start
+   * @param high index of sub-array end
+   */
+  private static void sort(int low, int high) {
+    if (low < high) {
+      int pi = partition(low, high);
+      sort(low, pi);
+      sort(pi + 1, high);
+    }
+  }
+
+  /**
+   * Sort of sub-array of txbegin, moving txend and
+   * txowner elements in step, so all three arrays are
+   * coherently sorted.
    */
   private static void sortEvents() {
-    int[] events = IntStream.range(0, txbegin.length)
-      .boxed().sorted((i, j) -> Float.compare(txbegin[i], txbegin[j]))
-      .mapToInt(i -> i).toArray();
-
-    float[] bSorted = new float[txbegin.length];
-    float[] eSorted = new float[txbegin.length];
-    int[] ownerSorted = new int[txbegin.length];
-    for (int i = 0; i < txbegin.length; i++) {
-      bSorted[i] = txbegin[events[i]];
-      eSorted[i] = txend[events[i]];
-      ownerSorted[i] = txowner[events[i]];
-    }
-    txbegin = bSorted;
-    txend = eSorted;
-    txowner = ownerSorted;
-    for (int i = 1; i < txbegin.length; i++) {
-      if (txbegin[i] < txbegin[i-1]) {
-        System.err.println("Unsorted!! "+i+" "+txbegin[i]+" "+txbegin[i-1]);
-       }
-    }
+    sort(0, txbegin.length - 1);
   }
 
   private static float smoothedStart(int window, int event) {
