@@ -1,23 +1,18 @@
 includes:
   - "minheap-base.yml"
 
-overrides:
-  maxheap: 16384
-
-suites:
-  dacapo-68f38f5d:
-    type: DaCapo
-    release: evaluation
-    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-68f38f5d.jar
-    timing_iteration: 1
-    timeout: 180 # for tomcat # 1800 # 30 min and h2 vlarge takes 5:45 with no heap limit (so this is ~5X the overhead)
-
+#overrides:
+#  "suites.dacapo-chopin-mr1.timing_iteration": 1
+#  "suites.dacapo-chopin-mr1.timeout": 6000
+ 
 configs:
-  - "open-jdk-17|ee|s|cp|gc-G1|t-32|f-10"
-  - "open-jdk-17|sz-small|ee|s|cp|gc-G1|t-1|f-10"
-  - "open-jdk-17|sz-large|ee|s|cp|gc-G1|t-32|f-10"
-  - "open-jdk-17|sz-vlarge|ee|s|cp|gc-G1|t-32|f-10"
-  - "open-jdk-17|ee|s|cp|gc-G1|t-1|f-10"
-  - "open-jdk-17|ee|s|up|gc-G1|t-32|f-10"
-  - "open-jdk-17|ee|s|cp|gc-Parallel|t-32|f-10"
-  - "open-jdk-11|ee|s|cp|gc-G1|t-32|f-10"
+  - "temurin-21|jdk21|sz-default|cp|gc-G1|t-32"
+  - "temurin-21|jdk21|sz-small|cp|gc-G1|t-1"
+  - "temurin-21|jdk21|sz-large|cp|gc-G1|t-32"
+  - "temurin-21|jdk21|sz-vlarge|cp|gc-G1|t-32"
+  - "temurin-21|jdk21|sz-default|cp|gc-G1|t-1"
+  - "temurin-21|jdk21|sz-default|up|gc-G1|t-32"
+  - "temurin-21|jdk21|sz-default|cp|gc-Parallel|t-32"
+  - "temurin-17|jdk17|sz-default|cp|gc-G1|t-32"
+  - "temurin-11|jdk11|sz-default|cp|gc-G1|t-32"
+  - "temurin-8|jdk8|sz-default|cp|gc-G1|t-32"
