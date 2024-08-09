@@ -1,31 +1,42 @@
 includes:
   - "$RUNNING_NG_PACKAGE_DATA/base/minheap.yml"
-  - "openjdk.yml"
+  - "$RUNNING_NG_PACKAGE_DATA/base/temurin.yml"
+
+overrides:
+  maxheap: 32768
+
+suites:
+  dacapo-chopin-mr1:
+    type: DaCapo
+    release: evaluation
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-02676f3d.jar
+    timing_iteration: 1
+    timeout: 6000
 
 benchmarks:
-  dacapo-68f38f5d:
-    - avrora
-    - batik
-    - biojava
+  dacapo-chopin-mr1:
+#    - avrora
+#    - batik
+#    - biojava
     - cassandra
-    - eclipse
-    - fop
-    - graphchi
-    - h2
-    - h2o
-    - jme
-    - jython
-    - kafka
-    - luindex
+#    - eclipse
+#    - fop
+#    - graphchi
+#    - h2
+#    - h2o
+#    - jme
+#    - jython
+#    - kafka
+#    - luindex
     - lusearch
-    - pmd
-    - spring
-    - sunflow
-    - tomcat
-    - tradesoap
-    - tradebeans
-    - xalan
-    - zxing
+#    - pmd
+#    - spring
+#    - sunflow
+#    - tomcat
+#    - tradesoap
+#    - tradebeans
+#    - xalan
+#    - zxing
 
 modifiers:
   sz:
@@ -52,3 +63,28 @@ modifiers:
   up:
     type: JVMArg
     val: "-XX:-UseCompressedOops"
+  jdk21:
+    type: ModifierSet
+    val: "jdk17|jdk21_h2o"
+  jdk21_h2o:
+    type: JVMArg
+    val: "-Dsys.ai.h2o.debug.allowJavaVersions=21"
+    includes:
+      dacapo-chopin-mr1:
+        - h2o
+  jdk17:
+    type: ModifierSet
+    val: "jdk11|jdk17_cassandra"
+  jdk17_cassandra:
+    type: JVMArg
+    val: "-Djava.security.manager=allow"
+    includes:
+      dacapo-chopin-mr1:
+        - cassandra
+  jdk11:
+    type: ModifierSet
+    val: "jdk8"
+  jdk8:
+    type: ModifierSet
+    val: "ee|s|f-10"
+  
