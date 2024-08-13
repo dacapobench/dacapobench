@@ -1,18 +1,18 @@
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/catalina.properties ../build/apache-tomcat-10.1.11-src/conf/catalina.properties
 --- ./apache-tomcat-10.1.11-src/conf/catalina.properties	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2024-03-05 23:32:07.680686983 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/catalina.properties	2024-08-13 05:06:43.562850890 +0000
 @@ -50,7 +50,7 @@
  #       ${catalina.base} path or the ${catalina.home} path contains a comma.
  #       Because double quotes are used for quoting, the double quote character
  #       may not appear in a path.
 -common.loader="${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"
 +common.loader=${catalina.cl.repo}
-
+ 
  #
  # List of comma-separated paths defining the contents of the "server"
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/server.xml ../build/apache-tomcat-10.1.11-src/conf/server.xml
 --- ./apache-tomcat-10.1.11-src/conf/server.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2024-03-05 23:32:07.680686983 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/server.xml	2024-08-13 05:06:43.562850890 +0000
 @@ -65,7 +65,7 @@
           AJP  Connector: /docs/config/ajp.html
           Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
@@ -24,7 +24,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/server.xml ../build/apa
                 maxParameterCount="1000"
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml
 --- ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2024-03-05 23:32:07.680686983 +0000
++++ ../build/apache-tomcat-10.1.11-src/conf/tomcat-users.xml	2024-08-13 05:06:43.562850890 +0000
 @@ -46,11 +46,9 @@
    examples web application, do not forget to remove the <!.. ..> that surrounds
    them. You will also need to set the passwords to something appropriate.
@@ -42,9 +42,10 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/conf/tomcat-users.xml ../bui
 +<role rolename="manager-jmx"/>
 +<user username="tomcat" password="s3cret" roles="manager-gui,manager-status,manager-script,manager-jmx"/>
  </tomcat-users>
+Only in ../build/apache-tomcat-10.1.11-src/java/org/apache/catalina/startup: catalina.properties
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java
 --- ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java	2024-03-05 23:36:35.960390244 +0000
++++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/net/AbstractEndpoint.java	2024-08-13 05:06:43.562850890 +0000
 @@ -803,7 +803,16 @@
      }
      public int getMaxThreads() {
@@ -65,11 +66,11 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
          }
 diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java
 --- ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2023-07-06 13:45:39.000000000 +0000
-+++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2024-03-06 00:17:19.398245927 +0000
++++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2024-08-13 05:41:09.051107562 +0000
 @@ -24,6 +24,7 @@
   */
  package org.apache.tomcat.util.threads;
-
+ 
 +import java.lang.reflect.Method;
  import java.util.ArrayList;
  import java.util.ConcurrentModificationException;
@@ -77,7 +78,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
 @@ -607,6 +608,10 @@
      private static final RuntimePermission shutdownPerm =
          new RuntimePermission("modifyThread");
-
+ 
 +    private final Object dacapoCallback;
 +    private final Method taskStartMethod;
 +    private final Method taskEndMethod;
@@ -88,7 +89,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
 @@ -1367,6 +1372,21 @@
          this.threadFactory = threadFactory;
          this.handler = handler;
-
+ 
 +        Object callback = null;
 +        Method start = null;
 +        Method end = null;
@@ -106,7 +107,7 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
 +        this.taskEndMethod = end;
          prestartAllCoreThreads();
      }
-
+ 
 @@ -2101,7 +2121,14 @@
       * @param t the thread that will run task {@code r}
       * @param r the task that will be executed
@@ -114,14 +115,14 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
 -    protected void beforeExecute(Thread t, Runnable r) { }
 +    protected void beforeExecute(Thread t, Runnable r) {
 +        try {
-+            if (t == null && dacapoCallback != null)
++            if (dacapoCallback != null)
 +                taskStartMethod.invoke(dacapoCallback);
 +        } catch (Exception e) {
 +            System.err.println("Could not invoke DaCapo callbacks: "+e);
 +        }
 +    }
-
-
+ 
+ 
      /**
 @@ -2155,6 +2182,13 @@
       * execution completed normally
@@ -137,4 +138,5 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
          // Throwing StopPooledThreadException is likely to cause this method to
          // be called more than once for a given task based on the typical
          // implementations of the parent class. This test ensures that
-
+Only in ../build/apache-tomcat-10.1.11-src/: output
+Only in ../build/apache-tomcat-10.1.11-src/webapps/docs: jdbc-pool.xml
