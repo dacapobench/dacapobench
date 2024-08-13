@@ -263,7 +263,7 @@ public class LatencyReporter {
 
     for(int i = 0; i < events; i++) {
       float startns = txbegin[i] - halfWindow;
-      while (txbegin[start] < startns) // find the event marking the start of the window
+      while (txbegin[start] < startns && start < (events - 1)) // find the event marking the start of the window
         start++;
       float endns = txbegin[i] + halfWindow;
       while (txbegin[end] < endns && end < (events - 1)) // find the event marking the end of the window
