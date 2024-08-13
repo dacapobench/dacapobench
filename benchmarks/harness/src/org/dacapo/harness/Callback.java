@@ -140,7 +140,7 @@ public class Callback {
 
       /* Optionally report on progress towards convergence */
       if (iterations >= args.getWindow() && args.getVerbose()) {
-        System.err.printf("Variation %4.2f%% achieved after %d iterations, target = %4.2f%%\n", TestHarness.coeff_of_var(times) * 100, iterations, args
+        System.out.printf("Variation %4.2f%% achieved after %d iterations, target = %4.2f%%\n", TestHarness.coeff_of_var(times) * 100, iterations, args
             .getTargetVar() * 100);
       }
 
@@ -170,9 +170,9 @@ public class Callback {
   };
 
   protected void start(String benchmark, boolean warmup) {
-    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
-    System.err.println((warmup ? ("warmup " + (iterations + 1) + " ") : "") + "=====");
-    System.err.flush();
+    System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
+    System.out.println((warmup ? ("warmup " + (iterations + 1) + " ") : "") + "=====");
+    System.out.flush();
   }
 
   public void stop(long duration) {
@@ -189,15 +189,15 @@ public class Callback {
   };
 
   protected void complete(String benchmark, boolean valid, boolean warmup) {
-    System.err.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);
+    System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);
     if (valid) {
-      System.err.print(warmup ? (" completed warmup " + (iterations + 1) + " ") : " PASSED ");
-      System.err.print("in " + elapsed + " msec ");
+      System.out.print(warmup ? (" completed warmup " + (iterations + 1) + " ") : " PASSED ");
+      System.out.print("in " + elapsed + " msec ");
     } else {
-      System.err.print(" FAILED " + (warmup ? "warmup " : ""));
+      System.out.print(" FAILED " + (warmup ? "warmup " : ""));
     }
-    System.err.println("=====");
-    System.err.flush();
+    System.out.println("=====");
+    System.out.flush();
   }
 
   /**

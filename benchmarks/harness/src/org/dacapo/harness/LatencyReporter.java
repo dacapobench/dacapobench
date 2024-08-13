@@ -9,7 +9,7 @@
 package org.dacapo.harness;
 
 import java.util.Arrays;
-
+import java.util.stream.IntStream;
 import java.lang.reflect.Method;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.NoSuchMethodException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.HdrHistogram.*;
 
@@ -31,23 +32,28 @@ public class LatencyReporter {
   static final int NS_COARSENING = 1;   // measure at this precision
   static final int US_DIVISOR = 1000/NS_COARSENING;
 
+  private int id;
   private int idxOffset;
   private int idx;
+  private int next_idx;
   private double max;
   private static int stride;
 
   static float[] txbegin;
   static float[] txend;
+  static int[] txowner;
   static long requestsStarted;
   static long requestsFinished;
-  private static Integer globalIdx = 0;
+  private static AtomicInteger globalIdx = new AtomicInteger(0);
   static double fileMax;
   static LatencyReporter[] reporters;
   private static long timerBase = 0;  // used to improve precision (when using floats)
   private static Callback callback = null;
 
   public LatencyReporter(int threadID, int threads, int transactions, int stride) {
-    idx = -1;
+    id = threadID;
+    idx = 0;
+    next_idx = 0;
     max = 0;
     reporters[threadID] = this;
   }
@@ -70,6 +76,7 @@ public class LatencyReporter {
     } else {
       txbegin = new float[transactions];
       txend = new float[transactions];
+      txowner = new int[transactions];
       reporters = new LatencyReporter[threads];
       for (int i = 0; i < threads; i++) {
         reporters[i] = new LatencyReporter(i, threads, transactions, stride);
@@ -92,27 +99,26 @@ public class LatencyReporter {
     return reporters[threadID].start();
   }
   public int start() {
-    idx++;
-    if (idx % stride == 0)
-      idx = inc();
-    if (idx < txbegin.length)
-      startIdx(idx);
+    if (next_idx % stride == 0) {
+      next_idx = inc();
+    }
+    idx = next_idx++;
+    if (idx < txbegin.length) {
+      startIdx(idx, id);
+    }
     return idx;
   }
-  private static void startIdx(int index) {
+  private static void startIdx(int index, int threadID) {
     if (callback != null)
       callback.requestStart(index);
     long start = (System.nanoTime() - timerBase)/NS_COARSENING;
     txbegin[index] = (float) start;
     txend[index] = -1;
+    txowner[index] = threadID;
   }
 
   private static int inc() {
-    int rtn;
-    synchronized (globalIdx) {
-       rtn = globalIdx += stride;
-    }
-    return rtn;
+    return globalIdx.getAndAdd(stride);
   }
 
   /**
@@ -140,8 +146,205 @@ public class LatencyReporter {
     return txend[index];
   }
 
-  public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration) {
+  /**
+   * Swap elements of txbegin, txend and txowner at
+   * indexes i and j.  This allows a sort based on 
+   * txbegin with elements of all three arrays retaining
+   * the same relative order.
+   * 
+   * @param i
+   * @param j
+   */
+  private static void swap(int i, int j) {
+    float tmp = txbegin[i];
+    txbegin[i] = txbegin[j];
+    txbegin[j] = tmp;
+
+    tmp = txend[i];
+    txend[i] = txend[j];
+    txend[j] = tmp;
+
+    int tmpi = txowner[i];
+    txowner[i] = txowner[j];
+    txowner[j] = tmpi;
+  }
+
+  /**
+   * Partition sub-array of txbegin using Hoare-style partitioning,
+   * and return the pivot.
+   * 
+   * @param low index of sub-array start
+   * @param high index of sub-array end
+   * @return index of pivot
+   */
+  private static int partition(int low, int high) {
+    float pivot = txbegin[low];
+    int i = low - 1;
+    int j = high + 1;
+
+    while (true) {
+      while (txbegin[++i] < pivot);
+      while (txbegin[--j] > pivot);
+      if (i >= j) {
+        return j;
+      }
+      swap(i, j);
+    }
+  }
+
+  /**
+   * Quicksort of sub-array of txbegin, moving txend and
+   * txowner elements in step, so all three arrays are
+   * coherently sorted.
+   * 
+   * @param low index of sub-array start
+   * @param high index of sub-array end
+   */
+  private static void sort(int low, int high) {
+    if (low < high) {
+      int pi = partition(low, high);
+      sort(low, pi);
+      sort(pi + 1, high);
+    }
+  }
+
+  /**
+   * Sort of sub-array of txbegin, moving txend and
+   * txowner elements in step, so all three arrays are
+   * coherently sorted.
+   */
+  private static void sortEvents() {
+    sort(0, txbegin.length - 1);
+  }
+
+  private static float smoothedStart(int window, int event) {
+    int start = event - (window / 2);
+    start = start < 0 ? 0 : start;
+    int end = event + (window / 2);
+    end = end >= txbegin.length ? txbegin.length - 1 : end;
+    float elapsed = txend[end] - txbegin[start];
+    float interval = elapsed / (1 + end - start);
+    return txbegin[start] + ((event - start) * interval);
+  }
+
+  /**
+   * Apply a smoothing function to start times, using a sliding window of
+   * N events, where N reflects the average number of events that cover
+   * a window of the specified size.
+   */
+  private static float[] smoothedStartEvents(int windowus) {
+    int events = txbegin.length;
+    double elapsed = txend[events - 1] - txbegin[0];
+    int window = (int) (events * ((long) windowus * 1000L / elapsed)); // nanoseconds
+    float[] smoothed = new float[events];
+
+    int bigger = 0;
+    for(int i = 0; i < events; i++) {
+      smoothed[i] = smoothedStart(window, i);
+      float tmp = smoothedStart(window/2, i);
+      if (smoothed[i] < tmp) {
+        bigger++;
+      }
+    }
+    return smoothed;
+  }
+
+  /**
+   * Apply a smoothing function to start times, using a sliding window of
+   * specified microseconds.
+   */
+  private static float[] smoothedStartTime(int windowus) {
+    int start = 0;
+    int end = 0;
+
+    int events = txbegin.length;
+    float[] smoothed = new float[events];
+    float halfWindow = ((long) windowus * 1000L / 2); // nano seconds
+
+    for(int i = 0; i < events; i++) {
+      float startns = txbegin[i] - halfWindow;
+      while (txbegin[start] < startns) // find the event marking the start of the window
+        start++;
+      float endns = txbegin[i] + halfWindow;
+      while (txbegin[end] < endns && end < (events - 1)) // find the event marking the end of the window
+        end++;
+
+      float interval = (txbegin[end] - txbegin[start])/(end - start); // average event interval within the window
+
+      smoothed[i] = txbegin[start] + ((i - start) * interval);
+    }
+    return smoothed;
+  }
+
+  private static void meteredLatency(int[] latency, int windowus, boolean timed) {
+    int events = txbegin.length;
+
+    float[] smoothed = timed ? smoothedStartTime(windowus) : smoothedStartEvents(windowus);
+
+    for(int i = 0; i < events; i++) {
+      int actual = (int) ((txend[i] - txbegin[i]) / 1000); // usec
+      int synth = (int) ((txend[i] - smoothed[i]) / 1000); // usec
+      latency[i] = (synth > actual) ? synth : actual;
+    }
+  }
+
+  private static void meteredLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, int iteration, int[] latency, int windowus, String desc) {
+    meteredLatency(latency, windowus, true);
+
+    if (dumpLatencyCSV)
+      dumpLatencyCSV(latency, txbegin, txowner, desc, baseLatencyFileName, iteration);
+    if (dumpLatencyHDR)
+      dumpLatencyHDR(latency, txbegin, desc, baseLatencyFileName, iteration);
+    printLatency(latency, txbegin, txbegin.length, desc, iteration);
+  }
+
+  private static void dumpSmoothingCSV(String baseLatencyFileName, int iteration, int[] latency, int elapsedus, boolean timed) {
+    int limitus = elapsedus * 2;
+
+    String filename = baseLatencyFileName+"-usec-metered-"+(timed ? "time-" : "events-")+(iteration-1)+".csv";
+    try {
+      File file = new File(filename);
+      BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
+
+      String header = "# window us, 50";
+      int precision = 10;
+      String precstr = "90";
+      while (precision <= TAIL_PRECISION) {
+        header += ", "+precstr;
+        precision *= 10;
+        if (precstr.equals("90"))
+          precstr = "99";
+        else
+          precstr += precstr.equals("99") ? ".9" : "9";
+      }
+
+      latencyFile.write(header + System.lineSeparator());
+
+      double step = Math.pow(2.0, 0.125); // exponential steps in 1/8 of powers of two
+      for (double windowus = 100; windowus <= limitus; windowus *= step) {
+        meteredLatency(latency, (int) windowus, timed);
+        Arrays.sort(latency);
+
+        String row = ""+windowus;
+        row += ", "+latency(latency, 50, 100);
+        precision = 10;
+        while (precision <= TAIL_PRECISION) {
+          row += ", "+latency(latency, 1, precision);
+          precision *= 10;
+        }
+        latencyFile.write(row + System.lineSeparator());
+      }
+
+      latencyFile.close();
+    } catch (IOException e) {
+      System.err.println("Failed to write latency file '"+filename+"'"+System.lineSeparator()+e);
+    }
+  }
+
+
+  public static void reportLatency(String baseLatencyFileName, boolean dumpLatencyCSV, boolean dumpLatencyHDR, boolean dumpLatencySmoothing, int iteration) {
     if (timerBase != 0) {
+      sortEvents();
       int events = txbegin.length;
       printRequestTime(events);
 
@@ -155,35 +358,28 @@ public class LatencyReporter {
         }
       }
       if (dumpLatencyCSV)
-        dumpLatencyCSV(latency, txbegin, "simple", baseLatencyFileName, iteration);
+        dumpLatencyCSV(latency, txbegin, txowner, "simple", baseLatencyFileName, iteration);
       if (dumpLatencyHDR)
         dumpLatencyHDR(latency, txbegin, "simple", baseLatencyFileName, iteration);
       printLatency(latency, txbegin, events, "simple", iteration);
 
-      // synthetically metered --- each query start is evenly spaced, so delays will compound
-      float[] sorted = Arrays.copyOf(txbegin, events);
-      Arrays.sort(sorted);
-      double start = sorted[0];
-      double elapsed = end - start;
-      double synthstart = 0;
-      for(int i = 0; i < events; i++) {
-        double relativePosition = (double) Arrays.binarySearch(sorted, txbegin[i]) / (double) events;
-        synthstart = start + (elapsed * relativePosition);
-        int actual = (int) ((txend[i] - txbegin[i])/1000);
-        int synth = (int) ((txend[i] - synthstart)/1000);
-        latency[i] = (synth > actual) ? synth : actual;
+      meteredLatency(baseLatencyFileName, dumpLatencyCSV, dumpLatencyHDR, iteration, latency, 100000, "metered 100ms smoothing");
+
+      int elapsedus = (int) ((txend[events - 1] - txbegin[0])/1000.0);
+      int limitus = elapsedus * 10;
+      meteredLatency(baseLatencyFileName, dumpLatencyCSV, dumpLatencyHDR, iteration, latency, limitus, "metered full smoothing");
+
+
+      if (dumpLatencySmoothing) {
+        dumpSmoothingCSV(baseLatencyFileName, iteration, latency, elapsedus, true);
       }
-      if (dumpLatencyCSV)
-        dumpLatencyCSV(latency, txbegin, "metered", baseLatencyFileName, iteration);
-      if (dumpLatencyHDR)
-        dumpLatencyHDR(latency, txbegin, "metered", baseLatencyFileName, iteration);
-      printLatency(latency, txbegin, events, "metered", iteration);
     }
   }
 
-  private static String latency(int[] latency, int numerator, int denominator) {
+
+  private static int latency(int[] latency, int numerator, int denominator) {
     int usecs = (latency[latency.length - 1 - (latency.length * numerator) / denominator]);
-    return ""+usecs+" usec";
+    return usecs;
   }
 
   public static void printRequestTime(int events) {
@@ -197,12 +393,12 @@ public class LatencyReporter {
 
   public static void printLatency(int[] latency, float[] txbegin, int events, String kind, int iteration) {
     Arrays.sort(latency);
-    String report = "===== DaCapo "+kind+" tail latency: ";
-    report += "50% " + latency(latency, 50, 100);
+    String report = "===== DaCapo tail latency, "+kind+": ";
+    report += "50% " + latency(latency, 50, 100)+" usec";
     int precision = 10;
     String precstr = "90";
     while (precision <= TAIL_PRECISION) {
-      report += ", " + precstr + "% " + latency(latency, 1, precision);
+      report += ", " + precstr + "% " + latency(latency, 1, precision)+" usec";
       precision *= 10;
       if (precstr.equals("90"))
         precstr = "99";
@@ -214,14 +410,14 @@ public class LatencyReporter {
     System.out.println(report);
   }
 
-  private static void dumpLatencyCSV(int[] latency, float[] txbegin, String kind, String baseFilename, int iteration) {
-    String filename = baseFilename+"-usec-"+kind+"-"+(iteration-1)+".csv";
+  private static void dumpLatencyCSV(int[] latency, float[] txbegin, int[] txowner, String kind, String baseFilename, int iteration) {
+    String filename = baseFilename+"-usec-"+kind.replace(" ", "-")+"-"+(iteration-1)+".csv";
     try {
       File file = new File(filename);
       BufferedWriter latencyFile = new BufferedWriter(new FileWriter(file));
       for (int i = 0; i < latency.length; i++) {
         int start = (int) (txbegin[i]/1000);
-        latencyFile.write(start+", "+(start+latency[i])+System.lineSeparator());
+        latencyFile.write(start+", "+(start+latency[i])+", "+txowner[i]+System.lineSeparator());
       }
       latencyFile.close();
     } catch (IOException e) {
@@ -247,15 +443,15 @@ public class LatencyReporter {
   }
 
   public static void requestsStarting() {
-    globalIdx = -stride;
-    System.err.println("Starting "+txbegin.length+" requests...");
+    globalIdx.set(0);
+    System.out.println("Starting "+txbegin.length+" requests...");
     if (callback != null) callback.requestsStarting();
     requestsStarted = System.nanoTime();
   }
 
   public static void requestsFinished() {
     requestsFinished = System.nanoTime();
-    System.err.println("Completed requests");
+    System.out.println("Completed requests");
     if (callback != null) callback.requestsFinished();
   }
 

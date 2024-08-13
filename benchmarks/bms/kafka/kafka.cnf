@@ -3,16 +3,16 @@ benchmark kafka
   thread-model per_cpu;
 
 size small args "simple_produce_bench-small.json", "10000"
-  output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x49eb5f30bb81b66c3e38a78f9122256c85254479;
+  output stdout digest 0x43d55a01e5ea2c3aeb74dcac80310147e69d47a5,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
          
 size default args "simple_produce_bench.json", "1000000"
-  output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x36fed859a569f5840cd873e556ce3028dcac3371;
+  output stdout digest 0xa0856f589629f19b188ceea01c3f1772e3c783e1,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
          
 size large args "simple_produce_bench-large.json", "10000000"
-  output stdout digest 0xd054f76402d83d91bc9824746d89c489c458a103,
-         stderr digest 0x452a8ac06032778f38bc1853b00dbdfb170bea3b;
+  output stdout digest 0x8966ac69fc5f9e1c3535c1fc4bacfdc84c473938,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	     "Apache Kafka® is a distributed streaming platform.",

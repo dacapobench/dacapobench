@@ -3,16 +3,16 @@ benchmark spring
   thread-model per_cpu;
 
 size small args "32", "2"
-  output stdout digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709,
-         stderr digest 0x8209cf393ab6d7b12d9a8184aac8316d34f93197;
+  output stdout digest 0x8209cf393ab6d7b12d9a8184aac8316d34f93197,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
          
 size default args "8192", "8"
-  output stdout digest 0x3d667eb33ec98f18caf9fb13954b49402d64f249,
-         stderr digest 0xe65fccd0bbdf049d4cdba6874f799514055d30b3;
+  output stdout digest 0x5fb134f6616c50d8edc6d924c165fb308dd9f45a,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
          
 size large args "131072", "16"
-  output stdout digest 0x3d667eb33ec98f18caf9fb13954b49402d64f249,
-         stderr digest 0x42b54b435d585776e37a38519c5f46f028ed1e49;
+  output stdout digest 0xe87c57f95d86ae2a122d6e090bbcb005f145e68b,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short	     "PetClinic application running as a Spring microservice.",

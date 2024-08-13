@@ -7,32 +7,32 @@ size small args
 		"--scale","2",
 		"--cleanup-in-iteration"
   thread-limit 400
-  output stdout digest 0x866da39974be32a28d31c191f0fcc0311a4f0fda,
-         stderr digest 0xcf2894f2ad60a686300152c79149a18848b46f28;
+  output stdout digest 0x2c7cf07c4316786e38f6e68ad239f67e4d52548c,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
   
 size default args
 		"--total-transactions","100000",
 		"--scale","16",
 		"--cleanup-in-iteration"
   thread-limit 1024
-  output stdout digest 0x82fa050e8480d0d6b50011da17cf1fbad897419e,
-         stderr digest 0x681e8a46e626bb20d88f2f06ec9fce1cab02899e;
+  output stdout digest 0xc57acae471866576479277785c99ac9ac2acf974,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args 
 		"--total-transactions","2500000",
 		"--scale","128",
 		"--cleanup-in-iteration"
   thread-limit 2048
-  output stdout digest 0x00461741979e1c2f1fa2da42d17a0984e007ea9f,
-         stderr digest 0xbb07e07c83899953c76ae869653fd3f9983d239c;
+  output stdout digest 0x3ea984f4cf86f47281e6daf65a9e3bf716f8c74a,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size vlarge args
 		"--total-transactions","5000000",
 		"--scale","256",
 		"--cleanup-in-iteration"
   thread-limit 2048
-  output stdout digest 0x2f5a419a6d363eb5f3d1aaf6202f6c3238b4cca2,
-         stderr digest 0xd9bf2b5c96a2b4885902ada28dc8f089befdf065;
+  output stdout digest 0xb654fdfcdb0493cee3bf1fe783dba27c91f68aa8,
+         stderr digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description
   short		"An SQL relational database engine written in Java",
