@@ -178,7 +178,7 @@ public class LatencyReporter {
    * @return index of pivot
    */
   private static int partition(int low, int high) {
-    float pivot = txbegin[low];
+    float pivot = txbegin[(low + high) / 2];
     int i = low - 1;
     int j = high + 1;
 
