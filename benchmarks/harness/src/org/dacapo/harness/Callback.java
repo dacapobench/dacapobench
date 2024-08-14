@@ -69,6 +69,7 @@ public class Callback {
       times = new long[args.getWindow()];
     }
     verbose |= args.getDebug();
+    callbackInstance = this;
   }
 
   public void init(Config config) {
