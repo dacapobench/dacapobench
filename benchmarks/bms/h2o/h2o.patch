@@ -1,6 +1,24 @@
-diff '--color=auto' -ur '--exclude=cache.properties' ./build.gradle ../build/build.gradle
+diff '--color=auto' -ur ./build.gradle ../build/build.gradle
 --- ./build.gradle	2023-08-02 10:09:23.000000000 +0000
-+++ ../build/build.gradle	2023-09-28 06:44:30.748933493 +0000
++++ ../build/build.gradle	2024-08-13 07:22:13.208547856 +0000
+@@ -16,7 +16,7 @@
+                 url "${localNexusLocation}/public"
+             }
+         } else {
+-            maven { url 'https://plugins.gradle.org/m2/' }
++            maven { url 'https://repo.spring.io/plugins-release/' }
+             mavenCentral()
+         }
+     }
+@@ -25,7 +25,7 @@
+     dependencies {
+         classpath 'org.ow2.asm:asm:5.1'
+         classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
+-        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1'
++        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.3'
+         classpath 'org.testng:testng:6.8'
+         classpath 'me.champeau.gradle:jmh-gradle-plugin:0.5.2'
+         // Note: Analyze unused/undefined dependencies for each module - good for debugging
 @@ -151,14 +151,14 @@
        project(':h2o-clustering')
      ]
@@ -70,9 +88,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' ./build.gradle ../build/bui
  }
  
  // Include support for S3 syncing
-diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
+diff '--color=auto' -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
 --- ./h2o-algos/build.gradle	2023-08-02 10:09:23.000000000 +0000
-+++ ../build/h2o-algos/build.gradle	2023-09-28 06:44:30.748933493 +0000
++++ ../build/h2o-algos/build.gradle	2024-08-13 07:11:59.834613139 +0000
 @@ -53,7 +53,7 @@
    testRuntimeOnly project(":${defaultWebserverModule}")
    testCompileOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
@@ -82,9 +100,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-algos/build.gradle ..
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-core/src/main/java/water/Cleaner.java ../build/h2o-core/src/main/java/water/Cleaner.java
+diff '--color=auto' -ur ./h2o-core/src/main/java/water/Cleaner.java ../build/h2o-core/src/main/java/water/Cleaner.java
 --- ./h2o-core/src/main/java/water/Cleaner.java	2023-08-02 10:09:23.000000000 +0000
-+++ ../build/h2o-core/src/main/java/water/Cleaner.java	2023-09-28 06:44:30.748933493 +0000
++++ ../build/h2o-core/src/main/java/water/Cleaner.java	2024-08-13 07:11:59.838613131 +0000
 @@ -10,6 +10,7 @@
  /** Store Cleaner: User-Mode Swap-To-Disk */
  
@@ -122,9 +140,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-core/src/main/java/wa
        if( DESIRED == -1 ) clean_to_age = now;  // Test mode: clean all
  
        // No logging if under memory pressure: can deadlock the cleaner thread
-diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-core/src/main/java/water/MemoryManager.java ../build/h2o-core/src/main/java/water/MemoryManager.java
+diff '--color=auto' -ur ./h2o-core/src/main/java/water/MemoryManager.java ../build/h2o-core/src/main/java/water/MemoryManager.java
 --- ./h2o-core/src/main/java/water/MemoryManager.java	2023-08-02 10:09:23.000000000 +0000
-+++ ../build/h2o-core/src/main/java/water/MemoryManager.java	2023-09-28 06:55:14.456450756 +0000
++++ ../build/h2o-core/src/main/java/water/MemoryManager.java	2024-08-13 07:11:59.838613131 +0000
 @@ -42,6 +42,26 @@
   * @author cliffc
   */
@@ -179,9 +197,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-core/src/main/java/wa
  
    /**
     * Try to reserve memory needed for task execution and return true if
-diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
+diff '--color=auto' -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
 --- ./h2o-extensions/target-encoder/build.gradle	2023-08-02 10:09:24.000000000 +0000
-+++ ../build/h2o-extensions/target-encoder/build.gradle	2023-09-28 06:44:30.752933489 +0000
++++ ../build/h2o-extensions/target-encoder/build.gradle	2024-08-13 07:11:59.838613131 +0000
 @@ -12,7 +12,7 @@
      testImplementation 'com.pholser:junit-quickcheck-generators:0.9'
      testRuntimeOnly project(":${defaultWebserverModule}")
@@ -191,9 +209,9 @@ diff '--color=auto' -ur '--exclude=cache.properties' ./h2o-extensions/target-enc
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-diff '--color=auto' -ur '--exclude=cache.properties' ./settings.gradle ../build/settings.gradle
+diff '--color=auto' -ur ./settings.gradle ../build/settings.gradle
 --- ./settings.gradle	2023-08-02 10:09:24.000000000 +0000
-+++ ../build/settings.gradle	2023-09-28 06:44:30.752933489 +0000
++++ ../build/settings.gradle	2024-08-13 07:11:59.838613131 +0000
 @@ -7,9 +7,9 @@
  include 'h2o-algos'
  include 'h2o-web'
