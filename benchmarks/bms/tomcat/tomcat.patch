@@ -63,3 +63,77 @@ diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/
          } else {
              return -1;
          }
+diff '--color=auto' -ur ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java
+--- ./apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2023-07-06 13:45:39.000000000 +0000
++++ ../build/apache-tomcat-10.1.11-src/java/org/apache/tomcat/util/threads/ThreadPoolExecutor.java	2024-03-06 00:17:19.398245927 +0000
+@@ -24,6 +24,7 @@
+  */
+ package org.apache.tomcat.util.threads;
+
++import java.lang.reflect.Method;
+ import java.util.ArrayList;
+ import java.util.ConcurrentModificationException;
+ import java.util.HashSet;
+@@ -607,6 +608,10 @@
+     private static final RuntimePermission shutdownPerm =
+         new RuntimePermission("modifyThread");
+
++    private final Object dacapoCallback;
++    private final Method taskStartMethod;
++    private final Method taskEndMethod;
++
+     /**
+      * Class Worker mainly maintains interrupt control state for
+      * threads running tasks, along with other minor bookkeeping.
+@@ -1367,6 +1372,21 @@
+         this.threadFactory = threadFactory;
+         this.handler = handler;
+
++        Object callback = null;
++        Method start = null;
++        Method end = null;
++        try {
++            Class clazz = Class.forName("org.dacapo.harness.Callback");
++            Method getter = clazz.getMethod("getCallback");
++            callback = getter.invoke(getter, null);
++            start = clazz.getMethod("serverTaskStart");
++            end = clazz.getMethod("serverTaskEnd");
++        } catch (Exception e) {
++            System.err.println("Could not initialize DaCapo callbacks: "+e);
++        }
++        this.dacapoCallback = callback;
++        this.taskStartMethod = start;
++        this.taskEndMethod = end;
+         prestartAllCoreThreads();
+     }
+
+@@ -2101,7 +2121,14 @@
+      * @param t the thread that will run task {@code r}
+      * @param r the task that will be executed
+      */
+-    protected void beforeExecute(Thread t, Runnable r) { }
++    protected void beforeExecute(Thread t, Runnable r) {
++        try {
++            if (dacapoCallback != null)
++                taskStartMethod.invoke(dacapoCallback);
++        } catch (Exception e) {
++            System.err.println("Could not invoke DaCapo callbacks: "+e);
++        }
++    }
+
+
+     /**
+@@ -2155,6 +2182,13 @@
+      * execution completed normally
+      */
+     protected void afterExecute(Runnable r, Throwable t) {
++        try {
++            if (dacapoCallback != null)
++                taskEndMethod.invoke(dacapoCallback);
++        } catch (Exception e) {
++            System.err.println("Could not invoke DaCapo callbacks: "+e);
++        }
++
+         // Throwing StopPooledThreadException is likely to cause this method to
+         // be called more than once for a given task based on the typical
+         // implementations of the parent class. This test ensures that

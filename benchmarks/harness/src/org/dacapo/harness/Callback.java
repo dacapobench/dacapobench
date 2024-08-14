@@ -17,6 +17,16 @@ import org.dacapo.parser.Config;
  */
 public class Callback {
 
+  private static Callback callbackInstance;
+
+  public static Callback getCallback() {
+    if (callbackInstance.getClass() == Callback.class) {
+      return null;             // not overridden
+    } else {
+      return callbackInstance; // overridden
+    }
+  }
+
   /**
    * Support for timing methodologies that have timing and warmup runs.
    */
@@ -155,7 +165,7 @@ public class Callback {
    */
   public void start(String benchmark) {
     start(benchmark, mode == Mode.WARMUP);
-  };
+  }
 
   protected void start(String benchmark, boolean warmup) {
     System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
@@ -174,7 +184,7 @@ public class Callback {
   /* Announce completion of the benchmark (pass or fail) */
   public void complete(String benchmark, boolean valid) {
     complete(benchmark, valid, mode == Mode.WARMUP);
-  };
+  }
 
   protected void complete(String benchmark, boolean valid, boolean warmup) {
     System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);
@@ -219,4 +229,21 @@ public class Callback {
    * @param id A unique ID for the request.
    */
   public void requestEnd(int id) {}
+
+  /*
+   * Many of the workloads model client-server requests. The above callbacks capture
+   * the entire request, from the client's perspective.
+   *
+   * The following callbacks are invoked on the server side, and thus only capture
+   * part of the latency of the request.
+   *
+   * IMPORTANT: these callbacks capture server tasks which may not map 1:1 to
+   * client requests.
+   */
+
+  /* Called by server-side code at the start of servicing a request (request-based workloads only) */
+  public void serverTaskStart() {}
+
+  /* Called by server-side code at completion of servicing a request (request-based workloads only) */
+  public void serverTaskEnd() {}
 }
