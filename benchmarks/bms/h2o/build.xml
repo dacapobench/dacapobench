@@ -68,6 +68,7 @@
         <!-- build h2o with testing-->
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
             <env key="CLASSPATH" value="${java.home}/lib"/>
+            <arg value="--no-daemon"/>
             <arg value="clean"/>
             <arg value="build"/>
         </exec>
@@ -77,6 +78,7 @@
         <!-- build h2o without testing-->
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="yes">
             <env key="CLASSPATH" value="${java.home}/lib"/>
+            <arg value="--no-daemon"/>
             <arg value="clean"/>
             <arg value="build"/>
             <arg value="-x"/>
