@@ -167,7 +167,7 @@ public class Callback {
    */
   public void start(String benchmark) {
     start(benchmark, mode == Mode.WARMUP);
-  };
+  }
 
   protected void start(String benchmark, boolean warmup) {
     System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark + " starting ");
@@ -186,7 +186,7 @@ public class Callback {
   /* Announce completion of the benchmark (pass or fail) */
   public void complete(String benchmark, boolean valid) {
     complete(benchmark, valid, mode == Mode.WARMUP);
-  };
+  }
 
   protected void complete(String benchmark, boolean valid, boolean warmup) {
     System.out.print("===== DaCapo " + TestHarness.getBuildVersion() + " " + benchmark);

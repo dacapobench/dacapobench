@@ -20,7 +20,7 @@ public class ExampleCallback extends Callback {
   public void start(String benchmark) {
     System.err.println("Example callback starting " + (isWarmup() ? "warmup " : "") + benchmark);
     super.start(benchmark);
-  };
+  }
 
   /* Immediately after the end of the benchmark */
   @Override
@@ -28,14 +28,14 @@ public class ExampleCallback extends Callback {
     super.stop(duration);
     System.err.println("Example callback stopping " + (isWarmup() ? "warmup" : ""));
     System.err.flush();
-  };
+  }
 
   @Override
   public void complete(String benchmark, boolean valid) {
     super.complete(benchmark, valid);
     System.err.println("Example callback " + (valid ? "PASSED " : "FAILED ") + (isWarmup() ? "warmup " : "") + benchmark + (requests > 0 ? (", observed "+requests+" requests") : ""));
     System.err.flush();
-  };
+  }
 
   /**
    * The workload is about to start issuing requests (request-based workloads only).
@@ -79,7 +79,7 @@ public class ExampleCallback extends Callback {
   @Override
   public void serverTaskStart() { /* your code here */ }
 
-  /* Called by server-side code at completion of servicing a task (request-based workloads only) */
+  // /* Called by server-side code at completion of servicing a task (request-based workloads only) */
   @Override
   public void serverTaskEnd() { /* your code here */ }
 }
