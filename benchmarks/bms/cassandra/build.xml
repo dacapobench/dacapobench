@@ -96,11 +96,24 @@
                 <!-- ycsb libs -->
                 <file file="${ycsb-dir}/cassandra/target/cassandra-binding-${ycsb-version}.jar"/>
                 <fileset dir="${ycsb-dir}/cassandra/target/dependency" includes="*.jar">
-                    <exclude name="guava-16.0.1.jar"/>
-                    <exclude name="jamm-0.3.0.jar"/>
-                    <exclude name="slf4j-simple-1.7.21.jar"/>
-                    <exclude name="snakeyaml-1.11.jar"/>
+                    <exclude name="guava-*.jar"/>
+                    <exclude name="jamm-*.jar"/>
+                    <exclude name="slf4j-simple-*.jar"/>
+                    <exclude name="snakeyaml-*.jar"/>
                     <exclude name="netty-*.jar"/>
+                    <exclude name="commons-cli-*.jar"/>
+                    <exclude name="commons-lang3-*.jar"/>
+                    <exclude name="HdrHistogram-*.jar"/>
+                    <exclude name="high-scale-lib-*.jar"/>
+                    <exclude name="hppc-*.jar"/>
+                    <exclude name="jbcrypt-*.jar"/>
+                    <exclude name="jcl-over-slf4j-*.jar"/>
+                    <exclude name="jna-*.jar"/>
+                    <exclude name="metrics-core-*.jar"/>
+                    <exclude name="ohc-core-*.jar"/>
+                    <exclude name="reporter-config3-*.jar"/>
+                    <exclude name="reporter-config-base-*.jar"/>
+                    <exclude name="snappy-java-*.jar"/>
                 </fileset>
                 <file file="${ycsb-dir}/core/target/core-${ycsb-version}.jar"/>
                 <fileset dir="${ycsb-dir}/core/target/dependency">
