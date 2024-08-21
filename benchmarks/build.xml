@@ -169,7 +169,7 @@
             </redirector>
         </exec>
         <exec executable="${git.exe}" resultproperty="git.rc" failonerror="no" failifexecutionfails="no">
-            <arg line="diff-index --quiet HEAD"/>
+            <arg line="diff --quiet HEAD"/>
         </exec>
         <condition property="git.dirty" value="-dirty" else="">
             <equals arg1="${git.rc}" arg2="1"/>
