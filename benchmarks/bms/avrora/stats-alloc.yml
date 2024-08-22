@@ -1,21 +1,18 @@
-#
-# Trace generated using dacapo-evaluation-git-458822b9
-#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 5065040
-bytes-allocated: 176275792
+objects-allocated: 5065554
+bytes-allocated: 176212928
 # number of objects allocated for each object size
 objects-by-size: 
   16: 24727
-  24: 1341059
-  32: 3297084
+  24: 1340958
+  32: 3297708
   40: 120520
-  48: 53422
-  56: 142599
+  48: 53418
+  56: 142595
   64: 7622
-  72: 2022
+  72: 2021
   80: 17493
   88: 1699
   96: 5760
@@ -23,27 +20,27 @@ objects-by-size:
   112: 404
   120: 256
   128: 3255
-  136: 224
-  144: 8762
-  152: 196
-  160: 3468
-  168: 160
-  176: 3272
-  184: 302
-  192: 201
-  200: 12557
-  208: 192
-  216: 122
-  224: 3098
-  232: 57
+  136: 1304
+  144: 10480
+  152: 142
+  160: 742
+  168: 253
+  176: 3400
+  184: 447
+  192: 131
+  200: 12350
+  208: 107
+  216: 113
+  224: 3093
+  232: 49
   240: 134
   248: 108
   256: 164
-  264: 90
+  264: 628
   272: 550
   280: 117
   288: 51
-  296: 606
+  296: 68
   304: 87
   312: 78
   320: 39
@@ -676,13 +673,13 @@ objects-by-size:
 # number of bytes allocated for each object size
 bytes-by-size: 
   16: 395632
-  24: 32185416
-  32: 105506688
+  24: 32182992
+  32: 105526656
   40: 4820800
-  48: 2564256
-  56: 7985544
+  48: 2564064
+  56: 7985320
   64: 487808
-  72: 145584
+  72: 145512
   80: 1399440
   88: 149512
   96: 552960
@@ -690,27 +687,27 @@ bytes-by-size:
   112: 45248
   120: 30720
   128: 416640
-  136: 30464
-  144: 1261728
-  152: 29792
-  160: 554880
-  168: 26880
-  176: 575872
-  184: 55568
-  192: 38592
-  200: 2511400
-  208: 39936
-  216: 26352
-  224: 693952
-  232: 13224
+  136: 177344
+  144: 1509120
+  152: 21584
+  160: 118720
+  168: 42504
+  176: 598400
+  184: 82248
+  192: 25152
+  200: 2470000
+  208: 22256
+  216: 24408
+  224: 692832
+  232: 11368
   240: 32160
   248: 26784
   256: 41984
-  264: 23760
+  264: 165792
   272: 149600
   280: 32760
   288: 14688
-  296: 179376
+  296: 20128
   304: 26448
   312: 24336
   320: 12480
@@ -1343,8 +1340,8 @@ bytes-by-size:
 # number of objects allocated for each class
 objects-by-type: 
   B: 2563
-  \[I: 1
-  \[\[I: 64
+  [I: 1
+  [[I: 64
   avrora/Defaults$AutoProgramReader: 2
   avrora/actions/SimAction: 1
   avrora/actions/SimAction$ShutdownThread: 1
@@ -1467,13 +1464,13 @@ objects-by-type:
   avrora/sim/SimulatorThread: 9
   avrora/sim/clock/ClockDomain: 9
   avrora/sim/clock/DeltaQueue: 9
-  avrora/sim/clock/DeltaQueue$EventList: 46106
+  avrora/sim/clock/DeltaQueue$EventList: 46005
   avrora/sim/clock/DeltaQueue$Link: 63
   avrora/sim/clock/DerivedClock: 9
   avrora/sim/clock/MainClock: 9
   avrora/sim/clock/RippleSynchronizer: 1
   avrora/sim/clock/RippleSynchronizer$NotifyEvent: 9
-  avrora/sim/clock/RippleSynchronizer$WaitLink: 207380
+  avrora/sim/clock/RippleSynchronizer$WaitLink: 207774
   avrora/sim/energy/Energy: 63
   avrora/sim/energy/EnergyControl: 9
   avrora/sim/mcu/ADC: 9
@@ -1642,7 +1639,7 @@ objects-by-type:
   avrora/sim/util/MulticastProbe: 9
   avrora/sim/util/TransactionalList$Link: 45
   avrora/syntax/elf/ELFParser: 2
-  byte: 413883
+  byte: 413874
   cck/elf/ELFDataInputStream: 10
   cck/elf/ELFHeader: 2
   cck/elf/ELFProgramHeaderTable: 2
@@ -1772,7 +1769,7 @@ objects-by-type:
   java/util/HashMap$Values: 1
   java/util/HashSet: 14
   java/util/LinkedList: 243225
-  java/util/LinkedList$ListItr: 2773167
+  java/util/LinkedList$ListItr: 2773397
   java/util/LinkedList$Node: 250139
   java/util/Optional: 124
   java/util/Properties: 1
@@ -1810,9 +1807,9 @@ objects-by-type:
   sun/net/www/protocol/jar/URLJarFile$URLJarFileEntry: 52
 # number of bytes allocated for each class
 bytes-by-type: 
-  B: 283840
-  \[I: 1064
-  \[\[I: 1640
+  B: 262696
+  [I: 1064
+  [[I: 1640
   avrora/Defaults$AutoProgramReader: 80
   avrora/actions/SimAction: 64
   avrora/actions/SimAction$ShutdownThread: 120
@@ -1935,13 +1932,13 @@ bytes-by-type:
   avrora/sim/SimulatorThread: 1152
   avrora/sim/clock/ClockDomain: 216
   avrora/sim/clock/DeltaQueue: 288
-  avrora/sim/clock/DeltaQueue$EventList: 1106544
+  avrora/sim/clock/DeltaQueue$EventList: 1104120
   avrora/sim/clock/DeltaQueue$Link: 2016
   avrora/sim/clock/DerivedClock: 360
   avrora/sim/clock/MainClock: 288
   avrora/sim/clock/RippleSynchronizer: 56
   avrora/sim/clock/RippleSynchronizer$NotifyEvent: 288
-  avrora/sim/clock/RippleSynchronizer$WaitLink: 6636160
+  avrora/sim/clock/RippleSynchronizer$WaitLink: 6648768
   avrora/sim/energy/Energy: 4032
   avrora/sim/energy/EnergyControl: 216
   avrora/sim/mcu/ADC: 648
@@ -2110,7 +2107,7 @@ bytes-by-type:
   avrora/sim/util/MulticastProbe: 288
   avrora/sim/util/TransactionalList$Link: 1080
   avrora/syntax/elf/ELFParser: 128
-  byte: 25669848
+  byte: 25610584
   cck/elf/ELFDataInputStream: 240
   cck/elf/ELFHeader: 112
   cck/elf/ELFProgramHeaderTable: 48
@@ -2240,7 +2237,7 @@ bytes-by-type:
   java/util/HashMap$Values: 16
   java/util/HashSet: 224
   java/util/LinkedList: 7783200
-  java/util/LinkedList$ListItr: 88741344
+  java/util/LinkedList$ListItr: 88748704
   java/util/LinkedList$Node: 6003336
   java/util/Optional: 1984
   java/util/Properties: 56
