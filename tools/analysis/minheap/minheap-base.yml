@@ -9,34 +9,34 @@ suites:
   dacapo-chopin-mr1:
     type: DaCapo
     release: evaluation
-    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-02676f3d.jar
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-cb0048d8.jar
     timing_iteration: 1
     timeout: 6000
 
 benchmarks:
   dacapo-chopin-mr1:
-#    - avrora
-#    - batik
-#    - biojava
+    - avrora
+    - batik
+    - biojava
     - cassandra
-#    - eclipse
-#    - fop
-#    - graphchi
-#    - h2
-#    - h2o
-#    - jme
-#    - jython
-#    - kafka
-#    - luindex
+    - eclipse
+    - fop
+    - graphchi
+    - h2
+    - h2o
+    - jme
+    - jython
+    - kafka
+    - luindex
     - lusearch
-#    - pmd
-#    - spring
-#    - sunflow
-#    - tomcat
-#    - tradesoap
-#    - tradebeans
-#    - xalan
-#    - zxing
+    - pmd
+    - spring
+    - sunflow
+    - tomcat
+    - tradesoap
+    - tradebeans
+    - xalan
+    - zxing
 
 modifiers:
   sz:
