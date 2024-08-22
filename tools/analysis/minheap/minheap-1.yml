@@ -1,10 +1,6 @@
 includes:
   - "minheap-base.yml"
 
-#overrides:
-#  "suites.dacapo-chopin-mr1.timing_iteration": 1
-#  "suites.dacapo-chopin-mr1.timeout": 6000
- 
 configs:
   - "temurin-21|jdk21|sz-default|cp|gc-G1|t-32"
   - "temurin-21|jdk21|sz-small|cp|gc-G1|t-1"
@@ -16,3 +12,4 @@ configs:
   - "temurin-17|jdk17|sz-default|cp|gc-G1|t-32"
   - "temurin-11|jdk11|sz-default|cp|gc-G1|t-32"
   - "temurin-8|jdk8|sz-default|cp|gc-G1|t-32"
+#  - "temurin-21-arm|jdk21|sz-default|cp|gc-G1|t-32"

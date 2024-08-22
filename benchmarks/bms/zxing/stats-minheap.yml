@@ -1,16 +1,16 @@
 #
-# Minimum heap sizes in which benchmark will run to completion, using
+# Minimum heap sizes in which the benchmark will run to completion, using
 # -Xms<x> -Xmx<x> for various x and various configuarations.  Discovered
 # by bisection search.  Numbers below are in MB and reflect results of
 # five trials.
 #
-open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 103, 97, 130, 126, 116 ]                   # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 1
-open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-5: [ 201, 290, 195, 194, 176 ]                  # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 5
-open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-10: [ 215, 258, 206, 177, 242 ]                 # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 10
-open-jdk-21.sz-small.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 5, 5, 5, 5, 5 ]                    # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -s small -t 32 -f 10 -n 1
-open-jdk-21.ee.s.cp.gc-Parallel.t-32.f-10.n-1: [ 93, 92, 91, 93, 89 ]                 # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseParallelGC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 1
-open-jdk-21.ee.s.cp.gc-G1.t-1.f-10.n-1: [ 39, 39, 39, 39, 39 ]                        # java-21-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 1 -f 10 -n 1
-open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1: [ 132, 89, 97, 97, 97 ]                      # java-21-openjdk-amd64 -server -XX:-UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 1
-open-jdk-17.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 94, 92, 85, 103, 85 ]                      # java-17-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 1
-open-jdk-11.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 99, 98, 95, 77, 75 ]                       # java-11-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 1
-open-jdk-8.ee.s.cp.gc-G1.t-32.f-10.n-1: [ 103, 105, 107, 97, 130 ]                    # java-8-openjdk-amd64 -server -XX:+UseCompressedOops -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC -jar dacapo-evaluation-git-a229230.jar zxing -t 32 -f 10 -n 1
+temurin-21.sz-default.cp.gc-G1.t-32.n-1: [94, 107, 117, 140, 146]                # temurin-21-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s default -t 32
+temurin-21.sz-default.cp.gc-G1.t-32.n-5: [167, 177, 183, 234, 258]               # temurin-21-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 5 zxing -f 10 -s default -t 32
+temurin-21.sz-default.cp.gc-G1.t-32.n-10: [191, 228, 250, 264, 322]              # temurin-21-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 10 zxing -f 10 -s default -t 32
+temurin-21.sz-small.cp.gc-G1.t-1.n-1: [5, 5, 5, 5, 5]                            # temurin-21-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s small -t 1
+temurin-21.sz-default.cp.gc-G1.t-1.n-1: [39, 39, 39, 39, 39]                     # temurin-21-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s default -t 1
+temurin-21.sz-default.up.gc-G1.t-32.n-1: [101, 114, 127, 132, 133]               # temurin-21-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:-UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s default -t 32
+temurin-21.sz-default.cp.gc-Parallel.t-32.n-1: [81, 91, 93, 93, 94]              # temurin-21-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseParallelGC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s default -t 32
+temurin-17.sz-default.cp.gc-G1.t-32.n-1: [93, 96, 97, 100, 101]                  # temurin-17-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s default -t 32
+temurin-11.sz-default.cp.gc-G1.t-32.n-1: [57, 64, 98, 100, 114]                  # temurin-11-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s default -t 32
+temurin-8.sz-default.cp.gc-G1.t-32.n-1: [96, 98, 100, 103, 110]                  # temurin-8-jdk-amd64/bin/java -XX:+ExitOnOutOfMemoryError -server -XX:+UseCompressedOops -XX:+UseG1GC -Xms<?> -Xmx<?> -jar dacapo-evaluation-git-02676f3d.jar -n 1 zxing -f 10 -s default -t 32

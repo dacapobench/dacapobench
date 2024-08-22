@@ -347,7 +347,7 @@ def nominal():
         nom['ARA'] = int(alloc['bytes-allocated']/(1000*ap))
         desc['ARA'] = 'nominal allocation rate (bytes / usec) ('+str(alloc['bytes-allocated'])+'/'+str(1000*ap)+')'
 
-        nom['GTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1']))))
+        nom['GTO'] = int(alloc['bytes-allocated']/(1024*1024*(max(minheap['temurin-21.sz-default.cp.gc-G1.t-32.n-1']))))
         desc['GTO'] = 'nominal memory turnover (total alloc bytes / min heap bytes)'
 
     hs = int(100*(tight-ap)/ap)
@@ -356,33 +356,33 @@ def nominal():
     nom['GSS'] = hs
     desc['GSS'] = 'nominal heap size sensitivity (slowdown with tight heap, as a percentage) ('+str(tight)+'/'+str(ap)+')'
 
-    nom['GMD'] = statistics.median(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-5'])
+    nom['GMD'] = statistics.median(minheap['temurin-21.sz-default.cp.gc-G1.t-32.n-5'])
     desc['GMD'] = 'nominal minimum heap size (MB) for default size configuration (with compressed pointers)'
 
     sz='small'
-    hscfg='open-jdk-21.sz-'+sz+'.ee.s.cp.gc-G1.t-1.f-10.n-1'
+    hscfg='temurin-21.sz-'+sz+'.cp.gc-G1.t-1.n-1'
     if hscfg in minheap:
         nom['GMS'] = statistics.median(minheap[hscfg])
         desc['GMS'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
     sz='large'
-    hscfg='open-jdk-21.sz-'+sz+'.ee.s.cp.gc-G1.t-32.f-10.n-1'
+    hscfg='temurin-21.sz-'+sz+'.cp.gc-G1.t-32.n-1'
     if hscfg in minheap:
         nom['GML'] = statistics.median(minheap[hscfg])
         desc['GML'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
     sz='vlarge'
-    hscfg='open-jdk-21.sz-'+sz+'.ee.s.cp.gc-G1.t-32.f-10.n-1'
+    hscfg='temurin-21.sz-'+sz+'.cp.gc-G1.t-32.n-1'
     if hscfg in minheap:
         nom['GMV'] = statistics.median(minheap[hscfg])
         desc['GMV'] = 'nominal minimum heap size (MB) for '+sz+' size configuration (with compressed pointers)'
 
 
-    nom['GMU'] = statistics.median(minheap['open-jdk-21.ee.s.up.gc-G1.t-32.f-10.n-1'])
+    nom['GMU'] = statistics.median(minheap['temurin-21.sz-default.up.gc-G1.t-32.n-1'])
     desc['GMU'] = 'nominal minimum heap size (MB) for default size without compressed pointers'
 
-    one = max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-1'])
-    ten = max(minheap['open-jdk-21.ee.s.cp.gc-G1.t-32.f-10.n-10'])
+    one = max(minheap['temurin-21.sz-default.cp.gc-G1.t-32.n-1'])
+    ten = max(minheap['temurin-21.sz-default.cp.gc-G1.t-32.n-10'])
     if (not ten is None):
         leakage = int(100*((ten/one)-1))
         if (leakage < 0):
