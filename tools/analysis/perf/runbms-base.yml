@@ -1,46 +1,45 @@
 includes:
   - "$RUNNING_NG_PACKAGE_DATA/base/runbms.yml"
-  - "openjdk.yml"
+  - "$RUNNING_NG_PACKAGE_DATA/base/temurin.yml"
 
 overrides:
   "remote_host": null
 
 suites:
-  dacapo-7839b032:
+  dacapo-chopin-mr1:
     type: DaCapo
     release: evaluation
-    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-7839b032.jar
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-cb0048d8.jar
     timing_iteration: 10
     timeout: 1800
     minheap: min
     minheap_values:
       min:
-        avrora: 7
-        batik: 193
-        biojava: 97
-        cassandra: 129
-        eclipse: 347
-        fop: 15
-        graphchi: 184
-        h2: 1363
-        h2o: 238
+        avrora: 5
+        batik: 175
+        biojava: 93
+        cassandra: 177
+        eclipse: 135
+        fop: 13
+        graphchi: 175
+        h2: 681
+        h2o: 79
         jme: 29
-        jython: 29
-        kafka: 198
-        luindex: 41
-        lusearch: 25
-        pmd: 202
-        spring: 64
-        sunflow: 31
+        jython: 25
+        kafka: 197
+        luindex: 29
+        lusearch: 19
+        pmd: 192
+        spring: 58
+        sunflow: 29
         tomcat: 21
         tradebeans: 135
-        tradesoap: 91
-        xalan: 17
-        zxing: 147
-
+        tradesoap: 93
+        xalan: 13
+        zxing: 250
 
 benchmarks:
-  dacapo-7839b032:
+  dacapo-chopin-mr1:
     - avrora
     - batik
     - biojava
@@ -92,3 +91,27 @@ modifiers:
   gclog:
     type: JVMArg
     val: "-Xlog:gc:file=gc.log" 
+    jdk21:
+    type: ModifierSet
+    val: "jdk17|jdk21_h2o"
+  jdk21_h2o:
+    type: JVMArg
+    val: "-Dsys.ai.h2o.debug.allowJavaVersions=21"
+    includes:
+      dacapo-chopin-mr1:
+        - h2o
+  jdk17:
+    type: ModifierSet
+    val: "jdk11|jdk17_cassandra"
+  jdk17_cassandra:
+    type: JVMArg
+    val: "-Djava.security.manager=allow"
+    includes:
+      dacapo-chopin-mr1:
+        - cassandra
+  jdk11:
+    type: ModifierSet
+    val: "jdk8"
+  jdk8:
+    type: ModifierSet
+    val: "ee|s|f-10"

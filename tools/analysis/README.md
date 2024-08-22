@@ -1,8 +1,10 @@
 # Analysis Tools for DaCapo
 
-This tool exists to support simple analysis of the DaCapo benchmarks.
+These alaysis tools are used to generate the per-benchmark statistics seen in the `benchmarks/bms/*/stats-*.yml` files.
 
 ### MinHeap
+
+**TL;DR**:* Use the `run.sh` script within the `minheap` directory.  Expected running time: O(1 week).
 
 The minheap tools establish the minimum heap sizes in which the benchmarks will run under various configurations.  The results of the minheap analysis are ultimately output to the `benchmarks/bms/<benchmark>/stats-minheap.yml` file.  These in turn contribute to a number of the _nominal statistics_ which appear in the `benchmarks/bms/<benchmark>/stats-nominal.yml` file for each benchmark.
 
@@ -18,7 +20,9 @@ Finally, `aggregatestats.py` and `normalizestats.py` need to be run to propogate
 
 ### Bytecode Analysis
 
-We use bytecode analysis to generate the `benchmarks/bms/<benchmark>/stats-bytecode.yml` file for each benchmark. The relevant sourcecode is in the `bcc` subdirectory.
+**TL;DR**:* Use the `run-bca.sh` script within this directory. Expected running time: O(1 day).
+
+We use bytecode analysis to generate the `benchmarks/bms/<benchmark>/stats-bytecode.yml` file for each benchmark. The relevant source code is in the `bcc` subdirectory.
 
 The analysis uses a java agent, with the necessary jar pre-built into the DaCapo distribution.  The agent will use a callback, `org.dacapo.BytecodeCallback` which is defined in `benchmarks/harness/src/org/dacapo/analysis`, and compiled into the DaCapo distribution.
 
@@ -35,13 +39,19 @@ Finally, `aggregatestats.py` and `normalizestats.py` need to be run to propogate
 
 ### Alloc Analysis
 
-We also use bytecode analysis to analyze the allocation behaviors of each workload.  Specifically we use [this](https://github.com/google/allocation-instrumenter) instrumentation agent.
+**TL;DR**:* Use the `run-alloc.sh` script within this directory. Expected running time: O(1 hr).
+
+We also use bytecode analysis to analyze the allocation behaviors of each workload.  Specifically, we use [this](https://github.com/google/allocation-instrumenter) instrumentation agent.
 
 The `run-alloc.sh` script in this directory will run the analysis for all of the bechmarks, updating the respective `stats-alloc.yml` files for each benchmark.
 
 Finally, `aggregatestats.py` and `normalizestats.py` need to be run to propogate the minheap stats into the nominal statistics (see below).
 
 ### Performance
+
+#### Kernel
+
+The script `kernel.sh` will generate the `stats-kernel.yml` file for a given benchmark.
 
 ### Aggregating and Normalizing
 
