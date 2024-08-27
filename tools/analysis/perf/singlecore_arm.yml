@@ -1,0 +1,18 @@
+# Need to turn off NMI watchdog
+# Quick test: running -d runbms ~/dacapo/dacapo-pldi-2024/data ./single_core_arm.yml -s 3 -p "dacapo-pldi-2024-single-core-arm-fast" -i 1
+# Full run: running runbms ~/dacapo/dacapo-pldi-2024/data ./single_core_arm.yml -s 2 -p "dacapo-pldi-2024-single-core-arm"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-10"
+  "suites.dacapo-chopin-mr1.timeout": 9000
+  "runtimes.temurin-21.home": "/usr/lib/jvm/temurin-21-jdk-arm64"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |taskset-0    |dialation-40"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo single core arm"

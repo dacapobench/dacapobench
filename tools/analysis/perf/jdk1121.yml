@@ -1,0 +1,32 @@
+# Need to turn off NMI watchdog
+# Quick test: running -d runbms ./data ./jdk1121.yml -s 2 -p "dacapo-jdk1121" -i 1
+# Full run: running runbms ./data ./jdk1121.yml -s 2 -p "dacapo-jdk1121"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-5"
+  "suites.dacapo-chopin-mr1.timing_iteration": "5"
+configs:
+  - "temurin-21|openjdk_common  |hotspot_gc-G1        |mu_threads-32|dialation-40"
+  - "temurin-21|openjdk_common  |hotspot_gc-Serial    |mu_threads-32|dialation-40"
+  - "temurin-21|openjdk_common  |hotspot_gc-Parallel  |mu_threads-32|dialation-40"
+  - "temurin-21|openjdk_common  |hotspot_gc-Shenandoah|mu_threads-32|dialation-40"
+  - "temurin-21|openjdk_common  |hotspot_gc-Z         |mu_threads-32|dialation-40"
+  - "temurin-21|openjdk_common  |hotspot_gc-Z|zgc_gen |mu_threads-32|dialation-40"
+  - "temurin-17|openjdk17_common|hotspot_gc-G1        |mu_threads-32|dialation-40"
+  - "temurin-17|openjdk17_common|hotspot_gc-Serial    |mu_threads-32|dialation-40"
+  - "temurin-17|openjdk17_common|hotspot_gc-Parallel  |mu_threads-32|dialation-40"
+  - "temurin-17|openjdk17_common|hotspot_gc-Shenandoah|mu_threads-32|dialation-40"
+  - "temurin-17|openjdk17_common|hotspot_gc-Z         |mu_threads-32|dialation-40"
+  - "temurin-11|openjdk11_common|hotspot_gc-G1        |mu_threads-32|dialation-40"
+  - "temurin-11|openjdk11_common|hotspot_gc-Serial    |mu_threads-32|dialation-40"
+  - "temurin-11|openjdk11_common|hotspot_gc-Parallel  |mu_threads-32|dialation-40"
+  - "temurin-11|openjdk11_common|hotspot_gc-Shenandoah|mu_threads-32|dialation-40"
+  - "temurin-11|openjdk11_common|hotspot_gc-Z         |mu_threads-32|dialation-40"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo jdk1121"

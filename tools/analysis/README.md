@@ -49,6 +49,19 @@ Finally, `aggregatestats.py` and `normalizestats.py` need to be run to propogate
 
 ### Performance
 
+The performance numbers are mostly generated on a single machine in its default configuration using the script `perf/run.sh`.   However, some of the results are generated on ARM and Intel hardware and on the AMD hardware with different configuraitons.  See the note at the top of `perf/run.sh`.
+
+#### Additional prerequisite
+
+You need the distillation tools in `$HOME/dacapo/distillation`:
+
+```
+cd $HOME/dacapo
+git clone --recursive https://github.com/anupli/dacapo-distillation distillation
+cd dacapo-distillation
+make -j
+```
+
 #### Kernel
 
 The script `kernel.sh` will generate the `stats-kernel.yml` file for a given benchmark.

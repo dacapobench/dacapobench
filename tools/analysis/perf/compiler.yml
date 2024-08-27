@@ -1,0 +1,30 @@
+# Need to turn off NMI watchdog
+# Quick test: running -d runbms ./data ./compiler.yml -s 2 -p "dacapo-compiler"
+# Full run: running runbms ./data ./compiler.yml -s 2 -p "dacapo-compiler"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-5"
+  "suites.dacapo-chopin-mr1.timing_iteration": "5"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |mu_threads-32|dialation-40|c1"
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |mu_threads-32|dialation-40|c2"
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |mu_threads-32|dialation-40|c1|comp"
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |mu_threads-32|dialation-40|c2|comp"
+modifiers:
+  c2:
+    type: JVMArg
+    val: "-XX:-TieredCompilation"
+  c1:
+    type: JVMArg
+    val: "-XX:TieredStopAtLevel=1"
+  comp:
+    type: JVMArg
+    val: "-Xcomp"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo c1/c2"

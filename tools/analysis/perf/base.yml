@@ -1,0 +1,292 @@
+heap_range: 6
+invocations: 10
+minheap_multiplier: 1.0
+spread_factor: 1
+remote_host: squirrel.moma
+
+benchmarks:
+  dacapo-chopin-mr1:
+    - avrora
+    - batik
+    - biojava
+    - cassandra
+    - eclipse
+    - fop
+    - graphchi
+    - h2
+    - h2o
+    - jme
+    - jython
+    - kafka
+    - luindex
+    - lusearch
+    - pmd
+    - spring
+    - sunflow
+    - tomcat
+    - tradebeans
+    - tradesoap
+    - xalan
+    - zxing
+
+modifiers:
+  c2:
+    type: JVMArg
+    val: -XX:-TieredCompilation -Xcomp
+  hotspot_gc:
+    type: JVMArg
+    val: -XX:+UnlockExperimentalVMOptions -XX:+Use{0}GC
+  zgc_gen:
+    type: JVMArg
+    val: -XX:+ZGenerational
+  jvmti:
+    type: JVMArg
+    val: -agentpath:$HOME/dacapo/distillation/libperf_statistics.so
+  jvmti_env:
+    type: EnvVar
+    val: $HOME/dacapo/distillation/libperf_statistics.so
+    var: LD_PRELOAD
+  openjdk_common_inner:
+    type: ModifierSet
+    val: s|probes|probes_cp|jvmti|jvmti_env|eoom
+  openjdk_common:
+    type: ModifierSet
+    val: openjdk_common_inner|dacapochopin_jdk21
+  openjdk17_common:
+    type: ModifierSet
+    val: openjdk_common_inner|dacapochopin_jdk17
+  openjdk11_common:
+    type: ModifierSet
+    val: openjdk_common_inner|dacapochopin_jdk11
+  # 1 CYCLES_NOT_IN_HALT == ls_not_halted_cyc (0x76)
+  # 2 DISPATCH_STALLS_1:FE_NO_OPS == de_no_dispatch_per_slot.no_ops_from_frontend (0x1000001a0)
+  # 3 DISPATCH_STALLS_1:BE_STALLS == de_no_dispatch_per_slot.backend_stalls (0x100001ea0)
+  # 4 RETIRED_INSTRUCTIONS == instructions (0xc0)
+  # https://elixir.bootlin.com/linux/v6.2.16/source/arch/x86/events/amd/core.c#L132
+  # 5 REQUESTS_TO_L2_GROUP1:RD_BLK_L:RD_BLK_X:LS_RD_BLK_C_S:CHANGE_TO_X (0xe860, recommended by the manual)
+  # REQUESTS_TO_L2_GROUP1:RD_BLK_L:RD_BLK_X:CHANGE_TO_X == L1-dcache-load-misses == PERF_COUNT_HW_CACHE_L1D:MISS (0xc860, 2.1.13.4.6 PMCx060 Requests to L2 Group1, 11001000 RdBlkL, RdBlkX, ChangeToX)
+  # 6 L1_DTLB_MISS:TLB_RELOAD_1G_L2_MISS:TLB_RELOAD_2M_L2_MISS:TLB_RELOAD_COALESCED_PAGE_MISS:TLB_RELOAD_4K_L2_MISS == dTLB-load-misses == PERF_COUNT_HW_CACHE_DTLB:MISS (0xf045, 2.1.13.4.2 PMCx045 L1 DTLB Misses, 11110000, TlbReload1GL2Miss, TlbReload2ML2Miss, TlbReloadCoalescedPageMiss, TlbReload4KL2Miss)
+  # UNC_L3_REQUESTS:MISS
+  # PERF_COUNT_SW_TASK_CLOCK:k
+  # XXX perf can have high observer effect when an hardware event is enabled,
+  # and there're a lot of context switches
+  perf:
+    type: EnvVar
+    val: CYCLES_NOT_IN_HALT,DISPATCH_STALLS_1:FE_NO_OPS,DISPATCH_STALLS_1:BE_STALLS,PERF_COUNT_HW_INSTRUCTIONS,REQUESTS_TO_L2_GROUP1:RD_BLK_L:RD_BLK_X:LS_RD_BLK_C_S:CHANGE_TO_X,L1_DTLB_MISS:TLB_RELOAD_1G_L2_MISS:TLB_RELOAD_2M_L2_MISS:TLB_RELOAD_COALESCED_PAGE_MISS:TLB_RELOAD_4K_L2_MISS,UNC_L3_REQUESTS:MISS
+    var: PERF_EVENTS
+  perf_save:
+    type: EnvVar
+    val: "{0}"
+    var: PERF_EVENTS_SAVE
+  probes:
+    type: JVMArg
+    val: -Djava.library.path=$HOME/dacapo/distillation
+  probes_cp:
+    type: JVMClasspath
+    val: $HOME/dacapo/distillation
+  s:
+    type: JVMArg
+    val: -server
+  eoom:
+    type: JVMArg
+    val: "-XX:+ExitOnOutOfMemoryError"
+  bm_size:
+    type: ProgramArg
+    val: "-s {0}"
+  mu_threads:
+    type: ProgramArg
+    val: "-t {0}"
+  dialation:
+    type: ProgramArg
+    val: "-f {0}"
+  noops:
+    type: JVMArg
+    val: "-XX:+UseCompressedOops"
+  woops:
+    type: JVMArg
+    val: "-XX:-UseCompressedOops"
+  taskset:
+    type: Wrapper
+    val: "taskset -c {0}"
+  gclog:
+    type: JVMArg
+    val: "-Xlog:gc:file=gc.log"
+  # The below were defined in https://github.com/anupli/running-ng/blob/28190fc388dc1bffabcfe5dafd27306e8548f0cd/src/running/config/base/dacapo.yml#L133
+  dacapochopin_jdk21:
+    type: ModifierSet
+    val: "dacapochopin_jdk17|dacapochopin_jdk21_h2o"
+  dacapochopin_jdk21_h2o:
+    type: JVMArg
+    val: "-Dsys.ai.h2o.debug.allowJavaVersions=21"
+    includes:
+      dacapochopin:
+        - h2o
+  dacapochopin_jdk17:
+    type: ModifierSet
+    val: "dacapochopin_jdk11|dacapochopin_jdk17_cassandra"
+  dacapochopin_jdk17_cassandra:
+    type: JVMArg
+    val: "-Djava.security.manager=allow"
+    includes:
+      dacapochopin:
+        - cassandra
+  dacapochopin_jdk11:
+    type: ModifierSet
+    val: "dacapochopin_jdk9"
+  dacapochopin_jdk9:
+    type: ModifierSet
+    val: "dacapochopin_jdk9_backward_compatible|dacapochopin_jdk9_h2o|dacapochopin_jdk9_cassandra|dacapochopin_jdk9_trades"
+  dacapochopin_jdk9_h2o:
+    type: JVMArg
+    val: "--add-opens java.base/java.lang=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - h2o
+  dacapochopin_jdk9_cassandra:
+    type: JVMArg
+    val: "--add-exports java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - cassandra
+  dacapochopin_jdk9_trades:
+    type: JVMArg
+    val: "--add-opens java.base/java.util=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - tradebeans
+        - tradesoap
+  # https://github.com/anupli/running-ng/issues/111
+  # https://github.com/anupli/running-ng/pull/114
+  # https://github.com/anupli/running-ng/issues/130
+  # https://mmtk.zulipchat.com/#narrow/stream/262677-ANU-Research/topic/Using.20new.20dacapo/near/270150954
+  dacapochopin_jdk9_backward_compatible:
+    type: JVMArg
+    val: "--add-exports java.base/jdk.internal.ref=ALL-UNNAMED"
+    includes:
+      dacapochopin:
+        - avrora
+        - batik
+        - biojava
+        - cassandra
+        - eclipse
+        - fop
+        - graphchi
+        - h2
+        - h2o
+        - jme
+        - jython
+        - kafka
+        - luindex
+        - lusearch
+        - pmd
+        - spring
+        - sunflow
+        - tomcat
+        - tradebeans
+        - tradesoap
+        - xalan
+        - zxing
+
+runtimes:
+  temurin-11:
+    home: /usr/lib/jvm/temurin-11-jdk-amd64
+    release: 11
+    type: OpenJDK
+  temurin-17:
+    home: /usr/lib/jvm/temurin-17-jdk-amd64
+    release: 17
+    type: OpenJDK
+  temurin-21:
+    home: /usr/lib/jvm/temurin-21-jdk-amd64
+    release: 21
+    type: OpenJDK
+
+suites:
+  dacapo-chopin-mr1:
+    callback: DacapoChopinCallback
+    minheap: temurin-21-G1-n-5
+    minheap_values:
+      temurin-21-G1:
+        avrora: 5
+        batik: 175
+        biojava: 93
+        cassandra: 177
+        eclipse: 135
+        fop: 13
+        graphchi: 175
+        h2: 681
+        h2o: 79
+        jme: 29
+        jython: 25
+        kafka: 197
+        luindex: 29
+        lusearch: 19
+        pmd: 192
+        spring: 58
+        sunflow: 29
+        tomcat: 21
+        tradebeans: 135
+        tradesoap: 93
+        xalan: 13
+        zxing: 250
+      temurin-21-G1-small:
+        fop: 9
+      temurin-21-G1-Parallel:
+        fop: 15
+      temurin-21-G1-t1:
+        fop: 13
+      temurin-21-G1-woops:
+        fop: 17
+      temurin-21-G1-n-5:
+        avrora: 5
+        batik: 175
+        biojava: 93
+        cassandra: 174
+        eclipse: 135
+        fop: 13
+        graphchi: 175
+        h2: 681
+        h2o: 73
+        jme: 29
+        jython: 25
+        kafka: 201
+        luindex: 29
+        lusearch: 19
+        pmd: 191
+        spring: 55
+        sunflow: 29
+        tomcat: 21
+        tradebeans: 135
+        tradesoap: 91
+        xalan: 13
+        zxing: 183
+      temurin-21-G1-n-10:
+        avrora: 5
+        batik: 175
+        biojava: 93
+        cassandra: 177
+        eclipse: 135
+        fop: 13
+        graphchi: 175
+        h2: 681
+        h2o: 79
+        jme: 29
+        jython: 25
+        kafka: 197
+        luindex: 29
+        lusearch: 19
+        pmd: 192
+        spring: 58
+        sunflow: 29
+        tomcat: 21
+        tradebeans: 135
+        tradesoap: 93
+        xalan: 13
+        zxing: 250
+      temurin-17-G1:
+        fop: 15
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-cb0048d8.jar
+    release: "23.11"
+    timeout: 1800
+    timing_iteration: 10
+    type: DaCapo

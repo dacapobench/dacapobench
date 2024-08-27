@@ -1,0 +1,26 @@
+# Need to turn off NMI watchdog
+# Quick test: running -d runbms ./data ./variants_perf.yml -s 3 -p "20231101-dacapo-variants-fast" -i 1
+# Full run: running runbms ./data ./variants_perf.yml -s 2 -p "dacapo-pldi-2024-variants"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-10"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |mu_threads-32|dialation-40|perf|perf_save-1"
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |taskset-0    |dialation-40|perf|perf_save-1"
+  - "temurin-21|openjdk_common|hotspot_gc-Serial    |mu_threads-32|dialation-40|perf|perf_save-1"
+  - "temurin-21|openjdk_common|hotspot_gc-Parallel  |mu_threads-32|dialation-40|perf|perf_save-1"
+  - "temurin-21|openjdk_common|hotspot_gc-Z         |mu_threads-32|dialation-40|perf|perf_save-1"
+  - "temurin-21|openjdk_common|hotspot_gc-Shenandoah|mu_threads-32|dialation-40|perf|perf_save-1"
+  - "temurin-21|openjdk_common|hotspot_gc-Z|zgc_gen |mu_threads-32|dialation-40|perf|perf_save-1"
+plugins:
+  perf_phases_save:
+    type: CopyFile
+    patterns:
+      - "scratch/perf_statistics_phases.csv.zst"
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo variants perf"
