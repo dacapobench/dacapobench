@@ -1,0 +1,19 @@
+# Full run: running runbms ~/dacapo/dacapo-pldi-2024/data ./gclog.yml -s 2 -p "dacapo-pldi-2024-gclog" -i 1
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-10"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1|mu_threads-32|dialation-40|gclog"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo gclog"
+plugins:
+  collect_gclog:
+    type: CopyFile
+    patterns:
+      - "gc.log"

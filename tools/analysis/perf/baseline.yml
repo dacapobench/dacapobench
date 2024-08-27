@@ -1,0 +1,16 @@
+# Need to turn off NMI watchdog
+# Quick test: running -d runbms data ./baseline.yml -s 3 -p "dacapo-baseline-fast" -i 1
+# Full run: running runbms data ./baseline.yml -s 10,5,1,7,3,9,8,6,4,2 -p "dacapo-baseline"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-10"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1|mu_threads-32|dialation-40"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo baseline"

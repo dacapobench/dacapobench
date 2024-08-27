@@ -1,0 +1,31 @@
+# Need to turn off NMI watchdog
+# Quick test: running -d runbms ./data ./llc.yml -s 2 -p "dacapo-llc" -i 1
+# Full run: running runbms ./data ./llc.yml -s 2 -p "dacapo-llc"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-5"
+  "suites.dacapo-chopin-mr1.timing_iteration": "5"
+  "modifiers.jvmti_env.val": "$HOME/distillation/libperf_statistics.so $HOME/distillation/libresctrl.so"
+modifiers:
+  resctrl_cos:
+    type: EnvVar
+    val: "dacapo_cos"
+    var: RESCTRL_COS
+  resctrl_schemata:
+    type: EnvVar
+    val: "L3:0={0};1={0}"
+    var: RESCTRL_SCHEMATA
+  resctrl:
+    type: ModifierSet
+    val: "resctrl_cos|resctrl_schemata-{0}"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1|mu_threads-32|dialation-40|resctrl-ffff"
+  - "temurin-21|openjdk_common|hotspot_gc-G1|mu_threads-32|dialation-40|resctrl-0001"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo llc"

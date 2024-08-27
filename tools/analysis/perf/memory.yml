@@ -1,0 +1,24 @@
+# Need to turn off NMI watchdog
+#
+# When use 2400MT/s and JEDEC profile (no XMP)
+# The motherboard sets timing to (tCL-tRCD-tRP-tRAS) 22-20-20-39
+# But the machine is very unstable, and reboots in the middle of a h2 invocation
+# When forcing XMP3 profile, the timing is 32-32-32-64 regardless the system memory multiplier
+# and the machine can pass prime95 and memtest.
+#
+# Quick test: running -d runbms ./data ./memory.yml -s 2 -p "dacapo-memory"
+# Full run: running runbms ./data ./memory.yml -s 2 -p "dacapo-memory"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-5"
+  "suites.dacapo-chopin-mr1.timing_iteration": "5"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |mu_threads-32|dialation-40"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo memory"
