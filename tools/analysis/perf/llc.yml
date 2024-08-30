@@ -4,8 +4,8 @@
 includes:
   - "./base.yml"
 overrides:
-  "suites.dacapo-chopin-mr1.minheap": "temurin-21-G1-n-5"
-  "suites.dacapo-chopin-mr1.timing_iteration": "5"
+  "suites.dacapochopin.minheap": "temurin-21-G1-n-5"
+  "suites.dacapochopin.timing_iteration": "5"
   "modifiers.jvmti_env.val": "$HOME/distillation/libperf_statistics.so $HOME/distillation/libresctrl.so"
 modifiers:
   resctrl_cos:

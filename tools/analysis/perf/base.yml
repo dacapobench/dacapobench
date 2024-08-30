@@ -5,7 +5,7 @@ spread_factor: 1
 remote_host: squirrel.moma
 
 benchmarks:
-  dacapo-chopin-mr1:
+  dacapochopin:
     - avrora
     - batik
     - biojava
@@ -202,7 +202,7 @@ runtimes:
     type: OpenJDK
 
 suites:
-  dacapo-chopin-mr1:
+  dacapochopin:
     callback: DacapoChopinCallback
     minheap: temurin-21-G1-n-5
     minheap_values:
@@ -285,7 +285,7 @@ suites:
         zxing: 250
       temurin-17-G1:
         fop: 15
-    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-cb0048d8.jar
+    path: /home/steveb/devel/dacapobench/benchmarks/dacapo-evaluation-git-6b469af0.jar
     release: "23.11"
     timeout: 1800
     timing_iteration: 10
