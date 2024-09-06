@@ -135,12 +135,12 @@ public class AllocCallback extends Callback {
     yml.println("# number of objects allocated for each class");
     yml.println("objects-by-type: ");
     for (String desc : objectsByType.keySet()) {
-      yml.println("  "+desc.replaceAll("\\\\","")+": "+objectsByType.get(desc));
+      yml.println("  "+desc.replaceAll("\\\\","").replaceAll("\\[","\\\\[")+": "+objectsByType.get(desc));
     }
     yml.println("# number of bytes allocated for each class");
     yml.println("bytes-by-type: ");
     for (String desc : objectsByType.keySet()) {
-      yml.println("  "+desc.replaceAll("\\\\","")+": "+bytesByType.get(desc));
+      yml.println("  "+desc.replaceAll("\\\\","").replaceAll("\\[","\\\\[")+": "+bytesByType.get(desc));
     }
   }
 }
