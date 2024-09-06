@@ -1,55 +1,52 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 481
+skipped-classes: 484
 transformed-classes: 711
-transformed-bytecodes: 161578
-executed-bytecodes: 23280382656
+transformed-bytecodes: 162212
+executed-bytecodes: 23280384898
 executed-bytecodes-unique: 21324
 executed-bytecodes-p90: 1751688
 executed-bytecodes-p99: 14440734
 executed-bytecodes-p999: 91642811
 executed-bytecodes-p9999: 115443685
-executed-calls: 1044734819
+executed-calls: 1044735149
 executed-calls-unique: 2532
 opcodes:
-  aconst_null: 152491232
+  aconst_null: 152491304
   iconst_m1: 227936208
-  iconst_0: 153008028
-  iconst_1: 567031483
-  iconst_2: 15977182
+  iconst_0: 153008043
+  iconst_1: 567031500
+  iconst_2: 15977180
   iconst_3: 2630408
   iconst_4: 3501355
   iconst_5: 11162988
   lconst_0: 23552
   fconst_0: 24
-  bipush: 469962985
+  bipush: 469962980
   sipush: 101902242
-  ldc: 196251711
-  iload: 3677652271
+  ldc: 196251812
+  iload: 3677652297
   lload: 193549
   fload: 96
   dload: 132488
-  aload: 4228091174
+  aload: 4228091814
   iaload: 158371186
   laload: 185867
-  aaload: 171642420
+  aaload: 171642440
   baload: 319361741
   caload: 271523944
-  istore: 690943600
+  istore: 690943635
   lstore: 4610
   dstore: 66244
-  astore: 164643143
+  astore: 164643323
   iastore: 71336673
   lastore: 185867
-  aastore: 52436732
+  aastore: 52436731
   bastore: 3045857
   castore: 117795189
   pop: 46009250
-  dup: 285601086
+  dup: 285601142
   dup_x1: 141161024
   dup_x2: 3126457
   dup2: 1472860
@@ -64,7 +61,7 @@ opcodes:
   fdiv: 382
   irem: 3940825
   ineg: 312407
-  ishl: 13212349
+  ishl: 13212348
   ishr: 28177
   iushr: 83358141
   iand: 208277048
@@ -81,46 +78,47 @@ opcodes:
   lcmp: 20482
   fcmpg: 406
   dcmpl: 693850
-  ifeq: 309533966
+  ifeq: 309534077
   ifne: 256562811
   iflt: 152625198
   ifge: 4210013
   ifgt: 6078075
-  ifle: 29905324
+  ifle: 29905360
   if_icmpeq: 73384374
   if_icmpne: 332337183
   if_icmplt: 348836773
   if_icmpge: 531191708
   if_icmpgt: 101326453
-  if_icmple: 20110887
-  if_acmpeq: 119405725
-  if_acmpne: 43013296
-  goto: 484263821
+  if_icmple: 20110886
+  if_acmpeq: 119405762
+  if_acmpne: 43013340
+  goto: 484263907
   tableswitch: 12594457
   lookupswitch: 17529124
   ireturn: 737945566
   dreturn: 830430
-  areturn: 197243298
-  return: 238021235
-  getstatic: 122719446
-  putstatic: 39
-  getfield: 3722438615
-  putfield: 470646149
-  invokevirtual: 773181272
-  invokespecial: 49393503
-  invokestatic: 144923577
-  invokeinterface: 77236467
-  new: 5548344
-  newarray: 1098459
-  anewarray: 463712
+  areturn: 197243407
+  return: 238021239
+  getstatic: 122719474
+  putstatic: 47
+  getfield: 3722438698
+  putfield: 470646183
+  invokevirtual: 773181417
+  invokespecial: 49393538
+  invokestatic: 144923665
+  invokeinterface: 77236529
+  new: 5548362
+  newarray: 1098458
+  anewarray: 463711
   arraylength: 18673508
   athrow: 8704
-  checkcast: 30468718
+  checkcast: 30468825
   instanceof: 1557062
   monitorenter: 26112
   monitorexit: 26112
-  ifnull: 111532911
-  ifnonnull: 18405192
+  ifnull: 111532929
+  ifnonnull: 18405231
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -366,6 +364,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException

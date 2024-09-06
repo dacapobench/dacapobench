@@ -1,150 +1,148 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1930
+skipped-classes: 1933
 transformed-classes: 1934
-transformed-bytecodes: 552699
-executed-bytecodes: 10260401341
-executed-bytecodes-unique: 118411
-executed-bytecodes-p90: 92174
-executed-bytecodes-p99: 1014246
-executed-bytecodes-p999: 11283020
+transformed-bytecodes: 553296
+executed-bytecodes: 10258375907
+executed-bytecodes-unique: 118410
+executed-bytecodes-p90: 92010
+executed-bytecodes-p99: 1012915
+executed-bytecodes-p999: 11268258
 executed-bytecodes-p9999: 99548000
-executed-calls: 923030893
-executed-calls-unique: 17006
+executed-calls: 922734860
+executed-calls-unique: 16990
 opcodes:
-  aconst_null: 51450144
-  iconst_m1: 33370467
-  iconst_0: 154823241
-  iconst_1: 103654343
-  iconst_2: 10330901
-  iconst_3: 2397859
-  iconst_4: 2018295
-  iconst_5: 411118
-  lconst_0: 3269510
-  lconst_1: 319336
+  aconst_null: 51781303
+  iconst_m1: 33342816
+  iconst_0: 155940431
+  iconst_1: 103631738
+  iconst_2: 10310054
+  iconst_3: 2391821
+  iconst_4: 2012339
+  iconst_5: 410705
+  lconst_0: 3307142
+  lconst_1: 326198
   dconst_0: 26
-  bipush: 192491089
-  sipush: 61746801
-  ldc: 26741715
-  iload: 1532482062
-  lload: 9267274
+  bipush: 191969257
+  sipush: 61649860
+  ldc: 26635995
+  iload: 1530736334
+  lload: 9069769
   fload: 47
   dload: 6078
-  aload: 2329452899
-  iaload: 1843241
+  aload: 2330035264
+  iaload: 1841699
   laload: 3827
   faload: 80000
-  aaload: 33673121
-  baload: 368350051
-  caload: 47457396
-  istore: 198978394
-  lstore: 3225668
+  aaload: 33611730
+  baload: 368039233
+  caload: 47319214
+  istore: 198782287
+  lstore: 3197559
   dstore: 6093
-  astore: 105028054
-  iastore: 473010
+  astore: 105052376
+  iastore: 552913
   lastore: 736
   fastore: 240000
   dastore: 1
-  aastore: 1777884
-  bastore: 14210013
-  castore: 10663883
-  pop: 43709215
-  pop2: 96399
-  dup: 64506594
-  dup_x1: 12654130
-  dup_x2: 1604
+  aastore: 1777361
+  bastore: 14147958
+  castore: 10656296
+  pop: 43839841
+  pop2: 96278
+  dup: 64416223
+  dup_x1: 12730701
+  dup_x2: 1328
   dup2: 168175
   dup2_x1: 140
-  iadd: 168926066
-  ladd: 1758055
+  iadd: 168694060
+  ladd: 1752993
   dadd: 4000
-  isub: 74134926
-  lsub: 1273954
-  imul: 3454574
-  lmul: 54782
+  isub: 74062737
+  lsub: 1217002
+  imul: 3450097
+  lmul: 54742
   fmul: 4541
   dmul: 21
-  idiv: 216183
-  ldiv: 881573
+  idiv: 215820
+  ldiv: 866429
   ddiv: 12000
-  irem: 637443
-  lrem: 318240
-  ineg: 9770
+  irem: 608695
+  lrem: 317262
+  ineg: 9769
   lneg: 14001
-  ishl: 2361176
-  lshl: 337140
+  ishl: 2360182
+  lshl: 336985
   ishr: 21520
   lshr: 70
-  iushr: 5532727
+  iushr: 5523836
   lushr: 1045
-  iand: 47757848
-  land: 1054665
-  ior: 1777150
-  lor: 1243197
+  iand: 47734547
+  land: 1054510
+  ior: 1776466
+  lor: 1242732
   ixor: 429
   lxor: 161330
-  iinc: 268340108
-  i2l: 3196984
+  iinc: 268033676
+  i2l: 3138403
   i2f: 4515
   i2d: 21
-  l2i: 1606836
+  l2i: 1587719
   l2f: 160000
   l2d: 4000
   f2i: 4541
   d2i: 21
-  i2b: 13503178
-  i2c: 11582219
-  lcmp: 4650939
+  i2b: 13443299
+  i2c: 11573695
+  lcmp: 4562920
   dcmpl: 2
   dcmpg: 2068
-  ifeq: 117257077
-  ifne: 127721844
-  iflt: 22887755
-  ifge: 4833270
-  ifgt: 1147881
-  ifle: 8076903
-  if_icmpeq: 60410080
-  if_icmpne: 156102366
-  if_icmplt: 47691948
-  if_icmpge: 302572585
-  if_icmpgt: 34457507
-  if_icmple: 66994055
-  if_acmpeq: 1688453
-  if_acmpne: 9324439
-  goto: 328747872
-  tableswitch: 10373000
-  lookupswitch: 1508068
-  ireturn: 215028154
-  lreturn: 3711559
+  ifeq: 117156990
+  ifne: 127643907
+  iflt: 22796797
+  ifge: 4812534
+  ifgt: 1117513
+  ifle: 8065824
+  if_icmpeq: 60269518
+  if_icmpne: 155806172
+  if_icmplt: 47588883
+  if_icmpge: 302308949
+  if_icmpgt: 34310056
+  if_icmple: 66864052
+  if_acmpeq: 1694262
+  if_acmpne: 9357306
+  goto: 328619131
+  tableswitch: 10337492
+  lookupswitch: 1506449
+  ireturn: 214810174
+  lreturn: 3661281
   freturn: 80021
   dreturn: 1
-  areturn: 124430779
-  return: 119443136
-  getstatic: 77353514
-  putstatic: 1517884
-  getfield: 918507890
-  putfield: 254824628
-  invokevirtual: 672661460
-  invokespecial: 32937226
-  invokestatic: 173439229
-  invokeinterface: 43631327
-  invokedynamic: 361651
-  new: 12145434
-  newarray: 2094808
-  anewarray: 1582202
-  arraylength: 131986991
+  areturn: 124407332
+  return: 119894282
+  getstatic: 77577068
+  putstatic: 1514070
+  getfield: 918435327
+  putfield: 256218420
+  invokevirtual: 672365509
+  invokespecial: 33040704
+  invokestatic: 173296301
+  invokeinterface: 43669779
+  invokedynamic: 362567
+  new: 12126113
+  newarray: 2088925
+  anewarray: 1762271
+  arraylength: 131987323
   athrow: 2151
-  checkcast: 17307878
-  instanceof: 4199781
-  monitorenter: 926065
-  monitorexit: 926065
-  multianewarray: 21
-  ifnull: 72712890
-  ifnonnull: 40408801
+  checkcast: 17349003
+  instanceof: 4212356
+  monitorenter: 928436
+  monitorexit: 928436
+  multianewarray: 11
+  ifnull: 72878330
+  ifnonnull: 40392034
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -390,6 +388,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -1139,6 +1140,7 @@ opcodes:
 # jdk/internal/logger/LazyLoggers$1
 # jdk/internal/logger/LazyLoggers$LazyLoggerFactories
 # jdk/internal/logger/LoggerFinderLoader
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # sun/util/logging/internal/LoggingProviderImpl$JULWrapper
 # sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration
 # javax/management/MBeanConstructorInfo
@@ -1431,8 +1433,8 @@ opcodes:
 # javax/management/openmbean/CompositeDataView
 # com/sun/management/internal/HotSpotDiagnostic
 # com/sun/management/HotSpotDiagnosticMXBean
-# com/sun/management/HotSpotDiagnosticMXBean$ThreadDumpFormat
 # com/sun/management/VMOption
+# com/sun/management/HotSpotDiagnosticMXBean$ThreadDumpFormat
 # com/sun/management/VMOption$Origin
 # jdk/internal/misc/VM$BufferPoolsHolder
 # sun/nio/ch/FileChannelImpl$2
@@ -1594,8 +1596,12 @@ opcodes:
 # sun/security/rsa/SunRsaSignEntries
 # sun/security/jca/ProviderConfig$3
 # sun/security/jca/ProviderConfig$ProviderLoader
-# java/security/InvalidParameterException
+# java/security/AuthProvider
 # java/security/ProviderException
+# java/security/InvalidParameterException
+# javax/security/auth/login/FailedLoginException
+# javax/security/auth/Subject
+# javax/security/auth/callback/CallbackHandler
 # sun/security/util/CurveDB
 # java/security/spec/ECFieldFp
 # java/security/spec/ECField
@@ -1612,25 +1618,21 @@ opcodes:
 # java/security/spec/ECFieldF2m
 # sun/security/ssl/SunJSSE
 # com/sun/crypto/provider/SunJCE
-# java/security/AuthProvider
-# javax/security/auth/login/FailedLoginException
-# javax/security/auth/Subject
-# javax/security/auth/callback/CallbackHandler
-# sun/security/provider/certpath/ldap/JdkLDAP
-# sun/security/provider/certpath/ldap/JdkLDAP$ProviderService
 # com/sun/security/sasl/Provider
 # com/sun/security/sasl/Provider$1
 # com/sun/security/sasl/Provider$ProviderService
+# sun/security/provider/certpath/ldap/JdkLDAP
+# sun/security/provider/certpath/ldap/JdkLDAP$ProviderService
 # javax/naming/Referenceable
 # java/io/ObjectInputStream
 # java/io/ObjectInput
 # java/io/ObjectStreamConstants
-# javax/net/ssl/SSLException
-# java/util/function/ToLongFunction
-# java/nio/channels/CompletionHandler
 # com/sun/org/apache/xerces/internal/util/EncodingMap
 # sun/nio/cs/ISO_8859_1$Decoder
 # com/sun/org/apache/xerces/internal/impl/dtd/XMLNotationDecl
+# javax/net/ssl/SSLException
+# java/util/function/ToLongFunction
+# java/nio/channels/CompletionHandler
 # java/security/SecureRandomParameters
 # sun/security/provider/SecureRandom
 # sun/security/provider/SHA
@@ -1715,12 +1717,12 @@ opcodes:
 # sun/net/NetProperties$1
 # sun/net/spi/DefaultProxySelector$NonProxyInfo
 # sun/net/spi/DefaultProxySelector$3
-# java/nio/BufferOverflowException
-# java/nio/channels/ClosedChannelException
 # java/net/Socket$SocketInputStream
 # sun/nio/ch/NioSocketImpl$1
 # java/net/Socket$SocketOutputStream
 # sun/nio/ch/NioSocketImpl$2
+# java/nio/BufferOverflowException
+# java/nio/channels/ClosedChannelException
 # java/util/concurrent/LinkedBlockingDeque
 # java/util/concurrent/BlockingDeque
 # java/util/concurrent/Semaphore$NonfairSync
@@ -1905,7 +1907,6 @@ opcodes:
 # sun/security/rsa/RSACore
 # sun/security/rsa/RSAPadding
 # java/math/MutableBigInteger
-# javax/crypto/BadPaddingException
 # sun/security/provider/certpath/X509CertPath
 # java/security/cert/CertPath
 # sun/security/timestamp/TimestampToken

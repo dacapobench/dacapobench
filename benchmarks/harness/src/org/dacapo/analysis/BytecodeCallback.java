@@ -144,7 +144,7 @@ public class BytecodeCallback extends Callback {
         yml.println("executed-calls: "+ callsExecuted);
         yml.println("executed-calls-unique: "+ called.size());
 
-        yml.print("opcodes: {");
+        yml.print("opcodes:");
         boolean start = true;
         for (int i = 0; i < 255; i++) {
             if (opcodes[i] != 0) {
@@ -152,8 +152,7 @@ public class BytecodeCallback extends Callback {
                 start = false;
             }
         }
-        yml.println("\n}");
-
+        
         for (String msg : skipped) {
             yml.println("# "+msg);
         }

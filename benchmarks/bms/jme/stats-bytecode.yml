@@ -1,143 +1,141 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1008
+skipped-classes: 1013
 transformed-classes: 826
-transformed-bytecodes: 268997
-executed-bytecodes: 1461100963
-executed-bytecodes-unique: 35231
+transformed-bytecodes: 269631
+executed-bytecodes: 1461082466
+executed-bytecodes-unique: 34964
 executed-bytecodes-p90: 542
 executed-bytecodes-p99: 1463014
 executed-bytecodes-p999: 3145728
-executed-bytecodes-p9999: 7259709
-executed-calls: 80219555
-executed-calls-unique: 4306
+executed-bytecodes-p9999: 7259706
+executed-calls: 80218949
+executed-calls-unique: 4256
 opcodes:
-  aconst_null: 5924347
-  iconst_m1: 1065614
-  iconst_0: 1401923
-  iconst_1: 12749989
-  iconst_2: 5109945
-  iconst_3: 10168576
-  iconst_4: 401373
-  iconst_5: 3349
-  lconst_0: 78
-  lconst_1: 6419
-  fconst_0: 13456263
-  fconst_1: 11402893
-  fconst_2: 8199
+  aconst_null: 5924292
+  iconst_m1: 1065587
+  iconst_0: 1401511
+  iconst_1: 12749660
+  iconst_2: 5109752
+  iconst_3: 10168467
+  iconst_4: 401202
+  iconst_5: 3286
+  lconst_0: 23
+  lconst_1: 7200
+  fconst_0: 13456047
+  fconst_1: 11402805
+  fconst_2: 8177
   dconst_0: 1
   dconst_1: 10
-  bipush: 1294753
-  sipush: 1836407
-  ldc: 2539344
-  iload: 74209747
-  lload: 21271
-  fload: 162887308
+  bipush: 1294437
+  sipush: 1836323
+  ldc: 2539050
+  iload: 74208785
+  lload: 23716
+  fload: 162886175
   dload: 7
-  aload: 357964730
-  iaload: 1064378
-  faload: 6721736
-  aaload: 536508
+  aload: 357958454
+  iaload: 1064375
+  faload: 6721484
+  aaload: 536381
   baload: 1835186
-  istore: 4668550
-  lstore: 7939
-  fstore: 61202456
+  istore: 4667920
+  lstore: 8719
+  fstore: 61202124
   dstore: 4
-  astore: 4250955
-  iastore: 267396
-  fastore: 1078262
+  astore: 4250018
+  iastore: 267796
+  fastore: 1077842
   aastore: 23172
-  bastore: 1204
-  sastore: 1854
-  pop: 25852905
+  bastore: 1120
+  sastore: 1728
+  pop: 25852744
   pop2: 1
-  dup: 17140594
-  dup_x1: 5066622
-  iadd: 21622414
-  ladd: 6337
-  fadd: 21054860
+  dup: 17139711
+  dup_x1: 5067018
+  iadd: 21621756
+  ladd: 7117
+  fadd: 21054632
   dadd: 524290
-  isub: 4948966
-  lsub: 8709
-  fsub: 34999847
-  imul: 18857879
+  isub: 4948947
+  lsub: 9542
+  fsub: 34999696
+  imul: 18857848
   lmul: 401
-  fmul: 85031478
+  fmul: 85031177
   dmul: 786435
   idiv: 3533
   ldiv: 1200
-  fdiv: 6274205
+  fdiv: 6274089
   ddiv: 11
   irem: 800
-  ineg: 213
+  ineg: 212
   fneg: 274698
   ishl: 1181314
   lshl: 42
-  ishr: 1574134
-  iand: 3891817
+  ishr: 1574071
+  iand: 3891640
   land: 1
   ior: 1179709
   lor: 1
-  iinc: 5644708
+  iinc: 5644540
   i2l: 402
-  i2f: 4701487
+  i2f: 4701170
   i2d: 1
   l2i: 42
   l2f: 1200
-  f2i: 217611
-  f2d: 5469383
+  f2i: 217610
+  f2d: 5469382
   d2i: 1
-  d2f: 4945093
-  i2b: 1574068
+  d2f: 4945092
+  i2b: 1573984
   i2c: 15426
-  i2s: 543444
-  lcmp: 6340
-  fcmpl: 6338928
-  fcmpg: 2064833
-  ifeq: 5287903
-  ifne: 2682073
-  iflt: 1214402
-  ifge: 1846603
+  i2s: 543360
+  lcmp: 7119
+  fcmpl: 6338581
+  fcmpg: 2064557
+  ifeq: 5287471
+  ifne: 2681906
+  iflt: 1214365
+  ifge: 1846326
   ifgt: 800
-  ifle: 1639171
-  if_icmpeq: 1109376
-  if_icmpne: 3751278
+  ifle: 1639689
+  if_icmpeq: 1109358
+  if_icmpne: 3751134
   if_icmplt: 263456
-  if_icmpge: 6458803
-  if_icmpgt: 437
+  if_icmpge: 6458641
+  if_icmpgt: 436
   if_icmple: 5424
-  if_acmpeq: 3234
-  if_acmpne: 3671911
-  goto: 4965043
+  if_acmpeq: 3231
+  if_acmpne: 3671897
+  goto: 4965163
   tableswitch: 273836
-  lookupswitch: 158
-  ireturn: 7585638
-  lreturn: 7540
-  freturn: 9179860
-  areturn: 29357355
-  return: 9250398
-  getstatic: 1058119
-  putstatic: 1123
-  getfield: 178316081
-  putfield: 71014757
-  invokevirtual: 53978918
-  invokespecial: 13316634
-  invokestatic: 12495293
-  invokeinterface: 428710
-  new: 4662334
-  newarray: 502
+  lookupswitch: 155
+  ireturn: 7584819
+  lreturn: 8319
+  freturn: 9179754
+  areturn: 29356789
+  return: 9250196
+  getstatic: 1058064
+  putstatic: 725
+  getfield: 178313128
+  putfield: 71013938
+  invokevirtual: 53977478
+  invokespecial: 13316506
+  invokestatic: 12496337
+  invokeinterface: 428628
+  new: 4662308
+  newarray: 503
   anewarray: 2806
-  arraylength: 1984395
-  checkcast: 341269
+  arraylength: 1984375
+  checkcast: 341101
   instanceof: 7879
-  monitorenter: 2473
-  monitorexit: 2473
-  ifnull: 864704
-  ifnonnull: 8149265
+  monitorenter: 2071
+  monitorexit: 2071
+  ifnull: 864435
+  ifnonnull: 8149009
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -221,9 +219,9 @@ opcodes:
 # sun/net/www/protocol/jrt/Handler
 # java/nio/file/FileSystemNotFoundException
 # java/nio/file/FileSystemAlreadyExistsException
-# java/security/PrivilegedActionException
 # java/util/zip/ZipException
 # java/nio/file/ProviderMismatchException
+# java/security/PrivilegedActionException
 # java/nio/file/AccessMode
 # java/nio/file/attribute/FileAttribute
 # java/nio/channels/SeekableByteChannel
@@ -383,6 +381,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -409,8 +410,6 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -518,6 +517,8 @@ opcodes:
 # javax/xml/datatype/FactoryFinder
 # jdk/xml/internal/SecuritySupport
 # javax/xml/datatype/FactoryFinder$1
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/net/URLClassLoader$3
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
@@ -670,6 +671,7 @@ opcodes:
 # jdk/internal/logger/LazyLoggers$1
 # jdk/internal/logger/LazyLoggers$LazyLoggerFactories
 # jdk/internal/logger/LoggerFinderLoader
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # sun/util/logging/internal/LoggingProviderImpl$JULWrapper
 # sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration
 # sun/awt/X11/XToolkit$2
@@ -787,11 +789,14 @@ opcodes:
 # java/util/concurrent/RejectedExecutionHandler
 # java/util/concurrent/SynchronousQueue
 # java/util/AbstractQueue
-# java/util/concurrent/SynchronousQueue$TransferStack
 # java/util/concurrent/SynchronousQueue$Transferer
-# java/util/concurrent/SynchronousQueue$TransferStack$SNode
+# java/util/concurrent/LinkedTransferQueue
+# java/util/concurrent/TransferQueue
+# java/util/concurrent/LinkedTransferQueue$DualNode
 # java/lang/invoke/VarHandleReferences$FieldInstanceReadOnly
 # java/lang/invoke/VarHandleReferences$FieldInstanceReadWrite
+# java/lang/invoke/VarHandleInts$FieldInstanceReadWrite
+# java/lang/invoke/VarHandleInts$FieldInstanceReadOnly
 # jdk/internal/vm/StackableScope
 # jdk/internal/vm/ThreadContainer
 # jdk/internal/vm/SharedThreadContainer
@@ -801,23 +806,27 @@ opcodes:
 # jdk/internal/vm/ThreadContainers$RootContainer
 # jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer
 # java/net/URLClassLoader$2
-# java/util/concurrent/Future
 # java/util/concurrent/Callable
+# java/util/concurrent/Future
 # java/util/concurrent/Executors
 # java/util/concurrent/LinkedBlockingQueue
 # java/util/concurrent/LinkedBlockingQueue$Node
 # java/util/concurrent/Executors$DefaultThreadFactory
 # java/nio/FloatBuffer
-# java/nio/DoubleBuffer
+# java/util/prefs/BackingStoreException
 # java/lang/InterruptedException
-# java/lang/Class$1
-# java/nio/DirectFloatBufferU
-# java/util/random/RandomGenerator
-# java/util/Random
-# java/nio/DirectShortBufferU
-# java/applet/Applet
-# java/awt/Panel
-# java/awt/Canvas
+# java/util/StringJoiner
+# javax/swing/JFrame
+# javax/swing/WindowConstants
+# javax/swing/RootPaneContainer
+# java/awt/Frame
+# java/awt/Window
+# javax/swing/JEditorPane
+# javax/swing/JScrollPane
+# javax/swing/ScrollPaneConstants
+# javax/swing/JPanel
+# javax/swing/Action
+# javax/swing/JButton
 # java/awt/Component$AWTTreeLock
 # java/awt/Component$1
 # sun/awt/AWTAccessor$ComponentAccessor
@@ -829,19 +838,43 @@ opcodes:
 # java/awt/event/AWTEventListener
 # java/awt/Container$1
 # sun/awt/AWTAccessor$ContainerAccessor
+# sun/awt/util/IdentityArrayList
+# java/util/concurrent/atomic/AtomicBoolean
+# java/awt/Window$1
+# sun/awt/AWTAccessor$WindowAccessor
+# java/awt/Frame$1
+# sun/awt/AWTAccessor$FrameAccessor
+# java/awt/event/WindowListener
+# javax/swing/event/ChangeListener
+# javax/swing/JSlider
+# java/nio/DoubleBuffer
+# java/lang/Class$1
+# java/nio/DirectFloatBufferU
+# java/util/random/RandomGenerator
+# java/util/Random
+# java/nio/DirectShortBufferU
+# java/util/logging/Formatter
+# java/util/logging/ConsoleHandler
+# java/util/logging/StreamHandler
+# javax/swing/JTabbedPane
+# java/awt/Canvas
+# java/util/concurrent/CountDownLatch
+# java/util/concurrent/CountDownLatch$Sync
+# java/applet/Applet
+# java/awt/Panel
 # java/awt/Graphics
+# java/awt/Image
 # java/applet/AudioClip
 # java/applet/AppletStub
-# java/awt/Image
 # java/applet/AppletContext
 # javax/accessibility/AccessibleContext
 # java/awt/event/ContainerListener
-# java/awt/FocusTraversalPolicy
 # java/awt/Point
 # java/awt/geom/Point2D
 # java/awt/HeadlessException
 # java/awt/Event
 # java/awt/ComponentOrientation
+# java/awt/FocusTraversalPolicy
 # java/io/PrintWriter
 # java/awt/dnd/DropTarget
 # java/awt/dnd/DropTargetListener
@@ -870,40 +903,10 @@ opcodes:
 # java/awt/im/InputContext
 # java/awt/image/ColorModel
 # java/awt/image/ImageProducer
-# java/awt/image/VolatileImage
 # java/awt/ImageCapabilities
+# java/awt/image/VolatileImage
 # java/awt/AWTException
 # java/awt/event/FocusEvent$Cause
-# java/util/StringJoiner
-# java/awt/event/WindowListener
-# java/util/concurrent/CountDownLatch
-# java/util/concurrent/CountDownLatch$Sync
-# java/util/logging/Formatter
-# java/util/logging/ConsoleHandler
-# java/util/logging/StreamHandler
-# javax/swing/JPanel
-# javax/swing/JTabbedPane
-# javax/swing/JFrame
-# javax/swing/WindowConstants
-# javax/swing/RootPaneContainer
-# java/awt/Frame
-# java/awt/Window
-# javax/swing/event/ChangeListener
-# javax/swing/JSlider
-# javax/swing/JButton
-# sun/awt/util/IdentityArrayList
-# java/util/concurrent/atomic/AtomicBoolean
-# java/lang/invoke/VarHandleInts$FieldInstanceReadWrite
-# java/lang/invoke/VarHandleInts$FieldInstanceReadOnly
-# java/awt/Window$1
-# sun/awt/AWTAccessor$WindowAccessor
-# java/awt/Frame$1
-# sun/awt/AWTAccessor$FrameAccessor
-# javax/swing/JEditorPane
-# javax/swing/JScrollPane
-# javax/swing/ScrollPaneConstants
-# javax/swing/Action
-# java/util/prefs/BackingStoreException
 # java/util/concurrent/FutureTask
 # java/util/concurrent/RunnableFuture
 # java/util/concurrent/FutureTask$WaitNode
@@ -911,10 +914,10 @@ opcodes:
 # java/util/concurrent/ThreadPoolExecutor$Worker
 # java/util/concurrent/ConcurrentLinkedQueue
 # java/util/concurrent/ConcurrentLinkedQueue$Node
+# java/awt/image/BufferedImageOp
 # java/awt/image/RenderedImage
 # javax/imageio/stream/ImageOutputStream
 # javax/imageio/stream/ImageInputStream
-# java/awt/image/BufferedImageOp
 # java/lang/UnsatisfiedLinkError
 # java/io/UncheckedIOException
 # java/util/JumboEnumSet
@@ -1079,14 +1082,14 @@ opcodes:
 # java/util/concurrent/ConcurrentLinkedDeque$Node
 # sun/java2d/DisposerTarget
 # javax/imageio/ImageIO$CanDecodeInputFilter
-# com/sun/imageio/plugins/common/ReaderUtil
 # java/util/concurrent/ForkJoinPool
+# com/sun/imageio/plugins/common/ReaderUtil
 # java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
 # java/util/concurrent/ForkJoinPool$WorkQueue
 # java/util/concurrent/ForkJoinPool$DefaultForkJoinWorkerThreadFactory
+# com/sun/imageio/plugins/png/PNGImageReader
 # jdk/internal/access/JavaUtilConcurrentFJPAccess
 # java/util/concurrent/ForkJoinPool$2
-# com/sun/imageio/plugins/png/PNGImageReader
 # com/sun/imageio/plugins/png/PNGMetadata
 # javax/imageio/metadata/IIOMetadata
 # javax/imageio/ImageReadParam
@@ -1139,8 +1142,8 @@ opcodes:
 # java/lang/invoke/BoundMethodHandle$Species_LI
 # jdk/internal/event/ThreadSleepEvent
 # java/io/FileOutputStream$1
-# java/util/IdentityHashMap$IdentityHashMapIterator
-# java/util/IdentityHashMap$KeyIterator
+# java/util/concurrent/ThreadLocalRandom
+# jdk/internal/util/random/RandomSupport
 # java/security/NoSuchAlgorithmException
 # java/security/GeneralSecurityException
 # sun/security/provider/SHA

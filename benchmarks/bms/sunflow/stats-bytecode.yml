@@ -1,19 +1,16 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 963
+skipped-classes: 964
 transformed-classes: 183
-transformed-bytecodes: 63009
-executed-bytecodes: 423453587165
+transformed-bytecodes: 63643
+executed-bytecodes: 423453587189
 executed-bytecodes-unique: 20994
 executed-bytecodes-p90: 12582912
 executed-bytecodes-p99: 411253955
 executed-bytecodes-p999: 1430956417
 executed-bytecodes-p9999: 1578532783
-executed-calls: 16652462858
+executed-calls: 16652462862
 executed-calls-unique: 1822
 opcodes:
   aconst_null: 159406437
@@ -37,7 +34,7 @@ opcodes:
   lload: 6995291
   fload: 39471051629
   dload: 944118869
-  aload: 88035195174
+  aload: 88035195182
   iaload: 6021638420
   laload: 3134660
   faload: 194982086
@@ -106,7 +103,7 @@ opcodes:
   fcmpg: 6888295646
   dcmpl: 36545196
   dcmpg: 143879700
-  ifeq: 64946993
+  ifeq: 64946997
   ifne: 2162841942
   iflt: 509199652
   ifge: 6511961771
@@ -128,13 +125,13 @@ opcodes:
   freturn: 3263561530
   dreturn: 65617900
   areturn: 3003859224
-  return: 5471550928
+  return: 5471550932
   getstatic: 99555589
   putstatic: 62
-  getfield: 65990342541
+  getfield: 65990342545
   putfield: 6582047017
   invokevirtual: 10067429660
-  invokespecial: 1048630047
+  invokespecial: 1048630051
   invokestatic: 3248088465
   invokeinterface: 2288314686
   new: 517340385
@@ -146,6 +143,7 @@ opcodes:
   monitorexit: 1270
   ifnull: 1659092532
   ifnonnull: 569573363
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -229,9 +227,9 @@ opcodes:
 # sun/net/www/protocol/jrt/Handler
 # java/nio/file/FileSystemNotFoundException
 # java/nio/file/FileSystemAlreadyExistsException
+# java/util/zip/ZipException
 # java/nio/file/ProviderMismatchException
 # java/security/PrivilegedActionException
-# java/util/zip/ZipException
 # java/nio/file/AccessMode
 # java/nio/file/attribute/FileAttribute
 # java/nio/channels/SeekableByteChannel
@@ -391,6 +389,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -417,6 +418,8 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -528,8 +531,6 @@ opcodes:
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
 # java/util/regex/Matcher
@@ -599,6 +600,7 @@ opcodes:
 # jdk/internal/logger/LoggerFinderLoader
 # java/util/logging/LoggingPermission
 # jdk/internal/logger/BootstrapLogger$BootstrapExecutors
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # java/util/logging/LogManager
 # java/util/logging/Level
 # java/util/logging/Level$KnownLevel
@@ -758,8 +760,8 @@ opcodes:
 # javax/imageio/ImageIO$CanDecodeInputFilter
 # javax/imageio/spi/ServiceRegistry$Filter
 # javax/imageio/spi/FilterIterator
-# com/sun/imageio/plugins/common/ReaderUtil
 # java/util/concurrent/AbstractExecutorService
+# com/sun/imageio/plugins/common/ReaderUtil
 # javax/imageio/ImageIO$ImageReaderIterator
 # java/util/concurrent/ForkJoinPool
 # java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
@@ -1011,9 +1013,6 @@ opcodes:
 # java/time/format/DateTimeFormatterBuilder$NumberPrinterParser
 # java/time/format/DateTimeFormatterBuilder$CharLiteralPrinterParser
 # java/time/format/ResolverStyle
-# java/time/chrono/Chronology
-# java/time/chrono/AbstractChronology
-# java/time/chrono/IsoChronology
 # java/time/format/DateTimeFormatterBuilder$CompositePrinterParser
 # java/time/format/DecimalStyle
 # java/time/format/DateTimeFormatterBuilder$SettingsParser

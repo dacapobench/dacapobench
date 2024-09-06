@@ -20,7 +20,7 @@ Finally, `aggregatestats.py` and `normalizestats.py` need to be run to propogate
 
 ### Bytecode Analysis
 
-**TL;DR**:* Use the `run-bca.sh` script within this directory. Expected running time: O(1 day).
+**TL;DR**:* Use the `run-bytecode.sh` script within this directory. Expected running time: O(1 day).
 
 We use bytecode analysis to generate the `benchmarks/bms/<benchmark>/stats-bytecode.yml` file for each benchmark. The relevant source code is in the `bcc` subdirectory.
 
@@ -33,7 +33,7 @@ Example usage: `java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.y
 * `-Ddacapo.bcc.yml` specifies the file where the yml will be written (if undefined, output will go to stdout).
 * `-Djava.security.manager=allow` is required for the cassandra workload when using more recent JVMs.
 
-The `run-bca.sh` script in this directory will run the analysis for all of the bechmarks, updating the respective `stats-bytecode.yml` files for each benchmark.
+The `run-bytecode.sh` script in this directory will run the analysis for all of the bechmarks, updating the respective `stats-bytecode.yml` files for each benchmark.
 
 Finally, `aggregatestats.py` and `normalizestats.py` need to be run to propogate the minheap stats into the nominal statistics (see below).
 

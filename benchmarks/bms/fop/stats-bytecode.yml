@@ -1,57 +1,54 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1290
+skipped-classes: 1291
 transformed-classes: 2672
-transformed-bytecodes: 671009
-executed-bytecodes: 1540446012
+transformed-bytecodes: 671643
+executed-bytecodes: 1540218141
 executed-bytecodes-unique: 177071
 executed-bytecodes-p90: 4374
 executed-bytecodes-p99: 204591
 executed-bytecodes-p999: 1313261
 executed-bytecodes-p9999: 2300295
-executed-calls: 147586510
+executed-calls: 147564480
 executed-calls-unique: 26947
 opcodes:
-  aconst_null: 6481652
+  aconst_null: 6481640
   iconst_m1: 2797371
-  iconst_0: 25258741
-  iconst_1: 26824950
+  iconst_0: 25258735
+  iconst_1: 26824078
   iconst_2: 1195902
   iconst_3: 2924377
   iconst_4: 1151535
   iconst_5: 115086
   lconst_0: 222066
   lconst_1: 578113
-  fconst_0: 13118
+  fconst_0: 11488
   fconst_1: 14371
   fconst_2: 1884
   dconst_0: 2287497
   dconst_1: 2850841
-  bipush: 13057925
-  sipush: 20429038
-  ldc: 14098595
-  iload: 171203037
+  bipush: 13053324
+  sipush: 20428063
+  ldc: 14075775
+  iload: 171191517
   lload: 669931
-  fload: 343081
+  fload: 326781
   dload: 31576465
-  aload: 337187318
+  aload: 337122053
   iaload: 989013
   laload: 735
-  faload: 160581
+  faload: 160533
   daload: 1553809
   aaload: 10706656
-  baload: 2521983
+  baload: 2520993
   caload: 4716267
   saload: 87792
-  istore: 31785642
+  istore: 31784844
   lstore: 296233
   fstore: 52278
   dstore: 12059431
-  astore: 32655924
+  astore: 32656885
   iastore: 1515791
   lastore: 19
   fastore: 29465
@@ -60,8 +57,8 @@ opcodes:
   bastore: 351314
   castore: 1261192
   sastore: 61046
-  pop: 3522385
-  dup: 9561443
+  pop: 3521409
+  dup: 9556216
   dup_x1: 2514407
   dup_x2: 22152
   dup2: 528353
@@ -79,9 +76,9 @@ opcodes:
   dmul: 5566104
   idiv: 147393
   ldiv: 35116
-  fdiv: 40572
+  fdiv: 38942
   ddiv: 806922
-  irem: 128746
+  irem: 128761
   lrem: 80710
   ineg: 27653
   fneg: 1177
@@ -91,19 +88,19 @@ opcodes:
   lshr: 56
   iushr: 906115
   lushr: 94
-  iand: 4364369
+  iand: 4363379
   land: 56
   ior: 576612
   ixor: 51704
   lxor: 94
-  iinc: 12163095
+  iinc: 12162081
   i2l: 16442
-  i2f: 41014
-  i2d: 2604077
+  i2f: 39384
+  i2d: 2602447
   l2i: 11879
   l2d: 303219
   f2i: 262
-  f2d: 52634
+  f2d: 51004
   d2i: 29202
   d2l: 201667
   d2f: 15357
@@ -111,54 +108,54 @@ opcodes:
   i2c: 1226748
   i2s: 62480
   lcmp: 225630
-  fcmpl: 81835
+  fcmpl: 81811
   fcmpg: 5627
   dcmpl: 3659457
   dcmpg: 8090848
-  ifeq: 38152600
-  ifne: 13798776
+  ifeq: 38151651
+  ifne: 13796113
   iflt: 6272881
   ifge: 2455136
   ifgt: 4353320
   ifle: 6526714
-  if_icmpeq: 11280125
-  if_icmpne: 12454204
-  if_icmplt: 7281658
-  if_icmpge: 16600482
-  if_icmpgt: 2187048
-  if_icmple: 3911776
-  if_acmpeq: 1552890
-  if_acmpne: 1442994
-  goto: 27614913
+  if_icmpeq: 11280119
+  if_icmpne: 12453371
+  if_icmplt: 7280668
+  if_icmpge: 16600452
+  if_icmpgt: 2186058
+  if_icmple: 3911878
+  if_acmpeq: 1553071
+  if_acmpne: 1442976
+  goto: 27614025
   tableswitch: 1203391
   lookupswitch: 2473700
-  ireturn: 58108478
+  ireturn: 58107555
   lreturn: 3714
   freturn: 62229
   dreturn: 3726340
   areturn: 44487880
-  return: 15768251
-  getstatic: 12432091
+  return: 15757495
+  getstatic: 12428480
   putstatic: 1667
-  getfield: 161975305
-  putfield: 29467641
-  invokevirtual: 94031924
-  invokespecial: 14427253
-  invokestatic: 26372696
-  invokeinterface: 12754298
+  getfield: 161972221
+  putfield: 29433056
+  invokevirtual: 94029188
+  invokespecial: 14412885
+  invokestatic: 26370376
+  invokeinterface: 12751692
   invokedynamic: 339
-  new: 2805533
+  new: 2800306
   newarray: 242241
-  anewarray: 323479
-  arraylength: 1941389
+  anewarray: 322488
+  arraylength: 1941371
   athrow: 421
-  checkcast: 10067044
-  instanceof: 2675917
+  checkcast: 10067029
+  instanceof: 2675884
   monitorenter: 9233
   monitorexit: 9233
   multianewarray: 53732
   ifnull: 20761485
-  ifnonnull: 15294559
+  ifnonnull: 15294657
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -404,6 +401,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -429,8 +429,6 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -542,6 +540,8 @@ opcodes:
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
 # java/util/regex/Matcher
@@ -703,6 +703,7 @@ opcodes:
 # jdk/internal/logger/LazyLoggers$1
 # jdk/internal/logger/LazyLoggers$LazyLoggerFactories
 # jdk/internal/logger/LoggerFinderLoader
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # sun/util/logging/internal/LoggingProviderImpl$JULWrapper
 # sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration
 # sun/awt/AppContext$GetAppContextLock
@@ -788,10 +789,10 @@ opcodes:
 # javax/imageio/spi/IIORegistry$1
 # javax/imageio/ImageReader
 # javax/imageio/metadata/IIOMetadataFormat
+# javax/imageio/ImageTypeSpecifier
+# java/awt/image/RenderedImage
 # javax/imageio/ImageWriter
 # javax/imageio/ImageTranscoder
-# java/awt/image/RenderedImage
-# javax/imageio/ImageTypeSpecifier
 # javax/imageio/ImageIO$SpiInfo
 # javax/imageio/ImageIO$SpiInfo$1
 # javax/imageio/ImageIO$SpiInfo$2
@@ -860,8 +861,8 @@ opcodes:
 # java/lang/invoke/VarHandleReferences$FieldInstanceReadWrite
 # sun/java2d/DefaultDisposerRecord
 # sun/java2d/DisposerRecord
-# sun/java2d/DisposerTarget
 # java/util/concurrent/AbstractExecutorService
+# sun/java2d/DisposerTarget
 # sun/java2d/cmm/lcms/LCMSProfile
 # java/util/concurrent/ForkJoinPool
 # java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
@@ -922,9 +923,9 @@ opcodes:
 # java/lang/StringIndexOutOfBoundsException
 # java/io/PushbackInputStream
 # java/io/StringWriter
-# java/text/ParseException
 # java/text/DateFormat
 # java/text/SimpleDateFormat
+# java/text/ParseException
 # java/text/DateFormat$Field
 # java/util/spi/LocaleServiceProvider
 # sun/util/spi/CalendarProvider
@@ -1176,12 +1177,8 @@ opcodes:
 # sun/nio/cs/UTF_16$Decoder
 # sun/nio/cs/UnicodeDecoder
 # sun/nio/cs/ArrayDecoder
-# java/io/RandomAccessFile$1
-# sun/font/Type1Font$1
 # sun/font/SunFontManager$8
-# java/io/StreamTokenizer
-# java/lang/foreign/MemorySegment
-# java/nio/BufferUnderflowException
+# java/io/RandomAccessFile$1
 # sun/font/NativeFont
 # java/util/TreeMap$Values
 # java/util/TreeMap$ValueIterator
@@ -1431,6 +1428,7 @@ opcodes:
 # java/util/AbstractList$SubList
 # jdk/internal/math/FloatToDecimal
 # java/util/BitSet
+# java/lang/foreign/MemorySegment
 # java/lang/ThreadDeath
 # java/awt/PaintContext
 # java/awt/GradientPaint
