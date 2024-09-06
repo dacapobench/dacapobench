@@ -1,163 +1,161 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1601
-transformed-classes: 5364
-transformed-bytecodes: 1074255
-executed-bytecodes: 9256464329
-executed-bytecodes-unique: 161050
-executed-bytecodes-p90: 5669
-executed-bytecodes-p99: 1036500
-executed-bytecodes-p999: 8513562
-executed-bytecodes-p9999: 18529825
-executed-calls: 1347284486
-executed-calls-unique: 28376
+skipped-classes: 1607
+transformed-classes: 5363
+transformed-bytecodes: 1074870
+executed-bytecodes: 6133461129
+executed-bytecodes-unique: 160481
+executed-bytecodes-p90: 2436
+executed-bytecodes-p99: 1000000
+executed-bytecodes-p999: 5000000
+executed-bytecodes-p9999: 17258009
+executed-calls: 807371488
+executed-calls-unique: 28232
 opcodes:
-  aconst_null: 20608690
-  iconst_m1: 5100001
-  iconst_0: 116053045
-  iconst_1: 132968923
-  iconst_2: 9123222
-  iconst_3: 513862
-  iconst_4: 625886
-  iconst_5: 20131899
-  lconst_0: 17480858
-  lconst_1: 11353132
-  fconst_0: 123
-  fconst_1: 338218
-  dconst_0: 711
-  dconst_1: 221993
-  bipush: 133583080
-  sipush: 17029524
-  ldc: 55243092
-  iload: 563226206
-  lload: 133040645
-  fload: 1174243
-  dload: 9668844
-  aload: 2413594779
-  iaload: 7214845
-  laload: 33542
-  faload: 1338757
-  daload: 170369
-  aaload: 7323323
-  baload: 7127
+  aconst_null: 12483038
+  iconst_m1: 3148277
+  iconst_0: 79491619
+  iconst_1: 96209164
+  iconst_2: 6471023
+  iconst_3: 174535
+  iconst_4: 195501
+  iconst_5: 18064677
+  lconst_0: 16356592
+  lconst_1: 10583969
+  fconst_0: 59
+  fconst_1: 97183
+  dconst_0: 622
+  dconst_1: 315385
+  bipush: 112702630
+  sipush: 15004329
+  ldc: 42959805
+  iload: 472879028
+  lload: 115554695
+  fload: 452230
+  dload: 8724867
+  aload: 1484818828
+  iaload: 8465994
+  laload: 242044
+  faload: 1097379
+  daload: 49618
+  aaload: 2896383
+  baload: 7095
   caload: 37615
-  istore: 196427322
-  lstore: 25199832
-  fstore: 722926
-  dstore: 1077919
-  astore: 141499552
-  iastore: 1196225
+  istore: 168716686
+  lstore: 25067825
+  fstore: 322485
+  dstore: 971285
+  astore: 87800634
+  iastore: 2146641
   lastore: 19
   fastore: 3000013
-  dastore: 113786
-  aastore: 3086157
-  bastore: 6269
-  castore: 5109
-  pop: 36733428
-  pop2: 3048967
-  dup: 76874535
-  dup_x1: 1008324
+  dastore: 33282
+  aastore: 2380064
+  bastore: 6245
+  castore: 5145
+  pop: 27391933
+  pop2: 912698
+  dup: 48364272
+  dup_x1: 2008292
   dup_x2: 1816
-  dup2: 1769185
+  dup2: 1878583
   dup2_x1: 2000272
-  iadd: 97629891
-  ladd: 14765253
-  fadd: 610061
-  dadd: 2062024
-  isub: 30512377
-  lsub: 12325547
-  dsub: 247039
-  imul: 29649782
-  lmul: 726292
-  fmul: 181
-  dmul: 210193
-  idiv: 1046376
-  ldiv: 2057436
-  fdiv: 112741
-  ddiv: 190612
-  irem: 2690887
-  lrem: 1004
-  ineg: 5000062
-  lneg: 1000688
-  ishl: 30221735
-  lshl: 4649410
-  ishr: 21777332
-  lshr: 2888700
-  iushr: 48875620
-  lushr: 1874591
-  iand: 31653213
-  land: 5511182
-  ior: 10776834
-  lor: 1761811
-  ixor: 33085215
-  lxor: 3887683
-  iinc: 4490591
-  i2l: 15138934
-  i2f: 225359
-  i2d: 496051
-  l2i: 5942407
-  l2f: 2610303
-  l2d: 658234
+  iadd: 85248695
+  ladd: 13822952
+  fadd: 290029
+  dadd: 2108990
+  isub: 26055955
+  lsub: 11960563
+  dsub: 85099
+  imul: 24634455
+  lmul: 324951
+  fmul: 30
+  dmul: 77926
+  idiv: 1014184
+  ldiv: 2029231
+  fdiv: 32396
+  ddiv: 68906
+  irem: 2229815
+  lrem: 687
+  ineg: 5000057
+  lneg: 1000400
+  ishl: 29520998
+  lshl: 4872949
+  ishr: 22097726
+  lshr: 3000477
+  iushr: 46519459
+  lushr: 1905813
+  iand: 26904494
+  land: 5685536
+  ior: 10174370
+  lor: 1873085
+  ixor: 28931173
+  lxor: 3999909
+  iinc: 6427928
+  i2l: 12644629
+  i2f: 64733
+  i2d: 149612
+  l2i: 5269848
+  l2f: 2290088
+  l2d: 458678
   f2i: 1
-  f2l: 180
-  f2d: 338037
-  d2i: 38
-  d2l: 36
-  i2b: 20695090
-  i2c: 4717
-  i2s: 129670
-  lcmp: 37748667
-  fcmpl: 112859
-  fcmpg: 112859
-  dcmpl: 76724
-  dcmpg: 46502
-  ifeq: 153913537
-  ifne: 50800298
-  iflt: 8665308
-  ifge: 18070265
-  ifgt: 1247846
-  ifle: 12630846
-  if_icmpeq: 5923428
-  if_icmpne: 31597297
-  if_icmplt: 20412088
-  if_icmpge: 29157123
-  if_icmpgt: 5333647
-  if_icmple: 35017326
-  if_acmpeq: 11457308
-  if_acmpne: 48576596
-  goto: 71443559
-  tableswitch: 3664743
-  lookupswitch: 114319
-  ireturn: 363679552
-  lreturn: 78114669
-  freturn: 1225478
-  dreturn: 394945
-  areturn: 473584761
-  return: 254359711
-  getstatic: 148776520
-  putstatic: 11480
-  getfield: 825073812
-  putfield: 250710045
-  invokevirtual: 578198495
-  invokespecial: 261527258
-  invokestatic: 272687168
-  invokeinterface: 227919515
-  invokedynamic: 6952050
-  new: 43128469
-  newarray: 2209901
-  anewarray: 5998276
-  arraylength: 26741813
+  f2l: 29
+  f2d: 97098
+  d2i: 22
+  d2l: 34
+  i2b: 19444977
+  i2c: 4753
+  i2s: 37282
+  lcmp: 31853255
+  fcmpl: 32450
+  fcmpg: 32450
+  dcmpl: 25898
+  dcmpg: 6292
+  ifeq: 98752431
+  ifne: 28881144
+  iflt: 6017020
+  ifge: 16845959
+  ifgt: 1555439
+  ifle: 10454256
+  if_icmpeq: 6124613
+  if_icmpne: 17261261
+  if_icmplt: 13492030
+  if_icmpge: 21931700
+  if_icmpgt: 4083148
+  if_icmple: 28944105
+  if_acmpeq: 9264268
+  if_acmpne: 28115267
+  goto: 52469106
+  tableswitch: 1057806
+  lookupswitch: 33845
+  ireturn: 227270125
+  lreturn: 43299066
+  freturn: 1064788
+  dreturn: 113756
+  areturn: 238466042
+  return: 154628101
+  getstatic: 87882416
+  putstatic: 1482
+  getfield: 526734977
+  putfield: 152428730
+  invokevirtual: 331857274
+  invokespecial: 130743077
+  invokestatic: 201079060
+  invokeinterface: 140040688
+  invokedynamic: 3651389
+  new: 20921487
+  newarray: 2063380
+  anewarray: 3652822
+  arraylength: 23565037
   athrow: 20
-  checkcast: 75770008
-  instanceof: 19758563
-  monitorenter: 3507602
-  monitorexit: 3507603
-  ifnull: 62389738
-  ifnonnull: 104604102
+  checkcast: 43760614
+  instanceof: 8462053
+  monitorenter: 2371479
+  monitorexit: 2371480
+  ifnull: 46984887
+  ifnonnull: 71959760
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -241,9 +239,9 @@ opcodes:
 # sun/net/www/protocol/jrt/Handler
 # java/nio/file/FileSystemNotFoundException
 # java/nio/file/FileSystemAlreadyExistsException
-# java/security/PrivilegedActionException
 # java/util/zip/ZipException
 # java/nio/file/ProviderMismatchException
+# java/security/PrivilegedActionException
 # java/nio/file/AccessMode
 # java/nio/file/attribute/FileAttribute
 # java/nio/channels/SeekableByteChannel
@@ -403,6 +401,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -536,12 +537,12 @@ opcodes:
 # javax/xml/datatype/FactoryFinder
 # jdk/xml/internal/SecuritySupport
 # javax/xml/datatype/FactoryFinder$1
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/net/URLClassLoader$3
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/lang/invoke/MethodHandle$1
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
@@ -565,6 +566,65 @@ opcodes:
 # java/util/MissingResourceException
 # java/io/InterruptedIOException
 # java/util/StringTokenizer
+# java/lang/Thread$Builder$OfPlatform
+# java/lang/Thread$Builder
+# java/lang/Thread$Builder$OfVirtual
+# sun/reflect/generics/parser/SignatureParser
+# sun/reflect/generics/tree/TypeArgument
+# sun/reflect/generics/tree/TypeTree
+# sun/reflect/generics/tree/Tree
+# sun/reflect/generics/tree/SimpleClassTypeSignature
+# sun/reflect/generics/tree/FieldTypeSignature
+# sun/reflect/generics/tree/BaseType
+# sun/reflect/generics/tree/TypeSignature
+# sun/reflect/generics/tree/ReturnType
+# sun/reflect/generics/tree/ClassTypeSignature
+# sun/reflect/generics/scope/ClassScope
+# sun/reflect/generics/scope/Scope
+# sun/reflect/generics/scope/AbstractScope
+# sun/reflect/generics/factory/CoreReflectionFactory
+# sun/reflect/generics/factory/GenericsFactory
+# sun/reflect/generics/visitor/Reifier
+# sun/reflect/generics/visitor/TypeTreeVisitor
+# java/lang/reflect/GenericArrayType
+# sun/reflect/annotation/AnnotationType
+# sun/reflect/annotation/AnnotationType$1
+# java/lang/annotation/Retention
+# java/lang/annotation/Inherited
+# java/lang/annotation/RetentionPolicy
+# sun/reflect/annotation/AnnotationTypeMismatchExceptionProxy
+# sun/reflect/annotation/ExceptionProxy
+# sun/reflect/annotation/AnnotationParser$1
+# sun/reflect/annotation/AnnotationInvocationHandler
+# java/lang/reflect/InvocationHandler
+# java/lang/reflect/Proxy
+# java/lang/reflect/Proxy$1
+# jdk/internal/loader/AbstractClassLoaderValue$Sub
+# java/lang/reflect/Proxy$ProxyBuilder
+# java/util/Collections$SingletonList
+# java/util/Collections$1
+# java/lang/PublicMethods
+# java/lang/module/ModuleDescriptor$Builder
+# jdk/internal/module/Checks
+# java/lang/reflect/Proxy$ProxyBuilder$ProxyClassContext
+# java/lang/reflect/ProxyGenerator
+# java/lang/reflect/ProxyGenerator$ProxyMethod
+# java/util/StringJoiner
+# java/lang/reflect/ProxyGenerator$PrimitiveTypeInfo
+# jdk/internal/org/objectweb/asm/Edge
+# jdk/proxy1/$Proxy0
+# java/lang/reflect/Proxy$ProxyBuilder$1
+# java/lang/annotation/Target
+# com/sun/proxy/jdk/proxy1/$Proxy1
+# java/lang/invoke/MethodHandleImpl$CasesHolder
+# java/lang/invoke/MethodHandleImpl$LoopClauses
+# java/lang/invoke/MethodHandleImpl$ArrayAccess
+# java/lang/invoke/MethodHandleImpl$ArrayAccessor
+# java/lang/invoke/MethodHandleImpl$ArrayAccessor$1
+# java/lang/ClassValue$ClassValueMap
+# java/lang/invoke/MethodHandleImpl$BindCaller
+# java/lang/invoke/MethodHandleImpl$BindCaller$1
+# java/lang/invoke/MethodHandleImpl$BindCaller$InjectedInvokerHolder
 # java/lang/Class$1
 # java/text/Format
 # java/text/DateFormat
@@ -599,7 +659,6 @@ opcodes:
 # com/sun/beans/util/Cache$Kind$Soft
 # com/sun/beans/util/Cache$Ref
 # com/sun/beans/introspect/MethodInfo
-# java/lang/PublicMethods
 # com/sun/beans/introspect/MethodInfo$MethodOrder
 # java/beans/MethodDescriptor
 # java/beans/MethodRef
@@ -609,75 +668,30 @@ opcodes:
 # sun/reflect/generics/repository/GenericDeclRepository
 # sun/reflect/generics/repository/AbstractRepository
 # java/lang/reflect/TypeVariable
-# sun/reflect/generics/parser/SignatureParser
 # sun/reflect/generics/tree/FormalTypeParameter
-# sun/reflect/generics/tree/TypeTree
-# sun/reflect/generics/tree/Tree
-# sun/reflect/generics/tree/TypeArgument
-# sun/reflect/generics/tree/SimpleClassTypeSignature
-# sun/reflect/generics/tree/FieldTypeSignature
-# sun/reflect/generics/tree/BaseType
-# sun/reflect/generics/tree/TypeSignature
-# sun/reflect/generics/tree/ReturnType
-# sun/reflect/generics/tree/ClassTypeSignature
 # sun/reflect/generics/tree/ClassSignature
 # sun/reflect/generics/tree/Signature
-# java/util/StringJoiner
 # sun/reflect/generics/scope/MethodScope
-# sun/reflect/generics/scope/AbstractScope
-# sun/reflect/generics/scope/Scope
-# sun/reflect/generics/factory/CoreReflectionFactory
-# sun/reflect/generics/factory/GenericsFactory
 # sun/reflect/generics/repository/MethodRepository
 # sun/reflect/generics/repository/ConstructorRepository
 # sun/reflect/generics/tree/BottomSignature
 # sun/reflect/generics/tree/Wildcard
 # sun/reflect/generics/tree/MethodTypeSignature
-# sun/reflect/generics/visitor/Reifier
-# sun/reflect/generics/visitor/TypeTreeVisitor
 # sun/reflect/generics/reflectiveObjects/WildcardTypeImpl
 # java/lang/reflect/WildcardType
 # sun/reflect/generics/reflectiveObjects/LazyReflectiveObjectGenerator
 # sun/reflect/generics/reflectiveObjects/ParameterizedTypeImpl
 # java/lang/reflect/ParameterizedType
-# sun/reflect/generics/scope/ClassScope
 # sun/reflect/generics/reflectiveObjects/TypeVariableImpl
 # com/sun/beans/introspect/EventSetInfo
 # java/util/TreeMap$Values
 # java/util/TreeMap$ValueIterator
 # com/sun/beans/introspect/PropertyInfo
 # java/beans/PropertyVetoException
-# java/lang/reflect/GenericArrayType
 # com/sun/beans/WildcardTypeImpl
 # java/beans/BeanProperty
 # jdk/internal/vm/annotation/IntrinsicCandidate
-# sun/reflect/annotation/AnnotationType
-# sun/reflect/annotation/AnnotationType$1
-# java/lang/annotation/Retention
-# java/lang/annotation/Inherited
-# java/lang/annotation/Target
-# java/lang/annotation/RetentionPolicy
-# sun/reflect/annotation/AnnotationTypeMismatchExceptionProxy
-# sun/reflect/annotation/ExceptionProxy
-# sun/reflect/annotation/AnnotationParser$1
-# sun/reflect/annotation/AnnotationInvocationHandler
-# java/lang/reflect/InvocationHandler
-# java/lang/reflect/Proxy
-# java/lang/reflect/Proxy$1
-# jdk/internal/loader/AbstractClassLoaderValue$Sub
-# java/lang/reflect/Proxy$ProxyBuilder
-# java/util/Collections$SingletonList
-# java/util/Collections$1
-# java/lang/module/ModuleDescriptor$Builder
-# jdk/internal/module/Checks
-# java/lang/reflect/Proxy$ProxyBuilder$ProxyClassContext
-# java/lang/reflect/ProxyGenerator
-# java/lang/reflect/ProxyGenerator$ProxyMethod
-# java/lang/reflect/ProxyGenerator$PrimitiveTypeInfo
-# jdk/internal/org/objectweb/asm/Edge
-# jdk/proxy1/$Proxy0
-# java/lang/reflect/Proxy$ProxyBuilder$1
-# com/sun/proxy/jdk/proxy1/$Proxy1
+# com/sun/proxy/jdk/proxy1/$Proxy2
 # java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet
 # java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$1
 # java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry
@@ -826,18 +840,18 @@ opcodes:
 # sun/net/spi/DefaultProxySelector$1
 # sun/net/NetProperties
 # sun/net/NetProperties$1
-# java/net/NoRouteToHostException
-# java/net/SocketException
-# java/net/UnknownHostException
 # sun/net/spi/DefaultProxySelector$NonProxyInfo
 # sun/net/spi/DefaultProxySelector$3
 # sun/net/NetHooks
 # sun/net/sdp/SdpProvider
 # sun/net/NetHooks$Provider
 # java/net/ConnectException
+# java/net/SocketException
 # sun/net/util/SocketExceptions
 # java/net/SocketTimeoutException
 # jdk/internal/event/ThreadSleepEvent
+# java/net/NoRouteToHostException
+# java/net/UnknownHostException
 # java/util/Formatter
 # java/util/regex/CharPredicates
 # java/util/regex/Pattern$Ques
@@ -956,13 +970,13 @@ opcodes:
 # java/util/concurrent/Semaphore
 # java/util/concurrent/Semaphore$NonfairSync
 # java/util/concurrent/Semaphore$Sync
-# java/io/StringReader
 # java/util/concurrent/ForkJoinPool
 # java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
 # java/util/concurrent/ForkJoinPool$WorkQueue
 # java/util/concurrent/ForkJoinPool$DefaultForkJoinWorkerThreadFactory
 # jdk/internal/access/JavaUtilConcurrentFJPAccess
 # java/util/concurrent/ForkJoinPool$2
+# java/io/StringReader
 # java/text/DecimalFormatSymbols
 # sun/util/locale/provider/DecimalFormatSymbolsProviderImpl
 # sun/util/resources/LocaleData$CommonResourceBundleProvider
@@ -976,30 +990,35 @@ opcodes:
 # javax/management/OperationsException
 # java/lang/management/ManagementFactory
 # javax/management/MBeanServerFactory
-# com/sun/jmx/mbeanserver/GetPropertyAction
-# javax/management/MBeanServerBuilder
 # java/lang/StringLatin1$CharsSpliterator
-# com/sun/jmx/mbeanserver/JmxMBeanServer
+# com/sun/jmx/mbeanserver/GetPropertyAction
 # java/util/stream/IntStream
 # java/util/stream/IntPipeline
+# javax/management/MBeanServerBuilder
 # java/util/stream/IntPipeline$Head
-# com/sun/jmx/mbeanserver/SunJmxMBeanServer
 # java/util/function/IntPredicate
-# javax/management/MBeanServer
-# javax/management/MBeanServerConnection
+# com/sun/jmx/mbeanserver/JmxMBeanServer
+# com/sun/jmx/mbeanserver/SunJmxMBeanServer
 # java/util/stream/IntPipeline$StatelessOp
+# javax/management/MBeanServer
 # java/util/stream/IntPipeline$10
-# com/sun/jmx/mbeanserver/MBeanServerDelegateImpl
-# javax/management/DynamicMBean
-# javax/management/MBeanRegistration
-# javax/management/MBeanServerDelegate
-# javax/management/MBeanServerDelegateMBean
+# javax/management/MBeanServerConnection
 # java/util/function/IntConsumer
-# javax/management/NotificationEmitter
-# javax/management/NotificationBroadcaster
 # java/util/stream/Sink$OfInt
 # java/util/stream/FindOps$FindSink$OfInt
 # java/util/OptionalInt
+# sun/nio/ch/SocketAdaptor
+# com/sun/jmx/mbeanserver/MBeanServerDelegateImpl
+# javax/management/DynamicMBean
+# java/util/stream/Sink$ChainedInt
+# java/util/stream/IntPipeline$10$1
+# javax/management/MBeanRegistration
+# javax/management/MBeanServerDelegate
+# javax/management/MBeanServerDelegateMBean
+# java/lang/StringUTF16$CharsSpliterator
+# javax/management/NotificationEmitter
+# javax/management/NotificationBroadcaster
+# java/lang/CharacterData00
 # javax/management/MBeanNotificationInfo
 # javax/management/MBeanFeatureInfo
 # javax/management/DescriptorRead
@@ -1007,12 +1026,8 @@ opcodes:
 # com/sun/jmx/mbeanserver/Util
 # javax/management/ObjectName
 # javax/management/QueryExp
-# java/util/stream/Sink$ChainedInt
-# java/util/stream/IntPipeline$10$1
 # javax/management/ObjectName$Property
-# java/lang/StringUTF16$CharsSpliterator
 # java/util/ComparableTimSort
-# java/lang/CharacterData00
 # javax/management/MBeanAttributeInfo
 # javax/management/NotificationBroadcasterSupport
 # javax/management/NotificationBroadcasterSupport$1
@@ -1035,6 +1050,7 @@ opcodes:
 # jdk/internal/logger/LoggerFinderLoader
 # java/util/logging/LoggingPermission
 # jdk/internal/logger/BootstrapLogger$BootstrapExecutors
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # java/util/logging/LogManager
 # java/util/logging/Level
 # java/util/logging/Level$KnownLevel
@@ -1094,6 +1110,7 @@ opcodes:
 # javax/management/MBeanServerNotification
 # javax/management/Notification
 # java/util/EventObject
+# java/nio/channels/CancelledKeyException
 # javax/management/ObjectInstance
 # com/sun/jmx/mbeanserver/JmxMBeanServer$3
 # java/lang/management/ManagementFactory$PlatformMBeanFinder
@@ -1151,14 +1168,12 @@ opcodes:
 # com/sun/jmx/mbeanserver/MXBeanIntrospector
 # com/sun/jmx/mbeanserver/MBeanIntrospector
 # com/sun/jmx/mbeanserver/MBeanIntrospector$PerInterfaceMap
-# sun/nio/ch/SocketAdaptor
 # com/sun/jmx/mbeanserver/MBeanIntrospector$MBeanInfoMap
 # com/sun/jmx/mbeanserver/MBeanAnalyzer
 # com/sun/jmx/mbeanserver/MBeanAnalyzer$MethodOrder
 # com/sun/jmx/mbeanserver/ConvertingMethod
 # com/sun/jmx/mbeanserver/MXBeanMappingFactory
 # com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory
-# java/nio/channels/CancelledKeyException
 # com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$Mappings
 # javax/management/openmbean/OpenType
 # javax/management/openmbean/SimpleType
@@ -1177,7 +1192,9 @@ opcodes:
 # java/lang/invoke/MethodHandles$1
 # java/lang/invoke/BoundMethodHandle$Species_LJ
 # java/lang/invoke/BoundMethodHandle$Species_LLLL
+# java/util/concurrent/atomic/AtomicBoolean
 # java/lang/invoke/BoundMethodHandle$Species_LLLLL
+# sun/nio/ch/SocketChannelImpl$DefaultOptionsHolder
 # com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$CollectionMapping
 # javax/management/openmbean/CompositeType
 # javax/management/openmbean/TabularType
@@ -1206,8 +1223,6 @@ opcodes:
 # java/lang/annotation/ElementType
 # com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory$EnumMapping
 # javax/management/MBeanParameterInfo
-# java/util/concurrent/atomic/AtomicBoolean
-# sun/nio/ch/SocketChannelImpl$DefaultOptionsHolder
 # com/sun/jmx/mbeanserver/PerInterface$MethodAndSig
 # com/sun/management/internal/OperatingSystemImpl
 # com/sun/management/UnixOperatingSystemMXBean
@@ -1233,7 +1248,7 @@ opcodes:
 # jdk/internal/platform/CgroupSubsystemController
 # java/lang/Deprecated
 # java/lang/annotation/Documented
-# jdk/proxy1/$Proxy2
+# jdk/proxy1/$Proxy3
 # javax/management/DescriptorKey
 # sun/management/MemoryImpl
 # java/lang/management/MemoryMXBean
@@ -1365,7 +1380,6 @@ opcodes:
 # sun/nio/ch/FileChannelImpl$3
 # java/lang/management/BufferPoolMXBean
 # sun/management/ManagementFactoryHelper$1
-# java/util/concurrent/ThreadPoolExecutor$Worker
 # jdk/management/jfr/SettingDescriptorInfo
 # jdk/management/jfr/SettingDescriptorInfo$1
 # jdk/management/jfr/FlightRecorderMXBeanImpl
@@ -1386,8 +1400,8 @@ opcodes:
 # jdk/management/jfr/FlightRecorderMXBeanImpl$MXBeanListener
 # jdk/jfr/FlightRecorderListener
 # com/sun/jmx/mbeanserver/StandardMBeanSupport
-# com/sun/jmx/mbeanserver/StandardMBeanIntrospector
 # javax/management/NotCompliantMBeanException
+# com/sun/jmx/mbeanserver/StandardMBeanIntrospector
 # java/lang/reflect/UndeclaredThrowableException
 # java/util/stream/ReduceOps$2
 # java/util/stream/ReduceOps$2ReducingSink
@@ -1396,19 +1410,18 @@ opcodes:
 # java/util/TaskQueue
 # java/util/TimerThread
 # java/util/Timer$ThreadReaper
-# java/lang/ArrayIndexOutOfBoundsException
 # java/util/concurrent/locks/AbstractQueuedSynchronizer$SharedNode
+# java/lang/ArrayIndexOutOfBoundsException
 # java/math/MathContext
 # java/math/RoundingMode
-# java/nio/BufferUnderflowException
 # java/text/ParseException
+# java/nio/BufferUnderflowException
 # java/nio/file/FileVisitor
 # java/text/NumberFormat
 # java/text/DecimalFormat
 # java/text/FieldPosition
 # java/text/DigitList
 # java/lang/ExceptionInInitializerError
-# java/lang/ClassValue$ClassValueMap
 # javax/net/ssl/KeyManagerFactory
 # javax/net/ssl/TrustManagerFactory
 # java/security/cert/CertSelector
@@ -1427,6 +1440,7 @@ opcodes:
 # java/util/concurrent/FutureTask
 # java/util/concurrent/FutureTask$WaitNode
 # java/util/concurrent/Executors$RunnableAdapter
+# java/util/concurrent/ThreadPoolExecutor$Worker
 # java/util/concurrent/CopyOnWriteArraySet
 # java/util/concurrent/LinkedBlockingDeque
 # java/util/concurrent/BlockingDeque
@@ -1516,12 +1530,24 @@ opcodes:
 # sun/util/PropertyResourceBundleCharset$PropertiesFileDecoder
 # java/util/ResourceBundle$BundleReference
 # java/io/CharConversionException
-# java/util/concurrent/Executors$DelegatedScheduledExecutorService
-# java/util/concurrent/Executors$DelegatedExecutorService
-# jdk/proxy1/$Proxy5
+# jdk/proxy1/$Proxy6
 # java/util/concurrent/ConcurrentHashMap$TreeNode
 # java/util/concurrent/ConcurrentHashMap$TreeBin
 # java/util/function/UnaryOperator
+# java/util/concurrent/Executors$DelegatedScheduledExecutorService
+# java/util/concurrent/Executors$DelegatedExecutorService
+# sun/nio/cs/ISO_8859_1$Encoder
+# sun/nio/cs/Surrogate$Parser
+# sun/nio/cs/Surrogate
+# sun/util/locale/provider/TimeZoneNameUtility
+# sun/util/locale/provider/TimeZoneNameUtility$TimeZoneNameGetter
+# sun/util/cldr/CLDRTimeZoneNameProviderImpl
+# sun/util/locale/provider/TimeZoneNameProviderImpl
+# sun/util/locale/provider/BaseLocaleDataMetaInfo
+# sun/util/resources/cldr/TimeZoneNames
+# sun/util/resources/TimeZoneNamesBundle
+# sun/util/resources/OpenListResourceBundle
+# sun/util/resources/cldr/TimeZoneNames_en
 # java/time/Instant
 # java/time/format/DateTimeFormatter
 # java/time/format/DateTimeFormatterBuilder
@@ -1540,9 +1566,6 @@ opcodes:
 # java/time/format/DateTimeFormatterBuilder$NumberPrinterParser
 # java/time/format/DateTimeFormatterBuilder$CharLiteralPrinterParser
 # java/time/format/ResolverStyle
-# java/time/chrono/Chronology
-# java/time/chrono/AbstractChronology
-# java/time/chrono/IsoChronology
 # java/time/format/DateTimeFormatterBuilder$CompositePrinterParser
 # java/time/format/DecimalStyle
 # java/time/format/DateTimeFormatterBuilder$SettingsParser
@@ -1561,18 +1584,6 @@ opcodes:
 # java/time/Period
 # java/time/format/DateTimePrintContext
 # java/time/Instant$1
-# sun/nio/cs/ISO_8859_1$Encoder
-# sun/nio/cs/Surrogate$Parser
-# sun/nio/cs/Surrogate
-# sun/util/locale/provider/TimeZoneNameUtility
-# sun/util/locale/provider/TimeZoneNameUtility$TimeZoneNameGetter
-# sun/util/cldr/CLDRTimeZoneNameProviderImpl
-# sun/util/locale/provider/TimeZoneNameProviderImpl
-# sun/util/locale/provider/BaseLocaleDataMetaInfo
-# sun/util/resources/cldr/TimeZoneNames
-# sun/util/resources/TimeZoneNamesBundle
-# sun/util/resources/OpenListResourceBundle
-# sun/util/resources/cldr/TimeZoneNames_en
 # java/lang/ProcessEnvironment
 # java/lang/ProcessEnvironment$Variable
 # java/lang/ProcessEnvironment$ExternalData
@@ -1582,9 +1593,10 @@ opcodes:
 # java/lang/ProcessEnvironment$StringEnvironment
 # java/util/function/IntUnaryOperator
 # java/util/concurrent/SynchronousQueue
-# java/util/concurrent/SynchronousQueue$TransferStack
 # java/util/concurrent/SynchronousQueue$Transferer
-# java/util/concurrent/SynchronousQueue$TransferStack$SNode
+# java/util/concurrent/LinkedTransferQueue
+# java/util/concurrent/TransferQueue
+# java/util/concurrent/LinkedTransferQueue$DualNode
 # java/util/logging/Logger$SystemLoggerHelper
 # java/util/logging/Logger$SystemLoggerHelper$1
 # java/util/function/BiPredicate
@@ -1593,12 +1605,15 @@ opcodes:
 # java/util/IdentityHashMap$EntrySet
 # java/util/IdentityHashMap$EntryIterator
 # java/util/IdentityHashMap$EntryIterator$Entry
-# jdk/proxy1/$Proxy7
-# jdk/proxy1/$Proxy10
+# jdk/proxy1/$Proxy8
+# jdk/proxy1/$Proxy11
+# java/util/concurrent/locks/ReentrantReadWriteLock$Sync$HoldCounter
 # java/util/concurrent/atomic/LongAccumulator
 # java/util/function/LongBinaryOperator
 # java/lang/ThreadLocal$SuppliedThreadLocal
 # java/util/regex/Pattern$Caret
+# javax/net/ssl/SSLPeerUnverifiedException
+# javax/net/ssl/SSLException
 # java/lang/invoke/BoundMethodHandle$Species_LLLLLL
 # java/lang/invoke/BoundMethodHandle$Species_LLLLLLL
 # java/lang/invoke/BoundMethodHandle$Species_LLLLLLLL
@@ -1607,22 +1622,20 @@ opcodes:
 # java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLLL
 # java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLLLL
 # java/lang/invoke/BoundMethodHandle$Species_LLLLLLLLLLLLL
-# java/util/jar/JarInputStream
-# javax/net/ssl/SSLPeerUnverifiedException
-# javax/net/ssl/SSLException
-# java/io/PrintWriter
-# java/io/PrintWriter$1
-# jdk/internal/access/JavaIOPrintWriterAccess
 # java/util/ArrayDeque$DescendingIterator
+# java/util/jar/JarInputStream
 # java/util/ArrayList$ListItr
 # sun/nio/ch/IOVecWrapper
 # sun/nio/ch/AllocatedNativeObject
 # sun/nio/ch/NativeObject
 # sun/nio/ch/IOVecWrapper$Deallocator
-# java/nio/HeapByteBufferR
+# java/io/PrintWriter
+# java/io/PrintWriter$1
+# jdk/internal/access/JavaIOPrintWriterAccess
 # java/net/URLEncoder
 # java/util/BitSet
 # java/io/CharArrayWriter
+# java/nio/HeapByteBufferR
 # java/util/function/ToIntFunction
 # java/util/stream/ReferencePipeline$4
 # java/util/function/IntBinaryOperator
@@ -1644,24 +1657,16 @@ opcodes:
 # java/text/MessageFormat
 # java/text/MessageFormat$Field
 # java/lang/FunctionalInterface
-# jdk/proxy1/$Proxy22
+# jdk/proxy1/$Proxy23
 # java/util/stream/ReferencePipeline$15
 # java/util/stream/ReferencePipeline$15$1
-# java/lang/invoke/MethodHandleImpl$BindCaller
-# java/lang/invoke/MethodHandleImpl$BindCaller$1
-# java/lang/invoke/MethodHandleImpl$CasesHolder
-# java/lang/invoke/MethodHandleImpl$LoopClauses
-# java/lang/invoke/MethodHandleImpl$ArrayAccess
-# java/lang/invoke/MethodHandleImpl$ArrayAccessor
-# java/lang/invoke/MethodHandleImpl$ArrayAccessor$1
-# java/lang/invoke/MethodHandleImpl$BindCaller$InjectedInvokerHolder
 # java/util/Collections$CopiesList
 # java/lang/invoke/MethodHandleImpl$WrappedMember
+# java/awt/image/RenderedImage
 # javax/xml/transform/stream/StreamSource
 # javax/xml/transform/Source
 # javax/xml/transform/sax/SAXSource
 # javax/xml/transform/dom/DOMSource
-# java/awt/image/RenderedImage
 # java/util/Collections$UnmodifiableSortedSet
 # javax/xml/namespace/QName
 # java/util/logging/ConsoleHandler
@@ -1714,7 +1719,7 @@ opcodes:
 # sun/reflect/generics/tree/IntSignature
 # sun/reflect/generics/tree/BooleanSignature
 # jdk/internal/ValueBased
-# com/sun/proxy/jdk/proxy1/$Proxy43
+# com/sun/proxy/jdk/proxy1/$Proxy44
 # sun/reflect/generics/tree/ShortSignature
 # java/util/stream/LongStream
 # java/util/stream/DoubleStream
@@ -1724,7 +1729,6 @@ opcodes:
 # java/util/concurrent/CompletableFuture$Signaller
 # java/security/InvalidKeyException
 # java/util/Base64$Decoder
-# java/util/concurrent/locks/ReentrantReadWriteLock$Sync$HoldCounter
 # java/lang/StringIndexOutOfBoundsException
 # java/util/concurrent/ConcurrentSkipListMap$Values
 # java/util/concurrent/ConcurrentSkipListMap$ValueIterator
@@ -1748,6 +1752,7 @@ opcodes:
 # java/util/TreeMap$NavigableSubMap$DescendingSubMapEntryIterator
 # java/util/TreeMap$NavigableSubMap$SubMapIterator
 # java/util/concurrent/ConcurrentLinkedQueue$Itr
+# java/util/concurrent/ConcurrentHashMap$TableStack
 # java/util/stream/MatchOps$MatchKind
 # java/util/stream/MatchOps
 # java/util/stream/MatchOps$MatchOp
@@ -1757,5 +1762,4 @@ opcodes:
 # java/util/zip/CRC32C
 # java/nio/channels/AsynchronousCloseException
 # java/nio/channels/ClosedChannelException
-# java/security/CodeSigner
 # java/util/concurrent/ConcurrentHashMap$KeySpliterator

@@ -1,159 +1,157 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 778
+skipped-classes: 781
 transformed-classes: 901
-transformed-bytecodes: 218648
-executed-bytecodes: 30084489885
-executed-bytecodes-unique: 54545
+transformed-bytecodes: 219121
+executed-bytecodes: 30089817691
+executed-bytecodes-unique: 54527
 executed-bytecodes-p90: 236845
 executed-bytecodes-p99: 13404700
 executed-bytecodes-p999: 91183906
 executed-bytecodes-p9999: 106012917
-executed-calls: 1749244097
-executed-calls-unique: 5652
+executed-calls: 1749289784
+executed-calls-unique: 5623
 opcodes:
   aconst_null: 3539013
-  iconst_m1: 270262181
-  iconst_0: 250203826
-  iconst_1: 583503257
-  iconst_2: 8849153
-  iconst_3: 30782685
-  iconst_4: 4098680
-  iconst_5: 14901411
-  lconst_0: 8789971
-  lconst_1: 104626328
-  fconst_0: 49561
+  iconst_m1: 270281091
+  iconst_0: 250199348
+  iconst_1: 583531390
+  iconst_2: 8849130
+  iconst_3: 30782723
+  iconst_4: 4098823
+  iconst_5: 14901455
+  lconst_0: 8789078
+  lconst_1: 104627382
+  fconst_0: 49570
   fconst_1: 21933
   dconst_0: 3
   dconst_1: 16
-  bipush: 435178137
-  sipush: 423317169
-  ldc: 236778944
-  iload: 5531226170
-  lload: 92320707
-  fload: 223563
+  bipush: 435203602
+  sipush: 423365769
+  ldc: 236782803
+  iload: 5531562065
+  lload: 92324273
+  fload: 223608
   dload: 37
-  aload: 5203529820
-  iaload: 719182624
-  laload: 47336204
+  aload: 5206266730
+  iaload: 719234424
+  laload: 47341909
   faload: 40
-  aaload: 93225346
-  baload: 117174143
+  aaload: 93247238
+  baload: 117223252
   caload: 69860883
   saload: 1991374
-  istore: 1906344277
-  lstore: 24770668
-  fstore: 79163
+  istore: 1906457754
+  lstore: 24775738
+  fstore: 79190
   dstore: 32
-  astore: 177489859
-  iastore: 66371082
-  lastore: 113366401
+  astore: 177517250
+  iastore: 66375276
+  lastore: 113371943
   fastore: 271
   aastore: 3608962
-  bastore: 89239544
+  bastore: 89240473
   sastore: 3118937
-  pop: 8368675
+  pop: 8368347
   pop2: 296638
-  dup: 131334633
-  dup_x1: 125452498
+  dup: 131335218
+  dup_x1: 125457542
   dup_x2: 2548321
-  dup2: 17322857
+  dup2: 17325877
   dup2_x1: 37848
-  iadd: 630486018
-  ladd: 57526671
-  isub: 129552171
-  lsub: 3572028
+  iadd: 630557662
+  ladd: 57524371
+  isub: 129559340
+  lsub: 3572806
   dsub: 16
-  imul: 105340772
-  lmul: 2851145
-  fmul: 30359
-  dmul: 27689
-  idiv: 1211813
-  ldiv: 186923
+  imul: 105346006
+  lmul: 2849756
+  fmul: 30368
+  dmul: 27698
+  idiv: 1211889
+  ldiv: 186932
   fdiv: 16
-  ddiv: 26443
-  irem: 60256
-  lrem: 72985
-  ineg: 25472015
-  lneg: 927193
-  ishl: 24793113
-  lshl: 7400409
-  ishr: 45433453
-  lshr: 1289669
-  iushr: 59354923
-  lushr: 5353855
-  iand: 536989082
-  land: 9496632
+  ddiv: 26452
+  irem: 60332
+  lrem: 72994
+  ineg: 25473615
+  lneg: 925960
+  ishl: 24793098
+  lshl: 7406325
+  ishr: 45455858
+  lshr: 1289013
+  iushr: 59354926
+  lushr: 5358037
+  iand: 537054638
+  land: 9499941
   ior: 37978266
-  lor: 6677808
+  lor: 6683516
   ixor: 86112499
-  lxor: 1373042
-  iinc: 349092475
-  i2l: 79446304
-  i2f: 30830
-  i2d: 52823
-  l2i: 43472840
+  lxor: 1372731
+  iinc: 349130311
+  i2l: 79441349
+  i2f: 30839
+  i2d: 52841
+  l2i: 43468951
   l2f: 71
   l2d: 43
-  f2i: 30022
+  f2i: 30031
   f2l: 71
   f2d: 6
   d2i: 8
-  d2l: 27044
+  d2l: 27053
   d2f: 23
-  i2b: 106529108
+  i2b: 106529088
   i2s: 3335161
-  lcmp: 43712043
+  lcmp: 43710912
   fcmpl: 8
   fcmpg: 278
   dcmpl: 634
   dcmpg: 3
-  ifeq: 219272346
-  ifne: 351163448
-  iflt: 59440755
-  ifge: 56105086
-  ifgt: 17986006
-  ifle: 30364056
-  if_icmpeq: 72554235
-  if_icmpne: 578521582
-  if_icmplt: 28504989
-  if_icmpge: 632581543
-  if_icmpgt: 29390602
-  if_icmple: 29583782
+  ifeq: 219285100
+  ifne: 351193325
+  iflt: 59441682
+  ifge: 56103165
+  ifgt: 17985152
+  ifle: 30371482
+  if_icmpeq: 72571624
+  if_icmpne: 578522815
+  if_icmplt: 28505089
+  if_icmpge: 632585020
+  if_icmpgt: 29394724
+  if_icmple: 29583840
   if_acmpeq: 3263184
-  if_acmpne: 3373819
-  goto: 935836537
+  if_acmpne: 3373491
+  goto: 935868544
   tableswitch: 52052050
-  lookupswitch: 276249
-  ireturn: 617458379
-  lreturn: 20327146
+  lookupswitch: 276006
+  ireturn: 617478230
+  lreturn: 20325443
   freturn: 3631
   dreturn: 7917
-  areturn: 130449696
-  return: 333550223
-  getstatic: 517563599
+  areturn: 130452742
+  return: 333556900
+  getstatic: 517568452
   putstatic: 560
-  getfield: 3242761123
-  putfield: 841501769
-  invokevirtual: 700259695
-  invokespecial: 34196863
-  invokestatic: 782743224
-  invokeinterface: 232037372
+  getfield: 3242976571
+  putfield: 842722890
+  invokevirtual: 700288730
+  invokespecial: 34196962
+  invokestatic: 782759335
+  invokeinterface: 232037814
   invokedynamic: 6943
-  new: 4338490
-  newarray: 1759492
+  new: 4338536
+  newarray: 1759538
   anewarray: 317480
-  arraylength: 60378815
-  checkcast: 24953674
-  instanceof: 30350370
+  arraylength: 60378853
+  checkcast: 24953887
+  instanceof: 30350391
   monitorenter: 186
   monitorexit: 186
   ifnull: 40717316
-  ifnonnull: 42484563
+  ifnonnull: 42484584
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -237,9 +235,9 @@ opcodes:
 # sun/net/www/protocol/jrt/Handler
 # java/nio/file/FileSystemNotFoundException
 # java/nio/file/FileSystemAlreadyExistsException
+# java/security/PrivilegedActionException
 # java/util/zip/ZipException
 # java/nio/file/ProviderMismatchException
-# java/security/PrivilegedActionException
 # java/nio/file/AccessMode
 # java/nio/file/attribute/FileAttribute
 # java/nio/channels/SeekableByteChannel
@@ -399,6 +397,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException

@@ -1,25 +1,22 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1350
+skipped-classes: 1354
 transformed-classes: 763
-transformed-bytecodes: 112679
-executed-bytecodes: 17142813053
-executed-bytecodes-unique: 18295
+transformed-bytecodes: 113303
+executed-bytecodes: 17142812108
+executed-bytecodes-unique: 18285
 executed-bytecodes-p90: 2839
 executed-bytecodes-p99: 21793852
 executed-bytecodes-p999: 122227694
 executed-bytecodes-p9999: 496355838
-executed-calls: 3408604789
-executed-calls-unique: 2912
+executed-calls: 3408603955
+executed-calls-unique: 2906
 opcodes:
-  aconst_null: 92707123
+  aconst_null: 92707126
   iconst_m1: 8440
-  iconst_0: 4550307
-  iconst_1: 265836866
+  iconst_0: 4550322
+  iconst_1: 265836884
   iconst_2: 22622924
   iconst_3: 117905580
   iconst_4: 164704
@@ -30,26 +27,26 @@ opcodes:
   dconst_1: 8598634
   bipush: 97367518
   sipush: 86
-  ldc: 29086307
-  iload: 1577922213
+  ldc: 29086268
+  iload: 1577922231
   lload: 58
   dload: 26051772
-  aload: 4131604767
+  aload: 4131604750
   iaload: 8973140
   daload: 593863
-  aaload: 597995
+  aaload: 597998
   baload: 713016
   caload: 261783906
-  istore: 349348977
+  istore: 349348989
   lstore: 21
   dstore: 23959171
-  astore: 636291053
+  astore: 636290995
   iastore: 8595565
   dastore: 221842
   aastore: 74032
   castore: 28
-  pop: 400021603
-  dup: 1890324
+  pop: 400021631
+  dup: 1890331
   dup_x1: 7
   dup2: 8595548
   iadd: 117593187
@@ -72,7 +69,7 @@ opcodes:
   iand: 61
   land: 9
   lor: 9
-  iinc: 341198471
+  iinc: 341198474
   i2l: 5687
   i2d: 721106
   l2i: 2843
@@ -82,7 +79,7 @@ opcodes:
   lcmp: 5
   dcmpl: 119238
   dcmpg: 53941
-  ifeq: 537544299
+  ifeq: 537544246
   ifne: 217598905
   iflt: 43840287
   ifge: 139121
@@ -91,38 +88,39 @@ opcodes:
   if_icmpeq: 22048692
   if_icmpne: 140210864
   if_icmplt: 8612481
-  if_icmpge: 371909413
+  if_icmpge: 371909416
   if_icmpgt: 2697
-  if_icmple: 139466984
+  if_icmple: 139466990
   if_acmpeq: 37
   if_acmpne: 49
-  goto: 761105568
+  goto: 761105544
   tableswitch: 7
   lookupswitch: 87175408
   ireturn: 361671463
   lreturn: 5686
   dreturn: 1334552
-  areturn: 702874756
-  return: 7783775
-  getstatic: 171724186
+  areturn: 702874761
+  return: 7783778
+  getstatic: 171724193
   putstatic: 388
-  getfield: 838643839
+  getfield: 838643848
   putfield: 14372036
-  invokevirtual: 2119544768
-  invokespecial: 4204859
-  invokestatic: 211758897
-  invokeinterface: 1073092744
+  invokevirtual: 2119544767
+  invokespecial: 4204866
+  invokestatic: 211758108
+  invokeinterface: 1073092693
   invokedynamic: 3521
-  new: 1574446
+  new: 1574453
   newarray: 79534
   anewarray: 252258
   arraylength: 756265
-  checkcast: 509929589
+  checkcast: 509929516
   instanceof: 34507309
   monitorenter: 5689
   monitorexit: 5689
-  ifnull: 21894899
+  ifnull: 21894905
   ifnonnull: 78116713
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -368,6 +366,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -390,7 +391,6 @@ opcodes:
 # sun/net/www/protocol/jar/JarURLConnection$JarURLInputStream
 # java/io/UnsupportedEncodingException
 # java/util/Vector
-# java/lang/NoSuchFieldError
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
@@ -523,6 +523,7 @@ opcodes:
 # sun/security/util/FilePermCompat
 # sun/security/util/SecurityProperties
 # java/io/FilePermissionCollection
+# java/lang/NoSuchFieldError
 # java/util/concurrent/LinkedBlockingQueue
 # java/util/concurrent/BlockingQueue
 # java/util/AbstractQueue
@@ -615,8 +616,6 @@ opcodes:
 # java/lang/management/ManagementFactory$PlatformMBeanFinder
 # java/lang/management/ManagementFactory$PlatformMBeanFinder$1
 # sun/management/spi/PlatformMBeanProvider
-# jdk/management/jfr/internal/FlightRecorderMXBeanProvider
-# java/util/concurrent/Callable
 # com/sun/management/internal/PlatformMBeanProviderImpl
 # com/sun/management/internal/PlatformMBeanProviderImpl$1
 # sun/management/spi/PlatformMBeanProvider$PlatformComponent
@@ -634,6 +633,8 @@ opcodes:
 # sun/management/VMManagementImpl
 # sun/management/VMManagement
 # com/sun/management/internal/PlatformMBeanProviderImpl$5
+# jdk/management/jfr/internal/FlightRecorderMXBeanProvider
+# java/util/concurrent/Callable
 # java/lang/management/DefaultPlatformMBeanProvider
 # java/lang/management/DefaultPlatformMBeanProvider$1
 # java/lang/management/DefaultPlatformMBeanProvider$2
@@ -1163,6 +1164,7 @@ opcodes:
 # jdk/internal/logger/LoggerFinderLoader
 # java/util/logging/LoggingPermission
 # jdk/internal/logger/BootstrapLogger$BootstrapExecutors
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # java/util/logging/Level
 # java/util/logging/Level$KnownLevel
 # java/util/logging/LogManager$1
@@ -1452,9 +1454,9 @@ opcodes:
 # jdk/jfr/FlightRecorder
 # javax/management/NotificationListener
 # javax/management/NotificationFilter
+# javax/management/ListenerNotFoundException
 # jdk/management/jfr/FlightRecorderMXBeanImpl$MXBeanListener
 # jdk/jfr/FlightRecorderListener
-# javax/management/ListenerNotFoundException
 # javax/management/ObjectName$PatternProperty
 # java/beans/PropertyChangeListener
 # com/sun/jmx/mbeanserver/StandardMBeanSupport

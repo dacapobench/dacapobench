@@ -1,19 +1,16 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1053
+skipped-classes: 1057
 transformed-classes: 203
-transformed-bytecodes: 53092
-executed-bytecodes: 369041850541
+transformed-bytecodes: 53726
+executed-bytecodes: 369041919419
 executed-bytecodes-unique: 8195
 executed-bytecodes-p90: 5000000
 executed-bytecodes-p99: 2384487000
 executed-bytecodes-p999: 4768974000
 executed-bytecodes-p9999: 4768974000
-executed-calls: 11504462572
+executed-calls: 11504469905
 executed-calls-unique: 1188
 opcodes:
   aconst_null: 10356603
@@ -24,47 +21,47 @@ opcodes:
   iconst_3: 43049313
   iconst_4: 31673429
   iconst_5: 3
-  lconst_0: 139003
+  lconst_0: 140893
   lconst_1: 61
   dconst_0: 258393293
   dconst_1: 27094005
   bipush: 23928488043
   sipush: 80178159
-  ldc: 2754809
+  ldc: 2755459
   iload: 91771782894
-  lload: 80604824
+  lload: 80606710
   fload: 202000000
-  dload: 5029683158
-  aload: 46625887274
+  dload: 5029685048
+  aload: 46625902432
   iaload: 40503415
   daload: 14502431168
   aaload: 5753173261
   baload: 76795457
   istore: 15231591379
-  lstore: 41083706
+  lstore: 41085596
   fstore: 11000000
-  dstore: 876600301
+  dstore: 876602191
   astore: 691219481
   iastore: 30003695
   dastore: 5540963382
   aastore: 2779956
   pop: 2498970
   pop2: 360
-  dup: 46859387
+  dup: 46861602
   dup_x1: 1
   dup2: 2628118000
   iadd: 9839389737
   ladd: 29945348
-  dadd: 2365010331
+  dadd: 2365012221
   isub: 19160034466
   lsub: 322
-  dsub: 2592846147
+  dsub: 2592848037
   imul: 23911069594
   lmul: 38094161
-  dmul: 5196333358
+  dmul: 5196335248
   idiv: 9550869041
   ldiv: 38094017
-  ddiv: 81420898
+  ddiv: 81422788
   irem: 7502192
   lrem: 38094006
   dneg: 125
@@ -78,17 +75,17 @@ opcodes:
   i2l: 144227348
   i2d: 27094000
   l2i: 87188223
-  l2d: 139223
+  l2d: 141113
   f2d: 202000000
   lcmp: 1425604
   dcmpl: 257393061
   dcmpg: 27094000
-  ifeq: 41864175
+  ifeq: 41866063
   ifne: 35718432
   iflt: 39075256
   ifge: 28136142
   ifgt: 5207305
-  ifle: 264129245
+  ifle: 264129895
   if_icmpeq: 2354722
   if_icmpne: 4774812032
   if_icmplt: 15102610
@@ -97,22 +94,22 @@ opcodes:
   if_icmple: 293688574
   if_acmpeq: 18
   if_acmpne: 18
-  goto: 13060468953
+  goto: 13060471493
   tableswitch: 1
   ireturn: 4877700937
   lreturn: 495
   dreturn: 2614581060
   areturn: 91832686
-  return: 2678350813
-  getstatic: 78811360
+  return: 2678353963
+  getstatic: 78811685
   putstatic: 80
-  getfield: 24058507561
-  putfield: 113582418
-  invokevirtual: 251033412
-  invokespecial: 4854980099
+  getfield: 24058521419
+  putfield: 113584308
+  invokevirtual: 251040420
+  invokespecial: 4854980424
   invokestatic: 1143881212
   invokeinterface: 5254567849
-  new: 36571386
+  new: 36571711
   newarray: 20765297
   anewarray: 1354720
   arraylength: 54843558
@@ -124,6 +121,7 @@ opcodes:
   multianewarray: 1354700
   ifnull: 52019250
   ifnonnull: 28350741
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -262,10 +260,10 @@ opcodes:
 # java/nio/file/ClosedFileSystemException
 # java/nio/file/FileAlreadyExistsException
 # java/lang/NumberFormatException
+# java/nio/file/ReadOnlyFileSystemException
 # java/util/zip/DeflaterOutputStream
 # java/nio/file/NotDirectoryException
 # java/nio/file/DirectoryNotEmptyException
-# java/nio/file/ReadOnlyFileSystemException
 # java/nio/file/attribute/PosixFilePermissions
 # java/nio/file/attribute/PosixFilePermission
 # java/util/Collections$SynchronizedCollection
@@ -369,6 +367,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -630,6 +631,7 @@ opcodes:
 # jdk/internal/logger/LazyLoggers$1
 # jdk/internal/logger/LazyLoggers$LazyLoggerFactories
 # jdk/internal/logger/LoggerFinderLoader
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # sun/util/logging/internal/LoggingProviderImpl$JULWrapper
 # javax/management/MBeanOperationInfo
 # javax/management/MBeanConstructorInfo
@@ -664,7 +666,6 @@ opcodes:
 # java/lang/management/ManagementFactory$PlatformMBeanFinder
 # java/lang/management/ManagementFactory$PlatformMBeanFinder$1
 # sun/management/spi/PlatformMBeanProvider
-# jdk/management/jfr/internal/FlightRecorderMXBeanProvider
 # com/sun/management/internal/PlatformMBeanProviderImpl
 # com/sun/management/internal/PlatformMBeanProviderImpl$1
 # sun/management/spi/PlatformMBeanProvider$PlatformComponent
@@ -679,6 +680,7 @@ opcodes:
 # sun/management/VMManagementImpl
 # sun/management/VMManagement
 # com/sun/management/internal/PlatformMBeanProviderImpl$5
+# jdk/management/jfr/internal/FlightRecorderMXBeanProvider
 # java/lang/management/DefaultPlatformMBeanProvider
 # java/lang/management/DefaultPlatformMBeanProvider$1
 # java/lang/management/DefaultPlatformMBeanProvider$2

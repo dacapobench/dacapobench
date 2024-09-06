@@ -1,22 +1,19 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1089
+skipped-classes: 1093
 transformed-classes: 924
-transformed-bytecodes: 186352
-executed-bytecodes: 2756325325
+transformed-bytecodes: 186986
+executed-bytecodes: 2756325153
 executed-bytecodes-unique: 32956
 executed-bytecodes-p90: 32572
 executed-bytecodes-p99: 1000718
 executed-bytecodes-p999: 10424928
 executed-bytecodes-p9999: 13031160
-executed-calls: 70165369
+executed-calls: 70165329
 executed-calls-unique: 4910
 opcodes:
-  aconst_null: 2754598
+  aconst_null: 2754596
   iconst_m1: 6792618
   iconst_0: 20538759
   iconst_1: 58670115
@@ -31,14 +28,14 @@ opcodes:
   fconst_2: 8250
   dconst_0: 28029
   dconst_1: 3810
-  bipush: 29055265
+  bipush: 29055273
   sipush: 48815296
   ldc: 3970265
-  iload: 622642321
+  iload: 622642305
   lload: 2
   fload: 7516117
   dload: 909436
-  aload: 378347860
+  aload: 378347798
   iaload: 68057304
   faload: 61290
   daload: 355546
@@ -46,11 +43,11 @@ opcodes:
   baload: 42700913
   caload: 655748
   saload: 3237386
-  istore: 134435026
+  istore: 134435030
   lstore: 2
   fstore: 1361190
   dstore: 321770
-  astore: 10702933
+  astore: 10702935
   iastore: 52769881
   fastore: 342145
   dastore: 128
@@ -105,7 +102,7 @@ opcodes:
   fcmpg: 214423
   dcmpl: 15648
   dcmpg: 35399
-  ifeq: 10249996
+  ifeq: 10249986
   ifne: 4935799
   iflt: 31823101
   ifge: 21070017
@@ -113,8 +110,8 @@ opcodes:
   ifle: 10956618
   if_icmpeq: 3913074
   if_icmpne: 19201936
-  if_icmplt: 2166807
-  if_icmpge: 35299409
+  if_icmplt: 2166803
+  if_icmpge: 35299413
   if_icmpgt: 17041640
   if_icmple: 10668354
   if_acmpeq: 85917
@@ -126,26 +123,27 @@ opcodes:
   freturn: 1403704
   dreturn: 2
   areturn: 17327468
-  return: 14921647
-  getstatic: 6294701
-  putstatic: 5468
-  getfield: 139013174
+  return: 14921637
+  getstatic: 6294703
+  putstatic: 5466
+  getfield: 139013134
   putfield: 31026230
-  invokevirtual: 35792950
-  invokespecial: 8901501
+  invokevirtual: 35792930
+  invokespecial: 8901481
   invokestatic: 16354502
   invokeinterface: 9116416
   new: 2995580
   newarray: 178210
   anewarray: 174494
   arraylength: 4863828
-  checkcast: 2928856
+  checkcast: 2928858
   instanceof: 384254
   monitorenter: 1
   monitorexit: 1
   multianewarray: 1
-  ifnull: 5990672
+  ifnull: 5990664
   ifnonnull: 6250320
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -391,6 +389,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -416,6 +417,8 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -497,8 +500,6 @@ opcodes:
 # java/nio/channels/SelectableChannel
 # sun/nio/ch/ChannelInputStream
 # sun/security/provider/ByteArrayAccess$LE
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # sun/security/provider/ByteArrayAccess
 # javax/xml/datatype/DatatypeConfigurationException
 # java/util/Calendar
@@ -771,10 +772,10 @@ opcodes:
 # org/w3c/dom/events/EventTarget
 # org/w3c/dom/NodeList
 # org/w3c/dom/events/Event
-# org/w3c/dom/DOMError
 # org/w3c/dom/DOMConfiguration
-# org/w3c/dom/events/EventListener
+# org/w3c/dom/DOMError
 # org/w3c/dom/DocumentFragment
+# org/w3c/dom/events/EventListener
 # java/io/PushbackInputStream
 # java/io/StringWriter
 # org/w3c/dom/TypeInfo
@@ -799,14 +800,14 @@ opcodes:
 # java/util/concurrent/ForkJoinPool$2
 # com/sun/org/apache/xerces/internal/impl/io/MalformedByteSequenceException
 # java/io/CharConversionException
+# java/awt/geom/Point2D
+# java/awt/geom/Point2D$Float
 # java/awt/Rectangle
 # java/awt/image/renderable/RenderableImage
 # java/awt/Image
 # java/awt/image/BufferedImage
 # java/awt/image/WritableRenderedImage
 # java/awt/Transparency
-# java/awt/geom/Point2D
-# java/awt/geom/Point2D$Float
 # java/awt/Cursor
 # sun/util/logging/PlatformLogger
 # sun/util/logging/PlatformLogger$Level
@@ -828,6 +829,7 @@ opcodes:
 # jdk/internal/logger/LoggerFinderLoader
 # java/util/logging/LoggingPermission
 # jdk/internal/logger/BootstrapLogger$BootstrapExecutors
+# jdk/internal/logger/LoggerFinderLoader$TemporaryLoggerFinder
 # java/util/logging/LogManager
 # java/util/logging/Level
 # java/util/logging/Level$KnownLevel

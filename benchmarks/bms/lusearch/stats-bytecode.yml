@@ -1,149 +1,146 @@
-#
-# Trace generated using dacapo-evaluation-git-be22ce79
-#
 # These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 662
+skipped-classes: 663
 transformed-classes: 738
-transformed-bytecodes: 152923
-executed-bytecodes: 162339762586
-executed-bytecodes-unique: 26603
-executed-bytecodes-p90: 4382122
+transformed-bytecodes: 153460
+executed-bytecodes: 162210407292
+executed-bytecodes-unique: 26352
+executed-bytecodes-p90: 4339233
 executed-bytecodes-p99: 129527996
 executed-bytecodes-p999: 789329315
-executed-bytecodes-p9999: 959868954
-executed-calls: 8390367516
-executed-calls-unique: 3054
+executed-bytecodes-p9999: 958163983
+executed-calls: 8377636318
+executed-calls-unique: 3002
 opcodes:
-  aconst_null: 42337815
-  iconst_m1: 114391516
-  iconst_0: 404192386
-  iconst_1: 1082407719
-  iconst_2: 52811566
-  iconst_3: 46498467
-  iconst_4: 825707645
+  aconst_null: 42172143
+  iconst_m1: 114289234
+  iconst_0: 403080518
+  iconst_1: 1080451259
+  iconst_2: 52750444
+  iconst_3: 46473528
+  iconst_4: 825699480
   iconst_5: 889093
-  lconst_0: 86216145
-  lconst_1: 1283169676
+  lconst_0: 86084377
+  lconst_1: 1281288561
   fconst_0: 1952027
   fconst_1: 479096736
   dconst_0: 24
   dconst_1: 880560
-  bipush: 7798412224
-  sipush: 1192664082
-  ldc: 3584619013
-  iload: 31884397538
-  lload: 2457244133
+  bipush: 7796388392
+  sipush: 1191314399
+  ldc: 3583800352
+  iload: 31871419463
+  lload: 2455609184
   fload: 379044091
-  aload: 24048004603
-  iaload: 106631241
-  laload: 360068913
-  faload: 264992719
-  aaload: 259251664
-  baload: 360049713
+  aload: 24022514406
+  iaload: 106629194
+  laload: 360016438
+  faload: 264990630
+  aaload: 259056460
+  baload: 359890132
   caload: 8844500
-  istore: 8223387944
-  lstore: 406187840
+  istore: 8218328892
+  lstore: 405679288
   fstore: 54282319
-  astore: 237138054
-  iastore: 108543135
-  lastore: 1936747616
-  fastore: 227023465
-  aastore: 129242100
-  bastore: 249361904
-  pop: 34009145
-  pop2: 24576
-  dup: 2960458166
-  dup_x1: 156564694
+  astore: 235729649
+  iastore: 109063329
+  lastore: 1936414512
+  fastore: 227019371
+  aastore: 129086758
+  bastore: 247873735
+  pop: 33732560
+  pop2: 12
+  dup: 2956148971
+  dup_x1: 155574202
   dup_x2: 4352
   dup2: 26055166
-  dup2_x1: 124167326
-  iadd: 7196421231
-  ladd: 2420328548
+  dup2_x1: 124165279
+  iadd: 7193673136
+  ladd: 2418284561
   fadd: 252104606
   dadd: 2641680
-  isub: 1049932353
-  lsub: 155005544
+  isub: 1049737372
+  lsub: 154876254
   fsub: 252104606
-  imul: 1153608
-  lmul: 21791923
-  fmul: 490728383
+  imul: 1100061
+  lmul: 21788705
+  fmul: 490726294
   idiv: 2369104
   ldiv: 1050867
-  fdiv: 477530014
+  fdiv: 477527967
   ddiv: 1761120
   irem: 545197
   lrem: 15
-  ineg: 1
   lneg: 5342300
-  ishl: 267353901
-  lshl: 67362542
-  ishr: 23627831
-  iushr: 908268097
-  lushr: 1589596644
-  iand: 3780171079
-  land: 1890120197
-  ior: 374883981
-  lor: 43532487
+  ishl: 266351609
+  lshl: 67140224
+  ishr: 23618775
+  iushr: 908267388
+  lushr: 1589215763
+  iand: 3778809358
+  land: 1889556932
+  ior: 373827129
+  lor: 43391244
   ixor: 397047
   lxor: 5342301
-  iinc: 1863574656
-  i2l: 812568801
-  i2f: 25802990
-  l2i: 133923028
-  l2f: 13368433
+  iinc: 1863314339
+  i2l: 811979204
+  i2f: 25800943
+  l2i: 133835490
+  l2f: 13366344
   l2d: 3522240
-  f2i: 2048
-  f2l: 12319857
+  f2i: 1
+  f2l: 12317768
   d2f: 1761120
-  i2b: 200565184
-  i2s: 6144
-  lcmp: 126868238
+  i2b: 199183459
+  i2s: 3
+  lcmp: 126583574
   fcmpl: 76124079
   fcmpg: 76265437
-  ifeq: 1132516787
-  ifne: 1208438606
-  iflt: 282709764
-  ifge: 113220871
-  ifgt: 59299590
-  ifle: 95618438
-  if_icmpeq: 45990030
-  if_icmpne: 1531361737
-  if_icmplt: 2410734460
-  if_icmpge: 1103487862
-  if_icmpgt: 119604293
-  if_icmple: 890370253
-  if_acmpeq: 9220606
-  if_acmpne: 44244881
-  goto: 1847376995
-  tableswitch: 48003144
-  lookupswitch: 6889748
-  ireturn: 2725666633
-  lreturn: 174602704
+  ifeq: 1132013023
+  ifne: 1208049014
+  iflt: 282260822
+  ifge: 112995788
+  ifgt: 59207822
+  ifle: 95447020
+  if_icmpeq: 45880533
+  if_icmpne: 1529871705
+  if_icmplt: 2410503149
+  if_icmpge: 1103046098
+  if_icmpgt: 119569494
+  if_icmple: 890104454
+  if_acmpeq: 9165423
+  if_acmpne: 44220409
+  goto: 1846457872
+  tableswitch: 47969524
+  lookupswitch: 6874805
+  ireturn: 2721739818
+  lreturn: 174229175
   freturn: 81141392
-  areturn: 405347352
-  return: 1362413666
-  getstatic: 3974641071
-  putstatic: 2497
-  getfield: 12605215379
-  putfield: 3960360512
-  invokevirtual: 4036330754
-  invokespecial: 463880845
-  invokestatic: 1652780174
-  invokeinterface: 2229567700
-  invokedynamic: 7808043
-  new: 149545697
-  newarray: 71328541
-  anewarray: 20409865
-  arraylength: 388028854
+  areturn: 404480603
+  return: 1359421224
+  getstatic: 3972573042
+  putstatic: 451
+  getfield: 12587866005
+  putfield: 3957417251
+  invokevirtual: 4030684851
+  invokespecial: 462756078
+  invokestatic: 1651217490
+  invokeinterface: 2225276279
+  invokedynamic: 7701620
+  new: 149023996
+  newarray: 71056466
+  anewarray: 20281051
+  arraylength: 386000245
   athrow: 1048576
-  checkcast: 272270935
-  instanceof: 6352251
-  monitorenter: 85943
-  monitorexit: 85943
-  ifnull: 90375924
-  ifnonnull: 85270197
+  checkcast: 272014117
+  instanceof: 6292934
+  monitorenter: 22186
+  monitorexit: 22186
+  ifnull: 90130308
+  ifnonnull: 84983357
+
 # sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
@@ -389,6 +386,9 @@ opcodes:
 # java/time/zone/ZoneOffsetTransitionRule
 # java/time/ZoneOffset
 # java/time/zone/ZoneOffsetTransition
+# java/time/chrono/Chronology
+# java/time/chrono/AbstractChronology
+# java/time/chrono/IsoChronology
 # java/nio/file/Files$AcceptAllFilter
 # java/nio/file/ClosedDirectoryStreamException
 # java/nio/file/DirectoryIteratorException
@@ -522,12 +522,12 @@ opcodes:
 # javax/xml/datatype/FactoryFinder
 # jdk/xml/internal/SecuritySupport
 # javax/xml/datatype/FactoryFinder$1
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/net/URLClassLoader$3
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/lang/invoke/MethodHandle$1
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
@@ -541,9 +541,6 @@ opcodes:
 # sun/security/util/SecurityProperties
 # java/io/FilePermissionCollection
 # java/lang/InterruptedException
-# java/lang/invoke/MethodHandles$1
-# java/lang/invoke/BoundMethodHandle$Species_LJ
-# java/lang/invoke/BoundMethodHandle$Species_LLLL
 # java/lang/SecurityException
 # java/util/AbstractList$RandomAccessSpliterator
 # java/util/StringJoiner
@@ -613,6 +610,9 @@ opcodes:
 # java/util/regex/Pattern$Ques
 # java/util/regex/Pattern$BranchConn
 # java/util/regex/Pattern$Branch
+# java/lang/invoke/MethodHandles$1
+# java/lang/invoke/BoundMethodHandle$Species_LJ
+# java/lang/invoke/BoundMethodHandle$Species_LLLL
 # java/lang/invoke/BoundMethodHandle$Species_LLLLL
 # java/lang/foreign/Arena
 # java/lang/foreign/SegmentAllocator
@@ -731,8 +731,8 @@ opcodes:
 # java/util/stream/ReduceOps$2ReducingSink
 # com/sun/management/internal/HotSpotDiagnostic
 # java/util/Collections$2
-# com/sun/management/VMOption
 # com/sun/management/HotSpotDiagnosticMXBean$ThreadDumpFormat
+# com/sun/management/VMOption
 # com/sun/management/internal/Flag
 # com/sun/management/internal/Flag$1
 # com/sun/management/VMOption$Origin
@@ -749,10 +749,6 @@ opcodes:
 # java/util/Collections$CopiesList
 # java/lang/invoke/MethodHandleImpl$WrappedMember
 # java/util/concurrent/CopyOnWriteArraySet
-# java/util/random/RandomGenerator
-# java/util/Random
-# java/util/concurrent/ThreadLocalRandom
-# jdk/internal/util/random/RandomSupport
 # java/lang/invoke/BoundMethodHandle$Species_LLJ
 # java/lang/invoke/BoundMethodHandle$Species_LLLJ
 # java/io/PrintWriter
@@ -761,6 +757,10 @@ opcodes:
 # java/io/StringReader
 # java/lang/reflect/UndeclaredThrowableException
 # java/lang/ArrayIndexOutOfBoundsException
+# java/util/random/RandomGenerator
+# java/util/Random
+# java/util/concurrent/ThreadLocalRandom
+# jdk/internal/util/random/RandomSupport
 # java/nio/charset/CharacterCodingException
 # java/util/stream/IntStream
 # java/util/stream/ReferencePipeline$8
@@ -793,15 +793,13 @@ opcodes:
 # java/lang/invoke/VarHandleSegmentAsShorts
 # java/util/WeakHashMap$KeyIterator
 # java/util/WeakHashMap$HashIterator
+# java/io/FileOutputStream$1
 # java/nio/file/FileVisitor
 # java/util/stream/StreamSpliterators$WrappingSpliterator
 # java/util/stream/StreamSpliterators$AbstractWrappingSpliterator
 # java/util/stream/SpinedBuffer
 # java/util/stream/StreamSpliterators
 # java/util/function/BooleanSupplier
-# java/io/FileOutputStream$1
-# java/util/IdentityHashMap$IdentityHashMapIterator
-# java/util/IdentityHashMap$KeyIterator
 # java/security/NoSuchAlgorithmException
 # java/security/GeneralSecurityException
 # sun/security/provider/SHA
