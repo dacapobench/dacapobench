@@ -1,6 +1,24 @@
+diff '--color=auto' -ur ./pom.xml ../build/pom.xml
+--- ./pom.xml	2024-08-13 05:03:52.000000000 +0000
++++ ../build/pom.xml	2024-09-10 07:23:39.366035698 +0000
+@@ -252,6 +252,14 @@
+         <enabled>false</enabled>
+       </snapshots>
+     </repository>
++    <repository>
++			<releases>
++				<checksumPolicy>ignore</checksumPolicy>
++			</releases>
++			<id>tomcat.patched</id>
++			<name>tomcat</name>
++			<url>file://../../repo</url>
++		</repository>
+   </repositories>
+ 
+   <pluginRepositories>
 diff '--color=auto' -ur ./src/main/resources/application.properties ../build/src/main/resources/application.properties
---- ./src/main/resources/application.properties	2022-09-21 09:34:41.000000000 +0000
-+++ ../build/src/main/resources/application.properties	2022-09-22 13:27:38.122035021 +0000
+--- ./src/main/resources/application.properties	2024-08-13 05:03:52.000000000 +0000
++++ ../build/src/main/resources/application.properties	2024-09-10 07:19:11.554243501 +0000
 @@ -17,8 +17,9 @@
  management.endpoints.web.exposure.include=*
  
@@ -14,8 +32,8 @@ diff '--color=auto' -ur ./src/main/resources/application.properties ../build/src
  
  # Maximum time static resources should be cached
 diff '--color=auto' -ur ./src/main/resources/db/h2/data.sql ../build/src/main/resources/db/h2/data.sql
---- ./src/main/resources/db/h2/data.sql	2022-09-21 09:34:41.000000000 +0000
-+++ ../build/src/main/resources/db/h2/data.sql	2022-09-22 13:27:38.138035106 +0000
+--- ./src/main/resources/db/h2/data.sql	2024-08-13 05:03:52.000000000 +0000
++++ ../build/src/main/resources/db/h2/data.sql	2024-09-10 07:19:11.567243684 +0000
 @@ -1,13 +1,13 @@
 -INSERT INTO vets VALUES (default, 'James', 'Carter');
 -INSERT INTO vets VALUES (default, 'Helen', 'Leary');
@@ -32734,8 +32752,8 @@ diff '--color=auto' -ur ./src/main/resources/db/h2/data.sql ../build/src/main/re
 +INSERT INTO visits VALUES (12225, 12224, '2021-12-02', 'vaccination');
 +INSERT INTO visits VALUES (12226, 12225, '2018-12-10', 'neutered');
 diff '--color=auto' -ur ./src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java ../build/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java
---- ./src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java	2022-09-21 09:34:41.000000000 +0000
-+++ ../build/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java	2022-09-22 13:30:10.918766198 +0000
+--- ./src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java	2024-08-13 05:03:52.000000000 +0000
++++ ../build/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java	2024-09-10 07:19:11.568243698 +0000
 @@ -84,7 +84,7 @@
  	@Test
  	void shouldFindOwnersByLastName() {
