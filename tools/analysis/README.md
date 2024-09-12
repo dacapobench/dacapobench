@@ -49,7 +49,7 @@ Finally, `aggregatestats.py` and `normalizestats.py` need to be run to propogate
 
 ### Performance
 
-The performance numbers are mostly generated on a single machine in its default configuration using the script `perf/run.sh`.   However, some of the results are generated on ARM and Intel hardware and on the AMD hardware with different configuraitons.  See the note at the top of `perf/run.sh`.
+The performance numbers are mostl generated on a single machine in its default configuration using the `perf/run-default.sh` script.  The remaining results use the, `perf/run-boost.sh`, `perf/run-memory.sh`, `perf/run-arm.sh`, and `perf/run-intel.sh` scripts.  The boost and memory scripts are run on the default AMD hardware with turboboost enabled and memory speed reduced respectively, while the arm and intel scripts are run on ARM and Intel platforms respectively.
 
 #### Additional prerequisite
 
@@ -61,10 +61,9 @@ git clone --recursive https://github.com/anupli/dacapo-distillation distillation
 cd dacapo-distillation
 make -j
 ```
+#### Generating yml
 
-#### Kernel
-
-The script `kernel.sh` will generate the `stats-kernel.yml` file for a given benchmark.
+Once the experiments have completed and all log files moved onto a single machine, for example in the `perf/data` directory, use the `perf/create-yml.sh` script to create the yml files for each benchmark.
 
 ### Aggregating and Normalizing
 

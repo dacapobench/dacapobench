@@ -1,0 +1,21 @@
+# Need to turn off NMI watchdog
+# Quick test: running -d runbms ~/dacapo/dacapo-pldi-2024/data ./interpreter.yml -s 2 -p "dacapo-pldi-2024-interpreter"
+# Full run: running runbms ~/dacapo/dacapo-pldi-2024/data ./interpreter.yml -s 2 -p "dacapo-pldi-2024-interpreter"
+includes:
+  - "./base.yml"
+overrides:
+  "suites.dacapochopin.minheap": "temurin-21-G1-n-5"
+  "suites.dacapochopin.timing_iteration": "5"
+configs:
+  - "temurin-21|openjdk_common|hotspot_gc-G1        |mu_threads-32|dialation-40|interpreter"
+modifiers:
+  interpreter:
+    type: JVMArg
+    val: "-Xint"
+plugins:
+  zulip:
+    type: Zulip
+    request:
+      type: stream
+      to: "running-ng bots"
+      topic: "dacapo int"

@@ -10,8 +10,12 @@ log=$2   # name of the root directory containing the log files
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-hardware="AMD Ryzen 9 7950X 16/32 cores."
-os="Linux 6.2."
+jdk="Temurin-21.0.4+7"
+amd="AMD Ryzen 9 7950X 16/32 4.5GHz cores"
+intel="Intel Core i9-12900KF Alder Lake 8/16 3.2GHz + 8/8 2.4GHz cores"
+arm="Ampere Altra 80 3.0GHz cores"
+os="Linux 6.8.0-40"
+dacapo="dacapo-evaluation-git-6b469af0"
 
 echo "#"
 echo "# Total, user and kernel time in milliseconds for the final (10th)"
@@ -31,10 +35,14 @@ echo "# Multiple invocations are reported.  These reflect the distribution"
 echo "# (variance) of the workload across invocations.  Missing data reflects"
 echo "# the workload failing to complete with that configuration."
 echo "#"
-echo "# These results were gathered on the following hardware:"
+echo "# These results were gathered using the following DaCapo version:"
+echo "#    $dacapo"
 echo "#"
-echo "# $hardware"
-echo "# $os"
+echo "# Unless otherwise noted, the following JVM was used:"
+echo "#    $jdk"
+echo "#"
+echo "# Unless otherwise noted, results were generated on the following platform:"
+echo "#    $amd, $os"
 echo "#"
 
 # main perf config
