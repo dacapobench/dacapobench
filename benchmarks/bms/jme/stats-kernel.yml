@@ -16,20 +16,24 @@
 # (variance) of the workload across invocations.  Missing data reflects
 # the workload failing to complete with that configuration.
 #
-# These results were gathered on the following hardware:
+# These results were gathered using the following DaCapo version:
+#    dacapo-evaluation-git-6b469af0
 #
-# AMD Ryzen 9 7950X 16/32 cores.
-# Linux 6.2.
+# Unless otherwise noted, the following JVM was used:
+#    Temurin-21.0.4+7
+#
+# Unless otherwise noted, results were generated on the following platform:
+#    AMD Ryzen 9 7950X 16/32 4.5GHz cores, Linux 6.8.0-40
 #
 open-jdk-21.server.G1.t-32:
   2.0:
-    - [ 6822, 206, 17 ]
-    - [ 6823, 220, 34 ]
-    - [ 6823, 265, 14 ]
-    - [ 6823, 221, 8 ]
-    - [ 6824, 231, 19 ]
-    - [ 6817, 204, 14 ]
-    - [ 6821, 215, 14 ]
-    - [ 6819, 238, 17 ]
-    - [ 6819, 246, 23 ]
-    - [ 6822, 206, 25 ]
+    - [ 6814, 201, 13 ]
+    - [ 6821, 220, 21 ]
+    - [ 6822, 204, 17 ]
+    - [ 6829, 303, 24 ]
+    - [ 6829, 282, 18 ]
+    - [ 6826, 211, 18 ]
+    - [ 6816, 236, 14 ]
+    - [ 6830, 247, 21 ]
+    - [ 6831, 201, 24 ]
+    - [ 6829, 202, 24 ]
