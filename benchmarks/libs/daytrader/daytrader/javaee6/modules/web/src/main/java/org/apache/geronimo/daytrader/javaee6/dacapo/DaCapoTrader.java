@@ -99,12 +99,12 @@ public class DaCapoTrader extends Thread {
   }
 
   public void reset() {
-    try {
-      DaCapoDBBuilder.reset(trade, logNumSessions, threads);
-    } catch (Exception e) {
-      System.err.println("Caught exception while resetting DaCapo workload: " + e.toString());
-      e.printStackTrace();
-    }
+    // try {
+    //     DaCapoDBBuilder.reset(trade, logNumSessions, threads);
+    //   } catch (Exception e) {
+    //     System.err.println("Caught exception while resetting DaCapo workload: " + e.toString());
+    //     e.printStackTrace();
+    //   }
     int ordinal;
     synchronized (consumed) {
       ordinal = consumed[1]++;
@@ -114,7 +114,6 @@ public class DaCapoTrader extends Thread {
       if (consumed[1] == threads) {
         for (int i = 0; i < OP_NAMES.length; i++) opCount[i] = 0;     // reset global count
         consumed[1] = 0;
-        System.out.println(DaCapoDBBuilder.maker + "Finished repopulating database");
         System.out.println(DaCapoDBBuilder.maker + "Running " + tradeSessions.length + " trade sessions " + (soap ? "from client via soap" : "directly on server"));
         LatencyReporter.starting();
       }
@@ -198,6 +197,29 @@ public class DaCapoTrader extends Thread {
       if (i != OP_NQ)
         System.out.print(DaCapoDBBuilder.maker + "\t" + OP_NAMES[i] + " " + dots.substring(OP_NAMES[i].length()) + " " + String.format("%5d", opCount[i]) + " " + String.format("(%4.1f%%)%n",  100 * ((float) opCount[i] / (total - nested))));
     }
+  }
+
+  public static void prepareTrade(final int logNumSessions, final boolean beans) {
+    Thread prepare = new Thread(new Runnable() {
+      public void run() {
+        if (VERBOSE) System.err.println("Preparing...");
+
+        try {
+          DaCapoDBBuilder.reset(beans ? new TradeJEEDirect(true) : new TradeJPADirect(), logNumSessions, 1);
+        } catch (Exception e) {
+          System.err.println("Caught exception while resetting DaCapo workload: " + e.toString());
+          e.printStackTrace();
+        }
+      }
+    });
+    prepare.start();
+    try {
+      prepare.join();
+    } catch (InterruptedException e) {
+      System.err.println("Error resetting DaCapo: " + e.toString());
+      e.printStackTrace();
+      System.exit(0);
+    } 
   }
 
   public static void initializeTrade(final int logNumSessions) {

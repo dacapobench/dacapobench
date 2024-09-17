@@ -100,8 +100,8 @@ public class DaCapoDBBuilder extends Thread {
 		int ordinal = getOrdinal(trade);
 		populateUsers(trade, ordinal, threads);
 		if (ordinal == threads - 1) {
-			threadCount = 0; // all done
-	//		userCount = 0;
+			threadCount = 0; // reset the counter since we're all done
+			System.out.println(maker + "Finished repopulating database");
 		}
 		return true;
 	}

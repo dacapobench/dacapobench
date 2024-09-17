@@ -1,6 +1,6 @@
-diff '--color=auto' -ur daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml ../build/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml
---- daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2023-05-12 10:22:57.000000000 +0000
-+++ ../build/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml ../build/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml
+--- ./daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2023-05-12 10:22:57.000000000 +0000
++++ ../build/daytrader/javaee6/assemblies/daytrader-ear/src/main/resources/META-INF/application.xml	2024-09-17 07:24:37.990927953 +0000
 @@ -1,14 +1,26 @@
  <?xml version="1.0" encoding="UTF-8"?>
 -<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd" version="6">
@@ -37,9 +37,9 @@ diff '--color=auto' -ur daytrader/javaee6/assemblies/daytrader-ear/src/main/reso
 \ No newline at end of file
 +  <library-directory>lib</library-directory>
 +</application>
-diff '--color=auto' -ur daytrader/javaee6/modules/entities/pom.xml ../build/daytrader/javaee6/modules/entities/pom.xml
---- daytrader/javaee6/modules/entities/pom.xml	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/entities/pom.xml	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/entities/pom.xml ../build/daytrader/javaee6/modules/entities/pom.xml
+--- ./daytrader/javaee6/modules/entities/pom.xml	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/entities/pom.xml	2024-09-17 07:24:37.990927953 +0000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -117,9 +117,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/entities/pom.xml ../build/dayt
          <!--  <plugins>
              <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
-diff '--color=auto' -ur daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml ../build/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml
---- daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml ../build/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml
+--- ./daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/entities/src/main/resources/META-INF/persistence.xml	2024-09-17 07:24:37.990927953 +0000
 @@ -1,4 +1,5 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +
@@ -177,9 +177,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/entities/src/main/resources/ME
          </properties>
      </persistence-unit>
  </persistence>
-diff '--color=auto' -ur daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java ../build/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java
---- daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java ../build/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java
+--- ./daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/utils/src/main/java/org/apache/geronimo/daytrader/javaee6/utils/TradeConfig.java	2024-09-17 07:24:37.990927953 +0000
 @@ -80,7 +80,7 @@
      public static int cachingType = NO_CACHING;
      
@@ -189,9 +189,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/utils/src/main/java/org/apache
      private static int MAX_QUOTES = 1000;
  
      /* Trade Database specific paramters */
-diff '--color=auto' -ur daytrader/javaee6/modules/web/pom.xml ../build/daytrader/javaee6/modules/web/pom.xml
---- daytrader/javaee6/modules/web/pom.xml	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/pom.xml	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/pom.xml ../build/daytrader/javaee6/modules/web/pom.xml
+--- ./daytrader/javaee6/modules/web/pom.xml	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/pom.xml	2024-09-17 07:24:37.990927953 +0000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -311,9 +311,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/pom.xml ../build/daytrader
              </plugins> 
      </build>
  </project>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJDBCDirect.java	2024-09-17 07:24:37.994928325 +0000
 @@ -60,7 +60,7 @@
  
      private static String dsName = TradeConfig.DATASOURCE;
@@ -323,9 +323,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
  
      private static BigDecimal ZERO = new BigDecimal(0.0);
  
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJEEDirect.java	2024-09-17 07:24:37.994928325 +0000
 @@ -19,7 +19,7 @@
  import java.math.BigDecimal;
  import java.util.Collection;
@@ -437,9 +437,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
          } catch (Exception e) {
              Log
                  .error("TradeDirect:init  Unable to locate TradeStreamerTopic.\n\t -- Asynchronous mode will not work correctly and Quote Price change publishing will be disabled");
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/core/direct/TradeJPADirect.java	2024-09-17 07:24:37.994928325 +0000
 @@ -717,8 +717,8 @@
          Query query = entityManager.createNamedQuery("holdingejb.holdingsByUserID");
          query.setParameter("userID", userID);
@@ -459,9 +459,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
      }
  
      /*
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/DirectSLSBBean.java	2024-09-17 07:24:37.994928325 +0000
 @@ -27,7 +27,7 @@
  import javax.ejb.*;
  
@@ -471,9 +471,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
  @EJB(name="java:global/DirectSLSBBean", beanInterface=DirectSLSBRemote.class)
  @TransactionAttribute(TransactionAttributeType.REQUIRED)
  @TransactionManagement(TransactionManagementType.CONTAINER)
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2023-08-15 06:48:45.796761330 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/ejb3/TradeSLSBBean.java	2024-09-17 07:24:37.994928325 +0000
 @@ -43,14 +43,12 @@
  import javax.ejb.*;
  import javax.jms.*;
@@ -508,9 +508,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
              entityManager.persist(account);
          }
          
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeAction.java	2024-09-17 07:24:37.994928325 +0000
 @@ -86,6 +86,7 @@
                      } catch (Exception ex) {
                          Log.error("TradeAction:createTrade - Lookup of TradeSLSBRemote failed!!!");
@@ -536,9 +536,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
              }
              catch (Exception e) {
                  Log.error("TradeAction:TradeAction() Creation of Trade JDBC Direct failed\n" + e);
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeBuildDB.java	2024-09-17 07:24:37.998928695 +0000
 @@ -1,11 +1,32 @@
 +/**
 + *  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -684,9 +684,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
      }
  }
 -
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeConfigServlet.java	2024-09-17 08:26:17.438083526 +0000
 @@ -23,13 +23,16 @@
  
  import org.apache.geronimo.daytrader.javaee6.core.direct.*;
@@ -744,7 +744,7 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
          String result = "";
          
          resp.setContentType("text/html");
-@@ -416,6 +433,16 @@
+@@ -416,6 +433,24 @@
                  resp.setContentType("text/html");
                  new TradeBuildDB(resp.getWriter(), getServletConfig().getServletContext().getRealPath("/"));
              }
@@ -753,7 +753,15 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
 +                size = req.getParameter("size");
 +                bean = req.getParameter("bean");
 +                DaCapoClient.main(new String[] {"-i", "-s", size, bean});
-+            } else if (action.equals("dacapoRun")){
++            }
++            else if (action.equals("dacapoPrepare"))
++            {
++                size = req.getParameter("size");
++                bean = req.getParameter("bean");
++                DaCapoClient.main(new String[] {"-p", "-s", size, bean});
++            }
++            else if (action.equals("dacapoRun"))
++            {
 +                size = req.getParameter("size");
 +                bean = req.getParameter("bean");
 +                DaCapoClient.main(new String[] {"-s", size, bean});
@@ -761,9 +769,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
              doConfigDisplay(req, resp, result + "Current DayTrader Configuration:");
          }
          catch (Exception e)
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java
---- daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java
+--- ./daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/java/org/apache/geronimo/daytrader/javaee6/web/TradeServletAction.java	2024-09-17 07:24:37.998928695 +0000
 @@ -30,6 +30,7 @@
  import java.util.Collection;
  import java.util.Iterator;
@@ -799,9 +807,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/java/org/apache/g
                  // ignore, for the non-JavaEE web-only assemblies
              }
              
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl
---- daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl
+--- ./daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/mysql/Table.ddl	2024-09-17 07:24:37.998928695 +0000
 @@ -15,12 +15,12 @@
  
  -- Each SQL statement in this file should terminate with a semicolon (;)
@@ -821,9 +829,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscrip
  
  CREATE TABLE holdingejb
    (PURCHASEPRICE DECIMAL(14, 2),
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl
---- daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl
+--- ./daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/resources/dbscripts/other/Table.ddl	2024-09-17 07:24:37.998928695 +0000
 @@ -93,13 +93,6 @@
  ALTER TABLE ORDEREJB
    ADD CONSTRAINT PK_ORDEREJB PRIMARY KEY (ORDERID);
@@ -838,9 +846,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/resources/dbscrip
  CREATE INDEX ACCOUNT_USERID ON ACCOUNTEJB(PROFILE_USERID);
  CREATE INDEX HOLDING_ACCOUNTID ON HOLDINGEJB(ACCOUNT_ACCOUNTID);
  CREATE INDEX ORDER_ACCOUNTID ON ORDEREJB(ACCOUNT_ACCOUNTID);
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/account.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/account.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/account.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/account.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/account.jsp	2024-09-17 07:24:37.998928695 +0000
 @@ -40,7 +40,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Account</FONT></B></TD>
@@ -867,9 +875,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/account.js
                  OrderDataBean orderData = (OrderDataBean) it.next();
  
                  %>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl
---- daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl
+--- ./daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/mysql/Table.ddl	2024-09-17 07:24:37.998928695 +0000
 @@ -15,12 +15,12 @@
  
  # Each SQL statement in this file should terminate with a semicolon (;)
@@ -889,9 +897,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/
  
  CREATE TABLE holdingejb
    (PURCHASEPRICE DECIMAL(14, 2),
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl
---- daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl
+--- ./daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/dbscripts/other/Table.ddl	2024-09-17 07:24:37.998928695 +0000
 @@ -93,13 +93,6 @@
  ALTER TABLE ORDEREJB
    ADD CONSTRAINT PK_ORDEREJB PRIMARY KEY (ORDERID);
@@ -906,9 +914,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/dbscripts/
  CREATE INDEX ACCOUNT_USERID ON ACCOUNTEJB(PROFILE_USERID);
  CREATE INDEX HOLDING_ACCOUNTID ON HOLDINGEJB(ACCOUNT_ACCOUNTID);
  CREATE INDEX ORDER_ACCOUNTID ON ORDEREJB(ACCOUNT_ACCOUNTID);
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/header.html ../build/daytrader/javaee6/modules/web/src/main/webapp/header.html
---- daytrader/javaee6/modules/web/src/main/webapp/header.html	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/header.html	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/header.html ../build/daytrader/javaee6/modules/web/src/main/webapp/header.html
+--- ./daytrader/javaee6/modules/web/src/main/webapp/header.html	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/header.html	2024-09-17 07:24:38.002929067 +0000
 @@ -20,6 +20,7 @@
  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
  </head>
@@ -926,9 +934,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/header.htm
  							onmouseover="window.status='Select this tab to log on and trade portfolios.  Users are u:n and passwords are xxx';  return true;"
  							onmouseout="window.status='';  return true;">
  							<img src="images/tradingAndPortfolios.gif" width="140" height="29" border="0" alt=""></a></td>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/order.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/order.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/order.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/order.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/order.jsp	2024-09-17 07:24:38.002929067 +0000
 @@ -31,7 +31,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader New Orders</FONT></B></TD>
@@ -938,9 +946,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/order.jsp 
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/portfolio.jsp	2024-09-17 07:24:38.002929067 +0000
 @@ -32,7 +32,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Portfolio</FONT></B></TD>
@@ -950,9 +958,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/portfolio.
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/quoteImg.jsp	2024-09-17 07:24:38.002929067 +0000
 @@ -33,7 +33,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Quotes</FONT></B></TD>
@@ -962,9 +970,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quoteImg.j
          </TR>
          <TR align="left">
              <TD><A href="app?action=home"><IMG src="images/menuHome.gif" width="80"
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quote.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/quote.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/quote.jsp	2024-09-17 07:24:38.002929067 +0000
 @@ -31,7 +31,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Quotes</FONT></B></TD>
@@ -974,9 +982,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/quote.jsp 
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/register.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/register.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/register.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/register.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/register.jsp	2024-09-17 07:24:38.002929067 +0000
 @@ -38,7 +38,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10"><B><FONT
                  color="#ffffff">DayTrader Register</FONT></B></TD>
@@ -986,9 +994,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/register.j
          </TR>
      </TBODY>
  </TABLE>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/tradehome.jsp	2024-09-17 07:24:38.002929067 +0000
 @@ -37,7 +37,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10" colspan=5><B><FONT
                  color="#ffffff">DayTrader Home</FONT></B></TD>
@@ -998,9 +1006,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/tradehome.
          </TR>
          <TR align="left">
              <TD><B><A href="app?action=home">Home</A></B><B> </B></TD>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml ../build/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml
---- daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2023-05-12 10:22:58.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml ../build/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml
+--- ./daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2023-05-12 10:22:58.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/web.xml	2024-09-17 07:24:38.002929067 +0000
 @@ -19,25 +19,22 @@
  <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
@@ -1092,9 +1100,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/WEB-INF/we
      <!--  <service-ref>
          <description>WSDL Service Trade</description>
          <service-ref-name>service/Trade</service-ref-name>
-diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp
---- daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2023-08-15 06:48:45.800761310 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp ../build/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp
+--- ./daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/modules/web/src/main/webapp/welcome.jsp	2024-09-17 07:24:38.002929067 +0000
 @@ -28,7 +28,7 @@
              <TD bgcolor="#c93333" align="left" width="640" height="10"><B><FONT
                  color="#ffffff">DayTrader Login</FONT></B></TD>
@@ -1104,9 +1112,9 @@ diff '--color=auto' -ur daytrader/javaee6/modules/web/src/main/webapp/welcome.js
          </TR>
      </TBODY>
  </TABLE>
-diff '--color=auto' -ur daytrader/javaee6/pom.xml ../build/daytrader/javaee6/pom.xml
---- daytrader/javaee6/pom.xml	2023-05-12 10:22:59.000000000 +0000
-+++ ../build/daytrader/javaee6/pom.xml	2023-08-15 06:48:45.804761289 +0000
+diff '--color=auto' -ur ./daytrader/javaee6/pom.xml ../build/daytrader/javaee6/pom.xml
+--- ./daytrader/javaee6/pom.xml	2023-05-12 10:22:59.000000000 +0000
++++ ../build/daytrader/javaee6/pom.xml	2024-09-17 07:24:38.002929067 +0000
 @@ -1,4 +1,20 @@
  <?xml version="1.0" encoding="UTF-8"?>
 +<!--
@@ -1135,9 +1143,9 @@ diff '--color=auto' -ur daytrader/javaee6/pom.xml ../build/daytrader/javaee6/pom
 -</project>
 \ No newline at end of file
 +</project>
-diff '--color=auto' -ur daytrader/pom.xml ../build/daytrader/pom.xml
---- daytrader/pom.xml	2023-05-12 10:22:57.000000000 +0000
-+++ ../build/daytrader/pom.xml	2023-08-15 06:48:45.804761289 +0000
+diff '--color=auto' -ur ./daytrader/pom.xml ../build/daytrader/pom.xml
+--- ./daytrader/pom.xml	2023-05-12 10:22:57.000000000 +0000
++++ ../build/daytrader/pom.xml	2024-09-17 07:24:38.006929437 +0000
 @@ -20,8 +20,8 @@
  
      <parent>

@@ -37,6 +37,26 @@ public class DaCapoClientRunner {
     }
   }
 
+  public static void prepare(int logNumSessions, int numThreads, boolean useBeans) {
+    try {
+      URL url = new URL("http://localhost:"+Launcher.DAYTRADER_PORT+"/daytrader/config?action=dacapoPrepare&size=" + logNumSessions + (useBeans ? "&bean=-b" : "" ));
+
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+      // Request for pre-iteration prepare
+      connection.setRequestMethod("GET");
+
+      if (connection.getResponseCode() != 200) {
+        throw new RuntimeException("Failed for preparing transactionses!");
+      }
+
+    } catch (Exception e) {
+      System.err.print("Exception preparing iteration: " + e.toString());
+      e.printStackTrace();
+      System.exit(-1);
+    }
+  }
+
   public static void runIteration(int logNumSessions, int numThreads, int timeoutms, boolean useBeans) {
 
     try {

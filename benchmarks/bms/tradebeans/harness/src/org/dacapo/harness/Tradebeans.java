@@ -30,6 +30,8 @@ import org.dacapo.parser.Config;
 public class Tradebeans extends Benchmark {
 
   private Method initializeMethod;
+  private Method preapreMethod;
+  private Method iterateMethod;
   private Method shutdownMethod;
   private static final int TIMEOUT_MARGIN = 5; // Increase our watchdog timeout by this factor to account for slow machines
 
@@ -41,7 +43,8 @@ public class Tradebeans extends Benchmark {
     // Find the launcher
     Class<?> clazz = Class.forName("org.dacapo.daytrader.Launcher", true, loader);
     this.initializeMethod = clazz.getMethod("initialize", new Class[] { File.class, File.class, Integer.TYPE, Integer.TYPE, Boolean.TYPE});
-    this.method = clazz.getMethod("performIteration", new Class[] {});
+    this.preapreMethod = clazz.getMethod("performPrepare", new Class[] {});
+    this.iterateMethod = clazz.getMethod("performIteration", new Class[] {});
     this.shutdownMethod = clazz.getMethod("shutdown", new Class[] {});
   }
 
@@ -83,6 +86,8 @@ public class Tradebeans extends Benchmark {
     int timeout = (int) (timeEstimate * Float.parseFloat(timeoutDialation));
     WatchDog.set(timeout, "tradebeans", "Adjust timeout with the -f command line option.");
 
+    System.out.println("Starting Wildfly...");
+    
     // Silence server startup messages
     PrintStream stdout = System.out;
     emptyOutput();
@@ -106,10 +111,19 @@ public class Tradebeans extends Benchmark {
     }
   }
 
+  @Override
+  public void preIteration(String size) throws Exception {
+    super.preIteration(size);
+    useBenchmarkClassLoader();
+    if (getVerbose())
+      System.out.println("tradebeans benchmark preparing");
+    preapreMethod.invoke(null);
+  }
+
   public void iterate(String size) throws Exception {
     if (getVerbose())
       System.out.println("tradebeans benchmark starting");
-    method.invoke(null);
+    iterateMethod.invoke(null);
   }
 
   private void emptyOutput(){
