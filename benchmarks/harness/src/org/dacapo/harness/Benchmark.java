@@ -267,6 +267,10 @@ public abstract class Benchmark {
 
     boolean valid = validate(size);
     callback.complete(config.name, valid);
+
+    if (valid)
+      LatencyReporter.reportLatency(latencyBaseFileName, dumpLatencyCSV, dumpLatencyHDR, dumpLatencySmoothing, iteration);
+
     postIteration(size);
     return valid;
   }
@@ -736,7 +740,6 @@ public abstract class Benchmark {
    * @param size Argument to the benchmark iteration.
    */
   public void postIteration(String size) throws Exception {
-    LatencyReporter.reportLatency(latencyBaseFileName, dumpLatencyCSV, dumpLatencyHDR, dumpLatencySmoothing, iteration);
     if (!preserve) {
       postIterationCleanup(size);
     }
