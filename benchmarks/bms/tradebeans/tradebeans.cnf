@@ -5,25 +5,25 @@ benchmark tradebeans
 size small args "3", "11"
   threads 1      // per available processor
   thread-limit 32
-  output stdout  digest 0x05c1fe11d60395ec55f7353aee93099ab941cdf0,
+  output stdout  digest 0x56b6bf1306435a8b537be2abca2e29ebeee14cac,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size default args "10", "22"
   threads 1      // per available processor
   thread-limit 2048
-  output stdout  digest 0x5f07afb8346308139460f8807950c97af20bcc44,
+  output stdout  digest 0x788f1325faa22ae893bf87c508c1a2337d47bb5b,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size large args "14", "200"
   threads 1      // per available processor
   thread-limit 2048
-  output stdout  digest 0x568ce7e20ed1410c6430fd280a7858a8a242221c,
+  output stdout  digest 0xe75f5cae90e7cc0ba6906bda918343393946e53f,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 size vlarge args "15", "600"
   threads 1      // per available processor
   thread-limit 2048
-  output stdout  digest 0x1246cfc2f24769e86a37fd26ddac7ba17f76ee51,
+  output stdout  digest 0xc8c0536f79e06808bf2a666739d41817f2c61ee2,
          stderr  digest 0xda39a3ee5e6b4b0d3255bfef95601890afd80709;
 
 description

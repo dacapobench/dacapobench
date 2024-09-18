@@ -22,6 +22,7 @@ public class DaCapoClient {
 	public static void main(String[] args) {
 		boolean initialize = false;
 		boolean beans = false;
+		boolean prepare = false;
 		int logNumSessions = 3;
 		try {
 			for (int i = 0; i < args.length; i++) {
@@ -31,10 +32,14 @@ public class DaCapoClient {
 					logNumSessions = Integer.parseInt(args[++i]);
 				} else if ("-b".equals(args[i])) {
 					beans = true;
+				} else if ("-p".equals(args[i])) {
+					prepare = true;
 				}
 			}
 			if (initialize) {
 				DaCapoTrader.initializeTrade(logNumSessions);
+			} else if (prepare) {
+				DaCapoTrader.prepareTrade(logNumSessions, beans);
 			} else {
 				DaCapoRunner.runDaCapoTrade(logNumSessions, !beans);
 			}

@@ -126,6 +126,24 @@ public class Launcher {
     }
   }
 
+  public static void performPrepare() {
+    if (numThreads == -1) {
+      System.err.println("Trying to run Daytrader before initializing.  Exiting.");
+      System.exit(0);
+    }
+    ClassLoader originalClassloader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(serverCLoader);
+      DaCapoClientRunner.prepare(logNumSessions, numThreads, useBeans);
+    } catch (Exception e) {
+      System.err.println("Exception during iteration: " + e.toString());
+      e.printStackTrace();
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassloader);
+    }
+  }
+
+
   public static void performIteration() {
     if (numThreads == -1) {
       System.err.println("Trying to run Daytrader before initializing.  Exiting.");
