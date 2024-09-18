@@ -99,12 +99,6 @@ public class DaCapoTrader extends Thread {
   }
 
   public void reset() {
-    // try {
-    //     DaCapoDBBuilder.reset(trade, logNumSessions, threads);
-    //   } catch (Exception e) {
-    //     System.err.println("Caught exception while resetting DaCapo workload: " + e.toString());
-    //     e.printStackTrace();
-    //   }
     int ordinal;
     synchronized (consumed) {
       ordinal = consumed[1]++;
@@ -203,7 +197,6 @@ public class DaCapoTrader extends Thread {
     Thread prepare = new Thread(new Runnable() {
       public void run() {
         if (VERBOSE) System.err.println("Preparing...");
-
         try {
           DaCapoDBBuilder.reset(beans ? new TradeJEEDirect(true) : new TradeJPADirect(), logNumSessions, 1);
         } catch (Exception e) {
