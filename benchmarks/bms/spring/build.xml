@@ -41,7 +41,7 @@
     </condition>
     <property name="build-script" value="${bm-build-dir}/mvnw"/>
 
-    <target name="bm-prepare-dependency">
+    <target name="bm-prepare-dependency" depends="h2">
         <!-- download apache tomcat 9.0.65 -->
     	<antcall target="check-source">
 			<param name="target-dir" value="${bm-downloads}"/>
@@ -57,16 +57,44 @@
             <arg line="build-tomcat-jdbc embed"/>
         </exec>
         <mkdir dir="${bm-deps-output-dir}/repo" />
-        <!-- deploy the patched tomcat embed library to the local repo -->
+        <!-- install the patched tomcat embed library to the local repo -->
         <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
-            <arg line = "deploy:deploy-file" />
-            <arg line="-Durl=file://${bm-deps-output-dir}/repo"/>
+            <arg line = "install:install-file" />
             <arg line="-Dfile=${bm-deps-output-dir}/${tomcat-src-basename}/output/embed/tomcat-embed-core.jar"/>
             <arg line="-DgroupId=org.apache.tomcat.embed"/>
             <arg line="-DartifactId=tomcat-embed-core"/>
             <arg line="-Dpackaging=jar"/>
-            <arg line="-Dversion=${tomcat-version}"/>
+            <arg line="-Dversion=${tomcat-version}-PATCHED"/>
+        </exec>
+        <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line = "install:install-file" />
+            <arg line="-Dfile=${bm-deps-output-dir}/${tomcat-src-basename}/output/embed/tomcat-embed-el.jar"/>
+            <arg line="-DgroupId=org.apache.tomcat.embed"/>
+            <arg line="-DartifactId=tomcat-embed-el"/>
+            <arg line="-Dpackaging=jar"/>
+            <arg line="-Dversion=${tomcat-version}-PATCHED"/>
+        </exec>
+        <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line = "install:install-file" />
+            <arg line="-Dfile=${bm-deps-output-dir}/${tomcat-src-basename}/output/embed/tomcat-embed-websocket.jar"/>
+            <arg line="-DgroupId=org.apache.tomcat.embed"/>
+            <arg line="-DartifactId=tomcat-embed-websocket"/>
+            <arg line="-Dpackaging=jar"/>
+            <arg line="-Dversion=${tomcat-version}-PATCHED"/>
+        </exec>
+
+        <!-- install the our h2 library to the local repo -->
+        <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line = "install:install-file" />
+            <arg line="-Dfile=${h2-jar}"/>
+            <arg line="-DgroupId=com.h2database"/>
+            <arg line="-DartifactId=h2"/>
+            <arg line="-Dpackaging=jar"/>
+            <arg line="-Dversion=${h2-version}-PATCHED"/>
         </exec>
     </target>
 
@@ -76,6 +104,9 @@
         </antcall>
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="true">
             <arg line="package"/>
+            <arg line="'-Dtomcat.version=${tomcat-version}-PATCHED'"/>
+            <arg line="'-Dh2.version=${h2-version}-PATCHED'"/>
+            <arg line="'-Dmaven.repo.remote=file://${bm-deps-output-dir}/repo'"/>
         </exec>
     </target>
 
