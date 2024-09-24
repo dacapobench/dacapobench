@@ -13,17 +13,26 @@
     <property name="lib-name" value="h2"/>
     <property name="lib-version" value="${h2-version}"/>
     <property name="lib-url" value="${maven.url}/com/h2database/${lib-name}/${lib-version}"/>
+    <property name="spring-lib-url" value="${maven.url}/com/h2database/${lib-name}/${spring-h2-version}"/>
     <property name="lib-src" value="h2-${lib-version}.jar"/>
+    <property name="spring-lib-src" value="h2-${lib-version}.jar"/>
 
     <import file="../common.xml"/>
 
     <target name="jar" depends="h2-jar-check" unless="h2-build-done">
         <copy file="${lib-downloads}/h2-${lib-version}.jar" tofile="${h2-jar}"/>
+        <copy file="${lib-downloads}/h2-${spring-h2-version}.jar" tofile="${h2-jar}"/>
+    </target>
+
+    <target name="build">
     </target>
 
     <target name="h2-jar-check">
         <condition property="h2-build-done">
-            <available file="${h2-jar}"/>
+            <and>
+                <available file="${h2-jar}"/>
+                <available file="${spring-h2-jar}"/>
+            </and>
         </condition>
     </target>
 </project>
