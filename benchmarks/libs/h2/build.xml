@@ -12,27 +12,35 @@
 
     <property name="lib-name" value="h2"/>
     <property name="lib-version" value="${h2-version}"/>
-    <property name="lib-url" value="${maven.url}/com/h2database/${lib-name}/${lib-version}"/>
-    <property name="spring-lib-url" value="${maven.url}/com/h2database/${lib-name}/${spring-h2-version}"/>
-    <property name="lib-src" value="h2-${lib-version}.jar"/>
-    <property name="spring-lib-src" value="h2-${lib-version}.jar"/>
+    <property name="lib-url" value="${github.url}/h2database/h2database/archive/refs/tags"/>
+    <property name="lib-src" value="version-${lib-version}.tar.gz"/>
 
     <import file="../common.xml"/>
 
-    <target name="jar" depends="h2-jar-check" unless="h2-build-done">
-        <copy file="${lib-downloads}/h2-${lib-version}.jar" tofile="${h2-jar}"/>
-        <copy file="${lib-downloads}/h2-${spring-h2-version}.jar" tofile="${h2-jar}"/>
+    <target name="unpack" depends="untar,patch"/>
+
+    <condition property="h2-build-script" value="build.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="h2-build-script" value="build.sh"/>
+    <property name="build-dir" value="${lib-build-dir}/h2database-version-${h2-version}/h2"/>
+
+    <target name="jar" depends="h2-jar-check,build" unless="h2-build-done">
+        <copy file="${build-dir}/bin/h2-${lib-version}.jar" tofile="${h2-jar}"/>
     </target>
 
     <target name="build">
+        <antcall target="make-executable">
+            <param name="target-filename" value="${build-dir}/${h2-build-script}"/>
+        </antcall>
+        <exec executable="${build-dir}/${h2-build-script}" dir="${build-dir}">
+            <arg line="jar"/>
+        </exec>
     </target>
 
     <target name="h2-jar-check">
         <condition property="h2-build-done">
-            <and>
-                <available file="${h2-jar}"/>
-                <available file="${spring-h2-jar}"/>
-            </and>
+            <available file="${h2-jar}"/>
         </condition>
     </target>
 </project>
