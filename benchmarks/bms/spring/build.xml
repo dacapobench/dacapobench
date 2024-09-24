@@ -76,7 +76,6 @@
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line = "install:install-file" />
             <arg line="-Dfile=${h2-build-dir}/bin/h2-${sp-h2-version}.jar"/>
-            <!-- <arg line="-Dfile=${spring-h2-jar}"/>  -->
             <arg line="-DgroupId=com.h2database"/>
             <arg line="-DartifactId=h2"/>
             <arg line="-Dpackaging=jar"/>
