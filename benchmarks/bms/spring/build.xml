@@ -69,7 +69,6 @@
         <exec executable="${h2-build-dir}/${h2-build-script}" dir="${h2-build-dir}">
             <arg line="jar"/>
         </exec>
-        <mkdir dir="${bm-deps-output-dir}/repo" />
 
         <!-- install the our h2 library to the local repo -->
         <exec executable="${mvn-exe}" dir="${h2-build-dir}">
@@ -79,7 +78,7 @@
             <arg line="-DgroupId=com.h2database"/>
             <arg line="-DartifactId=h2"/>
             <arg line="-Dpackaging=jar"/>
-            <arg line="-Dversion=${spring-h2-version}-PATCHED"/>
+            <arg line="-Dversion=${sp-h2-version}-PATCHED"/>
         </exec>
 
         <!-- build patched tomcat -->
@@ -97,7 +96,6 @@
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line="build-tomcat-jdbc embed"/>
         </exec>
-        <mkdir dir="${bm-deps-output-dir}/repo" />
         <!-- install the patched tomcat embed library to the local repo -->
         <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
