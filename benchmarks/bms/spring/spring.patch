@@ -1,21 +1,3 @@
-diff '--color=auto' -ur ./pom.xml ../build/pom.xml
---- ./pom.xml	2024-08-13 05:03:52.000000000 +0000
-+++ ../build/pom.xml	2024-09-10 07:23:39.366035698 +0000
-@@ -252,6 +252,14 @@
-         <enabled>false</enabled>
-       </snapshots>
-     </repository>
-+    <repository>
-+			<releases>
-+				<checksumPolicy>ignore</checksumPolicy>
-+			</releases>
-+			<id>tomcat.patched</id>
-+			<name>tomcat</name>
-+			<url>file://../../repo</url>
-+		</repository>
-   </repositories>
- 
-   <pluginRepositories>
 diff '--color=auto' -ur ./src/main/resources/application.properties ../build/src/main/resources/application.properties
 --- ./src/main/resources/application.properties	2024-08-13 05:03:52.000000000 +0000
 +++ ../build/src/main/resources/application.properties	2024-09-10 07:19:11.554243501 +0000

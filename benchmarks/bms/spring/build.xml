@@ -19,13 +19,18 @@
     <property name="tomcat-src-basename" value="apache-tomcat-${tomcat-version}-src"/>
     <property name="tomcat-src" value="${tomcat-src-basename}.tar.gz"/>
 
+    <!-- should normalize version with rest of DaCapo, use lib/h2 -->
+    <property name="sp-h2-version" value="2.1.214" />
+    <property name="sp-h2-url" value="${github.url}/h2database/h2database/archive/refs/tags"/>
+    <property name="sp-h2-src-basename" value="version-${sp-h2-version}"/>
+    <property name="sp-h2-src" value="${sp-h2-src-basename}.tar.gz"/>
+
     <property name="bm-version-str" value="springboot ${bm-version} petclinic git-9ecdc11 h2 2.1.214 hibernate 5.6.10 tomcat ${tomcat-version}"/>
     <property name="bm-src" value="${bm-name}-${bm-version}-src.tgz"/>
     <property name="git-group" value="spring-projects"/>
     <property name="git-project" value="spring-petclinic"/>
     <property name="bm-git-url" value="${github.url}/${git-group}/${git-project}"/>
     <property name="bm-git-commit" value="89f7b4ee96b8dd354d56ff2211bb1ffe762ba24c"/>
-
 
     <import file="../common.xml"/>
 
@@ -40,8 +45,43 @@
         <os family="windows"/>
     </condition>
     <property name="build-script" value="${bm-build-dir}/mvnw"/>
+    <condition property="h2-build-script" value="build.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="h2-build-script" value="build.sh"/>
 
     <target name="bm-prepare-dependency">
+        <!-- build patched h2 -->
+        <property name="h2-build-dir" value="${bm-deps-output-dir}/h2database-version-${sp-h2-version}/h2"/>
+        <!-- download h2 -->
+        <antcall target="check-source">
+			<param name="target-dir" value="${bm-downloads}"/>
+			<param name="target-url" value="${sp-h2-url}"/>
+			<param name="target-file" value="${sp-h2-src}"/>
+		</antcall>
+        <untar src="${bm-downloads}/${sp-h2-src}" dest="${bm-deps-output-dir}/" compression="gzip"/>
+        <!-- patch h2 -->
+        <patch patchfile="${bm-files}/h2-4125.patch" dir="${bm-deps-output-dir}" strip="0" ignorewhitespace="yes" failonerror="true"/>
+        <!-- build h2 -->
+        <antcall target="make-executable">
+            <param name="target-filename" value="${h2-build-dir}/${h2-build-script}"/>
+        </antcall>
+        <exec executable="${h2-build-dir}/${h2-build-script}" dir="${h2-build-dir}">
+            <arg line="jar"/>
+        </exec>
+
+        <!-- install the our h2 library to the local repo -->
+        <exec executable="${mvn-exe}" dir="${h2-build-dir}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line = "install:install-file" />
+            <arg line="-Dfile=${h2-build-dir}/bin/h2-${sp-h2-version}.jar"/>
+            <arg line="-DgroupId=com.h2database"/>
+            <arg line="-DartifactId=h2"/>
+            <arg line="-Dpackaging=jar"/>
+            <arg line="-Dversion=${sp-h2-version}-PATCHED"/>
+        </exec>
+
+        <!-- build patched tomcat -->
         <!-- download apache tomcat 9.0.65 -->
     	<antcall target="check-source">
 			<param name="target-dir" value="${bm-downloads}"/>
@@ -56,17 +96,33 @@
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
             <arg line="build-tomcat-jdbc embed"/>
         </exec>
-        <mkdir dir="${bm-deps-output-dir}/repo" />
-        <!-- deploy the patched tomcat embed library to the local repo -->
+        <!-- install the patched tomcat embed library to the local repo -->
         <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
             <env key="JAVA_HOME" value="${jdk.11.home}"/>
-            <arg line = "deploy:deploy-file" />
-            <arg line="-Durl=file://${bm-deps-output-dir}/repo"/>
+            <arg line = "install:install-file" />
             <arg line="-Dfile=${bm-deps-output-dir}/${tomcat-src-basename}/output/embed/tomcat-embed-core.jar"/>
             <arg line="-DgroupId=org.apache.tomcat.embed"/>
             <arg line="-DartifactId=tomcat-embed-core"/>
             <arg line="-Dpackaging=jar"/>
-            <arg line="-Dversion=${tomcat-version}"/>
+            <arg line="-Dversion=${tomcat-version}-PATCHED"/>
+        </exec>
+        <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line = "install:install-file" />
+            <arg line="-Dfile=${bm-deps-output-dir}/${tomcat-src-basename}/output/embed/tomcat-embed-el.jar"/>
+            <arg line="-DgroupId=org.apache.tomcat.embed"/>
+            <arg line="-DartifactId=tomcat-embed-el"/>
+            <arg line="-Dpackaging=jar"/>
+            <arg line="-Dversion=${tomcat-version}-PATCHED"/>
+        </exec>
+        <exec executable="${mvn-exe}" dir="${bm-deps-output-dir}/${tomcat-src-basename}">
+            <env key="JAVA_HOME" value="${jdk.11.home}"/>
+            <arg line = "install:install-file" />
+            <arg line="-Dfile=${bm-deps-output-dir}/${tomcat-src-basename}/output/embed/tomcat-embed-websocket.jar"/>
+            <arg line="-DgroupId=org.apache.tomcat.embed"/>
+            <arg line="-DartifactId=tomcat-embed-websocket"/>
+            <arg line="-Dpackaging=jar"/>
+            <arg line="-Dversion=${tomcat-version}-PATCHED"/>
         </exec>
     </target>
 
@@ -76,6 +132,8 @@
         </antcall>
         <exec executable="${build-script}" dir="${bm-build-dir}" failonerror="true">
             <arg line="package"/>
+            <arg line="'-Dtomcat.version=${tomcat-version}-PATCHED'"/>
+            <arg line="'-Dh2.version=${sp-h2-version}-PATCHED'"/>
         </exec>
     </target>
 
