@@ -5,47 +5,26 @@ benchmarks/.idea/
 .vscode/
 local.properties
 *~
-
-benchmarks/dacapo-evaluation-git-*
-
-benchmarks/harness/downloads/*
-!benchmarks/harness/downloads/*.MD5
-
-benchmarks/libs/**/downloads/*
-!benchmarks/libs/**/downloads/*.MD5
-
-benchmarks/bms/**/downloads/*
-!benchmarks/bms/**/downloads/*.MD5
-
-benchmarks/bms/**/data/*
-
-benchmarks/bms/**/outjar/*
-benchmarks/bms/**/outdat/*
-benchmarks/bms/**/tmp/*
-benchmarks/libs/**/tmp/*
-dacapo/
-benchmarks/outjarzip/*
-benchmarks/cvs-*
-
-benchmarks/harness/tmp
-benchmarks/log/
-benchmarks/scratch/
-
-out/*
-liblwjgl.dylib
-libopenal.dylib
-benchmarks/data/*
 scratch/*
 
+benchmarks/dacapo*.jar
+benchmarks/dacapo*.zip
+benchmarks/dacapo*/dat/
+benchmarks/dacapo*/jar/
+benchmarks/build/*
+benchmarks/log/*
 benchmarks/tmp/*
 benchmarks/dbg/*
 benchmarks/scripts/*
+benchmarks/SOURCE_VERSION.txt
+benchmarks/benchmarks.iml
 
-benchmarks/libs/**/build/
-benchmarks/libs/**/dist/
-benchmarks/bms/**/build/
-benchmarks/bms/**/dist/
-
+# harness
+benchmarks/harness/downloads/*
+!benchmarks/harness/downloads/*.MD5
+benchmarks/harness/build/
+benchmarks/harness/dist/
+benchmarks/harness/tmp
 benchmarks/harness/src/org/dacapo/parser/ConfigFile.java
 benchmarks/harness/src/org/dacapo/parser/ConfigFileConstants.java
 benchmarks/harness/src/org/dacapo/parser/ConfigFileTokenManager.java
@@ -54,27 +33,29 @@ benchmarks/harness/src/org/dacapo/parser/SimpleCharStream.java
 benchmarks/harness/src/org/dacapo/parser/Token.java
 benchmarks/harness/src/org/dacapo/parser/TokenMgrError.java
 
-benchmarks/harness/build/
-benchmarks/harness/dist/
+# libraries
+benchmarks/libs/**/downloads/*
+!benchmarks/libs/**/downloads/*.MD5
+benchmarks/libs/**/tmp/*
+benchmarks/libs/**/build/
+benchmarks/libs/**/dist/
 
-benchmarks/SOURCE_VERSION.txt
-benchmarks/benchmarks.iml
-
+# benchmarks
+benchmarks/bms/**/downloads/*
+!benchmarks/bms/**/downloads/*.MD5
+benchmarks/bms/**/build/
+benchmarks/bms/**/dist/
+benchmarks/bms/**/deps/
+benchmarks/bms/**/data/*
+benchmarks/bms/**/outjar/*
+benchmarks/bms/**/outdat/*
+benchmarks/bms/**/tmp/*
 benchmarks/bms/kafka/data/
 benchmarks/bms/luindex/data/
 benchmarks/bms/eclipse/plugin/@dot/
-benchmarks/bms/batik/deps/
-
-benchmarks/build/
-benchmarks/dacapo*.jar
-benchmarks/dacapo*/dat/
-benchmarks/dacapo*/jar/
-
-benchmarks/run.sh
-
-benchmarks/META-INF/
 benchmarks/bms/tradebeans/outdat/
 
+# tools
 tools/analysis/bcc/target
 tools/analysis/bcc/dacapo-harness.jar
 tools/analysis/bcc/dependency-reduced-pom.xml
