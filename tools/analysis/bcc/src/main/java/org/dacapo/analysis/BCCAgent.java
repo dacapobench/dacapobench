@@ -34,6 +34,10 @@ public class BCCAgent {
           return false;
         }
 
+        if (className.startsWith("jdk/internal/reflect/GeneratedSerializationConstructorAccessor")) {
+          return false;
+        }
+
         return true;
       }
 
