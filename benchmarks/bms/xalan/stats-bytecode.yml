@@ -1,52 +1,55 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 484
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 488
 transformed-classes: 711
-transformed-bytecodes: 162212
-executed-bytecodes: 23280384898
+transformed-bytecodes: 162214
+executed-bytecodes: 23280385124
 executed-bytecodes-unique: 21324
 executed-bytecodes-p90: 1751688
 executed-bytecodes-p99: 14440734
 executed-bytecodes-p999: 91642811
 executed-bytecodes-p9999: 115443685
-executed-calls: 1044735149
+executed-calls: 1044735246
 executed-calls-unique: 2532
 opcodes:
-  aconst_null: 152491304
+  aconst_null: 152491296
   iconst_m1: 227936208
-  iconst_0: 153008043
-  iconst_1: 567031500
-  iconst_2: 15977180
+  iconst_0: 153008055
+  iconst_1: 567031508
+  iconst_2: 15977182
   iconst_3: 2630408
   iconst_4: 3501355
   iconst_5: 11162988
   lconst_0: 23552
   fconst_0: 24
-  bipush: 469962980
+  bipush: 469962985
   sipush: 101902242
-  ldc: 196251812
-  iload: 3677652297
+  ldc: 196251862
+  iload: 3677652320
   lload: 193549
   fload: 96
   dload: 132488
-  aload: 4228091814
+  aload: 4228091803
   iaload: 158371186
   laload: 185867
-  aaload: 171642440
+  aaload: 171642421
   baload: 319361741
   caload: 271523944
-  istore: 690943635
+  istore: 690943654
   lstore: 4610
   dstore: 66244
-  astore: 164643323
+  astore: 164643407
   iastore: 71336673
   lastore: 185867
-  aastore: 52436731
+  aastore: 52436732
   bastore: 3045857
   castore: 117795189
   pop: 46009250
-  dup: 285601142
+  dup: 285601170
   dup_x1: 141161024
   dup_x2: 3126457
   dup2: 1472860
@@ -61,7 +64,7 @@ opcodes:
   fdiv: 382
   irem: 3940825
   ineg: 312407
-  ishl: 13212348
+  ishl: 13212349
   ishr: 28177
   iushr: 83358141
   iand: 208277048
@@ -78,48 +81,46 @@ opcodes:
   lcmp: 20482
   fcmpg: 406
   dcmpl: 693850
-  ifeq: 309534077
-  ifne: 256562811
+  ifeq: 309534134
+  ifne: 256562809
   iflt: 152625198
   ifge: 4210013
   ifgt: 6078075
-  ifle: 29905360
+  ifle: 29905378
   if_icmpeq: 73384374
   if_icmpne: 332337183
   if_icmplt: 348836773
   if_icmpge: 531191708
   if_icmpgt: 101326453
-  if_icmple: 20110886
-  if_acmpeq: 119405762
-  if_acmpne: 43013340
-  goto: 484263907
+  if_icmple: 20110887
+  if_acmpeq: 119405734
+  if_acmpne: 43013329
+  goto: 484263948
   tableswitch: 12594457
   lookupswitch: 17529124
   ireturn: 737945566
   dreturn: 830430
-  areturn: 197243407
-  return: 238021239
-  getstatic: 122719474
-  putstatic: 47
-  getfield: 3722438698
-  putfield: 470646183
-  invokevirtual: 773181417
-  invokespecial: 49393538
-  invokestatic: 144923665
-  invokeinterface: 77236529
-  new: 5548362
-  newarray: 1098458
-  anewarray: 463711
+  areturn: 197243365
+  return: 238021238
+  getstatic: 122719488
+  putstatic: 51
+  getfield: 3722438612
+  putfield: 470646152
+  invokevirtual: 773181479
+  invokespecial: 49393529
+  invokestatic: 144923707
+  invokeinterface: 77236531
+  new: 5548371
+  newarray: 1098459
+  anewarray: 463712
   arraylength: 18673508
   athrow: 8704
-  checkcast: 30468825
+  checkcast: 30468784
   instanceof: 1557062
   monitorenter: 26112
   monitorexit: 26112
-  ifnull: 111532929
-  ifnonnull: 18405231
-
-# sun/launcher/LauncherHelper
+  ifnull: 111532938
+  ifnonnull: 18405252# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -393,6 +394,8 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -408,6 +411,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -504,8 +511,6 @@ opcodes:
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
 # java/util/regex/Matcher

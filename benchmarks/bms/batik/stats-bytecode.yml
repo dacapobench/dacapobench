@@ -1,19 +1,22 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1093
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 1097
 transformed-classes: 924
-transformed-bytecodes: 186986
-executed-bytecodes: 2756325153
+transformed-bytecodes: 186988
+executed-bytecodes: 2756327205
 executed-bytecodes-unique: 32956
 executed-bytecodes-p90: 32572
 executed-bytecodes-p99: 1000718
 executed-bytecodes-p999: 10424928
 executed-bytecodes-p9999: 13031160
-executed-calls: 70165329
+executed-calls: 70165668
 executed-calls-unique: 4910
 opcodes:
-  aconst_null: 2754596
+  aconst_null: 2754418
   iconst_m1: 6792618
   iconst_0: 20538759
   iconst_1: 58670115
@@ -28,14 +31,14 @@ opcodes:
   fconst_2: 8250
   dconst_0: 28029
   dconst_1: 3810
-  bipush: 29055273
+  bipush: 29055985
   sipush: 48815296
   ldc: 3970265
-  iload: 622642305
+  iload: 622643365
   lload: 2
   fload: 7516117
   dload: 909436
-  aload: 378347798
+  aload: 378347773
   iaload: 68057304
   faload: 61290
   daload: 355546
@@ -43,11 +46,11 @@ opcodes:
   baload: 42700913
   caload: 655748
   saload: 3237386
-  istore: 134435030
+  istore: 134436098
   lstore: 2
   fstore: 1361190
   dstore: 321770
-  astore: 10702935
+  astore: 10702934
   iastore: 52769881
   fastore: 342145
   dastore: 128
@@ -56,7 +59,7 @@ opcodes:
   castore: 3457419
   sastore: 2100094
   pop: 3295156
-  dup: 13241792
+  dup: 13241614
   dup_x1: 10606670
   dup_x2: 3044097
   dup2: 54224734
@@ -102,7 +105,7 @@ opcodes:
   fcmpg: 214423
   dcmpl: 15648
   dcmpg: 35399
-  ifeq: 10249986
+  ifeq: 10249982
   ifne: 4935799
   iflt: 31823101
   ifge: 21070017
@@ -111,7 +114,7 @@ opcodes:
   if_icmpeq: 3913074
   if_icmpne: 19201936
   if_icmplt: 2166803
-  if_icmpge: 35299413
+  if_icmpge: 35299769
   if_icmpgt: 17041640
   if_icmple: 10668354
   if_acmpeq: 85917
@@ -123,28 +126,26 @@ opcodes:
   freturn: 1403704
   dreturn: 2
   areturn: 17327468
-  return: 14921637
-  getstatic: 6294703
-  putstatic: 5466
-  getfield: 139013134
+  return: 14921633
+  getstatic: 6294523
+  putstatic: 4932
+  getfield: 139013118
   putfield: 31026230
-  invokevirtual: 35792930
-  invokespecial: 8901481
+  invokevirtual: 35793455
+  invokespecial: 8901295
   invokestatic: 16354502
   invokeinterface: 9116416
-  new: 2995580
+  new: 2995402
   newarray: 178210
   anewarray: 174494
   arraylength: 4863828
-  checkcast: 2928858
+  checkcast: 2928857
   instanceof: 384254
   monitorenter: 1
   monitorexit: 1
   multianewarray: 1
-  ifnull: 5990664
-  ifnonnull: 6250320
-
-# sun/launcher/LauncherHelper
+  ifnull: 5990480
+  ifnonnull: 6250320# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -434,6 +435,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -772,10 +777,10 @@ opcodes:
 # org/w3c/dom/events/EventTarget
 # org/w3c/dom/NodeList
 # org/w3c/dom/events/Event
-# org/w3c/dom/DOMConfiguration
 # org/w3c/dom/DOMError
-# org/w3c/dom/DocumentFragment
+# org/w3c/dom/DOMConfiguration
 # org/w3c/dom/events/EventListener
+# org/w3c/dom/DocumentFragment
 # java/io/PushbackInputStream
 # java/io/StringWriter
 # org/w3c/dom/TypeInfo

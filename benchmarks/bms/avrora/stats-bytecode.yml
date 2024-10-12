@@ -1,157 +1,158 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 421
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 425
 transformed-classes: 573
-transformed-bytecodes: 80833
-executed-bytecodes: 13754028881
+transformed-bytecodes: 80835
+executed-bytecodes: 13775498180
 executed-bytecodes-unique: 33054
 executed-bytecodes-p90: 608600
 executed-bytecodes-p99: 5912318
-executed-bytecodes-p999: 72516833
-executed-bytecodes-p9999: 72746136
-executed-calls: 1106031406
+executed-bytecodes-p999: 72514754
+executed-bytecodes-p9999: 72746164
+executed-calls: 1107568908
 executed-calls-unique: 4106
 opcodes:
-  aconst_null: 9229840
+  aconst_null: 9414605
   iconst_m1: 2904425
-  iconst_0: 206775606
-  iconst_1: 177386552
-  iconst_2: 108565941
+  iconst_0: 206776134
+  iconst_1: 177401294
+  iconst_2: 108565872
   iconst_3: 907956
   iconst_4: 11982111
   iconst_5: 984472
-  lconst_0: 10275213
-  lconst_1: 4001474
+  lconst_0: 10282309
+  lconst_1: 4001357
   fconst_0: 11594
   fconst_1: 718
   dconst_0: 485906
   dconst_1: 243030
-  bipush: 106788124
-  sipush: 108951760
-  ldc: 41000792
-  iload: 1377052337
-  lload: 344800073
+  bipush: 106788250
+  sipush: 108951872
+  ldc: 41000599
+  iload: 1377053228
+  lload: 346041981
   fload: 60226
   dload: 2729180
-  aload: 3217746974
+  aload: 3225155837
   iaload: 5443419
   daload: 1454
-  aaload: 99812210
-  baload: 67106700
+  aaload: 99812238
+  baload: 67106742
   caload: 823267
   saload: 6087
-  istore: 245877905
-  lstore: 11129911
+  istore: 245878255
+  lstore: 11411984
   fstore: 18390
   dstore: 2212323
-  astore: 123869414
+  astore: 124678816
   iastore: 985
   dastore: 302
   aastore: 70083
-  bastore: 53955591
+  bastore: 53955577
   castore: 823965
   sastore: 40
   pop: 2739028
   pop2: 242946
-  dup: 224851062
-  dup_x1: 2659351
+  dup: 225094162
+  dup_x1: 2674091
   dup_x2: 3001029
   dup2: 242946
   dup2_x1: 2
-  iadd: 176704105
-  ladd: 74877376
+  iadd: 176718929
+  ladd: 74923959
   dadd: 734642
-  isub: 32761496
-  lsub: 81396358
+  isub: 32761580
+  lsub: 81624477
   fsub: 6216
   dsub: 249468
-  imul: 9386504
-  lmul: 254275
+  imul: 9386379
+  lmul: 254358
   fmul: 5378
-  dmul: 1778460
+  dmul: 1778537
   idiv: 1601228
-  ldiv: 1203141
+  ldiv: 1202941
   fdiv: 5378
-  ddiv: 2008607
+  ddiv: 2008684
   irem: 18648
   lrem: 242946
-  lneg: 16118
+  lneg: 16810
   dneg: 242946
   ishl: 45750145
   lshl: 2387797
   ishr: 33525029
   lshr: 1838975
   iushr: 222
-  iand: 186972210
+  iand: 186972434
   land: 5983409
   ior: 34187419
   lor: 1458493
   ixor: 3452323
   lxor: 654898
   iinc: 11035432
-  i2l: 72759502
+  i2l: 72759377
   i2d: 263830
   l2i: 1926640
   l2f: 6216
-  l2d: 2047387
+  l2d: 2047541
   f2i: 5378
   f2l: 6216
   f2d: 6216
-  d2i: 764631
+  d2i: 764708
   d2l: 542998
   d2f: 6216
-  i2b: 95027526
+  i2b: 95027540
   i2c: 30421948
   i2s: 11331
-  lcmp: 95771262
+  lcmp: 96267069
   fcmpl: 12303
   dcmpl: 9
   dcmpg: 718
-  ifeq: 352829487
-  ifne: 92002355
-  iflt: 304584
-  ifge: 43406142
-  ifgt: 1007488
-  ifle: 83078906
-  if_icmpeq: 15547879
+  ifeq: 352873646
+  ifne: 92401307
+  iflt: 304561
+  ifge: 43516284
+  ifgt: 1007295
+  ifle: 83264711
+  if_icmpeq: 15547907
   if_icmpne: 7708061
-  if_icmplt: 2156069
-  if_icmpge: 93899792
+  if_icmplt: 2170809
+  if_icmpge: 93995670
   if_icmple: 276367
   if_acmpeq: 784481
   if_acmpne: 34664
-  goto: 172184084
+  goto: 172779829
   tableswitch: 30960
   lookupswitch: 4434
-  ireturn: 394130831
-  lreturn: 13131292
+  ireturn: 394130983
+  lreturn: 13315885
   freturn: 6087
-  dreturn: 1979973
-  areturn: 24554114
-  return: 650541653
-  getstatic: 14569850
+  dreturn: 1980050
+  areturn: 25061961
+  return: 651246436
+  getstatic: 14675799
   putstatic: 486331
-  getfield: 2166956003
-  putfield: 647081670
-  invokevirtual: 662067610
-  invokespecial: 167852983
-  invokestatic: 167186460
-  invokeinterface: 108924353
-  new: 860812
+  getfield: 2170762604
+  putfield: 648110743
+  invokevirtual: 662759205
+  invokespecial: 168422507
+  invokestatic: 167370858
+  invokeinterface: 109016338
+  new: 906341
   newarray: 281583
   anewarray: 429
   arraylength: 42940624
   athrow: 49
-  checkcast: 7372479
+  checkcast: 7371980
   instanceof: 45
-  monitorenter: 2119868
-  monitorexit: 2119868
+  monitorenter: 2212146
+  monitorexit: 2212146
   multianewarray: 64
-  ifnull: 128618599
-  ifnonnull: 96896815
-
-# sun/launcher/LauncherHelper
+  ifnull: 129081441
+  ifnonnull: 97357138# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -439,6 +440,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -531,12 +536,12 @@ opcodes:
 # javax/xml/datatype/FactoryFinder
 # jdk/xml/internal/SecuritySupport
 # javax/xml/datatype/FactoryFinder$1
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/net/URLClassLoader$3
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/lang/invoke/MethodHandle$1
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult

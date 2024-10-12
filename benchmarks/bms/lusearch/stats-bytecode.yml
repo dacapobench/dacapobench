@@ -1,22 +1,25 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 663
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 667
 transformed-classes: 738
-transformed-bytecodes: 153460
-executed-bytecodes: 162210407292
+transformed-bytecodes: 153462
+executed-bytecodes: 162210397125
 executed-bytecodes-unique: 26352
 executed-bytecodes-p90: 4339233
 executed-bytecodes-p99: 129527996
 executed-bytecodes-p999: 789329315
 executed-bytecodes-p9999: 958163983
-executed-calls: 8377636318
+executed-calls: 8377635517
 executed-calls-unique: 3002
 opcodes:
   aconst_null: 42172143
   iconst_m1: 114289234
-  iconst_0: 403080518
-  iconst_1: 1080451259
+  iconst_0: 403079954
+  iconst_1: 1080450678
   iconst_2: 52750444
   iconst_3: 46473528
   iconst_4: 825699480
@@ -29,41 +32,41 @@ opcodes:
   dconst_1: 880560
   bipush: 7796388392
   sipush: 1191314399
-  ldc: 3583800352
-  iload: 31871419463
+  ldc: 3583800482
+  iload: 31871417898
   lload: 2455609184
   fload: 379044091
-  aload: 24022514406
+  aload: 24022513142
   iaload: 106629194
   laload: 360016438
   faload: 264990630
-  aaload: 259056460
+  aaload: 259056508
   baload: 359890132
   caload: 8844500
-  istore: 8218328892
+  istore: 8218327768
   lstore: 405679288
   fstore: 54282319
-  astore: 235729649
+  astore: 235729223
   iastore: 109063329
   lastore: 1936414512
   fastore: 227019371
   aastore: 129086758
   bastore: 247873735
-  pop: 33732560
+  pop: 33732596
   pop2: 12
-  dup: 2956148971
+  dup: 2956148394
   dup_x1: 155574202
   dup_x2: 4352
   dup2: 26055166
   dup2_x1: 124165279
-  iadd: 7193673136
+  iadd: 7193672553
   ladd: 2418284561
   fadd: 252104606
   dadd: 2641680
   isub: 1049737372
   lsub: 154876254
   fsub: 252104606
-  imul: 1100061
+  imul: 1099478
   lmul: 21788705
   fmul: 490726294
   idiv: 2369104
@@ -84,7 +87,7 @@ opcodes:
   lor: 43391244
   ixor: 397047
   lxor: 5342301
-  iinc: 1863314339
+  iinc: 1863315027
   i2l: 811979204
   i2f: 25800943
   l2i: 133835490
@@ -98,50 +101,48 @@ opcodes:
   lcmp: 126583574
   fcmpl: 76124079
   fcmpg: 76265437
-  ifeq: 1132013023
-  ifne: 1208049014
+  ifeq: 1132013120
+  ifne: 1208049650
   iflt: 282260822
   ifge: 112995788
-  ifgt: 59207822
+  ifgt: 59207239
   ifle: 95447020
   if_icmpeq: 45880533
   if_icmpne: 1529871705
   if_icmplt: 2410503149
-  if_icmpge: 1103046098
+  if_icmpge: 1103046169
   if_icmpgt: 119569494
   if_icmple: 890104454
-  if_acmpeq: 9165423
+  if_acmpeq: 9165467
   if_acmpne: 44220409
-  goto: 1846457872
+  goto: 1846457975
   tableswitch: 47969524
   lookupswitch: 6874805
-  ireturn: 2721739818
+  ireturn: 2721739816
   lreturn: 174229175
   freturn: 81141392
-  areturn: 404480603
-  return: 1359421224
-  getstatic: 3972573042
+  areturn: 404480619
+  return: 1359420641
+  getstatic: 3972572465
   putstatic: 451
-  getfield: 12587866005
+  getfield: 12587864246
   putfield: 3957417251
-  invokevirtual: 4030684851
-  invokespecial: 462756078
-  invokestatic: 1651217490
-  invokeinterface: 2225276279
-  invokedynamic: 7701620
-  new: 149023996
+  invokevirtual: 4030684461
+  invokespecial: 462756084
+  invokestatic: 1651217492
+  invokeinterface: 2225275858
+  invokedynamic: 7701622
+  new: 149024002
   newarray: 71056466
-  anewarray: 20281051
-  arraylength: 386000245
+  anewarray: 20281057
+  arraylength: 386000268
   athrow: 1048576
-  checkcast: 272014117
+  checkcast: 272014763
   instanceof: 6292934
-  monitorenter: 22186
-  monitorexit: 22186
-  ifnull: 90130308
-  ifnonnull: 84983357
-
-# sun/launcher/LauncherHelper
+  monitorenter: 21603
+  monitorexit: 21603
+  ifnull: 90130306
+  ifnonnull: 84983380# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -430,6 +431,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -690,6 +695,8 @@ opcodes:
 # java/lang/management/ManagementFactory$PlatformMBeanFinder
 # java/lang/management/ManagementFactory$PlatformMBeanFinder$1
 # sun/management/spi/PlatformMBeanProvider
+# jdk/management/jfr/internal/FlightRecorderMXBeanProvider
+# java/util/concurrent/Callable
 # com/sun/management/internal/PlatformMBeanProviderImpl
 # com/sun/management/internal/PlatformMBeanProviderImpl$1
 # sun/management/spi/PlatformMBeanProvider$PlatformComponent
@@ -706,8 +713,6 @@ opcodes:
 # sun/management/VMManagementImpl
 # sun/management/VMManagement
 # com/sun/management/internal/PlatformMBeanProviderImpl$5
-# jdk/management/jfr/internal/FlightRecorderMXBeanProvider
-# java/util/concurrent/Callable
 # java/lang/management/DefaultPlatformMBeanProvider
 # java/lang/management/DefaultPlatformMBeanProvider$1
 # java/lang/management/DefaultPlatformMBeanProvider$2

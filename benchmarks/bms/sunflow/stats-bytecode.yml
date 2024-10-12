@@ -1,16 +1,19 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 964
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 967
 transformed-classes: 183
-transformed-bytecodes: 63643
-executed-bytecodes: 423453587189
+transformed-bytecodes: 63645
+executed-bytecodes: 423453587165
 executed-bytecodes-unique: 20994
 executed-bytecodes-p90: 12582912
 executed-bytecodes-p99: 411253955
 executed-bytecodes-p999: 1430956417
 executed-bytecodes-p9999: 1578532783
-executed-calls: 16652462862
+executed-calls: 16652462858
 executed-calls-unique: 1822
 opcodes:
   aconst_null: 159406437
@@ -34,7 +37,7 @@ opcodes:
   lload: 6995291
   fload: 39471051629
   dload: 944118869
-  aload: 88035195182
+  aload: 88035195174
   iaload: 6021638420
   laload: 3134660
   faload: 194982086
@@ -103,7 +106,7 @@ opcodes:
   fcmpg: 6888295646
   dcmpl: 36545196
   dcmpg: 143879700
-  ifeq: 64946997
+  ifeq: 64946993
   ifne: 2162841942
   iflt: 509199652
   ifge: 6511961771
@@ -125,13 +128,13 @@ opcodes:
   freturn: 3263561530
   dreturn: 65617900
   areturn: 3003859224
-  return: 5471550932
+  return: 5471550928
   getstatic: 99555589
   putstatic: 62
-  getfield: 65990342545
+  getfield: 65990342541
   putfield: 6582047017
   invokevirtual: 10067429660
-  invokespecial: 1048630051
+  invokespecial: 1048630047
   invokestatic: 3248088465
   invokeinterface: 2288314686
   new: 517340385
@@ -142,9 +145,7 @@ opcodes:
   monitorenter: 1270
   monitorexit: 1270
   ifnull: 1659092532
-  ifnonnull: 569573363
-
-# sun/launcher/LauncherHelper
+  ifnonnull: 569573363# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -418,8 +419,6 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -435,6 +434,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -531,6 +534,8 @@ opcodes:
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
 # java/util/regex/Matcher
@@ -735,8 +740,6 @@ opcodes:
 # java/security/SecureRandom
 # java/util/random/RandomGenerator
 # java/util/Random
-# java/security/SecureRandomParameters
-# java/util/StringJoiner
 # java/nio/file/TempFileHelper$PosixPermissions
 # java/util/RegularEnumSet$EnumSetIterator
 # java/nio/file/attribute/PosixFilePermissions$1
@@ -758,28 +761,28 @@ opcodes:
 # java/lang/invoke/VarHandleReferences$FieldInstanceReadWrite
 # sun/java2d/DisposerTarget
 # javax/imageio/ImageIO$CanDecodeInputFilter
+# java/util/concurrent/AbstractExecutorService
 # javax/imageio/spi/ServiceRegistry$Filter
 # javax/imageio/spi/FilterIterator
-# java/util/concurrent/AbstractExecutorService
-# com/sun/imageio/plugins/common/ReaderUtil
-# javax/imageio/ImageIO$ImageReaderIterator
 # java/util/concurrent/ForkJoinPool
+# com/sun/imageio/plugins/common/ReaderUtil
 # java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
 # java/util/concurrent/ForkJoinPool$WorkQueue
-# com/sun/imageio/plugins/png/PNGImageReader
 # jdk/internal/vm/StackableScope
 # jdk/internal/vm/ThreadContainer
-# java/awt/Point
 # jdk/internal/vm/SharedThreadContainer
+# javax/imageio/ImageIO$ImageReaderIterator
 # java/util/concurrent/ForkJoinPool$DefaultForkJoinWorkerThreadFactory
-# java/awt/geom/Point2D
 # java/lang/invoke/VarHandleBooleans$FieldInstanceReadOnly
 # java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite
+# com/sun/imageio/plugins/png/PNGImageReader
 # jdk/internal/vm/ThreadContainers
 # jdk/internal/vm/ThreadContainers$RootContainer
 # jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer
 # jdk/internal/access/JavaUtilConcurrentFJPAccess
 # java/util/concurrent/ForkJoinPool$2
+# java/awt/Point
+# java/awt/geom/Point2D
 # com/sun/imageio/plugins/png/PNGMetadata
 # javax/imageio/metadata/IIOMetadata
 # javax/imageio/ImageReadParam
@@ -939,6 +942,7 @@ opcodes:
 # jdk/internal/access/JavaSecuritySignatureAccess
 # sun/security/jca/ServiceId
 # java/security/Signature$Delegate
+# java/util/StringJoiner
 # sun/security/x509/AVAKeyword
 # sun/security/pkcs/PKCS9Attribute
 # sun/security/x509/CertificateExtensions

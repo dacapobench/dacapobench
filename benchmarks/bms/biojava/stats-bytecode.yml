@@ -1,16 +1,19 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1354
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 1358
 transformed-classes: 763
-transformed-bytecodes: 113303
-executed-bytecodes: 17142812108
+transformed-bytecodes: 113305
+executed-bytecodes: 17142811820
 executed-bytecodes-unique: 18285
 executed-bytecodes-p90: 2839
 executed-bytecodes-p99: 21793852
 executed-bytecodes-p999: 122227694
 executed-bytecodes-p9999: 496355838
-executed-calls: 3408603955
+executed-calls: 3408603883
 executed-calls-unique: 2906
 opcodes:
   aconst_null: 92707126
@@ -27,11 +30,11 @@ opcodes:
   dconst_1: 8598634
   bipush: 97367518
   sipush: 86
-  ldc: 29086268
+  ldc: 29086250
   iload: 1577922231
   lload: 58
   dload: 26051772
-  aload: 4131604750
+  aload: 4131604678
   iaload: 8973140
   daload: 593863
   aaload: 597998
@@ -40,7 +43,7 @@ opcodes:
   istore: 349348989
   lstore: 21
   dstore: 23959171
-  astore: 636290995
+  astore: 636290959
   iastore: 8595565
   dastore: 221842
   aastore: 74032
@@ -79,7 +82,7 @@ opcodes:
   lcmp: 5
   dcmpl: 119238
   dcmpg: 53941
-  ifeq: 537544246
+  ifeq: 537544210
   ifne: 217598905
   iflt: 43840287
   ifge: 139121
@@ -93,7 +96,7 @@ opcodes:
   if_icmple: 139466990
   if_acmpeq: 37
   if_acmpne: 49
-  goto: 761105544
+  goto: 761105526
   tableswitch: 7
   lookupswitch: 87175408
   ireturn: 361671463
@@ -105,23 +108,21 @@ opcodes:
   putstatic: 388
   getfield: 838643848
   putfield: 14372036
-  invokevirtual: 2119544767
+  invokevirtual: 2119544749
   invokespecial: 4204866
   invokestatic: 211758108
-  invokeinterface: 1073092693
+  invokeinterface: 1073092639
   invokedynamic: 3521
   new: 1574453
   newarray: 79534
   anewarray: 252258
   arraylength: 756265
-  checkcast: 509929516
+  checkcast: 509929480
   instanceof: 34507309
   monitorenter: 5689
   monitorexit: 5689
   ifnull: 21894905
-  ifnonnull: 78116713
-
-# sun/launcher/LauncherHelper
+  ifnonnull: 78116713# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -394,8 +395,6 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -411,6 +410,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -507,6 +510,8 @@ opcodes:
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
 # java/util/regex/Matcher
@@ -594,9 +599,9 @@ opcodes:
 # java/io/ObjectStreamConstants
 # java/io/StreamCorruptedException
 # java/lang/PublicMethods
+# java/io/ObjectInputStream$GetField
 # java/io/ObjectInputValidation
 # java/io/NotActiveException
-# java/io/ObjectInputStream$GetField
 # java/io/ObjectInputFilter
 # java/io/ObjectInputFilter$FilterInfo
 # java/io/ObjectInputFilter$Status
@@ -1454,9 +1459,9 @@ opcodes:
 # jdk/jfr/FlightRecorder
 # javax/management/NotificationListener
 # javax/management/NotificationFilter
-# javax/management/ListenerNotFoundException
 # jdk/management/jfr/FlightRecorderMXBeanImpl$MXBeanListener
 # jdk/jfr/FlightRecorderListener
+# javax/management/ListenerNotFoundException
 # javax/management/ObjectName$PatternProperty
 # java/beans/PropertyChangeListener
 # com/sun/jmx/mbeanserver/StandardMBeanSupport
