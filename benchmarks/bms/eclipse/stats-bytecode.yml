@@ -1,9 +1,12 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 962
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 967
 transformed-classes: 559
-transformed-bytecodes: 119843
+transformed-bytecodes: 119845
 executed-bytecodes: 39109
 executed-bytecodes-unique: 1411
 executed-bytecodes-p90: 15
@@ -71,9 +74,7 @@ opcodes:
   monitorenter: 5
   monitorexit: 5
   ifnull: 1162
-  ifnonnull: 28
-
-# sun/launcher/LauncherHelper
+  ifnonnull: 28# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -362,6 +363,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -772,6 +777,7 @@ opcodes:
 # java/lang/invoke/MethodHandleImpl$BindCaller$1
 # java/lang/invoke/MethodHandleImpl$BindCaller$InjectedInvokerHolder
 # java/net/URLClassLoader$2
+# jdk/internal/event/EventHelper$ThreadTrackHolder
 # jdk/internal/logger/LazyLoggers
 # jdk/internal/logger/LazyLoggers$1
 # jdk/internal/logger/LazyLoggers$LazyLoggerFactories

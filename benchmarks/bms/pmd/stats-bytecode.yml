@@ -1,25 +1,28 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1227
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 1231
 transformed-classes: 2332
-transformed-bytecodes: 436841
-executed-bytecodes: 13904395126
+transformed-bytecodes: 436843
+executed-bytecodes: 13904290292
 executed-bytecodes-unique: 95973
 executed-bytecodes-p90: 47184
 executed-bytecodes-p99: 2313607
-executed-bytecodes-p999: 38837641
+executed-bytecodes-p999: 38837556
 executed-bytecodes-p9999: 67118561
-executed-calls: 1693440416
+executed-calls: 1693406801
 executed-calls-unique: 15358
 opcodes:
-  aconst_null: 80214656
-  iconst_m1: 21391022
-  iconst_0: 190341358
-  iconst_1: 229424583
-  iconst_2: 8865172
-  iconst_3: 4295088
-  iconst_4: 1782491
+  aconst_null: 80214607
+  iconst_m1: 21390188
+  iconst_0: 190340526
+  iconst_1: 229425870
+  iconst_2: 8865164
+  iconst_3: 4295085
+  iconst_4: 1782486
   iconst_5: 139462
   lconst_0: 7173135
   lconst_1: 5135459
@@ -28,47 +31,47 @@ opcodes:
   fconst_2: 3
   dconst_0: 24123
   dconst_1: 19750
-  bipush: 69253376
-  sipush: 12116956
-  ldc: 62245984
-  iload: 724429725
+  bipush: 69253377
+  sipush: 12121435
+  ldc: 62245897
+  iload: 724425233
   lload: 6062827
   fload: 43959
   dload: 273185
-  aload: 3973955470
-  iaload: 10854489
+  aload: 3973926565
+  iaload: 10854420
   laload: 3168271
-  aaload: 77867732
+  aaload: 77867772
   baload: 22891961
   caload: 110553943
-  istore: 139613409
+  istore: 139619534
   lstore: 2646925
   fstore: 37275
   dstore: 147974
-  astore: 274096486
-  iastore: 9869333
+  astore: 274098393
+  iastore: 9869332
   lastore: 307
-  aastore: 1795409
+  aastore: 1795417
   bastore: 553
   castore: 8697642
   sastore: 14
-  pop: 40054482
-  dup: 209130688
-  dup_x1: 82065086
+  pop: 40054491
+  dup: 209130386
+  dup_x1: 82065003
   dup_x2: 2838618
   dup2: 763213
-  iadd: 115387045
+  iadd: 115386906
   ladd: 2863
   dadd: 47242
-  isub: 21993079
+  isub: 21988445
   lsub: 1
   fsub: 37275
   dsub: 22382
-  imul: 2356738
+  imul: 2356725
   lmul: 2088
   fmul: 1015
   dmul: 37356
-  idiv: 251969
+  idiv: 251968
   ldiv: 1
   fdiv: 370
   ddiv: 11055
@@ -76,15 +79,15 @@ opcodes:
   ineg: 32806
   ishl: 6407394
   lshl: 5281610
-  ishr: 3256394
+  ishr: 3256392
   lshr: 147948
   iushr: 445
-  iand: 33475327
+  iand: 33475323
   land: 6737354
   ior: 1075437
   lor: 505704
   ixor: 700498
-  iinc: 84124821
+  iinc: 84126411
   i2l: 350687
   i2f: 1385
   i2d: 57091
@@ -98,53 +101,51 @@ opcodes:
   i2s: 645359
   lcmp: 6790043
   fcmpg: 1657
-  dcmpl: 92280
+  dcmpl: 92370
   dcmpg: 819
-  ifeq: 270836979
-  ifne: 190605963
-  iflt: 46183137
+  ifeq: 270831625
+  ifne: 190602893
+  iflt: 46180149
   ifge: 1166124
-  ifgt: 900101
+  ifgt: 900089
   ifle: 6572756
-  if_icmpeq: 73736429
-  if_icmpne: 79561247
-  if_icmplt: 39520807
-  if_icmpge: 129620690
-  if_icmpgt: 3354101
-  if_icmple: 4854926
-  if_acmpeq: 1206577
-  if_acmpne: 2291228
-  goto: 273051169
+  if_icmpeq: 73735526
+  if_icmpne: 79565727
+  if_icmplt: 39525286
+  if_icmpge: 129617601
+  if_icmpgt: 3351107
+  if_icmple: 4854925
+  if_acmpeq: 1206585
+  if_acmpne: 2291240
+  goto: 273053038
   tableswitch: 18514477
   lookupswitch: 5117450
-  ireturn: 327144789
+  ireturn: 327136439
   lreturn: 187493
   freturn: 70276
-  dreturn: 295769
-  areturn: 809414356
-  return: 250373683
-  getstatic: 74562243
-  putstatic: 906
-  getfield: 1621227036
-  putfield: 550463236
-  invokevirtual: 448110588
-  invokespecial: 396732736
-  invokestatic: 160527877
-  invokeinterface: 688069215
-  new: 107683916
-  newarray: 287079
-  anewarray: 1181523
-  arraylength: 59197804
+  dreturn: 295920
+  areturn: 809406354
+  return: 250373545
+  getstatic: 74561438
+  putstatic: 894
+  getfield: 1621217589
+  putfield: 550462825
+  invokevirtual: 448098497
+  invokespecial: 396732217
+  invokestatic: 160523136
+  invokeinterface: 688052951
+  new: 107683761
+  newarray: 287078
+  anewarray: 1181526
+  arraylength: 59197733
   athrow: 3227
-  checkcast: 196141326
-  instanceof: 26382234
+  checkcast: 196133936
+  instanceof: 26377876
   monitorenter: 1395
   monitorexit: 1395
   multianewarray: 2425
-  ifnull: 202681200
-  ifnonnull: 148340848
-
-# sun/launcher/LauncherHelper
+  ifnull: 202678106
+  ifnonnull: 148344199# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -435,6 +436,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -460,914 +465,3 @@ opcodes:
 # sun/security/provider/SunEntries
 # sun/security/provider/SunEntries$1
 # sun/security/provider/NativePRNG
-# java/security/SecureRandomSpi
-# sun/security/provider/NativePRNG$Variant
-# sun/security/provider/NativePRNG$1
-# sun/security/provider/NativePRNG$RandomIO
-# sun/security/provider/FileInputStreamPool
-# sun/security/provider/FileInputStreamPool$UnclosableInputStream
-# sun/security/provider/FileInputStreamPool$StreamRef
-# java/security/Provider$Service
-# java/security/Provider$UString
-# sun/security/provider/NativePRNG$Blocking
-# sun/security/provider/NativePRNG$NonBlocking
-# sun/security/util/SecurityProviderConstants
-# sun/security/util/KnownOIDs
-# sun/security/util/KnownOIDs$1
-# sun/security/util/KnownOIDs$2
-# sun/security/util/KnownOIDs$3
-# sun/security/util/KnownOIDs$4
-# sun/security/util/KnownOIDs$5
-# sun/security/util/KnownOIDs$6
-# sun/security/util/KnownOIDs$7
-# sun/security/util/KnownOIDs$8
-# sun/security/util/KnownOIDs$9
-# sun/security/util/KnownOIDs$10
-# jdk/internal/event/SecurityProviderServiceEvent
-# jdk/internal/event/Event
-# sun/security/provider/MD5
-# sun/security/provider/DigestBase
-# sun/security/jca/GetInstance$Instance
-# java/security/MessageDigest$Delegate
-# sun/security/util/MessageDigestSpi2
-# java/security/MessageDigest$Delegate$CloneableDelegate
-# java/nio/channels/Channels
-# sun/nio/ch/Streams
-# sun/nio/ch/SocketChannelImpl
-# sun/nio/ch/SelChImpl
-# java/nio/channels/SocketChannel
-# java/nio/channels/NetworkChannel
-# java/nio/channels/spi/AbstractSelectableChannel
-# java/nio/channels/SelectableChannel
-# sun/nio/ch/ChannelInputStream
-# sun/security/provider/ByteArrayAccess$LE
-# sun/security/provider/ByteArrayAccess
-# javax/xml/datatype/DatatypeConfigurationException
-# java/util/Calendar
-# java/util/GregorianCalendar
-# javax/xml/datatype/DatatypeFactory
-# java/util/regex/Pattern
-# java/util/regex/Pattern$Node
-# java/util/regex/Pattern$LastNode
-# java/util/regex/Pattern$GroupHead
-# java/util/regex/Pattern$CharPredicate
-# java/util/regex/Pattern$BmpCharPredicate
-# java/util/regex/Pattern$BitClass
-# java/util/regex/Pattern$CharProperty
-# java/util/regex/Pattern$Qtype
-# java/util/regex/Pattern$BmpCharProperty
-# java/util/regex/Pattern$CharPropertyGreedy
-# java/util/regex/Pattern$SliceNode
-# java/util/regex/Pattern$Slice
-# java/util/regex/Pattern$Begin
-# java/util/regex/Pattern$First
-# java/util/regex/Pattern$Start
-# java/util/regex/Pattern$StartS
-# java/util/regex/Pattern$TreeInfo
-# javax/xml/datatype/FactoryFinder
-# jdk/xml/internal/SecuritySupport
-# javax/xml/datatype/FactoryFinder$1
-# java/net/URLClassLoader$3
-# java/net/URLClassLoader$3$1
-# java/net/MalformedURLException
-# com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
-# java/lang/invoke/MethodHandle$1
-# java/util/regex/Pattern$BnM
-# java/util/regex/MatchResult
-# java/util/regex/Matcher
-# java/util/regex/IntHashSet
-# java/net/URLClassLoader$1
-# java/io/FilePermission
-# java/io/FilePermission$1
-# jdk/internal/access/JavaIOFilePermissionAccess
-# sun/security/util/FilePermCompat
-# sun/security/util/SecurityProperties
-# java/io/FilePermissionCollection
-# java/util/logging/Logger
-# java/util/logging/Handler
-# java/util/logging/Level
-# java/util/logging/Level$KnownLevel
-# java/util/logging/Logger$LoggerBundle
-# java/util/logging/Logger$ConfigurationData
-# java/util/logging/LogManager
-# java/util/logging/LogManager$1
-# java/util/logging/LogManager$LoggerContext
-# java/util/logging/LogManager$SystemLoggerContext
-# java/util/logging/LogManager$LogNode
-# java/util/Collections$SynchronizedMap
-# java/util/logging/LogManager$Cleaner
-# java/lang/ApplicationShutdownHooks
-# java/lang/ApplicationShutdownHooks$1
-# java/lang/Shutdown
-# java/lang/Shutdown$Lock
-# java/util/logging/LoggingPermission
-# sun/util/logging/internal/LoggingProviderImpl$LogManagerAccess
-# java/util/logging/LogManager$LoggingProviderAccess
-# java/lang/System$LoggerFinder
-# jdk/internal/logger/DefaultLoggerFinder
-# sun/util/logging/internal/LoggingProviderImpl
-# java/util/logging/LogManager$2
-# java/util/logging/LogManager$RootLogger
-# java/util/logging/LogManager$LoggerWeakRef
-# java/util/logging/LogManager$VisitedLoggers
-# java/util/logging/LogManager$LoggerContext$1
-# java/util/Collections$3
-# java/util/Properties$EntrySet
-# java/util/Hashtable$Enumerator
-# java/util/ArrayList$ArrayListSpliterator
-# java/util/stream/ReferencePipeline$7
-# java/util/stream/ReferencePipeline$7$1
-# java/util/stream/Streams$AbstractStreamBuilderImpl
-# java/util/stream/Stream$Builder
-# java/util/stream/Streams$StreamBuilderImpl
-# java/util/stream/Streams
-# java/util/IdentityHashMap$Values
-# java/lang/System$Logger
-# sun/util/logging/PlatformLogger$Bridge
-# sun/util/logging/PlatformLogger$ConfigurableBridge
-# jdk/internal/logger/BootstrapLogger
-# jdk/internal/logger/BootstrapLogger$DetectBackend
-# jdk/internal/logger/BootstrapLogger$DetectBackend$1
-# jdk/internal/logger/BootstrapLogger$LoggingBackend
-# jdk/internal/logger/BootstrapLogger$BootstrapExecutors
-# java/util/logging/LogManager$4
-# java/util/logging/Logger$SystemLoggerHelper
-# java/util/logging/Logger$SystemLoggerHelper$1
-# jdk/internal/logger/DefaultLoggerFinder$1
-# java/net/URLClassLoader$2
-# java/lang/invoke/DirectMethodHandle$StaticAccessor
-# jdk/internal/reflect/MethodHandleFieldAccessorImpl
-# jdk/internal/reflect/MethodHandleObjectFieldAccessorImpl
-# java/lang/ArrayIndexOutOfBoundsException
-# java/math/BigDecimal
-# java/lang/SecurityException
-# sun/reflect/generics/parser/SignatureParser
-# sun/reflect/generics/tree/TypeArgument
-# sun/reflect/generics/tree/TypeTree
-# sun/reflect/generics/tree/Tree
-# sun/reflect/generics/tree/SimpleClassTypeSignature
-# sun/reflect/generics/tree/FieldTypeSignature
-# sun/reflect/generics/tree/BaseType
-# sun/reflect/generics/tree/TypeSignature
-# sun/reflect/generics/tree/ReturnType
-# sun/reflect/generics/tree/ClassTypeSignature
-# sun/reflect/generics/scope/ClassScope
-# sun/reflect/generics/scope/Scope
-# sun/reflect/generics/scope/AbstractScope
-# sun/reflect/generics/factory/CoreReflectionFactory
-# sun/reflect/generics/factory/GenericsFactory
-# sun/reflect/generics/visitor/Reifier
-# sun/reflect/generics/visitor/TypeTreeVisitor
-# java/lang/reflect/GenericArrayType
-# sun/reflect/annotation/AnnotationType
-# sun/reflect/annotation/AnnotationType$1
-# sun/reflect/annotation/ExceptionProxy
-# java/lang/annotation/Retention
-# java/lang/annotation/Inherited
-# java/lang/annotation/RetentionPolicy
-# sun/reflect/annotation/AnnotationTypeMismatchExceptionProxy
-# sun/reflect/annotation/AnnotationParser$1
-# sun/reflect/annotation/AnnotationInvocationHandler
-# java/lang/reflect/InvocationHandler
-# java/lang/reflect/Proxy
-# java/lang/reflect/Proxy$1
-# jdk/internal/loader/AbstractClassLoaderValue$Sub
-# java/lang/reflect/Proxy$ProxyBuilder
-# java/util/Collections$SingletonList
-# java/util/Collections$1
-# java/lang/PublicMethods
-# java/lang/module/ModuleDescriptor$Builder
-# jdk/internal/module/Checks
-# java/lang/reflect/Proxy$ProxyBuilder$ProxyClassContext
-# java/lang/reflect/ProxyGenerator
-# java/lang/reflect/ProxyGenerator$ProxyMethod
-# java/lang/InterruptedException
-# java/util/StringJoiner
-# java/lang/reflect/ProxyGenerator$PrimitiveTypeInfo
-# jdk/internal/org/objectweb/asm/Edge
-# jdk/proxy1/$Proxy0
-# java/lang/reflect/Proxy$ProxyBuilder$1
-# java/lang/annotation/Target
-# java/lang/reflect/UndeclaredThrowableException
-# java/lang/Deprecated
-# java/lang/annotation/Documented
-# jdk/proxy1/$Proxy2
-# java/lang/Class$AnnotationData
-# java/lang/Class$1
-# jdk/internal/reflect/MethodHandleBooleanFieldAccessorImpl
-# jdk/internal/reflect/MethodHandleIntegerFieldAccessorImpl
-# sun/reflect/generics/repository/FieldRepository
-# sun/reflect/generics/repository/AbstractRepository
-# sun/reflect/generics/reflectiveObjects/ParameterizedTypeImpl
-# java/lang/reflect/ParameterizedType
-# sun/reflect/generics/repository/ClassRepository
-# sun/reflect/generics/repository/GenericDeclRepository
-# java/lang/reflect/TypeVariable
-# sun/reflect/generics/tree/FormalTypeParameter
-# sun/reflect/generics/tree/ClassSignature
-# sun/reflect/generics/tree/Signature
-# sun/reflect/generics/tree/TypeVariableSignature
-# sun/reflect/generics/reflectiveObjects/TypeVariableImpl
-# sun/reflect/generics/reflectiveObjects/LazyReflectiveObjectGenerator
-# java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet
-# java/util/LinkedHashMap$LinkedEntrySet
-# java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$1
-# java/util/LinkedHashMap$LinkedEntryIterator
-# java/util/Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry
-# java/util/regex/CharPredicates
-# java/util/regex/Pattern$BmpCharPropertyGreedy
-# java/util/regex/Pattern$GroupTail
-# java/util/regex/Pattern$Curly
-# java/util/regex/Pattern$Ques
-# java/util/regex/Pattern$Loop
-# java/util/regex/Pattern$Prolog
-# java/util/regex/Pattern$BranchConn
-# java/util/regex/Pattern$Branch
-# java/util/regex/Pattern$GroupCurly
-# java/util/logging/ConsoleHandler
-# java/util/logging/StreamHandler
-# java/util/logging/SimpleFormatter
-# java/util/logging/Formatter
-# jdk/internal/logger/SurrogateLogger
-# jdk/internal/logger/SimpleConsoleLogger
-# sun/util/logging/PlatformLogger$ConfigurableBridge$LoggerConfiguration
-# java/lang/System$Logger$Level
-# sun/util/logging/PlatformLogger
-# sun/util/logging/PlatformLogger$Level
-# jdk/internal/logger/SimpleConsoleLogger$Formatting
-# java/util/logging/ErrorManager
-# java/util/logging/Handler$1
-# java/util/logging/StreamHandler$1
-# java/nio/file/FileVisitor
-# java/nio/file/SimpleFileVisitor
-# java/util/RegularEnumSet$EnumSetIterator
-# java/nio/file/FileTreeWalker$1
-# sun/nio/fs/UnixSecureDirectoryStream
-# java/nio/file/SecureDirectoryStream
-# sun/nio/fs/UnixDirectoryStream
-# java/util/concurrent/locks/ReentrantReadWriteLock$FairSync
-# sun/nio/fs/UnixDirectoryStream$UnixDirectoryIterator
-# java/nio/file/Files$3
-# java/nio/file/FileVisitResult
-# sun/nio/fs/UnixException
-# java/nio/charset/UnsupportedCharsetException
-# sun/nio/ch/ChannelOutputStream
-# java/util/zip/CheckedInputStream
-# java/io/StringReader
-# java/util/regex/Pattern$SliceS
-# java/util/regex/ASCII
-# java/util/zip/Adler32
-# java/util/Stack
-# java/net/HttpURLConnection
-# java/io/EOFException
-# java/io/CharConversionException
-# java/util/MissingResourceException
-# java/lang/StringIndexOutOfBoundsException
-# java/util/ComparableTimSort
-# java/io/FilenameFilter
-# java/util/regex/Pattern$Dollar
-# java/text/Format
-# java/text/DateFormat
-# java/util/concurrent/CompletionService
-# java/util/concurrent/Callable
-# java/util/concurrent/ExecutionException
-# java/util/concurrent/Executors
-# java/util/concurrent/ThreadPoolExecutor
-# java/util/concurrent/AbstractExecutorService
-# java/util/concurrent/ThreadPoolExecutor$AbortPolicy
-# java/util/concurrent/RejectedExecutionHandler
-# java/util/concurrent/LinkedBlockingQueue
-# java/util/concurrent/BlockingQueue
-# java/util/AbstractQueue
-# java/util/concurrent/LinkedBlockingQueue$Node
-# jdk/internal/vm/StackableScope
-# jdk/internal/vm/ThreadContainer
-# jdk/internal/vm/SharedThreadContainer
-# java/lang/invoke/VarHandleBooleans$FieldInstanceReadOnly
-# java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite
-# java/lang/invoke/VarHandleReferences$FieldInstanceReadOnly
-# java/lang/invoke/VarHandleReferences$FieldInstanceReadWrite
-# jdk/internal/vm/ThreadContainers
-# jdk/internal/vm/ThreadContainers$RootContainer
-# jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer
-# java/util/concurrent/ExecutorCompletionService
-# java/util/concurrent/FutureTask
-# java/util/concurrent/RunnableFuture
-# java/util/concurrent/Future
-# java/lang/invoke/VarHandleInts$FieldInstanceReadWrite
-# java/lang/invoke/VarHandleInts$FieldInstanceReadOnly
-# java/util/concurrent/FutureTask$WaitNode
-# java/util/concurrent/ExecutorCompletionService$QueueingFuture
-# java/util/concurrent/Executors$RunnableAdapter
-# java/util/concurrent/ThreadPoolExecutor$Worker
-# java/util/concurrent/ForkJoinPool
-# java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
-# java/util/concurrent/ForkJoinPool$WorkQueue
-# java/util/concurrent/ForkJoinPool$DefaultForkJoinWorkerThreadFactory
-# jdk/internal/access/JavaUtilConcurrentFJPAccess
-# java/util/concurrent/ForkJoinPool$2
-# java/text/NumberFormat
-# java/util/spi/LocaleServiceProvider
-# java/text/spi/NumberFormatProvider
-# sun/util/locale/provider/LocaleProviderAdapter
-# sun/util/locale/provider/LocaleProviderAdapter$Type
-# sun/util/locale/provider/ResourceBundleBasedAdapter
-# sun/util/locale/provider/JRELocaleProviderAdapter
-# sun/util/cldr/CLDRLocaleProviderAdapter
-# sun/util/locale/provider/LocaleDataMetaInfo
-# sun/util/cldr/CLDRBaseLocaleDataMetaInfo
-# sun/util/locale/LanguageTag
-# sun/util/locale/ParseStatus
-# sun/util/locale/StringTokenIterator
-# sun/util/locale/InternalLocaleBuilder
-# sun/util/locale/InternalLocaleBuilder$CaseInsensitiveChar
-# java/util/Locale$Cache
-# sun/util/locale/provider/AvailableLanguageTags
-# sun/util/locale/provider/NumberFormatProviderImpl
-# sun/util/locale/provider/CalendarDataUtility
-# java/util/Locale$Builder
-# sun/util/locale/provider/LocaleResources
-# sun/util/resources/LocaleData
-# java/util/ResourceBundle$Control
-# java/util/ResourceBundle$Control$CandidateListCache
-# sun/util/resources/LocaleData$1
-# sun/util/resources/Bundles$Strategy
-# sun/util/resources/LocaleData$LocaleDataStrategy
-# sun/util/resources/Bundles
-# sun/util/resources/Bundles$1
-# sun/util/resources/Bundles$CacheKey
-# java/util/ResourceBundle$SingleFormatControl
-# java/util/ResourceBundle$NoFallbackControl
-# java/util/ListResourceBundle
-# sun/text/resources/cldr/FormatData
-# java/util/ResourceBundle$ResourceBundleProviderHelper
-# sun/util/resources/Bundles$CacheKeyReference
-# sun/util/resources/Bundles$BundleReference
-# sun/text/resources/cldr/FormatData_en
-# sun/util/locale/provider/LocaleResources$ResourceReference
-# java/text/DecimalFormatSymbols
-# java/text/spi/DecimalFormatSymbolsProvider
-# sun/util/locale/provider/DecimalFormatSymbolsProviderImpl
-# java/lang/StringLatin1$CharsSpliterator
-# java/util/stream/IntStream
-# java/util/stream/IntPipeline
-# java/util/stream/IntPipeline$Head
-# java/util/function/IntPredicate
-# java/util/stream/IntPipeline$StatelessOp
-# java/util/stream/IntPipeline$10
-# java/util/function/IntConsumer
-# java/util/stream/Sink$OfInt
-# java/util/stream/FindOps$FindSink$OfInt
-# java/util/OptionalInt
-# java/util/stream/Sink$ChainedInt
-# java/util/stream/IntPipeline$10$1
-# java/lang/StringUTF16$CharsSpliterator
-# java/lang/CharacterData00
-# java/text/DecimalFormat
-# java/text/FieldPosition
-# java/text/DigitList
-# java/math/RoundingMode
-# java/util/StringTokenizer
-# java/util/Collections$SingletonSet
-# java/util/AbstractList$RandomAccessSubList
-# java/util/AbstractList$SubList
-# java/util/AbstractList$SubList$1
-# jdk/internal/loader/BootLoader$PackageHelper
-# java/io/Console
-# java/util/EventListener
-# java/util/random/RandomGenerator
-# java/util/Random
-# sun/reflect/generics/scope/MethodScope
-# sun/reflect/generics/repository/MethodRepository
-# sun/reflect/generics/repository/ConstructorRepository
-# sun/reflect/generics/tree/BottomSignature
-# sun/reflect/generics/tree/Wildcard
-# sun/reflect/generics/tree/MethodTypeSignature
-# sun/reflect/generics/reflectiveObjects/WildcardTypeImpl
-# java/lang/reflect/WildcardType
-# java/util/BitSet
-# java/lang/Class$EnclosingMethodInfo
-# java/lang/reflect/AnnotatedType
-# java/util/logging/LogRecord
-# java/util/logging/Filter
-# java/lang/Override
-# java/io/ObjectInputStream
-# java/io/ObjectInput
-# java/io/ObjectStreamConstants
-# java/lang/constant/ClassDesc
-# java/lang/Enum$EnumDesc
-# java/lang/constant/DynamicConstantDesc
-# java/io/ObjectStreamException
-# java/io/PrintWriter
-# java/util/InvalidPropertiesFormatException
-# java/io/ObjectOutputStream
-# java/io/ObjectOutput
-# java/io/StreamCorruptedException
-# sun/reflect/generics/tree/VoidDescriptor
-# java/nio/charset/CharacterCodingException
-# java/lang/SuppressWarnings
-# java/io/StringWriter
-# java/util/Vector$Itr
-# sun/reflect/generics/tree/IntSignature
-# sun/reflect/generics/tree/ArrayTypeSignature
-# sun/reflect/generics/reflectiveObjects/GenericArrayTypeImpl
-# java/lang/reflect/Executable$ParameterData
-# java/util/function/ToIntFunction
-# java/util/function/ToLongFunction
-# java/util/function/ToDoubleFunction
-# java/lang/invoke/SerializedLambda
-# java/util/function/UnaryOperator
-# sun/reflect/generics/tree/BooleanSignature
-# java/util/function/IntFunction
-# java/text/MessageFormat
-# java/util/AbstractMap$SimpleImmutableEntry
-# java/io/FileFilter
-# java/lang/Throwable$PrintStreamOrWriter
-# sun/reflect/generics/tree/CharSignature
-# java/text/CharacterIterator
-# java/text/ParseException
-# java/text/ParsePosition
-# java/text/AttributedCharacterIterator
-# java/text/AttributedCharacterIterator$Attribute
-# java/lang/Process
-# java/util/stream/LongStream
-# java/util/stream/DoubleStream
-# java/util/function/DoubleBinaryOperator
-# java/util/function/IntBinaryOperator
-# java/util/function/LongBinaryOperator
-# java/util/function/IntToDoubleFunction
-# java/util/function/IntUnaryOperator
-# java/util/function/IntToLongFunction
-# java/nio/file/WatchService
-# java/nio/file/WatchEvent$Kind
-# java/nio/file/WatchEvent$Modifier
-# java/nio/file/WatchKey
-# java/util/function/BiPredicate
-# java/nio/file/attribute/UserPrincipal
-# java/nio/file/FileChannelLinesSpliterator
-# java/net/InetAddress
-# java/net/Proxy
-# java/io/InvalidObjectException
-# java/net/Authenticator
-# java/net/ProtocolException
-# java/net/ContentHandler
-# java/net/UnknownServiceException
-# java/net/FileNameMap
-# java/net/ContentHandlerFactory
-# sun/invoke/util/ValueConversions$WrapperCache
-# java/lang/invoke/BoundMethodHandle$Species_LLLL
-# java/util/DualPivotQuicksort
-# java/lang/invoke/MethodHandleImpl$CasesHolder
-# java/lang/invoke/MethodHandleImpl$LoopClauses
-# java/lang/invoke/MethodHandleImpl$ArrayAccess
-# java/lang/invoke/MethodHandleImpl$ArrayAccessor
-# java/lang/invoke/MethodHandleImpl$ArrayAccessor$1
-# java/lang/ClassValue$ClassValueMap
-# java/text/MessageFormat$Field
-# java/text/Format$Field
-# javax/swing/tree/MutableTreeNode
-# javax/swing/tree/TreeNode
-# javax/swing/tree/DefaultMutableTreeNode
-# java/util/Formatter
-# java/util/Formatter$Conversion
-# java/util/Formatter$FormatString
-# java/util/Formatter$FormatSpecifier
-# java/util/Formatter$Flags
-# jdk/internal/math/FormattedFPDecimal
-# jdk/internal/math/DoubleToDecimal
-# sun/util/resources/LocaleData$CommonResourceBundleProvider
-# sun/util/resources/LocaleData$LocaleDataResourceBundleProvider
-# java/util/spi/ResourceBundleProvider
-# java/util/ArrayList$SubList$1
-# sun/util/resources/Bundles$2
-# java/text/FieldPosition$Delegate
-# java/text/Format$FieldDelegate
-# java/text/NumberFormat$Field
-# java/util/regex/Pattern$UnixDollar
-# java/lang/annotation/ElementType
-# jdk/internal/math/MathUtils
-# jdk/internal/event/ThreadSleepEvent
-# java/lang/Thread$Builder$OfPlatform
-# java/lang/Thread$Builder
-# java/lang/Thread$Builder$OfVirtual
-# java/util/Formatter$FixedString
-# java/util/Formattable
-# java/util/function/LongUnaryOperator
-# java/util/Locale$FilteringMode
-# sun/util/locale/LocaleExtensions
-# java/util/Locale$IsoCountryCode
-# java/nio/ShortBuffer
-# java/nio/FloatBuffer
-# java/nio/DoubleBuffer
-# java/beans/IntrospectionException
-# java/beans/PropertyDescriptor
-# java/beans/FeatureDescriptor
-# java/beans/PropertyEditor
-# java/beans/Transient
-# java/awt/Component
-# java/awt/image/ImageObserver
-# java/awt/MenuContainer
-# javax/swing/JLabel
-# javax/swing/SwingConstants
-# javax/accessibility/Accessible
-# javax/swing/JComponent
-# javax/swing/TransferHandler$HasGetTransferHandler
-# java/awt/Container
-# java/awt/GridBagConstraints
-# java/awt/GridBagLayout
-# java/awt/LayoutManager2
-# java/awt/LayoutManager
-# java/awt/Insets
-# java/awt/Point
-# java/awt/geom/Point2D
-# java/awt/AWTEvent
-# java/util/EventObject
-# java/awt/event/KeyEvent
-# java/awt/event/InputEvent
-# java/awt/event/ComponentEvent
-# java/awt/FocusTraversalPolicy
-# sun/java2d/pipe/Region
-# java/awt/peer/ContainerPeer
-# java/awt/peer/ComponentPeer
-# java/awt/event/ContainerEvent
-# java/awt/Container$EventTargetFilter
-# java/awt/event/ContainerListener
-# java/awt/Graphics
-# java/awt/HeadlessException
-# java/awt/Dimension
-# java/awt/geom/Dimension2D
-# java/awt/Event
-# java/awt/ComponentOrientation
-# java/beans/PropertyChangeListener
-# java/awt/GraphicsConfiguration
-# java/awt/Font
-# java/awt/BufferCapabilities
-# java/awt/AWTException
-# java/awt/Image
-# java/awt/event/MouseWheelEvent
-# java/awt/event/MouseEvent
-# java/awt/event/FocusEvent
-# java/awt/event/InputMethodEvent
-# java/awt/event/HierarchyEvent
-# sun/awt/ComponentFactory
-# java/awt/event/FocusEvent$Cause
-# java/awt/event/ComponentListener
-# java/awt/event/FocusListener
-# java/awt/event/KeyListener
-# java/awt/event/MouseListener
-# java/awt/event/MouseMotionListener
-# java/awt/event/InputMethodListener
-# java/awt/event/HierarchyListener
-# java/awt/event/HierarchyBoundsListener
-# java/awt/event/MouseWheelListener
-# javax/accessibility/AccessibleContext
-# java/awt/dnd/DropTarget
-# java/awt/dnd/DropTargetListener
-# java/awt/Component$BaselineResizeBehavior
-# java/awt/FontMetrics
-# java/awt/Cursor
-# java/awt/image/BufferStrategy
-# java/awt/im/InputMethodRequests
-# sun/awt/RequestFocusController
-# javax/accessibility/AccessibleStateSet
-# java/awt/Shape
-# java/awt/Toolkit
-# java/awt/Rectangle
-# java/awt/geom/Rectangle2D
-# java/awt/geom/RectangularShape
-# java/awt/Window
-# java/awt/PointerInfo
-# java/awt/im/InputContext
-# java/awt/Color
-# java/awt/Paint
-# java/awt/Transparency
-# java/awt/image/ColorModel
-# java/awt/image/ImageProducer
-# java/awt/image/VolatileImage
-# java/awt/ImageCapabilities
-# java/awt/MenuComponent
-# java/awt/PopupMenu
-# java/awt/Menu
-# java/awt/MenuItem
-# java/awt/GridBagLayoutInfo
-# java/awt/event/ActionListener
-# javax/swing/table/DefaultTableCellRenderer
-# javax/swing/table/TableCellRenderer
-# javax/swing/table/AbstractTableModel
-# javax/swing/table/TableModel
-# javax/swing/JTable
-# javax/swing/event/TableModelListener
-# javax/swing/Scrollable
-# javax/swing/event/TableColumnModelListener
-# javax/swing/event/ListSelectionListener
-# javax/swing/event/CellEditorListener
-# javax/swing/event/RowSorterListener
-# javax/swing/JMenu
-# javax/swing/MenuElement
-# javax/swing/JMenuItem
-# javax/swing/AbstractButton
-# java/awt/ItemSelectable
-# javax/swing/JButton
-# java/awt/BorderLayout
-# java/awt/datatransfer/StringSelection
-# java/awt/datatransfer/Transferable
-# java/awt/datatransfer/ClipboardOwner
-# java/awt/event/ActionEvent
-# java/awt/event/ItemEvent
-# java/awt/event/ItemListener
-# java/awt/event/MouseAdapter
-# javax/swing/BorderFactory
-# javax/swing/JCheckBox
-# javax/swing/JToggleButton
-# javax/swing/JCheckBoxMenuItem
-# javax/swing/JComboBox
-# javax/swing/event/ListDataListener
-# javax/swing/JFileChooser
-# javax/swing/JFrame
-# javax/swing/WindowConstants
-# javax/swing/RootPaneContainer
-# java/awt/Frame
-# javax/swing/JMenuBar
-# javax/swing/JOptionPane
-# javax/swing/JPanel
-# javax/swing/JProgressBar
-# javax/swing/JScrollPane
-# javax/swing/ScrollPaneConstants
-# javax/swing/JTextArea
-# javax/swing/text/JTextComponent
-# javax/swing/JTextField
-# javax/swing/KeyStroke
-# java/awt/AWTKeyStroke
-# javax/swing/Timer
-# javax/swing/event/ListSelectionEvent
-# javax/swing/table/JTableHeader
-# javax/swing/table/TableColumn
-# javax/swing/table/TableColumnModel
-# java/awt/VKCollection
-# javax/swing/border/Border
-# javax/swing/filechooser/FileFilter
-# javax/swing/plaf/ComponentUI
-# javax/swing/plaf/FileChooserUI
-# javax/swing/JDialog
-# java/awt/Dialog
-# javax/swing/filechooser/FileSystemView
-# javax/swing/filechooser/FileView
-# javax/swing/Icon
-# javax/swing/JToolTip
-# javax/swing/TransferHandler
-# javax/swing/TransferHandler$DropLocation
-# javax/swing/JRootPane
-# javax/swing/JPopupMenu
-# javax/swing/InputMap
-# javax/swing/ActionMap
-# javax/swing/ArrayTable
-# java/beans/PropertyVetoException
-# java/beans/VetoableChangeListener
-# javax/swing/AncestorNotifier
-# javax/swing/event/AncestorListener
-# javax/swing/InputVerifier
-# javax/swing/ComponentInputMap
-# javax/swing/plaf/OptionPaneUI
-# javax/swing/JInternalFrame
-# javax/swing/JDesktopPane
-# javax/swing/JLayeredPane
-# javax/swing/plaf/LabelUI
-# javax/swing/ButtonModel
-# javax/swing/Action
-# javax/swing/event/MenuDragMouseEvent
-# javax/swing/event/MenuKeyEvent
-# javax/swing/event/MenuDragMouseListener
-# javax/swing/event/MenuKeyListener
-# javax/swing/MenuSelectionManager
-# javax/swing/plaf/MenuItemUI
-# javax/swing/plaf/ButtonUI
-# javax/swing/event/ChangeListener
-# javax/swing/AbstractButton$Handler
-# javax/swing/JMenu$WinListener
-# java/awt/event/WindowAdapter
-# java/awt/event/WindowListener
-# java/awt/event/WindowStateListener
-# java/awt/event/WindowFocusListener
-# javax/swing/event/MenuListener
-# javax/swing/text/Document
-# javax/swing/BoundedRangeModel
-# java/awt/print/Printable
-# javax/swing/DropMode
-# javax/swing/text/JTextComponent$DropLocation
-# javax/swing/plaf/TextUI
-# javax/swing/text/Caret
-# javax/swing/text/Keymap
-# javax/swing/text/BadLocationException
-# javax/swing/event/CaretListener
-# javax/swing/event/CaretEvent
-# javax/swing/text/NavigationFilter
-# javax/swing/text/Highlighter
-# javax/swing/text/JTextComponent$KeyBinding
-# java/awt/print/PrinterException
-# javax/print/PrintService
-# javax/print/attribute/PrintRequestAttributeSet
-# javax/print/attribute/AttributeSet
-# javax/swing/SingleSelectionModel
-# javax/swing/plaf/MenuBarUI
-# java/awt/event/WindowEvent
-# java/awt/MenuBar
-# sun/awt/AppContext
-# java/awt/Dialog$ModalExclusionType
-# sun/awt/util/IdentityArrayList
-# java/awt/Window$Type
-# javax/swing/plaf/PanelUI
-# java/awt/Window$WindowDisposerRecord
-# sun/java2d/DisposerRecord
-# java/awt/FocusManager
-# java/util/concurrent/atomic/AtomicBoolean
-# java/awt/LightweightDispatcher
-# java/awt/event/AWTEventListener
-# java/beans/PropertyChangeSupport
-# sun/awt/EventQueueItem
-# javax/swing/ComboBoxModel
-# javax/swing/ListModel
-# javax/swing/ComboBoxEditor
-# javax/swing/event/ListDataEvent
-# javax/swing/JComboBox$KeySelectionManager
-# javax/swing/ListCellRenderer
-# javax/swing/plaf/ComboBoxUI
-# javax/swing/event/PopupMenuListener
-# java/lang/NegativeArraySizeException
-# javax/swing/border/TitledBorder
-# javax/swing/border/AbstractBorder
-# java/awt/BasicStroke
-# java/awt/Stroke
-# javax/swing/border/CompoundBorder
-# javax/swing/border/MatteBorder
-# javax/swing/border/EmptyBorder
-# javax/swing/JViewport
-# javax/swing/plaf/ScrollPaneUI
-# javax/swing/JScrollBar
-# java/awt/Adjustable
-# javax/swing/ListSelectionModel
-# javax/swing/JTable$ModelChange
-# javax/swing/event/RowSorterEvent
-# javax/swing/event/TableColumnModelEvent
-# javax/swing/event/ChangeEvent
-# java/awt/print/PrinterJob
-# sun/swing/PrintingStatus
-# javax/swing/UIDefaults
-# javax/swing/RowSorter
-# javax/swing/JTable$Resizable3
-# javax/swing/JTable$Resizable2
-# javax/swing/table/TableCellEditor
-# javax/swing/CellEditor
-# javax/swing/event/TableModelEvent
-# javax/swing/JTable$PrintMode
-# javax/swing/JTable$DropLocation
-# javax/swing/SizeSequence
-# javax/swing/plaf/TableUI
-# java/awt/EventQueue
-# java/awt/dnd/DragSource
-# java/awt/dnd/DragGestureListener
-# java/awt/dnd/DragGestureRecognizer
-# java/awt/Dialog$ModalityType
-# java/awt/im/InputMethodHighlight
-# java/awt/PrintJob
-# java/awt/JobAttributes
-# java/awt/PageAttributes
-# java/awt/datatransfer/Clipboard
-# java/awt/datatransfer/DataFlavor
-# java/awt/datatransfer/FlavorListener
-# java/awt/datatransfer/UnsupportedFlavorException
-# javax/swing/event/EventListenerList
-# java/beans/VetoableChangeSupport
-# javax/swing/plaf/TableHeaderUI
-# javax/swing/plaf/ProgressBarUI
-# javax/swing/TimerQueue
-# java/util/Scanner
-# java/nio/file/StandardCopyOption
-# java/lang/SafeVarargs
-# sun/reflect/generics/tree/DoubleSignature
-# java/nio/file/PathMatcher
-# java/nio/file/attribute/UserPrincipalLookupService
-# sun/reflect/generics/tree/FloatSignature
-# java/util/concurrent/ScheduledExecutorService
-# java/util/concurrent/TimeoutException
-# java/util/concurrent/Future$State
-# java/text/SimpleDateFormat
-# java/text/CalendarBuilder
-# java/text/DateFormatSymbols
-# javax/xml/stream/XMLStreamWriter
-# javax/xml/stream/XMLOutputFactory
-# javax/xml/namespace/NamespaceContext
-# javax/xml/stream/XMLEventWriter
-# javax/xml/stream/util/XMLEventConsumer
-# javax/xml/transform/Result
-# javax/xml/stream/XMLInputFactory
-# javax/xml/stream/FactoryConfigurationError
-# java/io/LineNumberReader
-# java/util/ResourceBundle$CacheKey
-# java/security/AccessControlException
-# java/security/DomainCombiner
-# java/net/URLDecoder
-# javax/swing/JTextPane
-# javax/swing/JEditorPane
-# javax/swing/text/Style
-# javax/swing/text/MutableAttributeSet
-# javax/swing/text/AttributeSet
-# javax/swing/text/EditorKit
-# javax/swing/text/StyledDocument
-# javax/swing/text/StyledEditorKit
-# javax/swing/text/DefaultEditorKit
-# javax/swing/event/HyperlinkListener
-# javax/swing/event/HyperlinkEvent
-# java/time/Instant
-# javax/swing/DefaultListModel
-# javax/swing/AbstractListModel
-# javax/swing/JList
-# javax/swing/SwingUtilities
-# javax/swing/CellRendererPane
-# java/awt/Polygon
-# java/awt/font/LineMetrics
-# java/awt/font/FontRenderContext
-# javax/swing/text/Position$Bias
-# javax/swing/JList$DropLocation
-# javax/swing/plaf/ListUI
-# java/awt/color/ColorSpace
-# javax/swing/JTree
-# javax/swing/event/TreeSelectionListener
-# javax/swing/tree/TreePath
-# javax/swing/event/TreeSelectionEvent
-# javax/swing/tree/TreeModel
-# javax/swing/event/TreeModelListener
-# javax/swing/tree/ExpandVetoException
-# javax/swing/event/TreeModelEvent
-# javax/swing/tree/TreeSelectionModel
-# javax/swing/tree/TreeCellRenderer
-# javax/swing/tree/TreeCellEditor
-# javax/swing/JTree$DropLocation
-# javax/swing/event/TreeExpansionListener
-# javax/swing/event/TreeWillExpandListener
-# javax/swing/plaf/TreeUI
-# javax/swing/plaf/PopupMenuUI
-# java/awt/FlowLayout
-# javax/swing/plaf/RootPaneUI
-# javax/swing/text/DefaultHighlighter
-# javax/swing/text/LayeredHighlighter
-# javax/swing/text/Highlighter$HighlightPainter
-# javax/swing/text/Highlighter$Highlight
-# javax/swing/JTabbedPane
-# javax/swing/AbstractAction
-# javax/swing/ButtonGroup
-# javax/swing/JRadioButton
-# javax/swing/JRadioButtonMenuItem
-# javax/swing/JSplitPane
-# javax/swing/event/UndoableEditEvent
-# javax/swing/event/UndoableEditListener
-# javax/swing/tree/DefaultTreeCellRenderer
-# javax/swing/tree/DefaultTreeModel
-# javax/swing/undo/CannotRedoException
-# javax/swing/undo/CannotUndoException
-# javax/swing/undo/UndoManager
-# javax/swing/undo/CompoundEdit
-# javax/swing/undo/AbstractUndoableEdit
-# javax/swing/undo/UndoableEdit
-# java/awt/peer/FontPeer
-# sun/font/Font2DHandle
-# sun/font/AttributeValues
-# java/awt/geom/AffineTransform
-# javax/swing/JTabbedPane$Page
-# javax/accessibility/AccessibleComponent
-# javax/accessibility/AccessibleValue
-# javax/swing/plaf/TabbedPaneUI
-# javax/swing/plaf/SplitPaneUI
-# java/awt/event/ComponentAdapter
-# javax/swing/tree/RowMapper
-# javax/swing/plaf/ViewportUI
-# javax/swing/JViewport$ViewListener
-# javax/swing/undo/UndoManager$Action
-# sun/swing/text/UndoableEditLockSupport
-# javax/swing/text/Position
-# javax/swing/text/Element
-# javax/swing/event/DocumentListener
-# javax/swing/text/Segment
-# javax/swing/event/SwingPropertyChangeSupport
-# java/util/zip/ZipOutputStream
-# java/util/zip/ZipOutputStream$XEntry
-# java/lang/ProcessHandle
-# java/lang/ProcessHandle$Info
-# java/util/concurrent/CompletableFuture
-# java/util/concurrent/CompletionStage
-# java/util/Observer
-# java/awt/List
-# java/io/CharArrayReader
-# java/util/IdentityHashMap$IdentityHashMapIterator
-# java/util/IdentityHashMap$KeyIterator
-# java/lang/ProcessEnvironment
-# java/lang/ProcessEnvironment$Variable
-# java/lang/ProcessEnvironment$ExternalData
-# java/lang/ProcessImpl
-# java/lang/ProcessImpl$LaunchMechanism
-# java/lang/ProcessEnvironment$Value
-# java/lang/ProcessEnvironment$StringEnvironment
-# java/io/FileOutputStream$1
-# java/security/NoSuchAlgorithmException
-# java/security/GeneralSecurityException
-# sun/security/provider/SHA
-# sun/security/provider/ByteArrayAccess$BE

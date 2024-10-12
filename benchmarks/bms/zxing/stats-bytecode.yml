@@ -1,9 +1,12 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1015
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 1018
 transformed-classes: 330
-transformed-bytecodes: 139483
+transformed-bytecodes: 139485
 executed-bytecodes: 108759896998
 executed-bytecodes-unique: 55826
 executed-bytecodes-p90: 89542
@@ -134,9 +137,7 @@ opcodes:
   instanceof: 85509
   multianewarray: 1244
   ifnull: 4820465
-  ifnonnull: 2414737
-
-# sun/launcher/LauncherHelper
+  ifnonnull: 2414737# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -425,6 +426,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -517,12 +522,12 @@ opcodes:
 # javax/xml/datatype/FactoryFinder
 # jdk/xml/internal/SecuritySupport
 # javax/xml/datatype/FactoryFinder$1
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/net/URLClassLoader$3
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
 # com/sun/org/apache/xerces/internal/jaxp/datatype/DatatypeFactoryImpl
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/lang/invoke/MethodHandle$1
 # java/util/regex/Pattern$BnM
 # java/util/regex/MatchResult
@@ -807,7 +812,6 @@ opcodes:
 # java/security/SecureRandom
 # java/util/random/RandomGenerator
 # java/util/Random
-# java/security/SecureRandomParameters
 # java/nio/file/TempFileHelper$PosixPermissions
 # java/util/RegularEnumSet$EnumSetIterator
 # java/nio/file/attribute/PosixFilePermissions$1
@@ -832,10 +836,10 @@ opcodes:
 # javax/imageio/spi/FilterIterator
 # java/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory
 # java/util/concurrent/ForkJoinPool$WorkQueue
-# com/sun/imageio/plugins/common/ReaderUtil
 # java/util/concurrent/ForkJoinPool$DefaultForkJoinWorkerThreadFactory
 # jdk/internal/access/JavaUtilConcurrentFJPAccess
 # java/util/concurrent/ForkJoinPool$2
+# com/sun/imageio/plugins/common/ReaderUtil
 # javax/imageio/ImageIO$ImageReaderIterator
 # com/sun/imageio/plugins/png/PNGImageReader
 # java/awt/Point
@@ -848,13 +852,13 @@ opcodes:
 # java/io/SequenceInputStream
 # com/sun/imageio/plugins/common/SubImageInputStream
 # com/sun/imageio/plugins/common/InputStreamAdapter
+# javax/imageio/ImageTypeSpecifier$Indexed
 # javax/imageio/ImageTypeSpecifier$Interleaved
 # java/awt/image/DataBuffer
-# javax/imageio/ImageTypeSpecifier$Indexed
 # java/awt/image/DataBuffer$1
 # sun/awt/image/SunWritableRaster$DataStealer
-# sun/awt/image/SunWritableRaster
 # java/awt/image/ColorModel$1
+# sun/awt/image/SunWritableRaster
 # javax/imageio/ImageTypeSpecifier$Packed
 # java/awt/Rectangle
 # java/awt/Shape
@@ -878,8 +882,8 @@ opcodes:
 # sun/awt/image/SurfaceManager
 # java/awt/image/BufferedImage$1
 # sun/awt/image/IntegerComponentRaster
-# sun/awt/image/ShortComponentRaster
 # sun/awt/image/BytePackedRaster
+# sun/awt/image/ShortComponentRaster
 # java/io/RandomAccessFile$1
 # java/lang/ArrayIndexOutOfBoundsException
 # java/awt/geom/AffineTransform

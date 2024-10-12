@@ -1,16 +1,19 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 1013
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 1017
 transformed-classes: 826
-transformed-bytecodes: 269631
-executed-bytecodes: 1461082466
+transformed-bytecodes: 269633
+executed-bytecodes: 1461082196
 executed-bytecodes-unique: 34964
 executed-bytecodes-p90: 542
 executed-bytecodes-p99: 1463014
 executed-bytecodes-p999: 3145728
 executed-bytecodes-p9999: 7259706
-executed-calls: 80218949
+executed-calls: 80218910
 executed-calls-unique: 4256
 opcodes:
   aconst_null: 5924292
@@ -21,8 +24,8 @@ opcodes:
   iconst_3: 10168467
   iconst_4: 401202
   iconst_5: 3286
-  lconst_0: 23
-  lconst_1: 7200
+  lconst_0: 35
+  lconst_1: 7187
   fconst_0: 13456047
   fconst_1: 11402805
   fconst_2: 8177
@@ -32,16 +35,16 @@ opcodes:
   sipush: 1836323
   ldc: 2539050
   iload: 74208785
-  lload: 23716
+  lload: 23653
   fload: 162886175
   dload: 7
-  aload: 357958454
+  aload: 357958428
   iaload: 1064375
   faload: 6721484
   aaload: 536381
   baload: 1835186
   istore: 4667920
-  lstore: 8719
+  lstore: 8706
   fstore: 61202124
   dstore: 4
   astore: 4250018
@@ -55,11 +58,11 @@ opcodes:
   dup: 17139711
   dup_x1: 5067018
   iadd: 21621756
-  ladd: 7117
+  ladd: 7104
   fadd: 21054632
   dadd: 524290
   isub: 4948947
-  lsub: 9542
+  lsub: 9517
   fsub: 34999696
   imul: 18857848
   lmul: 401
@@ -92,7 +95,7 @@ opcodes:
   i2b: 1573984
   i2c: 15426
   i2s: 543360
-  lcmp: 7119
+  lcmp: 7106
   fcmpl: 6338581
   fcmpg: 2064557
   ifeq: 5287471
@@ -100,7 +103,7 @@ opcodes:
   iflt: 1214365
   ifge: 1846326
   ifgt: 800
-  ifle: 1639689
+  ifle: 1639676
   if_icmpeq: 1109358
   if_icmpne: 3751134
   if_icmplt: 263456
@@ -109,21 +112,21 @@ opcodes:
   if_icmple: 5424
   if_acmpeq: 3231
   if_acmpne: 3671897
-  goto: 4965163
+  goto: 4965138
   tableswitch: 273836
   lookupswitch: 155
   ireturn: 7584819
-  lreturn: 8319
+  lreturn: 8306
   freturn: 9179754
   areturn: 29356789
   return: 9250196
   getstatic: 1058064
   putstatic: 725
-  getfield: 178313128
+  getfield: 178313102
   putfield: 71013938
-  invokevirtual: 53977478
+  invokevirtual: 53977465
   invokespecial: 13316506
-  invokestatic: 12496337
+  invokestatic: 12496311
   invokeinterface: 428628
   new: 4662308
   newarray: 503
@@ -134,9 +137,7 @@ opcodes:
   monitorenter: 2071
   monitorexit: 2071
   ifnull: 864435
-  ifnonnull: 8149009
-
-# sun/launcher/LauncherHelper
+  ifnonnull: 8149009# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -425,6 +426,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -869,12 +874,12 @@ opcodes:
 # java/applet/AppletContext
 # javax/accessibility/AccessibleContext
 # java/awt/event/ContainerListener
+# java/awt/FocusTraversalPolicy
 # java/awt/Point
 # java/awt/geom/Point2D
 # java/awt/HeadlessException
 # java/awt/Event
 # java/awt/ComponentOrientation
-# java/awt/FocusTraversalPolicy
 # java/io/PrintWriter
 # java/awt/dnd/DropTarget
 # java/awt/dnd/DropTargetListener
@@ -903,8 +908,8 @@ opcodes:
 # java/awt/im/InputContext
 # java/awt/image/ColorModel
 # java/awt/image/ImageProducer
-# java/awt/ImageCapabilities
 # java/awt/image/VolatileImage
+# java/awt/ImageCapabilities
 # java/awt/AWTException
 # java/awt/event/FocusEvent$Cause
 # java/util/concurrent/FutureTask
@@ -914,10 +919,10 @@ opcodes:
 # java/util/concurrent/ThreadPoolExecutor$Worker
 # java/util/concurrent/ConcurrentLinkedQueue
 # java/util/concurrent/ConcurrentLinkedQueue$Node
-# java/awt/image/BufferedImageOp
 # java/awt/image/RenderedImage
 # javax/imageio/stream/ImageOutputStream
 # javax/imageio/stream/ImageInputStream
+# java/awt/image/BufferedImageOp
 # java/lang/UnsatisfiedLinkError
 # java/io/UncheckedIOException
 # java/util/JumboEnumSet

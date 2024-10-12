@@ -1,161 +1,162 @@
-# These statistics can be generated from a dacapo release using a command line like:
-#    java -javaagent:dacapo-evaluation-git-6b469af0/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar dacapo-evaluation-git-6b469af0.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
 #
-skipped-classes: 2313
+# Bytecode statistics generated using version dacapo-evaluation-git-3745e0c2
+#
+# These statistics can be generated from a dacapo release using a command line like:
+#    java -javaagent:<dacapo_version>/jar/bccagent.jar -Ddacapo.bcc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.BytecodeCallback <benchmark>
+#
+skipped-classes: 2318
 transformed-classes: 6796
-transformed-bytecodes: 1171133
-executed-bytecodes: 23291913827
-executed-bytecodes-unique: 101922
-executed-bytecodes-p90: 234406
-executed-bytecodes-p99: 3016786
-executed-bytecodes-p999: 20500978
-executed-bytecodes-p9999: 80102750
-executed-calls: 3059175461
-executed-calls-unique: 16160
+transformed-bytecodes: 1171135
+executed-bytecodes: 24513790230
+executed-bytecodes-unique: 114391
+executed-bytecodes-p90: 211080
+executed-bytecodes-p99: 2710858
+executed-bytecodes-p999: 23753691
+executed-bytecodes-p9999: 95572881
+executed-calls: 3243686029
+executed-calls-unique: 18453
 opcodes:
-  aconst_null: 54048474
-  iconst_m1: 13430127
-  iconst_0: 278880044
-  iconst_1: 450069784
-  iconst_2: 31597346
-  iconst_3: 13801362
-  iconst_4: 26678790
-  iconst_5: 8865067
-  lconst_0: 63971030
-  lconst_1: 18913315
-  dconst_0: 610469
-  dconst_1: 658299
-  bipush: 312778198
-  sipush: 141026440
-  ldc: 188808762
-  iload: 1849914696
-  lload: 1096776856
-  fload: 5370872
-  dload: 14022787
-  aload: 4760090503
-  iaload: 134519995
-  laload: 10779328
-  faload: 2885365
-  daload: 4430214
-  aaload: 49420964
-  baload: 479284
-  caload: 71009
-  saload: 39737
-  istore: 577328574
-  lstore: 386370417
-  fstore: 5370802
-  dstore: 4695906
-  astore: 353371067
-  iastore: 4538844
-  lastore: 7154002
+  aconst_null: 53629433
+  iconst_m1: 14086273
+  iconst_0: 298433064
+  iconst_1: 497716801
+  iconst_2: 31594157
+  iconst_3: 13767215
+  iconst_4: 26629719
+  iconst_5: 8868245
+  lconst_0: 71630886
+  lconst_1: 18858132
+  dconst_0: 621181
+  dconst_1: 667668
+  bipush: 328499174
+  sipush: 141020761
+  ldc: 204224713
+  iload: 1891711576
+  lload: 1231483902
+  fload: 5369534
+  dload: 14152922
+  aload: 4914924063
+  iaload: 134725147
+  laload: 10343468
+  faload: 2884696
+  daload: 4930704
+  aaload: 50096877
+  baload: 458894
+  caload: 75319
+  saload: 41389
+  istore: 623985057
+  lstore: 436847505
+  fstore: 5369464
+  dstore: 4965931
+  astore: 376578307
+  iastore: 4544243
+  lastore: 6980537
   fastore: 600000
-  dastore: 4454099
-  aastore: 10713705
-  bastore: 21426408
-  castore: 64
-  sastore: 111
-  pop: 90299075
-  pop2: 7719304
-  dup: 78210709
-  dup_x1: 9726624
-  dup2: 648692
-  dup2_x1: 593758
-  swap: 3683
-  iadd: 246244766
-  ladd: 115506793
-  fadd: 2685365
-  dadd: 5333936
-  isub: 116471744
-  lsub: 57052359
-  dsub: 334185
-  imul: 38722994
-  lmul: 49564254
-  fmul: 2685383
-  dmul: 19962524
-  idiv: 266168
-  ldiv: 2621931
+  dastore: 4957251
+  aastore: 10700105
+  bastore: 21440131
+  castore: 96
+  sastore: 103
+  pop: 93882790
+  pop2: 7722945
+  dup: 77874382
+  dup_x1: 9753704
+  dup2: 672833
+  dup2_x1: 565685
+  swap: 3804
+  iadd: 245138801
+  ladd: 121851086
+  fadd: 2684696
+  dadd: 5848263
+  isub: 116494358
+  lsub: 65130855
+  dsub: 339342
+  imul: 36927468
+  lmul: 57717860
+  fmul: 2684714
+  dmul: 24041938
+  idiv: 259391
+  ldiv: 2623979
   fdiv: 70
-  ddiv: 10089567
-  irem: 14940280
-  lrem: 310244
+  ddiv: 9917652
+  irem: 14086051
+  lrem: 311478
   drem: 12
-  ineg: 2030381
-  lneg: 301163
-  ishl: 28492577
-  lshl: 16550809
-  ishr: 78978597
-  lshr: 85738250
-  iushr: 10071070
-  lushr: 6632597
-  iand: 133180448
-  land: 25548848
-  ior: 90679784
-  lor: 10949091
-  ixor: 68725315
-  lxor: 11401916
-  iinc: 113256946
-  i2l: 103726669
-  i2f: 2685453
-  i2d: 228278
-  l2i: 188751511
-  l2f: 400018
-  l2d: 26583729
-  f2i: 2685365
+  ineg: 2011812
+  lneg: 301728
+  ishl: 28076265
+  lshl: 16343219
+  ishr: 79047600
+  lshr: 101985640
+  iushr: 10059136
+  lushr: 6564060
+  iand: 132724304
+  land: 25338510
+  ior: 90584281
+  lor: 10894601
+  ixor: 68577554
+  lxor: 11313783
+  iinc: 111759635
+  i2l: 107236965
+  i2f: 2684784
+  i2d: 229213
+  l2i: 221248517
+  l2f: 400020
+  l2d: 30235925
+  f2i: 2684696
   f2d: 70
-  d2i: 111291
-  d2l: 19198461
+  d2i: 111419
+  d2l: 23273871
   d2f: 18
-  i2b: 30984208
-  i2c: 8570
-  i2s: 1266412
-  lcmp: 162600199
-  dcmpl: 495953
-  dcmpg: 1158304
-  ifeq: 593195979
-  ifne: 385406777
-  iflt: 47191772
-  ifge: 37121535
-  ifgt: 29737632
-  ifle: 158149044
-  if_icmpeq: 16519563
-  if_icmpne: 33353345
-  if_icmplt: 17311249
-  if_icmpge: 106056556
-  if_icmpgt: 32672006
-  if_icmple: 53437281
-  if_acmpeq: 34309934
-  if_acmpne: 90754264
-  goto: 506708521
-  tableswitch: 35509469
-  lookupswitch: 4635943
-  ireturn: 959368587
-  lreturn: 171091313
-  freturn: 5570766
-  dreturn: 3970201
-  areturn: 476073920
-  return: 417077929
-  getstatic: 469046587
-  putstatic: 517
-  getfield: 1617262464
-  putfield: 304243127
-  invokevirtual: 1559535739
-  invokespecial: 200978602
-  invokestatic: 760501867
-  invokeinterface: 529546185
-  invokedynamic: 8613068
-  new: 31338018
-  newarray: 3273734
-  anewarray: 3179328
-  arraylength: 60300591
-  athrow: 46
-  checkcast: 341791455
-  instanceof: 23384979
-  monitorenter: 282973
-  monitorexit: 282973
-  ifnull: 58207746
-  ifnonnull: 102540405
-
-# sun/launcher/LauncherHelper
+  i2b: 30959042
+  i2c: 8824
+  i2s: 1267733
+  lcmp: 181262072
+  dcmpl: 504229
+  dcmpg: 1163912
+  ifeq: 651872125
+  ifne: 416956854
+  iflt: 47118671
+  ifge: 38170326
+  ifgt: 33734189
+  ifle: 183912348
+  if_icmpeq: 16437483
+  if_icmpne: 33259577
+  if_icmplt: 17251596
+  if_icmpge: 103823379
+  if_icmpgt: 32648254
+  if_icmple: 53190075
+  if_acmpeq: 34184252
+  if_acmpne: 98201785
+  goto: 552653515
+  tableswitch: 35509996
+  lookupswitch: 4630636
+  ireturn: 1027215570
+  lreturn: 178557910
+  freturn: 5569428
+  dreturn: 3978680
+  areturn: 473958265
+  return: 424335147
+  getstatic: 478238549
+  putstatic: 545
+  getfield: 1691373364
+  putfield: 311591796
+  invokevirtual: 1636830309
+  invokespecial: 199933138
+  invokestatic: 828320417
+  invokeinterface: 569792459
+  invokedynamic: 8809706
+  new: 31288575
+  newarray: 3273794
+  anewarray: 3188629
+  arraylength: 60304417
+  athrow: 33
+  checkcast: 367967832
+  instanceof: 23221342
+  monitorenter: 287367
+  monitorexit: 287367
+  ifnull: 61947695
+  ifnonnull: 106160597# sun/launcher/LauncherHelper
 # sun/nio/fs/UnixFileKey
 # java/util/jar/JarVerifier
 # java/util/ArrayList$SubList
@@ -429,6 +430,8 @@ opcodes:
 # java/lang/invoke/LambdaFormEditor$1
 # java/util/TreeMap$EntrySet
 # java/util/TreeMap$EntryIterator
+# jdk/internal/foreign/MemorySessionImpl
+# java/lang/foreign/MemorySegment$Scope
 # java/io/BufferedReader$1
 # java/lang/invoke/DirectMethodHandle$Special
 # java/util/stream/ReduceOps$1
@@ -444,6 +447,10 @@ opcodes:
 # sun/security/jca/ProviderList$1
 # java/security/Provider$ServiceKey
 # java/security/Provider$EngineDescription
+# java/security/SecureRandomParameters
+# java/security/cert/CertStoreParameters
+# java/security/Policy$Parameters
+# javax/security/auth/login/Configuration$Parameters
 # jdk/internal/math/FloatingDecimal
 # jdk/internal/math/FloatingDecimal$ExceptionalBinaryToASCIIBuffer
 # jdk/internal/math/FloatingDecimal$BinaryToASCIIConverter
@@ -536,8 +543,6 @@ opcodes:
 # javax/xml/datatype/FactoryFinder
 # jdk/xml/internal/SecuritySupport
 # javax/xml/datatype/FactoryFinder$1
-# jdk/internal/foreign/MemorySessionImpl
-# java/lang/foreign/MemorySegment$Scope
 # java/net/URLClassLoader$3
 # java/net/URLClassLoader$3$1
 # java/net/MalformedURLException
@@ -1271,13 +1276,13 @@ opcodes:
 # jdk/management/jfr/EventTypeInfo
 # jdk/jfr/internal/management/StreamManager
 # javax/management/StandardMBean$MBeanInfoSafeAction
-# jdk/jfr/FlightRecorder
 # jdk/jfr/Recording
 # javax/management/NotificationListener
 # javax/management/NotificationFilter
+# javax/management/ListenerNotFoundException
+# jdk/jfr/FlightRecorder
 # jdk/management/jfr/FlightRecorderMXBeanImpl$MXBeanListener
 # jdk/jfr/FlightRecorderListener
-# javax/management/ListenerNotFoundException
 # com/sun/jmx/mbeanserver/StandardMBeanSupport
 # com/sun/jmx/mbeanserver/StandardMBeanIntrospector
 # java/util/concurrent/atomic/AtomicBoolean
@@ -1416,8 +1421,8 @@ opcodes:
 # java/util/logging/Logger$SystemLoggerHelper$1
 # java/net/SocketException
 # java/io/IOError
-# java/security/NoSuchAlgorithmException
 # java/util/concurrent/ExecutionException
+# java/security/NoSuchAlgorithmException
 # java/beans/IntrospectionException
 # java/beans/FeatureDescriptor
 # java/beans/PropertyDescriptor
@@ -1555,11 +1560,11 @@ opcodes:
 # javax/security/auth/login/FailedLoginException
 # javax/security/auth/Subject
 # javax/security/auth/callback/CallbackHandler
+# sun/security/provider/certpath/ldap/JdkLDAP
+# sun/security/provider/certpath/ldap/JdkLDAP$ProviderService
 # com/sun/security/sasl/Provider
 # com/sun/security/sasl/Provider$1
 # com/sun/security/sasl/Provider$ProviderService
-# sun/security/provider/certpath/ldap/JdkLDAP
-# sun/security/provider/certpath/ldap/JdkLDAP$ProviderService
 # sun/security/jca/JCAUtil
 # sun/security/x509/AlgorithmId
 # java/nio/file/AtomicMoveNotSupportedException
@@ -1589,7 +1594,6 @@ opcodes:
 # java/nio/file/TempFileHelper
 # sun/nio/fs/LinuxFileSystem$SupportedFileFileAttributeViewsHolder
 # java/security/SecureRandom
-# java/security/SecureRandomParameters
 # java/nio/file/TempFileHelper$PosixPermissions
 # java/util/RegularEnumSet$EnumSetIterator
 # java/nio/file/attribute/PosixFilePermissions$1
@@ -1989,6 +1993,7 @@ opcodes:
 # jdk/internal/event/X509CertificateEvent
 # jdk/internal/event/EventHelper
 # java/util/jar/JarFile$ThreadTrackHolder
+# jdk/internal/event/EventHelper$ThreadTrackHolder
 # javax/net/ssl/SSLEngine
 # jdk/internal/util/random/RandomSupport
 # javax/net/ssl/TrustManagerFactory
@@ -2143,9 +2148,9 @@ opcodes:
 # java/util/concurrent/CompletableFuture$UniHandle
 # java/util/concurrent/CompletableFuture$UniCompletion
 # java/util/concurrent/ForkJoinTask$Aux
+# jdk/internal/event/ProcessStartEvent
 # java/lang/ProcessBuilder$NullInputStream
 # java/lang/ProcessBuilder$NullOutputStream
-# jdk/internal/event/ProcessStartEvent
 # jdk/internal/reflect/MethodHandleShortFieldAccessorImpl
 # java/util/function/DoubleToLongFunction
 # java/util/function/LongSupplier
@@ -2298,8 +2303,8 @@ opcodes:
 # java/util/stream/StreamSpliterators$WrappingSpliterator
 # java/util/stream/StreamSpliterators$AbstractWrappingSpliterator
 # java/util/stream/StreamSpliterators
-# java/util/concurrent/ConcurrentSkipListMap$ValueIterator
 # java/util/concurrent/ConcurrentHashMap$ValueSpliterator
+# java/util/concurrent/ConcurrentSkipListMap$ValueIterator
 # java/io/UTFDataFormatException
 # java/io/PrintWriter$1
 # jdk/internal/access/JavaIOPrintWriterAccess
@@ -2307,6 +2312,7 @@ opcodes:
 # java/util/function/DoubleSupplier
 # jdk/internal/math/FormattedFPDecimal
 # java/util/concurrent/ConcurrentSkipListMap$EntryIterator
+# java/nio/MappedMemoryUtils
 # java/util/Collections$SynchronizedList
 # java/util/IdentityHashMap$IdentityHashMapIterator
 # java/util/IdentityHashMap$KeyIterator
@@ -2346,7 +2352,6 @@ opcodes:
 # java/net/ConnectException
 # java/net/NoRouteToHostException
 # java/nio/channels/ConnectionPendingException
-# java/nio/MappedMemoryUtils
 # java/text/NumberFormat$Field
 # java/util/function/UnaryOperator
 # java/time/Instant$1
@@ -2362,6 +2367,7 @@ opcodes:
 # java/lang/FdLibm
 # java/util/concurrent/ConcurrentHashMap$KeySpliterator
 # java/util/concurrent/locks/ReentrantReadWriteLock$Sync$HoldCounter
+# java/util/function/LongPredicate
 # java/util/stream/ReferencePipeline$5
 # java/util/stream/LongPipeline$StatelessOp
 # java/util/stream/LongPipeline
