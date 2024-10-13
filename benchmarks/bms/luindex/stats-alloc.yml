@@ -1,59 +1,62 @@
+#
+# Allocation statistics generated using version dacapo-evaluation-git-3745e0c2
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 10941374
-bytes-allocated: 2312123184
+objects-allocated: 10945534
+bytes-allocated: 2312411368
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 134700
-  24: 3739166
-  32: 2809055
-  40: 841505
-  48: 691147
-  56: 839431
-  64: 33488
-  72: 17981
+  16: 138659
+  24: 3739376
+  32: 2809065
+  40: 841477
+  48: 691151
+  56: 839432
+  64: 33485
+  72: 17970
   80: 232427
-  88: 1258100
-  96: 33799
-  104: 8558
+  88: 1258102
+  96: 33792
+  104: 8559
   112: 3750
   120: 25048
-  128: 13191
+  128: 13187
   136: 2586
-  144: 8236
+  144: 8237
   152: 8029
   160: 3449
   168: 1935
-  176: 12331
+  176: 12326
   184: 1138
-  192: 1171
+  192: 1169
   200: 1153
   208: 1235
   216: 114822
-  224: 12206
+  224: 12207
   232: 1148
   240: 702
   248: 355
   256: 404
   264: 553
-  272: 4904
+  272: 4914
   280: 775
   288: 1415
   296: 545
-  304: 662
+  304: 659
   312: 343
   320: 206
   328: 962
-  336: 311
+  336: 312
   344: 133
   352: 169
   360: 204
-  368: 153
+  368: 156
   376: 153
   384: 107
   392: 98
-  400: 189
+  400: 190
   408: 152
   416: 119
   424: 121
@@ -69,7 +72,7 @@ objects-by-size:
   504: 92
   512: 1233
   520: 156
-  528: 1657
+  528: 1639
   536: 71
   544: 101
   552: 83
@@ -77,7 +80,7 @@ objects-by-size:
   568: 87
   576: 127
   584: 71
-  592: 76
+  592: 77
   600: 64
   608: 142
   616: 98
@@ -101,7 +104,7 @@ objects-by-size:
   760: 34
   768: 62
   776: 93
-  784: 152
+  784: 154
   792: 60
   800: 58
   808: 58
@@ -109,7 +112,7 @@ objects-by-size:
   824: 44
   832: 128
   840: 60
-  848: 49
+  848: 51
   856: 56
   864: 40
   872: 112
@@ -133,7 +136,7 @@ objects-by-size:
   1016: 39
   1024: 37
   1032: 43
-  1040: 2132
+  1040: 2131
   1048: 112
   1056: 73
   1064: 42
@@ -197,7 +200,7 @@ objects-by-size:
   1528: 35
   1536: 30
   1544: 28
-  1552: 28
+  1552: 29
   1560: 28
   1568: 28
   1576: 33
@@ -229,7 +232,7 @@ objects-by-size:
   1784: 37
   1792: 33
   1800: 38
-  1808: 27
+  1808: 28
   1816: 35
   1824: 37
   1832: 20
@@ -329,7 +332,7 @@ objects-by-size:
   2584: 19
   2592: 12
   2600: 30
-  2608: 25
+  2608: 26
   2616: 18
   2624: 20
   2632: 26
@@ -377,11 +380,11 @@ objects-by-size:
   2968: 14
   2976: 20
   2984: 17
-  2992: 19
+  2992: 20
   3000: 24
   3008: 63
   3016: 17
-  3024: 19
+  3024: 20
   3032: 15
   3040: 20
   3048: 9
@@ -450,10 +453,10 @@ objects-by-size:
   3552: 9
   3560: 20
   3568: 13
-  3576: 20
+  3576: 21
   3584: 13
   3592: 21
-  3600: 22
+  3600: 23
   3608: 21
   3616: 25
   3624: 13
@@ -482,7 +485,7 @@ objects-by-size:
   3808: 59
   3816: 14
   3824: 18
-  3832: 14
+  3832: 15
   3840: 17
   3848: 12
   3856: 19
@@ -525,7 +528,7 @@ objects-by-size:
   4152: 12
   4160: 11
   4168: 21
-  4176: 17
+  4176: 18
   4184: 11
   4192: 9
   4200: 15
@@ -611,7 +614,7 @@ objects-by-size:
   4840: 13
   4848: 21
   4856: 18
-  4864: 19
+  4864: 20
   4872: 52
   4880: 14
   4888: 8
@@ -652,7 +655,7 @@ objects-by-size:
   5168: 13
   5176: 12
   5184: 18
-  5192: 16
+  5192: 17
   5200: 7
   5208: 11
   5216: 10
@@ -660,7 +663,7 @@ objects-by-size:
   5232: 19
   5240: 13
   5248: 24
-  5256: 35
+  5256: 36
   5264: 16
   5272: 14
   5280: 25
@@ -668,7 +671,7 @@ objects-by-size:
   5296: 10
   5304: 14
   5312: 15
-  5320: 11
+  5320: 12
   5328: 8
   5336: 9
   5344: 18
@@ -698,11 +701,11 @@ objects-by-size:
   5536: 14
   5544: 14
   5552: 9
-  5560: 16
+  5560: 17
   5568: 17
   5576: 14
   5584: 9
-  5592: 16
+  5592: 17
   5600: 27
   5608: 10
   5616: 13
@@ -715,7 +718,7 @@ objects-by-size:
   5672: 15
   5680: 16
   5688: 12
-  5696: 9
+  5696: 10
   5704: 68
   5712: 37
   5720: 11
@@ -804,7 +807,7 @@ objects-by-size:
   6384: 16
   6392: 12
   6400: 7
-  6408: 11
+  6408: 12
   6416: 16
   6424: 19
   6432: 9
@@ -840,7 +843,7 @@ objects-by-size:
   6672: 11
   6680: 9
   6688: 12
-  6696: 8
+  6696: 9
   6704: 6
   6712: 14
   6720: 10
@@ -993,7 +996,7 @@ objects-by-size:
   7896: 11
   7904: 14
   7912: 6
-  7920: 12
+  7920: 13
   7928: 14
   7936: 7
   7944: 9
@@ -1036,7 +1039,7 @@ objects-by-size:
   8240: 4
   8248: 17
   8256: 10
-  8264: 8
+  8264: 9
   8272: 7
   8280: 8
   8288: 9
@@ -1084,7 +1087,7 @@ objects-by-size:
   8624: 10
   8632: 6
   8640: 12
-  8648: 9
+  8648: 10
   8656: 7
   8664: 7
   8672: 13
@@ -1139,14 +1142,14 @@ objects-by-size:
   9064: 8
   9072: 7
   9080: 10
-  9088: 5
-  9096: 4
+  9088: 6
+  9096: 5
   9104: 6
   9112: 9
   9120: 11
   9128: 9
   9136: 10
-  9144: 9
+  9144: 10
   9152: 11
   9160: 14
   9168: 7
@@ -1176,7 +1179,7 @@ objects-by-size:
   9360: 7
   9368: 11
   9376: 3
-  9384: 4
+  9384: 5
   9392: 8
   9400: 4
   9408: 9
@@ -1185,7 +1188,7 @@ objects-by-size:
   9432: 7
   9440: 13
   9448: 5
-  9456: 11
+  9456: 12
   9464: 6
   9472: 7
   9480: 5
@@ -1245,18 +1248,18 @@ objects-by-size:
   9912: 7
   9920: 3
   9928: 5
-  9936: 6
+  9936: 7
   9944: 8
   9952: 5
   9960: 7
   9968: 7
   9976: 8
-  9984: 8
+  9984: 9
   9992: 5
   10000: 13
   10008: 2
   10016: 6
-  10024: 7
+  10024: 8
   10032: 9
   10040: 4
   10048: 8
@@ -1264,7 +1267,7 @@ objects-by-size:
   10064: 6
   10072: 14
   10080: 4
-  10088: 6
+  10088: 7
   10096: 7
   10104: 6
   10112: 10
@@ -1503,12 +1506,12 @@ objects-by-size:
   11984: 4
   11992: 5
   12000: 9
-  12008: 10
+  12008: 11
   12016: 10
   12024: 5
   12032: 4
   12040: 6
-  12048: 4
+  12048: 5
   12056: 11
   12064: 3
   12072: 16
@@ -1687,7 +1690,7 @@ objects-by-size:
   13456: 7
   13464: 9
   13472: 8
-  13480: 6
+  13480: 7
   13488: 4
   13496: 4
   13504: 6
@@ -5652,7 +5655,8 @@ objects-by-size:
   49128: 1
   49136: 3
   49144: 2
-  49160: 19
+  49152: 18
+  49160: 1
   49168: 1
   49184: 1
   49192: 2
@@ -9848,55 +9852,55 @@ objects-by-size:
   4194320: 2
 # number of bytes allocated for each object size
 bytes-by-size: 
-  16: 2155200
-  24: 89739984
-  32: 89889760
-  40: 33660200
-  48: 33175056
-  56: 47008136
-  64: 2143232
-  72: 1294632
+  16: 2218544
+  24: 89745024
+  32: 89890080
+  40: 33659080
+  48: 33175248
+  56: 47008192
+  64: 2143040
+  72: 1293840
   80: 18594160
-  88: 110712800
-  96: 3244704
-  104: 890032
+  88: 110712976
+  96: 3244032
+  104: 890136
   112: 420000
   120: 3005760
-  128: 1688448
+  128: 1687936
   136: 351696
-  144: 1185984
+  144: 1186128
   152: 1220408
   160: 551840
   168: 325080
-  176: 2170256
+  176: 2169376
   184: 209392
-  192: 224832
+  192: 224448
   200: 230600
   208: 256880
   216: 24801552
-  224: 2734144
+  224: 2734368
   232: 266336
   240: 168480
   248: 88040
   256: 103424
   264: 145992
-  272: 1333888
+  272: 1336608
   280: 217000
   288: 407520
   296: 161320
-  304: 201248
+  304: 200336
   312: 107016
   320: 65920
   328: 315536
-  336: 104496
+  336: 104832
   344: 45752
   352: 59488
   360: 73440
-  368: 56304
+  368: 57408
   376: 57528
   384: 41088
   392: 38416
-  400: 75600
+  400: 76000
   408: 62016
   416: 49504
   424: 51304
@@ -9912,7 +9916,7 @@ bytes-by-size:
   504: 46368
   512: 631296
   520: 81120
-  528: 874896
+  528: 865392
   536: 38056
   544: 54944
   552: 45816
@@ -9920,7 +9924,7 @@ bytes-by-size:
   568: 49416
   576: 73152
   584: 41464
-  592: 44992
+  592: 45584
   600: 38400
   608: 86336
   616: 60368
@@ -9944,7 +9948,7 @@ bytes-by-size:
   760: 25840
   768: 47616
   776: 72168
-  784: 119168
+  784: 120736
   792: 47520
   800: 46400
   808: 46864
@@ -9952,7 +9956,7 @@ bytes-by-size:
   824: 36256
   832: 106496
   840: 50400
-  848: 41552
+  848: 43248
   856: 47936
   864: 34560
   872: 97664
@@ -9976,7 +9980,7 @@ bytes-by-size:
   1016: 39624
   1024: 37888
   1032: 44376
-  1040: 2217280
+  1040: 2216240
   1048: 117376
   1056: 77088
   1064: 44688
@@ -10040,7 +10044,7 @@ bytes-by-size:
   1528: 53480
   1536: 46080
   1544: 43232
-  1552: 43456
+  1552: 45008
   1560: 43680
   1568: 43904
   1576: 52008
@@ -10072,7 +10076,7 @@ bytes-by-size:
   1784: 66008
   1792: 59136
   1800: 68400
-  1808: 48816
+  1808: 50624
   1816: 63560
   1824: 67488
   1832: 36640
@@ -10172,7 +10176,7 @@ bytes-by-size:
   2584: 49096
   2592: 31104
   2600: 78000
-  2608: 65200
+  2608: 67808
   2616: 47088
   2624: 52480
   2632: 68432
@@ -10220,11 +10224,11 @@ bytes-by-size:
   2968: 41552
   2976: 59520
   2984: 50728
-  2992: 56848
+  2992: 59840
   3000: 72000
   3008: 189504
   3016: 51272
-  3024: 57456
+  3024: 60480
   3032: 45480
   3040: 60800
   3048: 27432
@@ -10293,10 +10297,10 @@ bytes-by-size:
   3552: 31968
   3560: 71200
   3568: 46384
-  3576: 71520
+  3576: 75096
   3584: 46592
   3592: 75432
-  3600: 79200
+  3600: 82800
   3608: 75768
   3616: 90400
   3624: 47112
@@ -10325,7 +10329,7 @@ bytes-by-size:
   3808: 224672
   3816: 53424
   3824: 68832
-  3832: 53648
+  3832: 57480
   3840: 65280
   3848: 46176
   3856: 73264
@@ -10368,7 +10372,7 @@ bytes-by-size:
   4152: 49824
   4160: 45760
   4168: 87528
-  4176: 70992
+  4176: 75168
   4184: 46024
   4192: 37728
   4200: 63000
@@ -10454,7 +10458,7 @@ bytes-by-size:
   4840: 62920
   4848: 101808
   4856: 87408
-  4864: 92416
+  4864: 97280
   4872: 253344
   4880: 68320
   4888: 39104
@@ -10495,7 +10499,7 @@ bytes-by-size:
   5168: 67184
   5176: 62112
   5184: 93312
-  5192: 83072
+  5192: 88264
   5200: 36400
   5208: 57288
   5216: 52160
@@ -10503,7 +10507,7 @@ bytes-by-size:
   5232: 99408
   5240: 68120
   5248: 125952
-  5256: 183960
+  5256: 189216
   5264: 84224
   5272: 73808
   5280: 132000
@@ -10511,7 +10515,7 @@ bytes-by-size:
   5296: 52960
   5304: 74256
   5312: 79680
-  5320: 58520
+  5320: 63840
   5328: 42624
   5336: 48024
   5344: 96192
@@ -10541,11 +10545,11 @@ bytes-by-size:
   5536: 77504
   5544: 77616
   5552: 49968
-  5560: 88960
+  5560: 94520
   5568: 94656
   5576: 78064
   5584: 50256
-  5592: 89472
+  5592: 95064
   5600: 151200
   5608: 56080
   5616: 73008
@@ -10558,7 +10562,7 @@ bytes-by-size:
   5672: 85080
   5680: 90880
   5688: 68256
-  5696: 51264
+  5696: 56960
   5704: 387872
   5712: 211344
   5720: 62920
@@ -10647,7 +10651,7 @@ bytes-by-size:
   6384: 102144
   6392: 76704
   6400: 44800
-  6408: 70488
+  6408: 76896
   6416: 102656
   6424: 122056
   6432: 57888
@@ -10683,7 +10687,7 @@ bytes-by-size:
   6672: 73392
   6680: 60120
   6688: 80256
-  6696: 53568
+  6696: 60264
   6704: 40224
   6712: 93968
   6720: 67200
@@ -10836,7 +10840,7 @@ bytes-by-size:
   7896: 86856
   7904: 110656
   7912: 47472
-  7920: 95040
+  7920: 102960
   7928: 110992
   7936: 55552
   7944: 71496
@@ -10879,7 +10883,7 @@ bytes-by-size:
   8240: 32960
   8248: 140216
   8256: 82560
-  8264: 66112
+  8264: 74376
   8272: 57904
   8280: 66240
   8288: 74592
@@ -10927,7 +10931,7 @@ bytes-by-size:
   8624: 86240
   8632: 51792
   8640: 103680
-  8648: 77832
+  8648: 86480
   8656: 60592
   8664: 60648
   8672: 112736
@@ -10982,14 +10986,14 @@ bytes-by-size:
   9064: 72512
   9072: 63504
   9080: 90800
-  9088: 45440
-  9096: 36384
+  9088: 54528
+  9096: 45480
   9104: 54624
   9112: 82008
   9120: 100320
   9128: 82152
   9136: 91360
-  9144: 82296
+  9144: 91440
   9152: 100672
   9160: 128240
   9168: 64176
@@ -11019,7 +11023,7 @@ bytes-by-size:
   9360: 65520
   9368: 103048
   9376: 28128
-  9384: 37536
+  9384: 46920
   9392: 75136
   9400: 37600
   9408: 84672
@@ -11028,7 +11032,7 @@ bytes-by-size:
   9432: 66024
   9440: 122720
   9448: 47240
-  9456: 104016
+  9456: 113472
   9464: 56784
   9472: 66304
   9480: 47400
@@ -11088,18 +11092,18 @@ bytes-by-size:
   9912: 69384
   9920: 29760
   9928: 49640
-  9936: 59616
+  9936: 69552
   9944: 79552
   9952: 49760
   9960: 69720
   9968: 69776
   9976: 79808
-  9984: 79872
+  9984: 89856
   9992: 49960
   10000: 130000
   10008: 20016
   10016: 60096
-  10024: 70168
+  10024: 80192
   10032: 90288
   10040: 40160
   10048: 80384
@@ -11107,7 +11111,7 @@ bytes-by-size:
   10064: 60384
   10072: 141008
   10080: 40320
-  10088: 60528
+  10088: 70616
   10096: 70672
   10104: 60624
   10112: 101120
@@ -11346,12 +11350,12 @@ bytes-by-size:
   11984: 47936
   11992: 59960
   12000: 108000
-  12008: 120080
+  12008: 132088
   12016: 120160
   12024: 60120
   12032: 48128
   12040: 72240
-  12048: 48192
+  12048: 60240
   12056: 132616
   12064: 36192
   12072: 193152
@@ -11530,7 +11534,7 @@ bytes-by-size:
   13456: 94192
   13464: 121176
   13472: 107776
-  13480: 80880
+  13480: 94360
   13488: 53952
   13496: 53984
   13504: 81024
@@ -15495,7 +15499,8 @@ bytes-by-size:
   49128: 49128
   49136: 147408
   49144: 98288
-  49160: 934040
+  49152: 884736
+  49160: 49160
   49168: 49168
   49184: 49184
   49192: 98384
@@ -19697,7 +19702,7 @@ objects-by-type:
   \[C: 1
   \[I: 25
   boolean: 8
-  byte: 1844449
+  byte: 1844585
   char: 4074
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 11054
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 6511
@@ -19756,7 +19761,7 @@ objects-by-type:
   com/sun/management/internal/PlatformMBeanProviderImpl$5: 1
   double: 1
   float: 10
-  int: 559385
+  int: 559384
   java/io/BufferedReader: 8
   java/io/ByteArrayInputStream: 4
   java/io/ByteArrayOutputStream: 1107
@@ -19777,7 +19782,7 @@ objects-by-type:
   java/lang/Byte: 209
   java/lang/CharacterData01: 1
   java/lang/CharacterData02: 1
-  java/lang/Class: 2512
+  java/lang/Class: 2510
   java/lang/Class$1: 4
   java/lang/Class$3: 4
   java/lang/Class$ReflectionData: 77
@@ -19857,8 +19862,7 @@ objects-by-type:
   java/lang/invoke/MethodHandles$Lookup: 373
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 226
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 226
-  java/lang/invoke/MethodType: 2265
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 856
+  java/lang/invoke/MethodType: 2263
   java/lang/invoke/MethodTypeForm: 178
   java/lang/invoke/SimpleMethodHandle: 60
   java/lang/invoke/VarForm: 2
@@ -20057,7 +20061,7 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 21
   java/util/concurrent/ConcurrentHashMap$KeySetView: 3
   java/util/concurrent/ConcurrentHashMap$MapEntry: 54
-  java/util/concurrent/ConcurrentHashMap$Node: 1847
+  java/util/concurrent/ConcurrentHashMap$Node: 1841
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 11
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 283
   java/util/concurrent/ConcurrentLinkedQueue: 1
@@ -20073,7 +20077,6 @@ objects-by-type:
   java/util/concurrent/atomic/AtomicReference: 8
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 16
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 29
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 1
   java/util/concurrent/locks/Lock: 1
   java/util/concurrent/locks/ReentrantLock: 63
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 67
@@ -20201,11 +20204,13 @@ objects-by-type:
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 1554
   jdk/internal/reflect/DirectConstructorHandleAccessor: 28
   jdk/internal/reflect/DirectMethodHandleAccessor: 8
+  jdk/internal/util/StrongReferenceKey: 3959
+  jdk/internal/util/WeakReferenceKey: 854
   jdk/internal/vm/SharedThreadContainer: 1
   jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer: 1
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider: 1
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider$SingleMBeanComponent: 1
-  long: 86523
+  long: 86509
   org/apache/lucene/analysis/Analyzer$1: 1
   org/apache/lucene/analysis/Analyzer$2: 1
   org/apache/lucene/analysis/Analyzer$TokenStreamComponents: 1
@@ -20543,7 +20548,7 @@ objects-by-type:
   org/apache/lucene/util/Bits: 1
   org/apache/lucene/util/ByteBlockPool: 9
   org/apache/lucene/util/ByteBlockPool$DirectTrackingAllocator: 3
-  org/apache/lucene/util/BytesRef: 329845
+  org/apache/lucene/util/BytesRef: 329952
   org/apache/lucene/util/BytesRefBuilder: 43
   org/apache/lucene/util/BytesRefHash: 18
   org/apache/lucene/util/BytesRefHash$1: 9
@@ -20630,11 +20635,11 @@ objects-by-type:
   org/apache/lucene/util/packed/DirectReader$DirectPackedReader16: 9
   org/apache/lucene/util/packed/DirectWriter: 8
   org/apache/lucene/util/packed/GrowableWriter: 23169
-  org/apache/lucene/util/packed/Packed64: 26375
+  org/apache/lucene/util/packed/Packed64: 26368
   org/apache/lucene/util/packed/PackedInts$Format: 3
   org/apache/lucene/util/packed/PackedInts$Format$1: 1
   org/apache/lucene/util/packed/PackedInts$Format$2: 1
-  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 26375
+  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 26368
   org/apache/lucene/util/packed/PackedInts$Mutable: 23169
   org/apache/lucene/util/packed/PackedInts$NullReader: 50
   org/apache/lucene/util/packed/PackedInts$Reader: 18
@@ -20719,7 +20724,7 @@ bytes-by-type:
   \[C: 48
   \[I: 1752
   boolean: 1688
-  byte: 1718166472
+  byte: 1718387960
   char: 1411392
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 442160
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 208352
@@ -20778,7 +20783,7 @@ bytes-by-type:
   com/sun/management/internal/PlatformMBeanProviderImpl$5: 24
   double: 16
   float: 1272
-  int: 205239232
+  int: 205239192
   java/io/BufferedReader: 384
   java/io/ByteArrayInputStream: 128
   java/io/ByteArrayOutputStream: 26568
@@ -20799,7 +20804,7 @@ bytes-by-type:
   java/lang/Byte: 3344
   java/lang/CharacterData01: 16
   java/lang/CharacterData02: 16
-  java/lang/Class: 70920
+  java/lang/Class: 70856
   java/lang/Class$1: 64
   java/lang/Class$3: 64
   java/lang/Class$ReflectionData: 4928
@@ -20879,8 +20884,7 @@ bytes-by-type:
   java/lang/invoke/MethodHandles$Lookup: 11936
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 7232
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 5424
-  java/lang/invoke/MethodType: 90600
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 27392
+  java/lang/invoke/MethodType: 90520
   java/lang/invoke/MethodTypeForm: 5696
   java/lang/invoke/SimpleMethodHandle: 1920
   java/lang/invoke/VarForm: 64
@@ -21079,7 +21083,7 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 672
   java/util/concurrent/ConcurrentHashMap$KeySetView: 72
   java/util/concurrent/ConcurrentHashMap$MapEntry: 1296
-  java/util/concurrent/ConcurrentHashMap$Node: 80816
+  java/util/concurrent/ConcurrentHashMap$Node: 80624
   java/util/concurrent/ConcurrentHashMap$ReservationNode: 352
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 15848
   java/util/concurrent/ConcurrentLinkedQueue: 24
@@ -21095,7 +21099,6 @@ bytes-by-type:
   java/util/concurrent/atomic/AtomicReference: 128
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 512
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 696
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 32
   java/util/concurrent/locks/Lock: 40
   java/util/concurrent/locks/ReentrantLock: 1008
   java/util/concurrent/locks/ReentrantLock$NonfairSync: 2144
@@ -21223,11 +21226,13 @@ bytes-by-type:
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 74592
   jdk/internal/reflect/DirectConstructorHandleAccessor: 672
   jdk/internal/reflect/DirectMethodHandleAccessor: 256
+  jdk/internal/util/StrongReferenceKey: 63344
+  jdk/internal/util/WeakReferenceKey: 27328
   jdk/internal/vm/SharedThreadContainer: 40
   jdk/internal/vm/ThreadContainers$RootContainer$TrackingRootContainer: 24
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider: 16
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider$SingleMBeanComponent: 24
-  long: 5928536
+  long: 5930240
   org/apache/lucene/analysis/Analyzer$1: 16
   org/apache/lucene/analysis/Analyzer$2: 16
   org/apache/lucene/analysis/Analyzer$TokenStreamComponents: 24
@@ -21565,7 +21570,7 @@ bytes-by-type:
   org/apache/lucene/util/Bits: 32
   org/apache/lucene/util/ByteBlockPool: 360
   org/apache/lucene/util/ByteBlockPool$DirectTrackingAllocator: 72
-  org/apache/lucene/util/BytesRef: 7916280
+  org/apache/lucene/util/BytesRef: 7918848
   org/apache/lucene/util/BytesRefBuilder: 688
   org/apache/lucene/util/BytesRefHash: 1008
   org/apache/lucene/util/BytesRefHash$1: 432
@@ -21652,11 +21657,11 @@ bytes-by-type:
   org/apache/lucene/util/packed/DirectReader$DirectPackedReader16: 216
   org/apache/lucene/util/packed/DirectWriter: 448
   org/apache/lucene/util/packed/GrowableWriter: 741408
-  org/apache/lucene/util/packed/Packed64: 1055000
+  org/apache/lucene/util/packed/Packed64: 1054720
   org/apache/lucene/util/packed/PackedInts$Format: 72
   org/apache/lucene/util/packed/PackedInts$Format$1: 32
   org/apache/lucene/util/packed/PackedInts$Format$2: 32
-  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 633000
+  org/apache/lucene/util/packed/PackedInts$FormatAndBits: 632832
   org/apache/lucene/util/packed/PackedInts$Mutable: 556056
   org/apache/lucene/util/packed/PackedInts$NullReader: 800
   org/apache/lucene/util/packed/PackedInts$Reader: 1176

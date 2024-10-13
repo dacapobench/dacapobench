@@ -1,37 +1,40 @@
+#
+# Allocation statistics generated using version dacapo-evaluation-git-3745e0c2
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 63997249
-bytes-allocated: 7130315024
+objects-allocated: 64960568
+bytes-allocated: 7145721232
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 6731762
-  24: 44270967
-  32: 550849
-  40: 3389045
-  48: 136002
-  56: 536694
-  64: 138789
-  72: 7591
-  80: 125051
-  88: 68824
-  96: 1371855
-  104: 50288
+  16: 7695296
+  24: 44270929
+  32: 550840
+  40: 3389030
+  48: 135996
+  56: 536568
+  64: 138787
+  72: 7590
+  80: 125043
+  88: 68822
+  96: 1371844
+  104: 50298
   112: 36642
   120: 1395
-  128: 34492
+  128: 34490
   136: 21167
-  144: 4404
+  144: 4405
   152: 16077
   160: 12847
-  168: 820
-  176: 5080726
+  168: 819
+  176: 5080724
   184: 7337
   192: 207
   200: 6085
   208: 4554
   216: 247
-  224: 11229
+  224: 11227
   232: 2942
   240: 573
   248: 2446
@@ -129,7 +132,7 @@ objects-by-size:
   984: 8
   992: 26
   1000: 20
-  1008: 12
+  1008: 11
   1016: 17
   1024: 17
   1032: 9
@@ -214,16 +217,16 @@ objects-by-size:
   1664: 7
   1672: 10
   1680: 3
-  1688: 7
+  1688: 6
   1696: 7
   1704: 5
-  1712: 6
+  1712: 7
   1720: 6
   1728: 2
-  1736: 4
+  1736: 3
   1744: 2
   1752: 10
-  1760: 10
+  1760: 11
   1768: 15
   1776: 8
   1784: 5
@@ -411,25 +414,26 @@ objects-by-size:
   3320: 2
   3336: 3
   3352: 4
-  3360: 2
+  3360: 1
   3368: 17
   3376: 2
   3384: 2
   3392: 7
   3400: 5
+  3408: 1
   3416: 1
   3424: 3
   3432: 1
   3440: 1
   3448: 1
   3456: 6
-  3464: 9
+  3464: 8
   3472: 2
   3480: 6
   3488: 2
   3496: 2
   3504: 2
-  3512: 8
+  3512: 9
   3520: 1
   3528: 3
   3536: 2
@@ -444,7 +448,7 @@ objects-by-size:
   3632: 2
   3640: 4
   3664: 2
-  3672: 5
+  3672: 4
   3680: 1
   3688: 4
   3696: 2
@@ -453,7 +457,7 @@ objects-by-size:
   3728: 6
   3736: 9
   3744: 2
-  3752: 3
+  3752: 4
   3760: 7
   3768: 1
   3776: 1
@@ -628,11 +632,11 @@ objects-by-size:
   5984: 5
   6000: 1
   6008: 2
-  6024: 1
   6040: 1
   6048: 1
   6064: 1
   6080: 3
+  6088: 1
   6104: 1
   6112: 1
   6128: 2
@@ -673,11 +677,11 @@ objects-by-size:
   6648: 1
   6656: 2
   6696: 1
-  6704: 2
+  6704: 1
   6720: 1
   6744: 1
   6776: 1
-  6800: 5
+  6800: 6
   6808: 1
   6832: 2
   6840: 1
@@ -685,21 +689,22 @@ objects-by-size:
   6864: 2
   6880: 1
   6896: 1
-  6904: 2
+  6904: 1
   6928: 1
   6944: 1
   6968: 1
   6992: 2
-  7000: 1
+  7000: 2
   7016: 1
   7032: 1
   7056: 2
   7064: 1
   7096: 1
-  7112: 2
+  7112: 1
   7144: 1
   7152: 1
   7160: 1
+  7176: 1
   7184: 16
   7208: 6
   7224: 1
@@ -708,13 +713,12 @@ objects-by-size:
   7296: 1
   7304: 1
   7320: 1
-  7328: 4
   7352: 2
   7360: 1
   7368: 1
   7376: 1
   7384: 5
-  7408: 1
+  7408: 5
   7432: 1
   7448: 1
   7456: 1
@@ -849,8 +853,8 @@ objects-by-size:
   10944: 1
   10968: 1
   11000: 6
-  11032: 1
   11064: 2
+  11072: 1
   11096: 1
   11128: 5
   11144: 1
@@ -881,11 +885,11 @@ objects-by-size:
   11952: 1
   11968: 1
   11992: 1
-  12040: 4
   12080: 1
   12112: 1
   12136: 2
   12144: 1
+  12160: 4
   12184: 5
   12208: 6
   12344: 1
@@ -913,8 +917,8 @@ objects-by-size:
   13232: 1
   13256: 2
   13272: 1
-  13392: 1
   13472: 1
+  13576: 1
   13648: 2
   13688: 1
   13736: 1
@@ -960,14 +964,14 @@ objects-by-size:
   16088: 1
   16128: 1
   16160: 5
-  16168: 1
+  16208: 1
   16264: 1
   16400: 21
   16592: 1
   16664: 1
   16824: 1
   16880: 2
-  16896: 1
+  16952: 1
   17152: 1
   17224: 1
   17496: 1
@@ -1002,7 +1006,7 @@ objects-by-size:
   21176: 1
   21224: 2
   21920: 1
-  22048: 1
+  22128: 1
   22296: 1
   22336: 1
   22592: 2
@@ -1024,7 +1028,7 @@ objects-by-size:
   25232: 5
   25328: 5
   25640: 5
-  25664: 1
+  25728: 1
   26016: 1
   26024: 5
   26080: 1
@@ -1056,7 +1060,7 @@ objects-by-size:
   32152: 1
   32720: 5
   32784: 3
-  33768: 1
+  33888: 1
   34048: 5
   34992: 1
   36056: 5
@@ -1140,33 +1144,33 @@ objects-by-size:
   134217776: 1
 # number of bytes allocated for each object size
 bytes-by-size: 
-  16: 107708192
-  24: 1062503208
-  32: 17627168
-  40: 135561800
-  48: 6528096
-  56: 30054864
-  64: 8882496
-  72: 546552
-  80: 10004080
-  88: 6056512
-  96: 131698080
-  104: 5229952
+  16: 123124736
+  24: 1062502296
+  32: 17626880
+  40: 135561200
+  48: 6527808
+  56: 30047808
+  64: 8882368
+  72: 546480
+  80: 10003440
+  88: 6056336
+  96: 131697024
+  104: 5230992
   112: 4103904
   120: 167400
-  128: 4414976
+  128: 4414720
   136: 2878712
-  144: 634176
+  144: 634320
   152: 2443704
   160: 2055520
-  168: 137760
-  176: 894207776
+  168: 137592
+  176: 894207424
   184: 1350008
   192: 39744
   200: 1217000
   208: 947232
   216: 53352
-  224: 2515296
+  224: 2514848
   232: 682544
   240: 137520
   248: 606608
@@ -1264,7 +1268,7 @@ bytes-by-size:
   984: 7872
   992: 25792
   1000: 20000
-  1008: 12096
+  1008: 11088
   1016: 17272
   1024: 17408
   1032: 9288
@@ -1349,16 +1353,16 @@ bytes-by-size:
   1664: 11648
   1672: 16720
   1680: 5040
-  1688: 11816
+  1688: 10128
   1696: 11872
   1704: 8520
-  1712: 10272
+  1712: 11984
   1720: 10320
   1728: 3456
-  1736: 6944
+  1736: 5208
   1744: 3488
   1752: 17520
-  1760: 17600
+  1760: 19360
   1768: 26520
   1776: 14208
   1784: 8920
@@ -1546,25 +1550,26 @@ bytes-by-size:
   3320: 6640
   3336: 10008
   3352: 13408
-  3360: 6720
+  3360: 3360
   3368: 57256
   3376: 6752
   3384: 6768
   3392: 23744
   3400: 17000
+  3408: 3408
   3416: 3416
   3424: 10272
   3432: 3432
   3440: 3440
   3448: 3448
   3456: 20736
-  3464: 31176
+  3464: 27712
   3472: 6944
   3480: 20880
   3488: 6976
   3496: 6992
   3504: 7008
-  3512: 28096
+  3512: 31608
   3520: 3520
   3528: 10584
   3536: 7072
@@ -1579,7 +1584,7 @@ bytes-by-size:
   3632: 7264
   3640: 14560
   3664: 7328
-  3672: 18360
+  3672: 14688
   3680: 3680
   3688: 14752
   3696: 7392
@@ -1588,7 +1593,7 @@ bytes-by-size:
   3728: 22368
   3736: 33624
   3744: 7488
-  3752: 11256
+  3752: 15008
   3760: 26320
   3768: 3768
   3776: 3776
@@ -1763,11 +1768,11 @@ bytes-by-size:
   5984: 29920
   6000: 6000
   6008: 12016
-  6024: 6024
   6040: 6040
   6048: 6048
   6064: 6064
   6080: 18240
+  6088: 6088
   6104: 6104
   6112: 6112
   6128: 12256
@@ -1808,11 +1813,11 @@ bytes-by-size:
   6648: 6648
   6656: 13312
   6696: 6696
-  6704: 13408
+  6704: 6704
   6720: 6720
   6744: 6744
   6776: 6776
-  6800: 34000
+  6800: 40800
   6808: 6808
   6832: 13664
   6840: 6840
@@ -1820,21 +1825,22 @@ bytes-by-size:
   6864: 13728
   6880: 6880
   6896: 6896
-  6904: 13808
+  6904: 6904
   6928: 6928
   6944: 6944
   6968: 6968
   6992: 13984
-  7000: 7000
+  7000: 14000
   7016: 7016
   7032: 7032
   7056: 14112
   7064: 7064
   7096: 7096
-  7112: 14224
+  7112: 7112
   7144: 7144
   7152: 7152
   7160: 7160
+  7176: 7176
   7184: 114944
   7208: 43248
   7224: 7224
@@ -1843,13 +1849,12 @@ bytes-by-size:
   7296: 7296
   7304: 7304
   7320: 7320
-  7328: 29312
   7352: 14704
   7360: 7360
   7368: 7368
   7376: 7376
   7384: 36920
-  7408: 7408
+  7408: 37040
   7432: 7432
   7448: 7448
   7456: 7456
@@ -1984,8 +1989,8 @@ bytes-by-size:
   10944: 10944
   10968: 10968
   11000: 66000
-  11032: 11032
   11064: 22128
+  11072: 11072
   11096: 11096
   11128: 55640
   11144: 11144
@@ -2016,11 +2021,11 @@ bytes-by-size:
   11952: 11952
   11968: 11968
   11992: 11992
-  12040: 48160
   12080: 12080
   12112: 12112
   12136: 24272
   12144: 12144
+  12160: 48640
   12184: 60920
   12208: 73248
   12344: 12344
@@ -2048,8 +2053,8 @@ bytes-by-size:
   13232: 13232
   13256: 26512
   13272: 13272
-  13392: 13392
   13472: 13472
+  13576: 13576
   13648: 27296
   13688: 13688
   13736: 13736
@@ -2095,14 +2100,14 @@ bytes-by-size:
   16088: 16088
   16128: 16128
   16160: 80800
-  16168: 16168
+  16208: 16208
   16264: 16264
   16400: 344400
   16592: 16592
   16664: 16664
   16824: 16824
   16880: 33760
-  16896: 16896
+  16952: 16952
   17152: 17152
   17224: 17224
   17496: 17496
@@ -2137,7 +2142,7 @@ bytes-by-size:
   21176: 21176
   21224: 42448
   21920: 21920
-  22048: 22048
+  22128: 22128
   22296: 22296
   22336: 22336
   22592: 45184
@@ -2159,7 +2164,7 @@ bytes-by-size:
   25232: 126160
   25328: 126640
   25640: 128200
-  25664: 25664
+  25728: 25728
   26016: 26016
   26024: 130120
   26080: 26080
@@ -2191,7 +2196,7 @@ bytes-by-size:
   32152: 32152
   32720: 163600
   32784: 98352
-  33768: 33768
+  33888: 33888
   34048: 170240
   34992: 34992
   36056: 180280
@@ -2275,59 +2280,59 @@ bytes-by-size:
   134217776: 134217776
 # number of objects allocated for each class
 objects-by-type: 
-  B: 909
+  B: 910
   D: 2354700
   I: 1
   \[D: 1354701
   \[\[D: 1354700
   boolean: 15
-  byte: 14014543
-  char: 5235
-  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 6984
+  byte: 14014416
+  char: 5234
+  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 6982
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 3941
   com/google/monitoring/runtime/instrumentation/StaticClassWriter: 624
   com/google/monitoring/runtime/instrumentation/StaticClassWriter$ClassInfo: 6
   com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter: 624
-  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 6984
+  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 6982
   com/google/monitoring/runtime/instrumentation/asm/AnnotationWriter: 94
   com/google/monitoring/runtime/instrumentation/asm/Attribute: 624
-  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 24736
+  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 24725
   com/google/monitoring/runtime/instrumentation/asm/ClassReader: 624
   com/google/monitoring/runtime/instrumentation/asm/Context: 624
   com/google/monitoring/runtime/instrumentation/asm/Edge: 55086
   com/google/monitoring/runtime/instrumentation/asm/FieldWriter: 2096
-  com/google/monitoring/runtime/instrumentation/asm/Frame: 55666
+  com/google/monitoring/runtime/instrumentation/asm/Frame: 55662
   com/google/monitoring/runtime/instrumentation/asm/Handle: 1611
   com/google/monitoring/runtime/instrumentation/asm/Handler: 1003
-  com/google/monitoring/runtime/instrumentation/asm/Label: 138704
-  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 6984
+  com/google/monitoring/runtime/instrumentation/asm/Label: 138690
+  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 6982
   com/google/monitoring/runtime/instrumentation/asm/RecordComponentWriter: 16
   com/google/monitoring/runtime/instrumentation/asm/SymbolTable: 624
-  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 114598
-  com/google/monitoring/runtime/instrumentation/asm/Type: 44412
-  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 6984
-  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 6984
+  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 114594
+  com/google/monitoring/runtime/instrumentation/asm/Type: 44404
+  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 6982
+  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 6982
   com/google/monitoring/runtime/instrumentation/asm/tree/AnnotationNode: 34
-  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 12106
+  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 12105
   com/google/monitoring/runtime/instrumentation/asm/tree/IincInsnNode: 932
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 6984
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 77306
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 6982
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 77303
   com/google/monitoring/runtime/instrumentation/asm/tree/IntInsnNode: 5936
   com/google/monitoring/runtime/instrumentation/asm/tree/InvokeDynamicInsnNode: 540
   com/google/monitoring/runtime/instrumentation/asm/tree/JumpInsnNode: 12388
-  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 49983
+  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 49979
   com/google/monitoring/runtime/instrumentation/asm/tree/LdcInsnNode: 18745
-  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 33705
-  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 21697
+  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 33703
+  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 21695
   com/google/monitoring/runtime/instrumentation/asm/tree/LookupSwitchInsnNode: 124
-  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 29055
+  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 29052
   com/google/monitoring/runtime/instrumentation/asm/tree/MethodNode$1: 3
   com/google/monitoring/runtime/instrumentation/asm/tree/MultiANewArrayInsnNode: 9
-  com/google/monitoring/runtime/instrumentation/asm/tree/ParameterNode: 241
+  com/google/monitoring/runtime/instrumentation/asm/tree/ParameterNode: 240
   com/google/monitoring/runtime/instrumentation/asm/tree/TableSwitchInsnNode: 65
   com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 1003
   com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 7135
-  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 64555
+  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 64551
   com/sun/jmx/interceptor/DefaultMBeanServerInterceptor: 1
   com/sun/jmx/interceptor/DefaultMBeanServerInterceptor$ResourceContext$1: 1
   com/sun/jmx/mbeanserver/ClassLoaderRepositorySupport: 1
@@ -2437,7 +2442,7 @@ objects-by-type:
   edu/cmu/graphchi/shards/SlidingShard$Block: 10
   edu/cmu/graphchi/util/HugeDoubleMatrix: 1
   float: 1
-  int: 3064548
+  int: 3064533
   java/io/BufferedInputStream: 40
   java/io/BufferedReader: 16
   java/io/BufferedReader$1: 1
@@ -2461,7 +2466,7 @@ objects-by-type:
   java/io/RandomAccessFile: 1
   java/io/StringReader: 2
   java/lang/Byte: 110
-  java/lang/Class: 3168
+  java/lang/Class: 3174
   java/lang/Class$1: 3
   java/lang/Class$3: 1
   java/lang/Class$AnnotationData: 21
@@ -2472,22 +2477,22 @@ objects-by-type:
   java/lang/ClassValue$Version: 1
   java/lang/CompoundEnumeration: 5
   java/lang/Double: 165
-  java/lang/Float: 111653
+  java/lang/Float: 1073188
   java/lang/Integer: 486
-  java/lang/InterruptedException: 27
+  java/lang/InterruptedException: 28
   java/lang/Long: 1722
   java/lang/Module: 1
   java/lang/NamedPackage: 3
   java/lang/NoSuchFieldException: 1
   java/lang/NoSuchMethodException: 7
-  java/lang/Object: 26667
+  java/lang/Object: 26668
   java/lang/Package: 18
   java/lang/PublicMethods: 45
   java/lang/PublicMethods$Key: 554
   java/lang/PublicMethods$MethodList: 547
   java/lang/RuntimePermission: 2
-  java/lang/String: 126109
-  java/lang/StringBuilder: 8479
+  java/lang/String: 126103
+  java/lang/StringBuilder: 8480
   java/lang/StringLatin1$CharsSpliterator: 2
   java/lang/StringLatin1$LinesSpliterator: 6
   java/lang/StringUTF16$CharsSpliterator: 1
@@ -2528,7 +2533,7 @@ objects-by-type:
   java/lang/invoke/LambdaFormEditor$1: 2
   java/lang/invoke/LambdaFormEditor$Transform: 31
   java/lang/invoke/LambdaFormEditor$TransformKey: 104
-  java/lang/invoke/MemberName: 956
+  java/lang/invoke/MemberName: 960
   java/lang/invoke/MethodHandle: 26
   java/lang/invoke/MethodHandle$1: 2
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 10
@@ -2537,12 +2542,11 @@ objects-by-type:
   java/lang/invoke/MethodHandles$Lookup: 198
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 98
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 98
-  java/lang/invoke/MethodType: 1132
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 436
+  java/lang/invoke/MethodType: 1137
   java/lang/invoke/MethodTypeForm: 96
   java/lang/invoke/SimpleMethodHandle: 47
-  java/lang/invoke/VarHandle$AccessDescriptor: 11
-  java/lang/invoke/VarHandle$AccessMode: 4
+  java/lang/invoke/VarHandle$AccessDescriptor: 12
+  java/lang/invoke/VarHandle$AccessMode: 5
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 1
   java/lang/invoke/VarHandleInts$FieldInstanceReadWrite: 3
   java/lang/invoke/VarHandleLongs$FieldInstanceReadWrite: 1
@@ -2609,14 +2613,14 @@ objects-by-type:
   java/util/AbstractMap$SimpleImmutableEntry: 10
   java/util/ArrayDeque: 5
   java/util/ArrayDeque$DeqIterator: 2
-  java/util/ArrayList: 27006
+  java/util/ArrayList: 26999
   java/util/ArrayList$ArrayListSpliterator: 6
   java/util/ArrayList$Itr: 4829
   java/util/ArrayList$SubList: 21
   java/util/ArrayList$SubList$1: 1
   java/util/Arrays$ArrayItr: 27
   java/util/Arrays$ArrayList: 87
-  java/util/BitSet: 13968
+  java/util/BitSet: 13964
   java/util/Collections$1: 16
   java/util/Collections$2: 10
   java/util/Collections$SetFromMap: 2
@@ -2634,7 +2638,7 @@ objects-by-type:
   java/util/Formatter: 3
   java/util/Formatter$FixedString: 15
   java/util/Formatter$FormatSpecifier: 12
-  java/util/HashMap: 8703
+  java/util/HashMap: 8701
   java/util/HashMap$EntryIterator: 205
   java/util/HashMap$EntrySet: 204
   java/util/HashMap$EntrySpliterator: 4
@@ -2704,11 +2708,11 @@ objects-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 14
   java/util/concurrent/ConcurrentHashMap$KeySetView: 2
   java/util/concurrent/ConcurrentHashMap$MapEntry: 54
-  java/util/concurrent/ConcurrentHashMap$Node: 886
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 11
+  java/util/concurrent/ConcurrentHashMap$Node: 883
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 12
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 38
   java/util/concurrent/ConcurrentSkipListMap: 7
-  java/util/concurrent/ConcurrentSkipListMap$Index: 33
+  java/util/concurrent/ConcurrentSkipListMap$Index: 31
   java/util/concurrent/ConcurrentSkipListMap$Node: 66
   java/util/concurrent/CopyOnWriteArrayList: 17
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 45
@@ -2726,7 +2730,7 @@ objects-by-type:
   java/util/concurrent/atomic/AtomicReference: 7
   java/util/concurrent/atomic/LongAdder: 6
   java/util/concurrent/atomic/Striped64$1: 1
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 388
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 391
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 40
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 36
   java/util/concurrent/locks/ReentrantLock: 117
@@ -2750,8 +2754,8 @@ objects-by-type:
   java/util/logging/Logging: 1
   java/util/logging/SimpleFormatter: 8
   java/util/logging/StreamHandler$1: 4
-  java/util/regex/IntHashSet: 5700
-  java/util/regex/Matcher: 5700
+  java/util/regex/IntHashSet: 5699
+  java/util/regex/Matcher: 5699
   java/util/regex/Pattern: 51
   java/util/regex/Pattern$Begin: 3
   java/util/regex/Pattern$BitClass: 14
@@ -2868,6 +2872,8 @@ objects-by-type:
   jdk/internal/reflect/DirectConstructorHandleAccessor: 26
   jdk/internal/reflect/DirectMethodHandleAccessor: 3
   jdk/internal/reflect/MethodHandleObjectFieldAccessorImpl: 10
+  jdk/internal/util/StrongReferenceKey: 2005
+  jdk/internal/util/WeakReferenceKey: 436
   jdk/internal/util/xml/impl/Attrs: 2
   jdk/internal/util/xml/impl/Input: 2
   jdk/internal/util/xml/impl/Pair: 22
@@ -2910,7 +2916,7 @@ objects-by-type:
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider$SingleMBeanComponent: 1
   jdk/proxy1/$Proxy0: 1
   jdk/proxy1/$Proxy1: 5
-  long: 14022
+  long: 14018
   nom/tam/util/BufferedDataInputStream: 10
   org/apache/commons/math/linear/ArrayRealVector: 3709400
   org/apache/commons/math/linear/BlockRealMatrix: 1354700
@@ -3024,59 +3030,59 @@ objects-by-type:
   ucar/unidata/io/RandomAccessFile: 1
 # number of bytes allocated for each class
 bytes-by-type: 
-  B: 22991744
+  B: 22991776
   D: 414427200
   I: 24
   \[D: 32512824
   \[\[D: 130051200
   boolean: 3824
-  byte: 442264400
-  char: 999392
-  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 279360
+  byte: 442257312
+  char: 1000088
+  com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter: 279280
   com/google/monitoring/runtime/instrumentation/AllocationMethodAdapter$VariableScope: 126112
   com/google/monitoring/runtime/instrumentation/StaticClassWriter: 99840
   com/google/monitoring/runtime/instrumentation/StaticClassWriter$ClassInfo: 192
   com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter: 24960
-  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 279360
+  com/google/monitoring/runtime/instrumentation/VerifyingClassAdapter$1: 279280
   com/google/monitoring/runtime/instrumentation/asm/AnnotationWriter: 4512
   com/google/monitoring/runtime/instrumentation/asm/Attribute: 9984
-  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 593664
+  com/google/monitoring/runtime/instrumentation/asm/ByteVector: 593400
   com/google/monitoring/runtime/instrumentation/asm/ClassReader: 29952
   com/google/monitoring/runtime/instrumentation/asm/Context: 54912
   com/google/monitoring/runtime/instrumentation/asm/Edge: 1322064
   com/google/monitoring/runtime/instrumentation/asm/FieldWriter: 134144
-  com/google/monitoring/runtime/instrumentation/asm/Frame: 2671968
+  com/google/monitoring/runtime/instrumentation/asm/Frame: 2671776
   com/google/monitoring/runtime/instrumentation/asm/Handle: 51552
   com/google/monitoring/runtime/instrumentation/asm/Handler: 40120
-  com/google/monitoring/runtime/instrumentation/asm/Label: 8946760
-  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 1564416
+  com/google/monitoring/runtime/instrumentation/asm/Label: 8945968
+  com/google/monitoring/runtime/instrumentation/asm/MethodWriter: 1563968
   com/google/monitoring/runtime/instrumentation/asm/RecordComponentWriter: 896
   com/google/monitoring/runtime/instrumentation/asm/SymbolTable: 44928
-  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 7239992
-  com/google/monitoring/runtime/instrumentation/asm/Type: 1255848
-  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 893952
-  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 279360
+  com/google/monitoring/runtime/instrumentation/asm/SymbolTable$Entry: 7239744
+  com/google/monitoring/runtime/instrumentation/asm/Type: 1255640
+  com/google/monitoring/runtime/instrumentation/asm/commons/JSRInlinerAdapter: 893696
+  com/google/monitoring/runtime/instrumentation/asm/commons/LocalVariablesSorter: 279280
   com/google/monitoring/runtime/instrumentation/asm/tree/AnnotationNode: 1088
-  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 581088
+  com/google/monitoring/runtime/instrumentation/asm/tree/FieldInsnNode: 581040
   com/google/monitoring/runtime/instrumentation/asm/tree/IincInsnNode: 44736
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 223488
-  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 3092240
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnList: 223424
+  com/google/monitoring/runtime/instrumentation/asm/tree/InsnNode: 3092120
   com/google/monitoring/runtime/instrumentation/asm/tree/IntInsnNode: 237440
   com/google/monitoring/runtime/instrumentation/asm/tree/InvokeDynamicInsnNode: 30240
   com/google/monitoring/runtime/instrumentation/asm/tree/JumpInsnNode: 495520
-  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 2000432
+  com/google/monitoring/runtime/instrumentation/asm/tree/LabelNode: 2000272
   com/google/monitoring/runtime/instrumentation/asm/tree/LdcInsnNode: 749800
-  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 1617840
-  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 867880
+  com/google/monitoring/runtime/instrumentation/asm/tree/LineNumberNode: 1617744
+  com/google/monitoring/runtime/instrumentation/asm/tree/LocalVariableNode: 867800
   com/google/monitoring/runtime/instrumentation/asm/tree/LookupSwitchInsnNode: 5952
-  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 1627080
+  com/google/monitoring/runtime/instrumentation/asm/tree/MethodInsnNode: 1626912
   com/google/monitoring/runtime/instrumentation/asm/tree/MethodNode$1: 96
   com/google/monitoring/runtime/instrumentation/asm/tree/MultiANewArrayInsnNode: 432
-  com/google/monitoring/runtime/instrumentation/asm/tree/ParameterNode: 5784
+  com/google/monitoring/runtime/instrumentation/asm/tree/ParameterNode: 5760
   com/google/monitoring/runtime/instrumentation/asm/tree/TableSwitchInsnNode: 3640
   com/google/monitoring/runtime/instrumentation/asm/tree/TryCatchBlockNode: 40120
   com/google/monitoring/runtime/instrumentation/asm/tree/TypeInsnNode: 285400
-  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 2582200
+  com/google/monitoring/runtime/instrumentation/asm/tree/VarInsnNode: 2582040
   com/sun/jmx/interceptor/DefaultMBeanServerInterceptor: 40
   com/sun/jmx/interceptor/DefaultMBeanServerInterceptor$ResourceContext$1: 16
   com/sun/jmx/mbeanserver/ClassLoaderRepositorySupport: 24
@@ -3186,7 +3192,7 @@ bytes-by-type:
   edu/cmu/graphchi/shards/SlidingShard$Block: 400
   edu/cmu/graphchi/util/HugeDoubleMatrix: 40
   float: 16
-  int: 180152848
+  int: 180152016
   java/io/BufferedInputStream: 1920
   java/io/BufferedReader: 768
   java/io/BufferedReader$1: 24
@@ -3210,7 +3216,7 @@ bytes-by-type:
   java/io/RandomAccessFile: 40
   java/io/StringReader: 80
   java/lang/Byte: 1760
-  java/lang/Class: 65888
+  java/lang/Class: 66072
   java/lang/Class$1: 48
   java/lang/Class$3: 16
   java/lang/Class$AnnotationData: 504
@@ -3221,22 +3227,22 @@ bytes-by-type:
   java/lang/ClassValue$Version: 24
   java/lang/CompoundEnumeration: 120
   java/lang/Double: 3960
-  java/lang/Float: 1786448
+  java/lang/Float: 17171008
   java/lang/Integer: 7776
-  java/lang/InterruptedException: 1080
+  java/lang/InterruptedException: 1120
   java/lang/Long: 41328
   java/lang/Module: 56
   java/lang/NamedPackage: 72
   java/lang/NoSuchFieldException: 40
   java/lang/NoSuchMethodException: 280
-  java/lang/Object: 1560256
+  java/lang/Object: 1560464
   java/lang/Package: 576
   java/lang/PublicMethods: 1080
   java/lang/PublicMethods$Key: 13296
   java/lang/PublicMethods$MethodList: 13128
   java/lang/RuntimePermission: 48
-  java/lang/String: 3476256
-  java/lang/StringBuilder: 203496
+  java/lang/String: 3476120
+  java/lang/StringBuilder: 203520
   java/lang/StringLatin1$CharsSpliterator: 64
   java/lang/StringLatin1$LinesSpliterator: 144
   java/lang/StringUTF16$CharsSpliterator: 32
@@ -3277,7 +3283,7 @@ bytes-by-type:
   java/lang/invoke/LambdaFormEditor$1: 32
   java/lang/invoke/LambdaFormEditor$Transform: 1440
   java/lang/invoke/LambdaFormEditor$TransformKey: 2496
-  java/lang/invoke/MemberName: 46464
+  java/lang/invoke/MemberName: 46656
   java/lang/invoke/MethodHandle: 3792
   java/lang/invoke/MethodHandle$1: 32
   java/lang/invoke/MethodHandleImpl$AsVarargsCollector: 480
@@ -3286,12 +3292,11 @@ bytes-by-type:
   java/lang/invoke/MethodHandles$Lookup: 6336
   java/lang/invoke/MethodHandles$Lookup$ClassDefiner: 3136
   java/lang/invoke/MethodHandles$Lookup$ClassFile: 2352
-  java/lang/invoke/MethodType: 45280
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 13952
+  java/lang/invoke/MethodType: 45480
   java/lang/invoke/MethodTypeForm: 3072
   java/lang/invoke/SimpleMethodHandle: 1504
-  java/lang/invoke/VarHandle$AccessDescriptor: 440
-  java/lang/invoke/VarHandle$AccessMode: 576
+  java/lang/invoke/VarHandle$AccessDescriptor: 480
+  java/lang/invoke/VarHandle$AccessMode: 720
   java/lang/invoke/VarHandleBooleans$FieldInstanceReadWrite: 40
   java/lang/invoke/VarHandleInts$FieldInstanceReadWrite: 120
   java/lang/invoke/VarHandleLongs$FieldInstanceReadWrite: 40
@@ -3358,14 +3363,14 @@ bytes-by-type:
   java/util/AbstractMap$SimpleImmutableEntry: 240
   java/util/ArrayDeque: 120
   java/util/ArrayDeque$DeqIterator: 64
-  java/util/ArrayList: 648144
+  java/util/ArrayList: 647976
   java/util/ArrayList$ArrayListSpliterator: 192
   java/util/ArrayList$Itr: 154528
   java/util/ArrayList$SubList: 672
   java/util/ArrayList$SubList$1: 32
   java/util/Arrays$ArrayItr: 648
   java/util/Arrays$ArrayList: 2088
-  java/util/BitSet: 335232
+  java/util/BitSet: 335136
   java/util/Collections$1: 384
   java/util/Collections$2: 240
   java/util/Collections$SetFromMap: 48
@@ -3383,7 +3388,7 @@ bytes-by-type:
   java/util/Formatter: 72
   java/util/Formatter$FixedString: 360
   java/util/Formatter$FormatSpecifier: 384
-  java/util/HashMap: 417744
+  java/util/HashMap: 417648
   java/util/HashMap$EntryIterator: 6560
   java/util/HashMap$EntrySet: 3264
   java/util/HashMap$EntrySpliterator: 160
@@ -3453,11 +3458,11 @@ bytes-by-type:
   java/util/concurrent/ConcurrentHashMap$ForwardingNode: 448
   java/util/concurrent/ConcurrentHashMap$KeySetView: 48
   java/util/concurrent/ConcurrentHashMap$MapEntry: 1296
-  java/util/concurrent/ConcurrentHashMap$Node: 46912
-  java/util/concurrent/ConcurrentHashMap$ReservationNode: 352
+  java/util/concurrent/ConcurrentHashMap$Node: 46816
+  java/util/concurrent/ConcurrentHashMap$ReservationNode: 384
   java/util/concurrent/ConcurrentHashMap$ValueIterator: 2128
   java/util/concurrent/ConcurrentSkipListMap: 336
-  java/util/concurrent/ConcurrentSkipListMap$Index: 792
+  java/util/concurrent/ConcurrentSkipListMap$Index: 744
   java/util/concurrent/ConcurrentSkipListMap$Node: 1584
   java/util/concurrent/CopyOnWriteArrayList: 408
   java/util/concurrent/CopyOnWriteArrayList$COWIterator: 1080
@@ -3475,7 +3480,7 @@ bytes-by-type:
   java/util/concurrent/atomic/AtomicReference: 112
   java/util/concurrent/atomic/LongAdder: 192
   java/util/concurrent/atomic/Striped64$1: 16
-  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 12416
+  java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionNode: 12512
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject: 960
   java/util/concurrent/locks/AbstractQueuedSynchronizer$ExclusiveNode: 1152
   java/util/concurrent/locks/ReentrantLock: 1872
@@ -3499,8 +3504,8 @@ bytes-by-type:
   java/util/logging/Logging: 16
   java/util/logging/SimpleFormatter: 128
   java/util/logging/StreamHandler$1: 96
-  java/util/regex/IntHashSet: 91200
-  java/util/regex/Matcher: 456000
+  java/util/regex/IntHashSet: 91184
+  java/util/regex/Matcher: 455920
   java/util/regex/Pattern: 4488
   java/util/regex/Pattern$Begin: 48
   java/util/regex/Pattern$BitClass: 224
@@ -3617,6 +3622,8 @@ bytes-by-type:
   jdk/internal/reflect/DirectConstructorHandleAccessor: 624
   jdk/internal/reflect/DirectMethodHandleAccessor: 96
   jdk/internal/reflect/MethodHandleObjectFieldAccessorImpl: 320
+  jdk/internal/util/StrongReferenceKey: 32080
+  jdk/internal/util/WeakReferenceKey: 13952
   jdk/internal/util/xml/impl/Attrs: 48
   jdk/internal/util/xml/impl/Input: 96
   jdk/internal/util/xml/impl/Pair: 880
@@ -3659,7 +3666,7 @@ bytes-by-type:
   jdk/management/jfr/internal/FlightRecorderMXBeanProvider$SingleMBeanComponent: 24
   jdk/proxy1/$Proxy0: 16
   jdk/proxy1/$Proxy1: 80
-  long: 349024
+  long: 348928
   nom/tam/util/BufferedDataInputStream: 640
   org/apache/commons/math/linear/ArrayRealVector: 59350400
   org/apache/commons/math/linear/BlockRealMatrix: 54188000

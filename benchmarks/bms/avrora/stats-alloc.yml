@@ -1,18 +1,21 @@
+#
+# Allocation statistics generated using version dacapo-evaluation-git-3745e0c2
+#
 # These statistics can be generated from a dacapo release using a command line like:
 #    java -javaagent:<dacapo_version>/jar/java-allocation-instrumenter-3.3.4.jar -Ddacapo.alloc.yml=<output_file> -jar <dacapo_version>.jar -callback org.dacapo.analysis.AllocCallback <benchmark>
 #
-objects-allocated: 5065554
-bytes-allocated: 176212928
+objects-allocated: 5066827
+bytes-allocated: 176240664
 # number of objects allocated for each object size
 objects-by-size: 
-  16: 24727
-  24: 1340958
-  32: 3297708
+  16: 24763
+  24: 1342495
+  32: 3297413
   40: 120520
-  48: 53418
-  56: 142595
-  64: 7622
-  72: 2021
+  48: 53416
+  56: 142594
+  64: 7621
+  72: 2020
   80: 17493
   88: 1699
   96: 5760
@@ -672,14 +675,14 @@ objects-by-size:
   53248: 1
 # number of bytes allocated for each object size
 bytes-by-size: 
-  16: 395632
-  24: 32182992
-  32: 105526656
+  16: 396208
+  24: 32219880
+  32: 105517216
   40: 4820800
-  48: 2564064
-  56: 7985320
-  64: 487808
-  72: 145512
+  48: 2563968
+  56: 7985264
+  64: 487744
+  72: 145440
   80: 1399440
   88: 149512
   96: 552960
@@ -1464,13 +1467,13 @@ objects-by-type:
   avrora/sim/SimulatorThread: 9
   avrora/sim/clock/ClockDomain: 9
   avrora/sim/clock/DeltaQueue: 9
-  avrora/sim/clock/DeltaQueue$EventList: 46005
+  avrora/sim/clock/DeltaQueue$EventList: 47542
   avrora/sim/clock/DeltaQueue$Link: 63
   avrora/sim/clock/DerivedClock: 9
   avrora/sim/clock/MainClock: 9
   avrora/sim/clock/RippleSynchronizer: 1
   avrora/sim/clock/RippleSynchronizer$NotifyEvent: 9
-  avrora/sim/clock/RippleSynchronizer$WaitLink: 207774
+  avrora/sim/clock/RippleSynchronizer$WaitLink: 207586
   avrora/sim/energy/Energy: 63
   avrora/sim/energy/EnergyControl: 9
   avrora/sim/mcu/ADC: 9
@@ -1639,7 +1642,7 @@ objects-by-type:
   avrora/sim/util/MulticastProbe: 9
   avrora/sim/util/TransactionalList$Link: 45
   avrora/syntax/elf/ELFParser: 2
-  byte: 413874
+  byte: 413869
   cck/elf/ELFDataInputStream: 10
   cck/elf/ELFHeader: 2
   cck/elf/ELFProgramHeaderTable: 2
@@ -1741,7 +1744,6 @@ objects-by-type:
   java/lang/invoke/LambdaFormEditor$TransformKey: 4
   java/lang/invoke/MemberName: 20
   java/lang/invoke/MethodType: 22
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 7
   java/lang/ref/SoftReference: 6
   java/lang/ref/WeakReference: 7
   java/lang/reflect/Constructor: 6
@@ -1769,7 +1771,7 @@ objects-by-type:
   java/util/HashMap$Values: 1
   java/util/HashSet: 14
   java/util/LinkedList: 243225
-  java/util/LinkedList$ListItr: 2773397
+  java/util/LinkedList$ListItr: 2773290
   java/util/LinkedList$Node: 250139
   java/util/Optional: 124
   java/util/Properties: 1
@@ -1798,6 +1800,8 @@ objects-by-type:
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 538
   jdk/internal/reflect/DirectConstructorHandleAccessor: 6
   jdk/internal/reflect/DirectMethodHandleAccessor: 1
+  jdk/internal/util/StrongReferenceKey: 36
+  jdk/internal/util/WeakReferenceKey: 7
   long: 6156
   short: 20
   sun/net/www/MessageHeader: 228
@@ -1932,13 +1936,13 @@ bytes-by-type:
   avrora/sim/SimulatorThread: 1152
   avrora/sim/clock/ClockDomain: 216
   avrora/sim/clock/DeltaQueue: 288
-  avrora/sim/clock/DeltaQueue$EventList: 1104120
+  avrora/sim/clock/DeltaQueue$EventList: 1141008
   avrora/sim/clock/DeltaQueue$Link: 2016
   avrora/sim/clock/DerivedClock: 360
   avrora/sim/clock/MainClock: 288
   avrora/sim/clock/RippleSynchronizer: 56
   avrora/sim/clock/RippleSynchronizer$NotifyEvent: 288
-  avrora/sim/clock/RippleSynchronizer$WaitLink: 6648768
+  avrora/sim/clock/RippleSynchronizer$WaitLink: 6642752
   avrora/sim/energy/Energy: 4032
   avrora/sim/energy/EnergyControl: 216
   avrora/sim/mcu/ADC: 648
@@ -2107,7 +2111,7 @@ bytes-by-type:
   avrora/sim/util/MulticastProbe: 288
   avrora/sim/util/TransactionalList$Link: 1080
   avrora/syntax/elf/ELFParser: 128
-  byte: 25610584
+  byte: 25610296
   cck/elf/ELFDataInputStream: 240
   cck/elf/ELFHeader: 112
   cck/elf/ELFProgramHeaderTable: 48
@@ -2209,7 +2213,6 @@ bytes-by-type:
   java/lang/invoke/LambdaFormEditor$TransformKey: 96
   java/lang/invoke/MemberName: 960
   java/lang/invoke/MethodType: 880
-  java/lang/invoke/MethodType$ConcurrentWeakInternSet$WeakEntry: 224
   java/lang/ref/SoftReference: 240
   java/lang/ref/WeakReference: 224
   java/lang/reflect/Constructor: 432
@@ -2237,7 +2240,7 @@ bytes-by-type:
   java/util/HashMap$Values: 16
   java/util/HashSet: 224
   java/util/LinkedList: 7783200
-  java/util/LinkedList$ListItr: 88748704
+  java/util/LinkedList$ListItr: 88745280
   java/util/LinkedList$Node: 6003336
   java/util/Optional: 1984
   java/util/Properties: 56
@@ -2266,6 +2269,8 @@ bytes-by-type:
   jdk/internal/ref/CleanerImpl$PhantomCleanableRef: 25824
   jdk/internal/reflect/DirectConstructorHandleAccessor: 144
   jdk/internal/reflect/DirectMethodHandleAccessor: 32
+  jdk/internal/util/StrongReferenceKey: 576
+  jdk/internal/util/WeakReferenceKey: 224
   long: 164688
   short: 9904
   sun/net/www/MessageHeader: 5472
