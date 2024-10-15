@@ -47,13 +47,6 @@ def format_line(input):
     result = result + '\n'
     return bytes(result, "utf-8")
 
-def zipfile_3_8_compat(context_manager):
-    # https://docs.python.org/3.8/library/zipfile.html#zipfile.Path.open
-    if sys.version_info >= (3, 9):
-        return context_manager
-    else:
-        return io.TextIOWrapper(context_manager)
-
 def generate_jar(name: str, main_class: str, dest_dir: Path, jars):
     jar_name = name + ".jar"
     output_jar_path = dest_dir / jar_name
@@ -96,16 +89,17 @@ def main() -> int:
     jar_parent_dir = harness_jar_path.with_suffix('')
 
     benchmark_md5_name = "META-INF/md5/" + benchmark + ".MD5"
-    md5_file = zipfile.Path(harness_jar, benchmark_md5_name)
 
-    with zipfile_3_8_compat(md5_file.open(mode="r")) as lines:
-        jars = []
-        for line in lines:
-            # use regex to simplify handling with line endings
-            if re.match(r".*\.jar$", line):
-                jars += [jar_parent_dir / line.split()[1]]
-        jars += [harness_jar_path]
-        generate_jar(benchmark, main_class, dest_dir_path, jars)
+    with zipfile.ZipFile(harness_jar) as archive:
+        # Avoid using mode 'U' because it's removed in Python 3.6+
+        with archive.open(benchmark_md5_name) as md5_file:
+            jars = []
+            for line in io.TextIOWrapper(md5_file).readlines():
+                # use regex to simplify handling with line endings
+                if re.match(r".*\.jar$", line):
+                    jars.append(jar_parent_dir / line.split()[1])
+            jars.append(harness_jar_path)
+            generate_jar(benchmark, main_class, dest_dir_path, jars)
 
     return 0
 
