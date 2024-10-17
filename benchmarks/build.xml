@@ -507,6 +507,7 @@ See ${log.build.report} for a summary of benchmark build status.
                 <arg value="-Dbuild.target-jar=${build.target-jar}"/>
                 <arg value="-Dbuild.target-jars=${build.target-jars}"/>
                 <arg value="-Dbuild.target-data=${build.target-data}"/>
+                <arg value="-Dbuild.target-stats=${build.target-stats}"/>
                 <arg value="-buildfile"/>
                 <arg value="bms/@{benchmark}/build.xml"/>
                 <arg value="incremental"/>
@@ -648,10 +649,12 @@ See ${log.build.report} for a summary of benchmark build status.
     <target name="create-zip-directory" depends="set-build-version-info,set-delete-zip-dir-property,delete-zip-directory">
         <property name="build.target-jars" value="${build.target-dir}/jar"/>
         <property name="build.target-data" value="${build.target-dir}/dat"/>
+        <property name="build.target-stats" value="${build.target-dir}/stats"/>
         <property name="build.target-launchers" value="${build.target-dir}/launchers"/>
 
         <mkdir dir="${build.target-jars}"/>
         <mkdir dir="${build.target-data}"/>
+        <mkdir dir="${build.target-stats}"/>
         <mkdir dir="${build.target-launchers}"/>
     </target>
 
