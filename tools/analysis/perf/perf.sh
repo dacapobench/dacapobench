@@ -16,7 +16,7 @@ amd="AMD Ryzen 9 7950X 16/32 4.5GHz cores"
 intel="Intel Core i9-12900KF Alder Lake 8/16 3.2GHz + 8/8 2.4GHz cores"
 arm="Ampere Altra 80 3.0GHz cores"
 os="Linux 6.8.0-40"
-dacapo="dacapo-evaluation-git-6b469af0"
+dacapo="dacapo-evaluation-git-071e5040"
 
 echo "#"
 echo "# Execution times in msec for various configurations at various heap"
