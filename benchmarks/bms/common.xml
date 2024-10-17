@@ -26,6 +26,7 @@
 	<property name="bm-deps-output-dir" value="${bm-files}/deps"/>
 	<property name="bm-jars" value="${bm-files}/data/jar/${bm-name}"/>
 	<property name="bm-data" value="${bm-files}/data/dat/${bm-name}"/>
+	<property name="bm-stats" value="${bm-files}/data/stats/${bm-name}"/>
 
 	<available file="${bm-data}" property="bm-data-exists" type="dir"/>
 	<property name="bm-src-dir" value="${bm-files}/src"/>
@@ -34,6 +35,7 @@
 	<property name="bm-downloads" value="${bm-files}/downloads"/>
 	<property name="bm-out-jar" value="${build.target-jars}/${bm-name}"/>
 	<property name="bm-out-dat" value="${build.target-data}/${bm-name}"/>
+	<property name="bm-out-stats" value="${build.target-stats}/${bm-name}"/>
 
 	<property name="bm-dat" value="${bm-out-dat}"/>
 	<property name="bm-cnf" value="${bm-output-dir}/META-INF/cnf"/>
@@ -125,6 +127,7 @@
 		<mkdir dir="${bm-dat}"/>
 		<mkdir dir="${bm-cnf}"/>
 		<mkdir dir="${bm-data}"/>
+		<mkdir dir="${bm-stats}"/>
 	</target>
 
 	<target name="unpack"/>
@@ -136,20 +139,20 @@
 		<!-- create checksum -->
 		<delete dir="${bm-md5-tmp}"/>
 		<checksum pattern="{0} {3}" todir="${bm-md5-tmp}">
-        	<fileset dir="${bm-files}/data" />
-    	</checksum>
-    	<concat destfile="${bm-md5}/${bm-name}.MD5">
-        	<fileset dir="${bm-md5-tmp}" />
-    	</concat>
+        	  <fileset dir="${bm-files}/data" />
+    		</checksum>
+    		<concat destfile="${bm-md5}/${bm-name}.MD5">
+        	  <fileset dir="${bm-md5-tmp}" />
+    		</concat>
 		<replace file="${bm-md5}/${bm-name}.MD5" token=" bms/${bm-name}/data/" value=" "/>
 
 		<!-- copy files -->
-	    <copy todir="${bm-dat}/..">
-            <fileset dir="${bm-data}/.."/>
-        </copy>
+		<copy todir="${bm-dat}/..">
+		  <fileset dir="${bm-data}/.."/>
+		</copy>
 		<copy todir="${bm-out-jar}/..">
-            <fileset dir="${bm-jars}/.."/>
-        </copy>
+		  <fileset dir="${bm-jars}/.."/>
+		</copy>
 
 		<!-- ensure files are read only -->
 		<chmod perm="ugo-w" type="both">
@@ -165,6 +168,12 @@
 
 	<target name="yml">
 		<copy file="${bm-files}/stats-nominal.yml" tofile="${bm-yml}/${bm-name}.yml"/>
+		<copy todir="${bm-stats}">
+		  <fileset dir="${bm-files}" includes="*.yml"/>
+		</copy>
+		<copy todir="${bm-out-stats}/..">
+		  <fileset dir="${bm-stats}/.."/>
+		</copy>
 	</target>
 
 	<target name="config">
