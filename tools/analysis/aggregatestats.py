@@ -78,6 +78,37 @@ def load_yml(bmpath):
     if os.path.exists(yml):
         with open(yml, 'r') as y:
             uarch = yaml.load(y, Loader=yaml.Loader)
+        get_uarch_stats()
+
+
+def get_one_uarch(hf, vm):
+    global uarch
+
+    results = uarch[vm][hf]
+    ctrs = results[0].keys()
+    invocations = len(results)
+    ua = {}
+    for ctr in ctrs:
+        val = 0
+        for inv in range(0, invocations):
+            val += results[inv][ctr]
+        ua[ctr] = val / invocations
+
+    return ua
+
+def get_uarch_stats():
+    global uarch
+    ua = {}
+    if uarch is None:
+        return ua
+    
+    hf = 2.0
+    vm_base = 'open-jdk-21.server.G1.t-32'
+    for vm in ['baseline', 'tma', 'tma-be']:
+        ua[vm] = get_one_uarch(hf, vm_base+'.'+vm)
+    # print(ua)
+
+    return ua
 
 def aggregate(results):
     std = []
@@ -99,6 +130,8 @@ def aggregate(results):
         mini.append(min(vals))
 
     return std, mean, mini;
+
+
 
 par_hf = 2.0
 par_threads = 32
@@ -467,45 +500,58 @@ def nominal():
     nom['UAI'] = int(intelpct)
     desc['UAI'] = 'nominal percentage change (slowdown) when running on Intel Golden Cove (i9-12900KF) v AMD Zen 4 (Ryzen 9 7950X) on a single core (taskset 0)'
 
-    cfg = 'open-jdk-21.server.G1.t-32'
+
     hf = 2.0
-    ua = uarch[cfg][hf]
+    ua = get_uarch_stats()
 
-    nom['UIP'] = int(100 * ua['IPC'])
-    desc['UIP'] = 'nominal 100 x instructions per cycle (IPC) ( 100 x '+str(int(ua['IPC']))+' )'
+    # ipc = int(100 * ua['baseline']['INSTS']/ua['baseline']['CYCLES'])
+    # nom['UIP'] = ipc
+    # desc['UIP'] = 'nominal 100 x instructions per cycle (IPC) (100 * '+str(ua['baseline']['INSTS'])+'/'+str(ua['baseline']['CYCLES'])+')'
 
-    nom['USF'] = int(100 * ua['FE_BOUND'])
-    desc['USF'] = 'nominal 100 x front end bound ( 100 x '+str(ua['FE_BOUND'])+') )'
+    # fe_bound = int(100 * ua['baseline']['FE_STALLS']/(6*ua['baseline']['CYCLES']))
+    # nom['USF'] = fe_bound
+    # desc['USF'] = 'nominal 100 x front end bound (100 * '+str(ua['baseline']['FE_STALLS'])+'/( 6 * '+str(ua['baseline']['CYCLES'])+') )'
 
-    nom['USB'] = int(100 * ua['BE_BOUND'])
-    desc['USB'] = 'nominal 100 x back end bound ( 100 x '+str(ua['BE_BOUND'])+') )'
+    # cmpki = int(1000*ua['baseline']['DC_MISS']/ua['baseline']['INSTS'])
+    # nom['UDC'] = cmpki
+    # desc['UDC'] = 'nominal data cache misses per K instructions ( 1000 * '+str(ua['baseline']['DC_MISS'])+'/ '+str(ua['baseline']['INSTS'])+' )'
+    
+    # dtlbmpmi = int(1000000*ua['baseline']['DTLB_MISS']/ua['baseline']['INSTS'])
+    # nom['UDT'] = dtlbmpmi
+    # desc['UDT'] = 'nominal DTLB misses per M instructions ( 1000000 * '+str(ua['baseline']['DTLB_MISS'])+' / '+str(ua['baseline']['INSTS'])+' )'
 
-    nom['UDC'] = int(ua['L1MPKI'])
-    desc['UDC'] = 'nominal data cache misses per K instructions ( '+str(ua['L1MPKI'])+' )'
+    llcmpmi = int((1000000*(ua['baseline']['LLC_MISS.0']+ua['baseline']['LLC_MISS.8']))/ua['baseline']['INSTS'])
+    nom['ULL'] = llcmpmi
+    desc['ULL'] = 'nominal LLC misses per M instructions ( 1000000 * ( ( '+str(ua['baseline']['LLC_MISS.0'])+') / '+ str(ua['baseline']['INSTS'])+' ) )'
 
-    nom['UDT'] = int(1000 * ua['DTLBMPKI'])
-    desc['UDT'] = 'nominal DTLB misses per M instructions ( 1000 x '+str(ua['DTLBMPKI'])+' )'
+    # be_bound = int(100 * ua['tma-be']['BE_STALLS']/(6*ua['tma-be']['CYCLES']))
+    # nom['USB'] = be_bound
+    # desc['USB'] = 'nominal 100 x back end bound ( 100 * '+str(ua['tma-be']['BE_STALLS'])+' / ( 6 * '+str(ua['tma-be']['CYCLES'])+' ) )'
+    
+    # bebmem = int((ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD']/ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU'])*be_bound)
+    # nom['UBM'] = bebmem
+    # desc['UBM'] = 'nominal backend bound (memory) ( '+str(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD'])+' / '+ str(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU']) + ') * ' + str(be_bound)+' )'
 
-    nom['ULL'] = int(1000 * (ua['LLCMPKI']))
-    desc['ULL'] = 'nominal LLC misses M instructions ( 1000 x '+str(ua['LLCMPKI'])+' )'
+    # Redundant, since becpu = 25 - bebmem
+    # becpu = int((1-(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD']/ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU']))*be_bound)
+    # nom['UBC'] = becpu
+    # desc['UBC'] = 'nominal backend bound (CPU) ( '+str(becpu)+' )'
 
-    nom['UBM'] = int(1000 * (ua['BE_BOUND_MEMORY']))
-    desc['UBM'] = 'nominal backend bound (memory) ( 1000 x '+str(ua['BE_BOUND_MEMORY'])+' )'
+    smtcont = int(1000 * ua['tma']['SMT_CONTENTION']/(6*ua['tma']['CYCLES']))
+    nom['USC'] = smtcont
+    desc['USC'] = 'nominal 1000 x SMT contention ( 1000 * '+str(ua['tma']['SMT_CONTENTION'])+' / ( 6 * '+str(ua['tma']['CYCLES'])+' ) )'
 
-    nom['UBC'] = int(1000 * (ua['BE_BOUND_CPU']))
-    desc['UBC'] = 'nominal backend bound (CPU) ( 1000 x '+str(ua['BE_BOUND_CPU'])+' )'
+    badspec = (ua['tma']['OPS_SOURCE_DISPATCHED_FROM_DECODER:DECODER:OPCACHE:LOOP_BUFFER']-ua['tma']['RETIRED_OPS'])/(6*ua['baseline']['CYCLES'])
+    nom['UBS'] = int(1000*badspec)
+    desc['UBS'] = 'nominal 1000 x bad speculation ( 1000 * ( '+str(ua['tma']['OPS_SOURCE_DISPATCHED_FROM_DECODER:DECODER:OPCACHE:LOOP_BUFFER'])+' - '+str(ua['tma']['RETIRED_OPS'])+' ) / ( 6 * '+str(ua['baseline']['CYCLES'])+' ) )'
 
-    nom['USC'] = int(1000 * (ua['SMT_CONTENTION']))
-    desc['USC'] = 'nominal SMT contention ( 1000 x '+str(ua['SMT_CONTENTION'])+' )'
+    badspecmis = int(1000*(badspec * ua['tma']['MISPREDICTED'])/(ua['tma']['MISPREDICTED'] + ua['tma']['RESYNCS']))
+    nom['UBP'] = badspecmis
+    desc['UBP'] = 'nominal 1000 x bad speculation: mispredicts ( 1000 * ( '+str(badspec)+' * '+str(ua['tma']['MISPREDICTED'])+' ) / ( '+str(ua['tma']['MISPREDICTED'])+' + '+str(ua['tma']['RESYNCS'])+' )'
 
-    nom['UBS'] = int(1000 * (ua['BAD_SPECULATION']))
-    desc['UBS'] = 'nominal bad speculation ( 1000 x '+str(ua['BAD_SPECULATION'])+' )'
-
-    nom['UBP'] = int(1000000 * (ua['BAD_SPECULATION_PIPELINE_RESTARTS']))
-    desc['UBP'] = 'nominal bad speculation: pipeline restarts ( 1000000 x '+str(ua['BAD_SPECULATION_PIPELINE_RESTARTS'])+' )'
-
-    nom['UBM'] = int(1000 * (ua['BAD_SPECULATION_MISPREDICTS']))
-    desc['UBM'] = 'nominal bad speculation: mispredicts ( 1000 x '+str(ua['BAD_SPECULATION_MISPREDICTS'])+' )'
+    badspecrestart = int(1000000*(badspec * ua['tma']['RESYNCS'])/(ua['tma']['MISPREDICTED'] + ua['tma']['RESYNCS']))
+    nom['UBR'] = badspecrestart
+    desc['UBR'] = 'nominal 1000000 x bad speculation: pipeline restarts ( 1000000 * ( '+str(badspec)+' * '+str(ua['tma']['RESYNCS'])+' ) / ( '+str(ua['tma']['MISPREDICTED'])+' + '+str(ua['tma']['RESYNCS'])+' ) )'
 
     print("# [value, mean, benchmark rank, description]")
     for x in sorted(nom):
