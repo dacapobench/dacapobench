@@ -20,10 +20,14 @@ RELEASE PROCEDURES
 	cd release
 	unzip ../dacapo-${dacapo.version}-${dacapo.nickname}-src.zip
 
-5. Build the new source (using a proxy if necessary)
-	<set up local.properties>
-	export PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH
-    cd benchmarks
+5. Build the new source using the docker container
+    (based on instructions at https://github.com/caizixian/dacapo-docker)
+	cd benchmarks
+	cp default.properties local.properties
+	sed -i s/java-1.11.0-openjdk-amd64/temurin-11-jdk-amd64/ local.properties
+	cd ..
+	podman run -it --rm -v $PWD:/dacapobench ghcr.io/caizixian/dacapo-docker:master bash
+	cd dacapobench/benchmarks
 	ant -Dbuild.is-official=true
 
 6. Test the resulting zip
