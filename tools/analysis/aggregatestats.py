@@ -504,33 +504,33 @@ def nominal():
     hf = 2.0
     ua = get_uarch_stats()
 
-    # ipc = int(100 * ua['baseline']['INSTS']/ua['baseline']['CYCLES'])
-    # nom['UIP'] = ipc
-    # desc['UIP'] = 'nominal 100 x instructions per cycle (IPC) (100 * '+str(ua['baseline']['INSTS'])+'/'+str(ua['baseline']['CYCLES'])+')'
+    ipc = int(100 * ua['baseline']['INSTS']/ua['baseline']['CYCLES'])
+    nom['UIP'] = ipc
+    desc['UIP'] = 'nominal 100 x instructions per cycle (IPC) ( 100 * '+str(ua['baseline']['INSTS'])+'/'+str(ua['baseline']['CYCLES'])+')'
 
-    # fe_bound = int(100 * ua['baseline']['FE_STALLS']/(6*ua['baseline']['CYCLES']))
-    # nom['USF'] = fe_bound
-    # desc['USF'] = 'nominal 100 x front end bound (100 * '+str(ua['baseline']['FE_STALLS'])+'/( 6 * '+str(ua['baseline']['CYCLES'])+') )'
+    fe_bound = int(100 * ua['baseline']['FE_STALLS']/(6*ua['baseline']['CYCLES']))
+    nom['USF'] = fe_bound
+    desc['USF'] = 'nominal 100 x front end bound ( 100 * '+str(ua['baseline']['FE_STALLS'])+'/( 6 * '+str(ua['baseline']['CYCLES'])+') )'
 
-    # cmpki = int(1000*ua['baseline']['DC_MISS']/ua['baseline']['INSTS'])
-    # nom['UDC'] = cmpki
-    # desc['UDC'] = 'nominal data cache misses per K instructions ( 1000 * '+str(ua['baseline']['DC_MISS'])+'/ '+str(ua['baseline']['INSTS'])+' )'
+    cmpki = int(1000*ua['baseline']['DC_MISS']/ua['baseline']['INSTS'])
+    nom['UDC'] = cmpki
+    desc['UDC'] = 'nominal data cache misses per K instructions ( 1000 * '+str(ua['baseline']['DC_MISS'])+'/ '+str(ua['baseline']['INSTS'])+' )'
     
-    # dtlbmpmi = int(1000000*ua['baseline']['DTLB_MISS']/ua['baseline']['INSTS'])
-    # nom['UDT'] = dtlbmpmi
-    # desc['UDT'] = 'nominal DTLB misses per M instructions ( 1000000 * '+str(ua['baseline']['DTLB_MISS'])+' / '+str(ua['baseline']['INSTS'])+' )'
+    dtlbmpmi = int(1000000*ua['baseline']['DTLB_MISS']/ua['baseline']['INSTS'])
+    nom['UDT'] = dtlbmpmi
+    desc['UDT'] = 'nominal DTLB misses per M instructions ( 1000000 * '+str(ua['baseline']['DTLB_MISS'])+' / '+str(ua['baseline']['INSTS'])+' )'
 
     llcmpmi = int((1000000*(ua['baseline']['LLC_MISS.0']+ua['baseline']['LLC_MISS.8']))/ua['baseline']['INSTS'])
     nom['ULL'] = llcmpmi
     desc['ULL'] = 'nominal LLC misses per M instructions ( 1000000 * ( ( '+str(ua['baseline']['LLC_MISS.0'])+') / '+ str(ua['baseline']['INSTS'])+' ) )'
 
-    # be_bound = int(100 * ua['tma-be']['BE_STALLS']/(6*ua['tma-be']['CYCLES']))
-    # nom['USB'] = be_bound
-    # desc['USB'] = 'nominal 100 x back end bound ( 100 * '+str(ua['tma-be']['BE_STALLS'])+' / ( 6 * '+str(ua['tma-be']['CYCLES'])+' ) )'
+    be_bound = int(100 * ua['tma-be']['BE_STALLS']/(6*ua['tma-be']['CYCLES']))
+    nom['USB'] = be_bound
+    desc['USB'] = 'nominal 100 x back end bound ( 100 * '+str(ua['tma-be']['BE_STALLS'])+' / ( 6 * '+str(ua['tma-be']['CYCLES'])+' ) )'
     
-    # bebmem = int((ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD']/ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU'])*be_bound)
-    # nom['UBM'] = bebmem
-    # desc['UBM'] = 'nominal backend bound (memory) ( '+str(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD'])+' / '+ str(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU']) + ') * ' + str(be_bound)+' )'
+    bebmem = int((ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD']/ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU'])*be_bound)
+    nom['UBM'] = bebmem
+    desc['UBM'] = 'nominal backend bound (memory) ( '+str(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD'])+' / '+ str(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU']) + ') * ' + str(be_bound)+' )'
 
     # Redundant, since becpu = 25 - bebmem
     # becpu = int((1-(ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_MISSING_LOAD']/ua['tma-be']['CYCLES_NO_RETIRE:NOT_COMPLETE_LOAD_AND_ALU']))*be_bound)

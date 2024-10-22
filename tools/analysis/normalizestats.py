@@ -87,6 +87,12 @@ def save_yml(path):
     for bm in bms:
         yml = path + '/'+bm+'/stats-nominal.yml'
         with open(yml, 'w') as y:
+            y.write("#\n")
+            y.write("# This data is part of the DaCapo benchmark suite.\n")
+            y.write("#\n")
+            y.write("# Please refer to https://www.dacapobench.org/ for instructions on how to\n")
+            y.write("# correctly cite this work.\n")
+            y.write("#\n")
             y.write("# key: [score/10, value, rank, min, median, max, description]\n")
             yaml.dump(stats[bm], y, default_flow_style=None, width=10000)
 

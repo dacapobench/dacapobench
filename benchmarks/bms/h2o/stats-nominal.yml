@@ -1,3 +1,9 @@
+#
+# This data is part of the DaCapo benchmark suite.
+#
+# Please refer to https://www.dacapobench.org/ for instructions on how to
+# correctly cite this work.
+#
 # key: [score/10, value, rank, min, median, max, description]
 AOA: [9, 142, 2/20, 28, 58, 211, nominal average object size (bytes)]
 AOL: [9, 152, 3/20, 24, 56, 200, nominal 90-percentile object size (bytes)]
@@ -41,8 +47,8 @@ UBR: [6, 1126, 10/22, 164, 1087, 3487, 'nominal 1000000 x bad speculation: pipel
 UBS: [2, 30, 18/22, 5, 39, 137, nominal 1000 x bad speculation ( 1000 * ( 135101790719.6 - 111855896632.3 ) / ( 6 * 127815187239.1 ) )]
 UDC: [9, 23, 3/22, 2, 12, 27, nominal data cache misses per K instructions ( 1000 * 2725567643.1/ 114387540829.4 )]
 UDT: [9, 499, 3/22, 14, 174, 576, nominal DTLB misses per M instructions ( 1000000 * 57134478.0 / 114387540829.4 )]
-UIP: [0, 89, 22/22, 89, 149, 476, nominal 100 x instructions per cycle (IPC) (100 * 114387540829.4/127815187239.1)]
+UIP: [0, 89, 22/22, 89, 149, 476, nominal 100 x instructions per cycle (IPC) ( 100 * 114387540829.4/127815187239.1)]
 ULL: [10, 8506, 1/22, 335, 2645, 8506, nominal LLC misses per M instructions ( 1000000 * ( ( 479996239.0) / 114387540829.4 ) )]
 USB: [10, 53, 1/22, 7, 29, 53, nominal 100 x back end bound ( 100 * 436387296139.3 / ( 6 * 134970328214.9 ) )]
 USC: [7, 102, 7/22, 1, 52, 351, nominal 1000 x SMT contention ( 1000 * 81225484773.4 / ( 6 * 132503228011.0 ) )]
-USF: [4, 18, 15/22, 4, 23, 51, nominal 100 x front end bound (100 * 144092840011.3/( 6 * 127815187239.1) )]
+USF: [4, 18, 15/22, 4, 23, 51, nominal 100 x front end bound ( 100 * 144092840011.3/( 6 * 127815187239.1) )]

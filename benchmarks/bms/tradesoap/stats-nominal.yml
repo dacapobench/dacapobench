@@ -1,3 +1,9 @@
+#
+# This data is part of the DaCapo benchmark suite.
+#
+# Please refer to https://www.dacapobench.org/ for instructions on how to
+# correctly cite this work.
+#
 # key: [score/10, value, rank, min, median, max, description]
 GCA: [5, 101, 11/22, 16, 100, 133, 'nominal average post-GC heap size as percent of min heap, when run at 2X min heap with G1 (94/93)']
 GCC: [4, 774, 15/22, 31, 948, 22408, nominal GC count at 2X heap size (G1)]
@@ -29,8 +35,8 @@ UBR: [5, 1087, 12/22, 164, 1087, 3487, 'nominal 1000000 x bad speculation: pipel
 UBS: [8, 74, 6/22, 5, 39, 137, nominal 1000 x bad speculation ( 1000 * ( 20919967982.0 - 16737662533.9 ) / ( 6 * 9403804596.0 ) )]
 UDC: [7, 17, 7/22, 2, 12, 27, nominal data cache misses per K instructions ( 1000 * 263133743.9/ 15355587136.4 )]
 UDT: [7, 385, 7/22, 14, 174, 576, nominal DTLB misses per M instructions ( 1000000 * 5926700.5 / 15355587136.4 )]
-UIP: [5, 163, 11/22, 89, 149, 476, nominal 100 x instructions per cycle (IPC) (100 * 15355587136.4/9403804596.0)]
+UIP: [5, 163, 11/22, 89, 149, 476, nominal 100 x instructions per cycle (IPC) ( 100 * 15355587136.4/9403804596.0)]
 ULL: [5, 2645, 12/22, 335, 2645, 8506, nominal LLC misses per M instructions ( 1000000 * ( ( 20012416.8) / 15355587136.4 ) )]
 USB: [4, 26, 15/22, 7, 29, 53, nominal 100 x back end bound ( 100 * 16789683774.2 / ( 6 * 10721402452.2 ) )]
 USC: [5, 52, 12/22, 1, 52, 351, nominal 1000 x SMT contention ( 1000 * 3382599272.7 / ( 6 * 10706074412.6 ) )]
-USF: [7, 35, 7/22, 4, 23, 51, nominal 100 x front end bound (100 * 20216431575.5/( 6 * 9403804596.0) )]
+USF: [7, 35, 7/22, 4, 23, 51, nominal 100 x front end bound ( 100 * 20216431575.5/( 6 * 9403804596.0) )]
