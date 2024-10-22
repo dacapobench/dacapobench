@@ -1,3 +1,9 @@
+#
+# This data is part of the DaCapo benchmark suite.
+#
+# Please refer to https://www.dacapobench.org/ for instructions on how to
+# correctly cite this work.
+#
 # key: [score/10, value, rank, min, median, max, description]
 AOA: [3, 40, 15/20, 28, 58, 211, nominal average object size (bytes)]
 AOL: [3, 48, 15/20, 24, 56, 200, nominal 90-percentile object size (bytes)]
@@ -35,14 +41,14 @@ PSD: [10, 13, 1/22, 0, 1, 13, nominal standard deviation among invocations at pe
 PWU: [8, 6, 6/22, 1, 3, 9, nominal iterations to warm up to within 1.5% of best]
 UAA: [5, 98, 11/22, 2, 92, 168, nominal percentage change (slowdown) when running on ARM Neoverse N1 (Ampere Altra Q80-30) v AMD Zen 4 (Ryzen 9 7950X) on a single core (taskset 0)]
 UAI: [4, 19, 15/22, -19, 25, 56, nominal percentage change (slowdown) when running on Intel Golden Cove (i9-12900KF) v AMD Zen 4 (Ryzen 9 7950X) on a single core (taskset 0)]
-UBC: [10, 121, 2/22, 15, 33, 181, nominal backend bound (CPU) ( 1000 x 0.12118895993684095 )]
-UBM: [1, 23, 20/22, 5, 37, 109, 'nominal bad speculation: mispredicts ( 1000 x 0.023033464935436402 )']
-UBP: [9, 2566, 3/22, 87, 977, 3209, 'nominal bad speculation: pipeline restarts ( 1000000 x 0.0025662887567572275 )']
-UBS: [1, 25, 20/22, 6, 38, 112, nominal bad speculation ( 1000 x 0.025599753692193628 )]
-UDC: [4, 8, 15/22, 2, 13, 27, nominal data cache misses per K instructions ( 8.231414718523045 )]
-UDT: [3, 103, 16/22, 13, 289, 1101, nominal DTLB misses per M instructions ( 1000 x 0.10334237659398893 )]
-UIP: [3, 116, 16/22, 92, 138, 476, nominal 100 x instructions per cycle (IPC) ( 100 x 1 )]
-ULL: [4, 2217, 15/22, 318, 3001, 8545, nominal LLC misses M instructions ( 1000 x 2.2173112122629877 )]
-USB: [9, 48, 3/22, 6, 29, 53, nominal 100 x back end bound ( 100 x 0.4841500519694432) )]
-USC: [10, 245, 2/22, 1, 53, 348, nominal SMT contention ( 1000 x 0.2450023284047554 )]
-USF: [1, 5, 21/22, 4, 27, 61, nominal 100 x front end bound ( 100 x 0.055116390876411035) )]
+UBM: [9, 37, 3/22, 5, 23, 41, nominal backend bound (memory) ( 203432630331.1 / 267452633167.8) * 49 )]
+UBP: [1, 21, 20/22, 5, 39, 134, 'nominal 1000 x bad speculation: mispredicts ( 1000 * ( 0.024224667405622322 * 667629062.9 ) / ( 667629062.9 + 72764396.2 )']
+UBR: [8, 2380, 5/22, 164, 1087, 3487, 'nominal 1000000 x bad speculation: pipeline restarts ( 1000000 * ( 0.024224667405622322 * 72764396.2 ) / ( 667629062.9 + 72764396.2 ) )']
+UBS: [1, 24, 20/22, 5, 39, 137, nominal 1000 x bad speculation ( 1000 * ( 488873851581.5 - 432743808520.5 ) / ( 6 * 386176908858.7 ) )]
+UDC: [3, 8, 16/22, 2, 12, 27, nominal data cache misses per K instructions ( 1000 * 3685005732.7/ 440255127249.1 )]
+UDT: [3, 75, 17/22, 14, 174, 576, nominal DTLB misses per M instructions ( 1000000 * 33129060.5 / 440255127249.1 )]
+UIP: [3, 114, 16/22, 89, 149, 476, nominal 100 x instructions per cycle (IPC) ( 100 * 440255127249.1/386176908858.7)]
+ULL: [4, 2333, 14/22, 335, 2645, 8506, nominal LLC misses per M instructions ( 1000000 * ( ( 514619975.4) / 440255127249.1 ) )]
+USB: [10, 49, 2/22, 7, 29, 53, nominal 100 x back end bound ( 100 * 1134683011290.7 / ( 6 * 385670700995.7 ) )]
+USC: [10, 240, 2/22, 1, 52, 351, nominal 1000 x SMT contention ( 1000 * 510338632550.1 / ( 6 * 353864971337.4 ) )]
+USF: [1, 5, 21/22, 4, 23, 51, nominal 100 x front end bound ( 100 * 129957703182.1/( 6 * 386176908858.7) )]

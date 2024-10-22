@@ -13,4 +13,5 @@ for bm in `ls $BASE | grep -v common.xml`; do
     $SCRIPT_DIR/perf.sh $bm $log > $BASE/$bm/stats-perf.yml
     $SCRIPT_DIR/gc.sh $bm $log > $BASE/$bm/stats-gc.yml
     $SCRIPT_DIR/kernel.sh $bm $log > $BASE/$bm/stats-kernel.yml
+    $SCRIPT_DIR/uarch.sh $bm $log > $BASE/$bm/stats-uarch.yml
 done
