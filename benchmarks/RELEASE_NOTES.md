@@ -59,11 +59,14 @@ This release includes a number of significant improvements to the usability of t
   * Separately time the request-based portion of request-based workloads, output elapsed time and throughput for requests ([**#250**](https://github.com/dacapobench/dacapobench/issues/250)).
   * Add server-side request callback hooks ([**#303**](https://github.com/dacapobench/dacapobench/pull/303])).
   * Generalize the latency metrics to include the concept of a smoothing window for metered latency, adding 100ms smoothing to the standard output ([**#283**](https://github.com/dacapobench/dacapobench/issues/283)).
-  * Added worker IDs to latency csvs ([**#271**](https://github.com/dacapobench/dacapobench/issues/271)).
-* Additions to the nominal statistics including sensitivity to compiler configuration ([**#240**](https://github.com/dacapobench/dacapobench/issues/240))
+  * Added worker IDs to latency csv's ([**#271**](https://github.com/dacapobench/dacapobench/issues/271)).
+* Additions to the nominal statistics including microarchitectural sensitivity and sensitivity to compiler configuration ([**#240**](https://github.com/dacapobench/dacapobench/issues/240)).
+* Make all per-benchmark statistics available and visible in `dacapo-23.11-MR1-chopin/stats`.
 
 ### 3.1.2 Bug fixes
 
+* [**#313**](https://github.com/dacapobench/dacapobench/pull/313) Fix upstream h2o build issue
+* [**#312**](https://github.com/dacapobench/dacapobench/pull/312) Fix spring not working with bytecode analyzer
 * [**#309**](https://github.com/dacapobench/dacapobench/pull/309) Integrate h2 [#4124](https://github.com/h2database/h2database/issues/4124) into DaCapo
 * [**#306**](https://github.com/dacapobench/dacapobench/issues/306) Don't output latency stats on failed runs
 * [**#304**](https://github.com/dacapobench/dacapobench/issues/304) tradebeans and tradesoap should populate data in prepare
