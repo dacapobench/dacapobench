@@ -386,7 +386,7 @@ public class LatencyReporter {
     String report = "===== DaCapo processed "+events+" requests ";
     long ms = (requestsFinished - requestsStarted)/1000000;
     report += "in "+ms+" msec, ";
-    long rps = (long) ((1000.0 * (double) events) / (double) ms);
+    long rps = (1000L * events) / ms;
     report += rps+" requests per second =====";
     System.out.println(report);
   }
