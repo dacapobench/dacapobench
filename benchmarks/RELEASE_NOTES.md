@@ -1,4 +1,4 @@
-# dacapo-23.11-MR1-chopin RELEASE NOTES 2024-10
+# dacapo-23.11-MR1-chopin RELEASE NOTES 2024-11
 
 This is a maintence release for 23.11, the third major release of the DaCapo benchmark suite.
 
@@ -34,9 +34,9 @@ The 23.11 release included: new packaging as a zip file containg a jar plus a re
 * Run a benchmark: `java -jar dacapo-23.11-MR1-chopin.jar <benchmark>`
 * For usage information, run with no arguments.
 
-## 2.3 Compatability
+## 2.3 Compatibility
 
-* All benchmarks are compatable with Java 11 through Java 21 (cassandra and h2o require defaults to be overridden via runtime properties).
+* All benchmarks are compatible with Java 11 through Java 21 (cassandra and h2o require defaults to be overridden via runtime properties).
 * All benchmarks aside from biojava, cassandra, eclipse, h2, luindex, lusearch, tomcat, tradebeans and tradesoap are compatable with Java 8.
 * The suite has been extensively tested on JDKs from 8 to 21 on Linux.  While we are not aware of any issues on MacOS or Windows, these platforms have not been tested the same way.  Thus we cannot vouch for the stability of the suite on MacOS or Windows (see 4.1 below).
 
