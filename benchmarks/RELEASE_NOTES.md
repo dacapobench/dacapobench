@@ -1,4 +1,4 @@
-# dacapo-23.11-MR1-chopin RELEASE NOTES 2024-10
+# dacapo-23.11-MR1-chopin RELEASE NOTES 2024-11
 
 This is a maintence release for 23.11, the third major release of the DaCapo benchmark suite.
 
@@ -25,20 +25,21 @@ The 23.11 release included: new packaging as a zip file containg a jar plus a re
 ## 2.1 Downloading
 
 * DaCapo now ships as a zip file which contains a jar file and a folder which contains all data sources and jar files used by the respective workloads.
-* Download from https://download.dacapobench.org/chopin/dacapo-23.11-chopin.zip
+* Download from https://download.dacapobench.org/chopin/dacapo-23.11-MR1-chopin.zip
 * Unzip the zip file
 
 ## 2.2 Running
 
 * It is essential that you read and observe the usage guidelines that appear in the [README](https://github.com/dacapobench/dacapobench/blob/main/README.md).
-* Run a benchmark: `java -jar dacapo-23.11-chopin.jar <benchmark>`
+* Run a benchmark: `java -jar dacapo-23.11-MR1-chopin.jar <benchmark>`
 * For usage information, run with no arguments.
 
-## 2.3 Compatability
+## 2.3 Compatibility
 
-* All benchmarks are compatable with Java 11 through Java 21 (cassandra and h2o require defaults to be overridden via runtime properties).
+* All benchmarks are compatible with Java 11 through Java 21 (cassandra and h2o require defaults to be overridden via runtime properties).
 * All benchmarks aside from biojava, cassandra, eclipse, h2, luindex, lusearch, tomcat, tradebeans and tradesoap are compatable with Java 8.
 * The suite has been extensively tested on JDKs from 8 to 21 on Linux.  While we are not aware of any issues on MacOS or Windows, these platforms have not been tested the same way.  Thus we cannot vouch for the stability of the suite on MacOS or Windows (see 4.1 below).
+
 ## 2.4 Building from Source
 
 * You must have a working, recent version of ant installed. Change to the benchmarks directory and then run:  `ant -p` for instructions on how to build.
