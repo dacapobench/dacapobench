@@ -1,4 +1,4 @@
-# dacapo-23.11-MR1-chopin RELEASE NOTES 2024-11
+# dacapo-23.11-MR2-chopin RELEASE NOTES 2024-12
 
 This is a maintence release for 23.11, the third major release of the DaCapo benchmark suite.
 
@@ -14,7 +14,7 @@ These notes are structured as follows:
 
 # 1. Overview
 
-The 23.11-MR1 release is a maintence release of 23.11.  It does not change the set of benchmarks or their versions, compared to 23.11.  It includes several bug fixes and a number of new features enhancing the usability of the suite (details below).
+The 23.11-MR2 release is a maintence release of 23.11.  It does not change the set of benchmarks or their versions, compared to 23.11.  It includes several bug fixes and a number of new features enhancing the usability of the suite (details below).
 
 The 23.11 release was the third major update of the suite.  It is incompatible with previous releases: new benchmarks have been added, old benchmarks have been removed, all other benchmarks have been substantially updated and the inputs have changed for every program. It is for this reason that **in any published use of the suite, the version of the suite must be explicitly stated**.
 
@@ -25,13 +25,13 @@ The 23.11 release included: new packaging as a zip file containg a jar plus a re
 ## 2.1 Downloading
 
 * DaCapo now ships as a zip file which contains a jar file and a folder which contains all data sources and jar files used by the respective workloads.
-* Download from https://download.dacapobench.org/chopin/dacapo-23.11-MR1-chopin.zip
+* Download from https://download.dacapobench.org/chopin/dacapo-23.11-MR2-chopin.zip
 * Unzip the zip file
 
 ## 2.2 Running
 
 * It is essential that you read and observe the usage guidelines that appear in the [README](https://github.com/dacapobench/dacapobench/blob/main/README.md).
-* Run a benchmark: `java -jar dacapo-23.11-MR1-chopin.jar <benchmark>`
+* Run a benchmark: `java -jar dacapo-23.11-MR2-chopin.jar <benchmark>`
 * For usage information, run with no arguments.
 
 ## 2.3 Compatibility
@@ -46,9 +46,13 @@ The 23.11 release included: new packaging as a zip file containg a jar plus a re
 
 # 3. Changes
 
-## 3.1 Changes introduced by 23.11-MR1
+## 3.1 Changes introduced by 23.11-MR2
 
-As a maintence release, the set of workloads and their versions were unchanged.   The only changes to workloads were bug fixes which we deemed essential ([**#230**](https://github.com/dacapobench/dacapobench/issues/230), [**#258**](https://github.com/dacapobench/dacapobench/issues/258), [**#264**](https://github.com/dacapobench/dacapobench/issues/264), [**#272**](https://github.com/dacapobench/dacapobench/issues/272), [**#302**](https://github.com/dacapobench/dacapobench/issues/302), [**#304**](https://github.com/dacapobench/dacapobench/issues/304), [**#309**](https://github.com/dacapobench/dacapobench/pull/309)).
+This maintenance release incorporates a minor change to the precomputed statistics included with the suite.  Specifically, incorrect LLC statistics were fixed, and depricated files were removed ([**#333**](https://github.com/dacapobench/dacapobench/pull/333]).  
+
+## 3.2 Changes introduced by 23.11-MR1
+
+As a maintenance release, the set of workloads and their versions were unchanged.   The only changes to workloads were bug fixes which we deemed essential ([**#230**](https://github.com/dacapobench/dacapobench/issues/230), [**#258**](https://github.com/dacapobench/dacapobench/issues/258), [**#264**](https://github.com/dacapobench/dacapobench/issues/264), [**#272**](https://github.com/dacapobench/dacapobench/issues/272), [**#302**](https://github.com/dacapobench/dacapobench/issues/302), [**#304**](https://github.com/dacapobench/dacapobench/issues/304), [**#309**](https://github.com/dacapobench/dacapobench/pull/309)).
 
 ### 3.2.1 Features
 
@@ -64,7 +68,7 @@ This release includes a number of significant improvements to the usability of t
 * Additions to the nominal statistics including microarchitectural sensitivity and sensitivity to compiler configuration ([**#240**](https://github.com/dacapobench/dacapobench/issues/240)).
 * Make all per-benchmark statistics available and visible in `dacapo-23.11-MR1-chopin/stats`.
 
-### 3.1.2 Bug fixes
+### 3.2.2 Bug fixes
 
 * [**#313**](https://github.com/dacapobench/dacapobench/pull/313) Fix upstream h2o build issue
 * [**#312**](https://github.com/dacapobench/dacapobench/pull/312) Fix spring not working with bytecode analyzer
@@ -98,9 +102,9 @@ This release includes a number of significant improvements to the usability of t
 * [**#250**](https://github.com/dacapobench/dacapobench/issues/250) For request-based workloads, report request throughput separately
 * [**#240**](https://github.com/dacapobench/dacapobench/issues/240) Richer nominal stats for Chopin
 
-## 3.2 Changes introduced by 23.11
+## 3.3 Changes introduced by 23.11
 
-### 3.2.1 Version changes introduced by 23.11
+### 3.3.1 Version changes introduced by 23.11
 
 All benchmarks updated to reflect recent versions:
 
@@ -119,7 +123,7 @@ All benchmarks updated to reflect recent versions:
 | lucene    |       2.4.1 |    9.7.0 |
 
 
-### 3.2.2 Benchmark additions due to 23.11
+### 3.3.2 Benchmark additions due to 23.11
 
 **biojava**: BioJava is an open-source project dedicated to   providing a Java framework for processing biological data.  It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures.
       
@@ -137,11 +141,11 @@ All benchmarks updated to reflect recent versions:
 
 **zxing**: Zxing is a multi-format 1D/2D barcode image processing library
 
-### 3.2.3. Benchmark deletions due to 23.11
+### 3.3.3. Benchmark deletions due to 23.11
 
 **lusearch-fix**:  This is no longer needed as we've moved to a much more recent version of Lucene.
        
-### 3.2.4. Other Notable Changes due to 23.11
+### 3.3.4. Other Notable Changes due to 23.11
 
 Latency metrics are now reported for each of the request-based workloads  (cassandra, h2, kafka, lusearch, spring, tomcat, tradebeans and tradesoap) and jme, which is a rendering workload (game engine).  The benchmark harness internally records the period of each request (or frame render), and at the end of each benchmark iteration outputs percentile statistics for request latencies. We report two metrics. Simple latency just reports the raw percentile latencies that were observed. Metered latency reports latencies as seen via an emulated request queue and a continuous stream of requests. Simple latency is unrealistic in that the rate at which requests are accepted is a function of the rate at which they are processed. In real systems requests will be enqueued and some of the user-observed latency is due to requests waiting in the request queue.
 
@@ -150,7 +154,7 @@ benchmarks/bm/*/stats-*.yml. When benchmarks are invoked some summary metrics ar
 
 The benchmark harness now supports a watchdog timer which can be set with the `-w` command line option.  This will terminate the JVM after the specified number of seconds if the process has not already completed.  This can be useful for debugging, for terminating runaway tasks in set amount of time.
 
-## 3.3 Changes introduced by 9.12-MR1
+## 3.4 Changes introduced by 9.12-MR1
 
 **lusearch-fix** is introduced as a new benchmark.   The lusearch-fix  and lusearch benchmarks differ by a single line of code.   This is a bug fix to lucene, which dramatically changes the performance of lusearch, reducing the amount of allocation greatly. https://issues.apache.org/jira/browse/LUCENE-1800 https://dl.acm.org/citation.cfm?id=2048092 We encourage you to use lusearch-fix in place of lusearch.   We retain the unpatched lusearch in this release for historical consistency.
 
@@ -158,13 +162,13 @@ The benchmark harness now supports a watchdog timer which can be set with the `-
 	      
 Other issues in the source distribution have been fixed to ensure that the suite builds with Java 8 VMs.
 	      
-## 3.4 Changes introduced by 9.12
+## 3.5 Changes introduced by 9.12
 
-### 3.4.1 Version changes introduced by 9.12
+### 3.5.1 Version changes introduced by 9.12
 
 All benchmark versions were updated.
 
-### 3.4.2 Benchmark additions due to 9.12
+### 3.5.2 Benchmark additions due to 9.12
 
 **avrora**: AVRORA is a set of simulation and analysis tools in a framework for AVR micro-controllers. The benchmark exhibits a great deal of fine-grained concurrency. The  benchmark is courtesy of Ben Titzer (Sun Microsystems)  and was developed at UCLA.
 
@@ -182,7 +186,7 @@ All benchmark versions were updated.
 
 Tradebeans and tradesoap were intentionally added as a pair to allow researchers to evaluate and analyze the overheads and behavior of communicating through a protocol such as SOAP.  Tradesoap's "large" configuration uses exactly the same workload as tradebeans' "default" configuration, and tradesoap's "huge" uses exactly the same workload as tradebeans' "large", allowing researchers to directly compare the two systems.
 
-### 3.4.3 Benchmark deletions due to 9.12
+### 3.5.3 Benchmark deletions due to 9.12
 
 **antlr**: Antlr is single threaded and highly repetitive. The most recent version of jython uses antlr; so antlr remains represented within the DaCapo suite.
 
@@ -194,7 +198,7 @@ Tradebeans and tradesoap were intentionally added as a pair to allow researchers
 
 **hsqldb**: Hsqldb has been replaced by h2, which runs a much richer workload and uses a more widely used and higher  performing database engine.
 
-### 3.4.4 Other Notable Changes due to 9.12
+### 3.5.4 Other Notable Changes due to 9.12
 
 The packaging of the DaCapo suite was been completely re-worked and the source code is entirely re-organized for 9.12.
 
