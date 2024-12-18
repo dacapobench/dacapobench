@@ -57,7 +57,7 @@ is created when a full build is performed.
 
 1. Set your `JAVA_HOME` environment variable appropriately (it must be set and be consistent with the VM that will be used to build the suite).
 
-2. Create the `local.properties` file (using `default.properties` as a templcate)
+2. Create the `local.properties` file (using `default.properties` as a template)
    
 3. Set `jdk.11.home`, in the `local.properties`, to point to a Java 11 installation.
 
