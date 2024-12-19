@@ -48,7 +48,7 @@ The 23.11 release included: new packaging as a zip file containg a jar plus a re
 
 ## 3.1 Changes introduced by 23.11-MR2
 
-This maintenance release incorporates a minor change to the precomputed statistics included with the suite.  Specifically, incorrect LLC statistics were fixed, and depricated files were removed ([**#333**](https://github.com/dacapobench/dacapobench/pull/333]).  
+This maintenance release incorporates two minor changes. The first is change to the precomputed statistics included with the suite.  Specifically, incorrect LLC statistics were fixed, and depricated files were removed ([**#333**](https://github.com/dacapobench/dacapobench/pull/333]). The second is a fix to h2o's maven build ([**#336**](https://github.com/dacapobench/dacapobench/pull/336]).
 
 ## 3.2 Changes introduced by 23.11-MR1
 
