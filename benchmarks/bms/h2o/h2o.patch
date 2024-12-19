@@ -1,6 +1,6 @@
 diff -ur ./build.gradle ../build/build.gradle
---- ./build.gradle	2023-11-07 10:26:09.000000000 +0000
-+++ ../build/build.gradle	2024-10-04 07:29:17.600295349 +0000
+--- ./build.gradle	2024-12-19 08:33:22.000000000 +0000
++++ ../build/build.gradle	2024-12-19 08:42:54.980335527 +0000
 @@ -25,7 +25,7 @@
      dependencies {
          classpath 'org.ow2.asm:asm:5.1'
@@ -33,15 +33,22 @@ diff -ur ./build.gradle ../build/build.gradle
  
      // The project which need to be run under CI only
      testNeedsCiProject = [
-@@ -252,7 +252,7 @@
+@@ -252,11 +252,11 @@
                  url "https://repository.cloudera.com/artifactory/cloudera-repos/"
              }
              maven {
 -                url "https://repo.hortonworks.com/content/repositories/releases/"
+-            }
+-            maven {
+-                url "https://repo.hortonworks.com/content/repositories/jetty-hadoop/"
 +	        url "https://search.maven.org/artifact/net"
              }
++//            maven {
++//                url "https://repo.hortonworks.com/content/repositories/jetty-hadoop/"
++//            }
              maven {
-                 url "https://repo.hortonworks.com/content/repositories/jetty-hadoop/"
+                 url "https://repository.mapr.com/maven/"
+             }
 @@ -268,9 +268,9 @@
  
      // Publish artifacts - we should filter subproject in future but now apply publisher plugin
@@ -88,9 +95,13 @@ diff -ur ./build.gradle ../build/build.gradle
  }
  
  // Include support for S3 syncing
+Only in ../build: build.gradle~
+Only in ../build/buildSrc: build
+Only in ../build/buildSrc: .gradle
+Only in ../build: .gradle
 diff -ur ./gradlew ../build/gradlew
---- ./gradlew	2023-11-07 10:26:08.000000000 +0000
-+++ ../build/gradlew	2024-08-20 10:47:11.805757967 +0000
+--- ./gradlew	2024-12-19 08:33:21.000000000 +0000
++++ ../build/gradlew	2024-12-19 08:33:34.233033439 +0000
 @@ -87,8 +87,10 @@
      if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
          # IBM's JDK on AIX uses strange locations for the executables
@@ -103,8 +114,8 @@ diff -ur ./gradlew ../build/gradlew
      if [ ! -x "$JAVACMD" ] ; then
          die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
 diff -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
---- ./h2o-algos/build.gradle	2023-11-07 10:26:08.000000000 +0000
-+++ ../build/h2o-algos/build.gradle	2024-08-20 10:47:11.805757967 +0000
+--- ./h2o-algos/build.gradle	2024-12-19 08:33:21.000000000 +0000
++++ ../build/h2o-algos/build.gradle	2024-12-19 08:33:34.233033439 +0000
 @@ -53,7 +53,7 @@
    testRuntimeOnly project(":${defaultWebserverModule}")
    testCompileOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
@@ -115,8 +126,8 @@ diff -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
 diff -ur ./h2o-core/src/main/java/water/Cleaner.java ../build/h2o-core/src/main/java/water/Cleaner.java
---- ./h2o-core/src/main/java/water/Cleaner.java	2023-11-07 10:26:08.000000000 +0000
-+++ ../build/h2o-core/src/main/java/water/Cleaner.java	2024-08-20 10:47:11.805757967 +0000
+--- ./h2o-core/src/main/java/water/Cleaner.java	2024-12-19 08:33:21.000000000 +0000
++++ ../build/h2o-core/src/main/java/water/Cleaner.java	2024-12-19 08:33:34.233033439 +0000
 @@ -10,6 +10,7 @@
  /** Store Cleaner: User-Mode Swap-To-Disk */
  
@@ -155,8 +166,8 @@ diff -ur ./h2o-core/src/main/java/water/Cleaner.java ../build/h2o-core/src/main/
  
        // No logging if under memory pressure: can deadlock the cleaner thread
 diff -ur ./h2o-core/src/main/java/water/MemoryManager.java ../build/h2o-core/src/main/java/water/MemoryManager.java
---- ./h2o-core/src/main/java/water/MemoryManager.java	2023-11-07 10:26:08.000000000 +0000
-+++ ../build/h2o-core/src/main/java/water/MemoryManager.java	2024-08-20 10:47:11.805757967 +0000
+--- ./h2o-core/src/main/java/water/MemoryManager.java	2024-12-19 08:33:21.000000000 +0000
++++ ../build/h2o-core/src/main/java/water/MemoryManager.java	2024-12-19 08:33:34.233033439 +0000
 @@ -42,6 +42,26 @@
   * @author cliffc
   */
@@ -212,8 +223,8 @@ diff -ur ./h2o-core/src/main/java/water/MemoryManager.java ../build/h2o-core/src
    /**
     * Try to reserve memory needed for task execution and return true if
 diff -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
---- ./h2o-extensions/target-encoder/build.gradle	2023-11-07 10:26:09.000000000 +0000
-+++ ../build/h2o-extensions/target-encoder/build.gradle	2024-08-20 10:47:11.805757967 +0000
+--- ./h2o-extensions/target-encoder/build.gradle	2024-12-19 08:33:22.000000000 +0000
++++ ../build/h2o-extensions/target-encoder/build.gradle	2024-12-19 08:33:34.233033439 +0000
 @@ -12,7 +12,7 @@
      testImplementation 'com.pholser:junit-quickcheck-generators:0.9'
      testRuntimeOnly project(":${defaultWebserverModule}")
@@ -224,8 +235,8 @@ diff -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/ta
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
 diff -ur ./settings.gradle ../build/settings.gradle
---- ./settings.gradle	2023-11-07 10:26:09.000000000 +0000
-+++ ../build/settings.gradle	2024-08-20 10:47:11.805757967 +0000
+--- ./settings.gradle	2024-12-19 08:33:22.000000000 +0000
++++ ../build/settings.gradle	2024-12-19 08:33:34.233033439 +0000
 @@ -7,9 +7,9 @@
  include 'h2o-algos'
  include 'h2o-web'
