@@ -1,23 +1,34 @@
 #!/bin/bash
-
+#
+# Script to generate a stripped down distribution.
+#
+# The script takes a full distribution and uses the file non-minimal-files.txt 
+# to remove large files.  It updates the relevant metadata so that attempts to 
+# use unsupported files will fail gracefully.
+#
 if [ $# -ne 1 ]
   then
     echo "Usage: $0 <dacapo zipfile>"
     exit 1
 fi
 
+#
+# Basic setup and creation of temp directory
+#
 BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 TMP_DIR=`mktemp -d -p "$BASE"`
 
 function cleanup {      
-#  rm -rf "$TMP_DIR"
+  rm -rf "$TMP_DIR"
   echo "Deleted temp directory $TMP_DIR"
 }
 trap cleanup EXIT
 
+#
+# Check command line argument
+#
 bigzip=`realpath $1`
-
 if [ -f "$bigzip"  ]; then
   VERSION=`basename $bigzip .zip`
   echo "Found $bigzip, for $VERSION"
@@ -25,7 +36,6 @@ else
   echo "Could not find zipfile '$bigzip'"
   exit 1
 fi
-
 
 cd $TMP_DIR
 
