@@ -1,19 +1,30 @@
 #!/bin/bash
 #
 # This script takes a dacapo zip file as an argument and uses
-# the non-minimal-files.txt file to create a new minimal zip file.
+# the non-minimal-files-all.txt and non-minimal-files-default.txt files
+# to create two new minimal zip file, one which can run all configs,
+# and a smaller one which cannot run large and huge contfigs that depend
+# on elided files.
 #
-# The new zip will have the suffix "minimal" and will include 
+# The original zip will be replaced with an equivalent one that has unneeded
+# files removed.
+#
+# A new zip will also be created, with the suffix "minimal" and will include 
 # similarly named jar and base directories.
 #
 # More specifically, the script will:
-#   - remove the files listed in non-minimal-files.txt,
+#   - remove the files listed in unneeded-files.txt,
 #   - update the jar to:
 #     - remove the md5 entries for each of the removed files
-#     - remove "large" and "huge" configs from the cfg metadata of each of the affected benchmarks
-#     - update the mainfest to add the "mimimal" suffix
 #   - create a new zip with the minimized base directory and new jar
-#
+# It will then repeat the above, but more agressively removing
+# files neeed by some large configs:
+#   - remove the files listed in unneeded-files-aggressive.txt,
+#   - update the jar to:
+#     - remove the md5 entries for each of the removed files
+#     - update the mainfest to add the "mimimal" suffix
+#     - remove "large" and "huge" configs from the cfg metadata of each of the affected benchmarks
+#  - create a new zip with the minimized base directory and new jar
 #
 if [ $# -ne 1 ]
   then
@@ -54,7 +65,7 @@ cd $TMP_DIR
 unzip $bigzip
 
 #
-# Unzip the jar into a jar directory
+# Unzip the main jar into a jar directory
 #
 JAR_DIR="$TMP_DIR/jar"
 mkdir -p $JAR_DIR
@@ -63,9 +74,9 @@ unzip ../$VERSION.jar
 cd $TMP_DIR
 
 #
-# Delete each non-minimal file and remove its md5 sum
+# Delete each unneeded file and remove its md5 sum
 #
-for f in `cat $BASE/non-minimal-files.txt`; do
+for f in `cat $BASE/unneeded-files.txt`; do
     bm=`echo $f | cut -d '/' -f2`
     chmod -f u+w $TMP_DIR/$VERSION/$f
     rm -f $TMP_DIR/$VERSION/$f
@@ -74,9 +85,39 @@ for f in `cat $BASE/non-minimal-files.txt`; do
 done
 
 #
-# Prune large and huge configs out of each affected benchmark's cnf file
+# Create new jar
 #
-bms=`cat $BASE/non-minimal-files.txt | cut -d '/' -f 2 | sort | uniq`
+cd $JAR_DIR
+rm -f ../$VERSION.jar
+zip -r ../$VERSION.jar .
+cd $TMP_DIR
+
+#
+#  Create zip
+#
+rm -f $BASE/$VERSION.zip
+zip -r $BASE/$VERSION.zip $VERSION.jar $VERSION
+
+
+# 
+# Now more agressively remove files, which will affect some configs
+#
+
+#
+# Delete each unneeded file and remove its md5 sum
+#
+for f in `cat $BASE/unneeded-files-aggressive.txt`; do
+    bm=`echo $f | cut -d '/' -f2`
+    chmod -f u+w $TMP_DIR/$VERSION/$f
+    rm -f $TMP_DIR/$VERSION/$f
+    grep -v $f $JAR_DIR/META-INF/md5/$bm.MD5 > tmp.MD5
+    mv tmp.MD5 $JAR_DIR/META-INF/md5/$bm.MD5
+done
+
+#
+# More aggressively prune large and huge configs out of each affected benchmark's cnf file
+#
+bms=`cat $BASE/unneeded-files-aggressive.txt | cut -d '/' -f 2 | sort | uniq`
 list=""
 for bm in $bms; do
     list=${list}" $bm"

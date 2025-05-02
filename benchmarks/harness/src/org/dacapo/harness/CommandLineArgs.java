@@ -96,6 +96,7 @@ public class CommandLineArgs {
   private static final String OPT_IGNORE_VALIDATION = "ignore-validation";
   private static final String OPT_NO_DIGEST_OUTPUT = "no-digest-output";
   private static final String OPT_NO_VALIDATION = "no-validation";
+  private static final String OPT_NO_FILE_CHECK = "no-file-check";
   private static final String OPT_PRESERVE = "preserve";
   private static final String OPT_VALIDATION_REPORT = "validation-report";
   private static final String OPT_CONFIG = "config";
@@ -125,6 +126,7 @@ public class CommandLineArgs {
     makeOption(null, OPT_IGNORE_VALIDATION,   "Don't halt on validation failure", null),
     makeOption(null, OPT_NO_DIGEST_OUTPUT,    "Turn off SHA1 digest of stdout/stderr", null),
     makeOption(null, OPT_NO_VALIDATION,       "Don't validate at all", null),
+    makeOption(null, OPT_NO_FILE_CHECK,       "Don't perform integrity check of DaCapo data files and jars", null),
     makeOption(null, OPT_PRESERVE,            "Preserve output files (debug)", null),
     makeOption(null, OPT_VALIDATION_REPORT,   "Report digests, line counts etc", "report_file"),
     makeOption(null, OPT_CONFIG,              null, "config_file"),
@@ -377,6 +379,10 @@ public class CommandLineArgs {
 
   public String getValidationReport() {
     return line.getOptionValue(OPT_VALIDATION_REPORT, null);
+  }
+
+  public boolean getNoFileCheck() {
+    return !line.hasOption(OPT_NO_FILE_CHECK);
   }
 
   public boolean getPreIterationGC() {

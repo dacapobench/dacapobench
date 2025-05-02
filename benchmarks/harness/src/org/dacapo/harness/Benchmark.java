@@ -96,6 +96,11 @@ public abstract class Benchmark {
   private static boolean validate = true;
 
   /**
+   * Skip file integrity check
+   */
+  private static boolean noFileCheck = false;
+
+  /**
    * Don't clean up output files
    */
   private static boolean preserve = false;
@@ -364,19 +369,20 @@ public abstract class Benchmark {
         File f = new File(data, filePath);
         if (!f.exists()) {
           System.out.println("Missing data file: "+data+File.separator+filePath);
-          return false;
-        }
-
-        if (filePath.startsWith("jar")) {
+          if (!noFileCheck)
+            return false;
+        } else if (filePath.startsWith("jar")) {
           jarDeps.add(f.toURI().toURL());
         } else {
           datDeps.add(f.toURI().toURL());
         }
 
-        String md5 = getMD5(f).toLowerCase();
-        if (!md5.equals(md5Expected)) {
-          System.out.println("Checksum failure: expected "+md5Expected+" for "+data+File.separator+filePath+" but got "+md5);
-          return false;
+        if (!noFileCheck) {
+          String md5 = getMD5(f).toLowerCase();
+          if (!md5.equals(md5Expected)) {
+           System.out.println("Checksum failure: expected "+md5Expected+" for "+data+File.separator+filePath+" but got "+md5);
+           return false;
+          }
         }
       } catch (Exception e) {
         System.out.println("Dependency check failure: did not find expected file "+data+File.separator+filePath);
@@ -911,6 +917,7 @@ public abstract class Benchmark {
     preserve = line.getPreserve();
     validate = line.getValidate();
     validateOutput = line.getValidateOutput();
+    noFileCheck = line.getNoFileCheck();
     preIterationGC = line.getPreIterationGC();
     timeoutDialation = line.getTimeoutDialation();
     latencyBaseFileName = new File(line.getLogDirectory(), "dacapo-latency").getAbsolutePath();
