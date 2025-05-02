@@ -1,10 +1,19 @@
 #!/bin/bash
 #
-# Script to generate a stripped down distribution.
+# This script takes a dacapo zip file as an argument and uses
+# the non-minimal-files.txt file to create a new minimal zip file.
 #
-# The script takes a full distribution and uses the file non-minimal-files.txt 
-# to remove large files.  It updates the relevant metadata so that attempts to 
-# use unsupported files will fail gracefully.
+# The new zip will have the suffix "minimal" and will include 
+# similarly named jar and base directories.
+#
+# More specifically, the script will:
+#   - remove the files listed in non-minimal-files.txt,
+#   - update the jar to:
+#     - remove the md5 entries for each of the removed files
+#     - remove "large" and "huge" configs from the cfg metadata of each of the affected benchmarks
+#     - update the mainfest to add the "mimimal" suffix
+#   - create a new zip with the minimized base directory and new jar
+#
 #
 if [ $# -ne 1 ]
   then
