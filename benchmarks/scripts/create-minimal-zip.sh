@@ -1,24 +1,27 @@
 #!/bin/bash
 #
 # This script takes a dacapo zip file as an argument and uses
-# the non-minimal-files-all.txt and non-minimal-files-default.txt files
-# to create two new minimal zip file, one which can run all configs,
-# and a smaller one which cannot run large and huge contfigs that depend
-# on elided files.
+# the unneeded-files.txt and unneeded-files-aggressive.txt files
+# to create two new minimal zip files.
+#
+# - unneeded-files.txt is a list of files that no config needs
+# - unneeded-files-aggressive.txt is a list of large files only need by some large configs
 #
 # The original zip will be replaced with an equivalent one that has unneeded
 # files removed.
 #
 # A new zip will also be created, with the suffix "minimal" and will include 
-# similarly named jar and base directories.
+# similarly named jar and base directories.  This second zip will not work with 
+# some large configs.
 #
 # More specifically, the script will:
-#   - remove the files listed in unneeded-files.txt,
+#   - remove all files listed in unneeded-files.txt,
 #   - update the jar to:
 #     - remove the md5 entries for each of the removed files
 #   - create a new zip with the minimized base directory and new jar
+#
 # It will then repeat the above, but more agressively removing
-# files neeed by some large configs:
+# large files that are only used by some large configs:
 #   - remove the files listed in unneeded-files-aggressive.txt,
 #   - update the jar to:
 #     - remove the md5 entries for each of the removed files

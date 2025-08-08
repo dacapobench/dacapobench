@@ -1,5 +1,12 @@
 #!/bin/bash
-
+#
+# This script is intended to be used to establish the unneeded-files.txt and
+# unneeded-files-aggressive.txt lists.
+#
+# However, it depends on either stat or find to determine which files are touched
+# and this can be very problematic.  It is not working reliably.
+#
+# 
 JAVA_FLAGS="-Djava.security.manager=allow -Dsys.ai.h2o.debug.allowJavaVersions=21"
 
 if [ $# -ne 1 ]
@@ -34,8 +41,7 @@ echo "Using Java version: $JAVA_VERSION"
 
 cd $TMP_DIR
 
-# for size in huge large default small; do
-for size in default small; do
+for size in huge large default small; do
   MARKER=$BASE/timestamp-$size
   USED=$BASE/files-dat-used-$size.txt
   ALL=$BASE/files-dat-all-$size.txt
@@ -54,7 +60,6 @@ for size in default small; do
   # Run the benchmarks
   #
   for bm in `java -jar $JAR -l 2>/dev/null`; do
-  # for bm in lusearch; do
     LOG=$bm-$size.log
     echo $bm
     java -verbose:class $JAVA_FLAGS  -jar $JAR -s $size -n 1 $bm > $LOG >&1
