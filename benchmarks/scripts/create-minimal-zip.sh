@@ -80,11 +80,14 @@ cd $TMP_DIR
 # Delete each unneeded file and remove its md5 sum
 #
 for f in `cat $BASE/unneeded-files.txt`; do
-    bm=`echo $f | cut -d '/' -f2`
     chmod -f u+w $TMP_DIR/$VERSION/$f
     rm -f $TMP_DIR/$VERSION/$f
-    grep -v $f $JAR_DIR/META-INF/md5/$bm.MD5 > tmp.MD5
-    mv tmp.MD5 $JAR_DIR/META-INF/md5/$bm.MD5
+    cd $JAR_DIR
+    for m in `grep -l $f META-INF/md5/*`; do
+      grep -v $f $m > tmp.MD5
+      mv tmp.MD5 $m
+    done
+    cd $TMP_DIR
 done
 
 #
