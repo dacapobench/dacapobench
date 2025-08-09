@@ -65,21 +65,27 @@ cd $TMP_DIR
 #
 # Unzip the full distro
 #
-unzip $bigzip
+echo "Unzipping original into $TMP_DIR ..."
+unzip -q $bigzip
+eecho "...done"
 
 #
 # Unzip the main jar into a jar directory
 #
+echo "Unzipping original jar into $JAR_DIR ..."
 JAR_DIR="$TMP_DIR/jar"
 mkdir -p $JAR_DIR
 cd $JAR_DIR
-unzip ../$VERSION.jar
+unzip -q ../$VERSION.jar
 cd $TMP_DIR
+echo "...done"
 
 #
 # Delete each unneeded file and remove its md5 sum
 #
+echo "Removing unneeded files, updating md5 sums ..."
 for f in `cat $BASE/unneeded-files.txt`; do
+    echo $f
     chmod -f u+w $TMP_DIR/$VERSION/$f
     rm -f $TMP_DIR/$VERSION/$f
     cd $JAR_DIR
@@ -89,21 +95,25 @@ for f in `cat $BASE/unneeded-files.txt`; do
     done
     cd $TMP_DIR
 done
+echo "...done"
 
 #
 # Create new jar
 #
+echo "Creating new jar file as $VERSION.jar..."
 cd $JAR_DIR
 rm -f ../$VERSION.jar
-zip -r ../$VERSION.jar .
+zip -qr ../$VERSION.jar .
 cd $TMP_DIR
+echo "...done"
 
 #
 #  Create zip
 #
+echo "Creating fresh zip as $BASE/$VERSION.zip..."
 rm -f $BASE/$VERSION.zip
-zip -r $BASE/$VERSION.zip $VERSION.jar $VERSION
-
+zip -qr $BASE/$VERSION.zip $VERSION.jar $VERSION
+echo "...done"
 
 # 
 # Now more agressively remove files, which will affect some configs
@@ -112,13 +122,19 @@ zip -r $BASE/$VERSION.zip $VERSION.jar $VERSION
 #
 # Delete each unneeded file and remove its md5 sum
 #
+echo "Removing additional unneeded files, updating md5 sums ..."
 for f in `cat $BASE/unneeded-files-aggressive.txt`; do
-    bm=`echo $f | cut -d '/' -f2`
+    echo $f
     chmod -f u+w $TMP_DIR/$VERSION/$f
     rm -f $TMP_DIR/$VERSION/$f
-    grep -v $f $JAR_DIR/META-INF/md5/$bm.MD5 > tmp.MD5
-    mv tmp.MD5 $JAR_DIR/META-INF/md5/$bm.MD5
+    cd $JAR_DIR
+    for m in `grep -l $f META-INF/md5/*`; do
+      grep -v $f $m > tmp.MD5
+      mv tmp.MD5 $m
+    done
+    cd $TMP_DIR
 done
+echo "...done"
 
 #
 # More aggressively prune large and huge configs out of each affected benchmark's cnf file
@@ -139,6 +155,7 @@ done
 #
 # Update the MANIFEST
 #
+echo "Updating minimal manifest"
 match=`grep Implementation-Version $JAR_DIR/META-INF/MANIFEST.MF | sed -e 's/[[:space:]]*$//'`
 suf="-minimal"
 sed -i "s/${match}/${match}${suf}\nTrimmed-Benchmarks:${list}/" $JAR_DIR/META-INF/MANIFEST.MF
@@ -146,13 +163,17 @@ sed -i "s/${match}/${match}${suf}\nTrimmed-Benchmarks:${list}/" $JAR_DIR/META-IN
 #
 # Create new jar
 #
+echo "Creating new jar file as $MIN_VERSION.jar..."
 cd $JAR_DIR
 MIN_VERSION=$VERSION$suf
-zip -r ../$MIN_VERSION.jar .
+zip -qr ../$MIN_VERSION.jar .
 cd $TMP_DIR
+echo "...done"
 
 #
 #  Move main dir and create zip
 #
+echo "Creating fresh zip as $BASE/$MIN_VERSION.zip..."
 mv $VERSION $MIN_VERSION
-zip -r $BASE/$MIN_VERSION.zip $MIN_VERSION.jar $MIN_VERSION
+zip -qr $BASE/$MIN_VERSION.zip $MIN_VERSION.jar $MIN_VERSION
+echo "...done"
