@@ -30,14 +30,22 @@ RELEASE PROCEDURES
 	cd dacapobench/benchmarks
 	ant -Dbuild.is-official=true
 
-6. Test the resulting zip
+6. Create space-optimzed zip files
+   cd benchmarks
+   scripts/create-minimal-zip.sh <path to zip generated in step 5>
 
-7. Upload files
+7. Test the resulting zip files
+   nohup scripts/test-distro.sh scripts/dacapo-${dacapo.version}-${dacapo.nickname}.zip
+   (check for any FAILures)
+   nohup scripts/test-distro.sh scripts/dacapo-${dacapo.version}-${dacapo.nickname}-minimal.zip
+   (check for any FAILures)
+
+8. Upload files
 	- rclone copy -P --tpslimit=5 --s3-chunk-size=256M -vv dacapo-*.zip r2:dacapo/chopin 
 
-8. Ensure download is working, and update web page 
+9. Ensure download is working, and update web page 
 
-9. Create a git tag and release
+10. Create a git tag and release
     - git tag -a v23.11-chopin -m "23.11-chopin release"
 	- git push origin --tags
 	- go to github and create a release
