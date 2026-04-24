@@ -1,6 +1,5 @@
-diff -ur ./kafka-3.3.1-src/config/log4j.properties ../build/kafka-3.3.1-src/config/log4j.properties
---- ./kafka-3.3.1-src/config/log4j.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/log4j.properties	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/config/log4j.properties	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/config/log4j.properties	2026-04-24 12:56:00.594606962 +1000
 @@ -14,8 +14,8 @@
  # limitations under the License.
  
@@ -61,9 +60,8 @@ diff -ur ./kafka-3.3.1-src/config/log4j.properties ../build/kafka-3.3.1-src/conf
 +log4j.logger.kafka.authorizer.logger=ERROR, authorizerAppender
  log4j.additivity.kafka.authorizer.logger=false
  
-diff -ur ./kafka-3.3.1-src/config/server.properties ../build/kafka-3.3.1-src/config/server.properties
---- ./kafka-3.3.1-src/config/server.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/server.properties	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/config/server.properties	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/config/server.properties	2026-04-24 12:56:00.595116382 +1000
 @@ -59,7 +59,7 @@
  ############################# Log Basics #############################
  
@@ -85,9 +83,8 @@ diff -ur ./kafka-3.3.1-src/config/server.properties ../build/kafka-3.3.1-src/con
  
  ############################# Zookeeper #############################
  
-diff -ur ./kafka-3.3.1-src/config/tools-log4j.properties ../build/kafka-3.3.1-src/config/tools-log4j.properties
---- ./kafka-3.3.1-src/config/tools-log4j.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/tools-log4j.properties	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/config/tools-log4j.properties	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/config/tools-log4j.properties	2026-04-24 12:56:00.595461262 +1000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -97,9 +94,8 @@ diff -ur ./kafka-3.3.1-src/config/tools-log4j.properties ../build/kafka-3.3.1-sr
  
  log4j.appender.stderr=org.apache.log4j.ConsoleAppender
  log4j.appender.stderr.layout=org.apache.log4j.PatternLayout
-diff -ur ./kafka-3.3.1-src/config/zookeeper.properties ../build/kafka-3.3.1-src/config/zookeeper.properties
---- ./kafka-3.3.1-src/config/zookeeper.properties	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/config/zookeeper.properties	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/config/zookeeper.properties	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/config/zookeeper.properties	2026-04-24 12:56:00.595757412 +1000
 @@ -13,7 +13,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
@@ -109,9 +105,8 @@ diff -ur ./kafka-3.3.1-src/config/zookeeper.properties ../build/kafka-3.3.1-src/
  # the port at which the clients will connect
  clientPort=2181
  # disable the per-ip limit on the number of connections since this is a non-production config
-diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala
---- ./kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala	2026-04-24 12:56:00.596194022 +1000
 @@ -73,7 +73,8 @@
          exitCode = 1
      } finally {
@@ -122,9 +117,8 @@ diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/admin/TopicCommand.scala ..
      }
    }
  
-diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala
---- ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala	2026-04-24 12:56:00.596691482 +1000
 @@ -76,7 +76,7 @@
    import LogManager._
  
@@ -134,9 +128,8 @@ diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/log/LogManager.scala ../bui
  
    private val logCreationOrDeletionLock = new Object
    private val currentLogs = new Pool[TopicPartition, UnifiedLog]()
-diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala
---- ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckpoint.scala	2026-04-24 12:56:00.597246412 +1000
 @@ -237,7 +237,7 @@
          Some(Utils.loadProps(absolutePath))
        } catch {
@@ -146,9 +139,8 @@ diff -ur ./kafka-3.3.1-src/core/src/main/scala/kafka/server/BrokerMetadataCheckp
            None
          case e: Exception =>
            error(s"Failed to read meta.properties file under dir $absolutePath", e)
-diff -ur ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json
---- ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/tests/spec/simple_produce_bench.json	2026-04-24 12:56:00.597610472 +1000
 @@ -23,16 +23,16 @@
    "durationMs": 10000000,
    "producerNode": "node0",
@@ -170,9 +162,8 @@ diff -ur ./kafka-3.3.1-src/tests/spec/simple_produce_bench.json ../build/kafka-3
        "numPartitions": 10,
        "replicationFactor": 1
      }
-diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java
---- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/Agent.java	2026-04-24 12:56:00.598057552 +1000
 @@ -20,6 +20,7 @@
  import com.fasterxml.jackson.databind.node.LongNode;
  import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -242,9 +233,8 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/agent/
          agent.waitForShutdown();
      }
  }
-diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java
---- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java	2023-09-28 07:54:20.458881135 +0000
+--- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common/WorkerUtils.java	2026-04-24 12:56:00.598483512 +1000
 @@ -106,6 +106,7 @@
  
      private static final int ADMIN_REQUEST_TIMEOUT = 25000;
@@ -307,9 +297,8 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/common
          }
          return existingTopics;
      }
-diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java
---- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2022-09-29 19:03:49.000000000 +0000
-+++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2023-09-28 07:45:35.897670292 +0000
+--- ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2022-09-30 05:03:49.000000000 +1000
++++ ../build/kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/workload/ProduceBenchWorker.java	2026-04-24 13:24:34.680521483 +1000
 @@ -27,6 +27,7 @@
  import org.apache.kafka.clients.producer.ProducerRecord;
  import org.apache.kafka.clients.producer.RecordMetadata;
@@ -328,7 +317,7 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
  public class ProduceBenchWorker implements TaskWorker {
      private static final Logger log = LoggerFactory.getLogger(ProduceBenchWorker.class);
      
-@@ -72,6 +76,14 @@
+@@ -72,6 +76,15 @@
  
      private KafkaFutureImpl<String> doneFuture;
  
@@ -336,6 +325,7 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
 +    Method dacapoEnd;
 +    Method dacapoStarting;
 +    Method dacapoFinished;
++    private volatile boolean dacapoStarted = false;
 +    private int tx = 0;
 +    private static int txCount = 0;
 +    public static void setTxCount(int count) { txCount = count; }
@@ -343,7 +333,7 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
      public ProduceBenchWorker(String id, ProduceBenchSpec spec) {
          this.id = id;
          this.spec = spec;
-@@ -79,7 +91,7 @@
+@@ -79,23 +92,54 @@
  
      @Override
      public void start(Platform platform, WorkerStatusTracker status,
@@ -352,7 +342,21 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
          if (!running.compareAndSet(false, true)) {
              throw new IllegalStateException("ProducerBenchWorker is already running.");
          }
-@@ -90,12 +102,32 @@
+         log.info("{}: Activating ProduceBenchWorker with {}", id, spec);
++        try {
++            Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter", true, ProduceBenchWorker.class.getClassLoader());
++            dacapoStart = clazz.getMethod("start", int.class);
++            dacapoEnd = clazz.getMethod("endIdx", int.class);
++            dacapoStarting = clazz.getMethod("requestsStarting");
++            dacapoFinished = clazz.getMethod("requestsFinished");
++        } catch (ClassNotFoundException e) {
++            System.err.println("Failed to access DaCapo latency reporter: "+e);
++        } catch (NoSuchMethodException e) {
++            System.err.println("Failed trying to create latency stats: "+e);
++        }
+         // Create an executor with 2 threads.  We need the second thread so
+         // that the StatusUpdater can run in parallel with SendRecords.
+         this.executor = Executors.newScheduledThreadPool(2,
              ThreadUtils.createThreadFactory("ProduceBenchWorkerThread%d", false));
          this.status = status;
          this.doneFuture = doneFuture;
@@ -387,29 +391,19 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
              try {
                  Map<String, NewTopic> newTopics = new HashMap<>();
                  HashSet<TopicPartition> active = new HashSet<>();
-@@ -119,8 +151,20 @@
+@@ -119,8 +163,10 @@
                  }
                  status.update(new TextNode("Creating " + newTopics.keySet().size() + " topic(s)"));
                  WorkerUtils.createTopics(log, spec.bootstrapServers(), spec.commonClientConf(),
 -                                         spec.adminClientConf(), newTopics, false);
 +                    spec.adminClientConf(), newTopics, false);               
                  status.update(new TextNode("Created " + newTopics.keySet().size() + " topic(s)"));
-+                try {
-+                    Class<?> clazz = Class.forName("org.dacapo.harness.LatencyReporter", true, ProduceBenchWorker.class.getClassLoader());
-+                    dacapoStart = clazz.getMethod("start", int.class);
-+                    dacapoEnd = clazz.getMethod("endIdx", int.class);
-+                    dacapoStarting = clazz.getMethod("requestsStarting");
-+                    dacapoFinished = clazz.getMethod("requestsFinished");
-+                } catch (ClassNotFoundException e) {
-+                    System.err.println("Failed to access DaCapo latency reporter: "+e);
-+                } catch (NoSuchMethodException e) {
-+                    System.err.println("Failed trying to create latency stats: "+e);
-+                }
-+                dacapoStarting(); 
++                dacapoStarting();
++                dacapoStarted = true;
                  executor.submit(new SendRecords(active));
              } catch (Throwable e) {
                  WorkerUtils.abort(log, "Prepare", e, doneFuture);
-@@ -131,23 +175,61 @@
+@@ -131,23 +177,61 @@
      private static class SendRecordsCallback implements Callback {
          private final SendRecords sendRecords;
          private final long startMs;
@@ -472,7 +466,7 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
      /**
       * A subclass of Throttle which flushes the Producer right before the throttle injects a delay.
       * This avoids including throttling latency in latency measurements.
-@@ -293,6 +375,7 @@
+@@ -293,6 +377,7 @@
          }
  
          private void sendMessage() throws InterruptedException {
@@ -480,7 +474,7 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
              if (!partitionsIterator.hasNext())
                  partitionsIterator = activePartitions.iterator();
  
-@@ -306,11 +389,18 @@
+@@ -306,11 +391,18 @@
                      partition.topic(), partition.partition(), keys.next(), values.next());
              }
              sendFuture = producer.send(record,
@@ -500,13 +494,14 @@ diff -ur ./kafka-3.3.1-src/trogdor/src/main/java/org/apache/kafka/trogdor/worklo
              histogram.add(durationMs);
          }
      }
-@@ -407,6 +497,8 @@
+@@ -407,6 +499,10 @@
  
      @Override
      public void stop(Platform platform) throws Exception {
-+        dacapoFinished();
++        if (dacapoStarted) {
++            dacapoFinished();
++        }
 +
          if (!running.compareAndSet(true, false)) {
              throw new IllegalStateException("ProduceBenchWorker is not running.");
          }
-Only in .: kafka.patch
