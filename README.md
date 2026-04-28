@@ -1,5 +1,7 @@
 # The DaCapo Benchmark Suite
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14717394.svg)](https://doi.org/10.5281/zenodo.14717394)
+
 Last updated 2023-11-08
 
 This benchmark suite is intend as a tool for the research community.
