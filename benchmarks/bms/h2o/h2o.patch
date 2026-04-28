@@ -1,7 +1,15 @@
-diff -ur ./build.gradle ../build/build.gradle
---- ./build.gradle	2024-12-19 08:33:22.000000000 +0000
-+++ ../build/build.gradle	2024-12-19 08:42:54.980335527 +0000
-@@ -25,7 +25,7 @@
+diff -ur '--exclude=.gradle' '--exclude=build' '--exclude=*.class' '--exclude=build.gradle~' ./orig/build.gradle ./build/build.gradle
+--- ./build.gradle	2026-04-28 13:58:08.000000000 +1000
++++ ../build/build.gradle	2026-04-28 14:54:37.831277377 +1000
+@@ -5,7 +5,6 @@
+ buildscript {
+     ext {
+         isCi = (!rootProject.hasProperty("forcePublic")) && (System.getProperty("user.name").equals("jenkins")
+-                    || System.getenv("CI") != null
+                     || (rootProject.hasProperty("doCI") && rootProject.doCI == "true"))
+     }
+ 
+@@ -25,7 +24,7 @@
      dependencies {
          classpath 'org.ow2.asm:asm:5.1'
          classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
@@ -10,7 +18,7 @@ diff -ur ./build.gradle ../build/build.gradle
          classpath 'org.testng:testng:6.8'
          classpath 'me.champeau.gradle:jmh-gradle-plugin:0.5.2'
          // Note: Analyze unused/undefined dependencies for each module - good for debugging
-@@ -151,14 +151,14 @@
+@@ -151,14 +150,14 @@
        project(':h2o-clustering')
      ]
  
@@ -33,7 +41,7 @@ diff -ur ./build.gradle ../build/build.gradle
  
      // The project which need to be run under CI only
      testNeedsCiProject = [
-@@ -252,11 +252,11 @@
+@@ -252,11 +251,11 @@
                  url "https://repository.cloudera.com/artifactory/cloudera-repos/"
              }
              maven {
@@ -49,7 +57,7 @@ diff -ur ./build.gradle ../build/build.gradle
              maven {
                  url "https://repository.mapr.com/maven/"
              }
-@@ -268,9 +268,9 @@
+@@ -268,9 +267,9 @@
  
      // Publish artifacts - we should filter subproject in future but now apply publisher plugin
      // to all projects
@@ -62,7 +70,7 @@ diff -ur ./build.gradle ../build/build.gradle
  
      // Copy all jars and remove version number from the name
      apply from: "$rootDir/gradle/copyJars.gradle"
-@@ -306,19 +306,19 @@
+@@ -306,19 +305,19 @@
          
      }
  
@@ -95,13 +103,9 @@ diff -ur ./build.gradle ../build/build.gradle
  }
  
  // Include support for S3 syncing
-Only in ../build: build.gradle~
-Only in ../build/buildSrc: build
-Only in ../build/buildSrc: .gradle
-Only in ../build: .gradle
-diff -ur ./gradlew ../build/gradlew
---- ./gradlew	2024-12-19 08:33:21.000000000 +0000
-+++ ../build/gradlew	2024-12-19 08:33:34.233033439 +0000
+diff -ur '--exclude=.gradle' '--exclude=build' '--exclude=*.class' '--exclude=build.gradle~' ./orig/gradlew ./build/gradlew
+--- ./gradlew	2026-04-28 13:58:07.000000000 +1000
++++ ../build/gradlew	2026-04-28 14:54:27.629891005 +1000
 @@ -87,8 +87,10 @@
      if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
          # IBM's JDK on AIX uses strange locations for the executables
@@ -113,9 +117,9 @@ diff -ur ./gradlew ../build/gradlew
      fi
      if [ ! -x "$JAVACMD" ] ; then
          die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
-diff -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
---- ./h2o-algos/build.gradle	2024-12-19 08:33:21.000000000 +0000
-+++ ../build/h2o-algos/build.gradle	2024-12-19 08:33:34.233033439 +0000
+diff -ur '--exclude=.gradle' '--exclude=build' '--exclude=*.class' '--exclude=build.gradle~' ./orig/h2o-algos/build.gradle ./build/h2o-algos/build.gradle
+--- ./h2o-algos/build.gradle	2026-04-28 13:58:08.000000000 +1000
++++ ../build/h2o-algos/build.gradle	2026-04-28 14:54:27.630305535 +1000
 @@ -53,7 +53,7 @@
    testRuntimeOnly project(":${defaultWebserverModule}")
    testCompileOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
@@ -125,9 +129,9 @@ diff -ur ./h2o-algos/build.gradle ../build/h2o-algos/build.gradle
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-diff -ur ./h2o-core/src/main/java/water/Cleaner.java ../build/h2o-core/src/main/java/water/Cleaner.java
---- ./h2o-core/src/main/java/water/Cleaner.java	2024-12-19 08:33:21.000000000 +0000
-+++ ../build/h2o-core/src/main/java/water/Cleaner.java	2024-12-19 08:33:34.233033439 +0000
+diff -ur '--exclude=.gradle' '--exclude=build' '--exclude=*.class' '--exclude=build.gradle~' ./orig/h2o-core/src/main/java/water/Cleaner.java ./build/h2o-core/src/main/java/water/Cleaner.java
+--- ./h2o-core/src/main/java/water/Cleaner.java	2026-04-28 13:58:07.000000000 +1000
++++ ../build/h2o-core/src/main/java/water/Cleaner.java	2026-04-28 14:54:27.630743715 +1000
 @@ -10,6 +10,7 @@
  /** Store Cleaner: User-Mode Swap-To-Disk */
  
@@ -165,9 +169,9 @@ diff -ur ./h2o-core/src/main/java/water/Cleaner.java ../build/h2o-core/src/main/
        if( DESIRED == -1 ) clean_to_age = now;  // Test mode: clean all
  
        // No logging if under memory pressure: can deadlock the cleaner thread
-diff -ur ./h2o-core/src/main/java/water/MemoryManager.java ../build/h2o-core/src/main/java/water/MemoryManager.java
---- ./h2o-core/src/main/java/water/MemoryManager.java	2024-12-19 08:33:21.000000000 +0000
-+++ ../build/h2o-core/src/main/java/water/MemoryManager.java	2024-12-19 08:33:34.233033439 +0000
+diff -ur '--exclude=.gradle' '--exclude=build' '--exclude=*.class' '--exclude=build.gradle~' ./orig/h2o-core/src/main/java/water/MemoryManager.java ./build/h2o-core/src/main/java/water/MemoryManager.java
+--- ./h2o-core/src/main/java/water/MemoryManager.java	2026-04-28 13:58:07.000000000 +1000
++++ ../build/h2o-core/src/main/java/water/MemoryManager.java	2026-04-28 14:54:27.631216585 +1000
 @@ -42,6 +42,26 @@
   * @author cliffc
   */
@@ -222,9 +226,9 @@ diff -ur ./h2o-core/src/main/java/water/MemoryManager.java ../build/h2o-core/src
  
    /**
     * Try to reserve memory needed for task execution and return true if
-diff -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/target-encoder/build.gradle
---- ./h2o-extensions/target-encoder/build.gradle	2024-12-19 08:33:22.000000000 +0000
-+++ ../build/h2o-extensions/target-encoder/build.gradle	2024-12-19 08:33:34.233033439 +0000
+diff -ur '--exclude=.gradle' '--exclude=build' '--exclude=*.class' '--exclude=build.gradle~' ./orig/h2o-extensions/target-encoder/build.gradle ./build/h2o-extensions/target-encoder/build.gradle
+--- ./h2o-extensions/target-encoder/build.gradle	2026-04-28 13:58:08.000000000 +1000
++++ ../build/h2o-extensions/target-encoder/build.gradle	2026-04-28 14:54:27.631642005 +1000
 @@ -12,7 +12,7 @@
      testImplementation 'com.pholser:junit-quickcheck-generators:0.9'
      testRuntimeOnly project(":${defaultWebserverModule}")
@@ -234,9 +238,9 @@ diff -ur ./h2o-extensions/target-encoder/build.gradle ../build/h2o-extensions/ta
  }
  
  apply from: "${rootDir}/gradle/dataCheck.gradle"
-diff -ur ./settings.gradle ../build/settings.gradle
---- ./settings.gradle	2024-12-19 08:33:22.000000000 +0000
-+++ ../build/settings.gradle	2024-12-19 08:33:34.233033439 +0000
+diff -ur '--exclude=.gradle' '--exclude=build' '--exclude=*.class' '--exclude=build.gradle~' ./orig/settings.gradle ./build/settings.gradle
+--- ./settings.gradle	2026-04-28 13:58:08.000000000 +1000
++++ ../build/settings.gradle	2026-04-28 14:54:27.631986575 +1000
 @@ -7,9 +7,9 @@
  include 'h2o-algos'
  include 'h2o-web'
