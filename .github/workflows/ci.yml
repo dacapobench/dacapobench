@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, 'chopin*', 'dev-chopin*' ]
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday at midnight
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        benchmark: [avrora, batik, biojava, cassandra, eclipse, fop, graphchi, h2, h2o, jme, jython, kafka, luindex, lusearch, pmd, spring, sunflow, tomcat, tradebeans, tradesoap, xalan, zxing]
+
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.x'
+
+    - name: Install Python dependencies
+      run: |
+        pip install requests future tabulate wheel
+
+    - name: Install Temurin and Ant
+      run: |
+        sudo mkdir -p /etc/apt/keyrings
+        wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo tee /etc/apt/keyrings/adoptium.asc
+        echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+        sudo apt-get update
+        sudo apt-get install -y temurin-8-jdk temurin-11-jdk ant cvs subversion mercurial nodejs npm zstd
+
+    - name: Configure local.properties
+      run: |
+        cd benchmarks
+        touch local.properties
+        echo "make=/usr/bin/make" > local.properties
+        echo "build.failonerror=true" >> local.properties
+        
+        # Find Java 11 path
+        JAVA11_HOME=$(find /usr/lib/jvm -name "temurin-11*" -type d | head -n 1)
+        echo "jdk.11.home=$JAVA11_HOME" >> local.properties
+        
+        echo "Configured local.properties:"
+        cat local.properties
+
+    - name: Build benchmark
+      run: |
+        cd benchmarks
+        
+        # Find Java 8 path and set as default for this step
+        JAVA8_HOME=$(find /usr/lib/jvm -name "temurin-8*" -type d | head -n 1)
+        export JAVA_HOME=$JAVA8_HOME
+        export PATH=$JAVA_HOME/bin:$PATH
+        
+        echo "Using Java version:"
+        java -version
+        
+        ant ${{ matrix.benchmark }}
+
+    - name: Compress Artifacts
+      run: |
+        cd benchmarks
+        DIR_NAME=$(find . -maxdepth 1 -name "dacapo-evaluation-git-*" -type d | head -n 1)
+        JAR_NAME=$(find . -maxdepth 1 -name "dacapo-evaluation-git-*.jar" -type f | head -n 1)
+        tar --zstd -cf "dacapo-${{ matrix.benchmark }}.tar.zst" "$DIR_NAME" "$JAR_NAME"
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: dacapo-${{ matrix.benchmark }}.tar.zst
+        path: benchmarks/dacapo-${{ matrix.benchmark }}.tar.zst
+
+  full-build:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.x'
+
+    - name: Install Python dependencies
+      run: |
+        pip install requests future tabulate wheel
+
+    - name: Install Temurin and Ant
+      run: |
+        sudo mkdir -p /etc/apt/keyrings
+        wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo tee /etc/apt/keyrings/adoptium.asc
+        echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+        sudo apt-get update
+        sudo apt-get install -y temurin-8-jdk temurin-11-jdk ant cvs subversion mercurial nodejs npm zstd
+
+    - name: Configure local.properties
+      run: |
+        cd benchmarks
+        touch local.properties
+        echo "make=/usr/bin/make" > local.properties
+        echo "build.failonerror=true" >> local.properties
+        
+        # Find Java 11 path
+        JAVA11_HOME=$(find /usr/lib/jvm -name "temurin-11*" -type d | head -n 1)
+        echo "jdk.11.home=$JAVA11_HOME" >> local.properties
+        
+        echo "Configured local.properties:"
+        cat local.properties
+
+    - name: Build all benchmarks
+      run: |
+        cd benchmarks
+        
+        # Find Java 8 path and set as default for this step
+        JAVA8_HOME=$(find /usr/lib/jvm -name "temurin-8*" -type d | head -n 1)
+        export JAVA_HOME=$JAVA8_HOME
+        export PATH=$JAVA_HOME/bin:$PATH
+        
+        echo "Using Java version:"
+        java -version
+        
+        ant
+
+    - name: Compress Artifacts
+      run: |
+        cd benchmarks
+        DIR_NAME=$(find . -maxdepth 1 -name "dacapo-evaluation-git-*" -type d | head -n 1)
+        JAR_NAME=$(find . -maxdepth 1 -name "dacapo-evaluation-git-*.jar" -type f | head -n 1)
+        tar --zstd -cf "dacapo-full.tar.zst" "$DIR_NAME" "$JAR_NAME"
+
+    - name: Upload Full Artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: dacapo-full.tar.zst
+        path: benchmarks/dacapo-full.tar.zst
