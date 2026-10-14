@@ -405,7 +405,7 @@ def nominal():
     nom['PKP'] = kpct
     desc['PKP'] = 'nominal percentage of time spent in kernel mode (as percentage of user plus kernel time)'
 
-    nom['PIN'] = cspct
+    nom['PIN'] = inpct
     desc['PIN'] = 'nominal percentage slowdown due to using the interpreter (sensitivty to interpreter)'
 
     nom['PCS'] = cspct
