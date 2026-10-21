@@ -21,15 +21,10 @@ import java.util.zip.ZipInputStream;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.LogManager;
 
 import org.dacapo.parser.Config;
 
@@ -261,7 +256,14 @@ public abstract class Benchmark {
       stopIteration();
     }
 
-    final long duration = System.currentTimeMillis() - start;
+    long duration = System.currentTimeMillis() - start;
+
+    if (config.getTiming() == Config.Timing.REQUEST_WINDOW) {
+      long requestWindow = LatencyReporter.getRequestTimeMillis();
+      if (requestWindow > 0) {
+        duration = requestWindow;
+      }
+    }
 
     callback.stop(duration);
 
