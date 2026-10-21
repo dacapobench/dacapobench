@@ -129,6 +129,9 @@ TOKEN :
 | < THREADS : "threads" >
 | < THREAD_LIMIT : "thread-limit" >
 | < THREAD_MODEL : "thread-model" >
+| < TIMING : "timing" >
+| < WALL : "wall" >
+| < REQUEST_WINDOW : "request-window" >
 | < REPEATS : "repeats" >
 }
 
@@ -174,10 +177,11 @@ Config config() :
 }
 
 void configOption(Config config) :
-{ String className; Config.ThreadModel threadModel; String jar;}
+{ String className; Config.ThreadModel threadModel; Config.Timing timing; String jar;}
 {
     <CLASS> className=identifier() { config.setClass(className); }
   | <THREAD_MODEL> threadModel=threadModel() { config.setThreadModel(threadModel); }
+  | <TIMING> timing=timing() { config.setTiming(timing); }
   | <JARS> libraries(config)
 }
 
@@ -247,6 +251,12 @@ Config.ThreadModel threadModel() : { }
     <SINGLE> { return Config.ThreadModel.SINGLE; }
   | <FIXED>  { return Config.ThreadModel.FIXED; }
   | <PER_CPU> { return Config.ThreadModel.PER_CPU; }
+}
+
+Config.Timing timing() : { }
+{
+    <WALL> { return Config.Timing.WALL; }
+  | <REQUEST_WINDOW> { return Config.Timing.REQUEST_WINDOW; }
 }
 
 void description(Config config) : { }

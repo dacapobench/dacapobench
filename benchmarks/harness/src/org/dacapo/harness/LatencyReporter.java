@@ -44,6 +44,7 @@ public class LatencyReporter {
   static int[] txowner;
   static long requestsStarted;
   static long requestsFinished;
+  static long lastRequestWindowNanos;
   private static AtomicInteger globalIdx = new AtomicInteger(0);
   static double fileMax;
   static LatencyReporter[] reporters;
@@ -69,6 +70,9 @@ public class LatencyReporter {
   public static void initialize(int transactions, int threads, int _stride) {
     stride = _stride;
     timerBase = System.nanoTime();
+    requestsStarted = 0;
+    requestsFinished = 0;
+    lastRequestWindowNanos = 0;
     if (transactions > LATENCY_BUFFER_SIZE) {
       System.err.println("Too many transactions. "+transactions+" > LATENCY_BUFFER_SIZE ("+LATENCY_BUFFER_SIZE+")");
       java.lang.Thread.dumpStack();
@@ -391,6 +395,14 @@ public class LatencyReporter {
     System.out.println(report);
   }
 
+  /**
+   * Duration of the most recent request window, in milliseconds, or 0 if no
+   * request window has been observed since the last initialize().
+   */
+  public static long getRequestTimeMillis() {
+    return lastRequestWindowNanos / 1000000;
+  }
+
   public static void printLatency(int[] latency, float[] txbegin, int events, String kind, int iteration) {
     Arrays.sort(latency);
     String report = "===== DaCapo tail latency, "+kind+": ";
@@ -451,6 +463,7 @@ public class LatencyReporter {
 
   public static void requestsFinished() {
     requestsFinished = System.nanoTime();
+    lastRequestWindowNanos = requestsFinished - requestsStarted;
     System.out.println("Completed requests");
     if (callback != null) callback.requestsFinished();
   }

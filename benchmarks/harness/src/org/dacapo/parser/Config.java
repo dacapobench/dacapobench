@@ -65,6 +65,24 @@ public class Config {
   };
 
   /**
+   * The time reported for a benchmark iteration.
+   */
+  public enum Timing {
+    WALL("wall-clock time of the whole iteration"),
+    REQUEST_WINDOW("workload request window reported by the benchmark");
+
+    private String description;
+
+    private Timing(String description) {
+      this.description = description;
+    }
+
+    public String describe() {
+      return description;
+    }
+  };
+
+  /**
    * Inner class that keeps details of one of the output files specified by a
    * benchmark.
    */
@@ -252,6 +270,11 @@ public class Config {
    */
   private ThreadModel threadModel = null;
 
+  /**
+   * The time reported for an iteration
+   */
+  private Timing timing = null;
+
   HashMap<String, Size> sizes = new HashMap<String, Size>(3);
   HashMap<String, String> desc = new HashMap<String, String>(6);
 
@@ -315,6 +338,19 @@ public class Config {
       throw new ParseException("Configuration file error - cannot set thread model twice");
     }
     this.threadModel = model;
+  }
+
+  /**
+   * Set the time reported for an iteration
+   *
+   * @param timing
+   * @throws ParseException
+   */
+  void setTiming(Timing timing) throws ParseException {
+    if (this.timing != null) {
+      throw new ParseException("Configuration file error - cannot set timing twice");
+    }
+    this.timing = timing;
   }
 
   /**
@@ -478,6 +514,18 @@ public class Config {
       return ThreadModel.FIXED;
     } else {
       return threadModel;
+    }
+  }
+
+  /**
+   * Get the time reported for an iteration. Defaults to the wall-clock time
+   * of the whole iteration.
+   */
+  public Timing getTiming() {
+    if (timing == null) {
+      return Timing.WALL;
+    } else {
+      return timing;
     }
   }
 

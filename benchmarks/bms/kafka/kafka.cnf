@@ -1,6 +1,7 @@
 benchmark kafka
   class org.dacapo.harness.Kafka
-  thread-model per_cpu;
+  thread-model per_cpu
+  timing request-window;
 
 size small args "simple_produce_bench-small.json", "10000"
   output stdout digest 0x43d55a01e5ea2c3aeb74dcac80310147e69d47a5,
