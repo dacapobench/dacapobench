@@ -8,6 +8,13 @@ on:
   schedule:
     - cron: '0 0 * * 0' # Every Sunday at midnight
 
+env:
+  # Maven Central (repo.maven.apache.org) answers HTTP 429 to bursty anonymous
+  # clients such as CI runners that share an egress IP. Point the build at a
+  # mirror instead; the artifacts are byte-identical, so the committed *.MD5
+  # checksums still validate. Alternatives: https://maven.aliyun.com/repository/public
+  MAVEN_MIRROR: https://maven-central.storage-download.googleapis.com/maven2
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -62,7 +69,7 @@ jobs:
         echo "Using Java version:"
         java -version
         
-        ant ${{ matrix.benchmark }}
+        ant -Dmaven.url=$MAVEN_MIRROR ${{ matrix.benchmark }}
 
     - name: Compress Artifacts
       run: |
@@ -126,7 +133,7 @@ jobs:
         echo "Using Java version:"
         java -version
         
-        ant
+        ant -Dmaven.url=$MAVEN_MIRROR
 
     - name: Compress Artifacts
       run: |
