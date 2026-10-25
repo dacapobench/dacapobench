@@ -47,7 +47,14 @@
 
 	<!-- get the source if necessary -->
 	<target name="get-source" unless="target-valid-md5">
-		<get src="${target-url}" dest="${target-filename}" />
+		<!-- Remote repositories - Maven Central in particular - reject bursty CI
+		     traffic with HTTP 429. <get> retries immediately and has no delay of
+		     its own, so wrap it in <retry> to back off between attempts. -->
+		<retry retrycount="5" retrydelay="10000">
+			<get src="${target-url}" dest="${target-filename}" retries="1">
+				<header name="User-Agent" value="dacapo-benchmark-build/1.0"/>
+			</get>
+		</retry>
 	</target>
 
 	<!-- if there is no checksum then generate one -->
