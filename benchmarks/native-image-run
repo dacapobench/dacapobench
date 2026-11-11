@@ -72,6 +72,24 @@ case "$BENCHMARK" in
 
         ./$BENCHMARK -Djava.home=$GRAALVM_HOME $BENCHMARK;;
 
+    "jme")
+        run_agent
+
+        config_file=$CONFIG_DIR/empty
+        touch $config_file
+
+        echo { \
+               \"resources\": { \
+                 \"includes\": [ \
+                   {\"pattern\": \"jme3test/.*\\\\.class\"} \
+                 ] \
+               } \
+             } > $CONFIG_DIR/resource-config.json
+
+
+        run_native_image -Djava.util.logging.config.file=$config_file
+        ./$BENCHMARK $BENCHMARK;;
+
     "lusearch" | "luindex")
         run_agent
         run_native_image
