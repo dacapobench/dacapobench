@@ -90,6 +90,15 @@ case "$BENCHMARK" in
         run_native_image -Djava.util.logging.config.file=$config_file
         ./$BENCHMARK $BENCHMARK;;
 
+    "kafka")
+        run_agent
+
+        config_file=$CONFIG_DIR/empty
+        touch $config_file
+
+        run_native_image
+        ./$BENCHMARK -Djavax.xml.bind.JAXBContextFactory=org.dacapo.NoSuchJAXBContextFactory $BENCHMARK;;
+
     "lusearch" | "luindex")
         run_agent
         run_native_image
