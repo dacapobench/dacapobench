@@ -115,6 +115,11 @@ case "$BENCHMARK" in
 
         ./$BENCHMARK $BENCHMARK;;
 
+    "zxing")
+        run_agent
+        run_native_image "-H:+AddAllCharsets" 
+
+        ./$BENCHMARK $BENCHMARK;;
 
     *)
         echo "The benchmark $BENCHMARK" is not supported by Native Image currently.
