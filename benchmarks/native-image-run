@@ -96,7 +96,7 @@ case "$BENCHMARK" in
         config_file=$CONFIG_DIR/empty
         touch $config_file
 
-        run_native_image
+        run_native_image --initialize-at-run-time=com.sun.xml.bind.v2.runtime.reflect.opt.Injector
         ./$BENCHMARK -Djavax.xml.bind.JAXBContextFactory=org.dacapo.NoSuchJAXBContextFactory $BENCHMARK;;
 
     "lusearch" | "luindex")
