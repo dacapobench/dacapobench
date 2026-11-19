@@ -15,7 +15,7 @@ if test "$#" -ne 2; then
     echo
     echo "The script helps to run the benchmarks with GraalVM Native Image."
     echo "It will first run the Java agent to collect reflection and resource"
-    echo "information, and then supply the information as intput to Native"
+    echo "information, and then supply the information as input to Native"
     echo "Image compiler."
     echo
     echo "Prerequisite:"
@@ -63,14 +63,43 @@ case "$BENCHMARK" in
         ./$BENCHMARK $BENCHMARK;;
 
     "fop")
+        run_agent
+
         config_file=$CONFIG_DIR/empty
         touch $config_file
-        run_agent
+        
         run_native_image                                                             \
             --initialize-at-run-time=org.apache.fop.render.rtf.rtflib.rtfdoc.RtfList \
             -Djava.util.logging.config.file=$config_file                             \
 
         ./$BENCHMARK -Djava.home=$GRAALVM_HOME $BENCHMARK;;
+
+    "jme")
+        run_agent
+
+        config_file=$CONFIG_DIR/empty
+        touch $config_file
+
+        echo { \
+               \"resources\": { \
+                 \"includes\": [ \
+                   {\"pattern\": \"jme3test/.*\\\\.class\"} \
+                 ] \
+               } \
+             } > $CONFIG_DIR/resource-config.json
+
+
+        run_native_image -Djava.util.logging.config.file=$config_file
+        ./$BENCHMARK $BENCHMARK;;
+
+    "kafka")
+        run_agent
+
+        config_file=$CONFIG_DIR/empty
+        touch $config_file
+
+        run_native_image --initialize-at-run-time=com.sun.xml.bind.v2.runtime.reflect.opt.Injector
+        ./$BENCHMARK -Djavax.xml.bind.JAXBContextFactory=org.dacapo.NoSuchJAXBContextFactory $BENCHMARK;;
 
     "lusearch" | "luindex")
         run_agent
@@ -88,6 +117,11 @@ case "$BENCHMARK" in
 
         ./$BENCHMARK $BENCHMARK;;
 
+    "zxing")
+        run_agent
+        run_native_image "-H:+AddAllCharsets" 
+
+        ./$BENCHMARK $BENCHMARK;;
 
     *)
         echo "The benchmark $BENCHMARK" is not supported by Native Image currently.
