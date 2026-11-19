@@ -63,9 +63,11 @@ case "$BENCHMARK" in
         ./$BENCHMARK $BENCHMARK;;
 
     "fop")
+        run_agent
+
         config_file=$CONFIG_DIR/empty
         touch $config_file
-        run_agent
+        
         run_native_image                                                             \
             --initialize-at-run-time=org.apache.fop.render.rtf.rtflib.rtfdoc.RtfList \
             -Djava.util.logging.config.file=$config_file                             \
